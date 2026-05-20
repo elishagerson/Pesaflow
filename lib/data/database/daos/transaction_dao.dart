@@ -52,10 +52,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
                   transactions.reference.like('%$searchQuery%'));
     }
     if (startDate != null) {
-      query.where(transactions.createdAt.isAtLeastValue(startDate));
+      query.where(transactions.createdAt.isBiggerOrEqualToValue(startDate));
     }
     if (endDate != null) {
-      query.where(transactions.createdAt.isAtMostValue(endDate));
+      query.where(transactions.createdAt.isSmallerOrEqualToValue(endDate));
     }
 
     query.orderBy([OrderingTerm.desc(transactions.createdAt)]);
@@ -94,7 +94,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Inserts a transaction and adjusts the linked account's balance inside a transaction.
   Future<void> writeTransactionWithBalanceAdjustment(Transaction transaction) async {
-    await transaction(() async {
+    await attachedDatabase.transaction(() async {
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
@@ -122,7 +122,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Deletes a transaction and reverses the linked account's balance adjustment inside a transaction.
   Future<void> deleteTransactionWithBalanceAdjustment(String transactionId) async {
-    await transaction(() async {
+    await attachedDatabase.transaction(() async {
       // 1. Fetch the transaction to know the amount and type
       final transQuery = select(transactions)..where((t) => t.id.equals(transactionId));
       final transactionObj = await transQuery.getSingleOrNull();
