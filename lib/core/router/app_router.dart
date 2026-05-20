@@ -4,6 +4,7 @@ import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart';
 import 'package:pesaflow/presentation/settings/settings_screen.dart';
+import 'package:pesaflow/presentation/sms_review/sms_review_screen.dart';
 import 'package:pesaflow/presentation/transactions/transaction_form_screen.dart';
 import 'package:pesaflow/presentation/transactions/transaction_list_screen.dart';
 
@@ -140,6 +141,13 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+
+    // SMS Review Queue (full-screen, above bottom nav)
+    GoRoute(
+      path: '/sms-review',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SmsReviewScreen(),
     ),
   ],
 );
