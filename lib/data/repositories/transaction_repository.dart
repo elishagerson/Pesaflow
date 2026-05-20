@@ -42,4 +42,24 @@ class TransactionRepository {
   Future<void> deleteTransaction(String transactionId) {
     return _transactionDao.deleteTransactionWithBalanceAdjustment(transactionId);
   }
+
+  Future<bool> transactionExistsByReference(String reference) {
+    return _transactionDao.existsByReference(reference);
+  }
+
+  Future<List<Transaction>> getTransactionsByFuzzyWindow({
+    required String provider,
+    required String type,
+    required int amount,
+    required DateTime start,
+    required DateTime end,
+  }) {
+    return _transactionDao.getFuzzyMatches(
+      provider: provider,
+      type: type,
+      amount: amount,
+      start: start,
+      end: end,
+    );
+  }
 }
