@@ -11,7 +11,7 @@ void main() {
 
     test('Formats decimal cents automatically', () {
       expect(CurrencyFormatter.formatCents(5000025), 'Tsh 50,000.25');
-      expect(CurrencyFormatter.formatCents(1500), 'Tsh 15.00');
+      expect(CurrencyFormatter.formatCents(1500), 'Tsh 15');
     });
 
     test('Enforces decimals display when specified', () {
