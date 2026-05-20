@@ -181,4 +181,40 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
                      t.createdAt.isSmallerOrEqual(Constant(end)));
     return query.get();
   }
+
+  /// Streams transactions that need user review (source = 'sms_reviewed').
+  Stream<List<TransactionWithCategoryAndAccount>> watchReviewQueueTransactions() {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
+      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+    ]);
+
+    query.where(transactions.source.equals('sms_reviewed'));
+    query.orderBy([OrderingTerm.desc(transactions.createdAt)]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return TransactionWithCategoryAndAccount(
+          transaction: row.readTable(transactions),
+          category: row.readTable(categories),
+          account: row.readTable(accounts),
+        );
+      }).toList();
+    });
+  }
+
+  /// Approves a reviewed transaction by updating its source to 'sms_auto'
+  /// and optionally changing its category.
+  Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
+    final query = select(transactions)..where((t) => t.id.equals(transactionId));
+    final existing = await query.getSingleOrNull();
+    if (existing == null) return;
+
+    final updated = existing.copyWith(
+      source: 'sms_auto',
+      categoryId: newCategoryId ?? existing.categoryId,
+      updatedAt: DateTime.now(),
+    );
+    await update(transactions).replace(updated);
+  }
 }
