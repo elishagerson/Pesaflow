@@ -17,6 +17,9 @@ class CategoryRepository {
 
   Future<List<Category>> getAllCategories() => _categoryDao.getAllCategories();
 
+  /// Alias used by the auto-categorizer engine.
+  Future<List<Category>> getCategories() => getAllCategories();
+
   Future<List<Category>> getCategoriesByType(String type) => _categoryDao.getCategoriesByType(type);
 
   Future<Category?> getCategoryById(String id) => _categoryDao.getCategoryById(id);
