@@ -1,0 +1,85 @@
+import 'dart:io';
+import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
+
+import 'tables/accounts_table.dart';
+import 'tables/categories_table.dart';
+import 'tables/transactions_table.dart';
+
+part 'app_database.g.dart';
+
+@DriftDatabase(tables: [Accounts, Categories, Transactions])
+class AppDatabase extends _$AppDatabase {
+  AppDatabase() : super(_openConnection());
+
+  @override
+  int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (m) async {
+        await m.createAll();
+        
+        // Seed default system categories (strictly in English)
+        final uuid = const Uuid();
+        final now = DateTime.now();
+
+        final defaultCategories = [
+          // Income categories
+          _cat(uuid.v4(), 'Salary', 'briefcase', '#2E7D32', 'income', 1, true),
+          _cat(uuid.v4(), 'Business', 'store', '#008080', 'income', 2, true),
+          _cat(uuid.v4(), 'Other Income', 'plus-circle', '#808080', 'income', 3, true),
+
+          // Expense categories
+          _cat(uuid.v4(), 'Food & Groceries', 'cart', '#FF9800', 'expense', 1, true),
+          _cat(uuid.v4(), 'Transport', 'bus', '#FFC107', 'expense', 2, true),
+          _cat(uuid.v4(), 'Rent', 'home', '#F44336', 'expense', 3, true),
+          _cat(uuid.v4(), 'Utilities', 'zap', '#E91E63', 'expense', 4, true),
+          _cat(uuid.v4(), 'Airtime & Data', 'phone', '#9C27B0', 'expense', 5, true),
+          _cat(uuid.v4(), 'Health', 'heart', '#E91E63', 'expense', 6, true),
+          _cat(uuid.v4(), 'Education', 'book', '#2196F3', 'expense', 7, true),
+          _cat(uuid.v4(), 'Entertainment', 'film', '#673AB7', 'expense', 8, true),
+          _cat(uuid.v4(), 'Shopping', 'shopping-bag', '#00BCD4', 'expense', 9, true),
+          _cat(uuid.v4(), 'Eating Out', 'coffee', '#795548', 'expense', 10, true),
+          _cat(uuid.v4(), 'Mobile Money Transfer', 'send', '#607D8B', 'expense', 11, true),
+          _cat(uuid.v4(), 'Bank Fees', 'credit-card', '#D32F2F', 'expense', 12, true),
+          _cat(uuid.v4(), 'ATM Withdrawal', 'banknote', '#4CAF50', 'expense', 13, true),
+          _cat(uuid.v4(), 'Savings', 'piggy-bank', '#4CAF50', 'expense', 14, true),
+          _cat(uuid.v4(), 'Other', 'more-horizontal', '#9E9E9E', 'expense', 15, true),
+          
+          // Transfer categories
+          _cat(uuid.v4(), 'Between Accounts', 'arrow-left-right', '#9E9E9E', 'transfer', 1, true),
+        ];
+
+        for (final category in defaultCategories) {
+          await into(categories).insert(category);
+        }
+      },
+    );
+  }
+
+  Category _cat(String id, String name, String icon, String color, String type, int sortOrder, bool isSystem) {
+    return Category(
+      id: id,
+      name: name,
+      icon: icon,
+      color: color,
+      type: type,
+      isSystem: isSystem,
+      sortOrder: sortOrder,
+      createdAt: DateTime.now(),
+    );
+  }
+}
+
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'pesaflow.db'));
+    return NativeDatabase.createInBackground(file);
+  });
+}
