@@ -157,4 +157,28 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       await (delete(transactions)..where((t) => t.id.equals(transactionId))).go();
     });
   }
+
+  /// Checks if a transaction with the given reference exists in the database.
+  Future<bool> existsByReference(String reference) async {
+    final query = select(transactions)..where((t) => t.reference.equals(reference));
+    final row = await query.getSingleOrNull();
+    return row != null;
+  }
+
+  /// Finds transactions matching exact amount, provider, and type within a time window.
+  Future<List<Transaction>> getFuzzyMatches({
+    required String provider,
+    required String type,
+    required int amount,
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    final query = select(transactions)
+      ..where((t) => t.provider.equals(provider) & 
+                     t.type.equals(type) & 
+                     t.amount.equals(amount) & 
+                     t.createdAt.isBiggerOrEqual(Constant(start)) & 
+                     t.createdAt.isSmallerOrEqual(Constant(end)));
+    return query.get();
+  }
 }
