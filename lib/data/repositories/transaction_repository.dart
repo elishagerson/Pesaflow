@@ -62,4 +62,12 @@ class TransactionRepository {
       end: end,
     );
   }
+
+  Stream<List<TransactionWithCategoryAndAccount>> watchReviewQueueTransactions() {
+    return _transactionDao.watchReviewQueueTransactions();
+  }
+
+  Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) {
+    return _transactionDao.approveReviewedTransaction(transactionId, newCategoryId: newCategoryId);
+  }
 }
