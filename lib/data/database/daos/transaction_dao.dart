@@ -52,10 +52,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
                   transactions.reference.like('%$searchQuery%'));
     }
     if (startDate != null) {
-      query.where(transactions.createdAt.isBiggerOrEqualToValue(startDate));
+      query.where(transactions.createdAt.isBiggerOrEqual(Constant(startDate)));
     }
     if (endDate != null) {
-      query.where(transactions.createdAt.isSmallerOrEqualToValue(endDate));
+      query.where(transactions.createdAt.isSmallerOrEqual(Constant(endDate)));
     }
 
     query.orderBy([OrderingTerm.desc(transactions.createdAt)]);
