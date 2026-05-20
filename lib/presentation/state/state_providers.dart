@@ -48,3 +48,8 @@ final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCa
     searchQuery: search,
   );
 });
+
+final reviewQueueStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
+  final repo = ref.watch(transactionRepositoryProvider);
+  return repo.watchReviewQueueTransactions();
+});
