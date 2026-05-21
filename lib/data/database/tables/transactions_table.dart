@@ -5,6 +5,7 @@ class Transactions extends Table {
   TextColumn get id => text()();
   TextColumn get accountId => text()(); // FK to Accounts (referenced at Dart level)
   TextColumn get categoryId => text()(); // FK to Categories (referenced at Dart level)
+  TextColumn get trackerId => text().nullable()(); // FK to Trackers (referenced at Dart level)
   IntColumn get amount => integer()(); // in TZS cents (Tsh * 100)
   TextColumn get type => text()(); // enum: income, expense, transfer, airtime, fee
   TextColumn get description => text().withLength(min: 0, max: 255)();

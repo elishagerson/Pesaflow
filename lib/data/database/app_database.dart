@@ -13,6 +13,7 @@ import 'tables/budget_periods_table.dart';
 import 'tables/daily_snapshots_table.dart';
 import 'tables/monthly_snapshots_table.dart';
 import 'tables/app_settings_table.dart';
+import 'tables/trackers_table.dart';
 
 part 'app_database.g.dart';
 
@@ -25,12 +26,13 @@ part 'app_database.g.dart';
   DailySnapshots,
   MonthlySnapshots,
   AppSettings,
+  Trackers,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -72,6 +74,16 @@ class AppDatabase extends _$AppDatabase {
           await into(categories).insert(category);
         }
 
+        // Seed default tracker
+        await into(trackers).insert(Tracker(
+          id: 'default_personal',
+          name: 'Personal',
+          icon: 'person',
+          color: '#006B4F',
+          isArchived: false,
+          createdAt: DateTime.now(),
+        ));
+
         // Seed default app settings
         await into(appSettings).insert(AppSetting(
           key: 'onboarding_complete',
@@ -81,6 +93,11 @@ class AppDatabase extends _$AppDatabase {
         await into(appSettings).insert(AppSetting(
           key: 'theme',
           value: 'system',
+          updatedAt: DateTime.now(),
+        ));
+        await into(appSettings).insert(AppSetting(
+          key: 'active_tracker_id',
+          value: 'default_personal',
           updatedAt: DateTime.now(),
         ));
       },
@@ -102,6 +119,34 @@ class AppDatabase extends _$AppDatabase {
           await into(appSettings).insert(AppSetting(
             key: 'theme',
             value: 'system',
+            updatedAt: DateTime.now(),
+          ));
+        }
+
+        // Migration from schema version 2 → 3: add trackers table & trackerId to transactions
+        if (from < 3) {
+          await m.createTable(trackers);
+          await m.addColumn(transactions, transactions.trackerId);
+
+          // Seed default tracker for existing users
+          await into(trackers).insert(Tracker(
+            id: 'default_personal',
+            name: 'Personal',
+            icon: 'person',
+            color: '#006B4F',
+            isArchived: false,
+            createdAt: DateTime.now(),
+          ));
+
+          // Set existing transactions to the default tracker
+          await (update(transactions)..where((t) => t.trackerId.isNull())).write(
+            TransactionsCompanion(trackerId: const Value('default_personal')),
+          );
+
+          // Seed active tracker setting
+          await into(appSettings).insert(AppSetting(
+            key: 'active_tracker_id',
+            value: 'default_personal',
             updatedAt: DateTime.now(),
           ));
         }
