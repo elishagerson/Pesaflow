@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart'; // To reuse TactileSpringContainer!
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -21,22 +22,21 @@ class TransactionFormScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _amountController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _referenceController = TextEditingController();
-
+  String _amountStr = '0'; // Current keypad entered digits
   String _transactionType = 'Expense'; // Default
   String? _selectedAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
+  
+  final _descriptionController = TextEditingController();
+  final _referenceController = TextEditingController();
 
   bool _isEditMode = false;
   bool _isLoading = false;
   Transaction? _existingTransaction;
 
-  final List<String> _expenseSuggestions = ['Lunch', 'Taxi / Uber', 'Data Bundle', 'Electricity Luku', 'Groceries', 'Rent', 'Water Bill'];
-  final List<String> _incomeSuggestions = ['Salary Paycheck', 'Business Sale', 'Freelance Project', 'Allowance', 'Interest / Yield'];
+  final List<String> _expenseSuggestions = ['Lunch', 'Transport / Taxi', 'Airtime Bundle', 'Electricity Luku', 'Groceries', 'Rent', 'Water Bill'];
+  final List<String> _incomeSuggestions = ['Salary Paycheck', 'Business Sale', 'Freelance gig', 'Allowance', 'Dividends / Interest'];
 
   @override
   void initState() {
@@ -49,15 +49,16 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   Future<void> _loadExistingTransaction() async {
     setState(() => _isLoading = true);
-    // Fetch transaction by ID
     final repo = ref.read(transactionRepositoryProvider);
-    // Since we stream filtered transactions, we can watch them, or retrieve the list
-    // Wait, let's just watch recent transactions and look for our matching ID
     final list = await repo.watchRecentTransactions(100).first;
     final match = list.firstWhere((item) => item.transaction.id == widget.transactionId);
     
     _existingTransaction = match.transaction;
-    _amountController.text = (match.transaction.amount / 100.0).toStringAsFixed(0);
+    
+    // Convert cents back to decimal base string
+    final double baseValue = match.transaction.amount / 100.0;
+    _amountStr = baseValue % 1 == 0 ? baseValue.toInt().toString() : baseValue.toString();
+    
     _descriptionController.text = match.transaction.description;
     _referenceController.text = match.transaction.reference ?? '';
     _selectedAccountId = match.transaction.accountId;
@@ -68,22 +69,47 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     setState(() => _isLoading = false);
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
+  void _keypadPress(String value) {
+    setState(() {
+      if (value == '<') {
+        // Backspace
+        if (_amountStr.length > 1) {
+          _amountStr = _amountStr.substring(0, _amountStr.length - 1);
+        } else {
+          _amountStr = '0';
+        }
+      } else if (value == '.') {
+        if (!_amountStr.contains('.')) {
+          _amountStr += '.';
+        }
+      } else {
+        // Numbers
+        if (_amountStr == '0') {
+          _amountStr = value;
+        } else {
+          // Limit length to keep display elegant
+          if (_amountStr.length < 12) {
+            _amountStr += value;
+          }
+        }
+      }
+    });
   }
 
-  Future<void> _saveForm() async {
-    if (!_formKey.currentState!.validate()) return;
+  double _getAmountCents() {
+    final clean = _amountStr.replaceAll(RegExp(r'[^0-9.]'), '');
+    final parsed = double.tryParse(clean) ?? 0.0;
+    return parsed * 100.0;
+  }
+
+  Future<void> _saveTransaction() async {
+    final cents = _getAmountCents().round();
+    if (cents <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid amount greater than zero.')),
+      );
+      return;
+    }
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select an account.')),
@@ -97,21 +123,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       return;
     }
 
-    final double amountVal = double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
-    if (amountVal <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid amount greater than zero.')),
-      );
-      return;
-    }
-
-    final cents = (amountVal * 100).round();
     final repo = ref.read(transactionRepositoryProvider);
-
     setState(() => _isLoading = true);
 
     if (_isEditMode && _existingTransaction != null) {
-      // Safely perform edit: delete old transaction (which reverses balance changes) and insert new transaction
       await repo.deleteTransaction(_existingTransaction!.id);
     }
 
@@ -133,7 +148,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
     await repo.createTransaction(newTransaction);
 
-    // Invalidate state providers so UI fetches fresh streams
     ref.invalidate(accountsStreamProvider);
     ref.invalidate(recentTransactionsStreamProvider);
     ref.invalidate(filteredTransactionsStreamProvider);
@@ -146,30 +160,402 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     }
   }
 
+  void _showAccountPickerSheet(BuildContext context, List<Account> accounts) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20.0),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              Text(
+                'Select Source Account',
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: accounts.length,
+                itemBuilder: (context, index) {
+                  final account = accounts[index];
+                  final isSelected = account.id == _selectedAccountId;
+                  return TactileSpringContainer(
+                    onTap: () {
+                      setState(() => _selectedAccountId = account.id);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: isSelected 
+                            ? theme.colorScheme.primary.withOpacity(0.08) 
+                            : AppTheme.surfaceContainerDark,
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          color: isSelected 
+                              ? theme.colorScheme.primary.withOpacity(0.3) 
+                              : const Color(0x15FFFFFF),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            account.name,
+                            style: TextStyle(
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected ? theme.colorScheme.primary : null,
+                            ),
+                          ),
+                          Text(
+                            CurrencyFormatter.formatCents(account.balance),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSecondaryDetailsSheet(BuildContext context, List<Category> categories) {
+    final filteredCategories = categories.where((cat) {
+      return cat.type.toLowerCase() == _transactionType.toLowerCase();
+    }).toList();
+
+    if (_selectedCategoryId == null && filteredCategories.isNotEmpty) {
+      _selectedCategoryId = filteredCategories.first.id;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return AnimatedPadding(
+              padding: MediaQuery.of(context).viewInsets,
+              duration: const Duration(milliseconds: 100),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 36,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 20.0),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Transaction details'.toUpperCase(),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Category scroll list
+                    const Text('Category', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      height: 52,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: filteredCategories.length,
+                        itemBuilder: (context, index) {
+                          final cat = filteredCategories[index];
+                          final isSel = cat.id == _selectedCategoryId;
+                          final catColor = _hexToColor(cat.color);
+
+                          return TactileSpringContainer(
+                            onTap: () {
+                              setSheetState(() => _selectedCategoryId = cat.id);
+                              setState(() => _selectedCategoryId = cat.id);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                color: isSel ? catColor.withOpacity(0.12) : AppTheme.surfaceContainerDark,
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                  color: isSel ? catColor : const Color(0x15FFFFFF),
+                                  width: 1.2,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(_getCategoryIcon(cat.icon), color: isSel ? catColor : Colors.grey, size: 16),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    cat.name,
+                                    style: TextStyle(
+                                      color: isSel ? catColor : Colors.white70,
+                                      fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Description text input
+                    const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _descriptionController,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: const InputDecoration(
+                        hintText: 'e.g. Lunch, taxi, data bundle',
+                      ),
+                      onChanged: (val) => setState(() {}),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Suggestion chips
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: (_transactionType == 'Expense'
+                                ? _expenseSuggestions
+                                : _incomeSuggestions)
+                            .map((suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 6.0),
+                            child: ActionChip(
+                              label: Text(suggestion, style: const TextStyle(fontSize: 12)),
+                              backgroundColor: AppTheme.surfaceContainerDark,
+                              side: const BorderSide(color: Color(0x15FFFFFF)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                              onPressed: () {
+                                setSheetState(() {
+                                  _descriptionController.text = suggestion;
+                                });
+                                setState(() {
+                                  _descriptionController.text = suggestion;
+                                });
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Carrier Reference field
+                    const Text('Carrier Reference (Optional)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _referenceController,
+                      textCapitalization: TextCapitalization.characters,
+                      decoration: const InputDecoration(
+                        hintText: 'e.g. PP230489A1',
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Date input selector
+                    const Text('Transaction Date', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: _selectedDate,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2101),
+                        );
+                        if (picked != null) {
+                          setSheetState(() => _selectedDate = picked);
+                          setState(() => _selectedDate = picked);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceContainerDark,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0x15FFFFFF)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            const Icon(Icons.calendar_month_rounded, color: Colors.grey, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Final save record button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: theme.scaffoldBackgroundColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _saveTransaction();
+                        },
+                        child: Text(_isEditMode ? 'Update Transaction' : 'Record Transaction'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Color _hexToColor(String hex) {
+    final clean = hex.replaceAll('#', '');
+    if (clean.length == 6) {
+      return Color(int.parse('FF$clean', radix: 16));
+    }
+    return Colors.grey;
+  }
+
+  IconData _getCategoryIcon(String iconName) {
+    switch (iconName) {
+      case 'briefcase':
+        return Icons.work_rounded;
+      case 'store':
+        return Icons.storefront_rounded;
+      case 'cart':
+        return Icons.shopping_cart_rounded;
+      case 'bus':
+        return Icons.directions_bus_rounded;
+      case 'home':
+        return Icons.home_rounded;
+      case 'zap':
+        return Icons.electric_bolt_rounded;
+      case 'phone':
+        return Icons.phone_android_rounded;
+      case 'heart':
+        return Icons.favorite_rounded;
+      case 'book':
+        return Icons.menu_book_rounded;
+      case 'film':
+        return Icons.movie_rounded;
+      case 'shopping-bag':
+        return Icons.shopping_bag_rounded;
+      case 'coffee':
+        return Icons.coffee_rounded;
+      case 'send':
+        return Icons.send_rounded;
+      case 'credit-card':
+        return Icons.credit_card_rounded;
+      case 'banknote':
+        return Icons.payments_rounded;
+      case 'piggy-bank':
+        return Icons.savings_rounded;
+      case 'plus-circle':
+      default:
+        return Icons.add_circle_outline_rounded;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
-    
-    // Filter categories depending on selected transaction type
-    final filteredCategories = categories.where((cat) {
-      return cat.type.toLowerCase() == _transactionType.toLowerCase();
-    }).toList();
 
-    // Default account selection helper
     if (_selectedAccountId == null && accounts.isNotEmpty) {
       _selectedAccountId = accounts.first.id;
     }
 
-    // Default category selection helper based on filtered lists
-    if (_selectedCategoryId == null && filteredCategories.isNotEmpty) {
-      _selectedCategoryId = filteredCategories.first.id;
-    }
+    final activeAccount = accounts.firstWhere(
+      (acc) => acc.id == _selectedAccountId,
+      orElse: () => accounts.isNotEmpty ? accounts.first : Account(
+        id: '',
+        name: 'No Account',
+        type: 'cash',
+        balance: 0,
+        createdAt: DateTime.now(),
+        sortOrder: 0,
+        isArchived: false,
+      ),
+    );
+
+    // Parsing amount for bold screen display
+    final double amountValue = double.tryParse(_amountStr) ?? 0.0;
+    final String formattedDisplay = NumberFormat('#,###.##').format(amountValue);
+
+    // Font size scaling based on length
+    final double fontSize = _amountStr.length > 10 ? 36.0 : (_amountStr.length > 7 ? 46.0 : 64.0);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Transaction' : 'Record Transaction'),
+        title: Text(_isEditMode ? 'Edit' : 'Record'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.close_rounded),
+          onPressed: () => context.pop(),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -188,7 +574,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'You must create at least one local Cash, Bank or Mobile Money account before recording manual transactions.',
+                          'You must create at least one Account before recording manual transactions.',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey),
                         ),
@@ -202,228 +588,196 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   ),
                 )
               : SafeArea(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Segmented toggle
-                          Row(
+                  child: Column(
+                    children: [
+                      // Header Segment Toggle (internal styled pill like first screenshot)
+                      const SizedBox(height: 16),
+                      Container(
+                        width: 280,
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceContainerDark,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: const Color(0x15FFFFFF)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() {
+                                  _transactionType = 'Expense';
+                                  _selectedCategoryId = null;
+                                }),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: _transactionType == 'Expense' 
+                                        ? const Color(0xFF262626) 
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Expense',
+                                      style: TextStyle(
+                                        color: _transactionType == 'Expense' ? Colors.white : Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() {
+                                  _transactionType = 'Income';
+                                  _selectedCategoryId = null;
+                                }),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: _transactionType == 'Income' 
+                                        ? const Color(0xFF262626) 
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Income',
+                                      style: TextStyle(
+                                        color: _transactionType == 'Income' ? Colors.white : Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+
+                      // Giant visual amount display
+                      const Text(
+                        'Amount',
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Tsh $formattedDisplay',
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: -1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // Floating source account pill
+                      TactileSpringContainer(
+                        onTap: () => _showAccountPickerSheet(context, accounts),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1B1B1D),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: const Color(0x15FFFFFF)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                child: ChoiceChip(
-                                  label: const Center(child: Text('Expense')),
-                                  selected: _transactionType == 'Expense',
-                                  onSelected: (val) {
-                                    if (val) {
-                                      setState(() {
-                                        _transactionType = 'Expense';
-                                        _selectedCategoryId = null; // force recalculation
-                                      });
-                                    }
-                                  },
+                              Text(
+                                'From ${activeAccount.name}',
+                                style: const TextStyle(
+                                  color: Colors.white70, 
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ChoiceChip(
-                                  label: const Center(child: Text('Income')),
-                                  selected: _transactionType == 'Income',
-                                  onSelected: (val) {
-                                    if (val) {
-                                      setState(() {
-                                        _transactionType = 'Income';
-                                        _selectedCategoryId = null; // force recalculation
-                                      });
-                                    }
-                                  },
-                                ),
-                              ),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
                             ],
                           ),
-                          const SizedBox(height: 24),
-
-                          // Large Visual Money Input Card
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                            decoration: BoxDecoration(
-                              color: theme.brightness == Brightness.dark
-                                  ? AppTheme.surfaceContainerDark
-                                  : AppTheme.surfaceLight,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              border: Border.all(
-                                color: theme.brightness == Brightness.dark
-                                    ? const Color(0x1FFFFFFF)
-                                    : const Color(0x1F000000),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'AMOUNT (TZS)',
-                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
-                                ),
-                                const SizedBox(height: 8),
-                                TextFormField(
-                                  controller: _amountController,
-                                  keyboardType: TextInputType.number,
-                                  style: theme.textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'monospace',
-                                  ),
-                                  decoration: const InputDecoration(
-                                    prefixText: 'Tsh ',
-                                    fillColor: Colors.transparent,
-                                    border: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                  ),
-                                  validator: (val) {
-                                    if (val == null || val.trim().isEmpty) {
-                                      return 'Required';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Account Selector
-                          const Text('Account', style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            value: _selectedAccountId,
-                            decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 12.0)),
-                            items: accounts.map((acc) {
-                              return DropdownMenuItem(
-                                value: acc.id,
-                                child: Text('${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})'),
-                              );
-                            }).toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedAccountId = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 20),
-
-                          // Category Selector
-                          const Text('Category', style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            value: _selectedCategoryId,
-                            decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 12.0)),
-                            items: filteredCategories.map((cat) {
-                              return DropdownMenuItem(
-                                value: cat.id,
-                                child: Text(cat.name),
-                              );
-                            }).toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedCategoryId = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 20),
-
-                          // Date Field
-                          const Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          GestureDetector(
-                            onTap: () => _selectDate(context),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14.0),
-                              decoration: BoxDecoration(
-                                color: theme.brightness == Brightness.dark
-                                    ? AppTheme.surfaceDark
-                                    : AppTheme.surfaceLight,
-                                borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                  const Icon(Icons.calendar_month_rounded, color: Colors.grey),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          // Description
-                          const Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _descriptionController,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. Lunch with team, monthly data',
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Interactive Suggestion Chips
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            physics: const BouncingScrollPhysics(),
-                            child: Row(
-                              children: (_transactionType == 'Expense'
-                                      ? _expenseSuggestions
-                                      : _incomeSuggestions)
-                                  .map((suggestion) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: ActionChip(
-                                    label: Text(suggestion),
-                                    onPressed: () {
-                                      setState(() {
-                                        _descriptionController.text = suggestion;
-                                      });
-                                    },
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          // Carrier Reference (Optional)
-                          const Text('Carrier Reference (Optional)', style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _referenceController,
-                            textCapitalization: TextCapitalization.characters,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. P65AB1C2D (M-Pesa ID)',
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-
-                          // Save Button
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _saveForm,
-                              child: Text(_isEditMode ? 'Update' : 'Save'),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+                        ),
                       ),
-                    ),
+                      const Spacer(),
+
+                      // Numeric Keypad Grid
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          children: [
+                            _buildKeypadRow(['1', '2', '3']),
+                            const SizedBox(height: 12),
+                            _buildKeypadRow(['4', '5', '6']),
+                            const SizedBox(height: 12),
+                            _buildKeypadRow(['7', '8', '9']),
+                            const SizedBox(height: 12),
+                            _buildKeypadRow(['.', '0', '<']),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Continue Button (stark white visual CTA)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => _showSecondaryDetailsSheet(context, categories),
+                            child: const Text('Continue'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
+    );
+  }
+
+  Widget _buildKeypadRow(List<String> keys) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: keys.map((key) {
+        return Expanded(
+          child: TactileSpringContainer(
+            onTap: () => _keypadPress(key),
+            child: Container(
+              height: 54,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: key == '<'
+                    ? const Icon(Icons.backspace_outlined, color: Colors.white, size: 22)
+                    : Text(
+                        key,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
