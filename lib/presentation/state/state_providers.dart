@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
+import '../../data/database/daos/budget_dao.dart';
+import '../../data/database/daos/analytics_dao.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
+import '../../data/repositories/budget_repository.dart';
+import '../../data/repositories/analytics_repository.dart';
+import '../../domain/analytics/insight_generator.dart';
 
 final accountsStreamProvider = StreamProvider<List<Account>>((ref) {
   final repo = ref.watch(accountRepositoryProvider);
@@ -52,4 +57,42 @@ final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCa
 final reviewQueueStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
   return repo.watchReviewQueueTransactions();
+});
+
+// ═══════════════════════════════════════════════════════
+// Budget Providers
+// ═══════════════════════════════════════════════════════
+
+final activeBudgetsStreamProvider = StreamProvider<List<Budget>>((ref) {
+  final repo = ref.watch(budgetRepositoryProvider);
+  return repo.watchAllActiveBudgets();
+});
+
+final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) {
+  final repo = ref.watch(budgetRepositoryProvider);
+  return repo.getActiveBudgetsWithProgress();
+});
+
+// ═══════════════════════════════════════════════════════
+// Analytics Providers
+// ═══════════════════════════════════════════════════════
+
+final monthlyTotalsProvider = FutureProvider<Map<String, int>>((ref) {
+  final repo = ref.watch(analyticsRepositoryProvider);
+  return repo.getMonthTotals(DateTime.now());
+});
+
+final topCategoriesProvider = FutureProvider<List<CategorySpending>>((ref) {
+  final repo = ref.watch(analyticsRepositoryProvider);
+  return repo.getTopCategoriesForMonth(DateTime.now(), limit: 5);
+});
+
+final monthlySnapshotsProvider = FutureProvider<List<MonthlySnapshot>>((ref) {
+  final repo = ref.watch(analyticsRepositoryProvider);
+  return repo.getMonthlySnapshots(12);
+});
+
+final insightsProvider = FutureProvider<List<Insight>>((ref) {
+  final generator = ref.watch(insightGeneratorProvider);
+  return generator.generateInsights();
 });

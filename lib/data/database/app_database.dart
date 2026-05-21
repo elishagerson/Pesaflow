@@ -8,15 +8,29 @@ import 'package:uuid/uuid.dart';
 import 'tables/accounts_table.dart';
 import 'tables/categories_table.dart';
 import 'tables/transactions_table.dart';
+import 'tables/budgets_table.dart';
+import 'tables/budget_periods_table.dart';
+import 'tables/daily_snapshots_table.dart';
+import 'tables/monthly_snapshots_table.dart';
+import 'tables/app_settings_table.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Accounts, Categories, Transactions])
+@DriftDatabase(tables: [
+  Accounts,
+  Categories,
+  Transactions,
+  Budgets,
+  BudgetPeriods,
+  DailySnapshots,
+  MonthlySnapshots,
+  AppSettings,
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration {
@@ -26,7 +40,6 @@ class AppDatabase extends _$AppDatabase {
         
         // Seed default system categories (strictly in English)
         final uuid = const Uuid();
-        final now = DateTime.now();
 
         final defaultCategories = [
           // Income categories
@@ -57,6 +70,40 @@ class AppDatabase extends _$AppDatabase {
 
         for (final category in defaultCategories) {
           await into(categories).insert(category);
+        }
+
+        // Seed default app settings
+        await into(appSettings).insert(AppSetting(
+          key: 'onboarding_complete',
+          value: 'false',
+          updatedAt: DateTime.now(),
+        ));
+        await into(appSettings).insert(AppSetting(
+          key: 'theme',
+          value: 'system',
+          updatedAt: DateTime.now(),
+        ));
+      },
+      onUpgrade: (m, from, to) async {
+        // Migration from schema version 1 → 2: add Phase 3 tables
+        if (from < 2) {
+          await m.createTable(budgets);
+          await m.createTable(budgetPeriods);
+          await m.createTable(dailySnapshots);
+          await m.createTable(monthlySnapshots);
+          await m.createTable(appSettings);
+
+          // Seed default app settings for existing users
+          await into(appSettings).insert(AppSetting(
+            key: 'onboarding_complete',
+            value: 'true', // Existing users skip onboarding
+            updatedAt: DateTime.now(),
+          ));
+          await into(appSettings).insert(AppSetting(
+            key: 'theme',
+            value: 'system',
+            updatedAt: DateTime.now(),
+          ));
         }
       },
     );
