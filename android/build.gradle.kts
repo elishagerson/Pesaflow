@@ -24,8 +24,24 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
+    val configureAndroid = {
+        if (extensions.findByName("android") != null) {
+            extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+                compileSdkVersion(36)
+            }
+        }
+    }
+    if (state.executed) {
+        configureAndroid()
+    } else {
+        afterEvaluate {
+            configureAndroid()
+        }
+    }
+
     plugins.withId("com.android.library") {
         val android = extensions.getByType<com.android.build.gradle.LibraryExtension>()
+        android.compileSdk = 36
         if (android.namespace == null) {
             android.namespace = "com.pesaflow." + name.replace("-", "_")
             if (name == "telephony") {
