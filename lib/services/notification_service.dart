@@ -15,7 +15,7 @@ class NotificationService {
   Future<void> _init() async {
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidInit);
-    await _plugin.initialize(initSettings);
+    await _plugin.initialize(settings: initSettings);
   }
 
   /// Sends a local notification confirming a parsed carrier transaction.
@@ -32,6 +32,11 @@ class NotificationService {
       priority: Priority.high,
     );
     const details = NotificationDetails(android: androidDetails);
-    await _plugin.show(id, title, body, details);
+    await _plugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: details,
+    );
   }
 }
