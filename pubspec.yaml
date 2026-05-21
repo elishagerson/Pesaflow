@@ -53,6 +53,7 @@ dependencies:
   uuid: ^4.4.0
   telephony: ^0.2.0
   flutter_local_notifications: ^21.0.0
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:
