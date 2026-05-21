@@ -38,14 +38,6 @@ subprojects {
         }
     }
 
-    plugins.withId("com.android.application") {
-        val android = extensions.getByType<com.android.build.gradle.AppExtension>()
-        android.compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
-    }
-
     tasks.withType<JavaCompile>().configureEach {
         sourceCompatibility = "17"
         targetCompatibility = "17"
