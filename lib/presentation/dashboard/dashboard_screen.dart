@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -242,6 +244,101 @@ class DashboardScreen extends ConsumerWidget {
       return Color(int.parse('FF$clean', radix: 16));
     }
     return Colors.grey;
+  }
+
+  Widget _buildMonthlyOverview(WidgetRef ref, ThemeData theme) {
+    final totalsAsync = ref.watch(monthlyTotalsProvider);
+    final catsAsync = ref.watch(topCategoriesProvider);
+    return totalsAsync.when(
+      data: (totals) {
+        final income = totals['income'] ?? 0;
+        final expense = totals['expense'] ?? 0;
+        if (income == 0 && expense == 0) return const SizedBox.shrink();
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Monthly Overview', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(AppTheme.radiusCard), border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000))),
+            child: Row(children: [
+              catsAsync.when(
+                data: (cats) {
+                  if (cats.isEmpty) return const SizedBox(width: 80, height: 80);
+                  final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
+                  return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false)))));
+                },
+                loading: () => const SizedBox(width: 80, height: 80, child: CircularProgressIndicator(strokeWidth: 2)),
+                error: (_, __) => const SizedBox(width: 80, height: 80),
+              ),
+              const SizedBox(width: 16),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  AmountText(amountInCents: income, type: AmountType.income, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                ]),
+                const SizedBox(height: 6),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  AmountText(amountInCents: expense, type: AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                ]),
+                const SizedBox(height: 6),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant.withOpacity(0.3)),
+                const SizedBox(height: 6),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Text(income >= expense ? 'Saved' : 'Deficit', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  AmountText(amountInCents: (income - expense).abs(), type: income >= expense ? AmountType.income : AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                ]),
+              ])),
+            ]),
+          ),
+        ]);
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildBudgetRings(WidgetRef ref, ThemeData theme, BuildContext context) {
+    final budgetsAsync = ref.watch(budgetProgressProvider);
+    return budgetsAsync.when(
+      data: (budgets) {
+        if (budgets.isEmpty) return const SizedBox.shrink();
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Budget Progress', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            TextButton(onPressed: () => context.go('/budgets'), child: const Text('See All')),
+          ]),
+          const SizedBox(height: 8),
+          SizedBox(height: 100, child: ListView.builder(
+            scrollDirection: Axis.horizontal, physics: const BouncingScrollPhysics(), itemCount: budgets.length,
+            itemBuilder: (_, i) {
+              final bp = budgets[i];
+              final pct = bp.percentage.clamp(0.0, 1.0);
+              final catColor = _hexToColor(bp.category.color);
+              return GestureDetector(
+                onTap: () => context.go('/budgets/${bp.budget.id}'),
+                child: Container(
+                  width: 90, margin: const EdgeInsets.only(right: 12),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SizedBox(height: 56, width: 56, child: Stack(alignment: Alignment.center, children: [
+                      PieChart(PieChartData(startDegreeOffset: -90, sectionsSpace: 0, centerSpaceRadius: 20, sections: [
+                        PieChartSectionData(value: pct * 100, color: bp.spentInPeriod > (bp.currentPeriod?.allocated ?? bp.budget.amount) ? AppTheme.expenseColor : catColor, radius: 6, showTitle: false),
+                        PieChartSectionData(value: (1.0 - pct) * 100, color: catColor.withOpacity(0.15), radius: 6, showTitle: false),
+                      ])),
+                      Text('${(pct * 100).round()}%', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    ])),
+                    const SizedBox(height: 6),
+                    Text(bp.budget.name, style: const TextStyle(fontSize: 11), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                  ]),
+                ),
+              );
+            },
+          )),
+        ]);
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
   }
 
   @override
@@ -498,6 +595,14 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 28),
+
+              // Monthly Overview Donut
+              _buildMonthlyOverview(ref, theme),
+              const SizedBox(height: 24),
+
+              // Budget Progress Rings
+              _buildBudgetRings(ref, theme, context),
+              const SizedBox(height: 24),
 
               // Recent Transactions Section
               Row(
