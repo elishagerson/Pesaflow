@@ -54,6 +54,8 @@ dependencies:
   telephony: ^0.2.0
   flutter_local_notifications: ^21.0.0
   fl_chart: ^1.2.0
+  share_plus: ^10.0.0
+  file_picker: ^8.0.0
 
 dev_dependencies:
   flutter_test:
