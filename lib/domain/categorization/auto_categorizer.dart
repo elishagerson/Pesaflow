@@ -33,7 +33,7 @@ class AutoCategorizer {
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
     // Helper: finds the first category matching name (case-insensitive)
-    Category? findCategoryByName(String name) {
+    Category findCategoryByName(String name) {
       return categories.firstWhere(
         (cat) => cat.name.toLowerCase() == name.toLowerCase(),
         orElse: () => categories.firstWhere(
