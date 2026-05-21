@@ -24,21 +24,36 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    val configureNamespace = Action<Project> {
-        if (plugins.hasPlugin("com.android.library")) {
-            val android = extensions.findByName("android") as? com.android.build.gradle.BaseExtension
-            if (android != null && android.namespace == null) {
-                android.namespace = "com.pesaflow." + name.replace("-", "_")
-                if (name == "telephony") {
-                    android.namespace = "com.shounakmulay.telephony"
-                }
+    plugins.withId("com.android.library") {
+        val android = extensions.getByType<com.android.build.gradle.LibraryExtension>()
+        if (android.namespace == null) {
+            android.namespace = "com.pesaflow." + name.replace("-", "_")
+            if (name == "telephony") {
+                android.namespace = "com.shounakmulay.telephony"
             }
+        }
+        android.compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
     }
 
-    if (state.executed) {
-        configureNamespace.execute(this)
-    } else {
-        afterEvaluate(configureNamespace)
+    plugins.withId("com.android.application") {
+        val android = extensions.getByType<com.android.build.gradle.AppExtension>()
+        android.compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 }
