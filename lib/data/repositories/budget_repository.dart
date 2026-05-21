@@ -81,36 +81,11 @@ class BudgetRepository {
   /// Deletes a budget and all periods.
   Future<void> deleteBudget(String budgetId) => _budgetDao.deleteBudget(budgetId);
 
-  /// Gets all active budgets enriched with progress data.
-  Future<List<BudgetWithProgress>> getActiveBudgetsWithProgress() async {
-    final activeBudgets = await _budgetDao.getAllActiveBudgets();
-    final List<BudgetWithProgress> result = [];
-
-    for (final budget in activeBudgets) {
-      final category = await _budgetDao.getCategoryForBudget(budget.categoryId);
-      if (category == null) continue;
-
-      final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
-      int spent = 0;
-
-      if (currentPeriod != null) {
-        spent = await _budgetDao.getSpentForCategoryInPeriod(
-          budget.categoryId,
-          currentPeriod.periodStart,
-          currentPeriod.periodEnd,
-        );
-      }
-
-      result.add(BudgetWithProgress(
-        budget: budget,
-        category: category,
-        currentPeriod: currentPeriod,
-        spentInPeriod: spent,
-      ));
-    }
-
-    return result;
-  }
+   /// Gets all active budgets enriched with progress data using optimized queries.
+   /// This avoids the N+1 query problem by batching database operations.
+   Future<List<BudgetWithProgress>> getActiveBudgetsWithProgress() async {
+     return await _budgetDao.getActiveBudgetsWithProgressOptimized();
+   }
 
    /// Checks and closes any expired budget periods, creating new ones with rollover.
    Future<void> checkAndCloseExpiredPeriods() async {
