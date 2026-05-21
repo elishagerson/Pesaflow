@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -8,6 +9,7 @@ import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/services/backup_service.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -383,6 +385,99 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _handleExportCsv(BuildContext context, WidgetRef ref) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating CSV export...')),
+      );
+      await ref.read(backupServiceProvider).exportTransactionsToCsv();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to export CSV: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleBackupDb(BuildContext context, WidgetRef ref) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Creating local backup...')),
+      );
+      await ref.read(backupServiceProvider).backupDatabase();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Backup failed: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleRestoreDb(BuildContext context, WidgetRef ref) async {
+    try {
+      final success = await ref.read(backupServiceProvider).restoreDatabase();
+      if (!success || !context.mounted) return;
+
+      // Show relaunch alert dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          final theme = Theme.of(context);
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusDialog)),
+            title: Row(
+              children: [
+                Icon(Icons.check_circle_rounded, color: AppTheme.incomeColor, size: 28),
+                const SizedBox(width: 12),
+                const Text('Profile Restored'),
+              ],
+            ),
+            content: const Text(
+              'Your offline database backup has been successfully restored.\n\n'
+              'To cleanly load your transactions, budgets, and settings, PesaFlow needs to relaunch.',
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => exit(0),
+                child: const Text('Relaunch App'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusDialog)),
+            title: Row(
+              children: const [
+                Icon(Icons.error_outline_rounded, color: Colors.red, size: 28),
+                SizedBox(width: 12),
+                Text('Restore Failed'),
+              ],
+            ),
+            content: Text(
+              e is FormatException
+                  ? e.message
+                  : 'An unexpected error occurred during database restoration: $e',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -459,6 +554,41 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: const Text('Add custom financial category folders or edit envelopes'),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => _showCategoriesManager(context, ref),
+              ),
+              const Divider(height: 1),
+
+              // Data Management Section Header
+              const SizedBox(height: 24),
+              const Text('DATA MANAGEMENT', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1.2)),
+              const SizedBox(height: 8),
+
+              // Export CSV
+              ListTile(
+                leading: const Icon(Icons.file_download_rounded, color: Colors.green),
+                title: const Text('Export to CSV', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Download all transaction logs as a standard spreadsheet file'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _handleExportCsv(context, ref),
+              ),
+              const Divider(height: 1),
+
+              // Backup Database
+              ListTile(
+                leading: const Icon(Icons.backup_rounded, color: Colors.blue),
+                title: const Text('Backup Profile Database', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Generate an offline, portable SQLite file backup of your PesaFlow profile'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _handleBackupDb(context, ref),
+              ),
+              const Divider(height: 1),
+
+              // Restore Database
+              ListTile(
+                leading: const Icon(Icons.restore_rounded, color: Colors.orange),
+                title: const Text('Restore Profile Database', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Restore full transaction and budget history from a valid SQLite backup'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => _handleRestoreDb(context, ref),
               ),
               const Divider(height: 1),
 
