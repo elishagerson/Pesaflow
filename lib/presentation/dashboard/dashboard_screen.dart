@@ -8,6 +8,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -238,6 +239,25 @@ class DashboardScreen extends ConsumerWidget {
     }
   }
 
+  IconData _getTrackerIcon(String iconName) {
+    switch (iconName) {
+      case 'briefcase':
+        return Icons.work_rounded;
+      case 'home':
+        return Icons.home_rounded;
+      case 'person':
+        return Icons.person_rounded;
+      case 'flight':
+        return Icons.flight_takeoff_rounded;
+      case 'shopping_cart':
+        return Icons.shopping_cart_rounded;
+      case 'payments':
+        return Icons.payments_rounded;
+      default:
+        return Icons.folder_rounded;
+    }
+  }
+
   Color _hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
@@ -259,7 +279,17 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(AppTheme.radiusCard), border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000))),
+            decoration: BoxDecoration(
+              color: theme.brightness == Brightness.dark 
+                  ? AppTheme.surfaceContainerDark 
+                  : AppTheme.surfaceLight, 
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard), 
+              border: Border.all(
+                color: theme.brightness == Brightness.dark 
+                    ? const Color(0x1FFFFFFF) 
+                    : const Color(0x1F000000)
+              )
+            ),
             child: Row(children: [
               catsAsync.when(
                 data: (cats) {
@@ -315,7 +345,7 @@ class DashboardScreen extends ConsumerWidget {
               final bp = budgets[i];
               final pct = bp.percentage.clamp(0.0, 1.0);
               final catColor = _hexToColor(bp.category.color);
-              return GestureDetector(
+              return TactileSpringContainer(
                 onTap: () => context.go('/budgets/${bp.budget.id}'),
                 child: Container(
                   width: 90, margin: const EdgeInsets.only(right: 12),
@@ -341,12 +371,289 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
+  void _showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final trackersAsync = ref.watch(allTrackersStreamProvider);
+        final activeTrackerId = ref.watch(activeTrackerIdProvider);
+
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Grab handle
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20.0),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Workspaces',
+                    style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showAddTrackerDialog(context, ref);
+                    },
+                    icon: const Icon(Icons.add_rounded, size: 18),
+                    label: const Text('New'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              trackersAsync.when(
+                data: (trackersList) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: trackersList.length,
+                    itemBuilder: (context, index) {
+                      final item = trackersList[index];
+                      final isSelected = item.id == activeTrackerId;
+                      final itemColor = _hexToColor(item.color);
+
+                      return TactileSpringContainer(
+                        onTap: () {
+                          ref.read(activeTrackerIdProvider.notifier).setTrackerId(item.id);
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? itemColor.withOpacity(0.08)
+                                : (theme.brightness == Brightness.dark
+                                    ? AppTheme.surfaceContainerDark
+                                    : AppTheme.surfaceLight),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                            border: Border.all(
+                              color: isSelected
+                                  ? itemColor.withOpacity(0.3)
+                                  : (theme.brightness == Brightness.dark
+                                      ? const Color(0x1FFFFFFF)
+                                      : const Color(0x1F000000)),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: itemColor.withOpacity(0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  _getTrackerIcon(item.icon),
+                                  color: itemColor,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Text(
+                                  item.name,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                    color: isSelected ? itemColor : null,
+                                  ),
+                                ),
+                              ),
+                              if (isSelected)
+                                Icon(
+                                  Icons.check_circle_rounded,
+                                  color: itemColor,
+                                  size: 20,
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, _) => Text('Error loading workspaces: $err'),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddTrackerDialog(BuildContext context, WidgetRef ref) {
+    final nameController = TextEditingController();
+    String selectedIcon = 'briefcase';
+    String selectedColorHex = '#006B4F'; // Emerald
+
+    final iconsList = ['person', 'briefcase', 'home', 'flight', 'shopping_cart', 'payments'];
+    final colorsList = [
+      '#006B4F', // Emerald
+      '#4F46E5', // Indigo
+      '#F43F5E', // Rose/Coral
+      '#EAB308', // Amber/Yellow
+      '#8B5CF6', // Purple/Violet
+      '#06B6D4', // Cyan
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final theme = Theme.of(context);
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+              ),
+              title: const Text('New Workspace'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Workspace Name',
+                        hintText: 'e.g. Side Gig, Paris Trip',
+                      ),
+                      textCapitalization: TextCapitalization.words,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Select Icon', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: iconsList.map((ico) {
+                        final isSel = selectedIcon == ico;
+                        return GestureDetector(
+                          onTap: () => setState(() => selectedIcon = ico),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: isSel ? theme.colorScheme.primary.withOpacity(0.12) : Colors.transparent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSel ? theme.colorScheme.primary : Colors.grey.withOpacity(0.2),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Icon(
+                              _getTrackerIcon(ico),
+                              color: isSel ? theme.colorScheme.primary : Colors.grey,
+                              size: 20,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Select Color', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: colorsList.map((col) {
+                        final isSel = selectedColorHex == col;
+                        final c = _hexToColor(col);
+                        return GestureDetector(
+                          onTap: () => setState(() => selectedColorHex = col),
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: c,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSel ? theme.colorScheme.onSurface : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (nameController.text.trim().isEmpty) return;
+
+                    final newTracker = Tracker(
+                      id: const Uuid().v4(),
+                      name: nameController.text.trim(),
+                      icon: selectedIcon,
+                      color: selectedColorHex,
+                      isArchived: false,
+                      createdAt: DateTime.now(),
+                    );
+
+                    await ref.read(trackerRepositoryProvider).createTracker(newTracker);
+                    ref.invalidate(allTrackersStreamProvider);
+
+                    // Set newly created tracker as active
+                    await ref.read(activeTrackerIdProvider.notifier).setTrackerId(newTracker.id);
+
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('Create'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final netWorth = ref.watch(netWorthProvider);
     final accountsAsync = ref.watch(accountsStreamProvider);
     final recentTransAsync = ref.watch(recentTransactionsStreamProvider);
     final theme = Theme.of(context);
+
+    // Active tracker properties for dynamic aesthetic blending
+    final activeTrackerAsync = ref.watch(activeTrackerProvider);
+    final trackerColor = activeTrackerAsync.maybeWhen(
+      data: (tracker) => tracker != null ? _hexToColor(tracker.color) : theme.colorScheme.primary,
+      orElse: () => theme.colorScheme.primary,
+    );
+    final trackerName = activeTrackerAsync.maybeWhen(
+      data: (tracker) => tracker != null ? tracker.name : 'Personal',
+      orElse: () => 'Personal',
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -356,7 +663,7 @@ class DashboardScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Block
+              // Premium iOS-style Workspace selection header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -369,23 +676,54 @@ class DashboardScreen extends ConsumerWidget {
                           color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
                         ),
                       ),
-                      Text(
-                        'Hello, Friend!',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const SizedBox(height: 2),
+                      activeTrackerAsync.when(
+                        data: (tracker) {
+                          if (tracker == null) return const SizedBox.shrink();
+                          final color = _hexToColor(tracker.color);
+                          return TactileSpringContainer(
+                            onTap: () => _showWorkspaceSelectorSheet(context, ref),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(color: color.withOpacity(0.2), width: 1.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(_getTrackerIcon(tracker.icon), color: color, size: 14),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    tracker.name.toUpperCase(),
+                                    style: theme.textTheme.labelMedium?.copyWith(
+                                      fontWeight: FontWeight.black,
+                                      color: color,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(Icons.keyboard_arrow_down_rounded, color: color, size: 16),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        loading: () => const SizedBox.shrink(),
+                        error: (_, __) => const SizedBox.shrink(),
                       ),
                     ],
                   ),
                   CircleAvatar(
-                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                    child: Icon(Icons.person_rounded, color: theme.colorScheme.primary),
+                    backgroundColor: trackerColor.withOpacity(0.1),
+                    child: Icon(Icons.person_rounded, color: trackerColor),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
-              // Glassmorphic Premium Net Worth Hero Card
+              // Glassmorphic Hero Card dynamically matching current Workspace theme
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
@@ -393,15 +731,15 @@ class DashboardScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   gradient: LinearGradient(
                     colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.primary.withRed(15).withGreen(120),
+                      trackerColor,
+                      trackerColor.withRed((trackerColor.red + 15).clamp(0, 255)).withGreen((trackerColor.green - 30).clamp(0, 255)),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      color: trackerColor.withOpacity(0.3),
                       blurRadius: 16,
                       offset: const Offset(0, 8),
                     ),
@@ -411,7 +749,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'TOTAL NET WORTH',
+                      '$trackerName Balance'.toUpperCase(),
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: Colors.white70,
                         letterSpacing: 1.5,
@@ -425,6 +763,7 @@ class DashboardScreen extends ConsumerWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
+                        fontFamily: 'monospace',
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -433,7 +772,7 @@ class DashboardScreen extends ConsumerWidget {
                         Icon(Icons.security_rounded, color: Colors.white60, size: 16),
                         SizedBox(width: 6),
                         Text(
-                          '100% Secure & On-Device Only',
+                          '100% Offline & Private Wallet',
                           style: TextStyle(color: Colors.white60, fontSize: 12),
                         ),
                       ],
@@ -443,28 +782,55 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              // Primary Interactive Actions
+              // Interactive Quick Action Buttons wrapped in tactile springs
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => context.go('/transactions/add'),
-                      icon: const Icon(Icons.add_rounded),
-                      label: const Text('Add Transaction'),
+                    child: TactileSpringContainer(
+                      onTap: () => context.go('/transactions/add'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14.0),
+                        decoration: BoxDecoration(
+                          color: trackerColor,
+                          borderRadius: BorderRadius.circular(AppTheme.radiusButton),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_rounded, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Add Transaction',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _showAddAccountDialog(context, ref),
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppTheme.radiusButton),
-                        ),
+                    child: TactileSpringContainer(
+                      onTap: () => _showAddAccountDialog(context, ref),
+                      child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14.0),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(AppTheme.radiusButton),
+                          border: Border.all(color: trackerColor, width: 1.5),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.account_balance_wallet_rounded, color: trackerColor),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Add Account',
+                              style: TextStyle(color: trackerColor, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                      icon: const Icon(Icons.account_balance_wallet_rounded),
-                      label: const Text('Add Account'),
                     ),
                   ),
                 ],
@@ -495,7 +861,7 @@ class DashboardScreen extends ConsumerWidget {
                 child: accountsAsync.when(
                   data: (accounts) {
                     if (accounts.isEmpty) {
-                      return GestureDetector(
+                      return TactileSpringContainer(
                         onTap: () => _showAddAccountDialog(context, ref),
                         child: Container(
                           width: double.infinity,
@@ -528,63 +894,67 @@ class DashboardScreen extends ConsumerWidget {
                       itemCount: accounts.length,
                       itemBuilder: (context, index) {
                         final account = accounts[index];
-                        return Container(
-                          width: 180,
-                          margin: const EdgeInsets.only(right: 12.0),
-                          padding: const EdgeInsets.all(14.0),
-                          decoration: BoxDecoration(
-                            color: theme.brightness == Brightness.dark
-                                ? AppTheme.surfaceContainerDark
-                                : AppTheme.surfaceLight,
-                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                            border: Border.all(
+                        return TactileSpringContainer(
+                          onTap: () {}, // Tappable accounts if needed
+                          child: Container(
+                            width: 180,
+                            margin: const EdgeInsets.only(right: 12.0),
+                            padding: const EdgeInsets.all(14.0),
+                            decoration: BoxDecoration(
                               color: theme.brightness == Brightness.dark
-                                  ? const Color(0x1FFFFFFF)
-                                  : const Color(0x1F000000),
+                                  ? AppTheme.surfaceContainerDark
+                                  : AppTheme.surfaceLight,
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(
+                                color: theme.brightness == Brightness.dark
+                                    ? const Color(0x1FFFFFFF)
+                                    : const Color(0x1F000000),
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    _getAccountIcon(account.icon),
-                                    size: 20,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      account.name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      _getAccountIcon(account.icon),
+                                      size: 20,
+                                      color: trackerColor,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        account.name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.bodyMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    account.type.toUpperCase().replaceAll('_', ' '),
-                                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  AmountText(
-                                    amountInCents: account.balance,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      account.type.toUpperCase().replaceAll('_', ' '),
+                                      style: const TextStyle(fontSize: 10, color: Colors.grey),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    const SizedBox(height: 2),
+                                    AmountText(
+                                      amountInCents: account.balance,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -596,11 +966,11 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 28),
 
-              // Monthly Overview Donut
+              // Monthly Overview Bento Card
               _buildMonthlyOverview(ref, theme),
               const SizedBox(height: 24),
 
-              // Budget Progress Rings
+              // Budget Progress Rings Bento Card
               _buildBudgetRings(ref, theme, context),
               const SizedBox(height: 24),
 
@@ -614,7 +984,6 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to index 1 of the stateful shell (which is /transactions)
                       context.go('/transactions');
                     },
                     child: const Text('See All'),
@@ -717,7 +1086,7 @@ class DashboardScreen extends ConsumerWidget {
                                 Text(
                                   item.account.name,
                                   style: TextStyle(
-                                    color: theme.colorScheme.primary,
+                                    color: trackerColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -735,6 +1104,7 @@ class DashboardScreen extends ConsumerWidget {
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
+                                fontFamily: 'monospace',
                               ),
                             ),
                           ),
@@ -749,6 +1119,65 @@ class DashboardScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PREMIUM TACTILE SPRING INTERACTION CONTAINER
+// ════════════════════════════════════════════════════════════════════════════
+class TactileSpringContainer extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final double scaleFactor;
+
+  const TactileSpringContainer({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.scaleFactor = 0.96,
+  });
+
+  @override
+  State<TactileSpringContainer> createState() => _TactileSpringContainerState();
+}
+
+class _TactileSpringContainerState extends State<TactileSpringContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: widget.scaleFactor).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: widget.child,
       ),
     );
   }

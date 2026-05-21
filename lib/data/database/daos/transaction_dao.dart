@@ -30,6 +30,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     String? searchQuery,
     DateTime? startDate,
     DateTime? endDate,
+    String? trackerId,
   }) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
@@ -44,6 +45,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     }
     if (type != null && type != 'All') {
       query.where(transactions.type.equals(type.toLowerCase()));
+    }
+    if (trackerId != null) {
+      query.where(transactions.trackerId.equals(trackerId));
     }
     if (searchQuery != null && searchQuery.isNotEmpty) {
       query.where(transactions.description.like('%$searchQuery%') |
@@ -72,11 +76,15 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   /// Fetches the recent N transactions with category and account details.
-  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit) {
+  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit, {String? trackerId}) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ]);
+
+    if (trackerId != null) {
+      query.where(transactions.trackerId.equals(trackerId));
+    }
 
     query.orderBy([OrderingTerm.desc(transactions.createdAt)]);
     query.limit(limit);
