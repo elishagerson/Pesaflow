@@ -20,6 +20,7 @@ class TransactionRepository {
     String? searchQuery,
     DateTime? startDate,
     DateTime? endDate,
+    String? trackerId,
   }) {
     return _transactionDao.watchFilteredTransactions(
       accountId: accountId,
@@ -28,11 +29,12 @@ class TransactionRepository {
       searchQuery: searchQuery,
       startDate: startDate,
       endDate: endDate,
+      trackerId: trackerId,
     );
   }
 
-  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit) {
-    return _transactionDao.watchRecentTransactions(limit);
+  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit, {String? trackerId}) {
+    return _transactionDao.watchRecentTransactions(limit, trackerId: trackerId);
   }
 
   Future<void> createTransaction(Transaction transaction) {

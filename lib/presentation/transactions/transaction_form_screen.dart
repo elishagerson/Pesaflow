@@ -115,10 +115,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       await repo.deleteTransaction(_existingTransaction!.id);
     }
 
+    final trackerId = ref.read(activeTrackerIdProvider);
+
     final newTransaction = Transaction(
       id: _isEditMode ? _existingTransaction!.id : const Uuid().v4(),
       accountId: _selectedAccountId!,
       categoryId: _selectedCategoryId!,
+      trackerId: _isEditMode ? _existingTransaction!.trackerId : trackerId,
       amount: cents,
       type: _transactionType.toLowerCase(),
       description: _descriptionController.text.trim(),

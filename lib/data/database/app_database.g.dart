@@ -1205,6 +1205,17 @@ class $TransactionsTable extends Transactions
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _trackerIdMeta = const VerificationMeta(
+    'trackerId',
+  );
+  @override
+  late final GeneratedColumn<String> trackerId = GeneratedColumn<String>(
+    'tracker_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
   late final GeneratedColumn<int> amount = GeneratedColumn<int>(
@@ -1350,6 +1361,7 @@ class $TransactionsTable extends Transactions
     id,
     accountId,
     categoryId,
+    trackerId,
     amount,
     type,
     description,
@@ -1396,6 +1408,12 @@ class $TransactionsTable extends Transactions
       );
     } else if (isInserting) {
       context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('tracker_id')) {
+      context.handle(
+        _trackerIdMeta,
+        trackerId.isAcceptableOrUnknown(data['tracker_id']!, _trackerIdMeta),
+      );
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -1511,6 +1529,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}category_id'],
       )!,
+      trackerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tracker_id'],
+      ),
       amount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
@@ -1576,6 +1598,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final String id;
   final String accountId;
   final String categoryId;
+  final String? trackerId;
   final int amount;
   final String type;
   final String description;
@@ -1593,6 +1616,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     required this.id,
     required this.accountId,
     required this.categoryId,
+    this.trackerId,
     required this.amount,
     required this.type,
     required this.description,
@@ -1613,6 +1637,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     map['id'] = Variable<String>(id);
     map['account_id'] = Variable<String>(accountId);
     map['category_id'] = Variable<String>(categoryId);
+    if (!nullToAbsent || trackerId != null) {
+      map['tracker_id'] = Variable<String>(trackerId);
+    }
     map['amount'] = Variable<int>(amount);
     map['type'] = Variable<String>(type);
     map['description'] = Variable<String>(description);
@@ -1648,6 +1675,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       id: Value(id),
       accountId: Value(accountId),
       categoryId: Value(categoryId),
+      trackerId: trackerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trackerId),
       amount: Value(amount),
       type: Value(type),
       description: Value(description),
@@ -1687,6 +1717,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       id: serializer.fromJson<String>(json['id']),
       accountId: serializer.fromJson<String>(json['accountId']),
       categoryId: serializer.fromJson<String>(json['categoryId']),
+      trackerId: serializer.fromJson<String?>(json['trackerId']),
       amount: serializer.fromJson<int>(json['amount']),
       type: serializer.fromJson<String>(json['type']),
       description: serializer.fromJson<String>(json['description']),
@@ -1709,6 +1740,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       'id': serializer.toJson<String>(id),
       'accountId': serializer.toJson<String>(accountId),
       'categoryId': serializer.toJson<String>(categoryId),
+      'trackerId': serializer.toJson<String?>(trackerId),
       'amount': serializer.toJson<int>(amount),
       'type': serializer.toJson<String>(type),
       'description': serializer.toJson<String>(description),
@@ -1729,6 +1761,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     String? id,
     String? accountId,
     String? categoryId,
+    Value<String?> trackerId = const Value.absent(),
     int? amount,
     String? type,
     String? description,
@@ -1746,6 +1779,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     id: id ?? this.id,
     accountId: accountId ?? this.accountId,
     categoryId: categoryId ?? this.categoryId,
+    trackerId: trackerId.present ? trackerId.value : this.trackerId,
     amount: amount ?? this.amount,
     type: type ?? this.type,
     description: description ?? this.description,
@@ -1767,6 +1801,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       categoryId: data.categoryId.present
           ? data.categoryId.value
           : this.categoryId,
+      trackerId: data.trackerId.present ? data.trackerId.value : this.trackerId,
       amount: data.amount.present ? data.amount.value : this.amount,
       type: data.type.present ? data.type.value : this.type,
       description: data.description.present
@@ -1795,6 +1830,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ..write('id: $id, ')
           ..write('accountId: $accountId, ')
           ..write('categoryId: $categoryId, ')
+          ..write('trackerId: $trackerId, ')
           ..write('amount: $amount, ')
           ..write('type: $type, ')
           ..write('description: $description, ')
@@ -1817,6 +1853,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     id,
     accountId,
     categoryId,
+    trackerId,
     amount,
     type,
     description,
@@ -1838,6 +1875,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.id == this.id &&
           other.accountId == this.accountId &&
           other.categoryId == this.categoryId &&
+          other.trackerId == this.trackerId &&
           other.amount == this.amount &&
           other.type == this.type &&
           other.description == this.description &&
@@ -1857,6 +1895,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String> id;
   final Value<String> accountId;
   final Value<String> categoryId;
+  final Value<String?> trackerId;
   final Value<int> amount;
   final Value<String> type;
   final Value<String> description;
@@ -1875,6 +1914,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.id = const Value.absent(),
     this.accountId = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.trackerId = const Value.absent(),
     this.amount = const Value.absent(),
     this.type = const Value.absent(),
     this.description = const Value.absent(),
@@ -1894,6 +1934,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     required String id,
     required String accountId,
     required String categoryId,
+    this.trackerId = const Value.absent(),
     required int amount,
     required String type,
     required String description,
@@ -1918,6 +1959,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<String>? id,
     Expression<String>? accountId,
     Expression<String>? categoryId,
+    Expression<String>? trackerId,
     Expression<int>? amount,
     Expression<String>? type,
     Expression<String>? description,
@@ -1937,6 +1979,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       if (id != null) 'id': id,
       if (accountId != null) 'account_id': accountId,
       if (categoryId != null) 'category_id': categoryId,
+      if (trackerId != null) 'tracker_id': trackerId,
       if (amount != null) 'amount': amount,
       if (type != null) 'type': type,
       if (description != null) 'description': description,
@@ -1958,6 +2001,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Value<String>? id,
     Value<String>? accountId,
     Value<String>? categoryId,
+    Value<String?>? trackerId,
     Value<int>? amount,
     Value<String>? type,
     Value<String>? description,
@@ -1977,6 +2021,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       id: id ?? this.id,
       accountId: accountId ?? this.accountId,
       categoryId: categoryId ?? this.categoryId,
+      trackerId: trackerId ?? this.trackerId,
       amount: amount ?? this.amount,
       type: type ?? this.type,
       description: description ?? this.description,
@@ -2005,6 +2050,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     }
     if (categoryId.present) {
       map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (trackerId.present) {
+      map['tracker_id'] = Variable<String>(trackerId.value);
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
@@ -2057,6 +2105,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
           ..write('id: $id, ')
           ..write('accountId: $accountId, ')
           ..write('categoryId: $categoryId, ')
+          ..write('trackerId: $trackerId, ')
           ..write('amount: $amount, ')
           ..write('type: $type, ')
           ..write('description: $description, ')
@@ -4810,6 +4859,413 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   }
 }
 
+class $TrackersTable extends Trackers with TableInfo<$TrackersTable, Tracker> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrackersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 50,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+    'icon',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    icon,
+    color,
+    isArchived,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'trackers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Tracker> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('icon')) {
+      context.handle(
+        _iconMeta,
+        icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_iconMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Tracker map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Tracker(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      icon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $TrackersTable createAlias(String alias) {
+    return $TrackersTable(attachedDatabase, alias);
+  }
+}
+
+class Tracker extends DataClass implements Insertable<Tracker> {
+  final String id;
+  final String name;
+  final String icon;
+  final String color;
+  final bool isArchived;
+  final DateTime createdAt;
+  const Tracker({
+    required this.id,
+    required this.name,
+    required this.icon,
+    required this.color,
+    required this.isArchived,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['icon'] = Variable<String>(icon);
+    map['color'] = Variable<String>(color);
+    map['is_archived'] = Variable<bool>(isArchived);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  TrackersCompanion toCompanion(bool nullToAbsent) {
+    return TrackersCompanion(
+      id: Value(id),
+      name: Value(name),
+      icon: Value(icon),
+      color: Value(color),
+      isArchived: Value(isArchived),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Tracker.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Tracker(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      icon: serializer.fromJson<String>(json['icon']),
+      color: serializer.fromJson<String>(json['color']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'icon': serializer.toJson<String>(icon),
+      'color': serializer.toJson<String>(color),
+      'isArchived': serializer.toJson<bool>(isArchived),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Tracker copyWith({
+    String? id,
+    String? name,
+    String? icon,
+    String? color,
+    bool? isArchived,
+    DateTime? createdAt,
+  }) => Tracker(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    icon: icon ?? this.icon,
+    color: color ?? this.color,
+    isArchived: isArchived ?? this.isArchived,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Tracker copyWithCompanion(TrackersCompanion data) {
+    return Tracker(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      icon: data.icon.present ? data.icon.value : this.icon,
+      color: data.color.present ? data.color.value : this.color,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Tracker(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color, ')
+          ..write('isArchived: $isArchived, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, icon, color, isArchived, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Tracker &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.icon == this.icon &&
+          other.color == this.color &&
+          other.isArchived == this.isArchived &&
+          other.createdAt == this.createdAt);
+}
+
+class TrackersCompanion extends UpdateCompanion<Tracker> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> icon;
+  final Value<String> color;
+  final Value<bool> isArchived;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const TrackersCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isArchived = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TrackersCompanion.insert({
+    required String id,
+    required String name,
+    required String icon,
+    required String color,
+    this.isArchived = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       icon = Value(icon),
+       color = Value(color);
+  static Insertable<Tracker> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? icon,
+    Expression<String>? color,
+    Expression<bool>? isArchived,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (icon != null) 'icon': icon,
+      if (color != null) 'color': color,
+      if (isArchived != null) 'is_archived': isArchived,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TrackersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? icon,
+    Value<String>? color,
+    Value<bool>? isArchived,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return TrackersCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+      isArchived: isArchived ?? this.isArchived,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrackersCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color, ')
+          ..write('isArchived: $isArchived, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4823,6 +5279,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $AppSettingsTable appSettings = $AppSettingsTable(this);
+  late final $TrackersTable trackers = $TrackersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4836,6 +5293,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     dailySnapshots,
     monthlySnapshots,
     appSettings,
+    trackers,
   ];
 }
 
@@ -5407,6 +5865,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       required String id,
       required String accountId,
       required String categoryId,
+      Value<String?> trackerId,
       required int amount,
       required String type,
       required String description,
@@ -5427,6 +5886,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> accountId,
       Value<String> categoryId,
+      Value<String?> trackerId,
       Value<int> amount,
       Value<String> type,
       Value<String> description,
@@ -5464,6 +5924,11 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<String> get categoryId => $composableBuilder(
     column: $table.categoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get trackerId => $composableBuilder(
+    column: $table.trackerId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5557,6 +6022,11 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get trackerId => $composableBuilder(
+    column: $table.trackerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
@@ -5643,6 +6113,9 @@ class $$TransactionsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get trackerId =>
+      $composableBuilder(column: $table.trackerId, builder: (column) => column);
+
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
@@ -5723,6 +6196,7 @@ class $$TransactionsTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> accountId = const Value.absent(),
                 Value<String> categoryId = const Value.absent(),
+                Value<String?> trackerId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<String> description = const Value.absent(),
@@ -5741,6 +6215,7 @@ class $$TransactionsTableTableManager
                 id: id,
                 accountId: accountId,
                 categoryId: categoryId,
+                trackerId: trackerId,
                 amount: amount,
                 type: type,
                 description: description,
@@ -5761,6 +6236,7 @@ class $$TransactionsTableTableManager
                 required String id,
                 required String accountId,
                 required String categoryId,
+                Value<String?> trackerId = const Value.absent(),
                 required int amount,
                 required String type,
                 required String description,
@@ -5779,6 +6255,7 @@ class $$TransactionsTableTableManager
                 id: id,
                 accountId: accountId,
                 categoryId: categoryId,
+                trackerId: trackerId,
                 amount: amount,
                 type: type,
                 description: description,
@@ -7195,6 +7672,221 @@ typedef $$AppSettingsTableProcessedTableManager =
       AppSetting,
       PrefetchHooks Function()
     >;
+typedef $$TrackersTableCreateCompanionBuilder =
+    TrackersCompanion Function({
+      required String id,
+      required String name,
+      required String icon,
+      required String color,
+      Value<bool> isArchived,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$TrackersTableUpdateCompanionBuilder =
+    TrackersCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> icon,
+      Value<String> color,
+      Value<bool> isArchived,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$TrackersTableFilterComposer
+    extends Composer<_$AppDatabase, $TrackersTable> {
+  $$TrackersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TrackersTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrackersTable> {
+  $$TrackersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TrackersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrackersTable> {
+  $$TrackersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$TrackersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TrackersTable,
+          Tracker,
+          $$TrackersTableFilterComposer,
+          $$TrackersTableOrderingComposer,
+          $$TrackersTableAnnotationComposer,
+          $$TrackersTableCreateCompanionBuilder,
+          $$TrackersTableUpdateCompanionBuilder,
+          (Tracker, BaseReferences<_$AppDatabase, $TrackersTable, Tracker>),
+          Tracker,
+          PrefetchHooks Function()
+        > {
+  $$TrackersTableTableManager(_$AppDatabase db, $TrackersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrackersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrackersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TrackersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TrackersCompanion(
+                id: id,
+                name: name,
+                icon: icon,
+                color: color,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String icon,
+                required String color,
+                Value<bool> isArchived = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TrackersCompanion.insert(
+                id: id,
+                name: name,
+                icon: icon,
+                color: color,
+                isArchived: isArchived,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TrackersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TrackersTable,
+      Tracker,
+      $$TrackersTableFilterComposer,
+      $$TrackersTableOrderingComposer,
+      $$TrackersTableAnnotationComposer,
+      $$TrackersTableCreateCompanionBuilder,
+      $$TrackersTableUpdateCompanionBuilder,
+      (Tracker, BaseReferences<_$AppDatabase, $TrackersTable, Tracker>),
+      Tracker,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7215,4 +7907,6 @@ class $AppDatabaseManager {
       $$MonthlySnapshotsTableTableManager(_db, _db.monthlySnapshots);
   $$AppSettingsTableTableManager get appSettings =>
       $$AppSettingsTableTableManager(_db, _db.appSettings);
+  $$TrackersTableTableManager get trackers =>
+      $$TrackersTableTableManager(_db, _db.trackers);
 }

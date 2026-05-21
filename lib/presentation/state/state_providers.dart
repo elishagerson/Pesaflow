@@ -8,7 +8,45 @@ import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/budget_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
+import '../../data/repositories/settings_repository.dart';
+import '../../data/repositories/tracker_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
+
+final activeTrackerIdProvider = StateNotifierProvider<ActiveTrackerIdNotifier, String>((ref) {
+  final settingsRepo = ref.watch(settingsRepositoryProvider);
+  return ActiveTrackerIdNotifier(settingsRepo);
+});
+
+class ActiveTrackerIdNotifier extends StateNotifier<String> {
+  final SettingsRepository _settingsRepo;
+
+  ActiveTrackerIdNotifier(this._settingsRepo) : super('default_personal') {
+    _init();
+  }
+
+  Future<void> _init() async {
+    final saved = await _settingsRepo.getSetting('active_tracker_id');
+    if (saved != null && saved.isNotEmpty) {
+      state = saved;
+    }
+  }
+
+  Future<void> setTrackerId(String id) async {
+    state = id;
+    await _settingsRepo.setSetting('active_tracker_id', id);
+  }
+}
+
+final allTrackersStreamProvider = StreamProvider<List<Tracker>>((ref) {
+  final repo = ref.watch(trackerRepositoryProvider);
+  return repo.watchAllTrackers();
+});
+
+final activeTrackerProvider = FutureProvider<Tracker?>((ref) async {
+  final id = ref.watch(activeTrackerIdProvider);
+  final repo = ref.watch(trackerRepositoryProvider);
+  return repo.getTrackerById(id);
+});
 
 final accountsStreamProvider = StreamProvider<List<Account>>((ref) {
   final repo = ref.watch(accountRepositoryProvider);
@@ -22,7 +60,8 @@ final categoriesFutureProvider = FutureProvider<List<Category>>((ref) {
 
 final recentTransactionsStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
-  return repo.watchRecentTransactions(5);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchRecentTransactions(5, trackerId: trackerId);
 });
 
 final netWorthProvider = Provider<int>((ref) {
@@ -46,12 +85,14 @@ final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCa
   final accountId = ref.watch(transactionAccountFilterProvider);
   final categoryId = ref.watch(transactionCategoryFilterProvider);
   final search = ref.watch(transactionSearchQueryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
 
   return repo.watchFilteredTransactions(
     accountId: accountId,
     categoryId: categoryId,
     type: type,
     searchQuery: search,
+    trackerId: trackerId,
   );
 });
 

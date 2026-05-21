@@ -32,6 +32,14 @@ void main() {
   });
 
   group('Drift Local Database & DAOs Verification', () {
+    test('Default tracker "Personal" is seeded on creation', () async {
+      final list = await database.select(database.trackers).get();
+      expect(list.length, 1);
+      expect(list.first.id, 'default_personal');
+      expect(list.first.name, 'Personal');
+      expect(list.first.icon, 'person');
+    });
+
     test('Default system categories are seeded on creation', () async {
       final list = await categoryDao.getAllCategories();
       
