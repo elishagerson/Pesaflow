@@ -77,7 +77,7 @@ class BudgetEngine {
   }) {
     final alerts = <BudgetAlert>[];
 
-    if (percentage >= 1.0) {
+    if (percentage > 1.0) {
       alerts.add(BudgetAlert.exceeded);
     } else if (percentage >= 1.0) {
       alerts.add(BudgetAlert.reached);
