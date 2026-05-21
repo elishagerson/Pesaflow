@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Brand color tokens (Emerald & Navy/Charcoal)
-  static const Color primaryLight = Color(0060480); // Emerald Green #006B4F
+  static const Color primaryLight = Color(0xFF006B4F); // Emerald Green #006B4F
   static const Color primaryLightAccent = Color(0xFF006B4F);
   static const Color primaryDark = Color(0xFF4CD9A8); // Mint Green
   
