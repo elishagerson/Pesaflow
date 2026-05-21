@@ -698,7 +698,7 @@ class DashboardScreen extends ConsumerWidget {
                                   Text(
                                     tracker.name.toUpperCase(),
                                     style: theme.textTheme.labelMedium?.copyWith(
-                                      fontWeight: FontWeight.black,
+                                      fontWeight: FontWeight.w900,
                                       color: color,
                                       letterSpacing: 1.2,
                                     ),
