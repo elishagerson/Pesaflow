@@ -112,71 +112,59 @@ class BudgetRepository {
     return result;
   }
 
-  /// Checks and closes any expired budget periods, creating new ones with rollover.
-  Future<void> checkAndCloseExpiredPeriods() async {
-    final activeBudgets = await _budgetDao.getAllActiveBudgets();
-    final now = DateTime.now();
+   /// Checks and closes any expired budget periods, creating new ones with rollover.
+   Future<void> checkAndCloseExpiredPeriods() async {
+     final activeBudgets = await _budgetDao.getAllActiveBudgets();
+     final now = DateTime.now();
 
-    for (final budget in activeBudgets) {
-      final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
-      if (currentPeriod == null) continue;
+     for (final budget in activeBudgets) {
+       final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
+       if (currentPeriod == null) continue;
 
-      if (now.isAfter(currentPeriod.periodEnd)) {
-        // Period has expired — close it and create next
-        final spent = await _budgetDao.getSpentForCategoryInPeriod(
-          budget.categoryId,
-          currentPeriod.periodStart,
-          currentPeriod.periodEnd,
-        );
+       if (now.isAfter(currentPeriod.periodEnd)) {
+         // Period has expired — close it and create next
+         final spent = await _budgetDao.getSpentForCategoryInPeriod(
+           budget.categoryId,
+           currentPeriod.periodStart,
+           currentPeriod.periodEnd,
+         );
 
-        int rolloverAmount = 0;
-        if (budget.rollover) {
-          final remaining = currentPeriod.allocated - spent;
-          switch (budget.rolloverType) {
-            case 'all':
-              rolloverAmount = remaining; // Can be negative (deficit)
-              break;
-            case 'capped':
-              if (remaining > 0) {
-                rolloverAmount = budget.rolloverCap != null
-                    ? remaining.clamp(0, budget.rolloverCap!)
-                    : remaining;
-              } else {
-                rolloverAmount = remaining; // Carry deficit
-              }
-              break;
-            case 'none':
-            default:
-              rolloverAmount = 0;
-              break;
-          }
-        }
+         int rolloverAmount = 0;
+         if (budget.rollover) {
+           final remaining = currentPeriod.allocated - spent;
+           rolloverAmount = BudgetEngine.computeRollover(
+             allocated: currentPeriod.allocated,
+             spent: spent,
+             rolloverType: budget.rolloverType,
+             rolloverCap: budget.rolloverCap,
+           );
+         }
 
-        final nextStart = currentPeriod.periodEnd;
-        final nextEnd = _computePeriodEnd(nextStart, budget.period);
+         final nextStart = currentPeriod.periodEnd;
+         final nextEnd = _computePeriodEnd(nextStart, budget.period);
 
-        final closedPeriod = currentPeriod.copyWith(
-          spent: spent,
-          isClosed: true,
-          rolledTo: Value(rolloverAmount),
-        );
+         final closedPeriod = currentPeriod.copyWith(
+           spent: spent,
+           isClosed: true,
+           rolledTo: Value(rolloverAmount),
+         );
 
-        final nextPeriod = BudgetPeriod(
-          id: _uuid.v4(),
-          budgetId: budget.id,
-          periodStart: nextStart,
-          periodEnd: nextEnd,
-          allocated: budget.amount + rolloverAmount,
-          spent: 0,
-          rolledFrom: rolloverAmount,
-          isClosed: false,
-          createdAt: DateTime.now(),
-        );
+         final nextPeriod = BudgetPeriod(
+           id: _uuid.v4(),
+           budgetId: budget.id,
+           periodStart: nextStart,
+           periodEnd: nextEnd,
+           allocated: budget.amount + rolloverAmount,
+           spent: 0,
+           rolledFrom: rolloverAmount,
+           isClosed: false,
+           createdAt: DateTime.now(),
+         );
 
-        await _budgetDao.closePeriodAndCreateNext(closedPeriod, nextPeriod);
-      }
-    }
-  }
+         await _budgetDao.closePeriodAndCreateNext(closedPeriod, nextPeriod);
+       }
+     }
+   }
 
   /// Computes the end date for a budget period.
   DateTime _computePeriodEnd(DateTime start, String period) {
