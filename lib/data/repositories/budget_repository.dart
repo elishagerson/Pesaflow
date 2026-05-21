@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../database/app_database.dart';
@@ -157,7 +158,7 @@ class BudgetRepository {
         final closedPeriod = currentPeriod.copyWith(
           spent: spent,
           isClosed: true,
-          rolledTo: rolloverAmount,
+          rolledTo: Value(rolloverAmount),
         );
 
         final nextPeriod = BudgetPeriod(
