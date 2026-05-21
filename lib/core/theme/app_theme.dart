@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Brand color tokens (Emerald & Navy/Charcoal)
-  static const Color primaryLight = Color(0xFF006B4F); // Emerald Green #006B4F
+  // Brand color tokens (One App Premium Inspired Tones)
+  static const Color primaryLight = Color(0xFF006B4F); // Deep emerald green
   static const Color primaryLightAccent = Color(0xFF006B4F);
-  static const Color primaryDark = Color(0xFF4CD9A8); // Mint Green
+  static const Color primaryDark = Color(0xFF2AD0A6); // High-fidelity neon-mint teal
   
-  static const Color bgLight = Color(0xFFFFFBFE);
-  static const Color surfaceLight = Color(0xFFF3EDF7);
-  static const Color surfaceDimLight = Color(0xFFDED8E1);
+  static const Color bgLight = Color(0xFFF9F9FB);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color surfaceDimLight = Color(0xFFEBEBEF);
   
-  static const Color bgDark = Color(0xFF141218); // Deep charcoal
-  static const Color surfaceDark = Color(0xFF1C1B1F);
-  static const Color surfaceContainerDark = Color(0xFF211F26);
+  static const Color bgDark = Color(0xFF080808); // Absolute deep carbon dark
+  static const Color surfaceDark = Color(0xFF121212); // Carbon surface
+  static const Color surfaceContainerDark = Color(0xFF161616); // High-contrast bento card background
 
-  static const Color incomeColor = Color(0xFF2E7D32); // Green
-  static const Color expenseColor = Color(0xFFC62828); // Red
-  static const Color transferColor = Color(0xFF1565C0); // Blue
+  static const Color incomeColor = Color(0xFF2AD0A6); // Bright mint
+  static const Color expenseColor = Color(0xFFFF5A5F); // Coral pink/red
+  static const Color transferColor = Color(0xFF42A5F5); // Blue
   
-  static const Color incomeColorDark = Color(0xFF66BB6A);
-  static const Color expenseColorDark = Color(0xFFEF5350);
+  static const Color incomeColorDark = Color(0xFF2AD0A6);
+  static const Color expenseColorDark = Color(0xFFFF5A5F);
   static const Color transferColorDark = Color(0xFF42A5F5);
 
   // Border radius configurations matching Apple squircle principles
-  static const double radiusCard = 12.0;
-  static const double radiusDialog = 16.0;
-  static const double radiusInput = 8.0;
-  static const double radiusButton = 28.0;
+  static const double radiusCard = 16.0;
+  static const double radiusDialog = 20.0;
+  static const double radiusInput = 14.0;
+  static const double radiusButton = 14.0; // Modern squircle buttons
 
   // Custom typography scale
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
@@ -67,7 +67,7 @@ class AppTheme {
         color: surfaceLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x1F000000), width: 1),
+          side: const BorderSide(color: Color(0x14000000), width: 1.0),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -136,7 +136,7 @@ class AppTheme {
         color: surfaceContainerDark,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x1FFFFFFF), width: 1),
+          side: const BorderSide(color: Color(0x15FFFFFF), width: 0.8), // Thin translucent border for premium aesthetic
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -148,19 +148,20 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: primaryDark, width: 2),
+          borderSide: const BorderSide(color: primaryDark, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryDark,
-          foregroundColor: bgDark,
+          backgroundColor: Colors.white, // Stark premium white CTA like Mobbin "One" App Continue button
+          foregroundColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
