@@ -161,10 +161,10 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
      // Fetch all categories for these budgets in one query
      final categoriesMap = <String, Category>{};
      if (categoryIds.isNotEmpty) {
-       final categories = await (select(categories)..where((c) => c.id.isIn(categoryIds))).get();
-       for (final category in categories) {
-         categoriesMap[category.id] = category;
-       }
+        final categoryRows = await (select(categories)..where((c) => c.id.isIn(categoryIds))).get();
+        for (final category in categoryRows) {
+          categoriesMap[category.id] = category;
+        }
      }
      
      // Get all budget IDs

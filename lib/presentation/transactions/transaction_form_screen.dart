@@ -534,6 +534,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         id: '',
         name: 'No Account',
         type: 'cash',
+        icon: 'wallet',
         balance: 0,
         createdAt: DateTime.now(),
         sortOrder: 0,

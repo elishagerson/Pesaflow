@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
@@ -9,6 +10,9 @@ class GlassCard extends StatelessWidget {
   final double borderWidth;
   final Color? borderColor;
   final bool hasShadow;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? padding;
+  final VoidCallback? onTap;
 
   const GlassCard({
     Key? key,
@@ -18,6 +22,9 @@ class GlassCard extends StatelessWidget {
     this.borderWidth = 1.0,
     this.borderColor,
     this.hasShadow = true,
+    this.margin,
+    this.padding,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -25,13 +32,13 @@ class GlassCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    // Default colors based on theme
     final bgColor = backgroundColor ?? 
         (isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight);
     final border = borderColor ?? 
         (isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000));
 
-    return Container(
+    final card = Container(
+      padding: padding,
       decoration: BoxDecoration(
         color: bgColor.withOpacity(0.8),
         borderRadius: BorderRadius.circular(borderRadius),
@@ -57,5 +64,15 @@ class GlassCard extends StatelessWidget {
         ),
       ),
     );
+
+    if (margin != null || onTap != null) {
+      return Padding(
+        padding: margin ?? EdgeInsets.zero,
+        child: onTap != null
+            ? GestureDetector(onTap: onTap, child: card)
+            : card,
+      );
+    }
+    return card;
   }
 }

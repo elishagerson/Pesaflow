@@ -286,7 +286,7 @@ class DashboardScreen extends ConsumerWidget {
                  data: (cats) {
                    if (cats.isEmpty) return const SizedBox(width: 80, height: 80);
                    final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
-                   return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false))));
+                    return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false)))));
                  },
                  loading: () => const SizedBox(width: 80, height: 80, child: CircularProgressIndicator(strokeWidth: 2)),
                  error: (_, __) => const SizedBox(width: 80, height: 80),
@@ -309,10 +309,11 @@ class DashboardScreen extends ConsumerWidget {
                    Text(income >= expense ? 'Saved' : 'Deficit', style: const TextStyle(fontSize: 12, color: Colors.grey)),
                    AmountText(amountInCents: (income - expense).abs(), type: income >= expense ? AmountType.income : AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                  ]),
-               ])),
-           ]),
-         );
-       },
+                ])),   // close Column, Expanded
+            ]),         // close Row
+          ]),           // close Column
+        );              // close GlassCard
+      },
        loading: () => const SizedBox.shrink(),
        error: (_, __) => const SizedBox.shrink(),
      );
