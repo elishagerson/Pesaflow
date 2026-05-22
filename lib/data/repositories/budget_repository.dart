@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../database/app_database.dart';
 import '../database/daos/budget_dao.dart';
 import '../database/database_providers.dart';
+import '../../domain/budget/budget_engine.dart';
 
 final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
   final budgetDao = ref.watch(budgetDaoProvider);

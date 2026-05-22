@@ -20,28 +20,85 @@ class AnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Analytics'),
-          bottom: TabBar(
-            labelColor: theme.colorScheme.primary,
-            unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
-            indicatorColor: theme.colorScheme.primary,
-            tabs: const [
-              Tab(text: 'Overview'),
-              Tab(text: 'Trends'),
-              Tab(text: 'Insights'),
+        body: SafeArea(
+          child: Column(
+            children: [
+              // iOS-style nav header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Analytics',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+              // iOS-style segmented control
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[900] : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: List.generate(3, (index) {
+                      final labels = ['Overview', 'Trends', 'Insights'];
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            DefaultTabController.of(context).animateTo(index);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                              color: index == DefaultTabController.of(context).index
+                                  ? (isDark ? Colors.grey[700] : Colors.white)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              labels[index],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: index == DefaultTabController.of(context).index
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: index == DefaultTabController.of(context).index
+                                    ? (isDark ? Colors.white : Colors.black)
+                                    : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _OverviewTab(theme: theme, ref: ref, hexToColor: _hexToColor),
+                    _TrendsTab(theme: theme, ref: ref),
+                    _InsightsTab(theme: theme, ref: ref),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _OverviewTab(theme: theme, ref: ref, hexToColor: _hexToColor),
-            _TrendsTab(theme: theme, ref: ref),
-            _InsightsTab(theme: theme, ref: ref),
-          ],
         ),
       ),
     );

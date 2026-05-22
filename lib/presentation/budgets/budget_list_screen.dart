@@ -45,10 +45,31 @@ class BudgetListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Budgets'),
-      ),
-      body: budgetProgressAsync.when(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Budgets',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_rounded),
+                    onPressed: () => context.go('/budgets/add'),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: budgetProgressAsync.when(
         data: (budgets) {
           if (budgets.isEmpty) {
             return Center(
@@ -349,10 +370,9 @@ class BudgetListScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text('Error loading budgets: $err')),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/budgets/add'),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('New Budget'),
+            ),
+          ],
+        ),
       ),
     );
   }

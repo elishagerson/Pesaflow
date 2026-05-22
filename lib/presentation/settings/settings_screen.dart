@@ -7,6 +7,9 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
+import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/backup_service.dart';
@@ -486,196 +489,178 @@ class SettingsScreen extends ConsumerWidget {
     final recentTransactions = ref.watch(recentTransactionsStreamProvider).value ?? [];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Premium local privacy indicator card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.shield_rounded, color: theme.colorScheme.primary, size: 28),
-                      ),
-                      const SizedBox(width: 16),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Offline Privacy Protection',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'PesaFlow stores all financial records, carrier receipts, and bank logs in a sandboxed, strictly local offline SQLite database on your device. Absolutely zero cloud transfers.',
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+              // iOS-style nav header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                    color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
 
-              // Configuration Section Header
-              const Text('SYSTEM MANAGEMENT', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1.2)),
-              const SizedBox(height: 8),
-
-              // Accounts Manager
-              ListTile(
-                leading: const Icon(Icons.account_balance_wallet_rounded),
-                title: const Text('Accounts Manager', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Add, edit, or archive bank, mobile money, and cash balances'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _showAccountsManager(context, ref),
-              ),
-              const Divider(height: 1),
-
-              // Categories Manager
-              ListTile(
-                leading: const Icon(Icons.category_rounded),
-                title: const Text('Categories Manager', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Add custom financial category folders or edit envelopes'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _showCategoriesManager(context, ref),
-              ),
-              const Divider(height: 1),
-
-              // Data Management Section Header
-              const SizedBox(height: 24),
-              const Text('DATA MANAGEMENT', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1.2)),
-              const SizedBox(height: 8),
-
-              // Export CSV
-              ListTile(
-                leading: const Icon(Icons.file_download_rounded, color: Colors.green),
-                title: const Text('Export to CSV', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Download all transaction logs as a standard spreadsheet file'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _handleExportCsv(context, ref),
-              ),
-              const Divider(height: 1),
-
-              // Backup Database
-              ListTile(
-                leading: const Icon(Icons.backup_rounded, color: Colors.blue),
-                title: const Text('Backup Profile Database', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Generate an offline, portable SQLite file backup of your PesaFlow profile'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _handleBackupDb(context, ref),
-              ),
-              const Divider(height: 1),
-
-              // Restore Database
-              ListTile(
-                leading: const Icon(Icons.restore_rounded, color: Colors.orange),
-                title: const Text('Restore Profile Database', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Restore full transaction and budget history from a valid SQLite backup'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => _handleRestoreDb(context, ref),
-              ),
-              const Divider(height: 1),
-
-              // Preferences Section Header
-              const SizedBox(height: 24),
-              const Text('PREFERENCES', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1.2)),
-              const SizedBox(height: 8),
-
-              // Interface Language indicator (strictly English)
-              ListTile(
-                leading: const Icon(Icons.translate_rounded),
-                title: const Text('Interface Language', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Locking system text strictly to English (Phase 1)'),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Text('English Only', style: TextStyle(fontSize: 11, color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
-                ),
-              ),
-              const Divider(height: 1),
-
-              // Theme configuration display
-              ListTile(
-                leading: const Icon(Icons.dark_mode_rounded),
-                title: const Text('Visual Display Mode', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('Theme adapts dynamically based on system environment (Light/Dark)'),
-                trailing: const Icon(Icons.brightness_medium_rounded),
-              ),
-              const Divider(height: 1),
-
-              // Database Stats Section Header
-              const SizedBox(height: 24),
-              const Text('DATABASE HEALTH & METRICS', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1.2)),
-              const SizedBox(height: 12),
-
-              // Database Stats Row
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildMetricCard(context, 'Accounts', '${accounts.length}', Icons.account_balance_rounded),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildMetricCard(context, 'Categories', '${categories.length}', Icons.category_rounded),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildMetricCard(context, 'Transactions', '${recentTransactions.length}', Icons.receipt_long_rounded),
+              // Privacy section
+              IosListSection(
+                rows: [
+                  IosListRow(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.shield_rounded, color: theme.colorScheme.primary, size: 22),
+                    ),
+                    title: const Text('Offline Privacy'),
+                    subtitle: const Text('All data stored locally. Zero cloud transfers.'),
+                    indent: 48,
                   ),
                 ],
               ),
 
-              // Version / Legal footer
+              // System Management
+              IosListSection(
+                header: 'System Management',
+                rows: [
+                  IosListRow(
+                    leading: Icon(Icons.account_balance_wallet_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Accounts Manager'),
+                    subtitle: const Text('Manage bank, mobile money & cash wallets'),
+                    onTap: () => _showAccountsManager(context, ref),
+                  ),
+                  IosListRow(
+                    leading: Icon(Icons.category_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Categories Manager'),
+                    subtitle: const Text('Add custom financial categories'),
+                    onTap: () => _showCategoriesManager(context, ref),
+                  ),
+                ],
+              ),
+
+              // Data Management
+              IosListSection(
+                header: 'Data Management',
+                rows: [
+                  IosListRow(
+                    leading: const Icon(Icons.file_download_rounded, color: Colors.green, size: 24),
+                    title: const Text('Export to CSV'),
+                    subtitle: const Text('Download transactions as CSV file'),
+                    onTap: () => _handleExportCsv(context, ref),
+                  ),
+                  IosListRow(
+                    leading: const Icon(Icons.backup_rounded, color: Colors.blue, size: 24),
+                    title: const Text('Backup Database'),
+                    subtitle: const Text('Save an offline backup of your data'),
+                    onTap: () => _handleBackupDb(context, ref),
+                  ),
+                  IosListRow(
+                    leading: const Icon(Icons.restore_rounded, color: Colors.orange, size: 24),
+                    title: const Text('Restore Database'),
+                    subtitle: const Text('Restore from a previous backup'),
+                    onTap: () => _handleRestoreDb(context, ref),
+                  ),
+                ],
+              ),
+
+              // Preferences
+              IosListSection(
+                header: 'Preferences',
+                rows: [
+                  IosListRow(
+                    leading: const Icon(Icons.translate_rounded, size: 24),
+                    title: const Text('Interface Language'),
+                    subtitle: const Text('English (only option in Phase 1)'),
+                    trailing: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text('English', style: TextStyle(fontSize: 12, color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  IosListRow(
+                    leading: const Icon(Icons.dark_mode_rounded, size: 24),
+                    title: const Text('Visual Display Mode'),
+                    subtitle: const Text('Follows system theme (Light/Dark)'),
+                    trailing: const Icon(Icons.brightness_medium_rounded, size: 20),
+                  ),
+                ],
+              ),
+
+              // Database Health
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 6, top: 24),
+                child: Text(
+                  'DATABASE HEALTH'.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600],
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: IosMetricCard(
+                        icon: Icons.account_balance_rounded,
+                        label: 'Accounts',
+                        value: '${accounts.length}',
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: IosMetricCard(
+                        icon: Icons.category_rounded,
+                        label: 'Categories',
+                        value: '${categories.length}',
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: IosMetricCard(
+                        icon: Icons.receipt_long_rounded,
+                        label: 'Transactions',
+                        value: '${recentTransactions.length}',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Footer
               const SizedBox(height: 36),
-              const Center(
+              Center(
                 child: Column(
                   children: [
-                    Text('PesaFlow v1.0.0 (Phase 1 Foundation)', style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text('Built Offline for privacy in Tanzania', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    Text(
+                      'PesaFlow v1.0.0',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark ? Colors.grey[500] : Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Built Offline for privacy in Tanzania',
+                      style: TextStyle(fontSize: 11, color: theme.brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[400]),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMetricCard(BuildContext context, String label, String value, IconData icon) {
-    final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-        child: Column(
-          children: [
-            Icon(icon, color: theme.colorScheme.primary, size: 22),
-            const SizedBox(height: 8),
-            Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontFamily: 'monospace')),
-            const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
-          ],
         ),
       ),
     );

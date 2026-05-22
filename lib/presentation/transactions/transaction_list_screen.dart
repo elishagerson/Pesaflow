@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
@@ -90,8 +89,6 @@ class TransactionListScreen extends ConsumerWidget {
 
     // Watch streams/futures
     final transactionsAsync = ref.watch(filteredTransactionsStreamProvider);
-    final accountsAsync = ref.watch(accountsStreamProvider);
-    final categoriesAsync = ref.watch(categoriesFutureProvider);
 
     final searchController = TextEditingController(text: searchQuery);
     searchController.selection = TextSelection.fromPosition(
@@ -99,40 +96,55 @@ class TransactionListScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Transactions'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.filter_list_rounded,
-              color: (activeAccount != null || activeCategory != null)
-                  ? theme.colorScheme.primary
-                  : null,
-            ),
-            onPressed: () {
-              // Show filter sheets
-              _showFiltersBottomSheet(context, ref);
-            },
-          ),
-          if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
-            IconButton(
-              icon: const Icon(Icons.clear_all_rounded, color: Colors.red),
-              tooltip: 'Clear Filters',
-              onPressed: () {
-                ref.read(transactionTypeFilterProvider.notifier).state = 'All';
-                ref.read(transactionAccountFilterProvider.notifier).state = null;
-                ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                ref.read(transactionSearchQueryProvider.notifier).state = '';
-              },
-            ),
-        ],
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            // iOS-style nav header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Transactions',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
+                        IconButton(
+                          icon: const Icon(Icons.clear_all_rounded, color: Colors.red),
+                          tooltip: 'Clear Filters',
+                          onPressed: () {
+                            ref.read(transactionTypeFilterProvider.notifier).state = 'All';
+                            ref.read(transactionAccountFilterProvider.notifier).state = null;
+                            ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                            ref.read(transactionSearchQueryProvider.notifier).state = '';
+                          },
+                        ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.filter_list_rounded,
+                          color: (activeAccount != null || activeCategory != null)
+                              ? theme.colorScheme.primary
+                              : (theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600]),
+                        ),
+                        onPressed: () {
+                          _showFiltersBottomSheet(context, ref);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             // Live Search Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
               child: TextField(
                 controller: searchController,
                 onChanged: (val) {
@@ -368,8 +380,8 @@ class TransactionListScreen extends ConsumerWidget {
                                      ),
                                    ),
                                  ),
-                               );
-                          }),
+                                ));
+                           }),
                         ],
                       );
                     },
