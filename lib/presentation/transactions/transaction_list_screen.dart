@@ -320,55 +320,55 @@ class TransactionListScreen extends ConsumerWidget {
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
                               },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                                child: ListTile(
-                                  onTap: () => context.go('/transactions/edit/${trans.id}'),
-                                  leading: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      color: _hexToColor(item.category.color).withOpacity(0.15),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      _getCategoryIcon(item.category.icon),
-                                      color: _hexToColor(item.category.color),
-                                      size: 24,
-                                    ),
-                                  ),
-                                  title: Text(
-                                    trans.description.isNotEmpty ? trans.description : item.category.name,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Row(
-                                    children: [
-                                      Text(
-                                        item.account.name,
-                                        style: TextStyle(
-                                          color: theme.colorScheme.primary,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      if (trans.reference != null)
-                                        Text(
-                                          'Ref: ${trans.reference}',
-                                          style: const TextStyle(color: Colors.grey, fontSize: 11),
-                                        ),
-                                    ],
-                                  ),
-                                  trailing: AmountText(
-                                    amountInCents: trans.amount,
-                                    type: amtType,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
+                               child: GlassCard(
+                                 margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                                 borderRadius: AppTheme.radiusCard,
+                                 child: ListTile(
+                                   onTap: () => context.go('/transactions/edit/${trans.id}'),
+                                   leading: Container(
+                                     padding: const EdgeInsets.all(8.0),
+                                     decoration: BoxDecoration(
+                                       color: _hexToColor(item.category.color).withOpacity(0.15),
+                                       shape: BoxShape.circle,
+                                     ),
+                                     child: Icon(
+                                       _getCategoryIcon(item.category.icon),
+                                       color: _hexToColor(item.category.color),
+                                       size: 24,
+                                     ),
+                                   ),
+                                   title: Text(
+                                     trans.description.isNotEmpty ? trans.description : item.category.name,
+                                     style: const TextStyle(fontWeight: FontWeight.bold),
+                                   ),
+                                   subtitle: Row(
+                                     children: [
+                                       Text(
+                                         item.account.name,
+                                         style: TextStyle(
+                                           color: theme.colorScheme.primary,
+                                           fontSize: 12,
+                                           fontWeight: FontWeight.bold,
+                                         ),
+                                       ),
+                                       const SizedBox(width: 8),
+                                       if (trans.reference != null)
+                                         Text(
+                                           'Ref: ${trans.reference}',
+                                           style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                         ),
+                                     ],
+                                   ),
+                                   trailing: AmountText(
+                                     amountInCents: trans.amount,
+                                     type: amtType,
+                                     style: const TextStyle(
+                                       fontWeight: FontWeight.bold,
+                                       fontSize: 16,
+                                     ),
+                                   ),
+                                 ),
+                               );
                           }),
                         ],
                       );
