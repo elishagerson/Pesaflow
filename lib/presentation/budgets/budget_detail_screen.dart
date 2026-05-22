@@ -120,22 +120,33 @@ class BudgetDetailScreen extends ConsumerWidget {
                 Row(children: [
                   Expanded(child: _StatCard(label: 'Spent', amount: bp.spentInPeriod, color: status.isOverBudget ? theme.colorScheme.error : catColor, theme: theme)),
                   const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? AppTheme.incomeColor : theme.colorScheme.error, theme: theme)),
+                  Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)) : theme.colorScheme.error, theme: theme)),
                   const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.colorScheme.primary, theme: theme)),
+                  Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF), theme: theme)),
                 ]),
                 const SizedBox(height: 20),
 
                 // Pace card
                 Container(
                   width: double.infinity, padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(AppTheme.radiusCard), border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000))),
+                  decoration: BoxDecoration(
+                    color: theme.brightness == Brightness.dark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: theme.brightness == Brightness.dark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      width: 0.5,
+                    ),
+                  ),
                   child: Row(children: [
-                    Icon(status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded, color: status.isOnTrack ? AppTheme.incomeColor : Colors.orange, size: 28),
+                    Icon(
+                      status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
+                      color: status.isOnTrack ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)) : Colors.orange,
+                      size: 28,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(status.paceLabel, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                      Text('${status.daysLeft} days remaining in this period', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      Text('${status.daysLeft} days remaining in this period', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
                     ])),
                   ]),
                 ),
@@ -143,7 +154,7 @@ class BudgetDetailScreen extends ConsumerWidget {
 
                 // Period info
                 Text('Period: ${bp.budget.period}', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
-                Text('Rollover: ${bp.budget.rollover ? bp.budget.rolloverType : "disabled"}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                Text('Rollover: ${bp.budget.rollover ? bp.budget.rolloverType : "disabled"}', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
                 const SizedBox(height: 20),
 
                 // Historical Periods
@@ -155,7 +166,14 @@ class BudgetDetailScreen extends ConsumerWidget {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(8), border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000))),
+                      decoration: BoxDecoration(
+                        color: theme.brightness == Brightness.dark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: theme.brightness == Brightness.dark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                          width: 0.5,
+                        ),
+                      ),
                       child: Row(children: [
                         Icon(p.isClosed ? Icons.lock_rounded : Icons.lock_open_rounded, size: 16, color: Colors.grey),
                         const SizedBox(width: 8),
@@ -169,7 +187,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                   } ).toList()),
                   loading: () => const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text('Error: $e'),
-                ),
+                ),  ),
               ],
             ),
           ),
