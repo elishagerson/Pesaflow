@@ -35,11 +35,11 @@ class IosTabBar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(pillRadius),
               color: isDark
-                  ? const Color(0xCC1C1C1E)
+                  ? const Color(0xCC000000)
                   : const Color(0xCCF2F2F7),
               border: Border.all(
                 color: isDark
-                    ? const Color(0x2FFFFFFF)
+                    ? const Color(0x1AFFFFFF)
                     : const Color(0x1A000000),
                 width: 0.5,
               ),
