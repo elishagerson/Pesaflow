@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -723,63 +724,45 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
 
-              // Glassmorphic Hero Card dynamically matching current Workspace theme
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  gradient: LinearGradient(
-                    colors: [
-                      trackerColor,
-                      trackerColor.withRed((trackerColor.red + 15).clamp(0, 255)).withGreen((trackerColor.green - 30).clamp(0, 255)),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: trackerColor.withOpacity(0.3),
-                      blurRadius: 16,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$trackerName Balance'.toUpperCase(),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: Colors.white70,
-                        letterSpacing: 1.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    AmountText(
-                      amountInCents: netWorth,
-                      style: theme.textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
-                        fontFamily: 'monospace',
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Row(
-                      children: [
-                        Icon(Icons.security_rounded, color: Colors.white60, size: 16),
-                        SizedBox(width: 6),
-                        Text(
-                          '100% Offline & Private Wallet',
-                          style: TextStyle(color: Colors.white60, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+               // Glassmorphic Hero Card dynamically matching current Workspace theme
+               GlassCard(
+                 padding: const EdgeInsets.all(24.0),
+                 borderRadius: AppTheme.radiusCard,
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+                       '$trackerName Balance'.toUpperCase(),
+                       style: theme.textTheme.labelMedium?.copyWith(
+                         color: Colors.white70,
+                         letterSpacing: 1.5,
+                         fontWeight: FontWeight.bold,
+                       ),
+                     ),
+                     const SizedBox(height: 8),
+                     AmountText(
+                       amountInCents: netWorth,
+                       style: theme.textTheme.headlineLarge?.copyWith(
+                         color: Colors.white,
+                         fontWeight: FontWeight.bold,
+                         fontSize: 32,
+                         fontFamily: 'monospace',
+                       ),
+                     ),
+                     const SizedBox(height: 16),
+                     const Row(
+                       children: [
+                         Icon(Icons.security_rounded, color: Colors.white60, size: 16),
+                         SizedBox(width: 6),
+                         Text(
+                           '100% Offline & Private Wallet',
+                           style: TextStyle(color: Colors.white60, fontSize: 12),
+                         ),
+                       ],
+                     ),
+                   ],
+                 ),
+               ),
               const SizedBox(height: 24),
 
               // Interactive Quick Action Buttons wrapped in tactile springs
@@ -837,134 +820,114 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 28),
 
-              // Horizontal Scrollable Accounts Carousel
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'My Accounts',
-                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  accountsAsync.when(
-                    data: (list) => Text(
-                      '${list.length} active',
-                      style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
-                    ),
-                    loading: () => const SizedBox(),
-                    error: (_, __) => const SizedBox(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 105,
-                child: accountsAsync.when(
-                  data: (accounts) {
-                    if (accounts.isEmpty) {
-                      return TactileSpringContainer(
-                        onTap: () => _showAddAccountDialog(context, ref),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                            border: Border.all(
-                              color: theme.colorScheme.outlineVariant.withOpacity(0.5),
-                              style: BorderStyle.solid,
-                              width: 1,
-                            ),
-                          ),
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add_card_rounded, color: Colors.grey, size: 28),
-                              SizedBox(height: 6),
-                              Text(
-                                'No accounts added yet. Tap to create one!',
-                                style: TextStyle(color: Colors.grey, fontSize: 13),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
+               // Horizontal Scrollable Accounts Carousel
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Text(
+                     'My Accounts',
+                     style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                   ),
+                   accountsAsync.when(
+                     data: (list) => Text(
+                       '${list.length} active',
+                       style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                     ),
+                     loading: () => const SizedBox(),
+                     error: (_, __) => const SizedBox(),
+                   ),
+                 ],
+               ),
+               const SizedBox(height: 12),
+               SizedBox(
+                 height: 105,
+                 child: accountsAsync.when(
+                   data: (accounts) {
+                     if (accounts.isEmpty) {
+                       return GlassCard(
+                         onTap: () => _showAddAccountDialog(context, ref),
+                         borderRadius: AppTheme.radiusCard,
+                         child: const Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Icon(Icons.add_card_rounded, color: Colors.grey, size: 28),
+                             SizedBox(height: 6),
+                             Text(
+                               'No accounts added yet. Tap to create one!',
+                               style: TextStyle(color: Colors.grey, fontSize: 13),
+                             ),
+                           ],
+                         ),
+                       );
+                     }
 
-                    return ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: accounts.length,
-                      itemBuilder: (context, index) {
-                        final account = accounts[index];
-                        return TactileSpringContainer(
-                          onTap: () {}, // Tappable accounts if needed
-                          child: Container(
-                            width: 180,
-                            margin: const EdgeInsets.only(right: 12.0),
-                            padding: const EdgeInsets.all(14.0),
-                            decoration: BoxDecoration(
-                              color: theme.brightness == Brightness.dark
-                                  ? AppTheme.surfaceContainerDark
-                                  : AppTheme.surfaceLight,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              border: Border.all(
-                                color: theme.brightness == Brightness.dark
-                                    ? const Color(0x1FFFFFFF)
-                                    : const Color(0x1F000000),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      _getAccountIcon(account.icon),
-                                      size: 20,
-                                      color: trackerColor,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        account.name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: theme.textTheme.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      account.type.toUpperCase().replaceAll('_', ' '),
-                                      style: const TextStyle(fontSize: 10, color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    AmountText(
-                                      amountInCents: account.balance,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        fontFamily: 'monospace',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (err, _) => Center(child: Text('Error loading accounts: $err')),
-                ),
-              ),
-              const SizedBox(height: 28),
+                     return ListView.builder(
+                       physics: const BouncingScrollPhysics(),
+                       scrollDirection: Axis.horizontal,
+                       itemCount: accounts.length,
+                       itemBuilder: (context, index) {
+                         final account = accounts[index];
+                         return GlassCard(
+                           onTap: () {}, // Tappable accounts if needed
+                           borderRadius: AppTheme.radiusCard,
+                           margin: EdgeInsets.only(right: 12.0),
+                           child: Container(
+                             width: 180,
+                             padding: const EdgeInsets.all(14.0),
+                             child: Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               children: [
+                                 Row(
+                                   children: [
+                                     Icon(
+                                       _getAccountIcon(account.icon),
+                                       size: 20,
+                                       color: trackerColor,
+                                     ),
+                                     const SizedBox(width: 8),
+                                     Expanded(
+                                       child: Text(
+                                         account.name,
+                                         maxLines: 1,
+                                         overflow: TextOverflow.ellipsis,
+                                         style: theme.textTheme.bodyMedium?.copyWith(
+                                           fontWeight: FontWeight.bold,
+                                         ),
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                                 Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+                                     Text(
+                                       account.type.toUpperCase().replaceAll('_', ' '),
+                                       style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                     ),
+                                     const SizedBox(height: 2),
+                                     AmountText(
+                                       amountInCents: account.balance,
+                                       style: const TextStyle(
+                                         fontWeight: FontWeight.bold,
+                                         fontSize: 15,
+                                         fontFamily: 'monospace',
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                               ],
+                             ),
+                           ),
+                         );
+                       },
+                     );
+                   },
+                   loading: () => const Center(child: CircularProgressIndicator()),
+                   error: (err, _) => Center(child: Text('Error loading accounts: $err')),
+                 ),
+               ),
+               const SizedBox(height: 28),
 
               // Monthly Overview Bento Card
               _buildMonthlyOverview(ref, theme),
