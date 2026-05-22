@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -136,6 +138,13 @@ class TransactionListScreen extends ConsumerWidget {
                         onPressed: () {
                           _showFiltersBottomSheet(context, ref);
                         },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.add_circle_rounded,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () => context.go('/transactions/add'),
                       ),
                     ],
                   ),
@@ -332,54 +341,50 @@ class TransactionListScreen extends ConsumerWidget {
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
                               },
-                               child: GlassCard(
-                                 margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                                 borderRadius: AppTheme.radiusCard,
-                                 child: ListTile(
-                                   onTap: () => context.go('/transactions/edit/${trans.id}'),
-                                   leading: Container(
-                                     padding: const EdgeInsets.all(8.0),
-                                     decoration: BoxDecoration(
-                                       color: _hexToColor(item.category.color).withOpacity(0.15),
-                                       shape: BoxShape.circle,
-                                     ),
-                                     child: Icon(
-                                       _getCategoryIcon(item.category.icon),
-                                       color: _hexToColor(item.category.color),
-                                       size: 24,
-                                     ),
-                                   ),
-                                   title: Text(
-                                     trans.description.isNotEmpty ? trans.description : item.category.name,
-                                     style: const TextStyle(fontWeight: FontWeight.bold),
-                                   ),
-                                   subtitle: Row(
-                                     children: [
-                                       Text(
-                                         item.account.name,
-                                         style: TextStyle(
-                                           color: theme.colorScheme.primary,
-                                           fontSize: 12,
-                                           fontWeight: FontWeight.bold,
-                                         ),
-                                       ),
-                                       const SizedBox(width: 8),
-                                       if (trans.reference != null)
-                                         Text(
-                                           'Ref: ${trans.reference}',
-                                           style: const TextStyle(color: Colors.grey, fontSize: 11),
-                                         ),
-                                     ],
-                                   ),
-                                   trailing: AmountText(
-                                     amountInCents: trans.amount,
-                                     type: amtType,
-                                     style: const TextStyle(
-                                       fontWeight: FontWeight.bold,
-                                       fontSize: 16,
-                                     ),
-                                   ),
-                                 ),
+                                child: IosListRow(
+                                  onTap: () => context.go('/transactions/edit/${trans.id}'),
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: _hexToColor(item.category.color).withOpacity(0.15),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      _getCategoryIcon(item.category.icon),
+                                      color: _hexToColor(item.category.color),
+                                      size: 24,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    trans.description.isNotEmpty ? trans.description : item.category.name,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(
+                                        item.account.name,
+                                        style: TextStyle(
+                                          color: theme.colorScheme.primary,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      if (trans.reference != null)
+                                        Text(
+                                          'Ref: ${trans.reference}',
+                                          style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                        ),
+                                    ],
+                                  ),
+                                  trailing: AmountText(
+                                    amountInCents: trans.amount,
+                                    type: amtType,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ));
                            }),
                         ],
@@ -394,84 +399,59 @@ class TransactionListScreen extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/transactions/add'),
-        child: const Icon(Icons.add_rounded),
-      ),
     );
   }
 
   void _showFiltersBottomSheet(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    final accounts = ref.watch(accountsStreamProvider).value ?? [];
+    final categories = ref.watch(categoriesFutureProvider).value ?? [];
+    final activeAccount = ref.watch(transactionAccountFilterProvider);
+    final activeCategory = ref.watch(transactionCategoryFilterProvider);
+
+    IosBottomSheet.show(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-      ),
-      builder: (context) {
-        final accounts = ref.watch(accountsStreamProvider).value ?? [];
-        final categories = ref.watch(categoriesFutureProvider).value ?? [];
-        final activeAccount = ref.watch(transactionAccountFilterProvider);
-        final activeCategory = ref.watch(transactionCategoryFilterProvider);
-
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Filter Transactions',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Account Picker
-                  const Text('Filter by Account', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String?>(
-                    value: activeAccount,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 12.0)),
-                    items: [
-                      const DropdownMenuItem<String?>(value: null, child: Text('All Accounts')),
-                      ...accounts.map((acc) => DropdownMenuItem<String?>(
-                            value: acc.id,
-                            child: Text(acc.name),
-                          )),
-                    ],
-                    onChanged: (val) {
-                      ref.read(transactionAccountFilterProvider.notifier).state = val;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Category Picker
-                  const Text('Filter by Category', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String?>(
-                    value: activeCategory,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 12.0)),
-                    items: [
-                      const DropdownMenuItem<String?>(value: null, child: Text('All Categories')),
-                      ...categories.map((cat) => DropdownMenuItem<String?>(
-                            value: cat.id,
-                            child: Text('${cat.type.toUpperCase()}: ${cat.name}'),
-                          )),
-                    ],
-                    onChanged: (val) {
-                      ref.read(transactionCategoryFilterProvider.notifier).state = val;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                ],
+      initialChildSize: 0.6,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Text('Filter Transactions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          IosListSection(
+            header: 'Account',
+            rows: [
+              IosListRow(
+                title: const Text('All Accounts'),
+                trailing: activeAccount == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
+                onTap: () { ref.read(transactionAccountFilterProvider.notifier).state = null; Navigator.of(context).pop(); },
               ),
-            );
-          },
-        );
-      },
+              ...accounts.map((acc) => IosListRow(
+                title: Text(acc.name),
+                trailing: activeAccount == acc.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
+                onTap: () { ref.read(transactionAccountFilterProvider.notifier).state = acc.id; Navigator.of(context).pop(); },
+              )),
+            ],
+          ),
+          const SizedBox(height: 16),
+          IosListSection(
+            header: 'Category',
+            rows: [
+              IosListRow(
+                title: const Text('All Categories'),
+                trailing: activeCategory == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
+                onTap: () { ref.read(transactionCategoryFilterProvider.notifier).state = null; Navigator.of(context).pop(); },
+              ),
+              ...categories.map((cat) => IosListRow(
+                title: Text('${cat.type.toUpperCase()}: ${cat.name}'),
+                trailing: activeCategory == cat.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
+                onTap: () { ref.read(transactionCategoryFilterProvider.notifier).state = cat.id; Navigator.of(context).pop(); },
+              )),
+            ],
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 }
