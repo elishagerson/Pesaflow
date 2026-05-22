@@ -267,67 +267,56 @@ class DashboardScreen extends ConsumerWidget {
     return Colors.grey;
   }
 
-  Widget _buildMonthlyOverview(WidgetRef ref, ThemeData theme) {
-    final totalsAsync = ref.watch(monthlyTotalsProvider);
-    final catsAsync = ref.watch(topCategoriesProvider);
-    return totalsAsync.when(
-      data: (totals) {
-        final income = totals['income'] ?? 0;
-        final expense = totals['expense'] ?? 0;
-        if (income == 0 && expense == 0) return const SizedBox.shrink();
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Monthly Overview', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.brightness == Brightness.dark 
-                  ? AppTheme.surfaceContainerDark 
-                  : AppTheme.surfaceLight, 
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard), 
-              border: Border.all(
-                color: theme.brightness == Brightness.dark 
-                    ? const Color(0x1FFFFFFF) 
-                    : const Color(0x1F000000)
-              )
-            ),
-            child: Row(children: [
-              catsAsync.when(
-                data: (cats) {
-                  if (cats.isEmpty) return const SizedBox(width: 80, height: 80);
-                  final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
-                  return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false)))));
-                },
-                loading: () => const SizedBox(width: 80, height: 80, child: CircularProgressIndicator(strokeWidth: 2)),
-                error: (_, __) => const SizedBox(width: 80, height: 80),
-              ),
-              const SizedBox(width: 16),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  AmountText(amountInCents: income, type: AmountType.income, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                ]),
-                const SizedBox(height: 6),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                  AmountText(amountInCents: expense, type: AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                ]),
-                const SizedBox(height: 6),
-                Divider(height: 1, color: theme.colorScheme.outlineVariant.withOpacity(0.3)),
-                const SizedBox(height: 6),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text(income >= expense ? 'Saved' : 'Deficit', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                  AmountText(amountInCents: (income - expense).abs(), type: income >= expense ? AmountType.income : AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                ]),
-              ])),
-            ]),
-          ),
-        ]);
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
-    );
-  }
+   Widget _buildMonthlyOverview(WidgetRef ref, ThemeData theme) {
+     final totalsAsync = ref.watch(monthlyTotalsProvider);
+     final catsAsync = ref.watch(topCategoriesProvider);
+     return totalsAsync.when(
+       data: (totals) {
+         final income = totals['income'] ?? 0;
+         final expense = totals['expense'] ?? 0;
+         if (income == 0 && expense == 0) return const SizedBox.shrink();
+         return GlassCard(
+           padding: const EdgeInsets.all(16),
+           borderRadius: AppTheme.radiusCard,
+           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+             Text('Monthly Overview', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+             const SizedBox(height: 12),
+             Row(children: [
+               catsAsync.when(
+                 data: (cats) {
+                   if (cats.isEmpty) return const SizedBox(width: 80, height: 80);
+                   final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
+                   return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false))));
+                 },
+                 loading: () => const SizedBox(width: 80, height: 80, child: CircularProgressIndicator(strokeWidth: 2)),
+                 error: (_, __) => const SizedBox(width: 80, height: 80),
+               ),
+               const SizedBox(width: 16),
+               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                   const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                   AmountText(amountInCents: income, type: AmountType.income, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                 ]),
+                 const SizedBox(height: 6),
+                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                   const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                   AmountText(amountInCents: expense, type: AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                 ]),
+                 const SizedBox(height: 6),
+                 Divider(height: 1, color: theme.colorScheme.outlineVariant.withOpacity(0.3)),
+                 const SizedBox(height: 6),
+                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                   Text(income >= expense ? 'Saved' : 'Deficit', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                   AmountText(amountInCents: (income - expense).abs(), type: income >= expense ? AmountType.income : AmountType.expense, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                 ]),
+               ])),
+           ]),
+         );
+       },
+       loading: () => const SizedBox.shrink(),
+       error: (_, __) => const SizedBox.shrink(),
+     );
+   }
 
   Widget _buildBudgetRings(WidgetRef ref, ThemeData theme, BuildContext context) {
     final budgetsAsync = ref.watch(budgetProgressProvider);
