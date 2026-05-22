@@ -43,49 +43,51 @@ class AnalyticsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              // iOS-style segmented control
+              // iOS-style sliding capsule control
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Container(
-                  padding: const EdgeInsets.all(2),
+                  height: 38,
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[900] : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
+                    color: isDark ? const Color(0xFF0F0F10) : const Color(0xFFE5E5EA),
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(
+                      color: isDark ? const Color(0x10FFFFFF) : Colors.transparent,
+                      width: 0.5,
+                    ),
                   ),
-                  child: Row(
-                    children: List.generate(3, (index) {
-                      final labels = ['Overview', 'Trends', 'Insights'];
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            DefaultTabController.of(context).animateTo(index);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            decoration: BoxDecoration(
-                              color: index == DefaultTabController.of(context).index
-                                  ? (isDark ? Colors.grey[700] : Colors.white)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              labels[index],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: index == DefaultTabController.of(context).index
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                                color: index == DefaultTabController.of(context).index
-                                    ? (isDark ? Colors.white : Colors.black)
-                                    : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                  child: TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    dividerColor: Colors.transparent,
+                    indicatorPadding: const EdgeInsets.all(2),
+                    indicator: BoxDecoration(
+                      color: isDark ? const Color(0xFF242426) : Colors.white,
+                      borderRadius: BorderRadius.circular(7),
+                      boxShadow: isDark
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 1,
+                                offset: const Offset(0, 1),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+                            ],
+                    ),
+                    labelColor: isDark ? Colors.white : Colors.black,
+                    unselectedLabelColor: isDark ? Colors.grey[400] : Colors.grey[600],
+                    labelStyle: const TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    tabs: const [
+                      Tab(text: 'Overview'),
+                      Tab(text: 'Trends'),
+                      Tab(text: 'Insights'),
+                    ],
                   ),
                 ),
               ),

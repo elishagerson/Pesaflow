@@ -954,7 +954,7 @@ class DashboardScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'home',
+                        'Home',
                         style: TextStyle(
                           fontSize: 38,
                           fontWeight: FontWeight.w900,
@@ -1071,11 +1071,11 @@ class DashboardScreen extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(22.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF161618) : Colors.white,
+                  color: isDark ? const Color(0xFF0F0F10) : Colors.white,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                    width: 1.0,
+                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                    width: 0.5,
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -1207,17 +1207,17 @@ class DashboardScreen extends ConsumerWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                color: isDark ? const Color(0x3330D158) : const Color(0x33059669),
+                                color: isDark ? const Color(0x3300E5FF) : const Color(0x330A84FF),
                                 width: 1.0,
                               ),
-                              color: isDark ? const Color(0x0D30D158) : const Color(0x0D059669),
+                              color: isDark ? const Color(0x0D00E5FF) : const Color(0x0D0A84FF),
                             ),
                             child: AmountText(
                               amountInCents: account2.balance,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: isDark ? const Color(0xFF30D158) : const Color(0xFF059669),
+                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                               ),
                             ),
                           ),
@@ -1312,10 +1312,10 @@ class DashboardScreen extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(18.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF161618) : const Color(0xFFF2F2F7),
+                  color: isDark ? const Color(0xFF0F0F10) : const Color(0xFFF2F2F7),
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
                     width: 0.5,
                   ),
                 ),
@@ -1327,9 +1327,9 @@ class DashboardScreen extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.thumb_up_rounded,
-                              color: Color(0xFF30D158),
+                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                               size: 18,
                             ),
                             const SizedBox(width: 8),
@@ -1381,39 +1381,39 @@ class DashboardScreen extends ConsumerWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF30D158),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.check_rounded,
-                                color: Colors.black,
+                                color: isDark ? Colors.black : Colors.white,
                                 size: 10,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF30D158),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.check_rounded,
-                                color: Colors.black,
+                                color: isDark ? Colors.black : Colors.white,
                                 size: 10,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF30D158),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.check_rounded,
-                                color: Colors.black,
+                                color: isDark ? Colors.black : Colors.white,
                                 size: 10,
                               ),
                             ),
@@ -1452,10 +1452,10 @@ class DashboardScreen extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(18.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF161618) : Colors.white,
+                  color: isDark ? const Color(0xFF0F0F10) : Colors.white,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
                     width: 0.5,
                   ),
                 ),
@@ -1542,7 +1542,7 @@ class DashboardScreen extends ConsumerWidget {
                                   ? const Color(0xFFFF453A)
                                   : (overallPct > 0.5
                                       ? const Color(0xFFFF9F0A)
-                                      : const Color(0xFF30D158)),
+                                      : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
                             ),
                           ),
                           Column(
