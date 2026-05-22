@@ -28,57 +28,57 @@ class AppTheme {
   static const Color outlineVariantLight = Color(0xFFE2E0E8);
 
   // Dark
-  static const Color primaryDark = Color(0xFFA78BFA);
-  static const Color onPrimaryDark = Color(0xFF0A0A0F);
-  static const Color primaryContainerDark = Color(0xFF2E1065);
-  static const Color onPrimaryContainerDark = Color(0xFFEDE9FE);
+  static const Color primaryDark = Color(0xFF0A84FF); // Modern Apple iOS vibrant blue
+  static const Color onPrimaryDark = Color(0xFFFFFFFF);
+  static const Color primaryContainerDark = Color(0xFF0038A8);
+  static const Color onPrimaryContainerDark = Color(0xFFD0E2FF);
 
-  static const Color secondaryDark = Color(0xFF8B5CF6);
-  static const Color onSecondaryDark = Color(0xFF0A0A0F);
-  static const Color secondaryContainerDark = Color(0xFF3B1D8E);
-  static const Color onSecondaryContainerDark = Color(0xFFE2D5F7);
+  static const Color secondaryDark = Color(0xFF30D158); // Apple iOS vibrant green
+  static const Color onSecondaryDark = Color(0xFF000000);
+  static const Color secondaryContainerDark = Color(0xFF0F521B);
+  static const Color onSecondaryContainerDark = Color(0xFFC7F3D6);
 
-  static const Color tertiaryDark = Color(0xFFFBBF24);
-  static const Color onTertiaryDark = Color(0xFF0A0A0F);
+  static const Color tertiaryDark = Color(0xFFFF9F0A); // Apple iOS vibrant orange
+  static const Color onTertiaryDark = Color(0xFF000000);
 
-  static const Color bgDark = Color(0xFF0A0A0F);
-  static const Color onBgDark = Color(0xFFF5F5F7);
-  static const Color surfaceDark = Color(0xFF1C1C1E);
-  static const Color onSurfaceDark = Color(0xFFF5F5F7);
-  static const Color surfaceHighDark = Color(0xFF1C1C1E);
-  static const Color surfaceLowDark = Color(0xFF121214);
+  static const Color bgDark = Color(0xFF000000); // True Pitch Black for ultra-premium AMOLED contrast
+  static const Color onBgDark = Color(0xFFFFFFFF);
+  static const Color surfaceDark = Color(0xFF161618); // Modern charcoal grey cards
+  static const Color onSurfaceDark = Color(0xFFFFFFFF);
+  static const Color surfaceHighDark = Color(0xFF161618);
+  static const Color surfaceLowDark = Color(0xFF09090A);
 
-  static const Color outlineDark = Color(0xFF3F3F46);
-  static const Color outlineVariantDark = Color(0xFF27272A);
+  static const Color outlineDark = Color(0xFF2C2C2E); // Subtle dark outlines
+  static const Color outlineVariantDark = Color(0xFF1C1C1E);
 
   // Finance semantic colors
   static const Color incomeColor = Color(0xFF059669);
   static const Color expenseColor = Color(0xFFE11D48);
   static const Color transferColor = Color(0xFF0284C7);
 
-  static const Color incomeColorDark = Color(0xFF34D399);
-  static const Color expenseColorDark = Color(0xFFFB7185);
-  static const Color transferColorDark = Color(0xFF38BDF8);
+  static const Color incomeColorDark = Color(0xFF30D158); // Vibrant green
+  static const Color expenseColorDark = Color(0xFFFF453A); // Vibrant red
+  static const Color transferColorDark = Color(0xFF0A84FF); // Vibrant blue
 
   static const Color errorLight = Color(0xFFE11D48);
   static const Color onErrorLight = Color(0xFFFFFFFF);
-  static const Color errorDark = Color(0xFFFB7185);
-  static const Color onErrorDark = Color(0xFF0A0A0F);
+  static const Color errorDark = Color(0xFFFF453A);
+  static const Color onErrorDark = Color(0xFF000000);
 
   // Backward compat aliases (previously named)
   static Color get surfaceContainerDark => surfaceHighDark;
 
   // Radii
-  static const double radiusCard = 16.0;
-  static const double radiusDialog = 20.0;
-  static const double radiusInput = 14.0;
-  static const double radiusButton = 14.0;
+  static const double radiusCard = 20.0; // Premium highly-rounded card corners
+  static const double radiusDialog = 24.0;
+  static const double radiusInput = 16.0;
+  static const double radiusButton = 100.0; // Pill-shape by default for premium buttons
 
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
       fontFamily: 'monospace',
       fontFamilyFallback: ['JetBrains Mono', 'Roboto Mono', 'Courier New'],
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
     );
   }
 
@@ -181,12 +181,12 @@ class AppTheme {
       brightness: Brightness.dark,
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
-        primary: primaryDark,
-        onPrimary: onPrimaryDark,
+        primary: Colors.white, // Stark high-contrast main color (for white action buttons)
+        onPrimary: Colors.black,
         primaryContainer: primaryContainerDark,
         onPrimaryContainer: onPrimaryContainerDark,
-        secondary: secondaryDark,
-        onSecondary: onSecondaryDark,
+        secondary: primaryDark, // blue accent
+        onSecondary: onPrimaryDark,
         secondaryContainer: secondaryContainerDark,
         onSecondaryContainer: onSecondaryContainerDark,
         tertiary: tertiaryDark,
@@ -230,20 +230,20 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: primaryDark, width: 1.5),
+          borderSide: const BorderSide(color: Colors.white, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryDark,
-          foregroundColor: onPrimaryDark,
+          backgroundColor: Colors.white, // High-contrast stark white button
+          foregroundColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
-          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
@@ -251,8 +251,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          selectedBackgroundColor: primaryDark,
-          selectedForegroundColor: onPrimaryDark,
+          selectedBackgroundColor: Colors.white,
+          selectedForegroundColor: Colors.black,
         ),
       ),
       dividerTheme: const DividerThemeData(
