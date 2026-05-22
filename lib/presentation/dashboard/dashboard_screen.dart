@@ -1121,7 +1121,8 @@ class DashboardScreen extends ConsumerWidget {
                               CircularProgressIndicator(
                                 value: overallPct,
                                 strokeWidth: 4,
-                                backgroundColor: isDark ? Colors.white10 : Colors.black10,
+                                backgroundColor:
+                                    isDark ? Colors.white10 : Colors.black12,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   overallPct > 0.9
                                       ? const Color(0xFFFF453A)
