@@ -132,34 +132,43 @@ class _OverviewTab extends StatelessWidget {
               final expense = totals['expense'] ?? 0;
               final net = income - expense;
               final savingsRate = income > 0 ? ((net / income) * 100).round() : 0;
+              final isDark = theme.brightness == Brightness.dark;
+              final incomeColorVal = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+              final expenseColorVal = isDark ? const Color(0xFFFF453A) : const Color(0xFFE11D48);
+
               return Container(
-                width: double.infinity, padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  border: Border.all(
+                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                    width: 0.5,
+                  ),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('THIS MONTH', style: TextStyle(color: Colors.white70, fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.bold)),
+                  Text('THIS MONTH', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600], fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   Row(children: [
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Text('Income', style: TextStyle(color: Colors.white60, fontSize: 12)),
-                      AmountText(amountInCents: income, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text('Income', style: TextStyle(color: isDark ? Colors.grey[500] : Colors.grey[500], fontSize: 12)),
+                      AmountText(amountInCents: income, style: TextStyle(color: incomeColorVal, fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.3)),
                     ])),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      const Text('Expense', style: TextStyle(color: Colors.white60, fontSize: 12)),
-                      AmountText(amountInCents: expense, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text('Expense', style: TextStyle(color: isDark ? Colors.grey[500] : Colors.grey[500], fontSize: 12)),
+                      AmountText(amountInCents: expense, style: TextStyle(color: expenseColorVal, fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -0.3)),
                     ])),
                   ]),
                   const SizedBox(height: 12),
-                  Divider(height: 0.5, thickness: 0.5, color: Colors.white24),
+                  Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
                   const SizedBox(height: 8),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text(net >= 0 ? 'Net Savings' : 'Net Deficit', style: const TextStyle(color: Colors.white70, fontSize: 12)),
-                    AmountText(amountInCents: net.abs(), type: net >= 0 ? AmountType.income : AmountType.expense, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(net >= 0 ? 'Net Savings' : 'Net Deficit', style: TextStyle(color: isDark ? Colors.grey[300] : Colors.grey[700], fontSize: 13, fontWeight: FontWeight.w500)),
+                    AmountText(amountInCents: net.abs(), type: net >= 0 ? AmountType.income : AmountType.expense, style: TextStyle(color: net >= 0 ? incomeColorVal : expenseColorVal, fontWeight: FontWeight.w900, fontSize: 17, letterSpacing: -0.2)),
                   ]),
                   const SizedBox(height: 4),
-                  Text('Savings rate: $savingsRate%', style: const TextStyle(color: Colors.white60, fontSize: 11)),
+                  Text('Savings rate: $savingsRate%', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600], fontSize: 11)),
                 ]),
               );
             },
@@ -392,7 +401,7 @@ class _TrendsTab extends StatelessWidget {
                             LineChartBarData(
                               spots: incomeSpots,
                               isCurved: true,
-                              color: const Color(0xFF34C759),
+                              color: const Color(0xFF00E5FF),
                               barWidth: 3,
                               isStrokeCapRound: true,
                               dotData: const FlDotData(show: false),
@@ -400,8 +409,8 @@ class _TrendsTab extends StatelessWidget {
                                 show: true,
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFF34C759).withOpacity(0.12),
-                                    const Color(0xFF34C759).withOpacity(0.0),
+                                    const Color(0xFF00E5FF).withOpacity(0.12),
+                                    const Color(0xFF00E5FF).withOpacity(0.0),
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -444,7 +453,7 @@ class _TrendsTab extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF34C759), shape: BoxShape.circle)),
+              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF00E5FF), shape: BoxShape.circle)),
               const SizedBox(width: 6),
               const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
               const SizedBox(width: 24),

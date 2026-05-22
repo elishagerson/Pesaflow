@@ -52,11 +52,11 @@ class AppTheme {
   static const Color outlineVariantDark = Color(0xFF1C1C1E);
 
   // Finance semantic colors
-  static const Color incomeColor = Color(0xFF059669);
+  static const Color incomeColor = Color(0xFF0A84FF); // Vibrant blue
   static const Color expenseColor = Color(0xFFE11D48);
   static const Color transferColor = Color(0xFF0284C7);
 
-  static const Color incomeColorDark = Color(0xFF30D158); // Vibrant green
+  static const Color incomeColorDark = Color(0xFF00E5FF); // Premium neon cyan/blue
   static const Color expenseColorDark = Color(0xFFFF453A); // Vibrant red
   static const Color transferColorDark = Color(0xFF0A84FF); // Vibrant blue
 

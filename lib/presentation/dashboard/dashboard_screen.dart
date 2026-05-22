@@ -11,6 +11,8 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -22,6 +24,39 @@ class DashboardScreen extends ConsumerWidget {
     if (hour < 12) return 'Good Morning';
     if (hour < 17) return 'Good Afternoon';
     return 'Good Evening';
+  }
+
+  Widget _buildActiveParserBadge(bool isDark, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0x0AFFFFFF) : const Color(0x0A000000),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isDark ? const Color(0x10FFFFFF) : const Color(0x10000000),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.check_circle_rounded,
+            size: 10,
+            color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showAddAccountDialog(BuildContext context, WidgetRef ref) {
@@ -1069,9 +1104,15 @@ class DashboardScreen extends ConsumerWidget {
               // ── 2. "pesaflow cash" Balance Hero Card ──
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(22.0),
+                padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? [const Color(0xFF121214), const Color(0xFF0A0A0B)]
+                        : [Colors.white, const Color(0xFFF5F5F7)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
                     color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
@@ -1088,6 +1129,7 @@ class DashboardScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Brand & Budget Gauge Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1097,138 +1139,183 @@ class DashboardScreen extends ConsumerWidget {
                               'pesa',
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
-                                fontSize: 18,
-                                color: isDark ? Colors.white : Colors.black,
+                                fontSize: 19,
+                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                                letterSpacing: -0.5,
                               ),
                             ),
                             Text(
                               'flow',
                               style: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                fontSize: 18,
-                                color: isDark ? Colors.white70 : Colors.black54,
+                                fontSize: 19,
+                                color: isDark ? Colors.white : Colors.black,
+                                letterSpacing: -0.5,
                               ),
                             ),
                           ],
                         ),
-                        // Dynamic spent ring
-                        SizedBox(
-                          height: 38,
-                          width: 38,
-                          child: Stack(
-                            alignment: Alignment.center,
+                        // Dynamic Spent Progress Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)).withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Row(
                             children: [
-                              CircularProgressIndicator(
-                                value: overallPct,
-                                strokeWidth: 4,
-                                backgroundColor:
-                                    isDark ? Colors.white10 : Colors.black12,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  overallPct > 0.9
-                                      ? const Color(0xFFFF453A)
-                                      : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                              SizedBox(
+                                height: 12,
+                                width: 12,
+                                child: CircularProgressIndicator(
+                                  value: overallPct,
+                                  strokeWidth: 2,
+                                  backgroundColor: isDark ? Colors.white10 : Colors.black12,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    overallPct > 0.9
+                                        ? const Color(0xFFFF453A)
+                                        : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                                  ),
                                 ),
                               ),
-                              Icon(
-                                Icons.pie_chart_rounded,
-                                size: 14,
-                                color: isDark ? Colors.white70 : Colors.black54,
+                              const SizedBox(width: 6),
+                              Text(
+                                '${(overallPct * 100).round()}% SPENT',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 22),
+                    // Title Label & Main Value
+                    Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'TOTAL NET WORTH',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
+                            color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     AmountText(
                       amountInCents: netWorth,
-                      style: const TextStyle(
+                      useMonospace: false,
+                      style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 38,
+                        fontSize: 42,
+                        color: isDark ? Colors.white : Colors.black,
                         letterSpacing: -1.0,
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    Container(
+                    const SizedBox(height: 22),
+                    Divider(
                       height: 0.5,
-                      color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
+                      thickness: 0.5,
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
                     ),
-                    const SizedBox(height: 14),
-                    // Breakdown accounts
+                    const SizedBox(height: 18),
+                    // Individual Accounts List Section
                     if (account1 != null) ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '${account1.name} balance',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                account1.name,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: isDark ? Colors.grey[300] : Colors.grey[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: isDark ? const Color(0x3300E5FF) : const Color(0x330A84FF),
-                                width: 1.0,
-                              ),
-                              color: isDark ? const Color(0x0D00E5FF) : const Color(0x0D0A84FF),
-                            ),
-                            child: AmountText(
-                              amountInCents: account1.balance,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                              ),
+                          AmountText(
+                            amountInCents: account1.balance,
+                            useMonospace: false,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900,
+                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                             ),
                           ),
                         ],
                       ),
                     ],
                     if (account2 != null) ...[
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '${account2.name} balance',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.grey,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                account2.name,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: isDark ? Colors.grey[300] : Colors.grey[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: isDark ? const Color(0x3300E5FF) : const Color(0x330A84FF),
-                                width: 1.0,
-                              ),
-                              color: isDark ? const Color(0x0D00E5FF) : const Color(0x0D0A84FF),
-                            ),
-                            child: AmountText(
-                              amountInCents: account2.balance,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                              ),
+                          AmountText(
+                            amountInCents: account2.balance,
+                            useMonospace: false,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900,
+                              color: isDark ? Colors.grey[400] : Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
                     ],
                     if (account1 == null) ...[
-                      const Center(
+                      Center(
                         child: Text(
                           'No active accounts. Tap Add Account below to start.',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          style: TextStyle(color: Colors.grey[500], fontSize: 12),
                         ),
                       ),
                     ],
@@ -1310,7 +1397,7 @@ class DashboardScreen extends ConsumerWidget {
               // ── 4. SMS Review Queue Card (Setup Bonus Vibe) ──
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF0F0F10) : const Color(0xFFF2F2F7),
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1322,103 +1409,85 @@ class DashboardScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Header Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Icon(
-                              Icons.thumb_up_rounded,
+                              Icons.message_rounded,
+                              size: 16,
                               color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                              size: 18,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             Text(
-                              'Review SMS Alerts',
+                              'SMS AUTO-TRACKING',
                               style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 15,
-                                color: isDark ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                letterSpacing: 1.2,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
                               ),
                             ),
                           ],
                         ),
+                        // Pending Count Capsule
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
+                            color: pendingReviewCount > 0
+                                ? const Color(0xFFFF9F0A).withOpacity(0.12)
+                                : (isDark ? Colors.white10 : Colors.black12),
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: Text(
                             pendingReviewCount > 0
-                                ? '$pendingReviewCount pending'
-                                : '0 pending',
+                                ? '$pendingReviewCount PENDING'
+                                : '0 PENDING',
                             style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.5,
                               color: pendingReviewCount > 0
                                   ? const Color(0xFFFF9F0A)
-                                  : Colors.grey,
+                                  : Colors.grey[500],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Next: Categorize parsed bank & mobile money messages.',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Review and categorize parsed mobile money & bank transactions automatically extracted from your SMS notifications.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        height: 1.4,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
+                    Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
+                    const SizedBox(height: 14),
+                    // Active Parsers and Action Button Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Parser active checkmark rows
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check_rounded,
-                                color: isDark ? Colors.black : Colors.white,
-                                size: 10,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check_rounded,
-                                color: isDark ? Colors.black : Colors.white,
-                                size: 10,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check_rounded,
-                                color: isDark ? Colors.black : Colors.white,
-                                size: 10,
-                              ),
-                            ),
-                          ],
+                        // Active Parsers Chips
+                        Expanded(
+                          child: Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: [
+                              _buildActiveParserBadge(isDark, 'M-Pesa'),
+                              _buildActiveParserBadge(isDark, 'Airtel'),
+                              _buildActiveParserBadge(isDark, 'Halopesa'),
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 12),
+                        // Action Button
                         TactileSpringContainer(
                           onTap: () => context.push('/sms-review'),
                           child: Container(
@@ -1430,13 +1499,24 @@ class DashboardScreen extends ConsumerWidget {
                               color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: Text(
-                              "Let's go!",
-                              style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Let's go",
+                                  style: TextStyle(
+                                    color: isDark ? Colors.white : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.chevron_right_rounded,
+                                  size: 14,
+                                  color: isDark ? Colors.white : Colors.black,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1450,7 +1530,7 @@ class DashboardScreen extends ConsumerWidget {
               // ── 5. Budget Health Score Card (Credit Score Vibe) ──
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF0F0F10) : Colors.white,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1459,115 +1539,204 @@ class DashboardScreen extends ConsumerWidget {
                     width: 0.5,
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'budget',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 14,
-                                  color: isDark ? Colors.white : Colors.black,
-                                ),
-                              ),
-                              Text(
-                                ' health',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                  color: isDark ? Colors.grey : Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '${(1000 - (overallPct * 1000).round()).clamp(0, 1000)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 42,
-                              color: isDark ? Colors.white : Colors.black,
-                              letterSpacing: -1.5,
+                    // Header Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.health_and_safety_rounded,
+                              size: 16,
+                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.update_rounded,
-                                color: Colors.grey,
-                                size: 12,
+                            const SizedBox(width: 6),
+                            Text(
+                              'BUDGET HEALTH',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                                letterSpacing: 1.2,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
                               ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Updated just now',
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: 11,
-                                ),
+                            ),
+                          ],
+                        ),
+                        // Dynamic Status Badge
+                        (() {
+                          final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
+                          String ratingLabel = 'Healthy';
+                          Color ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+                          if (score >= 800) {
+                            ratingLabel = 'Excellent';
+                            ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+                          } else if (score >= 600) {
+                            ratingLabel = 'Healthy';
+                            ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+                          } else if (score >= 400) {
+                            ratingLabel = 'Moderate';
+                            ratingColor = Colors.orange;
+                          } else {
+                            ratingLabel = 'Critical';
+                            ratingColor = const Color(0xFFFF453A);
+                          }
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: ratingColor.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              ratingLabel,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: ratingColor,
+                                letterSpacing: 0.5,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          );
+                        }()),
+                      ],
                     ),
-                    // Multi-colored Gradient Ring
-                    SizedBox(
-                      height: 70,
-                      width: 70,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            value: 1.0,
-                            strokeWidth: 4,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              isDark
-                                  ? Colors.white.withOpacity(0.05)
-                                  : Colors.black.withOpacity(0.05),
-                            ),
-                          ),
-                          CircularProgressIndicator(
-                            value: (1.0 - overallPct), // Score remaining budget
-                            strokeWidth: 6,
-                            backgroundColor: Colors.transparent,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              overallPct > 0.8
-                                  ? const Color(0xFFFF453A)
-                                  : (overallPct > 0.5
-                                      ? const Color(0xFFFF9F0A)
-                                      : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 18),
+                    // Inner content Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Score Display
+                        (() {
+                          final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      '$score',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 48,
+                                        color: isDark ? Colors.white : Colors.black,
+                                        letterSpacing: -2,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '/ 1000',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        color: isDark ? Colors.grey[600] : Colors.grey[500],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              const SizedBox(height: 4),
                               Text(
-                                '${((1.0 - overallPct) * 100).round()}%',
+                                'Overall pacing score',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w900,
-                                  color: isDark ? Colors.white : Colors.black,
-                                ),
-                              ),
-                              const Text(
-                                'LEFT',
-                                style: TextStyle(
-                                  fontSize: 7,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
+                                  color: isDark ? Colors.grey[500] : Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
+                          );
+                        }()),
+                        // Progress circular indicator
+                        SizedBox(
+                          height: 72,
+                          width: 72,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                value: 1.0,
+                                strokeWidth: 5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                                ),
+                              ),
+                              CircularProgressIndicator(
+                                value: (1.0 - overallPct),
+                                strokeWidth: 7,
+                                strokeCap: StrokeCap.round,
+                                backgroundColor: Colors.transparent,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  overallPct > 0.8
+                                      ? const Color(0xFFFF453A)
+                                      : (overallPct > 0.5
+                                          ? const Color(0xFFFF9F0A)
+                                          : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${((1.0 - overallPct) * 100).round()}%',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: isDark ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'LEFT',
+                                    style: TextStyle(
+                                      fontSize: 7,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 18),
+                    Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
+                    const SizedBox(height: 12),
+                    // Summary status message row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Spent ${(overallPct * 100).round()}% of allocated budget',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.update_rounded,
+                              color: Colors.grey,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Updated just now',
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),

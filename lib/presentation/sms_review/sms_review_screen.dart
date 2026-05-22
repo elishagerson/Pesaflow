@@ -298,7 +298,7 @@ class SmsReviewScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(left: 24),
                   margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade600,
+                    color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   ),
                   child: const Row(
@@ -337,7 +337,7 @@ class SmsReviewScreen extends ConsumerWidget {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Transaction approved: ${trans.description}'),
-                          backgroundColor: Colors.green.shade600,
+                          backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -497,11 +497,11 @@ class SmsReviewScreen extends ConsumerWidget {
                                 ref.invalidate(recentTransactionsStreamProvider);
                               },
                               icon: Icon(Icons.check_rounded,
-                                  size: 16, color: Colors.green.shade600),
+                                  size: 16, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
                               label: Text('Approve',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.green.shade600)),
+                                      color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
                             ),
                           ],
                         ),

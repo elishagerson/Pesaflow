@@ -497,7 +497,11 @@ class SettingsScreen extends ConsumerWidget {
                 header: 'Data Management',
                 rows: [
                   IosListRow(
-                    leading: const Icon(Icons.file_download_rounded, color: Colors.green, size: 24),
+                    leading: Icon(
+                      Icons.file_download_rounded,
+                      color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                      size: 24,
+                    ),
                     title: const Text('Export to CSV'),
                     subtitle: const Text('Download transactions as CSV file'),
                     onTap: () => _handleExportCsv(context, ref),

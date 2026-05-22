@@ -9,12 +9,14 @@ class AmountText extends StatelessWidget {
   final AmountType type;
   final TextStyle? style;
   final bool showDecimals;
+  final bool useMonospace;
 
   const AmountText({
     required this.amountInCents,
     this.type = AmountType.neutral,
     this.style,
     this.showDecimals = false,
+    this.useMonospace = true,
     super.key,
   });
 
@@ -39,9 +41,14 @@ class AmountText extends StatelessWidget {
     }
 
     final TextStyle baseStyle = style ?? theme.textTheme.bodyMedium ?? const TextStyle();
-    final TextStyle customMonospaceStyle = AppTheme.getMonospaceStyle(baseStyle).copyWith(
-      color: resolveColor(),
-    );
+    final TextStyle customStyle = useMonospace
+        ? AppTheme.getMonospaceStyle(baseStyle).copyWith(
+            color: resolveColor(),
+          )
+        : baseStyle.copyWith(
+            color: resolveColor(),
+            fontWeight: baseStyle.fontWeight ?? FontWeight.w900,
+          );
 
     // Build the string representation: Prepend +/- signs for visually dynamic grids
     String displayString = CurrencyFormatter.formatCents(
@@ -57,7 +64,7 @@ class AmountText extends StatelessWidget {
 
     return Text(
       displayString,
-      style: customMonospaceStyle,
+      style: customStyle,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
