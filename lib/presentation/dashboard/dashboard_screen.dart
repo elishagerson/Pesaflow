@@ -802,145 +802,138 @@ class DashboardScreen extends ConsumerWidget {
       '#06B6D4', // Cyan
     ];
 
-    showDialog(
+    ModernDialog.show(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final theme = Theme.of(context);
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+      title: const Text('New Workspace'),
+      titleIcon: Icons.grid_view_rounded,
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          final theme = Theme.of(context);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Workspace Name',
+                  hintText: 'e.g. Side Gig, Paris Trip',
+                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                ),
+                textCapitalization: TextCapitalization.words,
               ),
-              title: const Text('New Workspace'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Workspace Name',
-                        hintText: 'e.g. Side Gig, Paris Trip',
-                      ),
-                      textCapitalization: TextCapitalization.words,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Select Icon',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: iconsList.map((ico) {
-                        final isSel = selectedIcon == ico;
-                        return GestureDetector(
-                          onTap: () => setState(() => selectedIcon = ico),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isSel
-                                  ? theme.colorScheme.primary.withOpacity(0.12)
-                                  : Colors.transparent,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: isSel
-                                    ? theme.colorScheme.primary
-                                    : Colors.grey.withOpacity(0.2),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Icon(
-                              _getTrackerIcon(ico),
-                              color: isSel
-                                  ? theme.colorScheme.primary
-                                  : Colors.grey,
-                              size: 20,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Select Color',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: colorsList.map((col) {
-                        final isSel = selectedColorHex == col;
-                        final c = _hexToColor(col);
-                        return GestureDetector(
-                          onTap: () => setState(() => selectedColorHex = col),
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: c,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: isSel
-                                    ? theme.colorScheme.onSurface
-                                    : Colors.transparent,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+              const SizedBox(height: 20),
+              const Text(
+                'Select Icon',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
                 ),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: iconsList.map((ico) {
+                  final isSel = selectedIcon == ico;
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedIcon = ico),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isSel
+                            ? theme.colorScheme.primary.withOpacity(0.12)
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSel
+                              ? theme.colorScheme.primary
+                              : Colors.grey.withOpacity(0.2),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        _getTrackerIcon(ico),
+                        color: isSel
+                            ? theme.colorScheme.primary
+                            : Colors.grey,
+                        size: 20,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Select Color',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (nameController.text.trim().isEmpty) return;
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: colorsList.map((col) {
+                  final isSel = selectedColorHex == col;
+                  final c = _hexToColor(col);
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedColorHex = col),
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: c,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSel
+                              ? theme.colorScheme.onSurface
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (nameController.text.trim().isEmpty) return;
 
-                    final newTracker = Tracker(
-                      id: const Uuid().v4(),
-                      name: nameController.text.trim(),
-                      icon: selectedIcon,
-                      color: selectedColorHex,
-                      isArchived: false,
-                      createdAt: DateTime.now(),
-                    );
-
-                    await ref
-                        .read(trackerRepositoryProvider)
-                        .createTracker(newTracker);
-                    ref.invalidate(allTrackersStreamProvider);
-
-                    // Set newly created tracker as active
-                    await ref
-                        .read(activeTrackerIdProvider.notifier)
-                        .setTrackerId(newTracker.id);
-
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Create'),
-                ),
-              ],
+            final newTracker = Tracker(
+              id: const Uuid().v4(),
+              name: nameController.text.trim(),
+              icon: selectedIcon,
+              color: selectedColorHex,
+              isArchived: false,
+              createdAt: DateTime.now(),
             );
+
+            await ref
+                .read(trackerRepositoryProvider)
+                .createTracker(newTracker);
+            ref.invalidate(allTrackersStreamProvider);
+
+            // Set newly created tracker as active
+            await ref
+                .read(activeTrackerIdProvider.notifier)
+                .setTrackerId(newTracker.id);
+
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
-        );
-      },
+          child: const Text('Create'),
+        ),
+      ],
     );
   }
 
