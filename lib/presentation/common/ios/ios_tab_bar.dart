@@ -147,11 +147,11 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xCC1C1C1E)
+                ? const Color(0xCC000000)
                 : const Color(0xCCF2F2F7),
             border: Border(
               bottom: BorderSide(
-                color: isDark ? const Color(0x1FFFFFFF) : const Color(0x1A000000),
+                color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1A000000),
                 width: 0.5,
               ),
             ),

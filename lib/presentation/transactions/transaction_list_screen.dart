@@ -310,83 +310,118 @@ class TransactionListScreen extends ConsumerWidget {
                             ),
                           ),
 
-                          // Transaction Items under this group
-                          ...dayItems.map((item) {
-                            final trans = item.transaction;
-                            
-                            AmountType amtType = AmountType.neutral;
-                            if (trans.type.toLowerCase() == 'income') {
-                              amtType = AmountType.income;
-                            } else if (trans.type.toLowerCase() == 'expense' ||
-                                       trans.type.toLowerCase() == 'airtime' ||
-                                       trans.type.toLowerCase() == 'fee') {
-                              amtType = AmountType.expense;
-                            }
-
-                            return Dismissible(
-                              key: Key(trans.id),
-                              direction: DismissDirection.endToStart,
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20.0),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.error,
-                                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                                ),
-                                child: const Icon(Icons.delete_rounded, color: Colors.white),
+                          // Transaction Items under this group inside elegant unified card containers
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark 
+                                  ? AppTheme.surfaceContainerDark 
+                                  : AppTheme.surfaceLight,
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(
+                                color: theme.brightness == Brightness.dark 
+                                    ? const Color(0x12FFFFFF) 
+                                    : const Color(0x1F000000),
+                                width: 0.5,
                               ),
-                              onDismissed: (_) async {
-                                await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                                ref.invalidate(filteredTransactionsStreamProvider);
-                                ref.invalidate(accountsStreamProvider);
-                                ref.invalidate(netWorthProvider);
-                              },
-                                child: IosListRow(
-                                  onTap: () => context.go('/transactions/edit/${trans.id}'),
-                                  leading: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      color: _hexToColor(item.category.color).withOpacity(0.15),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      _getCategoryIcon(item.category.icon),
-                                      color: _hexToColor(item.category.color),
-                                      size: 24,
-                                    ),
-                                  ),
-                                  title: Text(
-                                    trans.description.isNotEmpty ? trans.description : item.category.name,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Row(
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              child: Column(
+                                children: List.generate(dayItems.length, (idx) {
+                                  final item = dayItems[idx];
+                                  final trans = item.transaction;
+                                  final isLast = idx == dayItems.length - 1;
+                                  
+                                  AmountType amtType = AmountType.neutral;
+                                  if (trans.type.toLowerCase() == 'income') {
+                                    amtType = AmountType.income;
+                                  } else if (trans.type.toLowerCase() == 'expense' ||
+                                             trans.type.toLowerCase() == 'airtime' ||
+                                             trans.type.toLowerCase() == 'fee') {
+                                    amtType = AmountType.expense;
+                                  }
+                                  
+                                  return Column(
                                     children: [
-                                      Text(
-                                        item.account.name,
-                                        style: TextStyle(
-                                          color: theme.colorScheme.primary,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                                      Dismissible(
+                                        key: Key(trans.id),
+                                        direction: DismissDirection.endToStart,
+                                        background: Container(
+                                          alignment: Alignment.centerRight,
+                                          padding: const EdgeInsets.only(right: 20.0),
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                          child: const Icon(Icons.delete_rounded, color: Colors.white),
+                                        ),
+                                        onDismissed: (_) async {
+                                          await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
+                                          ref.invalidate(filteredTransactionsStreamProvider);
+                                          ref.invalidate(accountsStreamProvider);
+                                          ref.invalidate(netWorthProvider);
+                                        },
+                                        child: IosListRow(
+                                          onTap: () => context.go('/transactions/edit/${trans.id}'),
+                                          leading: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                              color: _hexToColor(item.category.color).withOpacity(0.12),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              _getCategoryIcon(item.category.icon),
+                                              color: _hexToColor(item.category.color),
+                                              size: 20,
+                                            ),
+                                          ),
+                                          title: Text(
+                                            trans.description.isNotEmpty ? trans.description : item.category.name,
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                          ),
+                                          subtitle: Row(
+                                            children: [
+                                              Text(
+                                                item.account.name,
+                                                style: TextStyle(
+                                                  color: theme.colorScheme.primary,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              if (trans.reference != null)
+                                                Text(
+                                                  'Ref: ${trans.reference}',
+                                                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                                ),
+                                            ],
+                                          ),
+                                          trailing: AmountText(
+                                            amountInCents: trans.amount,
+                                            type: amtType,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
-                                      if (trans.reference != null)
-                                        Text(
-                                          'Ref: ${trans.reference}',
-                                          style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                      if (!isLast)
+                                        Divider(
+                                          height: 0.5,
+                                          thickness: 0.5,
+                                          indent: 56,
+                                          color: theme.brightness == Brightness.dark 
+                                              ? const Color(0x12FFFFFF) 
+                                              : const Color(0x1F000000),
                                         ),
                                     ],
-                                  ),
-                                  trailing: AmountText(
-                                    amountInCents: trans.amount,
-                                    type: amtType,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ));
-                           }),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
                         ],
                       );
                     },

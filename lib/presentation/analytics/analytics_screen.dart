@@ -174,28 +174,99 @@ class _OverviewTab extends StatelessWidget {
               if (cats.isEmpty) return const Center(child: Text('No spending data yet', style: TextStyle(color: Colors.grey)));
               final total = cats.fold<int>(0, (s, c) => s + c.amount);
               final colors = [theme.colorScheme.primary, const Color(0xFFF59E0B), const Color(0xFF3B82F6), const Color(0xFF8B5CF6), const Color(0xFFEF4444)];
-              return Row(children: [
-                SizedBox(
-                  height: 160, width: 160,
-                  child: PieChart(PieChartData(
-                    sectionsSpace: 2, centerSpaceRadius: 45,
-                    sections: List.generate(cats.length, (i) => PieChartSectionData(
-                      value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : hexToColor(cats[i].categoryColor),
-                      radius: 25, showTitle: false,
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 140,
+                    width: 140,
+                    child: PieChart(PieChartData(
+                      sectionsSpace: 2, centerSpaceRadius: 40,
+                      sections: List.generate(cats.length, (i) => PieChartSectionData(
+                        value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : hexToColor(cats[i].categoryColor),
+                        radius: 20, showTitle: false,
+                      )),
                     )),
-                  )),
-                ),
-                const SizedBox(width: 20),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: List.generate(cats.length, (i) {
-                  final pct = total > 0 ? (cats[i].amount / total * 100).round() : 0;
-                  return Padding(padding: const EdgeInsets.only(bottom: 8), child: Row(children: [
-                    Container(width: 10, height: 10, decoration: BoxDecoration(color: i < colors.length ? colors[i] : hexToColor(cats[i].categoryColor), shape: BoxShape.circle)),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(cats[i].categoryName, style: const TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis)),
-                    Text('$pct%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                  ]));
-                }))),
-              ]);
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(cats.length, (i) {
+                        final cat = cats[i];
+                        final color = i < colors.length ? colors[i] : hexToColor(cat.categoryColor);
+                        final pct = total > 0 ? (cat.amount / total * 100).round() : 0;
+                        final double pctFactor = total > 0 ? (cat.amount / total) : 0.0;
+                        
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 8,
+                                        height: 8,
+                                        decoration: BoxDecoration(
+                                          color: color,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        cat.categoryName,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    '$pct%',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[400],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              // Curved progress track
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Container(
+                                  height: 5,
+                                  width: double.infinity,
+                                  color: Colors.white.withOpacity(0.06),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: FractionallySizedBox(
+                                      widthFactor: pctFactor,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: color,
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ],
+              );
             },
             loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
             error: (e, _) => Text('Error: $e'),
@@ -221,51 +292,165 @@ class _TrendsTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Income vs Expense', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text('Income & Expense Trends', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text('Last 12 months', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text('Curved trend waves over the last 12 months', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           const SizedBox(height: 16),
           snapshotsAsync.when(
             data: (snapshots) {
-              if (snapshots.isEmpty) return const SizedBox(height: 200, child: Center(child: Text('No data yet', style: TextStyle(color: Colors.grey))));
-              final reversed = snapshots.reversed.toList();
-              return SizedBox(
-                height: 250,
-                child: BarChart(BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: reversed.fold<double>(0, (m, s) => [s.totalIncome.toDouble(), s.totalExpense.toDouble(), m].reduce((a, b) => a > b ? a : b)) * 1.2 / 100,
-                  barGroups: List.generate(reversed.length, (i) => BarChartGroupData(x: i, barRods: [
-                    BarChartRodData(toY: reversed[i].totalIncome / 100, color: AppTheme.incomeColor, width: 8, borderRadius: BorderRadius.circular(4)),
-                    BarChartRodData(toY: reversed[i].totalExpense / 100, color: AppTheme.expenseColor, width: 8, borderRadius: BorderRadius.circular(4)),
-                  ])),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: (val, _) {
-                      final idx = val.toInt();
-                      if (idx < 0 || idx >= reversed.length) return const SizedBox();
-                      final ym = reversed[idx].yearMonth;
-                      return Padding(padding: const EdgeInsets.only(top: 4), child: Text(ym.substring(5), style: const TextStyle(fontSize: 10)));
-                    })),
+              if (snapshots.isEmpty) {
+                return const SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: Text(
+                      'No data yet',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
-                  borderData: FlBorderData(show: false),
-                  gridData: const FlGridData(show: false),
-                )),
+                );
+              }
+              final reversed = snapshots.reversed.toList();
+              
+              // Build points for Income (Green) and Expense (Red)
+              final incomeSpots = List.generate(reversed.length, (i) {
+                return FlSpot(i.toDouble(), reversed[i].totalIncome / 100.0);
+              });
+              final expenseSpots = List.generate(reversed.length, (i) {
+                return FlSpot(i.toDouble(), reversed[i].totalExpense / 100.0);
+              });
+
+              // Find maximum for clean scaling
+              double maxVal = 1000.0;
+              for (final s in reversed) {
+                final inc = s.totalIncome / 100.0;
+                final exp = s.totalExpense / 100.0;
+                if (inc > maxVal) maxVal = inc;
+                if (exp > maxVal) maxVal = exp;
+              }
+
+              return Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0F0F10),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0x15FFFFFF), width: 0.5),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 240,
+                      child: LineChart(
+                        LineChartData(
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: false,
+                            horizontalInterval: maxVal > 0 ? maxVal / 4 : 1000,
+                            getDrawingHorizontalLine: (value) => FlLine(
+                              color: Colors.white.withOpacity(0.04),
+                              strokeWidth: 1,
+                              dashArray: [5, 5],
+                            ),
+                          ),
+                          titlesData: FlTitlesData(
+                            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: 1,
+                                getTitlesWidget: (val, _) {
+                                  final idx = val.toInt();
+                                  if (idx < 0 || idx >= reversed.length) return const SizedBox();
+                                  final ym = reversed[idx].yearMonth;
+                                  final monthNum = ym.substring(5);
+                                  final monthLabels = {
+                                    '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
+                                    '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
+                                    '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
+                                  };
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      monthLabels[monthNum] ?? monthNum,
+                                      style: TextStyle(color: Colors.grey[500], fontSize: 10),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          minX: 0,
+                          maxX: (reversed.length - 1).toDouble(),
+                          minY: 0,
+                          maxY: maxVal * 1.15,
+                          lineBarsData: [
+                            // Green Income line
+                            LineChartBarData(
+                              spots: incomeSpots,
+                              isCurved: true,
+                              color: const Color(0xFF34C759),
+                              barWidth: 3,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    const Color(0xFF34C759).withOpacity(0.12),
+                                    const Color(0xFF34C759).withOpacity(0.0),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                            ),
+                            // Red Expense line
+                            LineChartBarData(
+                              spots: expenseSpots,
+                              isCurved: true,
+                              color: const Color(0xFFFF453A),
+                              barWidth: 3,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    const Color(0xFFFF453A).withOpacity(0.12),
+                                    const Color(0xFFFF453A).withOpacity(0.0),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
             loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
             error: (e, _) => Text('Error: $e'),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           // Legend
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.incomeColor, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(width: 4), const Text('Income', style: TextStyle(fontSize: 12)),
-            const SizedBox(width: 16),
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: AppTheme.expenseColor, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(width: 4), const Text('Expense', style: TextStyle(fontSize: 12)),
-          ]),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF34C759), shape: BoxShape.circle)),
+              const SizedBox(width: 6),
+              const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+              const SizedBox(width: 24),
+              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFFF453A), shape: BoxShape.circle)),
+              const SizedBox(width: 6),
+              const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+            ],
+          ),
         ],
       ),
     );
