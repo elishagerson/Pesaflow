@@ -79,7 +79,7 @@ class AppDatabase extends _$AppDatabase {
           id: 'default_personal',
           name: 'Personal',
           icon: 'person',
-          color: '#006B4F',
+          color: '#7C3AED',
           isArchived: false,
           createdAt: DateTime.now(),
         ));
@@ -133,7 +133,7 @@ class AppDatabase extends _$AppDatabase {
             id: 'default_personal',
             name: 'Personal',
             icon: 'person',
-            color: '#006B4F',
+            color: '#7C3AED',
             isArchived: false,
             createdAt: DateTime.now(),
           ));

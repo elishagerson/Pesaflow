@@ -6,6 +6,7 @@ import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class BudgetListScreen extends ConsumerWidget {
@@ -232,134 +233,122 @@ class BudgetListScreen extends ConsumerWidget {
 
                   final catColor = _hexToColor(bp.category.color);
 
-                  return GestureDetector(
+                  return GlassCard(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    borderRadius: AppTheme.radiusCard,
                     onTap: () => context.go('/budgets/${bp.budget.id}'),
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: theme.brightness == Brightness.dark
-                            ? AppTheme.surfaceContainerDark
-                            : AppTheme.surfaceLight,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(
-                          color: theme.brightness == Brightness.dark
-                              ? const Color(0x1FFFFFFF)
-                              : const Color(0x1F000000),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: catColor.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  _getCategoryIcon(bp.category.icon),
-                                  color: catColor,
-                                  size: 20,
-                                ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: catColor.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      bp.budget.name,
-                                      style: theme.textTheme.titleSmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      bp.category.name,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: Icon(
+                                _getCategoryIcon(bp.category.icon),
+                                color: catColor,
+                                size: 20,
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: status.isOverBudget
-                                          ? theme.colorScheme.error.withOpacity(0.1)
-                                          : status.isOnTrack
-                                              ? AppTheme.incomeColor.withOpacity(0.1)
-                                              : Colors.orange.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      status.paceLabel,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: status.isOverBudget
-                                            ? theme.colorScheme.error
-                                            : status.isOnTrack
-                                                ? AppTheme.incomeColor
-                                                : Colors.orange,
-                                      ),
+                                  Text(
+                                    bp.budget.name,
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
                                   Text(
-                                    '${status.daysLeft} days left',
-                                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                    bp.category.name,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          // Amount row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AmountText(
-                                amountInCents: bp.spentInPeriod,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: status.isOverBudget ? theme.colorScheme.error : null,
-                                ),
-                              ),
-                              AmountText(
-                                amountInCents: status.allocated,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          // Progress bar
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: LinearProgressIndicator(
-                              value: status.percentage.clamp(0.0, 1.0),
-                              backgroundColor: catColor.withOpacity(0.15),
-                              color: status.isOverBudget ? theme.colorScheme.error : catColor,
-                              minHeight: 6,
                             ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: status.isOverBudget
+                                        ? theme.colorScheme.error.withOpacity(0.1)
+                                        : status.isOnTrack
+                                            ? AppTheme.incomeColor.withOpacity(0.1)
+                                            : Colors.orange.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    status.paceLabel,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: status.isOverBudget
+                                          ? theme.colorScheme.error
+                                          : status.isOnTrack
+                                              ? AppTheme.incomeColor
+                                              : Colors.orange,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${status.daysLeft} days left',
+                                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        // Amount row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AmountText(
+                              amountInCents: bp.spentInPeriod,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: status.isOverBudget ? theme.colorScheme.error : null,
+                              ),
+                            ),
+                            AmountText(
+                              amountInCents: status.allocated,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        // Progress bar
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: LinearProgressIndicator(
+                            value: status.percentage.clamp(0.0, 1.0),
+                            backgroundColor: catColor.withOpacity(0.15),
+                            color: status.isOverBudget ? theme.colorScheme.error : catColor,
+                            minHeight: 6,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${(status.percentage * 100).round()}% used',
-                            style: const TextStyle(fontSize: 11, color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${(status.percentage * 100).round()}% used',
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
+                      ],
                     ),
                   );
                 }),

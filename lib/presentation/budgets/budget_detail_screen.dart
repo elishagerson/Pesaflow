@@ -7,7 +7,9 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 /// Provider for loading a specific budget's full data.
@@ -41,28 +43,8 @@ class BudgetDetailScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Budget Details'),
-        actions: [
-          IconButton(icon: const Icon(Icons.edit_rounded), onPressed: () => context.go('/budgets/$budgetId/edit')),
-          IconButton(
-            icon: const Icon(Icons.delete_rounded),
-            onPressed: () async {
-              final confirm = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-                title: const Text('Delete Budget?'),
-                content: const Text('This will permanently remove this budget and all its history.'),
-                actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete', style: TextStyle(color: Colors.red)))],
-              ));
-              if (confirm == true) {
-                await ref.read(budgetRepositoryProvider).deleteBudget(budgetId);
-                ref.invalidate(budgetProgressProvider);
-                if (context.mounted) context.pop();
-              }
-            },
-          ),
-        ],
-      ),
-      body: detailAsync.when(
+      body: SafeArea(
+        child: detailAsync.when(
         data: (bp) {
           if (bp == null) return const Center(child: Text('Budget not found'));
           final status = BudgetEngine.computeStatus(
@@ -73,7 +55,36 @@ class BudgetDetailScreen extends ConsumerWidget {
           );
           final catColor = _hexToColor(bp.category.color);
 
-          return SingleChildScrollView(
+          return Column(
+            children: [
+              IosNavBar(
+                title: bp.budget.name,
+                largeTitle: false,
+                leading: IconButton(
+                  icon: const Icon(Icons.chevron_left_rounded),
+                  onPressed: () => context.pop(),
+                ),
+                actions: [
+                  IconButton(icon: const Icon(Icons.edit_rounded), onPressed: () => context.go('/budgets/$budgetId/edit')),
+                  IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
+                        title: const Text('Delete Budget?'),
+                        content: const Text('This will permanently remove this budget and all its history.'),
+                        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete', style: TextStyle(color: Colors.red)))],
+                      ));
+                      if (confirm == true) {
+                        await ref.read(budgetRepositoryProvider).deleteBudget(budgetId);
+                        ref.invalidate(budgetProgressProvider);
+                        if (context.mounted) context.pop();
+                      }
+                    },
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -155,18 +166,21 @@ class BudgetDetailScreen extends ConsumerWidget {
                         AmountText(amountInCents: p.spent, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                       ]),
                     );
-                  }).toList()),
+                  } ).toList()),
                   loading: () => const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text('Error: $e'),
                 ),
               ],
             ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+          ),
       ),
-    );
+    ],
+  );
+},
+loading: () => const Center(child: CircularProgressIndicator()),
+error: (e, _) => Center(child: Text('Error: $e')),
+),
+    ));
   }
 }
 

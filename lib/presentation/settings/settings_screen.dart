@@ -80,170 +80,116 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showAccountsManager(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    final accounts = ref.watch(accountsStreamProvider).value ?? [];
+    final theme = Theme.of(context);
+    IosBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-      ),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.9,
-          minChildSize: 0.5,
-          expand: false,
-          builder: (context, scrollController) {
-            final accounts = ref.watch(accountsStreamProvider).value ?? [];
-            final theme = Theme.of(context);
-
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      initialChildSize: 0.6,
+      maxChildSize: 0.9,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Text('Manage Accounts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          if (accounts.isEmpty)
+            const Center(child: Padding(padding: EdgeInsets.all(32), child: Text('No active accounts.')))
+          else
+            ...accounts.map((acc) => IosListRow(
+              leading: Icon(_getAccountIcon(acc.icon), color: theme.colorScheme.primary),
+              title: Text(acc.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                acc.type.toUpperCase().replaceAll('_', ' ') +
+                    (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
+                style: const TextStyle(fontSize: 12),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Manage Accounts',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: accounts.isEmpty
-                        ? const Center(child: Text('No active accounts.'))
-                        : ListView.builder(
-                            controller: scrollController,
-                            itemCount: accounts.length,
-                            itemBuilder: (context, index) {
-                              final acc = accounts[index];
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 8.0),
-                                child: ListTile(
-                                  leading: Icon(_getAccountIcon(acc.icon), color: theme.colorScheme.primary),
-                                  title: Text(acc.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  subtitle: Text(
-                                    acc.type.toUpperCase().replaceAll('_', ' ') +
-                                        (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      AmountText(amountInCents: acc.balance, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete_rounded, color: Colors.red),
-                                        onPressed: () async {
-                                          await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
-                                          ref.invalidate(accountsStreamProvider);
-                                          ref.invalidate(netWorthProvider);
-                                          if (context.mounted) Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                  AmountText(amountInCents: acc.balance, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () async {
+                      await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
+                      ref.invalidate(accountsStreamProvider);
+                      ref.invalidate(netWorthProvider);
+                      if (context.mounted) Navigator.of(context).pop();
+                    },
+                    child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
                   ),
                 ],
               ),
-            );
-          },
-        );
-      },
+            )),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 
   void _showCategoriesManager(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    final categories = ref.watch(categoriesFutureProvider).value ?? [];
+    final theme = Theme.of(context);
+    IosBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-      ),
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.9,
-          minChildSize: 0.5,
-          expand: false,
-          builder: (context, scrollController) {
-            final categories = ref.watch(categoriesFutureProvider).value ?? [];
-            final theme = Theme.of(context);
-
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Manage Categories',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      TextButton.icon(
-                        icon: const Icon(Icons.add_rounded),
-                        label: const Text('Add Custom'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _showAddCategoryDialog(context, ref);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: categories.isEmpty
-                        ? const Center(child: Text('No categories seeded.'))
-                        : ListView.builder(
-                            controller: scrollController,
-                            itemCount: categories.length,
-                            itemBuilder: (context, index) {
-                              final cat = categories[index];
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 8.0),
-                                child: ListTile(
-                                  leading: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      color: _hexToColor(cat.color).withOpacity(0.15),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(_getCategoryIcon(cat.icon), color: _hexToColor(cat.color)),
-                                  ),
-                                  title: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  subtitle: Text(cat.type.toUpperCase(), style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                                  trailing: cat.isSystem
-                                      ? Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(4.0),
-                                          ),
-                                          child: const Text('System', style: TextStyle(fontSize: 10, color: Colors.grey)),
-                                        )
-                                      : IconButton(
-                                          icon: const Icon(Icons.delete_rounded, color: Colors.red),
-                                          onPressed: () async {
-                                            await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
-                                            ref.invalidate(categoriesFutureProvider);
-                                            ref.invalidate(filteredTransactionsStreamProvider);
-                                            if (context.mounted) Navigator.of(context).pop();
-                                          },
-                                        ),
-                                ),
-                              );
-                            },
-                          ),
-                  ),
-                ],
+      initialChildSize: 0.6,
+      maxChildSize: 0.9,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Manage Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextButton.icon(
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Add Custom'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showAddCategoryDialog(context, ref);
+                  },
+                ),
+              ],
+            ),
+          ),
+          if (categories.isEmpty)
+            const Center(child: Padding(padding: EdgeInsets.all(32), child: Text('No categories seeded.')))
+          else
+            ...categories.map((cat) => IosListRow(
+              leading: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: _hexToColor(cat.color).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(_getCategoryIcon(cat.icon), color: _hexToColor(cat.color)),
               ),
-            );
-          },
-        );
-      },
+              title: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(cat.type.toUpperCase(), style: const TextStyle(fontSize: 11, color: Colors.grey)),
+              trailing: cat.isSystem
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: const Text('System', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    )
+                  : GestureDetector(
+                      onTap: () async {
+                        await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
+                        ref.invalidate(categoriesFutureProvider);
+                        ref.invalidate(filteredTransactionsStreamProvider);
+                        if (context.mounted) Navigator.of(context).pop();
+                      },
+                      child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
+                    ),
+            )),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 
