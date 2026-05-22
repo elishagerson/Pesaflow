@@ -717,17 +717,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                       const Spacer(),
 
-                      // Numeric Keypad Grid
+                      // Numeric Keypad Grid (Edge-to-edge with elegant thin line grid dividers)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Color(0x12FFFFFF), width: 0.5),
+                          ),
+                        ),
                         child: Column(
                           children: [
                             _buildKeypadRow(['1', '2', '3']),
-                            const SizedBox(height: 12),
                             _buildKeypadRow(['4', '5', '6']),
-                            const SizedBox(height: 12),
                             _buildKeypadRow(['7', '8', '9']),
-                            const SizedBox(height: 12),
                             _buildKeypadRow(['.', '0', '<']),
                           ],
                         ),
@@ -754,26 +755,30 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   Widget _buildKeypadRow(List<String> keys) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: keys.map((key) {
+      children: keys.asMap().entries.map((entry) {
+        final index = entry.key;
+        final key = entry.value;
         return Expanded(
           child: TactileSpringContainer(
             onTap: () => _keypadPress(key),
             child: Container(
-              height: 54,
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              height: 64,
               decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
+                border: Border(
+                  top: const BorderSide(color: Color(0x12FFFFFF), width: 0.5),
+                  right: index < 2
+                      ? const BorderSide(color: Color(0x12FFFFFF), width: 0.5)
+                      : BorderSide.none,
+                ),
               ),
               child: Center(
                 child: key == '<'
-                    ? const Icon(Icons.backspace_outlined, color: Colors.white, size: 22)
+                    ? const Icon(Icons.backspace_outlined, color: Colors.white, size: 20)
                     : Text(
                         key,
                         style: const TextStyle(
                           fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
                           color: Colors.white,
                         ),
                       ),
