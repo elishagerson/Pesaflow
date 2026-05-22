@@ -10,7 +10,6 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
@@ -998,60 +997,93 @@ class DashboardScreen extends ConsumerWidget {
               // ── 1. Elegant Lowercase 'home' Header (Mobbin inspired) ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Home',
+                      Text(
+                        _getGreeting().toUpperCase(),
                         style: TextStyle(
-                          fontSize: 38,
+                          fontSize: 9,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: -1.5,
+                          letterSpacing: 1.5,
+                          color: isDark ? Colors.grey[500] : Colors.grey[600],
                         ),
                       ),
+                      const SizedBox(height: 4),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.w900,
+                              color: isDark ? Colors.white : Colors.black,
+                              letterSpacing: -1.0,
+                            ),
+                          ),
+                          Text(
+                            '.',
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.w900,
+                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                            ),
+                          ),
+                        ],
+                      ),
                       if (activeTrackerAsync.value != null) ...[
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 8),
                         TactileSpringContainer(
-                          onTap: () =>
-                              _showWorkspaceSelectorSheet(context, ref),
+                          onTap: () => _showWorkspaceSelectorSheet(context, ref),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                              vertical: 3.0,
+                              horizontal: 10.0,
+                              vertical: 4.0,
                             ),
                             decoration: BoxDecoration(
-                              color: trackerColor.withOpacity(0.08),
+                              color: isDark ? const Color(0xFF161618) : Colors.white,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                color: trackerColor.withOpacity(0.2),
-                                width: 1.0,
+                                color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                                width: 0.5,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.03),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  _getTrackerIcon(
-                                    activeTrackerAsync.value!.icon,
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: trackerColor,
+                                    shape: BoxShape.circle,
                                   ),
-                                  color: trackerColor,
-                                  size: 11,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 6),
                                 Text(
                                   trackerName.toUpperCase(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
-                                    color: trackerColor,
+                                    color: isDark ? Colors.white70 : Colors.black87,
                                     fontSize: 9,
                                     letterSpacing: 1.0,
                                   ),
                                 ),
-                                const SizedBox(width: 2),
+                                const SizedBox(width: 4),
                                 Icon(
                                   Icons.keyboard_arrow_down_rounded,
-                                  color: trackerColor,
+                                  color: isDark ? Colors.grey[500] : Colors.grey[600],
                                   size: 12,
                                 ),
                               ],
@@ -1063,48 +1095,78 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   Row(
                     children: [
-                      // Review Queue Bell trigger
-                      Stack(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.notifications_none_rounded,
-                              size: 26,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
-                            onPressed: () => context.push('/sms-review'),
-                          ),
-                          if (pendingReviewCount > 0)
-                            Positioned(
-                              right: 8,
-                              top: 8,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFFF453A),
-                                  shape: BoxShape.circle,
+                      // Review Queue Bell trigger with glass container
+                      TactileSpringContainer(
+                        onTap: () => context.push('/sms-review'),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF161618) : Colors.white,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                                  width: 0.5,
                                 ),
-                                child: Text(
-                                  '$pendingReviewCount',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
+                              ),
+                              child: Icon(
+                                Icons.notifications_none_rounded,
+                                size: 20,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            if (pendingReviewCount > 0)
+                              Positioned(
+                                right: -2,
+                                top: -2,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFF453A),
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: isDark ? Colors.black : Colors.white,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '$pendingReviewCount',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
+                      const SizedBox(width: 10),
+                      // Premium Profile Avatar Settings trigger
+                      TactileSpringContainer(
                         onTap: () => context.go('/settings'),
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: trackerColor.withOpacity(0.12),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: isDark
+                                  ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
+                                  : [Colors.grey[200]!, Colors.grey[300]!],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
+                              width: 0.5,
+                            ),
+                          ),
                           child: Icon(
-                            Icons.person_rounded,
-                            color: trackerColor,
+                            Icons.person_outline_rounded,
+                            color: isDark ? Colors.white : Colors.black,
                             size: 20,
                           ),
                         ),

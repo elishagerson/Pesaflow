@@ -10,6 +10,7 @@ import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 /// Provider for loading a specific budget's full data.
@@ -69,11 +70,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                   IconButton(
                     icon: const Icon(Icons.delete_rounded),
                     onPressed: () async {
-                      final confirm = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
+                      final confirm = await ModernDialog.show<bool>(
+                        context: context,
                         title: const Text('Delete Budget?'),
+                        titleIcon: Icons.delete_forever_rounded,
+                        iconColor: Colors.red,
                         content: const Text('This will permanently remove this budget and all its history.'),
-                        actions: [TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete', style: TextStyle(color: Colors.red)))],
-                      ));
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      );
                       if (confirm == true) {
                         await ref.read(budgetRepositoryProvider).deleteBudget(budgetId);
                         ref.invalidate(budgetProgressProvider);

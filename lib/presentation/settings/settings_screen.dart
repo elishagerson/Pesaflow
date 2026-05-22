@@ -6,10 +6,8 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
-import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
@@ -131,7 +129,6 @@ class SettingsScreen extends ConsumerWidget {
 
   void _showCategoriesManager(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
-    final theme = Theme.of(context);
     IosBottomSheet.show(
       context: context,
       initialChildSize: 0.6,
@@ -378,58 +375,41 @@ class SettingsScreen extends ConsumerWidget {
       if (!success || !context.mounted) return;
 
       // Show relaunch alert dialog
-      showDialog(
+      ModernDialog.show(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
-          final theme = Theme.of(context);
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusDialog)),
-            title: Row(
-              children: [
-                Icon(Icons.check_circle_rounded, color: AppTheme.incomeColor, size: 28),
-                const SizedBox(width: 12),
-                const Text('Profile Restored'),
-              ],
-            ),
-            content: const Text(
-              'Your offline database backup has been successfully restored.\n\n'
-              'To cleanly load your transactions, budgets, and settings, PesaFlow needs to relaunch.',
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () => exit(0),
-                child: const Text('Relaunch App'),
-              ),
-            ],
-          );
-        },
+        title: const Text('Profile Restored'),
+        titleIcon: Icons.check_circle_rounded,
+        iconColor: AppTheme.incomeColor,
+        content: const Text(
+          'Your offline database backup has been successfully restored.\n\n'
+          'To cleanly load your transactions, budgets, and settings, PesaFlow needs to relaunch.',
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => exit(0),
+            child: const Text('Relaunch App'),
+          ),
+        ],
       );
     } catch (e) {
       if (context.mounted) {
-        showDialog(
+        ModernDialog.show(
           context: context,
-          builder: (context) => AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusDialog)),
-            title: Row(
-              children: const [
-                Icon(Icons.error_outline_rounded, color: Colors.red, size: 28),
-                SizedBox(width: 12),
-                Text('Restore Failed'),
-              ],
-            ),
-            content: Text(
-              e is FormatException
-                  ? e.message
-                  : 'An unexpected error occurred during database restoration: $e',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Close'),
-              ),
-            ],
+          title: const Text('Restore Failed'),
+          titleIcon: Icons.error_outline_rounded,
+          iconColor: Colors.red,
+          content: Text(
+            e is FormatException
+                ? e.message
+                : 'An unexpected error occurred during database restoration: $e',
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
         );
       }
     }
