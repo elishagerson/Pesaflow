@@ -318,48 +318,52 @@ class DashboardScreen extends ConsumerWidget {
      );
    }
 
-  Widget _buildBudgetRings(WidgetRef ref, ThemeData theme, BuildContext context) {
-    final budgetsAsync = ref.watch(budgetProgressProvider);
-    return budgetsAsync.when(
-      data: (budgets) {
-        if (budgets.isEmpty) return const SizedBox.shrink();
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Budget Progress', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-            TextButton(onPressed: () => context.go('/budgets'), child: const Text('See All')),
-          ]),
-          const SizedBox(height: 8),
-          SizedBox(height: 100, child: ListView.builder(
-            scrollDirection: Axis.horizontal, physics: const BouncingScrollPhysics(), itemCount: budgets.length,
-            itemBuilder: (_, i) {
-              final bp = budgets[i];
-              final pct = bp.percentage.clamp(0.0, 1.0);
-              final catColor = _hexToColor(bp.category.color);
-              return TactileSpringContainer(
-                onTap: () => context.go('/budgets/${bp.budget.id}'),
-                child: Container(
-                  width: 90, margin: const EdgeInsets.only(right: 12),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    SizedBox(height: 56, width: 56, child: Stack(alignment: Alignment.center, children: [
-                      PieChart(PieChartData(startDegreeOffset: -90, sectionsSpace: 0, centerSpaceRadius: 20, sections: [
-                        PieChartSectionData(value: pct * 100, color: bp.spentInPeriod > (bp.currentPeriod?.allocated ?? bp.budget.amount) ? AppTheme.expenseColor : catColor, radius: 6, showTitle: false),
-                        PieChartSectionData(value: (1.0 - pct) * 100, color: catColor.withOpacity(0.15), radius: 6, showTitle: false),
-                      ])),
-                      Text('${(pct * 100).round()}%', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                    ])),
-                    const SizedBox(height: 6),
-                    Text(bp.budget.name, style: const TextStyle(fontSize: 11), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
-                  ]),
-                ),
-              );
-            },
-          )),
-        ]);
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
-    );
-  }
+   Widget _buildBudgetRings(WidgetRef ref, ThemeData theme, BuildContext context) {
+     final budgetsAsync = ref.watch(budgetProgressProvider);
+     return budgetsAsync.when(
+       data: (budgets) {
+         if (budgets.isEmpty) return const SizedBox.shrink();
+         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+             Text('Budget Progress', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+             TextButton(onPressed: () => context.go('/budgets'), child: const Text('See All')),
+           ]),
+           const SizedBox(height: 8),
+           SizedBox(height: 100, child: ListView.builder(
+             scrollDirection: Axis.horizontal, physics: const BouncingScrollPhysics(), itemCount: budgets.length,
+             itemBuilder: (_, i) {
+               final bp = budgets[i];
+               final pct = bp.percentage.clamp(0.0, 1.0);
+               final catColor = _hexToColor(bp.category.color);
+               return TactileSpringContainer(
+                 onTap: () => context.go('/budgets/${bp.budget.id}'),
+                 child: GlassCard(
+                   borderRadius: AppTheme.radiusCard,
+                   margin: EdgeInsets.only(right: 12),
+                   child: Container(
+                     width: 90,
+                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                       SizedBox(height: 56, width: 56, child: Stack(alignment: Alignment.center, children: [
+                         PieChart(PieChartData(startDegreeOffset: -90, sectionsSpace: 0, centerSpaceRadius: 20, sections: [
+                           PieChartSectionData(value: pct * 100, color: bp.spentInPeriod > (bp.currentPeriod?.allocated ?? bp.budget.amount) ? AppTheme.expenseColor : catColor, radius: 6, showTitle: false),
+                           PieChartSectionData(value: (1.0 - pct) * 100, color: catColor.withOpacity(0.15), radius: 6, showTitle: false),
+                         ])),
+                         Text('${(pct * 100).round()}%', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                       ])),
+                       const SizedBox(height: 6),
+                       Text(bp.budget.name, style: const TextStyle(fontSize: 11), maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                     ]),
+                   ),
+                 ),
+               );
+             },
+           )),
+         ]);
+       },
+       loading: () => const SizedBox.shrink(),
+       error: (_, __) => const SizedBox.shrink(),
+     );
+   }
 
   void _showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
