@@ -187,7 +187,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                   } ).toList()),
                   loading: () => const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text('Error: $e'),
-                ),  ),
+                ),
               ],
             ),
           ),
