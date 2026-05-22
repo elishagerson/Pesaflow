@@ -193,13 +193,21 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(AppTheme.radiusCard), border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000))),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(
+          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+          width: 0.5,
+        ),
+      ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: TextStyle(fontSize: 11, color: theme.colorScheme.onSurfaceVariant)),
+        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 4),
-        AmountText(amountInCents: amount.abs(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: color)),
+        AmountText(amountInCents: amount.abs(), style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: color, letterSpacing: -0.3)),
       ]),
     );
   }

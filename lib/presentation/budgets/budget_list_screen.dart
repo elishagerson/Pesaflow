@@ -137,14 +137,11 @@ class BudgetListScreen extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
+                    color: theme.brightness == Brightness.dark ? const Color(0xFF0F0F10) : Colors.white,
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.8),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    border: Border.all(
+                      color: theme.brightness == Brightness.dark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      width: 0.5,
                     ),
                   ),
                   child: Column(
@@ -153,7 +150,8 @@ class BudgetListScreen extends ConsumerWidget {
                       Text(
                         'BUDGET OVERVIEW',
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: Colors.white70,
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
                       ),
@@ -164,14 +162,15 @@ class BudgetListScreen extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Total Spent', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                              const Text('Total Spent', style: TextStyle(color: Colors.grey, fontSize: 12)),
                               const SizedBox(height: 2),
                               AmountText(
                                 amountInCents: totalSpent,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                style: TextStyle(
+                                  color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.w900,
                                   fontSize: 22,
+                                  letterSpacing: -0.5,
                                 ),
                               ),
                             ],
@@ -179,14 +178,15 @@ class BudgetListScreen extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text('Total Allocated', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                              const Text('Total Allocated', style: TextStyle(color: Colors.grey, fontSize: 12)),
                               const SizedBox(height: 2),
                               AmountText(
                                 amountInCents: totalAllocated,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                style: TextStyle(
+                                  color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+                                  fontWeight: FontWeight.w900,
                                   fontSize: 22,
+                                  letterSpacing: -0.5,
                                 ),
                               ),
                             ],
@@ -199,8 +199,12 @@ class BudgetListScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
                           value: totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.0) : 0,
-                          backgroundColor: Colors.white24,
-                          color: totalSpent > totalAllocated ? Colors.red[300] : Colors.white,
+                          backgroundColor: theme.brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.05)
+                              : Colors.black.withOpacity(0.05),
+                          color: totalSpent > totalAllocated
+                              ? Colors.red[400]
+                              : (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
                           minHeight: 8,
                         ),
                       ),
@@ -209,7 +213,7 @@ class BudgetListScreen extends ConsumerWidget {
                         totalAllocated > 0
                             ? '${(totalSpent / totalAllocated * 100).round()}% used'
                             : '0% used',
-                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),
@@ -284,7 +288,7 @@ class BudgetListScreen extends ConsumerWidget {
                                     color: status.isOverBudget
                                         ? theme.colorScheme.error.withOpacity(0.1)
                                         : status.isOnTrack
-                                            ? AppTheme.incomeColor.withOpacity(0.1)
+                                            ? (theme.brightness == Brightness.dark ? const Color(0x1F00E5FF) : const Color(0x1F0A84FF))
                                             : Colors.orange.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -296,7 +300,7 @@ class BudgetListScreen extends ConsumerWidget {
                                       color: status.isOverBudget
                                           ? theme.colorScheme.error
                                           : status.isOnTrack
-                                              ? AppTheme.incomeColor
+                                              ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))
                                               : Colors.orange,
                                     ),
                                   ),
