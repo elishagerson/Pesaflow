@@ -999,73 +999,74 @@ class DashboardScreen extends ConsumerWidget {
                         amtType = AmountType.expense;
                       }
 
-                      return Dismissible(
-                        key: Key(trans.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20.0),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.error,
-                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                          ),
-                          child: const Icon(Icons.delete_rounded, color: Colors.white),
-                        ),
-                        onDismissed: (_) async {
-                          await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                          ref.invalidate(recentTransactionsStreamProvider);
-                          ref.invalidate(accountsStreamProvider);
-                          ref.invalidate(netWorthProvider);
-                        },
-                        child: Card(
-                          margin: const EdgeInsets.only(bottom: 8.0),
-                          child: ListTile(
-                            onTap: () => context.go('/transactions/edit/${trans.id}'),
-                            leading: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: _hexToColor(item.category.color).withOpacity(0.15),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                _getCategoryIcon(item.category.icon),
-                                color: _hexToColor(item.category.color),
-                                size: 24,
-                              ),
-                            ),
-                            title: Text(
-                              trans.description.isNotEmpty ? trans.description : item.category.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Row(
-                              children: [
-                                Text(
-                                  item.account.name,
-                                  style: TextStyle(
-                                    color: trackerColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  trans.createdAt.toString().substring(0, 10),
-                                  style: const TextStyle(color: Colors.grey, fontSize: 11),
-                                ),
-                              ],
-                            ),
-                            trailing: AmountText(
-                              amountInCents: trans.amount,
-                              type: amtType,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
+                       return Dismissible(
+                         key: Key(trans.id),
+                         direction: DismissDirection.endToStart,
+                         background: Container(
+                           alignment: Alignment.centerRight,
+                           padding: const EdgeInsets.only(right: 20.0),
+                           decoration: BoxDecoration(
+                             color: theme.colorScheme.error,
+                             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                           ),
+                           child: const Icon(Icons.delete_rounded, color: Colors.white),
+                         ),
+                         onDismissed: (_) async {
+                           await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
+                           ref.invalidate(recentTransactionsStreamProvider);
+                           ref.invalidate(accountsStreamProvider);
+                           ref.invalidate(netWorthProvider);
+                         },
+                         child: GlassCard(
+                           margin: const EdgeInsets.only(bottom: 8.0),
+                           borderRadius: AppTheme.radiusCard,
+                           child: ListTile(
+                             onTap: () => context.go('/transactions/edit/${trans.id}'),
+                             leading: Container(
+                               padding: const EdgeInsets.all(8.0),
+                               decoration: BoxDecoration(
+                                 color: _hexToColor(item.category.color).withOpacity(0.15),
+                                 shape: BoxShape.circle,
+                               ),
+                               child: Icon(
+                                 _getCategoryIcon(item.category.icon),
+                                 color: _hexToColor(item.category.color),
+                                 size: 24,
+                               ),
+                             ),
+                             title: Text(
+                               trans.description.isNotEmpty ? trans.description : item.category.name,
+                               style: const TextStyle(fontWeight: FontWeight.bold),
+                             ),
+                             subtitle: Row(
+                               children: [
+                                 Text(
+                                   item.account.name,
+                                   style: TextStyle(
+                                     color: trackerColor,
+                                     fontSize: 12,
+                                     fontWeight: FontWeight.bold,
+                                   ),
+                                 ),
+                                 const SizedBox(width: 8),
+                                 Text(
+                                   trans.createdAt.toString().substring(0, 10),
+                                   style: const TextStyle(color: Colors.grey, fontSize: 11),
+                                 ),
+                               ],
+                             ),
+                             trailing: AmountText(
+                               amountInCents: trans.amount,
+                               type: amtType,
+                               style: const TextStyle(
+                                 fontWeight: FontWeight.bold,
+                                 fontSize: 16,
+                                 fontFamily: 'monospace',
+                               ),
+                             ),
+                           ),
+                         ),
+                       );
                     },
                   );
                 },
