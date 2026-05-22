@@ -4,6 +4,9 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -166,11 +169,15 @@ class SmsReviewScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SMS Review Queue'),
-        centerTitle: true,
-      ),
-      body: reviewAsync.when(
+      body: SafeArea(
+        child: Column(
+          children: [
+            IosNavBar(
+              title: 'SMS Review',
+              largeTitle: true,
+            ),
+            Expanded(
+              child: reviewAsync.when(
         data: (items) {
           if (items.isEmpty) {
             return Center(
@@ -509,6 +516,9 @@ class SmsReviewScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text('Error loading review queue: $err')),
       ),
-    );
+          ),
+        ],
+      ),
+    ));
   }
 }

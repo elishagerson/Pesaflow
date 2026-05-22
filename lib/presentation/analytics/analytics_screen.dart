@@ -6,6 +6,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/analytics_dao.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -149,7 +150,7 @@ class _OverviewTab extends StatelessWidget {
                     ])),
                   ]),
                   const SizedBox(height: 12),
-                  Divider(color: Colors.white24),
+                  Divider(height: 0.5, thickness: 0.5, color: Colors.white24),
                   const SizedBox(height: 8),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text(net >= 0 ? 'Net Savings' : 'Net Deficit', style: const TextStyle(color: Colors.white70, fontSize: 12)),
@@ -172,7 +173,7 @@ class _OverviewTab extends StatelessWidget {
             data: (cats) {
               if (cats.isEmpty) return const Center(child: Text('No spending data yet', style: TextStyle(color: Colors.grey)));
               final total = cats.fold<int>(0, (s, c) => s + c.amount);
-              final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
+              final colors = [theme.colorScheme.primary, const Color(0xFFF59E0B), const Color(0xFF3B82F6), const Color(0xFF8B5CF6), const Color(0xFFEF4444)];
               return Row(children: [
                 SizedBox(
                   height: 160, width: 160,
@@ -311,14 +312,10 @@ class _InsightsTab extends StatelessWidget {
           itemBuilder: (context, index) {
             final insight = insights[index];
             final color = _getSeverityColor(insight.severity);
-            return Container(
+            return GlassCard(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
-                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                border: Border.all(color: color.withOpacity(0.3)),
-              ),
+              borderRadius: AppTheme.radiusCard,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                   padding: const EdgeInsets.all(8),

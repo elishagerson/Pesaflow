@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -199,12 +201,15 @@ class _AccountsPage extends StatelessWidget {
         const SizedBox(height: 8),
         Text('Select the accounts you use. You can add more later.', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         const SizedBox(height: 24),
-        Expanded(child: ListView(children: accounts.entries.map((e) => CheckboxListTile(
-          value: e.value,
-          onChanged: (v) => onToggle(e.key, v ?? false),
-          secondary: Icon(icons[e.key], color: theme.colorScheme.primary),
+        Expanded(child: ListView(children: accounts.entries.map((e) => IosListRow(
+          leading: Icon(icons[e.key], color: theme.colorScheme.primary),
           title: Text(e.key, style: const TextStyle(fontWeight: FontWeight.bold)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          trailing: CupertinoSwitch(
+            value: e.value,
+            activeColor: theme.colorScheme.primary,
+            onChanged: (v) => onToggle(e.key, v),
+          ),
+          onTap: () => onToggle(e.key, !e.value),
         )).toList())),
       ]),
     );

@@ -9,6 +9,9 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart'; // To reuse TactileSpringContainer!
 
@@ -550,14 +553,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final double fontSize = _amountStr.length > 10 ? 36.0 : (_amountStr.length > 7 ? 46.0 : 64.0);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit' : 'Record'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close_rounded),
-          onPressed: () => context.pop(),
-        ),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : accounts.isEmpty
@@ -591,6 +586,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               : SafeArea(
                   child: Column(
                     children: [
+                      IosNavBar(
+                        title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
+                        largeTitle: false,
+                        leading: IconButton(
+                          icon: const Icon(Icons.close_rounded),
+                          onPressed: () => context.pop(),
+                        ),
+                      ),
                       // Header Segment Toggle (internal styled pill like first screenshot)
                       const SizedBox(height: 16),
                       Container(

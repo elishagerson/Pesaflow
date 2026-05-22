@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
+import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
@@ -90,45 +94,196 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     final isEditing = widget.budgetId != null;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isEditing ? 'Edit Budget' : 'Create Budget'), leading: IconButton(icon: const Icon(Icons.close_rounded), onPressed: () => context.pop())),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(controller: _nameController, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'Budget Name', hintText: 'e.g. Monthly Food', prefixIcon: Icon(Icons.label_rounded)), validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null),
-              const SizedBox(height: 16),
-              categoriesAsync.when(
-                data: (cats) => DropdownButtonFormField<String>(value: _selectedCategoryId, decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category_rounded)), items: cats.where((c) => c.type == 'expense').map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(), onChanged: (v) => setState(() => _selectedCategoryId = v), validator: (v) => v == null ? 'Select a category' : null),
-                loading: () => const LinearProgressIndicator(),
-                error: (e, _) => Text('Error: $e'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            IosNavBar(
+              title: isEditing ? 'Edit Budget' : 'New Budget',
+              largeTitle: false,
+              leading: IconButton(
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => context.pop(),
               ),
-              const SizedBox(height: 16),
-              TextFormField(controller: _amountController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Budget Amount (Tsh)', hintText: 'e.g. 300000', prefixIcon: Icon(Icons.payments_rounded)), validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null),
-              const SizedBox(height: 16),
-              Text('Budget Period', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              SegmentedButton<String>(segments: const [ButtonSegment(value: 'weekly', label: Text('Week')), ButtonSegment(value: 'biweekly', label: Text('2 Wk')), ButtonSegment(value: 'monthly', label: Text('Month')), ButtonSegment(value: 'yearly', label: Text('Year'))], selected: {_period}, onSelectionChanged: (v) => setState(() => _period = v.first)),
-              const SizedBox(height: 20),
-              ListTile(contentPadding: EdgeInsets.zero, leading: const Icon(Icons.calendar_today_rounded), title: const Text('Start Date'), subtitle: Text('${_startDate.day}/${_startDate.month}/${_startDate.year}', style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)), onTap: () async { final d = await showDatePicker(context: context, initialDate: _startDate, firstDate: DateTime(2020), lastDate: DateTime(2030)); if (d != null) setState(() => _startDate = d); }),
-              const Divider(),
-              SwitchListTile(contentPadding: EdgeInsets.zero, title: const Text('Enable Rollover'), subtitle: const Text('Unused budget carries to next period'), value: _rollover, onChanged: (v) => setState(() => _rollover = v)),
-              if (_rollover) ...[
-                const SizedBox(height: 8),
-                SegmentedButton<String>(segments: const [ButtonSegment(value: 'all', label: Text('All')), ButtonSegment(value: 'capped', label: Text('Capped'))], selected: {_rolloverType == 'none' ? 'all' : _rolloverType}, onSelectionChanged: (v) => setState(() => _rolloverType = v.first)),
-                if (_rolloverType == 'capped') Padding(padding: const EdgeInsets.only(top: 12), child: TextFormField(controller: _capController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Max Rollover (Tsh)', prefixIcon: Icon(Icons.upcoming_rounded)))),
-              ],
-              const SizedBox(height: 16),
-              Text('Alert Threshold: ${(_threshold * 100).round()}%', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
-              Slider(value: _threshold, min: 0.5, max: 1.0, divisions: 10, label: '${(_threshold * 100).round()}%', onChanged: (v) => setState(() => _threshold = v)),
-              const SizedBox(height: 32),
-              SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _isLoading ? null : _save, child: _isLoading ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : Text(isEditing ? 'Update Budget' : 'Create Budget'))),
-              const SizedBox(height: 24),
-            ],
-          ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      IosListSection(
+                        header: 'Details',
+                        rows: [
+                          IosListRow(
+                            title: TextFormField(
+                              controller: _nameController,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: const InputDecoration(labelText: 'Budget Name', hintText: 'e.g. Monthly Food', prefixIcon: Icon(Icons.label_rounded), border: InputBorder.none),
+                              validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      IosListSection(
+                        header: 'Category',
+                        rows: [
+                          IosListRow(
+                            title: categoriesAsync.when(
+                              data: (cats) => DropdownButtonFormField<String>(
+                                value: _selectedCategoryId,
+                                decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category_rounded), border: InputBorder.none),
+                                items: cats.where((c) => c.type == 'expense').map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
+                                onChanged: (v) => setState(() => _selectedCategoryId = v),
+                                validator: (v) => v == null ? 'Select a category' : null,
+                              ),
+                              loading: () => const LinearProgressIndicator(),
+                              error: (e, _) => Text('Error: $e'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      IosListSection(
+                        header: 'Amount',
+                        rows: [
+                          IosListRow(
+                            title: TextFormField(
+                              controller: _amountController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(labelText: 'Budget Amount (Tsh)', hintText: 'e.g. 300000', prefixIcon: Icon(Icons.payments_rounded), border: InputBorder.none),
+                              validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Period', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600], letterSpacing: 0.5)),
+                      ),
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                            border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
+                          ),
+                          padding: const EdgeInsets.all(12),
+                          child: SegmentedButton<String>(
+                            segments: const [
+                              ButtonSegment(value: 'weekly', label: Text('Week')),
+                              ButtonSegment(value: 'biweekly', label: Text('2 Wk')),
+                              ButtonSegment(value: 'monthly', label: Text('Month')),
+                              ButtonSegment(value: 'yearly', label: Text('Year')),
+                            ],
+                            selected: {_period},
+                            onSelectionChanged: (v) => setState(() => _period = v.first),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      IosListSection(
+                        header: 'Schedule',
+                        rows: [
+                          IosListRow(
+                            title: const Text('Start Date'),
+                            subtitle: Text('${_startDate.day}/${_startDate.month}/${_startDate.year}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            trailing: const Icon(Icons.calendar_today_rounded, size: 20),
+                            onTap: () async {
+                              final d = await showDatePicker(context: context, initialDate: _startDate, firstDate: DateTime(2020), lastDate: DateTime(2030));
+                              if (d != null) setState(() => _startDate = d);
+                            },
+                          ),
+                        ],
+                      ),
+                      IosListSection(
+                        header: 'Rollover',
+                        rows: [
+                      IosListRow(
+                        title: const Text('Enable Rollover'),
+                        subtitle: const Text('Unused budget carries to next period'),
+                        trailing: CupertinoSwitch(
+                          value: _rollover,
+                          activeColor: theme.colorScheme.primary,
+                          onChanged: (v) => setState(() => _rollover = v),
+                        ),
+                      ),
+                        ],
+                      ),
+                      if (_rollover) ...[
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: SegmentedButton<String>(
+                              segments: const [
+                                ButtonSegment(value: 'all', label: Text('All')),
+                                ButtonSegment(value: 'capped', label: Text('Capped')),
+                              ],
+                              selected: {_rolloverType == 'none' ? 'all' : _rolloverType},
+                              onSelectionChanged: (v) => setState(() => _rolloverType = v.first),
+                            ),
+                          ),
+                        ),
+                        if (_rolloverType == 'capped')
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                            child: TextFormField(
+                              controller: _capController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(labelText: 'Max Rollover (Tsh)', prefixIcon: Icon(Icons.upcoming_rounded)),
+                            ),
+                          ),
+                      ],
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Alert Threshold', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600], letterSpacing: 0.5)),
+                      ),
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: GlassCard(
+                          padding: const EdgeInsets.all(16),
+                          borderRadius: AppTheme.radiusCard,
+                          child: Column(children: [
+                            Text('${(_threshold * 100).round()}%', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                            Slider(value: _threshold, min: 0.5, max: 1.0, divisions: 10, label: '${(_threshold * 100).round()}%', onChanged: (v) => setState(() => _threshold = v)),
+                          ]),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _save,
+                            child: _isLoading
+                                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                : Text(isEditing ? 'Update Budget' : 'Create Budget'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

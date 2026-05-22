@@ -286,7 +286,7 @@ class DashboardScreen extends ConsumerWidget {
                catsAsync.when(
                  data: (cats) {
                    if (cats.isEmpty) return const SizedBox(width: 80, height: 80);
-                   final colors = [const Color(0xFF006B4F), const Color(0xFFFF9800), const Color(0xFF2196F3), const Color(0xFF9C27B0), const Color(0xFFF44336)];
+                    final colors = [theme.colorScheme.primary, const Color(0xFFF59E0B), const Color(0xFF3B82F6), const Color(0xFF8B5CF6), const Color(0xFFEF4444)];
                     return SizedBox(height: 80, width: 80, child: PieChart(PieChartData(sectionsSpace: 1, centerSpaceRadius: 25, sections: List.generate(cats.length, (i) => PieChartSectionData(value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : Colors.grey, radius: 12, showTitle: false)))));
                  },
                  loading: () => const SizedBox(width: 80, height: 80, child: CircularProgressIndicator(strokeWidth: 2)),
@@ -503,15 +503,15 @@ class DashboardScreen extends ConsumerWidget {
   void _showAddTrackerDialog(BuildContext context, WidgetRef ref) {
     final nameController = TextEditingController();
     String selectedIcon = 'briefcase';
-    String selectedColorHex = '#006B4F'; // Emerald
+    String selectedColorHex = '#7C3AED'; // Amethyst
 
     final iconsList = ['person', 'briefcase', 'home', 'flight', 'shopping_cart', 'payments'];
     final colorsList = [
-      '#006B4F', // Emerald
+      '#7C3AED', // Amethyst purple
       '#4F46E5', // Indigo
-      '#F43F5E', // Rose/Coral
-      '#EAB308', // Amber/Yellow
-      '#8B5CF6', // Purple/Violet
+      '#F43F5E', // Rose
+      '#F59E0B', // Amber
+      '#059669', // Emerald
       '#06B6D4', // Cyan
     ];
 
