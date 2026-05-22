@@ -370,8 +370,9 @@ class SmsReviewScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                     border: Border.all(
                       color: theme.brightness == Brightness.dark
-                          ? const Color(0x1FFFFFFF)
+                          ? const Color(0x12FFFFFF)
                           : const Color(0x1F000000),
+                      width: 0.5,
                     ),
                   ),
                   child: Column(
@@ -393,7 +394,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                 _getCategoryIcon(item.category.icon),
                                 color: _hexToColor(item.category.color),
                                 size: 22,
-                              ),
+                                                              ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -444,7 +445,7 @@ class SmsReviewScreen extends ConsumerWidget {
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                              ),
+                                                              ),
                             ),
                           ],
                         ),
@@ -458,8 +459,7 @@ class SmsReviewScreen extends ConsumerWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest
-                                  .withOpacity(0.5),
+                              color: Colors.white.withOpacity(0.03),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
