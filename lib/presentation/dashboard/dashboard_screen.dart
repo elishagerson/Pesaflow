@@ -66,202 +66,223 @@ class DashboardScreen extends ConsumerWidget {
     String? phoneNumber;
     String? provider;
 
-    showDialog(
+    ModernDialog.show(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final theme = Theme.of(context);
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+      title: const Text('Add Account'),
+      titleIcon: Icons.account_balance_wallet_rounded,
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Account Name',
+                  hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
+                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                ),
+                textCapitalization: TextCapitalization.words,
               ),
-              title: const Text('Add Account'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Account Name',
-                        hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
-                      ),
-                      textCapitalization: TextCapitalization.words,
+              const SizedBox(height: 16),
+              ModernDropdown<String>(
+                labelText: 'Account Type',
+                value: accountType,
+                prefixIcon: Icons.wallet_rounded,
+                items: const [
+                  ModernDropdownItem(
+                    value: 'Cash',
+                    label: 'Cash Wallet',
+                    icon: Icons.account_balance_wallet_rounded,
+                    color: Color(0xFF30D158),
+                    subtitle: 'Physical cash and local wallets',
+                  ),
+                  ModernDropdownItem(
+                    value: 'Mobile Money',
+                    label: 'Mobile Money',
+                    icon: Icons.phone_android_rounded,
+                    color: Color(0xFF0A84FF),
+                    subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
+                  ),
+                  ModernDropdownItem(
+                    value: 'Bank',
+                    label: 'Bank Account',
+                    icon: Icons.account_balance_rounded,
+                    color: Color(0xFFFF9F0A),
+                    subtitle: 'NMB, CRDB, NBC, and other banks',
+                  ),
+                ],
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {
+                      accountType = val;
+                      if (accountType == 'Mobile Money') {
+                        provider = 'M-Pesa_TZ';
+                      } else if (accountType == 'Bank') {
+                        provider = 'NMB';
+                      } else {
+                        provider = null;
+                      }
+                    });
+                  }
+                },
+              ),
+              if (accountType == 'Mobile Money') ...[
+                const SizedBox(height: 16),
+                ModernDropdown<String>(
+                  labelText: 'Carrier Provider',
+                  value: provider ?? 'M-Pesa_TZ',
+                  prefixIcon: Icons.phone_iphone_rounded,
+                  items: const [
+                    ModernDropdownItem(
+                      value: 'M-Pesa_TZ',
+                      label: 'Vodacom M-Pesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.redAccent,
+                      subtitle: 'Vodacom Mobile Money service',
                     ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      value: accountType,
-                      decoration: const InputDecoration(
-                        labelText: 'Account Type',
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Cash',
-                          child: Text('Cash Wallet'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Mobile Money',
-                          child: Text('Mobile Money'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Bank',
-                          child: Text('Bank Account'),
-                        ),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) {
-                          setState(() {
-                            accountType = val;
-                            if (accountType == 'Mobile Money') {
-                              provider = 'M-Pesa_TZ';
-                            } else if (accountType == 'Bank') {
-                              provider = 'NMB';
-                            } else {
-                              provider = null;
-                            }
-                          });
-                        }
-                      },
+                    ModernDropdownItem(
+                      value: 'TigoPesa_TZ',
+                      label: 'Tigo Pesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.blueAccent,
+                      subtitle: 'Tigo Mobile Money service',
                     ),
-                    if (accountType == 'Mobile Money') ...[
-                      const SizedBox(height: 12),
-                      DropdownButtonFormField<String>(
-                        value: provider ?? 'M-Pesa_TZ',
-                        decoration: const InputDecoration(
-                          labelText: 'Carrier Provider',
-                        ),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'M-Pesa_TZ',
-                            child: Text('Vodacom M-Pesa'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'TigoPesa_TZ',
-                            child: Text('Tigo Pesa'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'AirtelMoney_TZ',
-                            child: Text('Airtel Money'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Halopesa_TZ',
-                            child: Text('HaloPesa'),
-                          ),
-                        ],
-                        onChanged: (val) {
-                          setState(() {
-                            provider = val;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                          hintText: 'e.g. 076XXXXXXX',
-                        ),
-                        onChanged: (val) {
-                          phoneNumber = val;
-                        },
-                      ),
-                    ],
-                    if (accountType == 'Bank') ...[
-                      const SizedBox(height: 12),
-                      DropdownButtonFormField<String>(
-                        value: provider ?? 'NMB',
-                        decoration: const InputDecoration(
-                          labelText: 'Bank Brand',
-                        ),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'NMB',
-                            child: Text('NMB Bank'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'CRDB',
-                            child: Text('CRDB Bank'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'NBC',
-                            child: Text('NBC Bank'),
-                          ),
-                        ],
-                        onChanged: (val) {
-                          setState(() {
-                            provider = val;
-                          });
-                        },
-                      ),
-                    ],
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: balanceController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: 'Initial Balance (Tsh)',
-                        hintText: 'e.g. 150,000',
-                      ),
+                    ModernDropdownItem(
+                      value: 'AirtelMoney_TZ',
+                      label: 'Airtel Money',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.red,
+                      subtitle: 'Airtel Mobile Money service',
+                    ),
+                    ModernDropdownItem(
+                      value: 'Halopesa_TZ',
+                      label: 'HaloPesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.orangeAccent,
+                      subtitle: 'Halotel Mobile Money service',
                     ),
                   ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (nameController.text.trim().isEmpty) return;
-
-                    final rawAmount = balanceController.text;
-                    final cleanAmount = rawAmount.replaceAll(
-                      RegExp(r'[^0-9.]'),
-                      '',
-                    );
-                    final parsedDouble = double.tryParse(cleanAmount) ?? 0.0;
-                    final int cents = (parsedDouble * 100).round();
-
-                    String iconName = 'wallet';
-                    if (accountType == 'Mobile Money') {
-                      iconName = 'phone-android';
-                    } else if (accountType == 'Bank') {
-                      iconName = 'account-balance';
-                    }
-
-                    final newAccount = Account(
-                      id: const Uuid().v4(),
-                      name: nameController.text.trim(),
-                      type: accountType.toLowerCase().replaceAll(' ', '_'),
-                      balance: cents,
-                      provider: provider,
-                      phoneNumber: phoneNumber,
-                      icon: iconName,
-                      sortOrder: 0,
-                      isArchived: false,
-                      createdAt: DateTime.now(),
-                    );
-
-                    await ref
-                        .read(accountRepositoryProvider)
-                        .createAccount(newAccount);
-
-                    // Force Riverpod cache invalidation for accounts stream
-                    ref.invalidate(accountsStreamProvider);
-
-                    if (context.mounted) Navigator.of(context).pop();
+                  onChanged: (val) {
+                    setState(() {
+                      provider = val;
+                    });
                   },
-                  child: const Text('Create'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    hintText: 'e.g. 076XXXXXXX',
+                    prefixIcon: Icon(Icons.phone_rounded, size: 18),
+                  ),
+                  onChanged: (val) {
+                    phoneNumber = val;
+                  },
                 ),
               ],
+              if (accountType == 'Bank') ...[
+                const SizedBox(height: 16),
+                ModernDropdown<String>(
+                  labelText: 'Bank Brand',
+                  value: provider ?? 'NMB',
+                  prefixIcon: Icons.account_balance_rounded,
+                  items: const [
+                    ModernDropdownItem(
+                      value: 'NMB',
+                      label: 'NMB Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.blue,
+                      subtitle: 'National Microfinance Bank',
+                    ),
+                    ModernDropdownItem(
+                      value: 'CRDB',
+                      label: 'CRDB Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.green,
+                      subtitle: 'CRDB Bank Plc',
+                    ),
+                    ModernDropdownItem(
+                      value: 'NBC',
+                      label: 'NBC Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.cyan,
+                      subtitle: 'National Bank of Commerce',
+                    ),
+                  ],
+                  onChanged: (val) {
+                    setState(() {
+                      provider = val;
+                    });
+                  },
+                ),
+              ],
+              const SizedBox(height: 16),
+              TextField(
+                controller: balanceController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: 'Initial Balance (Tsh)',
+                  hintText: 'e.g. 150,000',
+                  prefixIcon: Icon(Icons.payments_rounded, size: 18),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (nameController.text.trim().isEmpty) return;
+
+            final rawAmount = balanceController.text;
+            final cleanAmount = rawAmount.replaceAll(
+              RegExp(r'[^0-9.]'),
+              '',
             );
+            final parsedDouble = double.tryParse(cleanAmount) ?? 0.0;
+            final int cents = (parsedDouble * 100).round();
+
+            String iconName = 'wallet';
+            if (accountType == 'Mobile Money') {
+              iconName = 'phone-android';
+            } else if (accountType == 'Bank') {
+              iconName = 'account-balance';
+            }
+
+            final newAccount = Account(
+              id: const Uuid().v4(),
+              name: nameController.text.trim(),
+              type: accountType.toLowerCase().replaceAll(' ', '_'),
+              balance: cents,
+              provider: provider,
+              phoneNumber: phoneNumber,
+              icon: iconName,
+              sortOrder: 0,
+              isArchived: false,
+              createdAt: DateTime.now(),
+            );
+
+            await ref
+                .read(accountRepositoryProvider)
+                .createAccount(newAccount);
+
+            // Force Riverpod cache invalidation for accounts stream
+            ref.invalidate(accountsStreamProvider);
+
+            if (context.mounted) Navigator.of(context).pop();
           },
-        );
-      },
+          child: const Text('Create'),
+        ),
+      ],
     );
   }
 
