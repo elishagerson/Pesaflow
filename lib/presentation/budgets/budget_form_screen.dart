@@ -7,6 +7,7 @@ import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
@@ -128,23 +129,25 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      IosListSection(
-                        header: 'Category',
-                        rows: [
-                          IosListRow(
-                            title: categoriesAsync.when(
-                              data: (cats) => DropdownButtonFormField<String>(
-                                value: _selectedCategoryId,
-                                decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category_rounded), border: InputBorder.none),
-                                items: cats.where((c) => c.type == 'expense').map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
-                                onChanged: (v) => setState(() => _selectedCategoryId = v),
-                                validator: (v) => v == null ? 'Select a category' : null,
-                              ),
-                              loading: () => const LinearProgressIndicator(),
-                              error: (e, _) => Text('Error: $e'),
-                            ),
-                          ),
-                        ],
+                      categoriesAsync.when(
+                        data: (cats) => ModernDropdown<String>(
+                          labelText: 'Category',
+                          value: _selectedCategoryId,
+                          prefixIcon: Icons.category_rounded,
+                          items: cats
+                              .where((c) => c.type == 'expense')
+                              .map((c) => ModernDropdownItem<String>(
+                                    value: c.id,
+                                    label: c.name,
+                                    icon: _getCategoryIcon(c.icon),
+                                    color: _hexToColor(c.color),
+                                    subtitle: 'Budget category for ${c.name}',
+                                  ))
+                              .toList(),
+                          onChanged: (v) => setState(() => _selectedCategoryId = v),
+                        ),
+                        loading: () => const LinearProgressIndicator(),
+                        error: (e, _) => Text('Error: $e'),
                       ),
                       const SizedBox(height: 8),
                       IosListSection(
@@ -287,5 +290,55 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
       ),
     );
+  }
+
+  Color _hexToColor(String hex) {
+    final clean = hex.replaceAll('#', '');
+    if (clean.length == 6) {
+      return Color(int.parse('FF$clean', radix: 16));
+    }
+    return Colors.grey;
+  }
+
+  IconData _getCategoryIcon(String iconName) {
+    switch (iconName) {
+      case 'briefcase':
+        return Icons.work_rounded;
+      case 'store':
+        return Icons.storefront_rounded;
+      case 'cart':
+        return Icons.shopping_cart_rounded;
+      case 'bus':
+        return Icons.directions_bus_rounded;
+      case 'home':
+        return Icons.home_rounded;
+      case 'zap':
+        return Icons.electric_bolt_rounded;
+      case 'phone':
+        return Icons.phone_android_rounded;
+      case 'heart':
+        return Icons.favorite_rounded;
+      case 'book':
+        return Icons.menu_book_rounded;
+      case 'film':
+        return Icons.movie_rounded;
+      case 'shopping-bag':
+        return Icons.shopping_bag_rounded;
+      case 'coffee':
+        return Icons.coffee_rounded;
+      case 'send':
+        return Icons.send_rounded;
+      case 'credit-card':
+        return Icons.credit_card_rounded;
+      case 'banknote':
+        return Icons.payments_rounded;
+      case 'piggy-bank':
+        return Icons.savings_rounded;
+      case 'arrow-left-right':
+        return Icons.compare_arrows_rounded;
+      case 'plus-circle':
+      default:
+        return Icons.add_circle_outline_rounded;
+    }
   }
 }

@@ -11,6 +11,8 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/backup_service.dart';
 
@@ -202,135 +204,141 @@ class SettingsScreen extends ConsumerWidget {
     final hexColors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#2196F3', '#00BCD4', '#009688', '#4CAF50', '#FFC107', '#FF9800', '#795548', '#607D8B'];
     final icons = ['cart', 'briefcase', 'store', 'bus', 'home', 'zap', 'phone', 'heart', 'book', 'film', 'coffee', 'send', 'piggy-bank'];
 
-    showDialog(
+    ModernDialog.show(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final theme = Theme.of(context);
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
+      title: const Text('Add Custom Category'),
+      titleIcon: Icons.category_rounded,
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          final theme = Theme.of(context);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Category Name',
+                  hintText: 'e.g. Subscriptions, Laundry',
+                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                ),
+                textCapitalization: TextCapitalization.words,
               ),
-              title: const Text('Add Custom Category'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Category Name',
-                        hintText: 'e.g. Subscriptions, Laundry',
+              const SizedBox(height: 16),
+              ModernDropdown<String>(
+                labelText: 'Category Type',
+                value: categoryType,
+                prefixIcon: Icons.unfold_more_rounded,
+                items: const [
+                  ModernDropdownItem(
+                    value: 'Expense',
+                    label: 'Expense',
+                    icon: Icons.trending_down_rounded,
+                    color: Color(0xFFFF453A),
+                    subtitle: 'Money going out',
+                  ),
+                  ModernDropdownItem(
+                    value: 'Income',
+                    label: 'Income',
+                    icon: Icons.trending_up_rounded,
+                    color: Color(0xFF30D158),
+                    subtitle: 'Money coming in',
+                  ),
+                ],
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {
+                      categoryType = val;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text('Select Theme Color', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: hexColors.map((hex) {
+                  final isSelected = selectedHexColor == hex;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedHexColor = hex;
+                      });
+                    },
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: _hexToColor(hex),
+                        shape: BoxShape.circle,
+                        border: isSelected
+                            ? Border.all(color: theme.brightness == Brightness.dark ? Colors.white : Colors.black, width: 2)
+                            : null,
                       ),
-                      textCapitalization: TextCapitalization.words,
                     ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      value: categoryType,
-                      decoration: const InputDecoration(labelText: 'Category Type'),
-                      items: const [
-                        DropdownMenuItem(value: 'Expense', child: Text('Expense')),
-                        DropdownMenuItem(value: 'Income', child: Text('Income')),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) {
-                          setState(() {
-                            categoryType = val;
-                          });
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('Select Theme Color', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 8.0,
-                      children: hexColors.map((hex) {
-                        final isSelected = selectedHexColor == hex;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedHexColor = hex;
-                            });
-                          },
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: _hexToColor(hex),
-                              shape: BoxShape.circle,
-                              border: isSelected
-                                  ? Border.all(color: theme.brightness == Brightness.dark ? Colors.white : Colors.black, width: 2)
-                                  : null,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('Select Icon', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 8.0,
-                      children: icons.map((icName) {
-                        final isSelected = selectedIcon == icName;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIcon = icName;
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: isSelected ? theme.colorScheme.primary.withOpacity(0.15) : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 1.5) : null,
-                            ),
-                            child: Icon(_getCategoryIcon(icName), size: 24, color: isSelected ? theme.colorScheme.primary : Colors.grey),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (nameController.text.trim().isEmpty) return;
+              const SizedBox(height: 20),
+              const Text('Select Icon', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: icons.map((icName) {
+                  final isSelected = selectedIcon == icName;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIcon = icName;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: isSelected ? theme.colorScheme.primary.withOpacity(0.15) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 1.5) : null,
+                      ),
+                      child: Icon(_getCategoryIcon(icName), size: 24, color: isSelected ? theme.colorScheme.primary : Colors.grey),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (nameController.text.trim().isEmpty) return;
 
-                    final newCategory = Category(
-                      id: const Uuid().v4(),
-                      name: nameController.text.trim(),
-                      icon: selectedIcon,
-                      color: selectedHexColor,
-                      type: categoryType.toLowerCase(),
-                      isSystem: false,
-                      sortOrder: 100,
-                      createdAt: DateTime.now(),
-                    );
-
-                    await ref.read(categoryRepositoryProvider).createCategory(newCategory);
-                    ref.invalidate(categoriesFutureProvider);
-                    ref.invalidate(filteredTransactionsStreamProvider);
-                    if (context.mounted) Navigator.of(context).pop();
-                  },
-                  child: const Text('Create'),
-                ),
-              ],
+            final newCategory = Category(
+              id: const Uuid().v4(),
+              name: nameController.text.trim(),
+              icon: selectedIcon,
+              color: selectedHexColor,
+              type: categoryType.toLowerCase(),
+              isSystem: false,
+              sortOrder: 100,
+              createdAt: DateTime.now(),
             );
+
+            await ref.read(categoryRepositoryProvider).createCategory(newCategory);
+            ref.invalidate(categoriesFutureProvider);
+            ref.invalidate(filteredTransactionsStreamProvider);
+            if (context.mounted) Navigator.of(context).pop();
           },
-        );
-      },
+          child: const Text('Create'),
+        ),
+      ],
     );
   }
 
