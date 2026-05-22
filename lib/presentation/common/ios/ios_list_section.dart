@@ -39,10 +39,10 @@ class IosListSection extends StatelessWidget {
         Container(
           margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+            color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
-              color: isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000),
+              color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
               width: 0.5,
             ),
           ),
@@ -58,7 +58,7 @@ class IosListSection extends StatelessWidget {
                       height: 0.5,
                       thickness: 0.5,
                       indent: row.indent ?? 56,
-                      color: isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000),
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
                     ),
                 ],
               );
@@ -234,15 +234,15 @@ class IosMetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final c = color ?? theme.colorScheme.primary;
+    final c = color ?? (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF));
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+        color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: isDark ? const Color(0x1FFFFFFF) : const Color(0x1F000000),
+          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
           width: 0.5,
         ),
       ),
@@ -253,9 +253,8 @@ class IosMetricCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
-              fontFamily: 'monospace',
+              fontWeight: FontWeight.w900,
+              fontSize: 18,
               color: isDark ? Colors.white : Colors.black,
             ),
           ),
