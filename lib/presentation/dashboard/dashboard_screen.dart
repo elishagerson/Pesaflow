@@ -995,186 +995,123 @@ class DashboardScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── 1. Elegant Lowercase 'home' Header (Mobbin inspired) ──
+              // ── 1. Elegant Top Bar (Mobbin inspired) ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // Left: Account Avatar Settings Trigger
+                  TactileSpringContainer(
+                    onTap: () => context.go('/settings'),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: isDark
+                              ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
+                              : [Colors.grey[200]!, Colors.grey[300]!],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: isDark ? Colors.white : Colors.black,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+
+                  // Center: Home Title
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _getGreeting().toUpperCase(),
+                        'Home',
                         style: TextStyle(
-                          fontSize: 9,
+                          fontSize: 22,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 1.5,
-                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          color: isDark ? Colors.white : Colors.black,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            'Home',
-                            style: TextStyle(
-                              fontSize: 34,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? Colors.white : Colors.black,
-                              letterSpacing: -1.0,
-                            ),
-                          ),
-                          Text(
-                            '.',
-                            style: TextStyle(
-                              fontSize: 34,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (activeTrackerAsync.value != null) ...[
-                        const SizedBox(height: 8),
-                        TactileSpringContainer(
-                          onTap: () => _showWorkspaceSelectorSheet(context, ref),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0,
-                              vertical: 4.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF161618) : Colors.white,
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                                width: 0.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    color: trackerColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  trackerName.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: isDark ? Colors.white70 : Colors.black87,
-                                    fontSize: 9,
-                                    letterSpacing: 1.0,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: isDark ? Colors.grey[500] : Colors.grey[600],
-                                  size: 12,
-                                ),
-                              ],
-                            ),
-                          ),
+                      Text(
+                        '.',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                          color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
                         ),
-                      ],
+                      ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      // Review Queue Bell trigger with glass container
-                      TactileSpringContainer(
-                        onTap: () => context.push('/sms-review'),
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF161618) : Colors.white,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.notifications_none_rounded,
-                                size: 20,
-                                color: isDark ? Colors.white : Colors.black,
-                              ),
-                            ),
-                            if (pendingReviewCount > 0)
-                              Positioned(
-                                right: -2,
-                                top: -2,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFFF453A),
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                      color: isDark ? Colors.black : Colors.white,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '$pendingReviewCount',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      // Premium Profile Avatar Settings trigger
-                      TactileSpringContainer(
-                        onTap: () => context.go('/settings'),
-                        child: Container(
+
+                  // Right: Notification Bell Trigger
+                  TactileSpringContainer(
+                    onTap: () => context.push('/sms-review'),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: isDark
-                                  ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
-                                  : [Colors.grey[200]!, Colors.grey[300]!],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                            color: isDark ? const Color(0xFF161618) : Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
+                              color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
                               width: 0.5,
                             ),
                           ),
                           child: Icon(
-                            Icons.person_outline_rounded,
-                            color: isDark ? Colors.white : Colors.black,
+                            Icons.notifications_none_rounded,
                             size: 20,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
-                      ),
-                    ],
+                        if (pendingReviewCount > 0)
+                          Positioned(
+                            right: -2,
+                            top: -2,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF453A),
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                  color: isDark ? Colors.black : Colors.white,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Text(
+                                '$pendingReviewCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              
+              // Salutation Greeting Section
+              Text(
+                _getGreeting(),
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white : Colors.black,
+                  letterSpacing: -0.8,
+                ),
               ),
               const SizedBox(height: 20),
 
