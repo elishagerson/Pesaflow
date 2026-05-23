@@ -11,17 +11,34 @@ class MpesaTzParser implements SmsParser {
   }
 
   String _extractReference(String text) {
-    final regex = RegExp(r'Rej:\s*([A-Za-z0-9]+)', caseSensitive: false);
-    final match = regex.firstMatch(text);
-    return match?.group(1) ?? 'MPESA-REF-UNKNOWN';
+    // Swahili: Rej: XXXXX
+    final rejRegex = RegExp(r'Rej:\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final match = rejRegex.firstMatch(text);
+    if (match != null) return match.group(1)!;
+
+    // English: reference word before "Confirmed."
+    final engRefRegex = RegExp(r'(\w+)\s+Confirmed\.', caseSensitive: false);
+    final engMatch = engRefRegex.firstMatch(text);
+    if (engMatch != null) return engMatch.group(1)!;
+
+    return 'MPESA-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
-    final regex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
-    final match = regex.firstMatch(text);
+    // Swahili: Salio: Tsh XXX
+    final salioRegex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final match = salioRegex.firstMatch(text);
     if (match != null) {
       return _parseAmount(match.group(1)!);
     }
+
+    // English: "New M-PESA balance is Tsh XXX"
+    final engBalRegex = RegExp(r'New\s+M[- ]?PESA\s+balance\s+is\s+Tsh\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final engMatch = engBalRegex.firstMatch(text);
+    if (engMatch != null) {
+      return _parseAmount(engMatch.group(1)!);
+    }
+
     return null;
   }
 
@@ -111,6 +128,131 @@ class MpesaTzParser implements SmsParser {
         caseSensitive: false,
       );
       match = feeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'fee',
+          senderOrRecipient: 'Vodacom Service Fee',
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // ========== English-format patterns (Vodacom Tanzania) ==========
+
+      // 5. English: Received Money (Income)
+      // Example: "Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676"
+      final engReceivedRegex = RegExp(
+        r'Confirmed\.\s*You have received Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        caseSensitive: false,
+      );
+      match = engReceivedRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final sender = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: sender,
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 6. English: Sent Money (Expense)
+      // Example: "Z10DN636 Confirmed.You have sent Tsh30,000 to JANE DOE on 27/1/14 at 1:19 PM New M-PESA balance is Tsh184,676"
+      final engSentRegex = RegExp(
+        r'Confirmed\.\s*You have sent Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        caseSensitive: false,
+      );
+      match = engSentRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final recipient = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 7. English: Paid Bills (Expense)
+      // Example: "Z10DN636 Confirmed.You have paid Tsh100,000 to ZESA BILLS on 27/1/14 at 1:19 PM New M-PESA balance is Tsh79,676"
+      final engPaidRegex = RegExp(
+        r'Confirmed\.\s*You have paid Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        caseSensitive: false,
+      );
+      match = engPaidRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final payee = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: payee,
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 8. English: Airtime Purchase (Expense/Airtime)
+      // Example: "Z10DN636 Confirmed.You have bought airtime of Tsh5,000 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,676"
+      final engAirtimeRegex = RegExp(
+        r'Confirmed\.\s*You have bought airtime of Tsh\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = engAirtimeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Vodacom Airtime',
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 9. English: Transaction Fee (Expense/Fee)
+      // Example: "Transaction cost Tsh500 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,176"
+      final engFeeRegex = RegExp(
+        r'Transaction cost Tsh\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = engFeeRegex.firstMatch(text);
       if (match != null) {
         final amt = _parseAmount(match.group(1)!);
         final ref = _extractReference(text);

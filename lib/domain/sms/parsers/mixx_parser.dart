@@ -10,17 +10,34 @@ class MixxParser implements SmsParser {
   }
 
   String _extractReference(String text) {
-    final regex = RegExp(r'(?:Kumbukumbu|Rej):\s*([A-Za-z0-9]+)', caseSensitive: false);
-    final match = regex.firstMatch(text);
-    return match?.group(1) ?? 'TIGO-REF-UNKNOWN';
+    // Swahili: Kumbukumbu: XXXXX or Rej: XXXXX
+    final swaRegex = RegExp(r'(?:Kumbukumbu|Rej):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final match = swaRegex.firstMatch(text);
+    if (match != null) return match.group(1)!;
+
+    // English: TxnID: XXXXX or TxnId: XXXXX
+    final engRegex = RegExp(r'Txn(?:ID|Id):\s*(\d+)', caseSensitive: false);
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) return engMatch.group(1)!;
+
+    return 'TIGO-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
-    final regex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
-    final match = regex.firstMatch(text);
+    // Swahili: Salio: Tsh XXX
+    final swaRegex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final match = swaRegex.firstMatch(text);
     if (match != null) {
       return _parseAmount(match.group(1)!);
     }
+
+    // English: "New balance is TSh XXX"
+    final engRegex = RegExp(r'New balance is TSh\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) {
+      return _parseAmount(engMatch.group(1)!);
+    }
+
     return null;
   }
 
@@ -95,6 +112,58 @@ class MixxParser implements SmsParser {
           amount: amt,
           type: 'airtime',
           senderOrRecipient: 'Tigo Pesa Bundle',
+          reference: ref,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // ========== English-format patterns (Mixx by Yas) ==========
+
+      // 4. English: Sent Money (Expense)
+      // Example: "You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. VAT TSh 82. New balance is TSh 311,708. TxnID: 26706282103620."
+      final engSentRegex = RegExp(
+        r'You have sent TSh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\.(?: Charges| New balance)',
+        caseSensitive: false,
+      );
+      match = engSentRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final recipient = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 5. English: Cash-In (Income / Agent Deposit)
+      // Example: "Cash-In of TSh 143,000 from Agent - ELIZA  NYONDO is successful. New balance is TSh 143,000. TxnId: 26694528075313."
+      final engCashInRegex = RegExp(
+        r'Cash-In of TSh\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?) is successful',
+        caseSensitive: false,
+      );
+      match = engCashInRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final sender = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: sender,
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,

@@ -127,6 +127,71 @@ void main() {
       expect(result!.amount, 1000000); // 10,000 * 100
       expect(result.balanceAfter, 6000000);
     });
+
+    // === English-format tests (Vodacom Tanzania) ===
+
+    test('ENGLISH: parses received money (income)', () {
+      const sms =
+          'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000); // 50,000 * 100
+      expect(result.senderOrRecipient, 'FREDRICK KIMARO');
+      expect(result.reference, 'Z10DN636');
+      expect(result.provider, 'M-Pesa_TZ');
+      expect(result.balanceAfter, 21467600); // 214,676 * 100
+    });
+
+    test('ENGLISH: parses sent money (expense)', () {
+      const sms =
+          'AB12CD34 Confirmed.You have sent Tsh30,000 to JANE DOE on 27/1/14 at 1:19 PM New M-PESA balance is Tsh184,676';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 3000000);
+      expect(result.senderOrRecipient, 'JANE DOE');
+      expect(result.reference, 'AB12CD34');
+      expect(result.balanceAfter, 18467600);
+    });
+
+    test('ENGLISH: parses paid bills (expense)', () {
+      const sms =
+          'EF56GH78 Confirmed.You have paid Tsh100,000 to ZESA BILLS on 27/1/14 at 1:19 PM New M-PESA balance is Tsh79,676';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 10000000);
+      expect(result.senderOrRecipient, 'ZESA BILLS');
+      expect(result.reference, 'EF56GH78');
+      expect(result.balanceAfter, 7967600);
+    });
+
+    test('ENGLISH: parses airtime purchase', () {
+      const sms =
+          'IJ90KL12 Confirmed.You have bought airtime of Tsh5,000 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,676';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'airtime');
+      expect(result.amount, 500000);
+      expect(result.reference, 'IJ90KL12');
+      expect(result.balanceAfter, 7467600);
+    });
+
+    test('ENGLISH: parses transaction fee', () {
+      const sms =
+          'Transaction cost Tsh500 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,176';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'fee');
+      expect(result.amount, 50000);
+      expect(result.balanceAfter, 7417600);
+    });
   });
 
   // ===========================================================================
@@ -221,6 +286,36 @@ void main() {
       expect(result!.type, 'airtime');
       expect(result.amount, 300000);
       expect(result.balanceAfter, 13200000);
+    });
+
+    // === English-format tests (Mixx by Yas) ===
+
+    test('ENGLISH: parses sent money (expense)', () {
+      const sms =
+          'You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. VAT TSh 82. New balance is TSh 311,708. TxnID: 26706282103620. 22/05/26 18:19 Please wait for confirmation.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2000000);
+      expect(result.senderOrRecipient, 'Airtel receiver STEPHAN MWAKALASYA - 255787273486');
+      expect(result.reference, '26706282103620');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 31170800);
+    });
+
+    test('ENGLISH: parses cash-in (income)', () {
+      const sms =
+          'Cash-In of TSh 143,000 from Agent - ELIZA  NYONDO is successful. New balance is TSh 143,000. TxnId: 26694528075313. 22/05/26 15:48.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 14300000);
+      expect(result.senderOrRecipient, 'Agent - ELIZA  NYONDO');
+      expect(result.reference, '26694528075313');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 14300000);
     });
   });
 
@@ -397,6 +492,36 @@ void main() {
       expect(result.senderOrRecipient, 'Jane Doe');
       expect(result.reference, 'S78XYZ987');
       expect(result.balanceAfter, 7500000);
+    });
+
+    // === English-format tests (real Selcom Pesa) ===
+
+    test('ENGLISH: parses received money (income)', () {
+      const sms =
+          '0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85. Help 0800 714 888 / 0800 784 888';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 47300000);
+      expect(result.senderOrRecipient, 'ELISHA NDUNDULU - Mixx by Yas (255675259341)');
+      expect(result.reference, '0517EQMYW');
+      expect(result.provider, 'SelcomPesa_TZ');
+      expect(result.balanceAfter, 47731985);
+    });
+
+    test('ENGLISH: parses sent money (expense)', () {
+      const sms =
+          '0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Transaction 13 of 150-Hello Mwezi. Updated balance is TZS 319.85. Help 0800 714 888 / 0800 784 888';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 47700000);
+      expect(result.senderOrRecipient, 'PARTS AND COMPONENTS MBEYA - 19938686');
+      expect(result.reference, '0517EQN0Z');
+      expect(result.provider, 'SelcomPesa_TZ');
+      expect(result.balanceAfter, 31985);
     });
   });
 
