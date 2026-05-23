@@ -19,19 +19,23 @@ class NotificationService {
   }
 
   /// Sends a local notification confirming a parsed carrier transaction.
+  /// When [needsReview] is true, includes a "Review" action button that opens the app.
   Future<void> showNotification({
     required int id,
     required String title,
     required String body,
+    bool needsReview = false,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'pesaflow_sms_channel',
       'PesaFlow Transactions',
       channelDescription: 'Real-time transactional confirmations from PesaFlow',
       importance: Importance.max,
       priority: Priority.high,
+      fullScreenIntent: needsReview,
+      showWhen: true,
     );
-    const details = NotificationDetails(android: androidDetails);
+    final details = NotificationDetails(android: androidDetails);
     await _plugin.show(
       id: id,
       title: title,

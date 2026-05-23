@@ -1,6 +1,7 @@
 import 'package:telephony/telephony.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
+import '../domain/sms/pending_review_notifier.dart';
 import '../domain/sms/sms_processor.dart';
 
 /// Top-level VM entry point running inside a separate native background Isolate.
@@ -30,6 +31,13 @@ void backgroundMessageHandler(SmsMessage message) async {
 
 final smsBackgroundServiceProvider = Provider<SmsBackgroundService>((ref) {
   final processor = ref.watch(smsProcessorProvider);
+
+  // Wire up foreground review callback: when SMS needs category assignment,
+  // push the full transaction object to pendingReviewProvider for dialog display
+  processor.onReviewNeeded = (item) {
+    ref.read(pendingReviewProvider.notifier).add(item);
+  };
+
   return SmsBackgroundService(processor);
 });
 

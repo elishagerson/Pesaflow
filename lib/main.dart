@@ -6,6 +6,8 @@ import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
+import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 
 void main() {
@@ -76,6 +78,47 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       routerConfig: appRouter,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            if (child != null) child,
+            // Pending SMS review dialog overlay
+            _PendingReviewOverlay(),
+          ],
+        );
+      },
     );
+  }
+}
+
+/// Overlay widget that listens for pending SMS transactions needing
+/// category assignment and shows a dialog immediately.
+class _PendingReviewOverlay extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_PendingReviewOverlay> createState() => _PendingReviewOverlayState();
+}
+
+class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
+  bool _dialogOpen = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final pendingItem = ref.watch(pendingReviewProvider);
+
+    if (pendingItem != null && !_dialogOpen) {
+      _dialogOpen = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => SmsReviewDialog(item: pendingItem),
+        ).then((_) {
+          _dialogOpen = false;
+        });
+      });
+    }
+
+    return const SizedBox.shrink();
   }
 }

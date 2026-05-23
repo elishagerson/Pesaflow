@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'dart:developer' as developer;
 
 import '../../data/database/app_database.dart';
+import '../../data/database/daos/transaction_dao.dart';
 import '../../data/models/sms_parsed.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
@@ -43,6 +44,7 @@ class SmsProcessor {
   final Deduplicator _deduplicator;
   final AutoCategorizer _categorizer;
   final NotificationService _notificationService;
+  void Function(TransactionWithCategoryAndAccount item)? onReviewNeeded;
 
   SmsProcessor({
     required AccountRepository accountRepo,
@@ -51,6 +53,7 @@ class SmsProcessor {
     required Deduplicator deduplicator,
     required AutoCategorizer categorizer,
     required NotificationService notificationService,
+    this.onReviewNeeded,
   })  : _accountRepo = accountRepo,
         _transactionRepo = transactionRepo,
         _settingsRepo = settingsRepo,
@@ -241,7 +244,18 @@ class SmsProcessor {
         id: transaction.hashCode,
         title: alertTitle,
         body: alertBody,
+        needsReview: !isAutoApproved,
       );
+
+      // Fire callback for foreground dialog if review needed
+      if (!isAutoApproved && onReviewNeeded != null) {
+        final reviewItem = TransactionWithCategoryAndAccount(
+          transaction: transaction,
+          category: catResult.category,
+          account: targetAccount,
+        );
+        onReviewNeeded!(reviewItem);
+      }
 
       return true;
     } catch (e, stack) {
