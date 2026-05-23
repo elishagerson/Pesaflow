@@ -6,6 +6,7 @@ import '../../data/database/app_database.dart';
 import '../../data/models/sms_parsed.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
+import '../../data/repositories/settings_repository.dart';
 import '../../services/notification_service.dart';
 import '../categorization/auto_categorizer.dart';
 import 'deduplicator.dart';
@@ -20,12 +21,14 @@ import 'parsers/bank_base.dart';
 final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
   final transactionRepo = ref.watch(transactionRepositoryProvider);
+  final settingsRepo = ref.watch(settingsRepositoryProvider);
   final deduplicator = ref.watch(deduplicatorProvider);
   final categorizer = ref.watch(autoCategorizerProvider);
   final notificationService = ref.watch(notificationServiceProvider);
   return SmsProcessor(
     accountRepo: accountRepo,
     transactionRepo: transactionRepo,
+    settingsRepo: settingsRepo,
     deduplicator: deduplicator,
     categorizer: categorizer,
     notificationService: notificationService,
@@ -35,6 +38,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
 class SmsProcessor {
   final AccountRepository _accountRepo;
   final TransactionRepository _transactionRepo;
+  final SettingsRepository _settingsRepo;
   final Deduplicator _deduplicator;
   final AutoCategorizer _categorizer;
   final NotificationService _notificationService;
@@ -42,11 +46,13 @@ class SmsProcessor {
   SmsProcessor({
     required AccountRepository accountRepo,
     required TransactionRepository transactionRepo,
+    required SettingsRepository settingsRepo,
     required Deduplicator deduplicator,
     required AutoCategorizer categorizer,
     required NotificationService notificationService,
   })  : _accountRepo = accountRepo,
         _transactionRepo = transactionRepo,
+        _settingsRepo = settingsRepo,
         _deduplicator = deduplicator,
         _categorizer = categorizer,
         _notificationService = notificationService;
@@ -164,7 +170,7 @@ class SmsProcessor {
           id: const Uuid().v4(),
           name: friendlyName,
           type: type,
-          balance: smsParsed.balanceAfter ?? 0,
+          balance: 0, // start with 0. We will reconcile to exact balanceAfter post-transaction!
           provider: provider,
           icon: type == 'bank' ? 'bank' : 'wallet',
           sortOrder: accounts.length + 1,
@@ -175,22 +181,18 @@ class SmsProcessor {
         await _accountRepo.createAccount(newAccount);
         targetAccount = newAccount;
         developer.log('Auto-created account $friendlyName for provider $provider', name: 'SmsProcessor');
-      } else if (smsParsed.balanceAfter != null) {
-        // Update account balance based on current parsed balance after
-        final updatedAccount = targetAccount.copyWith(
-          balance: smsParsed.balanceAfter!,
-        );
-        await _accountRepo.updateAccount(updatedAccount);
       }
 
       // 7. Persist Transaction
       final isAutoApproved = catResult.confidence >= 0.90;
       final source = isAutoApproved ? 'sms_auto' : 'sms_reviewed';
+      final activeTrackerId = await _settingsRepo.getSetting('active_tracker_id') ?? 'default_personal';
 
       final transaction = Transaction(
         id: const Uuid().v4(),
         accountId: targetAccount.id,
         categoryId: catResult.category.id,
+        trackerId: activeTrackerId, // Set trackerId to link with active tracker!
         amount: smsParsed.amount,
         type: smsParsed.type,
         description: smsParsed.senderOrRecipient,
@@ -207,6 +209,18 @@ class SmsProcessor {
       );
 
       await _transactionRepo.createTransaction(transaction);
+
+      // Reconcile account balance to the exact balanceAfter specified in the SMS,
+      // resolving any double-adjustments and repairing out-of-sync balances.
+      if (smsParsed.balanceAfter != null) {
+        final currentAccount = await _accountRepo.getAccountById(targetAccount.id);
+        if (currentAccount != null) {
+          final reconciledAccount = currentAccount.copyWith(
+            balance: smsParsed.balanceAfter!,
+          );
+          await _accountRepo.updateAccount(reconciledAccount);
+        }
+      }
 
       // 8. Trigger local notification
       final amountFormatted = 'Tsh ${(smsParsed.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';

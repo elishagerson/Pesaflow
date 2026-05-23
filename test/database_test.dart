@@ -128,5 +128,59 @@ void main() {
       updatedAccount = await accountDao.getAccountById(accountId);
       expect(updatedAccount?.balance, 7000000);
     });
+
+    test('approveReviewedTransaction updates source and links with active tracker ID if null', () async {
+      final uuid = const Uuid();
+      final accountId = uuid.v4();
+
+      final mockAccount = Account(
+        id: accountId,
+        name: 'M-Pesa',
+        type: 'mobile_money',
+        balance: 100000,
+        provider: 'M-Pesa_TZ',
+        icon: 'phone-android',
+        sortOrder: 1,
+        isArchived: false,
+        createdAt: DateTime.now(),
+      );
+
+      await accountDao.insertAccount(mockAccount);
+
+      final categoriesList = await categoryDao.getAllCategories();
+      final foodCat = categoriesList.firstWhere((cat) => cat.name == 'Food & Groceries');
+
+      // Create transaction with source 'sms_reviewed' and null trackerId
+      final transaction = Transaction(
+        id: uuid.v4(),
+        accountId: accountId,
+        categoryId: foodCat.id,
+        amount: 10000,
+        type: 'expense',
+        description: 'Supermarket',
+        source: 'sms_reviewed',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await transactionDao.writeTransactionWithBalanceAdjustment(transaction);
+
+      // Verify created state
+      var retrieved = await (database.select(database.transactions)
+            ..where((t) => t.id.equals(transaction.id)))
+          .getSingle();
+      expect(retrieved.source, 'sms_reviewed');
+      expect(retrieved.trackerId, isNull);
+
+      // Approve transaction
+      await transactionDao.approveReviewedTransaction(transaction.id);
+
+      // Verify approved state: source should be sms_auto and trackerId should be default_personal
+      retrieved = await (database.select(database.transactions)
+            ..where((t) => t.id.equals(transaction.id)))
+          .getSingle();
+      expect(retrieved.source, 'sms_auto');
+      expect(retrieved.trackerId, 'default_personal');
+    });
   });
 }

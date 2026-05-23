@@ -218,9 +218,17 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     final existing = await query.getSingleOrNull();
     if (existing == null) return;
 
+    String? trackerId = existing.trackerId;
+    if (trackerId == null) {
+      final settingsQuery = db.select(db.appSettings)..where((t) => t.key.equals('active_tracker_id'));
+      final setting = await settingsQuery.getSingleOrNull();
+      trackerId = setting?.value ?? 'default_personal';
+    }
+
     final updated = existing.copyWith(
       source: 'sms_auto',
       categoryId: newCategoryId ?? existing.categoryId,
+      trackerId: Value(trackerId),
       updatedAt: DateTime.now(),
     );
     await update(transactions).replace(updated);
