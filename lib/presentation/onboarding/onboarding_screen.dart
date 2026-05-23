@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:telephony/telephony.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
@@ -57,7 +58,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     'Cash Wallet': Icons.account_balance_wallet_rounded,
   };
 
-  void _nextPage() {
+  void _nextPage() async {
+    if (_currentPage == 1) {
+      try {
+        await Telephony.instance.requestPhoneAndSmsPermissions;
+      } catch (_) {}
+    }
     if (_currentPage < 3) {
       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }

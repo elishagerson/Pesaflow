@@ -17,6 +17,7 @@ import 'parsers/airtel_tz_parser.dart';
 import 'parsers/mixx_parser.dart';
 import 'parsers/halopesa_parser.dart';
 import 'parsers/bank_base.dart';
+import 'parsers/selcom_pesa_parser.dart';
 
 final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
@@ -93,6 +94,9 @@ class SmsProcessor {
         case 'NBC_Bank':
           parser = NbcBankParser();
           break;
+        case 'SelcomPesa_TZ':
+          parser = SelcomPesaParser();
+          break;
         default:
           return false;
       }
@@ -160,6 +164,10 @@ class SmsProcessor {
           case 'NBC_Bank':
             friendlyName = 'NBC Bank';
             type = 'bank';
+            break;
+          case 'SelcomPesa_TZ':
+            friendlyName = 'Selcom Pesa';
+            type = 'mobile_money';
             break;
           default:
             friendlyName = 'Carrier Account';

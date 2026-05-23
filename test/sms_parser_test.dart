@@ -4,6 +4,7 @@ import 'package:pesaflow/domain/sms/parsers/airtel_tz_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/mixx_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/halopesa_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/bank_base.dart';
+import 'package:pesaflow/domain/sms/parsers/selcom_pesa_parser.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
 
 void main() {
@@ -41,6 +42,11 @@ void main() {
       expect(ProviderMatcher.matchProvider('NMB'), 'NMB_Bank');
       expect(ProviderMatcher.matchProvider('CRDB'), 'CRDB_Bank');
       expect(ProviderMatcher.matchProvider('NBC'), 'NBC_Bank');
+    });
+
+    test('matches Selcom shortcodes', () {
+      expect(ProviderMatcher.matchProvider('SELCOM'), 'SelcomPesa_TZ');
+      expect(ProviderMatcher.matchProvider('SelcomPesa'), 'SelcomPesa_TZ');
     });
 
     test('returns null for unrecognized senders', () {
@@ -361,6 +367,40 @@ void main() {
   });
 
   // ===========================================================================
+  // Selcom Pesa Parser Tests
+  // ===========================================================================
+  group('SelcomPesaParser', () {
+    final parser = SelcomPesaParser();
+
+    test('parses received money (income)', () {
+      const sms =
+          'Umepokea Tsh 50,000.00 kutoka kwa John Doe tarehe 15/5/2026 saa 14:30. Ref: S78AB1C2D. Salio: Tsh 100,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'John Doe');
+      expect(result.reference, 'S78AB1C2D');
+      expect(result.provider, 'SelcomPesa_TZ');
+      expect(result.balanceAfter, 10000000);
+    });
+
+    test('parses sent money (expense)', () {
+      const sms =
+          'Umetuma Tsh 25,000.00 kwa Jane Doe tarehe 15/5/2026 saa 15:00. Ref: S78XYZ987. Salio: Tsh 75,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2500000);
+      expect(result.senderOrRecipient, 'Jane Doe');
+      expect(result.reference, 'S78XYZ987');
+      expect(result.balanceAfter, 7500000);
+    });
+  });
+
+  // ===========================================================================
   // Edge Case & Cross-Parser Tests
   // ===========================================================================
   group('Edge Cases', () {
@@ -372,6 +412,7 @@ void main() {
       expect(NmbBankParser().parse('', now), isNull);
       expect(CrdbBankParser().parse('', now), isNull);
       expect(NbcBankParser().parse('', now), isNull);
+      expect(SelcomPesaParser().parse('', now), isNull);
     });
 
     test('all parsers return null for promotional messages', () {
@@ -383,6 +424,7 @@ void main() {
       expect(NmbBankParser().parse(promo, now), isNull);
       expect(CrdbBankParser().parse(promo, now), isNull);
       expect(NbcBankParser().parse(promo, now), isNull);
+      expect(SelcomPesaParser().parse(promo, now), isNull);
     });
 
     test('M-Pesa parser handles large amounts correctly', () {

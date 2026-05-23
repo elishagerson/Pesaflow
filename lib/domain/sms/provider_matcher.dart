@@ -4,6 +4,12 @@ class ProviderMatcher {
   static String? matchProvider(String senderAddress) {
     final address = senderAddress.trim().toUpperCase();
 
+    // Selcom Pesa
+    // Checked first because "SELCOMPESA" contains "MPESA" which would otherwise false-match to M-Pesa.
+    if (address.contains('SELCOM')) {
+      return 'SelcomPesa_TZ';
+    }
+
     // M-Pesa (Vodacom)
     if (address.contains('M-PESA') || 
         address.contains('M_PESA') || 

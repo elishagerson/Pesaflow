@@ -111,7 +111,7 @@ class _TabItem {
 }
 
 const List<_TabItem> _tabData = [
-  _TabItem(icon: Icons.square_outlined, activeIcon: Icons.square_rounded, label: 'Dashboard'),
+  _TabItem(icon: Icons.space_dashboard_outlined, activeIcon: Icons.space_dashboard_rounded, label: 'Dashboard'),
   _TabItem(icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Transactions'),
   _TabItem(icon: Icons.pie_chart_outline_rounded, activeIcon: Icons.pie_chart_rounded, label: 'Budgets'),
   _TabItem(icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Analytics'),
