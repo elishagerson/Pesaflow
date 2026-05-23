@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // ── Noir & Amethyst — Full Explicit Palette ──
@@ -77,15 +78,125 @@ class AppTheme {
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
       fontFamily: 'monospace',
-      fontFamilyFallback: ['JetBrains Mono', 'Roboto Mono', 'Courier New'],
+      fontFamilyFallback: const ['JetBrains Mono', 'Roboto Mono', 'Courier New'],
       fontWeight: FontWeight.w700,
     );
+  }
+
+  static TextTheme _buildTextTheme(Color textColor) {
+    return GoogleFonts.outfitTextTheme(
+      TextTheme(
+        displayLarge: TextStyle(
+        fontSize: 57,
+        fontWeight: FontWeight.w900,
+        letterSpacing: -2.0,
+        height: 1.1,
+        color: textColor,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 45,
+        fontWeight: FontWeight.w900,
+        letterSpacing: -1.5,
+        height: 1.15,
+        color: textColor,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 36,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
+        height: 1.2,
+        color: textColor,
+      ),
+      headlineLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.w900,
+        letterSpacing: -0.8,
+        height: 1.25,
+        color: textColor,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.6,
+        height: 1.3,
+        color: textColor,
+      ),
+      headlineSmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.4,
+        height: 1.35,
+        color: textColor,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.4,
+        height: 1.4,
+        color: textColor,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2,
+        height: 1.45,
+        color: textColor,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.1,
+        height: 1.5,
+        color: textColor,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.1,
+        height: 1.5,
+        color: textColor,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.15,
+        height: 1.5,
+        color: textColor,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.2,
+        height: 1.5,
+        color: textColor,
+      ),
+      labelLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.1,
+        color: textColor,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.2,
+        color: textColor,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.3,
+        color: textColor,
+      ),
+    ));
   }
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      fontFamily: GoogleFonts.outfit().fontFamily,
+      textTheme: _buildTextTheme(onBgLight),
       colorScheme: ColorScheme(
         brightness: Brightness.light,
         primary: primaryLight,
@@ -114,6 +225,7 @@ class AppTheme {
         centerTitle: false,
         scrolledUnderElevation: 1,
         titleTextStyle: TextStyle(
+          fontFamily: 'system-ui',
           fontSize: 22.0,
           fontWeight: FontWeight.bold,
           color: Color(0xFF1C1C1E),
@@ -179,6 +291,8 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: GoogleFonts.outfit().fontFamily,
+      textTheme: _buildTextTheme(onBgDark),
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
         primary: Colors.white, // Stark high-contrast main color (for white action buttons)
@@ -207,6 +321,7 @@ class AppTheme {
         centerTitle: false,
         scrolledUnderElevation: 1,
         titleTextStyle: TextStyle(
+          fontFamily: 'system-ui',
           fontSize: 22.0,
           fontWeight: FontWeight.bold,
           color: Color(0xFFF5F5F7),
@@ -243,7 +358,11 @@ class AppTheme {
             borderRadius: BorderRadius.circular(radiusButton),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+          textStyle: const TextStyle(
+            fontFamily: 'system-ui',
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+          ),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
