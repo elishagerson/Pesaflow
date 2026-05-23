@@ -39,15 +39,10 @@ class SmsBackgroundService {
 
   SmsBackgroundService(this._smsProcessor);
 
-  /// Requests native SMS/Phone permissions and registers live foreground/background listeners.
+  /// Registers live foreground/background SMS listeners.
+  /// Permissions are requested in main.dart before this is called.
   Future<void> initialize() async {
     try {
-      final bool? permissionGranted = await _telephony.requestPhoneAndSmsPermissions;
-      if (permissionGranted != true) {
-        developer.log('SMS/Phone permissions denied by user', name: 'SmsBackground');
-        return;
-      }
-
       // 1. Listen dynamically when the app is active (Foreground)
       _telephony.listenIncomingSms(
         onNewMessage: (SmsMessage message) async {

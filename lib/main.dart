@@ -50,6 +50,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         // Request SMS and Phone permissions on startup for automation
         final bool? granted = await Telephony.instance.requestPhoneAndSmsPermissions;
         developer.log('Telephony permissions prompt on launch: granted=$granted', name: 'AppLaunch');
+        if (granted != true) {
+          developer.log('SMS automation disabled: permissions not granted', name: 'AppLaunch');
+        }
       } catch (e) {
         developer.log('Failed to request telephony permissions: $e', name: 'AppLaunch');
       }
