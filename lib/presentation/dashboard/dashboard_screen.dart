@@ -374,7 +374,45 @@ class DashboardScreen extends ConsumerWidget {
       data: (totals) {
         final income = totals['income'] ?? 0;
         final expense = totals['expense'] ?? 0;
-        if (income == 0 && expense == 0) return const SizedBox.shrink();
+        if (income == 0 && expense == 0) {
+          return GlassCard(
+            padding: const EdgeInsets.all(20),
+            borderRadius: AppTheme.radiusCard,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.analytics_outlined,
+                    color: theme.colorScheme.primary,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No transactions yet this month',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Start automatic SMS synchronization or log transactions manually to view your financial charts here.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }
         return GlassCard(
           padding: const EdgeInsets.all(16),
           borderRadius: AppTheme.radiusCard,
@@ -529,7 +567,65 @@ class DashboardScreen extends ConsumerWidget {
     final budgetsAsync = ref.watch(budgetProgressProvider);
     return budgetsAsync.when(
       data: (budgets) {
-        if (budgets.isEmpty) return const SizedBox.shrink();
+        if (budgets.isEmpty) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Budget Progress',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.go('/budgets/add'),
+                    child: const Text('Add Budget'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              GlassCard(
+                padding: const EdgeInsets.all(20),
+                borderRadius: AppTheme.radiusCard,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.08),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.donut_large_rounded,
+                        color: Colors.orange,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'No Active Budgets',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -974,7 +1070,21 @@ class DashboardScreen extends ConsumerWidget {
         overallPct = (totalSpent / totalAllocated).clamp(0.0, 1.0);
       }
     } else {
-      overallPct = 0.35; // Beautiful fallback of 35%
+      // Dynamic fallback if no budgets are set: compute spent vs income from actual transactions!
+      final totals = totalsAsync.value;
+      if (totals != null) {
+        final income = totals['income'] ?? 0;
+        final expense = totals['expense'] ?? 0;
+        if (income > 0) {
+          overallPct = (expense / income).clamp(0.0, 1.0);
+        } else if (expense > 0) {
+          overallPct = 1.0; // Has expenses but no income logged -> 100% spent
+        } else {
+          overallPct = 0.0; // Fresh app startup, no transactions -> 0% spent
+        }
+      } else {
+        overallPct = 0.0;
+      }
     }
 
     final pendingReviewCount = reviewQueueAsync.maybeWhen(
@@ -1495,8 +1605,9 @@ class DashboardScreen extends ConsumerWidget {
                             runSpacing: 4,
                             children: [
                               _buildActiveParserBadge(isDark, 'M-Pesa'),
+                              _buildActiveParserBadge(isDark, 'Tigo'),
                               _buildActiveParserBadge(isDark, 'Airtel'),
-                              _buildActiveParserBadge(isDark, 'Halopesa'),
+                              _buildActiveParserBadge(isDark, 'Selcom'),
                             ],
                           ),
                         ),
@@ -1726,7 +1837,9 @@ class DashboardScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Spent ${(overallPct * 100).round()}% of allocated budget',
+                          budgets.isNotEmpty
+                              ? 'Spent ${(overallPct * 100).round()}% of allocated budget'
+                              : 'Spent ${(overallPct * 100).round()}% of monthly income',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

@@ -25,7 +25,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final Map<String, bool> _accounts = {
     'M-Pesa': false,
     'Airtel Money': false,
-    'Mixx by Yas': false,
+    'Tigo Pesa': false,
     'NMB Bank': false,
     'CRDB Bank': false,
     'Cash Wallet': false,
@@ -34,7 +34,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final Map<String, String> _providers = {
     'M-Pesa': 'M-Pesa_TZ',
     'Airtel Money': 'AirtelMoney_TZ',
-    'Mixx by Yas': 'TigoPesa_TZ',
+    'Tigo Pesa': 'TigoPesa_TZ',
     'NMB Bank': 'NMB',
     'CRDB Bank': 'CRDB',
     'Cash Wallet': '',
@@ -43,7 +43,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final Map<String, String> _types = {
     'M-Pesa': 'mobile_money',
     'Airtel Money': 'mobile_money',
-    'Mixx by Yas': 'mobile_money',
+    'Tigo Pesa': 'mobile_money',
     'NMB Bank': 'bank',
     'CRDB Bank': 'bank',
     'Cash Wallet': 'cash',
@@ -52,7 +52,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final Map<String, IconData> _icons = {
     'M-Pesa': Icons.phone_android_rounded,
     'Airtel Money': Icons.phone_android_rounded,
-    'Mixx by Yas': Icons.phone_android_rounded,
+    'Tigo Pesa': Icons.phone_android_rounded,
     'NMB Bank': Icons.account_balance_rounded,
     'CRDB Bank': Icons.account_balance_rounded,
     'Cash Wallet': Icons.account_balance_wallet_rounded,

@@ -6,6 +6,7 @@ import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/services/sms_background_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +52,14 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         developer.log('Telephony permissions prompt on launch: granted=$granted', name: 'AppLaunch');
       } catch (e) {
         developer.log('Failed to request telephony permissions: $e', name: 'AppLaunch');
+      }
+
+      try {
+        // Initialize background SMS listeners and registration
+        await ref.read(smsBackgroundServiceProvider).initialize();
+        developer.log('Background SMS service initialized successfully', name: 'AppLaunch');
+      } catch (e) {
+        developer.log('Failed to initialize SMS background service: $e', name: 'AppLaunch');
       }
     });
   }
