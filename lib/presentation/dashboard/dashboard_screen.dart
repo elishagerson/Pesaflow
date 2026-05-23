@@ -1040,6 +1040,7 @@ class DashboardScreen extends ConsumerWidget {
     final recentTransAsync = ref.watch(recentTransactionsStreamProvider);
     final budgetsAsync = ref.watch(budgetProgressProvider);
     final reviewQueueAsync = ref.watch(reviewQueueStreamProvider);
+    final totalsAsync = ref.watch(monthlyTotalsProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
