@@ -69,7 +69,7 @@ class BackupService {
   /// Restores a selected database file from file picker.
   /// Returns [true] if restore succeeded and app needs restart.
   Future<bool> restoreDatabase() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.any,
     );
 

@@ -19,6 +19,7 @@ class BudgetActiveTabNotifier extends Notifier<int> {
   @override
   int build() => 0;
 
+  @override
   set state(int value) => super.state = value;
 }
 

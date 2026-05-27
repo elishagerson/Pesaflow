@@ -81,6 +81,7 @@ class TransactionTypeFilterNotifier extends Notifier<String> {
   @override
   String build() => 'All';
 
+  @override
   set state(String value) => super.state = value;
 }
 final transactionTypeFilterProvider = NotifierProvider<TransactionTypeFilterNotifier, String>(() {
@@ -91,6 +92,7 @@ class TransactionAccountFilterNotifier extends Notifier<String?> {
   @override
   String? build() => null;
 
+  @override
   set state(String? value) => super.state = value;
 }
 final transactionAccountFilterProvider = NotifierProvider<TransactionAccountFilterNotifier, String?>(() {
@@ -101,6 +103,7 @@ class TransactionCategoryFilterNotifier extends Notifier<String?> {
   @override
   String? build() => null;
 
+  @override
   set state(String? value) => super.state = value;
 }
 final transactionCategoryFilterProvider = NotifierProvider<TransactionCategoryFilterNotifier, String?>(() {
@@ -111,6 +114,7 @@ class TransactionSearchQueryNotifier extends Notifier<String> {
   @override
   String build() => '';
 
+  @override
   set state(String value) => super.state = value;
 }
 final transactionSearchQueryProvider = NotifierProvider<TransactionSearchQueryNotifier, String>(() {
