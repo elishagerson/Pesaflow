@@ -290,75 +290,36 @@ class SmsReviewScreen extends ConsumerWidget {
                 amtType = AmountType.expense;
               }
 
-              return Dismissible(
-                key: Key(trans.id),
-                // Swipe right to approve
-                background: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 24),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.check_rounded, color: Colors.white, size: 28),
-                      SizedBox(width: 8),
-                      Text('Approve', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                // Swipe left to reject/delete
-                secondaryBackground: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 24),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.error,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('Reject', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      SizedBox(width: 8),
-                      Icon(Icons.close_rounded, color: Colors.white, size: 28),
-                    ],
-                  ),
-                ),
-                confirmDismiss: (direction) async {
-                  if (direction == DismissDirection.startToEnd) {
-                    // Approve: mark as sms_auto
-                    await ref.read(transactionRepositoryProvider).approveReviewedTransaction(trans.id);
-                    ref.invalidate(reviewQueueStreamProvider);
-                    ref.invalidate(recentTransactionsStreamProvider);
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Transaction approved: ${trans.description}'),
-                          backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                    return true;
-                  } else {
-                    // Reject: delete the transaction
-                    await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                    ref.invalidate(reviewQueueStreamProvider);
-                    ref.invalidate(recentTransactionsStreamProvider);
-                    ref.invalidate(accountsStreamProvider);
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Transaction rejected: ${trans.description}'),
-                          backgroundColor: theme.colorScheme.error,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                    return true;
+              return SwipeableCard(
+                onSwipeLeft: () async {
+                  // Reject: delete the transaction
+                  await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
+                  ref.invalidate(reviewQueueStreamProvider);
+                  ref.invalidate(recentTransactionsStreamProvider);
+                  ref.invalidate(accountsStreamProvider);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Transaction rejected: ${trans.description}'),
+                        backgroundColor: theme.colorScheme.error,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                onSwipeRight: () async {
+                  // Approve: mark as sms_auto
+                  await ref.read(transactionRepositoryProvider).approveReviewedTransaction(trans.id);
+                  ref.invalidate(reviewQueueStreamProvider);
+                  ref.invalidate(recentTransactionsStreamProvider);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Transaction approved: ${trans.description}'),
+                        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
                   }
                 },
                 child: Container(
@@ -444,22 +405,24 @@ class SmsReviewScreen extends ConsumerWidget {
                                               // High-fidelity confidence score badge
                                               Container(
                                                 padding: const EdgeInsets.symmetric(
-                                                    horizontal: 8, vertical: 2),
+                                                    horizontal: 8, vertical: 4),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFF30D158).withOpacity(0.12),
+                                                  color: const Color(0xFF30D158).withOpacity(0.08),
                                                   borderRadius: BorderRadius.circular(100),
+                                                  border: Border.all(
+                                                    color: const Color(0xFF30D158).withOpacity(0.2),
+                                                    width: 1,
+                                                  ),
                                                 ),
                                                 child: Row(
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
-                                                    Icon(
-                                                      Icons.bolt_rounded,
-                                                      size: 10,
-                                                      color: theme.brightness == Brightness.dark
-                                                          ? const Color(0xFF30D158)
-                                                          : const Color(0xFF2E7D32),
+                                                    ConfidenceRing(
+                                                      score: 0.94,
+                                                      color: const Color(0xFF30D158),
+                                                      size: 12,
                                                     ),
-                                                    const SizedBox(width: 2),
+                                                    const SizedBox(width: 6),
                                                     Text(
                                                       '94% MATCH',
                                                       style: TextStyle(
@@ -564,5 +527,270 @@ class SmsReviewScreen extends ConsumerWidget {
         ],
       ),
     ));
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// HIGH-FIDELITY CUSTOM-PAINTED CONFIDENCE RING WIDGET
+// ════════════════════════════════════════════════════════════════════════════
+class ConfidenceRing extends StatelessWidget {
+  final double score;
+  final Color color;
+  final double size;
+
+  const ConfidenceRing({
+    super.key,
+    required this.score,
+    required this.color,
+    this.size = 14,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _ConfidenceRingPainter(
+          score: score,
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _ConfidenceRingPainter extends CustomPainter {
+  final double score;
+  final Color color;
+
+  _ConfidenceRingPainter({required this.score, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 1;
+
+    final bgPaint = Paint()
+      ..color = color.withOpacity(0.18)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    
+    canvas.drawCircle(center, radius, bgPaint);
+
+    final activePaint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -1.5708, // -90 degrees
+      6.28318 * score, // 2 * pi * score
+      false,
+      activePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _ConfidenceRingPainter oldDelegate) {
+    return oldDelegate.score != score || oldDelegate.color != color;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// TINDER-STYLE SPRING SWIPE CARD INTERACTION WIDGET
+// ════════════════════════════════════════════════════════════════════════════
+class SwipeableCard extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onSwipeLeft;
+  final VoidCallback onSwipeRight;
+
+  const SwipeableCard({
+    super.key,
+    required this.child,
+    required this.onSwipeLeft,
+    required this.onSwipeRight,
+  });
+
+  @override
+  State<SwipeableCard> createState() => _SwipeableCardState();
+}
+
+class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  Offset _dragOffset = Offset.zero;
+  double _angle = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    setState(() {
+      _dragOffset += details.delta;
+      _angle = _dragOffset.dx / 800.0; // Subtle rotation
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    final threshold = MediaQuery.of(context).size.width * 0.35;
+    if (_dragOffset.dx > threshold) {
+      _swipeOut(const Offset(600, 0), widget.onSwipeRight);
+    } else if (_dragOffset.dx < -threshold) {
+      _swipeOut(const Offset(-600, 0), widget.onSwipeLeft);
+    } else {
+      _snapBack();
+    }
+  }
+
+  void _swipeOut(Offset targetOffset, VoidCallback onComplete) {
+    final startOffset = _dragOffset;
+    final startAngle = _angle;
+    
+    _controller.duration = const Duration(milliseconds: 200);
+    final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    animation.addListener(() {
+      setState(() {
+        _dragOffset = Offset.lerp(startOffset, targetOffset, animation.value)!;
+        _angle = startAngle + (startAngle * 1.5 - startAngle) * animation.value;
+      });
+    });
+
+    _controller.forward(from: 0.0).then((_) {
+      onComplete();
+    });
+  }
+
+  void _snapBack() {
+    final startOffset = _dragOffset;
+    final startAngle = _angle;
+
+    _controller.duration = const Duration(milliseconds: 300);
+    final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
+    );
+
+    animation.addListener(() {
+      setState(() {
+        _dragOffset = Offset.lerp(startOffset, Offset.zero, animation.value)!;
+        _angle = startAngle + (0.0 - startAngle) * animation.value;
+      });
+    });
+
+    _controller.forward(from: 0.0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final threshold = MediaQuery.of(context).size.width * 0.35;
+    final double approveOpacity = (_dragOffset.dx / threshold).clamp(0.0, 1.0);
+    final double rejectOpacity = (-_dragOffset.dx / threshold).clamp(0.0, 1.0);
+
+    return GestureDetector(
+      onPanUpdate: _onPanUpdate,
+      onPanEnd: _onPanEnd,
+      child: Transform.translate(
+        offset: _dragOffset,
+        child: Transform.rotate(
+          angle: _angle,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              widget.child,
+              if (approveOpacity > 0)
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: approveOpacity,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(color: const Color(0xFF30D158), width: 3),
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF30D158),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF30D158).withOpacity(0.4),
+                                blurRadius: 15,
+                              )
+                            ],
+                          ),
+                          child: const Text(
+                            'APPROVE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.black,
+                              fontSize: 20,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (rejectOpacity > 0)
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: rejectOpacity,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(color: const Color(0xFFFF453A), width: 3),
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF453A),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFF453A).withOpacity(0.4),
+                                blurRadius: 15,
+                              )
+                            ],
+                          ),
+                          child: const Text(
+                            'REJECT',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.black,
+                              fontSize: 20,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

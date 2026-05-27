@@ -40,6 +40,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   final List<String> _expenseSuggestions = ['Lunch', 'Transport / Taxi', 'Airtime Bundle', 'Electricity Luku', 'Groceries', 'Rent', 'Water Bill'];
   final List<String> _incomeSuggestions = ['Salary Paycheck', 'Business Sale', 'Freelance gig', 'Allowance', 'Dividends / Interest'];
+  final List<String> _transferSuggestions = ['To Savings Vault', 'To Bank Account', 'To Mobile Wallet', 'Card Payment / Settlement'];
 
   @override
   void initState() {
@@ -304,54 +305,79 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Category scroll list
+                    // Category squircle grid selection
                     const Text('Category', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 52,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: filteredCategories.length,
-                        itemBuilder: (context, index) {
-                          final cat = filteredCategories[index];
-                          final isSel = cat.id == _selectedCategoryId;
-                          final catColor = _hexToColor(cat.color);
+                    const SizedBox(height: 12),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 1.0,
+                      ),
+                      itemCount: filteredCategories.length,
+                      itemBuilder: (context, index) {
+                        final cat = filteredCategories[index];
+                        final isSel = cat.id == _selectedCategoryId;
+                        final catColor = _hexToColor(cat.color);
 
-                          return TactileSpringContainer(
-                            onTap: () {
-                              setSheetState(() => _selectedCategoryId = cat.id);
-                              setState(() => _selectedCategoryId = cat.id);
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 8.0),
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                color: isSel ? catColor.withOpacity(0.12) : AppTheme.surfaceContainerDark,
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: isSel ? catColor : const Color(0x15FFFFFF),
-                                  width: 1.2,
-                                ),
+                        return TactileSpringContainer(
+                          onTap: () {
+                            setSheetState(() => _selectedCategoryId = cat.id);
+                            setState(() => _selectedCategoryId = cat.id);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: isSel 
+                                  ? catColor.withOpacity(0.15) 
+                                  : (theme.brightness == Brightness.dark 
+                                      ? const Color(0xFF1B1B1D) 
+                                      : Colors.grey.withOpacity(0.05)),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isSel ? catColor : Colors.transparent,
+                                width: 2,
                               ),
-                              child: Row(
-                                children: [
-                                  Icon(_getCategoryIcon(cat.icon), color: isSel ? catColor : Colors.grey, size: 16),
-                                  const SizedBox(width: 8),
-                                  Text(
+                              boxShadow: isSel ? [
+                                BoxShadow(
+                                  color: catColor.withOpacity(0.25),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                )
+                              ] : null,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  _getCategoryIcon(cat.icon),
+                                  color: isSel ? catColor : (theme.brightness == Brightness.dark ? Colors.white60 : Colors.black54),
+                                  size: 24,
+                                ),
+                                const SizedBox(height: 6),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Text(
                                     cat.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      color: isSel ? catColor : Colors.white70,
+                                      color: isSel 
+                                          ? (theme.brightness == Brightness.dark ? Colors.white : catColor) 
+                                          : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
                                       fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                      fontSize: 13,
+                                      fontSize: 11,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 20),
 
@@ -375,7 +401,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: Row(
                         children: (_transactionType == 'Expense'
                                 ? _expenseSuggestions
-                                : _incomeSuggestions)
+                                : (_transactionType == 'Income' ? _incomeSuggestions : _transferSuggestions))
                             .map((suggestion) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6.0),
@@ -597,7 +623,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       // Header Segment Toggle (internal styled pill like first screenshot)
                       const SizedBox(height: 16),
                       Container(
-                        width: 280,
+                        width: 320,
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceContainerDark,
@@ -606,6 +632,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                         child: Row(
                           children: [
+                            // Expense pill
                             Expanded(
                               child: GestureDetector(
                                 onTap: () => setState(() {
@@ -616,15 +643,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Expense' 
-                                        ? const Color(0xFF262626) 
+                                        ? const Color(0xFFFF453A).withOpacity(0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
+                                    border: _transactionType == 'Expense'
+                                        ? Border.all(color: const Color(0xFFFF453A), width: 1.2)
+                                        : null,
                                   ),
                                   child: Center(
                                     child: Text(
                                       'Expense',
                                       style: TextStyle(
-                                        color: _transactionType == 'Expense' ? Colors.white : Colors.grey,
+                                        color: _transactionType == 'Expense' ? const Color(0xFFFF453A) : Colors.grey,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),
@@ -633,6 +663,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                               ),
                             ),
+                            // Income pill
                             Expanded(
                               child: GestureDetector(
                                 onTap: () => setState(() {
@@ -643,15 +674,49 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Income' 
-                                        ? const Color(0xFF262626) 
+                                        ? const Color(0xFF30D158).withOpacity(0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
+                                    border: _transactionType == 'Income'
+                                        ? Border.all(color: const Color(0xFF30D158), width: 1.2)
+                                        : null,
                                   ),
                                   child: Center(
                                     child: Text(
                                       'Income',
                                       style: TextStyle(
-                                        color: _transactionType == 'Income' ? Colors.white : Colors.grey,
+                                        color: _transactionType == 'Income' ? const Color(0xFF30D158) : Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Transfer pill
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() {
+                                  _transactionType = 'Transfer';
+                                  _selectedCategoryId = null;
+                                }),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: _transactionType == 'Transfer' 
+                                        ? const Color(0xFF0A84FF).withOpacity(0.15) 
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: _transactionType == 'Transfer'
+                                        ? Border.all(color: const Color(0xFF0A84FF), width: 1.2)
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Transfer',
+                                      style: TextStyle(
+                                        color: _transactionType == 'Transfer' ? const Color(0xFF0A84FF) : Colors.grey,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),
@@ -675,12 +740,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Text(
-                            'Tsh $formattedDisplay',
+                          child: KeypadSpringText(
+                            text: 'Tsh $formattedDisplay',
                             style: TextStyle(
                               fontSize: fontSize,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
+                              fontFamily: 'monospace',
                               letterSpacing: -1.0,
                             ),
                           ),
@@ -787,6 +853,73 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PREMIUM DYNAMIC KEYPAD SPRING MONOSPACE TEXT
+// ════════════════════════════════════════════════════════════════════════════
+class KeypadSpringText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+
+  const KeypadSpringText({
+    super.key,
+    required this.text,
+    required this.style,
+  });
+
+  @override
+  State<KeypadSpringText> createState() => _KeypadSpringTextState();
+}
+
+class _KeypadSpringTextState extends State<KeypadSpringText>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.93)
+            .chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.93, end: 1.0)
+            .chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 60,
+      ),
+    ]).animate(_controller);
+  }
+
+  @override
+  void didUpdateWidget(covariant KeypadSpringText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _controller.reset();
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: Text(widget.text, style: widget.style),
     );
   }
 }
