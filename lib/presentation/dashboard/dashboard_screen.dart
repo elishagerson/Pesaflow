@@ -28,9 +28,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Mambo Vipi'; // Tanzanian local friendly morning greeting
-    if (hour < 17) return 'Habari za Mchana'; // Afternoon
-    return 'Habari za Jioni'; // Evening
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
   }
 
   Widget _buildActiveParserBadge(bool isDark, String label) {
@@ -395,8 +395,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }) {
     final remainingCents = (bp.currentPeriod?.allocated ?? bp.budget.amount) - bp.spentInPeriod;
     final remainingText = remainingCents >= 0
-        ? '${_formatCompact(remainingCents)} bado'
-        : '${_formatCompact(remainingCents.abs())} zidi';
+        ? '${_formatCompact(remainingCents)} left'
+        : '${_formatCompact(remainingCents.abs())} over';
     final remainingColor = remainingCents >= 0
         ? (isDark ? Colors.grey[400] : Colors.grey[600])
         : AppTheme.expenseColor;
@@ -554,7 +554,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Mwezi Huu',
+                        'Monthly Overview',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w900,
                           letterSpacing: -0.5,
@@ -646,7 +646,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
-                                  'Ingizo (Income)',
+                                  'Income',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -683,7 +683,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
-                                  'Matumizi (Expense)',
+                                  'Expense',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -728,7 +728,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  netSavings >= 0 ? 'Baki (Saved)' : 'Upungufu (Deficit)',
+                                  netSavings >= 0 ? 'Saved' : 'Deficit',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,

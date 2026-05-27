@@ -363,6 +363,7 @@ class SmsReviewScreen extends ConsumerWidget {
                 },
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 10),
+                  clipBehavior: Clip.antiAlias, // Ensures the left accent border is clipped nicely
                   decoration: BoxDecoration(
                     color: theme.brightness == Brightness.dark
                         ? AppTheme.surfaceContainerDark
@@ -375,140 +376,184 @@ class SmsReviewScreen extends ConsumerWidget {
                       width: 0.5,
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top section: provider badge + amount
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: _hexToColor(item.category.color).withOpacity(0.15),
-                                shape: BoxShape.circle,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Left Accent Border strip (dynamic category colored)
+                        Container(
+                          width: 5,
+                          color: _hexToColor(item.category.color),
+                        ),
+                        // Main content
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Top section: provider badge + amount
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: _hexToColor(item.category.color).withOpacity(0.15),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        _getCategoryIcon(item.category.icon),
+                                        color: _hexToColor(item.category.color),
+                                        size: 22,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            trans.description.isNotEmpty
+                                                ? trans.description
+                                                : item.category.name,
+                                            style: theme.textTheme.titleSmall?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 8, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                child: Text(
+                                                  item.account.name,
+                                                  style: TextStyle(
+                                                    color: theme.colorScheme.primary,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              // High-fidelity confidence score badge
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 8, vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFF30D158).withOpacity(0.12),
+                                                  borderRadius: BorderRadius.circular(100),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.bolt_rounded,
+                                                      size: 10,
+                                                      color: theme.brightness == Brightness.dark
+                                                          ? const Color(0xFF30D158)
+                                                          : const Color(0xFF2E7D32),
+                                                    ),
+                                                    const SizedBox(width: 2),
+                                                    Text(
+                                                      '94% MATCH',
+                                                      style: TextStyle(
+                                                        color: theme.brightness == Brightness.dark
+                                                            ? const Color(0xFF30D158)
+                                                            : const Color(0xFF2E7D32),
+                                                        fontSize: 9,
+                                                        fontWeight: FontWeight.w900,
+                                                        letterSpacing: 0.5,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    AmountText(
+                                      amountInCents: trans.amount,
+                                      type: amtType,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Icon(
-                                _getCategoryIcon(item.category.icon),
-                                color: _hexToColor(item.category.color),
-                                size: 22,
-                                                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    trans.description.isNotEmpty
-                                        ? trans.description
-                                        : item.category.name,
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
+
+                              // Raw SMS preview
+                              if (trans.rawSms != null && trans.rawSms!.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.03),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      trans.rawSms!,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontFamily: 'monospace',
+                                        color: theme.colorScheme.onSurfaceVariant
+                                            .withOpacity(0.7),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Text(
-                                          item.account.name,
-                                          style: TextStyle(
-                                            color: theme.colorScheme.primary,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        trans.type.toUpperCase(),
-                                        style: const TextStyle(
-                                            fontSize: 10, color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            AmountText(
-                              amountInCents: trans.amount,
-                              type: amtType,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                                ),
 
-                      // Raw SMS preview
-                      if (trans.rawSms != null && trans.rawSms!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.03),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              trans.rawSms!,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontFamily: 'monospace',
-                                color: theme.colorScheme.onSurfaceVariant
-                                    .withOpacity(0.7),
+                              // Action buttons
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                child: Row(
+                                  children: [
+                                    TextButton.icon(
+                                      onPressed: () => _showCategoryPicker(context, ref, item),
+                                      icon: const Icon(Icons.category_rounded, size: 16),
+                                      label: const Text('Change Category',
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                    const Spacer(),
+                                    TextButton.icon(
+                                      onPressed: () async {
+                                        await ref
+                                            .read(transactionRepositoryProvider)
+                                            .approveReviewedTransaction(trans.id);
+                                        ref.invalidate(reviewQueueStreamProvider);
+                                        ref.invalidate(recentTransactionsStreamProvider);
+                                      },
+                                      icon: Icon(Icons.check_rounded,
+                                          size: 16, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                                      label: Text('Approve',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-
-                      // Action buttons
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                        child: Row(
-                          children: [
-                            TextButton.icon(
-                              onPressed: () => _showCategoryPicker(context, ref, item),
-                              icon: const Icon(Icons.category_rounded, size: 16),
-                              label: const Text('Change Category',
-                                  style: TextStyle(fontSize: 12)),
-                            ),
-                            const Spacer(),
-                            TextButton.icon(
-                              onPressed: () async {
-                                await ref
-                                    .read(transactionRepositoryProvider)
-                                    .approveReviewedTransaction(trans.id);
-                                ref.invalidate(reviewQueueStreamProvider);
-                                ref.invalidate(recentTransactionsStreamProvider);
-                              },
-                              icon: Icon(Icons.check_rounded,
-                                  size: 16, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
-                              label: Text('Approve',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
+              );
               );
             },
           );

@@ -196,28 +196,131 @@ class _AccountsPage extends StatelessWidget {
   final Map<String, bool> accounts;
   final Map<String, IconData> icons;
   final void Function(String, bool) onToggle;
-  const _AccountsPage({required this.theme, required this.accounts, required this.icons, required this.onToggle});
+
+  const _AccountsPage({
+    required this.theme,
+    required this.accounts,
+    required this.icons,
+    required this.onToggle,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(height: 24),
-        Text('Set Up Accounts', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Text('Select the accounts you use. You can add more later.', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        const SizedBox(height: 24),
-        Expanded(child: ListView(children: accounts.entries.map((e) => IosListRow(
-          leading: Icon(icons[e.key], color: theme.colorScheme.primary),
-          title: Text(e.key, style: const TextStyle(fontWeight: FontWeight.bold)),
-          trailing: CupertinoSwitch(
-            value: e.value,
-            activeColor: theme.colorScheme.primary,
-            onChanged: (v) => onToggle(e.key, v),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 24),
+          Text(
+            'Set Up Accounts',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              letterSpacing: -0.5,
+            ),
           ),
-          onTap: () => onToggle(e.key, !e.value),
-        )).toList())),
-      ]),
+          const SizedBox(height: 8),
+          Text(
+            'Select the accounts you use. You can add more later.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              physics: const BouncingScrollPhysics(),
+              children: accounts.entries.map((e) {
+                final isSelected = e.value;
+                return TactileSpringContainer(
+                  onTap: () => onToggle(e.key, !isSelected),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? theme.colorScheme.primary.withOpacity(0.08)
+                          : (theme.brightness == Brightness.dark
+                              ? AppTheme.surfaceContainerDark
+                              : AppTheme.surfaceLight),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                      border: Border.all(
+                        color: isSelected
+                            ? theme.colorScheme.primary
+                            : (theme.brightness == Brightness.dark
+                                ? const Color(0x1DFFFFFF)
+                                : const Color(0x15000000)),
+                        width: isSelected ? 1.5 : 0.8,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: theme.colorScheme.primary.withOpacity(0.06),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? theme.colorScheme.primary.withOpacity(0.12)
+                                : (theme.brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.05)
+                                    : Colors.black.withOpacity(0.05)),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            icons[e.key],
+                            color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          e.key,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: isSelected
+                                ? (theme.brightness == Brightness.dark ? Colors.white : theme.colorScheme.primary)
+                                : (theme.brightness == Brightness.dark ? Colors.grey[300] : Colors.grey[700]),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Mini check bubble
+                        Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: isSelected
+                              ? const Icon(Icons.check, size: 10, color: Colors.white)
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -236,6 +339,63 @@ class _CompletePage extends StatelessWidget {
         const SizedBox(height: 16),
         Text('Your offline finance tracker is ready.\nStart recording transactions and take control of your money.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
       ]),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PREMIUM TACTILE SPRING INTERACTION CONTAINER
+// ════════════════════════════════════════════════════════════════════════════
+class TactileSpringContainer extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final double scaleFactor;
+
+  const TactileSpringContainer({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.scaleFactor = 0.96,
+  });
+
+  @override
+  State<TactileSpringContainer> createState() => _TactileSpringContainerState();
+}
+
+class _TactileSpringContainerState extends State<TactileSpringContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleFactor,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
     );
   }
 }
