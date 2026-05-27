@@ -237,122 +237,153 @@ class BudgetListScreen extends ConsumerWidget {
 
                   final catColor = _hexToColor(bp.category.color);
 
-                  return GlassCard(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(16),
-                    borderRadius: AppTheme.radiusCard,
+                  return TactileSpringContainer(
                     onTap: () => context.go('/budgets/${bp.budget.id}'),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: theme.brightness == Brightness.dark
+                            ? AppTheme.surfaceContainerDark
+                            : AppTheme.surfaceLight,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(
+                          color: theme.brightness == Brightness.dark
+                              ? const Color(0x12FFFFFF)
+                              : const Color(0x1F000000),
+                          width: 0.5,
+                        ),
+                      ),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // Left Category Accent Indicator Strip
                             Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: catColor.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                _getCategoryIcon(bp.category.icon),
-                                color: catColor,
-                                size: 20,
-                              ),
+                              width: 5,
+                              color: catColor,
                             ),
-                            const SizedBox(width: 12),
+                            // Content Column
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    bp.budget.name,
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: catColor.withOpacity(0.15),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                            _getCategoryIcon(bp.category.icon),
+                                            color: catColor,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                bp.budget.name,
+                                                style: theme.textTheme.titleSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                bp.category.name,
+                                                style: theme.textTheme.bodySmall?.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: status.isOverBudget
+                                                    ? theme.colorScheme.error.withOpacity(0.1)
+                                                    : status.isOnTrack
+                                                        ? (theme.brightness == Brightness.dark ? const Color(0x1F00E5FF) : const Color(0x1F0A84FF))
+                                                        : Colors.orange.withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Text(
+                                                status.paceLabel,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: status.isOverBudget
+                                                      ? theme.colorScheme.error
+                                                      : status.isOnTrack
+                                                          ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))
+                                                          : Colors.orange,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${status.daysLeft} days left',
+                                              style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Text(
-                                    bp.category.name,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
+                                    const SizedBox(height: 14),
+                                    // Amount row
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        AmountText(
+                                          amountInCents: bp.spentInPeriod,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: status.isOverBudget ? theme.colorScheme.error : null,
+                                          ),
+                                        ),
+                                        AmountText(
+                                          amountInCents: status.allocated,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: theme.colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 8),
+                                    // Progress bar
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: LinearProgressIndicator(
+                                        value: status.percentage.clamp(0.0, 1.0),
+                                        backgroundColor: catColor.withOpacity(0.15),
+                                        color: status.isOverBudget ? theme.colorScheme.error : catColor,
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '${(status.percentage * 100).round()}% used',
+                                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: status.isOverBudget
-                                        ? theme.colorScheme.error.withOpacity(0.1)
-                                        : status.isOnTrack
-                                            ? (theme.brightness == Brightness.dark ? const Color(0x1F00E5FF) : const Color(0x1F0A84FF))
-                                            : Colors.orange.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    status.paceLabel,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: status.isOverBudget
-                                          ? theme.colorScheme.error
-                                          : status.isOnTrack
-                                              ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))
-                                              : Colors.orange,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${status.daysLeft} days left',
-                                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                                ),
-                              ],
                             ),
                           ],
                         ),
-                        const SizedBox(height: 14),
-                        // Amount row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AmountText(
-                              amountInCents: bp.spentInPeriod,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: status.isOverBudget ? theme.colorScheme.error : null,
-                              ),
-                            ),
-                            AmountText(
-                              amountInCents: status.allocated,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        // Progress bar
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: LinearProgressIndicator(
-                            value: status.percentage.clamp(0.0, 1.0),
-                            backgroundColor: catColor.withOpacity(0.15),
-                            color: status.isOverBudget ? theme.colorScheme.error : catColor,
-                            minHeight: 6,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${(status.percentage * 100).round()}% used',
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
-                        ),
-                      ],
+                      ),
                     ),
                   );
                 }),
@@ -370,3 +401,61 @@ class BudgetListScreen extends ConsumerWidget {
     );
   }
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// PREMIUM TACTILE SPRING INTERACTION CONTAINER
+// ════════════════════════════════════════════════════════════════════════════
+class TactileSpringContainer extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final double scaleFactor;
+
+  const TactileSpringContainer({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.scaleFactor = 0.96,
+  });
+
+  @override
+  State<TactileSpringContainer> createState() => _TactileSpringContainerState();
+}
+
+class _TactileSpringContainerState extends State<TactileSpringContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleFactor,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
+    );
+  }
+}
+

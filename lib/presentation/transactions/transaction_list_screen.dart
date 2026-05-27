@@ -153,7 +153,7 @@ class TransactionListScreen extends ConsumerWidget {
             ),
             // Live Search Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: TextField(
                 controller: searchController,
                 onChanged: (val) {
@@ -161,22 +161,49 @@ class TransactionListScreen extends ConsumerWidget {
                 },
                 decoration: InputDecoration(
                   hintText: 'Search description, recipient or reference...',
-                  prefixIcon: const Icon(Icons.search_rounded),
+                  hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
+                  prefixIcon: Icon(
+                    Icons.search_rounded, 
+                    color: theme.colorScheme.primary, 
+                    size: 20,
+                  ),
                   suffixIcon: searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear_rounded),
+                          icon: const Icon(Icons.clear_rounded, size: 18),
                           onPressed: () {
                             ref.read(transactionSearchQueryProvider.notifier).state = '';
                           },
                         )
                       : null,
+                  filled: true,
+                  fillColor: theme.brightness == Brightness.dark
+                      ? const Color(0xFF0F0F10)
+                      : const Color(0xFFF2F2F7),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(
+                      color: theme.brightness == Brightness.dark
+                          ? const Color(0x12FFFFFF)
+                          : Colors.transparent,
+                      width: 0.5,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary.withOpacity(0.5),
+                      width: 1,
+                    ),
+                  ),
                 ),
+                style: const TextStyle(fontSize: 14),
               ),
             ),
 
             // Segmented Type Pills
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -184,16 +211,56 @@ class TransactionListScreen extends ConsumerWidget {
                 child: Row(
                   children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
                     final isSelected = activeType == type;
+                    
+                    // Distinctive glowing accent colors per pill type
+                    Color activeColor = theme.colorScheme.primary;
+                    if (type == 'Income') {
+                      activeColor = const Color(0xFF30D158);
+                    } else if (type == 'Expense') {
+                      activeColor = const Color(0xFFFF453A);
+                    } else if (type == 'Transfer') {
+                      activeColor = const Color(0xFF0A84FF);
+                    }
+
                     return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ChoiceChip(
-                        label: Text(type),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          if (selected) {
-                            ref.read(transactionTypeFilterProvider.notifier).state = type;
-                          }
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: TactileSpringContainer(
+                        onTap: () {
+                          ref.read(transactionTypeFilterProvider.notifier).state = type;
                         },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isSelected 
+                                ? activeColor.withOpacity(0.15) 
+                                : (theme.brightness == Brightness.dark 
+                                    ? AppTheme.surfaceContainerDark 
+                                    : Colors.grey.withOpacity(0.06)),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: isSelected ? activeColor : const Color(0x12FFFFFF),
+                              width: 1.2,
+                            ),
+                            boxShadow: isSelected ? [
+                              BoxShadow(
+                                color: activeColor.withOpacity(0.2),
+                                blurRadius: 8,
+                                spreadRadius: 0.5,
+                              )
+                            ] : null,
+                          ),
+                          child: Text(
+                            type,
+                            style: TextStyle(
+                              color: isSelected 
+                                  ? (theme.brightness == Brightness.dark ? Colors.white : activeColor) 
+                                  : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -487,6 +554,63 @@ class TransactionListScreen extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PREMIUM TACTILE SPRING INTERACTION CONTAINER
+// ════════════════════════════════════════════════════════════════════════════
+class TactileSpringContainer extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final double scaleFactor;
+
+  const TactileSpringContainer({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.scaleFactor = 0.95,
+  });
+
+  @override
+  State<TactileSpringContainer> createState() => _TactileSpringContainerState();
+}
+
+class _TactileSpringContainerState extends State<TactileSpringContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleFactor,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
     );
   }
 }
