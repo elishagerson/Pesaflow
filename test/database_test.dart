@@ -1,7 +1,5 @@
-import 'dart:ffi';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqlite3/open.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/account_dao.dart';
@@ -9,10 +7,6 @@ import 'package:pesaflow/data/database/daos/category_dao.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 
 void main() {
-  // Override sqlite3 library loading for Linux VM FFI compatibility
-  open.overrideFor(OperatingSystem.linux, () {
-    return DynamicLibrary.open('/usr/lib64/libsqlite3.so.0');
-  });
 
   late AppDatabase database;
   late AccountDao accountDao;
