@@ -16,14 +16,21 @@ import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  String? _selectedAccountId;
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 12) return 'Mambo Vipi'; // Tanzanian local friendly morning greeting
+    if (hour < 17) return 'Habari za Mchana'; // Afternoon
+    return 'Habari za Jioni'; // Evening
   }
 
   Widget _buildActiveParserBadge(bool isDark, String label) {
@@ -59,7 +66,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  void _showAddAccountDialog(BuildContext context, WidgetRef ref) {
+  void _showAddAccountDialog(BuildContext context) {
     final nameController = TextEditingController();
     String accountType = 'Cash'; // Default
     final balanceController = TextEditingController();
@@ -367,13 +374,125 @@ class DashboardScreen extends ConsumerWidget {
     return Colors.grey;
   }
 
-  Widget _buildMonthlyOverview(WidgetRef ref, ThemeData theme) {
+  String _formatCompact(int amountInCents) {
+    final double value = amountInCents / 100.0;
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(1)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(0)}k';
+    }
+    return value.toStringAsFixed(0);
+  }
+
+  Widget _buildSingleBudgetRing({
+    required BuildContext context,
+    required BudgetWithProgress bp,
+    required Color catColor,
+    required IconData catIcon,
+    required double pct,
+    required ThemeData theme,
+    required bool isDark,
+  }) {
+    final remainingCents = (bp.currentPeriod?.allocated ?? bp.budget.amount) - bp.spentInPeriod;
+    final remainingText = remainingCents >= 0
+        ? '${_formatCompact(remainingCents)} bado'
+        : '${_formatCompact(remainingCents.abs())} zidi';
+    final remainingColor = remainingCents >= 0
+        ? (isDark ? Colors.grey[400] : Colors.grey[600])
+        : AppTheme.expenseColor;
+
+    return TactileSpringContainer(
+      onTap: () => context.go('/budgets/${bp.budget.id}'),
+      child: GlassCard(
+        borderRadius: AppTheme.radiusCard,
+        margin: const EdgeInsets.only(right: 12),
+        child: Container(
+          width: 105,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 56,
+                width: 56,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Progress ring background track
+                    SizedBox(
+                      height: 52,
+                      width: 52,
+                      child: CircularProgressIndicator(
+                        value: 1.0,
+                        strokeWidth: 4.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          catColor.withOpacity(0.12),
+                        ),
+                      ),
+                    ),
+                    // Progress ring foreground filled track
+                    SizedBox(
+                      height: 52,
+                      width: 52,
+                      child: CircularProgressIndicator(
+                        value: pct,
+                        strokeWidth: 5.5,
+                        strokeCap: StrokeCap.round,
+                        backgroundColor: Colors.transparent,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          remainingCents < 0 ? AppTheme.expenseColor : catColor,
+                        ),
+                      ),
+                    ),
+                    // Centered Category Icon
+                    Icon(
+                      catIcon,
+                      color: remainingCents < 0 ? AppTheme.expenseColor : catColor,
+                      size: 18,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                bp.budget.name,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 3),
+              Text(
+                remainingText,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: remainingColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthlyOverview(ThemeData theme) {
     final totalsAsync = ref.watch(monthlyTotalsProvider);
-    final catsAsync = ref.watch(topCategoriesProvider);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return totalsAsync.when(
       data: (totals) {
         final income = totals['income'] ?? 0;
         final expense = totals['expense'] ?? 0;
+        
         if (income == 0 && expense == 0) {
           return GlassCard(
             padding: const EdgeInsets.all(20),
@@ -413,158 +532,240 @@ class DashboardScreen extends ConsumerWidget {
             ),
           );
         }
+        
+        // Calculate dynamic donut percentages
+        final double total = (income + expense).toDouble();
+        final double incomePct = total > 0 ? (income / total) * 100 : 50;
+        final double expensePct = total > 0 ? (expense / total) * 100 : 50;
+        
+        final netSavings = income - expense;
+        final savingsPct = income > 0 ? (netSavings / income * 100).round() : 0;
+
         return GlassCard(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(18),
           borderRadius: AppTheme.radiusCard,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Monthly Overview',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mwezi Huu',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      Text(
+                        'THIS MONTH',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Compact Net Savings indicator badge
+                  if (income > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: netSavings >= 0
+                            ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor).withOpacity(0.12)
+                            : (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Text(
+                        netSavings >= 0 ? '$savingsPct% SAVED' : '${savingsPct.abs()}% DEFICIT',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          color: netSavings >= 0
+                              ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor)
+                              : (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 18),
               Row(
                 children: [
-                  catsAsync.when(
-                    data: (cats) {
-                      if (cats.isEmpty)
-                        return const SizedBox(width: 80, height: 80);
-                      final colors = [
-                        theme.colorScheme.primary,
-                        const Color(0xFFF59E0B),
-                        const Color(0xFF3B82F6),
-                        const Color(0xFF8B5CF6),
-                        const Color(0xFFEF4444),
-                      ];
-                      return SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: PieChart(
-                          PieChartData(
-                            sectionsSpace: 1,
-                            centerSpaceRadius: 25,
-                            sections: List.generate(
-                              cats.length,
-                              (i) => PieChartSectionData(
-                                value: cats[i].amount.toDouble(),
-                                color: i < colors.length
-                                    ? colors[i]
-                                    : Colors.grey,
-                                radius: 12,
-                                showTitle: false,
-                              ),
-                            ),
+                  // Donut Pie Chart (Income vs Expense)
+                  SizedBox(
+                    height: 84,
+                    width: 84,
+                    child: PieChart(
+                      PieChartData(
+                        startDegreeOffset: -90,
+                        sectionsSpace: 2,
+                        centerSpaceRadius: 26,
+                        sections: [
+                          PieChartSectionData(
+                            value: incomePct,
+                            color: isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor,
+                            radius: 10,
+                            showTitle: false,
                           ),
-                        ),
-                      );
-                    },
-                    loading: () => const SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                          PieChartSectionData(
+                            value: expensePct,
+                            color: isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor,
+                            radius: 10,
+                            showTitle: false,
+                          ),
+                        ],
+                      ),
                     ),
-                    error: (_, __) => const SizedBox(width: 80, height: 80),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 20),
+                  // Metrics
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Income row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Income',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Ingizo (Income)',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                             AmountText(
                               amountInCents: income,
                               type: AmountType.income,
+                              useMonospace: true,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 13,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
+                        // Expense row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Expense',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Matumizi (Expense)',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                             AmountText(
                               amountInCents: expense,
                               type: AmountType.expense,
+                              useMonospace: true,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 13,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
                         Divider(
                           height: 0.5,
                           thickness: 0.5,
-                          color: theme.brightness == Brightness.dark
-                              ? const Color(0x1FFFFFFF)
-                              : const Color(0x1F000000),
+                          color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1A000000),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
+                        // Net Balance row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              income >= expense ? 'Saved' : 'Deficit',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: netSavings >= 0
+                                        ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor)
+                                        : (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  netSavings >= 0 ? 'Baki (Saved)' : 'Upungufu (Deficit)',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                             AmountText(
-                              amountInCents: (income - expense).abs(),
-                              type: income >= expense
-                                  ? AmountType.income
-                                  : AmountType.expense,
+                              amountInCents: netSavings.abs(),
+                              type: netSavings >= 0 ? AmountType.income : AmountType.expense,
+                              useMonospace: true,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 13,
                               ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ), // close Column, Expanded
+                  ),
                 ],
-              ), // close Row
+              ),
             ],
-          ), // close Column
-        ); // close GlassCard
+          ),
+        );
       },
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
     );
   }
 
-  Widget _buildBudgetRings(
-    WidgetRef ref,
-    ThemeData theme,
-    BuildContext context,
-  ) {
+  Widget _buildBudgetRings(ThemeData theme, BuildContext context) {
     final budgetsAsync = ref.watch(budgetProgressProvider);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return budgetsAsync.when(
       data: (budgets) {
         if (budgets.isEmpty) {
@@ -574,15 +775,30 @@ class DashboardScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Budget Progress',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Budget Progress',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'LIMITS & SPENDING',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
-                  TextButton(
+                  TextButton.icon(
                     onPressed: () => context.go('/budgets/add'),
-                    child: const Text('Add Budget'),
+                    icon: const Icon(Icons.add_rounded, size: 16),
+                    label: const Text('Add Budget'),
                   ),
                 ],
               ),
@@ -632,11 +848,25 @@ class DashboardScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Budget Progress',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Budget Progress',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'LIMITS & SPENDING',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                  ],
                 ),
                 TextButton(
                   onPressed: () => context.go('/budgets'),
@@ -644,9 +874,9 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             SizedBox(
-              height: 100,
+              height: 124,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -655,72 +885,16 @@ class DashboardScreen extends ConsumerWidget {
                   final bp = budgets[i];
                   final pct = bp.percentage.clamp(0.0, 1.0);
                   final catColor = _hexToColor(bp.category.color);
-                  return TactileSpringContainer(
-                    onTap: () => context.go('/budgets/${bp.budget.id}'),
-                    child: GlassCard(
-                      borderRadius: AppTheme.radiusCard,
-                      margin: EdgeInsets.only(right: 12),
-                      child: Container(
-                        width: 90,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 56,
-                              width: 56,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  PieChart(
-                                    PieChartData(
-                                      startDegreeOffset: -90,
-                                      sectionsSpace: 0,
-                                      centerSpaceRadius: 20,
-                                      sections: [
-                                        PieChartSectionData(
-                                          value: pct * 100,
-                                          color:
-                                              bp.spentInPeriod >
-                                                  (bp
-                                                          .currentPeriod
-                                                          ?.allocated ??
-                                                      bp.budget.amount)
-                                              ? AppTheme.expenseColor
-                                              : catColor,
-                                          radius: 6,
-                                          showTitle: false,
-                                        ),
-                                        PieChartSectionData(
-                                          value: (1.0 - pct) * 100,
-                                          color: catColor.withOpacity(0.15),
-                                          radius: 6,
-                                          showTitle: false,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(
-                                    '${(pct * 100).round()}%',
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              bp.budget.name,
-                              style: const TextStyle(fontSize: 11),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  final catIcon = _getCategoryIcon(bp.category.icon);
+                  
+                  return _buildSingleBudgetRing(
+                    context: context,
+                    bp: bp,
+                    catColor: catColor,
+                    catIcon: catIcon,
+                    pct: pct,
+                    theme: theme,
+                    isDark: isDark,
                   );
                 },
               ),
@@ -733,7 +907,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  void _showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
+  void _showWorkspaceSelectorSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -780,7 +954,7 @@ class DashboardScreen extends ConsumerWidget {
                   TextButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
-                      _showAddTrackerDialog(context, ref);
+                      _showAddTrackerDialog(context);
                     },
                     icon: const Icon(Icons.add_rounded, size: 18),
                     label: const Text('New'),
@@ -876,7 +1050,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  void _showAddTrackerDialog(BuildContext context, WidgetRef ref) {
+  void _showAddTrackerDialog(BuildContext context) {
     final nameController = TextEditingController();
     String selectedIcon = 'briefcase';
     String selectedColorHex = '#7C3AED'; // Amethyst
@@ -1034,7 +1208,7 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final netWorth = ref.watch(netWorthProvider);
     final accountsAsync = ref.watch(accountsStreamProvider);
     final recentTransAsync = ref.watch(recentTransactionsStreamProvider);
@@ -1094,9 +1268,30 @@ class DashboardScreen extends ConsumerWidget {
     );
 
     final accounts = accountsAsync.value ?? [];
-    final hasAccounts = accounts.isNotEmpty;
-    final account1 = hasAccounts ? accounts[0] : null;
-    final account2 = accounts.length > 1 ? accounts[1] : null;
+
+    // Dynamic Balance card color properties matching HIG/M3 design brief
+    final cardGradient = isDark
+        ? LinearGradient(
+            colors: [
+              trackerColor.withOpacity(0.24),
+              const Color(0xFF09090A),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )
+        : LinearGradient(
+            colors: [
+              trackerColor,
+              trackerColor.withOpacity(0.82),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          );
+
+    final Color heroTextColor = Colors.white;
+    final Color heroSubColor = isDark ? Colors.grey[400]! : Colors.white.withOpacity(0.8);
+    final Color pillBg = isDark ? Colors.white.withOpacity(0.06) : Colors.white.withOpacity(0.18);
+    final Color pillBorder = isDark ? const Color(0x1AFFFFFF) : const Color(0x33FFFFFF);
 
     return Scaffold(
       body: SafeArea(
@@ -1137,28 +1332,48 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ),
 
-                  // Center: Home Title
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Home',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? Colors.white : Colors.black,
-                          letterSpacing: -0.5,
+                  // Center: PesaFlow Active Workspace Selector
+                  TactileSpringContainer(
+                    onTap: () => _showWorkspaceSelectorSheet(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF161618) : Colors.white,
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                          width: 0.5,
                         ),
                       ),
-                      Text(
-                        '.',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: trackerColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            trackerName,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 14,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
 
                   // Right: Notification Bell Trigger
@@ -1226,28 +1441,22 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
 
-              // ── 2. "pesaflow cash" Balance Hero Card ──
+              // ── 2. "pesaflow cash" Floating Balance Hero Card ──
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF121214), const Color(0xFF0A0A0B)]
-                        : [Colors.white, const Color(0xFFF5F5F7)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  gradient: cardGradient,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                    width: 0.5,
+                    color: isDark ? trackerColor.withOpacity(0.3) : trackerColor.withOpacity(0.15),
+                    width: 0.8,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      color: trackerColor.withOpacity(0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
@@ -1265,7 +1474,7 @@ class DashboardScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 19,
-                                color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                                color: isDark ? const Color(0xFF00E5FF) : Colors.white,
                                 letterSpacing: -0.5,
                               ),
                             ),
@@ -1274,7 +1483,7 @@ class DashboardScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 19,
-                                color: isDark ? Colors.white : Colors.black,
+                                color: heroTextColor,
                                 letterSpacing: -0.5,
                               ),
                             ),
@@ -1284,7 +1493,7 @@ class DashboardScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)).withOpacity(0.12),
+                            color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: Row(
@@ -1295,11 +1504,11 @@ class DashboardScreen extends ConsumerWidget {
                                 child: CircularProgressIndicator(
                                   value: overallPct,
                                   strokeWidth: 2,
-                                  backgroundColor: isDark ? Colors.white10 : Colors.black12,
+                                  backgroundColor: Colors.white24,
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     overallPct > 0.9
                                         ? const Color(0xFFFF453A)
-                                        : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                                        : Colors.white,
                                   ),
                                 ),
                               ),
@@ -1309,7 +1518,7 @@ class DashboardScreen extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
-                                  color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                                  color: heroTextColor,
                                   letterSpacing: 0.5,
                                 ),
                               ),
@@ -1325,8 +1534,8 @@ class DashboardScreen extends ConsumerWidget {
                         Container(
                           width: 4,
                           height: 4,
-                          decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -1337,7 +1546,7 @@ class DashboardScreen extends ConsumerWidget {
                             fontSize: 10,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.5,
-                            color: isDark ? Colors.grey[500] : Colors.grey[600],
+                            color: heroSubColor,
                           ),
                         ),
                       ],
@@ -1349,7 +1558,7 @@ class DashboardScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 42,
-                        color: isDark ? Colors.white : Colors.black,
+                        color: heroTextColor,
                         letterSpacing: -1.0,
                       ),
                     ),
@@ -1357,90 +1566,98 @@ class DashboardScreen extends ConsumerWidget {
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      color: pillBorder,
                     ),
-                    const SizedBox(height: 18),
-                    // Individual Accounts List Section
-                    if (account1 != null) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                                  shape: BoxShape.circle,
+                    
+                    // Dynamic scrolling Account Pills in the Balance Hero Card
+                    if (accounts.isNotEmpty) ...[
+                      const SizedBox(height: 18),
+                      SizedBox(
+                        height: 38,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: accounts.length,
+                          itemBuilder: (context, index) {
+                            final account = accounts[index];
+                            final isSelected = _selectedAccountId == account.id;
+                            
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: TactileSpringContainer(
+                                onTap: () {
+                                  setState(() {
+                                    if (_selectedAccountId == account.id) {
+                                      _selectedAccountId = null; // Clear filter
+                                    } else {
+                                      _selectedAccountId = account.id; // Apply filter
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? (isDark ? trackerColor.withOpacity(0.35) : Colors.white)
+                                        : pillBg,
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? (isDark ? trackerColor : Colors.white)
+                                          : pillBorder,
+                                      width: isSelected ? 1.5 : 0.8,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _getAccountIcon(account.icon),
+                                        size: 14,
+                                        color: isSelected
+                                            ? (isDark ? Colors.white : trackerColor)
+                                            : heroTextColor,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        account.name,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: isSelected
+                                              ? (isDark ? Colors.white : trackerColor)
+                                              : heroTextColor,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        _formatCompact(account.balance),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: 'monospace',
+                                          fontWeight: FontWeight.bold,
+                                          color: isSelected
+                                              ? (isDark ? Colors.white.withOpacity(0.9) : trackerColor.withOpacity(0.9))
+                                              : heroTextColor.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Text(
-                                account1.name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: isDark ? Colors.grey[300] : Colors.grey[700],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          AmountText(
-                            amountInCents: account1.balance,
-                            useMonospace: false,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
-                    ],
-                    if (account2 != null) ...[
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: Colors.grey,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                account2.name,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: isDark ? Colors.grey[300] : Colors.grey[700],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          AmountText(
-                            amountInCents: account2.balance,
-                            useMonospace: false,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? Colors.grey[400] : Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                    if (account1 == null) ...[
+                    ] else ...[
+                      const SizedBox(height: 18),
                       Center(
                         child: Text(
                           'No active accounts. Tap Add Account below to start.',
-                          style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                          style: TextStyle(color: heroSubColor, fontSize: 12),
                         ),
                       ),
                     ],
@@ -1449,7 +1666,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              // ── 3. High-Contrast Stark Action Buttons ──
+              // ── 3. High-Contrast Action Buttons ──
               Row(
                 children: [
                   Expanded(
@@ -1486,7 +1703,7 @@ class DashboardScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: TactileSpringContainer(
-                      onTap: () => _showAddAccountDialog(context, ref),
+                      onTap: () => _showAddAccountDialog(context),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         decoration: BoxDecoration(
@@ -1653,7 +1870,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              // ── 5. Budget Health Score Card (Credit Score Vibe) ──
+              // ── 5. Budget Health Score Card ──
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
@@ -1718,13 +1935,13 @@ class DashboardScreen extends ConsumerWidget {
                             child: Text(
                               ratingLabel,
                               style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                color: ratingColor,
-                                letterSpacing: 0.5,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  color: ratingColor,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
-                            ),
-                          );
+                            );
                         }()),
                       ],
                     ),
@@ -1741,29 +1958,29 @@ class DashboardScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    Text(
-                                      '$score',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 48,
-                                        color: isDark ? Colors.white : Colors.black,
-                                        letterSpacing: -2,
-                                      ),
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    '$score',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 48,
+                                      color: isDark ? Colors.white : Colors.black,
+                                      letterSpacing: -2,
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '/ 1000',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 14,
-                                        color: isDark ? Colors.grey[600] : Colors.grey[500],
-                                      ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '/ 1000',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      color: isDark ? Colors.grey[600] : Colors.grey[500],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: 4),
                               Text(
                                 'Overall pacing score',
@@ -1871,141 +2088,12 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              // Horizontal Scrollable Accounts Carousel
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'My Accounts',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  accountsAsync.when(
-                    data: (list) => Text(
-                      '${list.length} active',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    loading: () => const SizedBox(),
-                    error: (_, __) => const SizedBox(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 105,
-                child: accountsAsync.when(
-                  data: (accounts) {
-                    if (accounts.isEmpty) {
-                      return GlassCard(
-                        onTap: () => _showAddAccountDialog(context, ref),
-                        borderRadius: AppTheme.radiusCard,
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_card_rounded,
-                              color: Colors.grey,
-                              size: 28,
-                            ),
-                            SizedBox(height: 6),
-                            Text(
-                              'No accounts added yet. Tap to create one!',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: accounts.length,
-                      itemBuilder: (context, index) {
-                        final account = accounts[index];
-                        return GlassCard(
-                          onTap: () {}, // Tappable accounts if needed
-                          borderRadius: AppTheme.radiusCard,
-                          margin: EdgeInsets.only(right: 12.0),
-                          child: Container(
-                            width: 180,
-                            padding: const EdgeInsets.all(14.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      _getAccountIcon(account.icon),
-                                      size: 20,
-                                      color: trackerColor,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        account.name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      account.type.toUpperCase().replaceAll(
-                                        '_',
-                                        ' ',
-                                      ),
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    AmountText(
-                                      amountInCents: account.balance,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        fontFamily: 'monospace',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (err, _) =>
-                      Center(child: Text('Error loading accounts: $err')),
-                ),
-              ),
-              const SizedBox(height: 28),
-
-              // Monthly Overview Bento Card
-              _buildMonthlyOverview(ref, theme),
+              // Monthly Overview Card (Donut Chart Revamp)
+              _buildMonthlyOverview(theme),
               const SizedBox(height: 24),
 
-              // Budget Progress Rings Bento Card
-              _buildBudgetRings(ref, theme, context),
+              // Budget Progress Rings (Embedded category icons)
+              _buildBudgetRings(theme, context),
               const SizedBox(height: 24),
 
               // Recent Transactions Section
@@ -2026,10 +2114,60 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
+              
+              // Clear account filter chip row if _selectedAccountId is active
+              if (_selectedAccountId != null) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
+                  child: Row(
+                    children: [
+                      InputChip(
+                        label: Text(
+                          'Filtered by: ${accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now())).name}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary,
+                          ),
+                        ),
+                        backgroundColor: (isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary).withOpacity(0.08),
+                        side: BorderSide(
+                          color: (isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary).withOpacity(0.2),
+                          width: 0.8,
+                        ),
+                        deleteIcon: Icon(
+                          Icons.cancel_rounded,
+                          size: 16,
+                          color: isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary,
+                        ),
+                        onDeleted: () {
+                          setState(() {
+                            _selectedAccountId = null;
+                          });
+                        },
+                        onPressed: () {
+                          setState(() {
+                            _selectedAccountId = null;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
+                const SizedBox(height: 6),
+              ],
+
               recentTransAsync.when(
                 data: (transactions) {
-                  if (transactions.isEmpty) {
+                  // Client-side dynamic filtering of recent transactions by account
+                  final filteredTransactions = _selectedAccountId == null
+                      ? transactions
+                      : transactions
+                          .where((t) => t.transaction.accountId == _selectedAccountId)
+                          .toList();
+
+                  if (filteredTransactions.isEmpty) {
                     return Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 36.0),
@@ -2039,6 +2177,10 @@ class DashboardScreen extends ConsumerWidget {
                             : AppTheme.surfaceLight,
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                          width: 0.5,
                         ),
                       ),
                       child: Column(
@@ -2052,16 +2194,18 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 12),
                           const Text(
-                            'No transactions recorded.',
+                            'No transactions found.',
                             style: TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            'Your offline financial logs will display here.',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          Text(
+                            _selectedAccountId == null
+                                ? 'Your offline financial logs will display here.'
+                                : 'No activity recorded for this specific account.',
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
@@ -2071,9 +2215,9 @@ class DashboardScreen extends ConsumerWidget {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: transactions.length,
+                    itemCount: filteredTransactions.length,
                     itemBuilder: (context, index) {
-                      final item = transactions[index];
+                      final item = filteredTransactions[index];
                       final trans = item.transaction;
 
                       AmountType amtType = AmountType.neutral;
@@ -2109,6 +2253,7 @@ class DashboardScreen extends ConsumerWidget {
                           ref.invalidate(recentTransactionsStreamProvider);
                           ref.invalidate(accountsStreamProvider);
                           ref.invalidate(netWorthProvider);
+                          ref.invalidate(monthlyTotalsProvider);
                         },
                         child: IosListRow(
                           onTap: () =>
