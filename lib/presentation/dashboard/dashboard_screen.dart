@@ -15,6 +15,11 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
+import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
+import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:flutter/services.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -900,6 +905,181 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
           ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildSavingsGoalsDashboard(ThemeData theme, BuildContext context) {
+    final isDark = theme.brightness == Brightness.dark;
+    final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
+
+    return savingsGoalsAsync.when(
+      data: (goals) {
+        if (goals.isEmpty) return const SizedBox.shrink();
+
+        final goal = goals.first;
+        final goalColor = _hexToColor(goal.color);
+        final pct = goal.targetAmount > 0 
+            ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
+            : 0.0;
+        final percentInt = (pct * 100).round();
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Savings Target',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'ACTIVE EMERGENCY VAULT',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      ref.read(budgetActiveTabProvider.notifier).state = 1;
+                      context.go('/budgets');
+                    },
+                    child: const Text('See All'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => SavingsGoalDetailSheet(goal: goal),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 52,
+                        width: 52,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            PieChart(PieChartData(
+                              startDegreeOffset: -90,
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 18,
+                              sections: [
+                                PieChartSectionData(
+                                  value: pct * 100,
+                                  color: goalColor,
+                                  radius: 4,
+                                  showTitle: false,
+                                ),
+                                PieChartSectionData(
+                                  value: (1.0 - pct) * 100,
+                                  color: goalColor.withOpacity(0.12),
+                                  radius: 4,
+                                  showTitle: false,
+                                ),
+                              ],
+                            )),
+                            Icon(
+                              goal.icon == 'savings' 
+                                  ? Icons.savings_rounded 
+                                  : goal.icon == 'laptop' 
+                                      ? Icons.laptop_chromebook_rounded 
+                                      : goal.icon == 'flight' 
+                                          ? Icons.flight_takeoff_rounded 
+                                          : goal.icon == 'home' 
+                                              ? Icons.home_rounded 
+                                              : goal.icon == 'car' 
+                                                  ? Icons.directions_car_rounded 
+                                                  : goal.icon == 'school' 
+                                                      ? Icons.school_rounded 
+                                                      : goal.icon == 'heart' 
+                                                          ? Icons.favorite_rounded 
+                                                          : Icons.savings_rounded,
+                              color: goalColor,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              goal.name,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '$percentInt%',
+                            style: TextStyle(
+                              color: goalColor,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          const Text(
+                            'Completed',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
       loading: () => const SizedBox.shrink(),
@@ -2094,7 +2274,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
               // Budget Progress Rings (Embedded category icons)
               _buildBudgetRings(theme, context),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
+
+              // Savings Goals Target Bento Box
+              _buildSavingsGoalsDashboard(theme, context),
+              const SizedBox(height: 12),
 
               // Recent Transactions Section
               Row(

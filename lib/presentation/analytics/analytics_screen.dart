@@ -12,6 +12,9 @@ import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
+import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
+import 'package:flutter/services.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -182,99 +185,132 @@ class _OverviewTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Savings Goal Bento Box
-          ref.watch(budgetProgressProvider).when(
-            data: (budgets) {
-              final savingsBudget = budgets.firstWhereOrNull(
-                (b) => b.category.name.toLowerCase() == 'savings' || b.category.icon == 'piggy-bank',
-              );
-
+          ref.watch(savingsGoalsStreamProvider).when(
+            data: (goals) {
               final isDark = theme.brightness == Brightness.dark;
 
-              if (savingsBudget != null) {
-                final spent = savingsBudget.spentInPeriod;
-                final allocated = savingsBudget.currentPeriod?.allocated ?? savingsBudget.budget.amount;
-                final pct = allocated > 0 ? (spent / allocated).clamp(0.0, 1.0) : 0.0;
-                final pctLabel = (pct * 100).round();
-                final catColor = hexToColor(savingsBudget.category.color);
+              if (goals.isNotEmpty) {
+                return SizedBox(
+                  height: 125,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: goals.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) {
+                      final goal = goals[index];
+                      final goalColor = hexToColor(goal.color);
+                      final goalPct = goal.targetAmount > 0 
+                          ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
+                          : 0.0;
+                      final percentInt = (goalPct * 100).round();
 
-                return Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      // Radial Savings Progress Ring
-                      SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            PieChart(PieChartData(
-                              startDegreeOffset: -90,
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 28,
-                              sections: [
-                                PieChartSectionData(
-                                  value: pct * 100,
-                                  color: catColor,
-                                  radius: 6,
-                                  showTitle: false,
+                      return GestureDetector(
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => SavingsGoalDetailSheet(goal: goal),
+                          );
+                        },
+                        child: Container(
+                          width: 250,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                            border: Border.all(
+                              color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 56,
+                                width: 56,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    PieChart(PieChartData(
+                                      startDegreeOffset: -90,
+                                      sectionsSpace: 0,
+                                      centerSpaceRadius: 20,
+                                      sections: [
+                                        PieChartSectionData(
+                                          value: goalPct * 100,
+                                          color: goalColor,
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                        PieChartSectionData(
+                                          value: (1.0 - goalPct) * 100,
+                                          color: goalColor.withOpacity(0.12),
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                      ],
+                                    )),
+                                    Icon(
+                                      goal.icon == 'savings' 
+                                          ? Icons.savings_rounded 
+                                          : goal.icon == 'laptop' 
+                                              ? Icons.laptop_chromebook_rounded 
+                                              : goal.icon == 'flight' 
+                                                  ? Icons.flight_takeoff_rounded 
+                                                  : goal.icon == 'home' 
+                                                      ? Icons.home_rounded 
+                                                      : goal.icon == 'car' 
+                                                          ? Icons.directions_car_rounded 
+                                                          : goal.icon == 'school' 
+                                                              ? Icons.school_rounded 
+                                                              : goal.icon == 'heart' 
+                                                                  ? Icons.favorite_rounded 
+                                                                  : Icons.savings_rounded,
+                                      color: goalColor,
+                                      size: 18,
+                                    ),
+                                  ],
                                 ),
-                                PieChartSectionData(
-                                  value: (1.0 - pct) * 100,
-                                  color: catColor.withOpacity(0.12),
-                                  radius: 6,
-                                  showTitle: false,
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      goal.name,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$percentInt% Completed',
+                                      style: TextStyle(
+                                        color: goalColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
+                                      style: const TextStyle(color: Colors.grey, fontSize: 10),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            )),
-                            Icon(Icons.savings_rounded, color: catColor, size: 22),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'SAVINGS GOAL TARGET',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: Colors.grey[500],
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '$pctLabel% COMPLETED',
-                              style: TextStyle(
-                                color: catColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Saved ${CurrencyFormatter.formatCents(spent)} of ${CurrencyFormatter.formatCents(allocated)} monthly target',
-                              style: TextStyle(
-                                color: isDark ? Colors.white70 : Colors.black87,
-                                fontSize: 11,
-                                height: 1.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 );
               } else {
@@ -336,7 +372,15 @@ class _OverviewTab extends StatelessWidget {
                         width: double.infinity,
                         height: 38,
                         child: ElevatedButton.icon(
-                          onPressed: () => context.go('/budgets/add'),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => const SavingsGoalFormSheet(),
+                            );
+                          },
                           icon: const Icon(Icons.add_rounded, size: 16),
                           label: const Text('Set Monthly Savings Goal', style: TextStyle(fontSize: 12)),
                         ),
@@ -346,7 +390,7 @@ class _OverviewTab extends StatelessWidget {
                 );
               }
             },
-            loading: () => const SizedBox(),
+            loading: () => const SizedBox(height: 100, child: Center(child: CupertinoActivityIndicator())),
             error: (_, __) => const SizedBox(),
           ),
           const SizedBox(height: 24),
