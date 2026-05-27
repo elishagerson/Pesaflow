@@ -24,24 +24,10 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    val configureAndroid = {
-        if (extensions.findByName("android") != null) {
-            extensions.configure<com.android.build.gradle.BaseExtension>("android") {
-                compileSdkVersion(36)
-            }
-        }
-    }
-    if (state.executed) {
-        configureAndroid()
-    } else {
-        afterEvaluate {
-            configureAndroid()
-        }
-    }
-
     plugins.withId("com.android.library") {
         val android = extensions.getByType<com.android.build.gradle.LibraryExtension>()
         android.compileSdk = 36
+        android.buildToolsVersion = "36.0.0"
         if (android.namespace == null) {
             android.namespace = "com.pesaflow." + name.replace("-", "_")
             if (name == "telephony") {
@@ -60,8 +46,8 @@ subprojects {
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = "17"
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
     }
 }
