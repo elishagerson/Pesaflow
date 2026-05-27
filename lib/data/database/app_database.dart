@@ -14,6 +14,8 @@ import 'tables/daily_snapshots_table.dart';
 import 'tables/monthly_snapshots_table.dart';
 import 'tables/app_settings_table.dart';
 import 'tables/trackers_table.dart';
+import 'tables/savings_goals_table.dart';
+import 'tables/savings_goal_contributions_table.dart';
 
 part 'app_database.g.dart';
 
@@ -27,12 +29,14 @@ part 'app_database.g.dart';
   MonthlySnapshots,
   AppSettings,
   Trackers,
+  SavingsGoals,
+  SavingsGoalContributions,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -149,6 +153,12 @@ class AppDatabase extends _$AppDatabase {
             value: 'default_personal',
             updatedAt: DateTime.now(),
           ));
+        }
+
+        // Migration from schema version 3 → 4: add savingsGoals and savingsGoalContributions tables
+        if (from < 4) {
+          await m.createTable(savingsGoals);
+          await m.createTable(savingsGoalContributions);
         }
       },
     );
