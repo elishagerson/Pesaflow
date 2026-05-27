@@ -740,7 +740,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                             'APPROVE',
                             style: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.black,
+                              fontWeight: FontWeight.w900,
                               fontSize: 20,
                               letterSpacing: 1.5,
                             ),
@@ -777,7 +777,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                             'REJECT',
                             style: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.black,
+                              fontWeight: FontWeight.w900,
                               fontSize: 20,
                               letterSpacing: 1.5,
                             ),
