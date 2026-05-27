@@ -629,7 +629,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 12),
                   // Metrics
                   Expanded(
                     child: Column(
@@ -2051,17 +2051,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 16),
 
               // ── 5. Budget Health Score Card ──
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F0F10) : Colors.white,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                    width: 0.5,
-                  ),
-                ),
+              GlassCard(
+                padding: const EdgeInsets.all(18.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -2115,81 +2106,95 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: Text(
                               ratingLabel,
                               style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w900,
-                                  color: ratingColor,
-                                  letterSpacing: 0.5,
-                                ),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: ratingColor,
+                                letterSpacing: 0.5,
                               ),
-                            );
+                            ),
+                          );
                         }()),
                       ],
                     ),
                     const SizedBox(height: 18),
-                    // Inner content Row
+                    // Inner content Row (Left Column: Score stack, Right Column: Gauge)
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Score Display
-                        (() {
-                          final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
-                          return Column(
+                        // Left: Score Display
+                        Expanded(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  Text(
-                                    '$score',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 48,
-                                      color: isDark ? Colors.white : Colors.black,
-                                      letterSpacing: -2,
+                              (() {
+                                final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
+                                return Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      '$score',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 42,
+                                        color: isDark ? Colors.white : Colors.black,
+                                        letterSpacing: -1.5,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '/ 1000',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      color: isDark ? Colors.grey[600] : Colors.grey[500],
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '/1000',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                        fontFamily: 'monospace',
+                                        color: isDark ? Colors.grey[600] : Colors.grey[500],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                );
+                              }()),
                               const SizedBox(height: 4),
                               Text(
                                 'Overall pacing score',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: isDark ? Colors.grey[500] : Colors.grey[600],
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                budgets.isNotEmpty
+                                    ? 'Spent ${(overallPct * 100).round()}% of allocated budget'
+                                    : 'Spent ${(overallPct * 100).round()}% of monthly income',
+                                style: TextStyle(
+                                  fontSize: 11,
                                   fontWeight: FontWeight.w500,
+                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
                                 ),
                               ),
                             ],
-                          );
-                        }()),
-                        // Progress circular indicator
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        // Right: Circular progress ring
                         SizedBox(
-                          height: 72,
-                          width: 72,
+                          height: 84,
+                          width: 84,
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
                               CircularProgressIndicator(
                                 value: 1.0,
-                                strokeWidth: 5,
+                                strokeWidth: 7,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
                                 ),
                               ),
                               CircularProgressIndicator(
                                 value: (1.0 - overallPct),
-                                strokeWidth: 7,
+                                strokeWidth: 9,
                                 strokeCap: StrokeCap.round,
                                 backgroundColor: Colors.transparent,
                                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -2206,18 +2211,43 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   Text(
                                     '${((1.0 - overallPct) * 100).round()}%',
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w900,
                                       color: isDark ? Colors.white : Colors.black,
+                                      letterSpacing: -0.5,
                                     ),
                                   ),
-                                  const Text(
-                                    'LEFT',
-                                    style: TextStyle(
-                                      fontSize: 7,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                      letterSpacing: 0.5,
+                                  const SizedBox(height: 2),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                    decoration: BoxDecoration(
+                                      color: (overallPct > 0.8
+                                          ? const Color(0xFFFF453A)
+                                          : (overallPct > 0.5
+                                              ? const Color(0xFFFF9F0A)
+                                              : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)))).withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                        color: (overallPct > 0.8
+                                            ? const Color(0xFFFF453A)
+                                            : (overallPct > 0.5
+                                                ? const Color(0xFFFF9F0A)
+                                                : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)))).withOpacity(0.3),
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'LEFT',
+                                      style: TextStyle(
+                                        fontSize: 7,
+                                        fontWeight: FontWeight.w900,
+                                        color: overallPct > 0.8
+                                            ? const Color(0xFFFF453A)
+                                            : (overallPct > 0.5
+                                                ? const Color(0xFFFF9F0A)
+                                                : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
+                                        letterSpacing: 0.5,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -2227,36 +2257,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 14),
                     Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
-                    const SizedBox(height: 12),
-                    // Summary status message row
+                    const SizedBox(height: 10),
+                    // Bottom updated row
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          budgets.isNotEmpty
-                              ? 'Spent ${(overallPct * 100).round()}% of allocated budget'
-                              : 'Spent ${(overallPct * 100).round()}% of monthly income',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                        ),
                         Row(
                           children: [
                             const Icon(
                               Icons.update_rounded,
                               color: Colors.grey,
-                              size: 12,
+                              size: 11,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'Updated just now',
                               style: TextStyle(
                                 color: Colors.grey[500],
-                                fontSize: 11,
+                                fontSize: 10,
                               ),
                             ),
                           ],

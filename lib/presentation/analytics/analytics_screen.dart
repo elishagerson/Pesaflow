@@ -390,7 +390,7 @@ class _OverviewTab extends StatelessWidget {
                 );
               }
             },
-            loading: () => SizedBox(height: 100, child: const Center(child: CupertinoActivityIndicator())),
+            loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
             error: (_, __) => const SizedBox(),
           ),
           const SizedBox(height: 24),

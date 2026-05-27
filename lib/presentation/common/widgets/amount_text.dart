@@ -62,11 +62,18 @@ class AmountText extends StatelessWidget {
       displayString = '- $displayString';
     }
 
-    return Text(
-      displayString,
-      style: customStyle,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+    if (useMonospace) {
+      displayString = '$displayString\u200A';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 2.0),
+      child: Text(
+        displayString,
+        style: customStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }
