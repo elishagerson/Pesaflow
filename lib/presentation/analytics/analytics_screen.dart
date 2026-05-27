@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/analytics_dao.dart';
@@ -352,6 +353,56 @@ class _TrendsTab extends StatelessWidget {
                       height: 240,
                       child: LineChart(
                         LineChartData(
+                          lineTouchData: LineTouchData(
+                            handleBuiltInTouches: true,
+                            touchTooltipData: LineTouchTooltipData(
+                              tooltipBgColor: theme.brightness == Brightness.dark
+                                  ? const Color(0xFF1B1B1D).withOpacity(0.95)
+                                  : Colors.white.withOpacity(0.95),
+                              tooltipRoundedRadius: 12,
+                              tooltipBorder: BorderSide(
+                                color: theme.brightness == Brightness.dark ? const Color(0x22FFFFFF) : const Color(0x0D000000),
+                                width: 1,
+                              ),
+                              getTooltipItems: (List<LineBarTouchedSpot> touchedSpots) {
+                                return touchedSpots.map((spot) {
+                                  final isIncome = spot.barIndex == 0;
+                                  return LineTooltipItem(
+                                    '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
+                                    TextStyle(
+                                      color: isIncome
+                                          ? const Color(0xFF00E5FF)
+                                          : const Color(0xFFFF453A),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                            ),
+                            getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
+                              return spotIndexes.map((spotIndex) {
+                                return TouchedSpotIndicatorData(
+                                  FlLine(
+                                    color: barData.color?.withOpacity(0.3) ?? Colors.grey,
+                                    strokeWidth: 2,
+                                    dashArray: [4, 4],
+                                  ),
+                                  FlDotData(
+                                    show: true,
+                                    getDotPainter: (spot, percent, barData, index) {
+                                      return FlDotCirclePainter(
+                                        radius: 6,
+                                        color: barData.color ?? Colors.grey,
+                                        strokeWidth: 2,
+                                        strokeColor: Colors.white,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }).toList();
+                            },
+                          ),
                           gridData: FlGridData(
                             show: true,
                             drawVerticalLine: false,
@@ -508,23 +559,95 @@ class _InsightsTab extends StatelessWidget {
           itemBuilder: (context, index) {
             final insight = insights[index];
             final color = _getSeverityColor(insight.severity);
-            return GlassCard(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(16),
-              borderRadius: AppTheme.radiusCard,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                  child: Icon(_getInsightIcon(insight.icon), color: color, size: 20),
+            final gradient = LinearGradient(
+              colors: [
+                color.withOpacity(0.08),
+                color.withOpacity(0.01),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            );
+
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.only(bottom: 14),
+              decoration: BoxDecoration(
+                gradient: gradient,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: color.withOpacity(0.25),
+                  width: 1,
                 ),
-                const SizedBox(width: 12),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(insight.title, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text(insight.message, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-                ])),
-              ]),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Left colored accent border strip
+                      Container(
+                        width: 5,
+                        color: color,
+                      ),
+                      // Content Row
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: color.withOpacity(0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  _getInsightIcon(insight.icon),
+                                  color: color,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      insight.title,
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      insight.message,
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.85),
+                                        height: 1.4,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         );
