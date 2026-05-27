@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer' as developer;
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   return NotificationService();
@@ -7,15 +9,26 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  Completer<void>? _initCompleter;
 
-  NotificationService() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await _plugin.initialize(settings: initSettings);
+  /// Lazily initializes the notification plugin exactly once.
+  /// Safe to call multiple times — subsequent calls return the cached future.
+  /// If initialization fails, the completer is reset so it can be retried.
+  Future<void> ensureInitialized() async {
+    if (_initCompleter != null) return _initCompleter!.future;
+    _initCompleter = Completer<void>();
+    try {
+      const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const initSettings = InitializationSettings(android: androidInit);
+      await _plugin.initialize(initSettings);
+      _initCompleter!.complete();
+      developer.log('Notification plugin initialized', name: 'NotificationService');
+    } catch (e) {
+      developer.log('Notification plugin init failed: $e', name: 'NotificationService');
+      _initCompleter!.completeError(e);
+      _initCompleter = null; // allow retry on next call
+      rethrow;
+    }
   }
 
   /// Sends a local notification confirming a parsed carrier transaction.
@@ -26,6 +39,8 @@ class NotificationService {
     required String body,
     bool needsReview = false,
   }) async {
+    await ensureInitialized();
+
     final androidDetails = AndroidNotificationDetails(
       'pesaflow_sms_channel',
       'PesaFlow Transactions',
@@ -36,11 +51,6 @@ class NotificationService {
       showWhen: true,
     );
     final details = NotificationDetails(android: androidDetails);
-    await _plugin.show(
-      id: id,
-      title: title,
-      body: body,
-      notificationDetails: details,
-    );
+    await _plugin.show(id, title, body, details);
   }
 }
