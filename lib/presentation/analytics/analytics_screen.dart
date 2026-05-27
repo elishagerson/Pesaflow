@@ -356,15 +356,17 @@ class _TrendsTab extends StatelessWidget {
                           lineTouchData: LineTouchData(
                             handleBuiltInTouches: true,
                             touchTooltipData: LineTouchTooltipData(
-                              tooltipBgColor: theme.brightness == Brightness.dark
-                                  ? const Color(0xFF1B1B1D).withOpacity(0.95)
-                                  : Colors.white.withOpacity(0.95),
-                              tooltipRoundedRadius: 12,
+                              getTooltipColor: (touchedSpot) {
+                                return theme.brightness == Brightness.dark
+                                    ? const Color(0xFF1B1B1D).withOpacity(0.95)
+                                    : Colors.white.withOpacity(0.95);
+                              },
+                              tooltipBorderRadius: BorderRadius.circular(12),
                               tooltipBorder: BorderSide(
                                 color: theme.brightness == Brightness.dark ? const Color(0x22FFFFFF) : const Color(0x0D000000),
                                 width: 1,
                               ),
-                              getTooltipItems: (List<LineBarTouchedSpot> touchedSpots) {
+                              getTooltipItems: (List<LineBarSpot> touchedSpots) {
                                 return touchedSpots.map((spot) {
                                   final isIncome = spot.barIndex == 0;
                                   return LineTooltipItem(
