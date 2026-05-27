@@ -69,7 +69,7 @@ class SmsReviewScreen extends ConsumerWidget {
     TransactionWithCategoryAndAccount item,
   ) async {
     final categoriesAsync = ref.read(categoriesFutureProvider);
-    final categories = categoriesAsync.valueOrNull ?? [];
+    final categories = categoriesAsync.value ?? [];
     if (categories.isEmpty) return;
 
     final selectedCategoryId = await showModalBottomSheet<String>(

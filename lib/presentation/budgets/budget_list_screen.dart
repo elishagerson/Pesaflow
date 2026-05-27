@@ -15,7 +15,16 @@ import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.da
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-final budgetActiveTabProvider = StateProvider<int>((ref) => 0);
+class BudgetActiveTabNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  set state(int value) => super.state = value;
+}
+
+final budgetActiveTabProvider = NotifierProvider<BudgetActiveTabNotifier, int>(() {
+  return BudgetActiveTabNotifier();
+});
 
 class BudgetListScreen extends ConsumerWidget {
   const BudgetListScreen({super.key});

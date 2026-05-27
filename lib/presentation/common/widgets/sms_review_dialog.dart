@@ -102,7 +102,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     final theme = Theme.of(context);
     final trans = widget.item.transaction;
     final categoriesAsync = ref.watch(categoriesFutureProvider);
-    final categories = categoriesAsync.valueOrNull ?? [];
+    final categories = categoriesAsync.value ?? [];
 
     final transactedCents = trans.amount;
     AmountType amountType = AmountType.neutral;

@@ -314,7 +314,7 @@ class _OverviewTab extends StatelessWidget {
                   ),
                 );
               } else {
-                final totals = totalsAsync.valueOrNull ?? {};
+                final totals = totalsAsync.value ?? {};
                 final income = totals['income'] ?? 0;
                 final expense = totals['expense'] ?? 0;
                 final netSavings = income - expense;

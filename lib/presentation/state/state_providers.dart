@@ -13,16 +13,14 @@ import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
-final activeTrackerIdProvider = StateNotifierProvider<ActiveTrackerIdNotifier, String>((ref) {
-  final settingsRepo = ref.watch(settingsRepositoryProvider);
-  return ActiveTrackerIdNotifier(settingsRepo);
-});
+class ActiveTrackerIdNotifier extends Notifier<String> {
+  late final SettingsRepository _settingsRepo;
 
-class ActiveTrackerIdNotifier extends StateNotifier<String> {
-  final SettingsRepository _settingsRepo;
-
-  ActiveTrackerIdNotifier(this._settingsRepo) : super('default_personal') {
+  @override
+  String build() {
+    _settingsRepo = ref.watch(settingsRepositoryProvider);
     _init();
+    return 'default_personal';
   }
 
   Future<void> _init() async {
@@ -37,6 +35,10 @@ class ActiveTrackerIdNotifier extends StateNotifier<String> {
     await _settingsRepo.setSetting('active_tracker_id', id);
   }
 }
+
+final activeTrackerIdProvider = NotifierProvider<ActiveTrackerIdNotifier, String>(() {
+  return ActiveTrackerIdNotifier();
+});
 
 final allTrackersStreamProvider = StreamProvider<List<Tracker>>((ref) {
   final repo = ref.watch(trackerRepositoryProvider);
@@ -75,10 +77,45 @@ final netWorthProvider = Provider<int>((ref) {
 });
 
 // Transaction List Filter Providers
-final transactionTypeFilterProvider = StateProvider<String>((ref) => 'All');
-final transactionAccountFilterProvider = StateProvider<String?>((ref) => null);
-final transactionCategoryFilterProvider = StateProvider<String?>((ref) => null);
-final transactionSearchQueryProvider = StateProvider<String>((ref) => '');
+class TransactionTypeFilterNotifier extends Notifier<String> {
+  @override
+  String build() => 'All';
+
+  set state(String value) => super.state = value;
+}
+final transactionTypeFilterProvider = NotifierProvider<TransactionTypeFilterNotifier, String>(() {
+  return TransactionTypeFilterNotifier();
+});
+
+class TransactionAccountFilterNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  set state(String? value) => super.state = value;
+}
+final transactionAccountFilterProvider = NotifierProvider<TransactionAccountFilterNotifier, String?>(() {
+  return TransactionAccountFilterNotifier();
+});
+
+class TransactionCategoryFilterNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  set state(String? value) => super.state = value;
+}
+final transactionCategoryFilterProvider = NotifierProvider<TransactionCategoryFilterNotifier, String?>(() {
+  return TransactionCategoryFilterNotifier();
+});
+
+class TransactionSearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  set state(String value) => super.state = value;
+}
+final transactionSearchQueryProvider = NotifierProvider<TransactionSearchQueryNotifier, String>(() {
+  return TransactionSearchQueryNotifier();
+});
 
 final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
