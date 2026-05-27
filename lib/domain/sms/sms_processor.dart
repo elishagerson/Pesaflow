@@ -233,19 +233,23 @@ class SmsProcessor {
         }
       }
 
-      // 8. Trigger local notification
+      // 8. Trigger local notification (non-fatal — transaction is already saved)
       final amountFormatted = 'Tsh ${(smsParsed.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
       final alertTitle = isAutoApproved ? 'Transaction Auto-Logged' : 'Review Required';
       final alertBody = isAutoApproved
           ? '$amountFormatted ${smsParsed.type == 'income' ? 'received' : 'sent'} (${catResult.category.name}) ✓'
           : '$amountFormatted ${smsParsed.type == 'income' ? 'received' : 'sent'} — tap to review category';
 
-      await _notificationService.showNotification(
-        id: transaction.hashCode,
-        title: alertTitle,
-        body: alertBody,
-        needsReview: !isAutoApproved,
-      );
+      try {
+        await _notificationService.showNotification(
+          id: transaction.hashCode,
+          title: alertTitle,
+          body: alertBody,
+          needsReview: !isAutoApproved,
+        );
+      } catch (e) {
+        developer.log('Notification failed (transaction still saved): $e', name: 'SmsProcessor');
+      }
 
       // Fire callback for foreground dialog if review needed
       if (!isAutoApproved && onReviewNeeded != null) {

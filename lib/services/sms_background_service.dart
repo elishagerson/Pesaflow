@@ -66,6 +66,7 @@ class SmsBackgroundService {
         },
         // 2. Listen dynamically when the app is closed or backgrounded (Background)
         onBackgroundMessage: backgroundMessageHandler,
+        listenInBackground: true,
       );
       developer.log('SMS Broadcast Listeners registered successfully', name: 'SmsBackground');
     } catch (e) {
