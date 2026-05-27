@@ -9,7 +9,6 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -348,7 +347,6 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
     final goalColor = _hexToColor(widget.goal.color);
     
     final contributionsAsync = ref.watch(savingsGoalContributionsStreamProvider(widget.goal.id));
-    final contributions = contributionsAsync.value ?? [];
 
     final remainingDays = _calculateDaysRemaining(widget.goal.targetDate);
     final pct = widget.goal.targetAmount > 0 

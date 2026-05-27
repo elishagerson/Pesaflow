@@ -35,7 +35,6 @@ class AmountText extends StatelessWidget {
         case AmountType.transfer:
           return isDark ? AppTheme.transferColorDark : AppTheme.transferColor;
         case AmountType.neutral:
-        default:
           return isDark ? Colors.white : Colors.black;
       }
     }
