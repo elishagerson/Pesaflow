@@ -10,6 +10,7 @@ import '../../data/repositories/budget_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
+import '../../data/repositories/savings_goal_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 final activeTrackerIdProvider = StateNotifierProvider<ActiveTrackerIdNotifier, String>((ref) {
@@ -137,4 +138,28 @@ final monthlySnapshotsProvider = FutureProvider<List<MonthlySnapshot>>((ref) {
 final insightsProvider = FutureProvider<List<Insight>>((ref) {
   final generator = ref.watch(insightGeneratorProvider);
   return generator.generateInsights();
+});
+
+// ═══════════════════════════════════════════════════════
+// Savings Goals Providers
+// ═══════════════════════════════════════════════════════
+
+final savingsGoalsStreamProvider = StreamProvider<List<SavingsGoal>>((ref) {
+  final repo = ref.watch(savingsGoalRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchAllSavingsGoals(trackerId);
+});
+
+final savingsGoalContributionsStreamProvider = StreamProvider.family<List<SavingsGoalContribution>, String>((ref, goalId) {
+  final repo = ref.watch(savingsGoalRepositoryProvider);
+  return repo.watchContributions(goalId);
+});
+
+final savingsGoalsTotalSavedProvider = Provider<int>((ref) {
+  final goalsAsync = ref.watch(savingsGoalsStreamProvider);
+  return goalsAsync.when(
+    data: (goals) => goals.fold<int>(0, (sum, goal) => sum + goal.currentAmount),
+    loading: () => 0,
+    error: (_, __) => 0,
+  );
 });
