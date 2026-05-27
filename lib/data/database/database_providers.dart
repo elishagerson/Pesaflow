@@ -7,6 +7,7 @@ import 'daos/budget_dao.dart';
 import 'daos/analytics_dao.dart';
 import 'daos/settings_dao.dart';
 import 'daos/tracker_dao.dart';
+import 'daos/savings_goals_dao.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -47,4 +48,9 @@ final settingsDaoProvider = Provider<SettingsDao>((ref) {
 final trackerDaoProvider = Provider<TrackerDao>((ref) {
   final db = ref.watch(databaseProvider);
   return TrackerDao(db);
+});
+
+final savingsGoalsDaoProvider = Provider<SavingsGoalsDao>((ref) {
+  final db = ref.watch(databaseProvider);
+  return SavingsGoalsDao(db);
 });
