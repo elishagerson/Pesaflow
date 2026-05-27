@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
+import 'package:collection/collection.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/analytics_dao.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
@@ -175,6 +178,176 @@ class _OverviewTab extends StatelessWidget {
             },
             loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
             error: (e, _) => Text('Error: $e'),
+          ),
+          const SizedBox(height: 20),
+
+          // Savings Goal Bento Box
+          ref.watch(budgetProgressProvider).when(
+            data: (budgets) {
+              final savingsBudget = budgets.firstWhereOrNull(
+                (b) => b.category.name.toLowerCase() == 'savings' || b.category.icon == 'piggy-bank',
+              );
+
+              final isDark = theme.brightness == Brightness.dark;
+
+              if (savingsBudget != null) {
+                final spent = savingsBudget.spentInPeriod;
+                final allocated = savingsBudget.currentPeriod?.allocated ?? savingsBudget.budget.amount;
+                final pct = allocated > 0 ? (spent / allocated).clamp(0.0, 1.0) : 0.0;
+                final pctLabel = (pct * 100).round();
+                final catColor = hexToColor(savingsBudget.category.color);
+
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Radial Savings Progress Ring
+                      SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            PieChart(PieChartData(
+                              startDegreeOffset: -90,
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 28,
+                              sections: [
+                                PieChartSectionData(
+                                  value: pct * 100,
+                                  color: catColor,
+                                  radius: 6,
+                                  showTitle: false,
+                                ),
+                                PieChartSectionData(
+                                  value: (1.0 - pct) * 100,
+                                  color: catColor.withOpacity(0.12),
+                                  radius: 6,
+                                  showTitle: false,
+                                ),
+                              ],
+                            )),
+                            Icon(Icons.savings_rounded, color: catColor, size: 22),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'SAVINGS GOAL TARGET',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: Colors.grey[500],
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '$pctLabel% COMPLETED',
+                              style: TextStyle(
+                                color: catColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Saved ${CurrencyFormatter.formatCents(spent)} of ${CurrencyFormatter.formatCents(allocated)} monthly target',
+                              style: TextStyle(
+                                color: isDark ? Colors.white70 : Colors.black87,
+                                fontSize: 11,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                final totals = totalsAsync.valueOrNull ?? {};
+                final income = totals['income'] ?? 0;
+                final expense = totals['expense'] ?? 0;
+                final netSavings = income - expense;
+
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF30D158).withOpacity(0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.savings_rounded, color: Color(0xFF30D158), size: 20),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'SET A SAVINGS GOAL',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: Colors.grey[500],
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      Text(
+                        netSavings > 0
+                            ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
+                            : 'Set a visual savings goal target to build a structured emergency safety vault.',
+                        style: TextStyle(
+                          color: isDark ? Colors.white70 : Colors.black87,
+                          fontSize: 12,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 38,
+                        child: ElevatedButton.icon(
+                          onPressed: () => context.go('/budgets/add'),
+                          icon: const Icon(Icons.add_rounded, size: 16),
+                          label: const Text('Set Monthly Savings Goal', style: TextStyle(fontSize: 12)),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            loading: () => const SizedBox(),
+            error: (_, __) => const SizedBox(),
           ),
           const SizedBox(height: 24),
 
