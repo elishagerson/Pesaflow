@@ -554,7 +554,6 @@ class SmsReviewScreen extends ConsumerWidget {
                   ),
                 ),
               );
-              );
             },
           );
         },
