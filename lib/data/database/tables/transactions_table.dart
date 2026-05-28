@@ -3,7 +3,8 @@ import 'package:drift/drift.dart';
 @DataClassName('Transaction')
 class Transactions extends Table {
   TextColumn get id => text()();
-  TextColumn get accountId => text()(); // FK to Accounts (referenced at Dart level)
+  TextColumn get accountId => text()(); // FK to Accounts — source account for transfers (referenced at Dart level)
+  TextColumn get destinationAccountId => text().nullable()(); // FK to Accounts — destination for transfers
   TextColumn get categoryId => text()(); // FK to Categories (referenced at Dart level)
   TextColumn get trackerId => text().nullable()(); // FK to Trackers (referenced at Dart level)
   IntColumn get amount => integer()(); // in TZS cents (Tsh * 100)
