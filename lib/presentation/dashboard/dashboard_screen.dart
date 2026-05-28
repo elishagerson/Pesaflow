@@ -406,17 +406,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ? (isDark ? Colors.grey[400] : Colors.grey[600])
         : AppTheme.expenseColor;
 
-    return TactileSpringContainer(
+    return GlassCard(
+      borderRadius: AppTheme.radiusCard,
+      margin: const EdgeInsets.only(right: 12),
+      elevation: CardElevation.low,
+      accentColor: Color(int.parse(bp.budget.color.replaceAll('#', '0xFF'))),
       onTap: () => context.go('/budgets/${bp.budget.id}'),
-      child: GlassCard(
-        borderRadius: AppTheme.radiusCard,
-        margin: const EdgeInsets.only(right: 12),
-        elevation: CardElevation.low,
-        accentColor: Color(int.parse(bp.budget.color.replaceAll('#', '0xFF'))),
-        padding: EdgeInsets.zero,
-        child: Container(
-          width: 105,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      padding: EdgeInsets.zero,
+      child: Container(
+        width: 105,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -552,6 +551,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return GlassCard(
           padding: const EdgeInsets.all(18),
           borderRadius: AppTheme.radiusCard,
+          elevation: CardElevation.medium,
+          accentColor: theme.colorScheme.primary,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -814,6 +815,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               GlassCard(
                 padding: const EdgeInsets.all(20),
                 borderRadius: AppTheme.radiusCard,
+                elevation: CardElevation.low,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -2056,6 +2058,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // ── 5. Budget Health Score Card ──
               GlassCard(
                 padding: const EdgeInsets.all(18.0),
+                elevation: CardElevation.medium,
+                accentColor: theme.colorScheme.primary,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

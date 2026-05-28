@@ -261,6 +261,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         child: GlassCard(
                           padding: const EdgeInsets.all(16),
                           borderRadius: AppTheme.radiusCard,
+                          elevation: CardElevation.medium,
                           child: Column(children: [
                             Text('${(_threshold * 100).round()}%', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
                             Slider(value: _threshold, min: 0.5, max: 1.0, divisions: 10, label: '${(_threshold * 100).round()}%', onChanged: (v) => setState(() => _threshold = v)),
