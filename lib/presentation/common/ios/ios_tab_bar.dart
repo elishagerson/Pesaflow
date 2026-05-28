@@ -18,7 +18,8 @@ class IosTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
@@ -46,8 +47,8 @@ class IosTabBar extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: isDark
-                      ? Colors.black.withOpacity(0.4)
-                      : Colors.black.withOpacity(0.12),
+                      ? Colors.black.withValues(alpha: 0.4)
+                      : Colors.black.withValues(alpha: 0.12),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
@@ -65,28 +66,60 @@ class IosTabBar extends StatelessWidget {
                     },
                     behavior: HitTestBehavior.opaque,
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOutCubic,
                       padding: const EdgeInsets.only(top: 4),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            isSelected ? tab.activeIcon : tab.icon,
-                            size: 24,
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.primary
-                                : (isDark ? Colors.grey[400] : Colors.grey[500]),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            switchInCurve: Curves.easeOutBack,
+                            switchOutCurve: Curves.easeIn,
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
+                            child: Icon(
+                              isSelected ? tab.activeIcon : tab.icon,
+                              key: ValueKey(isSelected),
+                              size: 24,
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : (isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[500]),
+                            ),
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            tab.label,
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutCubic,
                             style: TextStyle(
                               fontSize: 10,
-                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                              fontWeight:
+                                  isSelected ? FontWeight.w700 : FontWeight.w400,
                               color: isSelected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : (isDark ? Colors.grey[400] : Colors.grey[500]),
+                                  ? theme.colorScheme.primary
+                                  : (isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[500]),
+                            ),
+                            child: Text(tab.label),
+                          ),
+                          const SizedBox(height: 3),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutCubic,
+                            width: isSelected ? 20 : 0,
+                            height: 3,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                         ],
@@ -137,7 +170,8 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final top = MediaQuery.of(context).padding.top;
 
     return ClipRect(
@@ -178,7 +212,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black,
+                      color: theme.colorScheme.onBackground,
                     ),
                   ),
                 ),

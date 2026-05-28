@@ -45,21 +45,22 @@ class IosBottomSheet extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Container(
-                width: 36,
+                width: 40,
                 height: 5,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey[600] : Colors.grey[300],
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Expanded(
                 child: RawScrollbar(
                   controller: scrollController,

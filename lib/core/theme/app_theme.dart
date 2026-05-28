@@ -29,7 +29,7 @@ class AppTheme {
   static const Color outlineVariantLight = Color(0xFFE2E0E8);
 
   // Dark
-  static const Color primaryDark = Color(0xFF0A84FF); // Modern Apple iOS vibrant blue
+  static const Color primaryDark = Color(0xFFA78BFA); // Amethyst purple-300 for dark mode
   static const Color onPrimaryDark = Color(0xFFFFFFFF);
   static const Color primaryContainerDark = Color(0xFF0038A8);
   static const Color onPrimaryContainerDark = Color(0xFFD0E2FF);
@@ -295,11 +295,11 @@ class AppTheme {
       textTheme: _buildTextTheme(onBgDark),
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
-        primary: Colors.white, // Stark high-contrast main color (for white action buttons)
+        primary: primaryDark,
         onPrimary: Colors.black,
         primaryContainer: primaryContainerDark,
         onPrimaryContainer: onPrimaryContainerDark,
-        secondary: primaryDark, // blue accent
+        secondary: primaryDark,
         onSecondary: onPrimaryDark,
         secondaryContainer: secondaryContainerDark,
         onSecondaryContainer: onSecondaryContainerDark,
@@ -345,13 +345,13 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: Colors.white, width: 1.5),
+          borderSide: const BorderSide(color: primaryDark, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white, // High-contrast stark white button
+          backgroundColor: primaryDark,
           foregroundColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -370,7 +370,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          selectedBackgroundColor: Colors.white,
+          selectedBackgroundColor: primaryDark,
           selectedForegroundColor: Colors.black,
         ),
       ),
