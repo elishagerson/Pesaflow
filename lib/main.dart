@@ -1,12 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:telephony/telephony.dart';
-import 'dart:developer' as developer;
+
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
+import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 
@@ -27,10 +33,28 @@ class PesaFlowApp extends ConsumerStatefulWidget {
 }
 
 class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
+  static const _notificationChannel = MethodChannel('pesaflow/notification_listener');
+
   @override
   void initState() {
     super.initState();
-    // Check and close expired budget periods on app launch
+
+    // Register notification listener method channel handler
+    _notificationChannel.setMethodCallHandler((call) async {
+      if (call.method == 'onSmsNotification') {
+        final raw = call.arguments as String?;
+        if (raw != null) {
+          try {
+            final data = jsonDecode(raw) as Map<String, dynamic>;
+            await _handleSmsNotification(
+              sender: data['sender'] as String? ?? '',
+              body: data['body'] as String? ?? '',
+            );
+          } catch (_) {}
+        }
+      }
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await ref.read(budgetRepositoryProvider).checkAndCloseExpiredPeriods();
@@ -48,8 +72,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         developer.log('Onboarding check failed: $e', name: 'AppLaunch');
       }
 
+      // Request SMS and Phone permissions on startup for automation
       try {
-        // Request SMS and Phone permissions on startup for automation
         final bool? granted = await Telephony.instance.requestPhoneAndSmsPermissions;
         developer.log('Telephony permissions prompt on launch: granted=$granted', name: 'AppLaunch');
         if (granted != true) {
@@ -59,14 +83,57 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         developer.log('Failed to request telephony permissions: $e', name: 'AppLaunch');
       }
 
+      // Request POST_NOTIFICATIONS permission (Android 13+)
       try {
-        // Initialize background SMS listeners and registration
+        await _notificationChannel.invokeMethod('requestPostNotifications');
+        developer.log('POST_NOTIFICATIONS permission requested', name: 'AppLaunch');
+      } catch (e) {
+        developer.log('POST_NOTIFICATIONS request failed: $e', name: 'AppLaunch');
+      }
+
+      // Initialize background SMS listeners and registration
+      try {
         await ref.read(smsBackgroundServiceProvider).initialize();
         developer.log('Background SMS service initialized successfully', name: 'AppLaunch');
       } catch (e) {
         developer.log('Failed to initialize SMS background service: $e', name: 'AppLaunch');
       }
+
+      // Process any SMS notifications captured while app was killed
+      await _processPendingSms();
     });
+  }
+
+  Future<void> _handleSmsNotification({required String sender, required String body}) async {
+    if (sender.isEmpty || body.isEmpty) return;
+    try {
+      final processor = ref.read(smsProcessorProvider);
+      await processor.processSms(sender, body, DateTime.now());
+    } catch (e) {
+      developer.log('Notification listener SMS processing failed: $e', name: 'SmsNotification');
+    }
+  }
+
+  Future<void> _processPendingSms() async {
+    try {
+      final result = await _notificationChannel.invokeMethod<List<dynamic>>('getPendingSms');
+      if (result == null || result.isEmpty) return;
+      developer.log('Processing ${result.length} pending SMS from notification listener', name: 'SmsNotification');
+      for (final raw in result) {
+        if (raw is! String) continue;
+        try {
+          final data = jsonDecode(raw) as Map<String, dynamic>;
+          await _handleSmsNotification(
+            sender: data['sender'] as String? ?? '',
+            body: data['body'] as String? ?? '',
+          );
+        } catch (_) {}
+      }
+      await _notificationChannel.invokeMethod('clearPendingSms');
+      developer.log('Cleared pending SMS queue', name: 'SmsNotification');
+    } catch (e) {
+      developer.log('Pending SMS retrieval failed: $e', name: 'SmsNotification');
+    }
   }
 
   @override

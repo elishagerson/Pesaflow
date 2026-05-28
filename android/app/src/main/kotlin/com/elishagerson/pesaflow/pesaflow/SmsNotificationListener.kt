@@ -2,10 +2,8 @@ package com.elishagerson.pesaflow.pesaflow
 
 import android.app.Notification
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONArray
 import org.json.JSONObject

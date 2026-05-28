@@ -1,6 +1,10 @@
 package com.elishagerson.pesaflow.pesaflow
 
+import android.Manifest
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -20,6 +24,16 @@ class MainActivity : FlutterActivity() {
 
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
+                "requestPostNotifications" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                            1001
+                        )
+                    }
+                    result.success(true)
+                }
                 "getPendingSms" -> {
                     val pending = getPendingSms()
                     result.success(pending)
