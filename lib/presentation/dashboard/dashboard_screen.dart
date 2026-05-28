@@ -1237,7 +1237,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void _showAddTrackerDialog(BuildContext context) {
     final nameController = TextEditingController();
     String selectedIcon = 'briefcase';
-    String selectedColorHex = '#7C3AED'; // Amethyst
+    String selectedColorHex = '#0A84FF'; // Light blue
 
     final iconsList = [
       'person',
@@ -1248,7 +1248,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       'payments',
     ];
     final colorsList = [
-      '#7C3AED', // Amethyst purple
+      '#0A84FF', // Light Blue
       '#4F46E5', // Indigo
       '#F43F5E', // Rose
       '#F59E0B', // Amber
