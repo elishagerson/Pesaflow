@@ -770,6 +770,196 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  }
+
+  Widget _buildBudgetHealthCard(ThemeData theme, bool isDark, double overallPct, bool hasBudgets) {
+    final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
+    String ratingLabel = 'Healthy';
+    Color ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+    if (score >= 800) {
+      ratingLabel = 'Excellent';
+      ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+    } else if (score >= 600) {
+      ratingLabel = 'Healthy';
+      ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+    } else if (score >= 400) {
+      ratingLabel = 'Moderate';
+      ratingColor = Colors.orange;
+    } else {
+      ratingLabel = 'Critical';
+      ratingColor = const Color(0xFFFF453A);
+    }
+
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      elevation: CardElevation.medium,
+      accentColor: ratingColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.health_and_safety_rounded, size: 16, color: ratingColor),
+                  const SizedBox(width: 6),
+                  Text(
+                    'BUDGET HEALTH',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      letterSpacing: 1.5,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: ratingColor.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  ratingLabel,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: ratingColor,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          '$score',
+                          style: theme.textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '/1000',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? Colors.grey[600] : Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Overall pacing score',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      hasBudgets
+                          ? 'Spent ${(overallPct * 100).round()}% of allocated budget'
+                          : 'Spent ${(overallPct * 100).round()}% of monthly income',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              SizedBox(
+                height: 84,
+                width: 84,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: 1.0,
+                      strokeWidth: 7,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                      ),
+                    ),
+                    CircularProgressIndicator(
+                      value: (1.0 - overallPct),
+                      strokeWidth: 9,
+                      strokeCap: StrokeCap.round,
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation<Color>(ratingColor),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${((1.0 - overallPct) * 100).round()}%',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: ratingColor.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: ratingColor.withOpacity(0.3), width: 0.5),
+                          ),
+                          child: Text(
+                            'LEFT',
+                            style: TextStyle(
+                              fontSize: 7,
+                              fontWeight: FontWeight.w900,
+                              color: ratingColor,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Divider(height: 0.5, thickness: 0.5, color: theme.colorScheme.outline.withValues(alpha: 0.3)),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(Icons.update_rounded, size: 11, color: theme.colorScheme.onSurfaceVariant),
+              const SizedBox(width: 4),
+              Text(
+                'Updated just now',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBudgetRings(ThemeData theme, BuildContext context) {
     final budgetsAsync = ref.watch(budgetProgressProvider);
     final isDark = theme.brightness == Brightness.dark;
