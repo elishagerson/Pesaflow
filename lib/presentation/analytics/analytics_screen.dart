@@ -323,10 +323,14 @@ class _OverviewTab extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+                    color: isDark 
+                        ? Colors.white.withOpacity(0.04) 
+                        : Colors.black.withOpacity(0.03),
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                     border: Border.all(
-                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                      color: isDark 
+                          ? Colors.white.withOpacity(0.08) 
+                          : Colors.black.withOpacity(0.06),
                       width: 0.5,
                     ),
                   ),
@@ -370,7 +374,7 @@ class _OverviewTab extends StatelessWidget {
                       const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
-                        height: 38,
+                        height: 44,
                         child: ElevatedButton.icon(
                           onPressed: () {
                             HapticFeedback.lightImpact();
@@ -382,7 +386,13 @@ class _OverviewTab extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Icons.add_rounded, size: 16),
-                          label: const Text('Set Monthly Savings Goal', style: TextStyle(fontSize: 12)),
+                          label: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'Set Monthly Savings Goal',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                            ),
+                          ),
                         ),
                       ),
                     ],
