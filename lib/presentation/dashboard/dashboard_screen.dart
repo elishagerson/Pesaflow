@@ -2242,10 +2242,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 16),
 
-              // ── 5. Budget Health Score Card ──
-              _buildBudgetHealthCard(theme, isDark, overallPct, budgets.isNotEmpty),
-              const SizedBox(height: 24),
-
               // Monthly Overview Card (Donut Chart Revamp)
               _buildMonthlyOverview(theme),
               const SizedBox(height: 24),
