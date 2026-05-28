@@ -410,7 +410,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       borderRadius: AppTheme.radiusCard,
       margin: const EdgeInsets.only(right: 12),
       elevation: CardElevation.low,
-      accentColor: Color(int.parse(bp.budget.color.replaceAll('#', '0xFF'))),
+      accentColor: Color(int.parse(bp.category.color.replaceAll('#', '0xFF'))),
       onTap: () => context.go('/budgets/${bp.budget.id}'),
       padding: EdgeInsets.zero,
       child: Container(
@@ -487,8 +487,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildMonthlyOverview(ThemeData theme) {
@@ -813,32 +812,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 8),
               GlassCard(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(24),
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.low,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.08),
+                        color: theme.colorScheme.primary.withOpacity(0.08),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.donut_large_rounded,
-                        color: Colors.orange,
+                        color: theme.colorScheme.primary,
                         size: 28,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     Text(
                       'No Active Budgets',
-                      style: theme.textTheme.titleSmall?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(
                       'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -2056,10 +2055,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 16),
 
               // ── 5. Budget Health Score Card ──
+              final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
+              String ratingLabel = 'Healthy';
+              Color ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+              if (score >= 800) {
+                ratingLabel = 'Excellent';
+                ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+              } else if (score >= 600) {
+                ratingLabel = 'Healthy';
+                ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+              } else if (score >= 400) {
+                ratingLabel = 'Moderate';
+                ratingColor = Colors.orange;
+              } else {
+                ratingLabel = 'Critical';
+                ratingColor = const Color(0xFFFF453A);
+              }
               GlassCard(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.all(20),
                 elevation: CardElevation.medium,
-                accentColor: theme.colorScheme.primary,
+                accentColor: ratingColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -2072,102 +2087,74 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             Icon(
                               Icons.health_and_safety_rounded,
                               size: 16,
-                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                              color: ratingColor,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               'BUDGET HEALTH',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                                letterSpacing: 1.2,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 10,
+                                letterSpacing: 1.5,
                                 color: isDark ? Colors.grey[400] : Colors.grey[600],
                               ),
                             ),
                           ],
                         ),
-                        // Dynamic Status Badge
-                        (() {
-                          final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
-                          String ratingLabel = 'Healthy';
-                          Color ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-                          if (score >= 800) {
-                            ratingLabel = 'Excellent';
-                            ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-                          } else if (score >= 600) {
-                            ratingLabel = 'Healthy';
-                            ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-                          } else if (score >= 400) {
-                            ratingLabel = 'Moderate';
-                            ratingColor = Colors.orange;
-                          } else {
-                            ratingLabel = 'Critical';
-                            ratingColor = const Color(0xFFFF453A);
-                          }
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: ratingColor.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(100),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: ratingColor.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            ratingLabel,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              color: ratingColor,
+                              letterSpacing: 0.5,
                             ),
-                            child: Text(
-                              ratingLabel,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                color: ratingColor,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          );
-                        }()),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 18),
-                    // Inner content Row (Left Column: Score stack, Right Column: Gauge)
+                    const SizedBox(height: 20),
+                    // Inner content Row
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Left: Score Display
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              (() {
-                                final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
-                                return Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    Text(
-                                      '$score',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 42,
-                                        color: isDark ? Colors.white : Colors.black,
-                                        letterSpacing: -1.5,
-                                      ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    '$score',
+                                    style: theme.textTheme.displaySmall?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      color: isDark ? Colors.white : Colors.black,
                                     ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '/1000',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13,
-                                        fontFamily: 'monospace',
-                                        color: isDark ? Colors.grey[600] : Colors.grey[500],
-                                      ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '/1000',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark ? Colors.grey[600] : Colors.grey[500],
                                     ),
-                                  ],
-                                );
-                              }()),
-                              const SizedBox(height: 4),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
                               Text(
                                 'Overall pacing score',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: isDark ? Colors.grey[500] : Colors.grey[600],
+                                style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w600,
+                                  color: isDark ? Colors.grey[500] : Colors.grey[600],
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -2175,9 +2162,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 budgets.isNotEmpty
                                     ? 'Spent ${(overallPct * 100).round()}% of allocated budget'
                                     : 'Spent ${(overallPct * 100).round()}% of monthly income',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
+                                style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark ? Colors.grey[400] : Colors.grey[600],
                                 ),
                               ),
@@ -2185,7 +2170,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        // Right: Circular progress ring
                         SizedBox(
                           height: 84,
                           width: 84,
@@ -2204,42 +2188,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 strokeWidth: 9,
                                 strokeCap: StrokeCap.round,
                                 backgroundColor: Colors.transparent,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  overallPct > 0.8
-                                      ? const Color(0xFFFF453A)
-                                      : (overallPct > 0.5
-                                          ? const Color(0xFFFF9F0A)
-                                          : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
-                                ),
+                                valueColor: AlwaysStoppedAnimation<Color>(ratingColor),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     '${((1.0 - overallPct) * 100).round()}%',
-                                    style: TextStyle(
-                                      fontSize: 15,
+                                    style: theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: isDark ? Colors.white : Colors.black,
-                                      letterSpacing: -0.5,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
                                     decoration: BoxDecoration(
-                                      color: (overallPct > 0.8
-                                          ? const Color(0xFFFF453A)
-                                          : (overallPct > 0.5
-                                              ? const Color(0xFFFF9F0A)
-                                              : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)))).withOpacity(0.15),
+                                      color: ratingColor.withOpacity(0.15),
                                       borderRadius: BorderRadius.circular(100),
                                       border: Border.all(
-                                        color: (overallPct > 0.8
-                                            ? const Color(0xFFFF453A)
-                                            : (overallPct > 0.5
-                                                ? const Color(0xFFFF9F0A)
-                                                : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)))).withOpacity(0.3),
+                                        color: ratingColor.withOpacity(0.3),
                                         width: 0.5,
                                       ),
                                     ),
@@ -2248,11 +2216,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       style: TextStyle(
                                         fontSize: 7,
                                         fontWeight: FontWeight.w900,
-                                        color: overallPct > 0.8
-                                            ? const Color(0xFFFF453A)
-                                            : (overallPct > 0.5
-                                                ? const Color(0xFFFF9F0A)
-                                                : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
+                                        color: ratingColor,
                                         letterSpacing: 0.5,
                                       ),
                                     ),
@@ -2264,29 +2228,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14),
-                    Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
-                    const SizedBox(height: 10),
-                    // Bottom updated row
+                    const SizedBox(height: 16),
+                    Divider(height: 0.5, thickness: 0.5, color: theme.colorScheme.outline.withValues(alpha: 0.3)),
+                    const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.update_rounded,
-                              color: Colors.grey,
-                              size: 11,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Updated just now',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
+                        Icon(Icons.update_rounded, size: 11, color: theme.colorScheme.onSurfaceVariant),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Updated just now',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontSize: 10,
+                          ),
                         ),
                       ],
                     ),
