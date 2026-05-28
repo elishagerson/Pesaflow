@@ -2055,26 +2055,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 16),
 
               // ── 5. Budget Health Score Card ──
-              final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
-              String ratingLabel = 'Healthy';
-              Color ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-              if (score >= 800) {
-                ratingLabel = 'Excellent';
-                ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-              } else if (score >= 600) {
-                ratingLabel = 'Healthy';
-                ratingColor = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
-              } else if (score >= 400) {
-                ratingLabel = 'Moderate';
-                ratingColor = Colors.orange;
-              } else {
-                ratingLabel = 'Critical';
-                ratingColor = const Color(0xFFFF453A);
-              }
-              GlassCard(
-                padding: const EdgeInsets.all(20),
-                elevation: CardElevation.medium,
-                accentColor: ratingColor,
+              _buildBudgetHealthCard(theme, isDark, overallPct, budgets.isNotEmpty),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
