@@ -31,7 +31,7 @@ class GlassCard extends StatelessWidget {
     this.elevation = CardElevation.low,
     this.hasBorder = true,
     this.margin,
-    this.padding = const EdgeInsets.all(16),
+    this.padding,
     this.onTap,
     this.blurSigma = 6,
     this.frosted = true,
@@ -49,8 +49,8 @@ class GlassCard extends StatelessWidget {
             : AppTheme.surfaceLight);
     final borderColor = hasBorder
         ? (isDark
-            ? colorScheme.outline.withValues(alpha: 0.15)
-            : colorScheme.outline.withValues(alpha: 0.12))
+            ? colorScheme.outline!.withValues(alpha: 0.15)
+            : colorScheme.outline!.withValues(alpha: 0.12))
         : Colors.transparent;
     final shadowList = _buildShadow(isDark, colorScheme);
 
@@ -67,7 +67,7 @@ class GlassCard extends StatelessWidget {
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                color: accentColor.withValues(alpha: 0.3),
+                color: accentColor!.withValues(alpha: 0.3),
                 width: 0,
               ),
             )

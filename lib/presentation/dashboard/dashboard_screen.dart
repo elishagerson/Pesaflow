@@ -411,6 +411,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: GlassCard(
         borderRadius: AppTheme.radiusCard,
         margin: const EdgeInsets.only(right: 12),
+        elevation: CardElevation.low,
+        accentColor: Color(int.parse(bp.budget.color.replaceAll('#', '0xFF'))),
+        padding: EdgeInsets.zero,
         child: Container(
           width: 105,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
