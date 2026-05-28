@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // ── Noir & Amethyst — Full Explicit Palette ──
+  // ── Sky & Emerald — Light Blue + Emerald Palette ──
 
   // Light
-  static const Color primaryLight = Color(0xFF7C3AED);
+  static const Color primaryLight = Color(0xFF0A84FF); // Vibrant light blue
   static const Color onPrimaryLight = Color(0xFFFFFFFF);
-  static const Color primaryContainerLight = Color(0xFFEDE9FE);
-  static const Color onPrimaryContainerLight = Color(0xFF1E1029);
+  static const Color primaryContainerLight = Color(0xFFDCF0FF); // Very light blue
+  static const Color onPrimaryContainerLight = Color(0xFF00325E);
 
-  static const Color secondaryLight = Color(0xFF6D28D9);
+  static const Color secondaryLight = Color(0xFF10B981); // Emerald
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
-  static const Color secondaryContainerLight = Color(0xFFE2D5F7);
-  static const Color onSecondaryContainerLight = Color(0xFF1E1029);
+  static const Color secondaryContainerLight = Color(0xFFD1FAE5); // Light emerald
+  static const Color onSecondaryContainerLight = Color(0xFF003D24);
 
   static const Color tertiaryLight = Color(0xFFF59E0B);
   static const Color onTertiaryLight = Color(0xFFFFFFFF);
@@ -29,27 +29,27 @@ class AppTheme {
   static const Color outlineVariantLight = Color(0xFFE2E0E8);
 
   // Dark
-  static const Color primaryDark = Color(0xFFA78BFA); // Amethyst purple-300 for dark mode
-  static const Color onPrimaryDark = Color(0xFFFFFFFF);
-  static const Color primaryContainerDark = Color(0xFF0038A8);
-  static const Color onPrimaryContainerDark = Color(0xFFD0E2FF);
+  static const Color primaryDark = Color(0xFF38BDF8); // Sky blue for dark mode
+  static const Color onPrimaryDark = Color(0xFF000000);
+  static const Color primaryContainerDark = Color(0xFF004A8C);
+  static const Color onPrimaryContainerDark = Color(0xFFBAE6FD);
 
-  static const Color secondaryDark = Color(0xFF30D158); // Apple iOS vibrant green
-  static const Color onSecondaryDark = Color(0xFF000000);
-  static const Color secondaryContainerDark = Color(0xFF0F521B);
-  static const Color onSecondaryContainerDark = Color(0xFFC7F3D6);
+  static const Color secondaryDark = Color(0xFF34D399); // Emerald light for dark mode
+  static const Color onSecondaryDark = Color(0xFF003D24);
+  static const Color secondaryContainerDark = Color(0xFF005C38);
+  static const Color onSecondaryContainerDark = Color(0xFFD1FAE5);
 
-  static const Color tertiaryDark = Color(0xFFFF9F0A); // Apple iOS vibrant orange
+  static const Color tertiaryDark = Color(0xFFFF9F0A);
   static const Color onTertiaryDark = Color(0xFF000000);
 
-  static const Color bgDark = Color(0xFF000000); // True Pitch Black for ultra-premium AMOLED contrast
+  static const Color bgDark = Color(0xFF000000);
   static const Color onBgDark = Color(0xFFFFFFFF);
-  static const Color surfaceDark = Color(0xFF0F0F10); // Deep near-black like SMS card
+  static const Color surfaceDark = Color(0xFF0F0F10);
   static const Color onSurfaceDark = Color(0xFFFFFFFF);
   static const Color surfaceHighDark = Color(0xFF0F0F10);
   static const Color surfaceLowDark = Color(0xFF09090A);
 
-  static const Color outlineDark = Color(0xFF2C2C2E); // Subtle dark outlines
+  static const Color outlineDark = Color(0xFF2C2C2E);
   static const Color outlineVariantDark = Color(0xFF1C1C1E);
 
   // Finance semantic colors
@@ -299,8 +299,8 @@ class AppTheme {
         onPrimary: Colors.black,
         primaryContainer: primaryContainerDark,
         onPrimaryContainer: onPrimaryContainerDark,
-        secondary: primaryDark,
-        onSecondary: onPrimaryDark,
+        secondary: secondaryDark,
+        onSecondary: onSecondaryDark,
         secondaryContainer: secondaryContainerDark,
         onSecondaryContainer: onSecondaryContainerDark,
         tertiary: tertiaryDark,
