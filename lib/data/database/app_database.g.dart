@@ -1194,6 +1194,17 @@ class $TransactionsTable extends Transactions
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _destinationAccountIdMeta =
+      const VerificationMeta('destinationAccountId');
+  @override
+  late final GeneratedColumn<String> destinationAccountId =
+      GeneratedColumn<String>(
+        'destination_account_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _categoryIdMeta = const VerificationMeta(
     'categoryId',
   );
@@ -1360,6 +1371,7 @@ class $TransactionsTable extends Transactions
   List<GeneratedColumn> get $columns => [
     id,
     accountId,
+    destinationAccountId,
     categoryId,
     trackerId,
     amount,
@@ -1400,6 +1412,15 @@ class $TransactionsTable extends Transactions
       );
     } else if (isInserting) {
       context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('destination_account_id')) {
+      context.handle(
+        _destinationAccountIdMeta,
+        destinationAccountId.isAcceptableOrUnknown(
+          data['destination_account_id']!,
+          _destinationAccountIdMeta,
+        ),
+      );
     }
     if (data.containsKey('category_id')) {
       context.handle(
@@ -1525,6 +1546,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}account_id'],
       )!,
+      destinationAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_account_id'],
+      ),
       categoryId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}category_id'],
@@ -1597,6 +1622,7 @@ class $TransactionsTable extends Transactions
 class Transaction extends DataClass implements Insertable<Transaction> {
   final String id;
   final String accountId;
+  final String? destinationAccountId;
   final String categoryId;
   final String? trackerId;
   final int amount;
@@ -1615,6 +1641,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   const Transaction({
     required this.id,
     required this.accountId,
+    this.destinationAccountId,
     required this.categoryId,
     this.trackerId,
     required this.amount,
@@ -1636,6 +1663,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['account_id'] = Variable<String>(accountId);
+    if (!nullToAbsent || destinationAccountId != null) {
+      map['destination_account_id'] = Variable<String>(destinationAccountId);
+    }
     map['category_id'] = Variable<String>(categoryId);
     if (!nullToAbsent || trackerId != null) {
       map['tracker_id'] = Variable<String>(trackerId);
@@ -1674,6 +1704,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return TransactionsCompanion(
       id: Value(id),
       accountId: Value(accountId),
+      destinationAccountId: destinationAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(destinationAccountId),
       categoryId: Value(categoryId),
       trackerId: trackerId == null && nullToAbsent
           ? const Value.absent()
@@ -1716,6 +1749,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return Transaction(
       id: serializer.fromJson<String>(json['id']),
       accountId: serializer.fromJson<String>(json['accountId']),
+      destinationAccountId: serializer.fromJson<String?>(
+        json['destinationAccountId'],
+      ),
       categoryId: serializer.fromJson<String>(json['categoryId']),
       trackerId: serializer.fromJson<String?>(json['trackerId']),
       amount: serializer.fromJson<int>(json['amount']),
@@ -1739,6 +1775,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'accountId': serializer.toJson<String>(accountId),
+      'destinationAccountId': serializer.toJson<String?>(destinationAccountId),
       'categoryId': serializer.toJson<String>(categoryId),
       'trackerId': serializer.toJson<String?>(trackerId),
       'amount': serializer.toJson<int>(amount),
@@ -1760,6 +1797,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   Transaction copyWith({
     String? id,
     String? accountId,
+    Value<String?> destinationAccountId = const Value.absent(),
     String? categoryId,
     Value<String?> trackerId = const Value.absent(),
     int? amount,
@@ -1778,6 +1816,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   }) => Transaction(
     id: id ?? this.id,
     accountId: accountId ?? this.accountId,
+    destinationAccountId: destinationAccountId.present
+        ? destinationAccountId.value
+        : this.destinationAccountId,
     categoryId: categoryId ?? this.categoryId,
     trackerId: trackerId.present ? trackerId.value : this.trackerId,
     amount: amount ?? this.amount,
@@ -1798,6 +1839,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return Transaction(
       id: data.id.present ? data.id.value : this.id,
       accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      destinationAccountId: data.destinationAccountId.present
+          ? data.destinationAccountId.value
+          : this.destinationAccountId,
       categoryId: data.categoryId.present
           ? data.categoryId.value
           : this.categoryId,
@@ -1829,6 +1873,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return (StringBuffer('Transaction(')
           ..write('id: $id, ')
           ..write('accountId: $accountId, ')
+          ..write('destinationAccountId: $destinationAccountId, ')
           ..write('categoryId: $categoryId, ')
           ..write('trackerId: $trackerId, ')
           ..write('amount: $amount, ')
@@ -1852,6 +1897,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   int get hashCode => Object.hash(
     id,
     accountId,
+    destinationAccountId,
     categoryId,
     trackerId,
     amount,
@@ -1874,6 +1920,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       (other is Transaction &&
           other.id == this.id &&
           other.accountId == this.accountId &&
+          other.destinationAccountId == this.destinationAccountId &&
           other.categoryId == this.categoryId &&
           other.trackerId == this.trackerId &&
           other.amount == this.amount &&
@@ -1894,6 +1941,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String> id;
   final Value<String> accountId;
+  final Value<String?> destinationAccountId;
   final Value<String> categoryId;
   final Value<String?> trackerId;
   final Value<int> amount;
@@ -1913,6 +1961,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   const TransactionsCompanion({
     this.id = const Value.absent(),
     this.accountId = const Value.absent(),
+    this.destinationAccountId = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.trackerId = const Value.absent(),
     this.amount = const Value.absent(),
@@ -1933,6 +1982,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   TransactionsCompanion.insert({
     required String id,
     required String accountId,
+    this.destinationAccountId = const Value.absent(),
     required String categoryId,
     this.trackerId = const Value.absent(),
     required int amount,
@@ -1958,6 +2008,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   static Insertable<Transaction> custom({
     Expression<String>? id,
     Expression<String>? accountId,
+    Expression<String>? destinationAccountId,
     Expression<String>? categoryId,
     Expression<String>? trackerId,
     Expression<int>? amount,
@@ -1978,6 +2029,8 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (accountId != null) 'account_id': accountId,
+      if (destinationAccountId != null)
+        'destination_account_id': destinationAccountId,
       if (categoryId != null) 'category_id': categoryId,
       if (trackerId != null) 'tracker_id': trackerId,
       if (amount != null) 'amount': amount,
@@ -2000,6 +2053,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   TransactionsCompanion copyWith({
     Value<String>? id,
     Value<String>? accountId,
+    Value<String?>? destinationAccountId,
     Value<String>? categoryId,
     Value<String?>? trackerId,
     Value<int>? amount,
@@ -2020,6 +2074,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     return TransactionsCompanion(
       id: id ?? this.id,
       accountId: accountId ?? this.accountId,
+      destinationAccountId: destinationAccountId ?? this.destinationAccountId,
       categoryId: categoryId ?? this.categoryId,
       trackerId: trackerId ?? this.trackerId,
       amount: amount ?? this.amount,
@@ -2047,6 +2102,11 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     }
     if (accountId.present) {
       map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (destinationAccountId.present) {
+      map['destination_account_id'] = Variable<String>(
+        destinationAccountId.value,
+      );
     }
     if (categoryId.present) {
       map['category_id'] = Variable<String>(categoryId.value);
@@ -2104,6 +2164,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     return (StringBuffer('TransactionsCompanion(')
           ..write('id: $id, ')
           ..write('accountId: $accountId, ')
+          ..write('destinationAccountId: $destinationAccountId, ')
           ..write('categoryId: $categoryId, ')
           ..write('trackerId: $trackerId, ')
           ..write('amount: $amount, ')
@@ -6859,6 +6920,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
     TransactionsCompanion Function({
       required String id,
       required String accountId,
+      Value<String?> destinationAccountId,
       required String categoryId,
       Value<String?> trackerId,
       required int amount,
@@ -6880,6 +6942,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
     TransactionsCompanion Function({
       Value<String> id,
       Value<String> accountId,
+      Value<String?> destinationAccountId,
       Value<String> categoryId,
       Value<String?> trackerId,
       Value<int> amount,
@@ -6914,6 +6977,11 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<String> get accountId => $composableBuilder(
     column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationAccountId => $composableBuilder(
+    column: $table.destinationAccountId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7012,6 +7080,11 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get destinationAccountId => $composableBuilder(
+    column: $table.destinationAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get categoryId => $composableBuilder(
     column: $table.categoryId,
     builder: (column) => ColumnOrderings(column),
@@ -7103,6 +7176,11 @@ class $$TransactionsTableAnnotationComposer
   GeneratedColumn<String> get accountId =>
       $composableBuilder(column: $table.accountId, builder: (column) => column);
 
+  GeneratedColumn<String> get destinationAccountId => $composableBuilder(
+    column: $table.destinationAccountId,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get categoryId => $composableBuilder(
     column: $table.categoryId,
     builder: (column) => column,
@@ -7190,6 +7268,7 @@ class $$TransactionsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> accountId = const Value.absent(),
+                Value<String?> destinationAccountId = const Value.absent(),
                 Value<String> categoryId = const Value.absent(),
                 Value<String?> trackerId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
@@ -7209,6 +7288,7 @@ class $$TransactionsTableTableManager
               }) => TransactionsCompanion(
                 id: id,
                 accountId: accountId,
+                destinationAccountId: destinationAccountId,
                 categoryId: categoryId,
                 trackerId: trackerId,
                 amount: amount,
@@ -7230,6 +7310,7 @@ class $$TransactionsTableTableManager
               ({
                 required String id,
                 required String accountId,
+                Value<String?> destinationAccountId = const Value.absent(),
                 required String categoryId,
                 Value<String?> trackerId = const Value.absent(),
                 required int amount,
@@ -7249,6 +7330,7 @@ class $$TransactionsTableTableManager
               }) => TransactionsCompanion.insert(
                 id: id,
                 accountId: accountId,
+                destinationAccountId: destinationAccountId,
                 categoryId: categoryId,
                 trackerId: trackerId,
                 amount: amount,

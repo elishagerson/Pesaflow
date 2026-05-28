@@ -8,4 +8,18 @@ mixin _$BudgetDaoMixin on DatabaseAccessor<AppDatabase> {
   $BudgetPeriodsTable get budgetPeriods => attachedDatabase.budgetPeriods;
   $TransactionsTable get transactions => attachedDatabase.transactions;
   $CategoriesTable get categories => attachedDatabase.categories;
+  BudgetDaoManager get managers => BudgetDaoManager(this);
+}
+
+class BudgetDaoManager {
+  final _$BudgetDaoMixin _db;
+  BudgetDaoManager(this._db);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$BudgetPeriodsTableTableManager get budgetPeriods =>
+      $$BudgetPeriodsTableTableManager(_db.attachedDatabase, _db.budgetPeriods);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
 }

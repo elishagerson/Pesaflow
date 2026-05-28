@@ -9,4 +9,24 @@ mixin _$AnalyticsDaoMixin on DatabaseAccessor<AppDatabase> {
   $DailySnapshotsTable get dailySnapshots => attachedDatabase.dailySnapshots;
   $MonthlySnapshotsTable get monthlySnapshots =>
       attachedDatabase.monthlySnapshots;
+  AnalyticsDaoManager get managers => AnalyticsDaoManager(this);
+}
+
+class AnalyticsDaoManager {
+  final _$AnalyticsDaoMixin _db;
+  AnalyticsDaoManager(this._db);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$DailySnapshotsTableTableManager get dailySnapshots =>
+      $$DailySnapshotsTableTableManager(
+        _db.attachedDatabase,
+        _db.dailySnapshots,
+      );
+  $$MonthlySnapshotsTableTableManager get monthlySnapshots =>
+      $$MonthlySnapshotsTableTableManager(
+        _db.attachedDatabase,
+        _db.monthlySnapshots,
+      );
 }
