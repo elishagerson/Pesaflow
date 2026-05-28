@@ -13,7 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart'; // To reuse TactileSpringContainer!
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;

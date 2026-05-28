@@ -282,7 +282,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        side: BorderSide(color: outlineLight.withOpacity(0.4)),
+        side: BorderSide(color: outlineLight.withValues(alpha: 0.4)),
       ),
     );
   }
@@ -383,7 +383,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        side: BorderSide(color: outlineDark.withOpacity(0.4)),
+        side: BorderSide(color: outlineDark.withValues(alpha: 0.4)),
       ),
     );
   }
