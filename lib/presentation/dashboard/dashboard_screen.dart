@@ -1757,17 +1757,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     if (accounts.isNotEmpty) ...[
                       const SizedBox(height: 18),
                       SizedBox(
-                        height: 38,
+                        height: 42,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
+                          clipBehavior: Clip.none,
                           itemCount: accounts.length,
                           itemBuilder: (context, index) {
                             final account = accounts[index];
                             final isSelected = _selectedAccountId == account.id;
                             
                             return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
+                              padding: EdgeInsets.only(
+                                right: 8.0,
+                                left: index == 0 ? 2.0 : 0.0,
+                              ),
                               child: TactileSpringContainer(
                                 onTap: () {
                                   setState(() {
