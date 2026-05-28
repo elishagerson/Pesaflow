@@ -1,10 +1,13 @@
 package com.elishagerson.pesaflow.pesaflow
 
 import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -34,6 +37,13 @@ class MainActivity : FlutterActivity() {
                     }
                     result.success(true)
                 }
+                "isNotificationListenerEnabled" -> {
+                    result.success(isNotificationListenerEnabled())
+                }
+                "openNotificationListenerSettings" -> {
+                    openNotificationListenerSettings()
+                    result.success(true)
+                }
                 "getPendingSms" -> {
                     val pending = getPendingSms()
                     result.success(pending)
@@ -45,6 +55,16 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+    }
+
+    private fun isNotificationListenerEnabled(): Boolean {
+        val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(this)
+        return enabledListeners.contains(packageName)
+    }
+
+    private fun openNotificationListenerSettings() {
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        startActivity(intent)
     }
 
     private fun getPendingSms(): List<String> {

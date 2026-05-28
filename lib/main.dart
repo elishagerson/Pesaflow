@@ -101,6 +101,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
 
       // Process any SMS notifications captured while app was killed
       await _processPendingSms();
+
+      // Check if Notification Access is enabled; if not, prompt once
+      await _checkNotificationAccess();
     });
   }
 
