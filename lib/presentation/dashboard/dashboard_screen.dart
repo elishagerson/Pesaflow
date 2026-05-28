@@ -770,8 +770,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  }
-
   Widget _buildBudgetHealthCard(ThemeData theme, bool isDark, double overallPct, bool hasBudgets) {
     final score = (1000 - (overallPct * 1000).round()).clamp(0, 1000);
     String ratingLabel = 'Healthy';
