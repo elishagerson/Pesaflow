@@ -13,7 +13,7 @@ class IosTabBar extends StatelessWidget {
   });
 
   static const double pillHeight = 60.0;
-  static const double pillRadius = 30.0;
+  static const double pillRadius = 18.0;
 
   @override
   Widget build(BuildContext context) {
