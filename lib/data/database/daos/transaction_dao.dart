@@ -100,7 +100,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     });
   }
 
-  /// Inserts a transaction and adjusts the linked account's balance inside a transaction.
+  /// Inserts a transaction and adjusts the linked account(s) balance inside a transaction.
   Future<void> writeTransactionWithBalanceAdjustment(Transaction transaction) async {
     await attachedDatabase.transaction(() async {
       // 1. Insert the transaction
@@ -117,14 +117,26 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         balanceDelta = transaction.amount;
       } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
         balanceDelta = -transaction.amount;
+      } else if (type == 'transfer') {
+        balanceDelta = -transaction.amount;
       }
 
       final updatedAccount = account.copyWith(
         balance: account.balance + balanceDelta,
       );
 
-      // 4. Update the account balance
+      // 4. Update the source account balance
       await update(accounts).replace(updatedAccount);
+
+      // 5. For transfers, also credit the destination account
+      if (type == 'transfer' && transaction.destinationAccountId != null) {
+        final destQuery = select(accounts)..where((t) => t.id.equals(transaction.destinationAccountId!));
+        final destAccount = await destQuery.getSingle();
+        final updatedDest = destAccount.copyWith(
+          balance: destAccount.balance + transaction.amount,
+        );
+        await update(accounts).replace(updatedDest);
+      }
     });
   }
 
@@ -151,6 +163,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
           // Add back subtracted expense
           balanceDelta = transactionObj.amount;
+        } else if (type == 'transfer') {
+          // Add back amount deducted from source
+          balanceDelta = transactionObj.amount;
         }
 
         final updatedAccount = account.copyWith(
@@ -161,7 +176,19 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         await update(accounts).replace(updatedAccount);
       }
 
-      // 5. Delete the transaction
+      // 5. For transfers, also reverse the destination credit
+      if (transactionObj.type.toLowerCase() == 'transfer' && transactionObj.destinationAccountId != null) {
+        final destQuery = select(accounts)..where((t) => t.id.equals(transactionObj.destinationAccountId!));
+        final destAccount = await destQuery.getSingleOrNull();
+        if (destAccount != null) {
+          final updatedDest = destAccount.copyWith(
+            balance: destAccount.balance - transactionObj.amount,
+          );
+          await update(accounts).replace(updatedDest);
+        }
+      }
+
+      // 6. Delete the transaction
       await (delete(transactions)..where((t) => t.id.equals(transactionId))).go();
     });
   }

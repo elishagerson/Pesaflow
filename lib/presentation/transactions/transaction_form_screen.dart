@@ -28,6 +28,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   String _amountStr = '0'; // Current keypad entered digits
   String _transactionType = 'Expense'; // Default
   String? _selectedAccountId;
+  String? _selectedDestinationAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
   
@@ -116,7 +117,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     }
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an account.')),
+        const SnackBar(content: Text('Please select a source account.')),
+      );
+      return;
+    }
+    if (_transactionType == 'Transfer' && _selectedDestinationAccountId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a destination account.')),
+      );
+      return;
+    }
+    if (_transactionType == 'Transfer' && _selectedDestinationAccountId == _selectedAccountId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Source and destination accounts must be different.')),
       );
       return;
     }
@@ -139,6 +152,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final newTransaction = Transaction(
       id: _isEditMode ? _existingTransaction!.id : const Uuid().v4(),
       accountId: _selectedAccountId!,
+      destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
       categoryId: _selectedCategoryId!,
       trackerId: _isEditMode ? _existingTransaction!.trackerId : trackerId,
       amount: cents,
