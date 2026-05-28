@@ -139,6 +139,55 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
     }
   }
 
+  Future<void> _checkNotificationAccess() async {
+    if (!context.mounted) return;
+    try {
+      final dismissed = await ref.read(settingsRepositoryProvider).getSetting('notification_access_prompt_dismissed');
+      if (dismissed == 'true') return;
+
+      final enabled = await _notificationChannel.invokeMethod<bool>('isNotificationListenerEnabled');
+      if (enabled == true) return;
+
+      developer.log('Notification Access not enabled — prompting user', name: 'AppLaunch');
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Enable Notification Access'),
+          content: const Text(
+            'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
+            'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await ref.read(settingsRepositoryProvider).setSetting('notification_access_prompt_dismissed', 'true');
+                if (ctx.mounted) Navigator.of(ctx).pop();
+              },
+              child: const Text("Don't ask again"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _notificationChannel.invokeMethod('openNotificationListenerSettings');
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Not Now'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                await _notificationChannel.invokeMethod('openNotificationListenerSettings');
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Open Settings'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      developer.log('Notification access check failed: $e', name: 'AppLaunch');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
