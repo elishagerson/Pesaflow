@@ -140,16 +140,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
 
                 // Pace card
-                Container(
-                  width: double.infinity, padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: theme.brightness == Brightness.dark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: theme.brightness == Brightness.dark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                      width: 0.5,
-                    ),
-                  ),
+                GlassCard(
+                  padding: const EdgeInsets.all(16),
+                  frosted: false,
                   child: Row(children: [
                     Icon(
                       status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
@@ -176,17 +169,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                 periodsAsync.when(
                   data: (periods) => Column(children: periods.map((p) {
                     final pctUsed = p.allocated > 0 ? (p.spent / p.allocated * 100).round() : 0;
-                    return Container(
+                    return GlassCard(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: theme.brightness == Brightness.dark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: theme.brightness == Brightness.dark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                          width: 0.5,
-                        ),
-                      ),
+                      borderRadius: 8,
+                      frosted: false,
                       child: Row(children: [
                         Icon(p.isClosed ? Icons.lock_rounded : Icons.lock_open_rounded, size: 16, color: Colors.grey),
                         const SizedBox(width: 8),
@@ -224,17 +211,9 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = theme.brightness == Brightness.dark;
-    return Container(
+    return GlassCard(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(
-          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-          width: 0.5,
-        ),
-      ),
+      frosted: false,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 4),

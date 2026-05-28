@@ -143,17 +143,9 @@ class _OverviewTab extends StatelessWidget {
               final incomeColorVal = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
               final expenseColorVal = isDark ? const Color(0xFFFF453A) : const Color(0xFFE11D48);
 
-              return Container(
-                width: double.infinity,
+              return GlassCard(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                    width: 0.5,
-                  ),
-                ),
+                frosted: false,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('THIS MONTH', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600], fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
@@ -215,18 +207,12 @@ class _OverviewTab extends StatelessWidget {
                             builder: (context) => SavingsGoalDetailSheet(goal: goal),
                           );
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 250,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
-                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                            border: Border.all(
-                              color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                              width: 0.5,
-                            ),
-                          ),
-                          child: Row(
+                          child: GlassCard(
+                            padding: const EdgeInsets.all(16),
+                            frosted: false,
+                            child: Row(
                             children: [
                               SizedBox(
                                 height: 56,
@@ -309,7 +295,8 @@ class _OverviewTab extends StatelessWidget {
                             ],
                           ),
                         ),
-                      );
+                      ),
+                    );
                     },
                   ),
                 );
