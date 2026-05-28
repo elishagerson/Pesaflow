@@ -267,6 +267,105 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
+  void _showDestinationAccountPickerSheet(BuildContext context, List<Account> accounts) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20.0),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              Text(
+                'Select Destination Account',
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: accounts.length,
+                itemBuilder: (context, index) {
+                  final account = accounts[index];
+                  final isSelected = account.id == _selectedDestinationAccountId;
+                  final isSource = account.id == _selectedAccountId;
+                  final isDisabled = isSource;
+                  return TactileSpringContainer(
+                    onTap: isDisabled ? null : () {
+                      setState(() => _selectedDestinationAccountId = account.id);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: isSelected 
+                            ? theme.colorScheme.primary.withOpacity(0.08) 
+                            : AppTheme.surfaceContainerDark,
+                        borderRadius: BorderRadius.circular(12.0),
+                        border: Border.all(
+                          color: isSelected 
+                              ? theme.colorScheme.primary.withOpacity(0.3) 
+                              : const Color(0x15FFFFFF),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                account.name,
+                                style: TextStyle(
+                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color: isDisabled ? Colors.grey : (isSelected ? theme.colorScheme.primary : null),
+                                ),
+                              ),
+                              if (isDisabled) ...[
+                                const SizedBox(width: 6),
+                                const Text('(source)', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                              ],
+                            ],
+                          ),
+                          Text(
+                            CurrencyFormatter.formatCents(account.balance),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _showSecondaryDetailsSheet(BuildContext context, List<Category> categories) {
     final filteredCategories = categories.where((cat) {
       return cat.type.toLowerCase() == _transactionType.toLowerCase();
@@ -768,32 +867,67 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Floating source account pill
-                      TactileSpringContainer(
-                        onTap: () => _showAccountPickerSheet(context, accounts),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1B1B1D),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: const Color(0x15FFFFFF)),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TactileSpringContainer(
+                            onTap: () => _showAccountPickerSheet(context, accounts),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1B1B1D),
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(color: const Color(0x15FFFFFF)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'From ${activeAccount.name}',
+                                    style: const TextStyle(
+                                      color: Colors.white70, 
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'From ${activeAccount.name}',
-                                style: const TextStyle(
-                                  color: Colors.white70, 
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                          if (_transactionType == 'Transfer') ...[
+                            const SizedBox(width: 8),
+                            TactileSpringContainer(
+                              onTap: () => _showDestinationAccountPickerSheet(context, accounts),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1B1B1D),
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(color: const Color(0x15FFFFFF)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _selectedDestinationAccountId != null
+                                          ? 'To ${accounts.firstWhere((a) => a.id == _selectedDestinationAccountId).name}'
+                                          : 'To',
+                                      style: const TextStyle(
+                                        color: Colors.white70, 
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
-                            ],
-                          ),
-                        ),
+                            ),
+                          ],
+                        ],
                       ),
                       const Spacer(),
 
