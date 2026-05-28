@@ -18,7 +18,7 @@ class AppTheme {
   static const Color tertiaryLight = Color(0xFFF59E0B);
   static const Color onTertiaryLight = Color(0xFFFFFFFF);
 
-  static const Color bgLight = Color(0xFFF5F5F7);
+  static const Color bgLight = Color(0xFFF2F2F7);
   static const Color onBgLight = Color(0xFF1C1C1E);
   static const Color surfaceLight = Color(0xFFFFFFFF);
   static const Color onSurfaceLight = Color(0xFF1C1C1E);
@@ -44,9 +44,9 @@ class AppTheme {
 
   static const Color bgDark = Color(0xFF000000); // True Pitch Black for ultra-premium AMOLED contrast
   static const Color onBgDark = Color(0xFFFFFFFF);
-  static const Color surfaceDark = Color(0xFF161618); // Modern charcoal grey cards
+  static const Color surfaceDark = Color(0xFF0F0F10); // Deep near-black like SMS card
   static const Color onSurfaceDark = Color(0xFFFFFFFF);
-  static const Color surfaceHighDark = Color(0xFF161618);
+  static const Color surfaceHighDark = Color(0xFF0F0F10);
   static const Color surfaceLowDark = Color(0xFF09090A);
 
   static const Color outlineDark = Color(0xFF2C2C2E); // Subtle dark outlines
@@ -237,7 +237,7 @@ class AppTheme {
         color: surfaceHighLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x0A000000), width: 0.5),
+          side: const BorderSide(color: Color(0x0F000000), width: 0.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -276,7 +276,7 @@ class AppTheme {
       dividerTheme: const DividerThemeData(
         space: 0,
         thickness: 0.5,
-        color: Color(0x1A000000),
+        color: Color(0x0F000000),
       ),
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
@@ -333,7 +333,7 @@ class AppTheme {
         color: surfaceHighDark,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x15FFFFFF), width: 0.5),
+          side: const BorderSide(color: Color(0x12FFFFFF), width: 0.5),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -377,7 +377,7 @@ class AppTheme {
       dividerTheme: const DividerThemeData(
         space: 0,
         thickness: 0.5,
-        color: Color(0x1AFFFFFF),
+        color: Color(0x12FFFFFF),
       ),
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
