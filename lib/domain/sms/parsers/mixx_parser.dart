@@ -10,34 +10,20 @@ class MixxParser implements SmsParser {
   }
 
   String _extractReference(String text) {
-    // Swahili: Kumbukumbu: XXXXX or Rej: XXXXX
-    final swaRegex = RegExp(r'(?:Kumbukumbu|Rej):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final swaRegex = RegExp(r'(?:Kumbukumbu|Rej|TxnID|TxnId):\s*([A-Za-z0-9]+)', caseSensitive: false);
     final match = swaRegex.firstMatch(text);
-    if (match != null) return match.group(1)!;
-
-    // English: TxnID: XXXXX or TxnId: XXXXX
-    final engRegex = RegExp(r'Txn(?:ID|Id):\s*(\d+)', caseSensitive: false);
-    final engMatch = engRegex.firstMatch(text);
-    if (engMatch != null) return engMatch.group(1)!;
-
-    return 'TIGO-REF-UNKNOWN';
+    return match?.group(1) ?? 'TIGO-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
-    // Swahili: Salio: Tsh XXX
-    final swaRegex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final swaRegex = RegExp(
+      r'(?:Salio|Balance|Bal|New balance is):\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
+      caseSensitive: false
+    );
     final match = swaRegex.firstMatch(text);
     if (match != null) {
       return _parseAmount(match.group(1)!);
     }
-
-    // English: "New balance is TSh XXX"
-    final engRegex = RegExp(r'New balance is TSh\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
-    final engMatch = engRegex.firstMatch(text);
-    if (engMatch != null) {
-      return _parseAmount(engMatch.group(1)!);
-    }
-
     return null;
   }
 
@@ -46,10 +32,10 @@ class MixxParser implements SmsParser {
     final text = rawSmsBody.trim();
 
     try {
-      // 1. Check for Received Money (Income)
+      // 1. Swahili Received Money (Income)
       // Example: "Umepokea TZS 25,000.00 kutoka kwa 0712345678. Kumbukumbu: MX789012. Salio: TZS 150,000.00"
       final receivedRegex = RegExp(
-        r'Umepokea\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kutoka kwa|kutoka)\s+(.+?)\.',
+        r'Umepokea\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kutoka kwa|kutoka)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|$)',
         caseSensitive: false,
       );
       var match = receivedRegex.firstMatch(text);
@@ -71,10 +57,35 @@ class MixxParser implements SmsParser {
         );
       }
 
-      // 2. Check for Sent Money (Expense)
+      // 2. English Received Money (Income)
+      // Example: "You have received TZS 25,000.00 from 0712345678. TxnID: MX789012. Balance: TZS 150,000.00"
+      final engReceivedRegex = RegExp(
+        r'You have received\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)(?:\.|\s+TxnID|\s+TxnId|\s+Balance|\s+on|$)',
+        caseSensitive: false,
+      );
+      match = engReceivedRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final sender = match.group(2)!.trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: sender,
+          reference: ref,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 3. Swahili Sent Money (Expense)
       // Example: "Umetuma TZS 15,000.00 kwa 0765432198. Kumbukumbu: MX210987. Salio: TZS 135,000.00"
       final sentRegex = RegExp(
-        r'Umetuma\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)\.',
+        r'Umetuma\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|$)',
         caseSensitive: false,
       );
       match = sentRegex.firstMatch(text);
@@ -96,10 +107,10 @@ class MixxParser implements SmsParser {
         );
       }
 
-      // 3. Check for Bundle/Package purchase (Expense/Airtime)
+      // 4. Bundle/Package purchase (Expense/Airtime)
       // Example: "Ununuzi wa kifurushi TZS 3,000.00. Salio: TZS 132,000.00"
       final bundleRegex = RegExp(
-        r'Ununuzi\s+wa\s+kifurushi\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)',
+        r'Ununuzi\s+wa\s+kifurushi\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       );
       match = bundleRegex.firstMatch(text);
@@ -120,12 +131,10 @@ class MixxParser implements SmsParser {
         );
       }
 
-      // ========== English-format patterns (Mixx by Yas) ==========
-
-      // 4. English: Sent Money (Expense)
+      // 5. English Sent Money (Expense)
       // Example: "You have sent TSh 20,000 to Airtel receiver STEPHAN MWAKALASYA - 255787273486. Charges TSh 540. VAT TSh 82. New balance is TSh 311,708. TxnID: 26706282103620."
       final engSentRegex = RegExp(
-        r'You have sent TSh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\.(?: Charges| New balance)',
+        r'You have sent\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)(?:\.|\s+Charges|\s+New balance|\s+TxnID|\s+on|$)',
         caseSensitive: false,
       );
       match = engSentRegex.firstMatch(text);
@@ -147,10 +156,10 @@ class MixxParser implements SmsParser {
         );
       }
 
-      // 5. English: Cash-In (Income / Agent Deposit)
+      // 6. English Cash-In (Income / Agent Deposit)
       // Example: "Cash-In of TSh 143,000 from Agent - ELIZA  NYONDO is successful. New balance is TSh 143,000. TxnId: 26694528075313."
       final engCashInRegex = RegExp(
-        r'Cash-In of TSh\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?) is successful',
+        r'Cash-In of\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\s+is successful',
         caseSensitive: false,
       );
       match = engCashInRegex.firstMatch(text);

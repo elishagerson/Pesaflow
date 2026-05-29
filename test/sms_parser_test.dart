@@ -192,6 +192,32 @@ void main() {
       expect(result.amount, 50000);
       expect(result.balanceAfter, 7417600);
     });
+
+    test('Swahili format without tarehe', () {
+      const sms =
+          'Pesa zimewekwa Tsh 50,000.00 na John Doe. Rej: P65AB1C2D. Salio: Tsh 250,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'John Doe');
+      expect(result.reference, 'P65AB1C2D');
+      expect(result.balanceAfter, 25000000);
+    });
+
+    test('ENGLISH format with dashed dates', () {
+      const sms =
+          'Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 2026-05-15 at 14:30 New M-PESA balance is Tsh214,676';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'FREDRICK KIMARO');
+      expect(result.reference, 'Z10DN636');
+      expect(result.balanceAfter, 21467600);
+    });
   });
 
   // ===========================================================================
@@ -242,6 +268,53 @@ void main() {
       const sms = 'Airtel rewards! Pata data bure.';
       final result = parser.parse(sms, now);
       expect(result, isNull);
+    });
+
+    test('ENGLISH: parses received money', () {
+      const sms =
+          'You have received TZS 45,000.00 from 0712345678. TxnID: AT123456. Balance: TZS 300,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 4500000);
+      expect(result.senderOrRecipient, '0712345678');
+      expect(result.reference, 'AT123456');
+      expect(result.balanceAfter, 30000000);
+    });
+
+    test('ENGLISH: parses sent money', () {
+      const sms =
+          'You have sent TZS 20,000.00 to 0765432198. TxnID: AT654321. Balance: TZS 280,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2000000);
+      expect(result.senderOrRecipient, '0765432198');
+      expect(result.reference, 'AT654321');
+      expect(result.balanceAfter, 28000000);
+    });
+
+    test('ENGLISH: parses agent deposit', () {
+      const sms =
+          'You have deposited TZS 100,000.00 to Airtel Money. Balance: TZS 380,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 10000000);
+      expect(result.senderOrRecipient, 'Airtel Money Agent Deposit');
+      expect(result.balanceAfter, 38000000);
+    });
+
+    test('robust name extraction in Swahili', () {
+      const sms =
+          'Umepokea Tsh 45,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Rej: AT123456. Salio: Tsh 300,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.senderOrRecipient, 'JOHN DOE');
     });
   });
 
@@ -317,6 +390,28 @@ void main() {
       expect(result.provider, 'TigoPesa_TZ');
       expect(result.balanceAfter, 14300000);
     });
+
+    test('ENGLISH: parses received money with TZS', () {
+      const sms =
+          'You have received TZS 25,000.00 from 0712345678. TxnID: MX789012. Balance: TZS 150,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 2500000);
+      expect(result.senderOrRecipient, '0712345678');
+      expect(result.reference, 'MX789012');
+      expect(result.balanceAfter, 15000000);
+    });
+
+    test('robust name extraction in Swahili received', () {
+      const sms =
+          'Umepokea TZS 25,000.00 kutoka kwa JOHN DOE tarehe 15/05/2026. Kumbukumbu: MX789012. Salio: TZS 150,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.senderOrRecipient, 'JOHN DOE');
+    });
   });
 
   // ===========================================================================
@@ -346,6 +441,32 @@ void main() {
       expect(result, isNotNull);
       expect(result!.type, 'expense');
       expect(result.amount, 500000);
+      expect(result.reference, 'HP54321');
+      expect(result.balanceAfter, 4500000);
+    });
+
+    test('ENGLISH: parses received money', () {
+      const sms =
+          'You have received TZS 10,000.00 from 0621234567. Ref: HP12345. Balance: TZS 50,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 1000000);
+      expect(result.senderOrRecipient, '0621234567');
+      expect(result.reference, 'HP12345');
+      expect(result.balanceAfter, 5000000);
+    });
+
+    test('ENGLISH: parses sent money', () {
+      const sms =
+          'You have sent TZS 5,000.00 to 0627654321. Ref: HP54321. Balance: TZS 45,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 500000);
+      expect(result.senderOrRecipient, '0627654321');
       expect(result.reference, 'HP54321');
       expect(result.balanceAfter, 4500000);
     });
@@ -522,6 +643,17 @@ void main() {
       expect(result.reference, '0517EQN0Z');
       expect(result.provider, 'SelcomPesa_TZ');
       expect(result.balanceAfter, 31985);
+    });
+
+    test('Swahili/Fallback: parses with special characters in sender name', () {
+      const sms =
+          'Tsh 50,000.00 credited from ELISHA NDUNDULU - Mixx by Yas (255675259341). Ref: S78AB1C2D. Balance: Tsh 100,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'ELISHA NDUNDULU - Mixx by Yas (255675259341)');
     });
   });
 
