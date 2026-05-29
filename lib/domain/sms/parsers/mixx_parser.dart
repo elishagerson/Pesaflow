@@ -17,7 +17,7 @@ class MixxParser implements SmsParser {
 
   int? _extractBalance(String text) {
     final swaRegex = RegExp(
-      r'(?:Salio|Balance|Bal|New balance is):\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
+      r'(?:Salio|Balance|Bal|New balance is)\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
       caseSensitive: false
     );
     final match = swaRegex.firstMatch(text);
@@ -35,7 +35,7 @@ class MixxParser implements SmsParser {
       // 1. Swahili Received Money (Income)
       // Example: "Umepokea TZS 25,000.00 kutoka kwa 0712345678. Kumbukumbu: MX789012. Salio: TZS 150,000.00"
       final receivedRegex = RegExp(
-        r'Umepokea\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kutoka kwa|kutoka)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|$)',
+        r'Umepokea\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kutoka kwa|kutoka)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|\s+tarehe|$)',
         caseSensitive: false,
       );
       var match = receivedRegex.firstMatch(text);
@@ -85,7 +85,7 @@ class MixxParser implements SmsParser {
       // 3. Swahili Sent Money (Expense)
       // Example: "Umetuma TZS 15,000.00 kwa 0765432198. Kumbukumbu: MX210987. Salio: TZS 135,000.00"
       final sentRegex = RegExp(
-        r'Umetuma\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|$)',
+        r'Umetuma\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)(?:\.|\s+Kumbukumbu|\s+Rej|\s+Salio|\s+tarehe|$)',
         caseSensitive: false,
       );
       match = sentRegex.firstMatch(text);

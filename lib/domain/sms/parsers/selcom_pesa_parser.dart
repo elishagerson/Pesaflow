@@ -135,11 +135,11 @@ class SelcomPesaParser implements SmsParser {
       // 5. Extract sender or recipient
       String senderOrRecipient = 'Selcom';
       final toRegex = RegExp(
-        r'\b(?:to|kwa|kwenda)\s+([A-Za-z0-9\s_]+?)(?:\.|\s+tarehe|\s+Ref)',
+        r'\b(?:to|kwa|kwenda)\s+([A-Za-z0-9\s_\-\(\)\+]+?)(?:\.|\s+tarehe|\s+Ref|\s+Updated balance|\s+Salio|\s+Balance|$)',
         caseSensitive: false,
       );
       final fromRegex = RegExp(
-        r'\b(?:from|kutoka(?:\s+kwa)?)\s+([A-Za-z0-9\s_]+?)(?:\.|\s+tarehe|\s+Ref)',
+        r'\b(?:from|kutoka(?:\s+kwa)?)\s+([A-Za-z0-9\s_\-\(\)\+]+?)(?:\.|\s+tarehe|\s+Ref|\s+Updated balance|\s+Salio|\s+Balance|$)',
         caseSensitive: false,
       );
 
