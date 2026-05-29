@@ -26,14 +26,14 @@ class MpesaTzParser implements SmsParser {
 
   int? _extractBalance(String text) {
     // Swahili: Salio: Tsh XXX
-    final salioRegex = RegExp(r'Salio:\s*(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final salioRegex = RegExp(r'Salio:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final match = salioRegex.firstMatch(text);
     if (match != null) {
       return _parseAmount(match.group(1)!);
     }
 
     // English: "New M-PESA balance is Tsh XXX"
-    final engBalRegex = RegExp(r'New\s+M[- ]?PESA\s+balance\s+is\s+Tsh\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final engBalRegex = RegExp(r'New\s+M[- ]?PESA\s+balance\s+is\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final engMatch = engBalRegex.firstMatch(text);
     if (engMatch != null) {
       return _parseAmount(engMatch.group(1)!);
@@ -50,7 +50,7 @@ class MpesaTzParser implements SmsParser {
       // 1. Check for Received Money (Income)
       // Example: "Pesa zimewekwa Tsh 50,000.00 na John Doe tarehe 15/5/2026... Rej: P65AB. Salio: Tsh 250,000.00"
       final receivedRegex = RegExp(
-        r'(?:Pesa zimewekwa|Umepokea|Umepewa)\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:na|kutoka kwa|kutoka)\s+(.+?)\s+tarehe',
+        r'(?:Pesa zimewekwa|Umepokea|Umepewa)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:na|kutoka kwa|kutoka)\s+(.+?)(?:\.|\s+tarehe|\s+Rej|\s+Salio|$)',
         caseSensitive: false,
       );
       var match = receivedRegex.firstMatch(text);
@@ -75,7 +75,7 @@ class MpesaTzParser implements SmsParser {
       // 2. Check for Sent Money (Expense)
       // Example: "Umetuma Tsh 30,000.00 kwa Jane Doe tarehe 15/5/2026... Rej: P65XYZ. Salio: Tsh 220,000.00"
       final sentRegex = RegExp(
-        r'Umetuma\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)\s+tarehe',
+        r'Umetuma\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)(?:\.|\s+tarehe|\s+Rej|\s+Salio|$)',
         caseSensitive: false,
       );
       match = sentRegex.firstMatch(text);
@@ -100,7 +100,7 @@ class MpesaTzParser implements SmsParser {
       // 3. Check for Airtime purchase (Expense/Airtime)
       // Example: "Umenunua airtime Tsh 5,000.00 kwa 0712345678 tarehe 15/5/2026. Rej: A65ABC. Salio: Tsh 215,000.00"
       final airtimeRegex = RegExp(
-        r'Umenunua\s+airtime\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)',
+        r'Umenunua\s+airtime\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       );
       match = airtimeRegex.firstMatch(text);
@@ -124,7 +124,7 @@ class MpesaTzParser implements SmsParser {
       // 4. Check for service fee / carrier deduction (Expense/Fee)
       // Example: "Kodi ya kuhudumia Tsh 500.00 tarehe 15/5/2026. Salio: Tsh 214,500.00"
       final feeRegex = RegExp(
-        r'Kodi\s+ya\s+kuhudumia\s+(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)',
+        r'Kodi\s+ya\s+kuhudumia\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       );
       match = feeRegex.firstMatch(text);
@@ -150,7 +150,7 @@ class MpesaTzParser implements SmsParser {
       // 5. English: Received Money (Income)
       // Example: "Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676"
       final engReceivedRegex = RegExp(
-        r'Confirmed\.\s*You have received Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        r'Confirmed\.\s*You have received\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)(?:\.|\s+on|\s+New M[- ]?PESA|$)',
         caseSensitive: false,
       );
       match = engReceivedRegex.firstMatch(text);
@@ -175,7 +175,7 @@ class MpesaTzParser implements SmsParser {
       // 6. English: Sent Money (Expense)
       // Example: "Z10DN636 Confirmed.You have sent Tsh30,000 to JANE DOE on 27/1/14 at 1:19 PM New M-PESA balance is Tsh184,676"
       final engSentRegex = RegExp(
-        r'Confirmed\.\s*You have sent Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        r'Confirmed\.\s*You have sent\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)(?:\.|\s+on|\s+New M[- ]?PESA|$)',
         caseSensitive: false,
       );
       match = engSentRegex.firstMatch(text);
@@ -200,7 +200,7 @@ class MpesaTzParser implements SmsParser {
       // 7. English: Paid Bills (Expense)
       // Example: "Z10DN636 Confirmed.You have paid Tsh100,000 to ZESA BILLS on 27/1/14 at 1:19 PM New M-PESA balance is Tsh79,676"
       final engPaidRegex = RegExp(
-        r'Confirmed\.\s*You have paid Tsh\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+\d{1,2}/\d{1,2}/\d{2,4}',
+        r'Confirmed\.\s*You have paid\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)(?:\.|\s+on|\s+New M[- ]?PESA|$)',
         caseSensitive: false,
       );
       match = engPaidRegex.firstMatch(text);
@@ -225,7 +225,7 @@ class MpesaTzParser implements SmsParser {
       // 8. English: Airtime Purchase (Expense/Airtime)
       // Example: "Z10DN636 Confirmed.You have bought airtime of Tsh5,000 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,676"
       final engAirtimeRegex = RegExp(
-        r'Confirmed\.\s*You have bought airtime of Tsh\s*([\d,]+(?:\.[\d]{2})?)',
+        r'Confirmed\.\s*You have bought airtime of\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       );
       match = engAirtimeRegex.firstMatch(text);
@@ -249,7 +249,7 @@ class MpesaTzParser implements SmsParser {
       // 9. English: Transaction Fee (Expense/Fee)
       // Example: "Transaction cost Tsh500 on 27/1/14 at 1:19 PM New M-PESA balance is Tsh74,176"
       final engFeeRegex = RegExp(
-        r'Transaction cost Tsh\s*([\d,]+(?:\.[\d]{2})?)',
+        r'Transaction cost\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       );
       match = engFeeRegex.firstMatch(text);
