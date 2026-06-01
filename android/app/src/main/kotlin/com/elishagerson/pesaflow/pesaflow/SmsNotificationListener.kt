@@ -2,6 +2,8 @@ package com.elishagerson.pesaflow.pesaflow
 
 import android.app.Notification
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import io.flutter.plugin.common.MethodChannel
@@ -33,8 +35,16 @@ class SmsNotificationListener : NotificationListenerService() {
             put("timestamp", System.currentTimeMillis())
         }
 
-        // If Flutter is alive, forward immediately via MethodChannel
-        methodChannel?.invokeMethod("onSmsNotification", json.toString())
+        // If Flutter is alive, forward immediately via MethodChannel on the UI main thread
+        methodChannel?.let { channel ->
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    channel.invokeMethod("onSmsNotification", json.toString())
+                } catch (_: Exception) {
+                    // Silently ignore channel errors if engine is not fully initialized
+                }
+            }
+        }
 
         // Always persist to SharedPreferences for startup recovery
         persistPendingSms(json.toString())
