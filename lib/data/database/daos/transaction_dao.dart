@@ -260,4 +260,18 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     );
     await update(transactions).replace(updated);
   }
+
+  /// Finds the category ID of the most recent transaction that matches the description
+  /// or sender/recipient to dynamically adapt auto-categorization based on past history.
+  Future<String?> findLastCategoryForDescription(String description, String senderOrRecipient) async {
+    final query = select(transactions)
+      ..where((t) => t.description.equals(description) | 
+                     t.sender.equals(senderOrRecipient) | 
+                     t.recipient.equals(senderOrRecipient))
+      ..orderBy([OrderingTerm.desc(transactions.createdAt)])
+      ..limit(1);
+    final row = await query.getSingleOrNull();
+    return row?.categoryId;
+  }
 }
+
