@@ -82,4 +82,9 @@ class MainActivity : FlutterActivity() {
         val prefs: SharedPreferences = getSharedPreferences("pesaflow_pending_sms", MODE_PRIVATE)
         prefs.edit().putString("pending_sms_list", "[]").apply()
     }
+
+    override fun onDestroy() {
+        SmsNotificationListener.methodChannel = null
+        super.onDestroy()
+    }
 }
