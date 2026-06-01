@@ -273,5 +273,25 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     final row = await query.getSingleOrNull();
     return row?.categoryId;
   }
+
+  /// Finds an existing transfer transaction between two accounts with the exact same amount
+  /// within a specific time window.
+  Future<Transaction?> findFuzzyTransferMatch({
+    required String accountId,
+    required String destinationAccountId,
+    required int amount,
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    final query = select(transactions)
+      ..where((t) => t.type.equals('transfer') &
+                     t.amount.equals(amount) &
+                     ((t.accountId.equals(accountId) & t.destinationAccountId.equals(destinationAccountId)) |
+                      (t.accountId.equals(destinationAccountId) & t.destinationAccountId.equals(accountId))) &
+                     t.smsTimestamp.isBiggerOrEqual(Constant(start)) &
+                     t.smsTimestamp.isSmallerOrEqual(Constant(end)));
+    final results = await query.get();
+    return results.isNotEmpty ? results.first : null;
+  }
 }
 

@@ -72,4 +72,20 @@ class TransactionRepository {
   Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) {
     return _transactionDao.approveReviewedTransaction(transactionId, newCategoryId: newCategoryId);
   }
+
+  Future<Transaction?> findFuzzyTransferMatch({
+    required String accountId,
+    required String destinationAccountId,
+    required int amount,
+    required DateTime start,
+    required DateTime end,
+  }) {
+    return _transactionDao.findFuzzyTransferMatch(
+      accountId: accountId,
+      destinationAccountId: destinationAccountId,
+      amount: amount,
+      start: start,
+      end: end,
+    );
+  }
 }
