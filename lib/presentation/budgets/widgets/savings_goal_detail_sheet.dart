@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
@@ -117,6 +118,13 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
       ref.invalidate(savingsGoalsStreamProvider);
       ref.invalidate(savingsGoalsTotalSavedProvider);
 
+      // Check if this deposit completed the savings goal milestone (crossed from < 100% to >= 100%)
+      final updatedGoal = await repo.getSavingsGoalById(widget.goal.id);
+      final reachedMilestone = isDeposit &&
+          updatedGoal != null &&
+          updatedGoal.currentAmount >= updatedGoal.targetAmount &&
+          widget.goal.currentAmount < widget.goal.targetAmount;
+
       if (mounted) {
         Navigator.of(context).pop(); // pop amount modal
         ScaffoldMessenger.of(context).showSnackBar(
@@ -129,6 +137,21 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
             backgroundColor: isDeposit ? const Color(0xFF30D158) : const Color(0xFFFF453A),
           ),
         );
+
+        if (reachedMilestone) {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (mounted) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_) => SuccessConfettiDialog(
+                  goalName: widget.goal.name,
+                  targetAmount: widget.goal.targetAmount,
+                ),
+              );
+            }
+          });
+        }
       }
     } catch (e) {
       if (mounted) {
