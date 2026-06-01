@@ -49,6 +49,22 @@ class AutoCategorizer {
 
     final otherCategory = findCategoryByName('Other');
 
+    // 1.5 Dynamic categorization learning from transaction history
+    try {
+      final lastCategoryId = await _transactionDao.findLastCategoryForDescription(description, senderOrRecipient);
+      if (lastCategoryId != null) {
+        final matchedCategory = categories.firstWhere(
+          (cat) => cat.id == lastCategoryId,
+          orElse: () => otherCategory,
+        );
+        if (matchedCategory.id != otherCategory.id) {
+          return AutoCategorizerResult(category: matchedCategory, confidence: 0.99);
+        }
+      }
+    } catch (_) {
+      // Fallback gracefully on query failure (e.g. database not initialized in tests)
+    }
+
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {
       final airtimeCat = findCategoryByName('Airtime');
