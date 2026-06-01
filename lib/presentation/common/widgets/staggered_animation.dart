@@ -34,7 +34,7 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
     _slide = Tween<Offset>(
       begin: Offset(0, widget.offset / 100),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     Future.delayed(Duration(milliseconds: widget.index * 60), () {
       if (mounted) _controller.forward();
