@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/database/app_database.dart';
+import '../../../data/database/daos/transaction_dao.dart';
+import '../../../data/database/database_providers.dart';
 import '../../../data/repositories/category_repository.dart';
 
 final autoCategorizerProvider = Provider<AutoCategorizer>((ref) {
   final categoryRepo = ref.watch(categoryRepositoryProvider);
-  return AutoCategorizer(categoryRepo);
+  final transactionDao = ref.watch(transactionDaoProvider);
+  return AutoCategorizer(categoryRepo, transactionDao);
 });
 
 class AutoCategorizerResult {
@@ -19,8 +22,9 @@ class AutoCategorizerResult {
 
 class AutoCategorizer {
   final CategoryRepository _categoryRepository;
+  final TransactionDao _transactionDao;
 
-  AutoCategorizer(this._categoryRepository);
+  AutoCategorizer(this._categoryRepository, this._transactionDao);
 
   /// Classifies a transaction's category based on details (description, type, senderOrRecipient).
   Future<AutoCategorizerResult> categorize({
