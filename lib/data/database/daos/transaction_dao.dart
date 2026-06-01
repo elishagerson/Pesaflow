@@ -268,7 +268,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       ..where((t) => t.description.equals(description) | 
                      t.sender.equals(senderOrRecipient) | 
                      t.recipient.equals(senderOrRecipient))
-      ..orderBy([OrderingTerm.desc(transactions.createdAt)])
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
     final row = await query.getSingleOrNull();
     return row?.categoryId;
