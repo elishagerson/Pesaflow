@@ -70,22 +70,6 @@ void main() {
       notificationService: notificationService,
     );
 
-    // Initial setup to seed default personal tracker
-    await database.into(database.trackers).insert(Tracker(
-      id: 'default_personal',
-      name: 'Personal',
-      icon: 'person',
-      color: '#0A84FF',
-      isArchived: false,
-      createdAt: DateTime.now(),
-    ));
-
-    // Ensure system settings seeded
-    await database.into(database.appSettings).insert(AppSetting(
-      key: 'active_tracker_id',
-      value: 'default_personal',
-      updatedAt: DateTime.now(),
-    ));
   });
 
   tearDown(() async {
