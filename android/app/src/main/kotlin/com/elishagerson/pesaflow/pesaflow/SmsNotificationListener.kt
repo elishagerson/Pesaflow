@@ -31,10 +31,6 @@ class SmsNotificationListener : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         Log.d(TAG, "onNotificationPosted: pkg=${sbn.packageName} key=${sbn.key}")
 
-        if (sbn.isOccluded) {
-            Log.d(TAG, "Notification is occluded — skipping")
-        }
-
         val extras = sbn.notification.extras ?: return
 
         // SMS apps typically put the sender in EXTRA_TITLE and the body in EXTRA_TEXT
