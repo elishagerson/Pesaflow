@@ -26,22 +26,6 @@ class AutoCategorizer {
 
   AutoCategorizer(this._categoryRepository, this._transactionDao);
 
-  static Category __findCategoryByName(String name, List<Category> categories) {
-    try {
-      return categories.firstWhere(
-        (cat) => cat.name.toLowerCase() == name.toLowerCase(),
-      );
-    } catch (_) {
-      try {
-        return categories.firstWhere(
-          (cat) => cat.name.toLowerCase() == 'other',
-        );
-      } catch (_) {
-        return categories.first;
-      }
-    }
-  }
-
   /// Classifies a transaction's category based on details (description, type, senderOrRecipient).
   Future<AutoCategorizerResult> categorize({
     required String type, // income, expense, airtime, fee
@@ -55,7 +39,23 @@ class AutoCategorizer {
     }
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
-    final otherCategory = __findCategoryByName('Other', categories);
+    Category getCategoryByName(String name) {
+      try {
+        return categories.firstWhere(
+          (cat) => cat.name.toLowerCase() == name.toLowerCase(),
+        );
+      } catch (_) {
+        try {
+          return categories.firstWhere(
+            (cat) => cat.name.toLowerCase() == 'other',
+          );
+        } catch (_) {
+          return categories.first;
+        }
+      }
+    }
+
+    final otherCategory = getCategoryByName('Other');
 
     // 1.5 Dynamic categorization learning from transaction history
     try {
@@ -75,12 +75,12 @@ class AutoCategorizer {
 
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {
-      final airtimeCat = _findCategoryByName('Airtime');
+      final airtimeCat = getCategoryByName('Airtime');
       return AutoCategorizerResult(category: airtimeCat, confidence: 1.0);
     }
 
     if (type == 'fee') {
-      final feeCat = _findCategoryByName('Taxes'); // Map telco fees to system taxes/fees
+      final feeCat = getCategoryByName('Taxes'); // Map telco fees to system taxes/fees
       return AutoCategorizerResult(category: feeCat, confidence: 1.0);
     }
 
@@ -159,7 +159,7 @@ class AutoCategorizer {
     // Scan lowercase combined text for these keywords
     for (final entry in keywordMap.entries) {
       if (lowercaseText.contains(entry.key)) {
-        final cat = _findCategoryByName(entry.value);
+        final cat = getCategoryByName(entry.value);
         return AutoCategorizerResult(category: cat, confidence: 0.95);
       }
     }
