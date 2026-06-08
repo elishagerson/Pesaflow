@@ -26,6 +26,22 @@ class AutoCategorizer {
 
   AutoCategorizer(this._categoryRepository, this._transactionDao);
 
+  static Category _findCategoryByName(String name, List<Category> categories) {
+    try {
+      return categories.firstWhere(
+        (cat) => cat.name.toLowerCase() == name.toLowerCase(),
+      );
+    } catch (_) {
+      try {
+        return categories.firstWhere(
+          (cat) => cat.name.toLowerCase() == 'other',
+        );
+      } catch (_) {
+        return categories.first;
+      }
+    }
+  }
+
   /// Classifies a transaction's category based on details (description, type, senderOrRecipient).
   Future<AutoCategorizerResult> categorize({
     required String type, // income, expense, airtime, fee
@@ -39,26 +55,7 @@ class AutoCategorizer {
     }
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
-    // Helper: finds the first category matching name (case-insensitive)
-    Category _findCategoryByName(String name) {
-      try {
-        return categories.firstWhere(
-          (cat) => cat.name.toLowerCase() == name.toLowerCase(),
-        );
-      } catch (_) {
-        try {
-          return categories.firstWhere(
-            (cat) => cat.name.toLowerCase() == 'other',
-          );
-        } catch (_) {
-          return categories.first;
-        }
-      }
-    }
-
-    final otherCategory = _findCategoryByName('Other');
-
-    final otherCategory = findCategoryByName('Other');
+    final otherCategory = _findCategoryByName('Other', categories);
 
     // 1.5 Dynamic categorization learning from transaction history
     try {
