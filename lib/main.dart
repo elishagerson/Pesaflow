@@ -14,6 +14,8 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
+import 'package:pesaflow/services/budget_alert_service.dart';
+import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 
 void main() {
@@ -101,6 +103,16 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
 
       // Process any SMS notifications captured while app was killed
       await _processPendingSms();
+
+      // Check budget thresholds and send alerts if needed
+      try {
+        await ref.read(budgetAlertServiceProvider).checkAllBudgets();
+      } catch (_) {}
+
+      // Check savings reminder — alert if no saving activity in 7+ days
+      try {
+        await ref.read(savingsReminderServiceProvider).checkAndSendReminder();
+      } catch (_) {}
 
       // Check if Notification Access is enabled; if not, prompt once
       await _checkNotificationAccess();
