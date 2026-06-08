@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -58,8 +57,14 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun isNotificationListenerEnabled(): Boolean {
-        val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(this)
-        return enabledListeners.contains(packageName)
+        // Settings.Secure is the most reliable check across all Android versions.
+        // NotificationManagerCompat.getEnabledListenerPackages() has known
+        // inconsistencies on newer Android/beta releases.
+        val flat = Settings.Secure.getString(
+            contentResolver,
+            "enabled_notification_listeners"
+        )
+        return flat != null && flat.contains(packageName)
     }
 
     private fun openNotificationListenerSettings() {
