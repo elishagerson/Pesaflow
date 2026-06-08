@@ -103,7 +103,7 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   builder: (context, state) {
-                    final budgetId = state.pathParameters['id']!;
+                    final budgetId = state.pathParameters['id'] ?? '';
                     return BudgetDetailScreen(budgetId: budgetId);
                   },
                   routes: [

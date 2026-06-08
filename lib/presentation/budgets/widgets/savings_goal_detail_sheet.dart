@@ -82,6 +82,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
       if (_deductFromWallet && _selectedAccountId != null) {
         final txRepo = ref.read(transactionRepositoryProvider);
         final categories = ref.read(categoriesFutureProvider).value ?? [];
+        if (categories.isEmpty) return;
         
         // Find Savings category or default category
         final savingsCategory = categories.firstWhere(

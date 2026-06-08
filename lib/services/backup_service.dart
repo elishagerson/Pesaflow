@@ -77,7 +77,9 @@ class BackupService {
       return false; // User cancelled
     }
 
-    final pickedFile = File(result.files.single.path!);
+    final filePath = result.files.single.path;
+    if (filePath == null) return false;
+    final pickedFile = File(filePath);
 
     // Premium check: Verify the picked file is a valid SQLite 3 database file
     final bytes = await pickedFile.openRead(0, 16).first;

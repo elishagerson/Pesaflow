@@ -34,11 +34,13 @@ class AutoCategorizer {
   }) async {
     // 1. Fetch all system and user categories to find the correct database reference
     final categories = await _categoryRepository.getCategories();
+    if (categories.isEmpty) {
+      throw StateError('No categories available for auto-categorization');
+    }
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
     // Helper: finds the first category matching name (case-insensitive)
-    Category? _findCategoryByName(String name) {
-      if (categories.isEmpty) return null;
+    Category _findCategoryByName(String name) {
       try {
         return categories.firstWhere(
           (cat) => cat.name.toLowerCase() == name.toLowerCase(),
@@ -54,10 +56,7 @@ class AutoCategorizer {
       }
     }
 
-    final otherCategory = _findCategoryByName('Other') ?? (categories.isNotEmpty ? categories.first : null);
-    if (otherCategory == null) {
-      return const AutoCategorizerResult(category: null, confidence: 0.0);
-    }
+    final otherCategory = _findCategoryByName('Other');
 
     final otherCategory = findCategoryByName('Other');
 
