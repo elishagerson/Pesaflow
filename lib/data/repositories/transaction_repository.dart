@@ -2,16 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/app_database.dart';
 import '../database/daos/transaction_dao.dart';
 import '../database/database_providers.dart';
+import '../../services/budget_alert_service.dart';
 
 final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
   final dao = ref.watch(transactionDaoProvider);
-  return TransactionRepository(dao);
+  final budgetAlertService = ref.watch(budgetAlertServiceProvider);
+  return TransactionRepository(dao, budgetAlertService);
 });
 
 class TransactionRepository {
   final TransactionDao _transactionDao;
+  final BudgetAlertService _budgetAlertService;
 
-  TransactionRepository(this._transactionDao);
+  TransactionRepository(this._transactionDao, this._budgetAlertService);
 
   Stream<List<TransactionWithCategoryAndAccount>> watchFilteredTransactions({
     String? accountId,
@@ -37,8 +40,9 @@ class TransactionRepository {
     return _transactionDao.watchRecentTransactions(limit, trackerId: trackerId);
   }
 
-  Future<void> createTransaction(Transaction transaction) {
-    return _transactionDao.writeTransactionWithBalanceAdjustment(transaction);
+  Future<void> createTransaction(Transaction transaction) async {
+    await _transactionDao.writeTransactionWithBalanceAdjustment(transaction);
+    _budgetAlertService.checkBudgetsAfterTransaction(transaction.categoryId);
   }
 
   Future<void> deleteTransaction(String transactionId) {
