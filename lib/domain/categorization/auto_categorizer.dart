@@ -26,7 +26,7 @@ class AutoCategorizer {
 
   AutoCategorizer(this._categoryRepository, this._transactionDao);
 
-  static Category _findCategoryByName(String name, List<Category> categories) {
+  static Category __findCategoryByName(String name, List<Category> categories) {
     try {
       return categories.firstWhere(
         (cat) => cat.name.toLowerCase() == name.toLowerCase(),
@@ -55,7 +55,7 @@ class AutoCategorizer {
     }
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
-    final otherCategory = _findCategoryByName('Other', categories);
+    final otherCategory = __findCategoryByName('Other', categories);
 
     // 1.5 Dynamic categorization learning from transaction history
     try {
@@ -75,12 +75,12 @@ class AutoCategorizer {
 
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {
-      final airtimeCat = findCategoryByName('Airtime');
+      final airtimeCat = _findCategoryByName('Airtime');
       return AutoCategorizerResult(category: airtimeCat, confidence: 1.0);
     }
 
     if (type == 'fee') {
-      final feeCat = findCategoryByName('Taxes'); // Map telco fees to system taxes/fees
+      final feeCat = _findCategoryByName('Taxes'); // Map telco fees to system taxes/fees
       return AutoCategorizerResult(category: feeCat, confidence: 1.0);
     }
 
@@ -159,7 +159,7 @@ class AutoCategorizer {
     // Scan lowercase combined text for these keywords
     for (final entry in keywordMap.entries) {
       if (lowercaseText.contains(entry.key)) {
-        final cat = findCategoryByName(entry.value);
+        final cat = _findCategoryByName(entry.value);
         return AutoCategorizerResult(category: cat, confidence: 0.95);
       }
     }
