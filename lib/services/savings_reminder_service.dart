@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/data/database/daos/savings_goals_dao.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
-import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/services/notification_service.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
