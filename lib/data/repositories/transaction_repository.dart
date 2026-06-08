@@ -10,9 +10,14 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
   return TransactionRepository(dao, budgetAlertService);
 });
 
+final transactionRepositoryNoAlertsProvider = Provider<TransactionRepository>((ref) {
+  final dao = ref.watch(transactionDaoProvider);
+  return TransactionRepository(dao, null);
+});
+
 class TransactionRepository {
   final TransactionDao _transactionDao;
-  final BudgetAlertService _budgetAlertService;
+  final BudgetAlertService? _budgetAlertService;
 
   TransactionRepository(this._transactionDao, this._budgetAlertService);
 
@@ -42,7 +47,7 @@ class TransactionRepository {
 
   Future<void> createTransaction(Transaction transaction) async {
     await _transactionDao.writeTransactionWithBalanceAdjustment(transaction);
-    _budgetAlertService.checkBudgetsAfterTransaction(transaction.categoryId);
+    _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
   }
 
   Future<void> deleteTransaction(String transactionId) {

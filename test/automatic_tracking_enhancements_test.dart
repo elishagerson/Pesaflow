@@ -14,7 +14,6 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
-import 'package:pesaflow/services/budget_alert_service.dart';
 import 'package:pesaflow/services/notification_service.dart';
 
 class MockNotificationService extends NotificationService {
@@ -28,16 +27,6 @@ class MockNotificationService extends NotificationService {
     required String body,
     bool needsReview = false,
   }) async {}
-}
-
-class MockBudgetAlertService extends BudgetAlertService {
-  MockBudgetAlertService() : super(budgetDao: null!, notificationService: null!);
-
-  @override
-  Future<void> checkBudgetsAfterTransaction(String categoryId) async {}
-
-  @override
-  Future<void> checkAllBudgets() async {}
 }
 
 void main() {
@@ -65,7 +54,7 @@ void main() {
 
     accountRepo = AccountRepository(accountDao);
     categoryRepo = CategoryRepository(categoryDao);
-    transactionRepo = TransactionRepository(transactionDao, MockBudgetAlertService());
+    transactionRepo = TransactionRepository(transactionDao, null);
     settingsRepo = SettingsRepository(settingsDao);
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
