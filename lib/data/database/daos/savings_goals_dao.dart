@@ -58,7 +58,8 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase> with _$SavingsGoalsD
   Future<void> addContribution(SavingsGoalContribution contribution) async {
     await transaction(() async {
       await into(savingsGoalContributions).insert(contribution);
-      final goal = await (select(savingsGoals)..where((t) => t.id.equals(contribution.savingsGoalId))).getSingle();
+      final goal = await (select(savingsGoals)..where((t) => t.id.equals(contribution.savingsGoalId))).getSingleOrNull();
+      if (goal == null) return;
       final newAmount = goal.currentAmount + contribution.amount;
       final isCompleted = newAmount >= goal.targetAmount;
       
@@ -74,9 +75,11 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase> with _$SavingsGoalsD
   /// Deletes a contribution and atomically updates the savings goal current balance & status
   Future<void> deleteContribution(String contributionId) async {
     await transaction(() async {
-      final contribution = await (select(savingsGoalContributions)..where((t) => t.id.equals(contributionId))).getSingle();
+      final contribution = await (select(savingsGoalContributions)..where((t) => t.id.equals(contributionId))).getSingleOrNull();
+      if (contribution == null) return;
       await (delete(savingsGoalContributions)..where((t) => t.id.equals(contributionId))).go();
-      final goal = await (select(savingsGoals)..where((t) => t.id.equals(contribution.savingsGoalId))).getSingle();
+      final goal = await (select(savingsGoals)..where((t) => t.id.equals(contribution.savingsGoalId))).getSingleOrNull();
+      if (goal == null) return;
       final newAmount = goal.currentAmount - contribution.amount;
       final isCompleted = newAmount >= goal.targetAmount;
       

@@ -108,7 +108,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
       // 2. Load the linked account
       final accountQuery = select(accounts)..where((t) => t.id.equals(transaction.accountId));
-      final account = await accountQuery.getSingle();
+      final account = await accountQuery.getSingleOrNull();
+      if (account == null) return;
 
       // 3. Compute new balance
       int balanceDelta = 0;
@@ -131,11 +132,13 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       // 5. For transfers, also credit the destination account
       if (type == 'transfer' && transaction.destinationAccountId != null) {
         final destQuery = select(accounts)..where((t) => t.id.equals(transaction.destinationAccountId!));
-        final destAccount = await destQuery.getSingle();
+        final destAccount = await destQuery.getSingleOrNull();
+        if (destAccount != null) {
         final updatedDest = destAccount.copyWith(
           balance: destAccount.balance + transaction.amount,
         );
         await update(accounts).replace(updatedDest);
+        }
       }
     });
   }
