@@ -204,3 +204,22 @@ final savingsGoalsTotalSavedProvider = Provider<int>((ref) {
     error: (_, __) => 0,
   );
 });
+
+final daysSinceLastSaveProvider = FutureProvider<int>((ref) async {
+  final repo = ref.watch(savingsGoalRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  final goals = await repo.getAllSavingsGoals(trackerId);
+  DateTime? lastDate;
+  for (final goal in goals) {
+    final contributions = await repo.getContributions(goal.id);
+    for (final c in contributions) {
+      if (c.amount > 0) {
+        if (lastDate == null || c.createdAt.isAfter(lastDate)) {
+          lastDate = c.createdAt;
+        }
+      }
+    }
+  }
+  if (lastDate == null) return -1;
+  return DateTime.now().difference(lastDate).inDays;
+});

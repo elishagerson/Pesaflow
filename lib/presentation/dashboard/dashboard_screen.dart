@@ -916,6 +916,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  Widget _buildSavingsReminder(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    final daysSinceLastSaveAsync = ref.watch(daysSinceLastSaveProvider);
+
+    return daysSinceLastSaveAsync.when(
+      data: (days) {
+        if (days < 0) return const SizedBox.shrink();
+        if (days < 5) return const SizedBox.shrink();
+
+        final (icon, message, color) = days >= 14
+            ? (Icons.warning_rounded, 'It\'s been $days days since you saved — set aside some money today!', Colors.orange)
+            : days >= 7
+                ? (Icons.savings_rounded, 'It\'s been $days days since your last deposit — consider saving today.', const Color(0xFF30D158))
+                : (Icons.check_circle_rounded, 'Last saved $days days ago.', const Color(0xFF30D158));
+
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            border: Border.all(color: color.withOpacity(0.15), width: 0.5),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
   Widget _buildSavingsGoalsDashboard(ThemeData theme, BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
@@ -2063,6 +2108,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
               // Budget Progress Rings (Embedded category icons)
               _buildBudgetRings(theme, context),
+              const SizedBox(height: 12),
+
+              // Savings reminder card
+              _buildSavingsReminder(theme),
               const SizedBox(height: 12),
 
               // Savings Goals Target Bento Box
