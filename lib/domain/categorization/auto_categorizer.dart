@@ -37,23 +37,26 @@ class AutoCategorizer {
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
     // Helper: finds the first category matching name (case-insensitive)
-    Category findCategoryByName(String name) {
-      if (categories.isEmpty) {
-        throw StateError('No categories available');
+    Category? _findCategoryByName(String name) {
+      if (categories.isEmpty) return null;
+      try {
+        return categories.firstWhere(
+          (cat) => cat.name.toLowerCase() == name.toLowerCase(),
+        );
+      } catch (_) {
+        try {
+          return categories.firstWhere(
+            (cat) => cat.name.toLowerCase() == 'other',
+          );
+        } catch (_) {
+          return categories.first;
+        }
       }
-      return categories.firstWhere(
-        (cat) => cat.name.toLowerCase() == name.toLowerCase(),
-        orElse: () {
-          try {
-            return categories.firstWhere(
-              (cat) => cat.name.toLowerCase() == 'other',
-              orElse: () => categories.first,
-            );
-          } catch (_) {
-            return categories.first;
-          }
-        },
-      );
+    }
+
+    final otherCategory = _findCategoryByName('Other') ?? (categories.isNotEmpty ? categories.first : null);
+    if (otherCategory == null) {
+      return const AutoCategorizerResult(category: null, confidence: 0.0);
     }
 
     final otherCategory = findCategoryByName('Other');
