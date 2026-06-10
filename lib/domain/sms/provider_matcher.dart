@@ -26,11 +26,12 @@ class ProviderMatcher {
       return 'AirtelMoney_TZ';
     }
 
-    // Tigo Pesa / Mixx by Yas / T-Pesa
+    // Tigo Pesa / Mixx / Yas / T-Pesa
     if (address.contains('TIGO') || 
         address.contains('TIGOPESA') || 
         address.contains('TIGO PESA') || 
         address.contains('MIXX') || 
+        address.contains('YAS') ||
         address.contains('T-PESA') || 
         address.contains('TPESA')) {
       return 'TigoPesa_TZ';
