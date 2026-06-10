@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:flutter/services.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
