@@ -82,7 +82,7 @@ class AnalyticsScreen extends ConsumerWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    _OverviewTab(theme: theme, ref: ref, hexToColor: _hexToColor),
+                    _OverviewTab(theme: theme, ref: ref, hexToColor: hexToColor),
                     _TrendsTab(theme: theme, ref: ref),
                     _InsightsTab(theme: theme, ref: ref),
                   ],

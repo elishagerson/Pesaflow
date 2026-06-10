@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
@@ -209,12 +210,14 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
       themeMode: ThemeMode.system,
       routerConfig: appRouter,
       builder: (context, child) {
-        return Stack(
-          children: [
-            if (child != null) child,
-            // Pending SMS review dialog overlay
-            _PendingReviewOverlay(),
-          ],
+        return ScrollConfiguration(
+          behavior: CupertinoScrollBehavior(),
+          child: Stack(
+            children: [
+              if (child != null) child,
+              _PendingReviewOverlay(),
+            ],
+          ),
         );
       },
     );

@@ -14,6 +14,25 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
+Page<dynamic> _slidePage(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(1, 0),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        )),
+        child: child,
+      );
+    },
+  );
+}
+
 class ScaffoldWithNavBar extends StatelessWidget {
   const ScaffoldWithNavBar({
     required this.navigationShell,
@@ -48,7 +67,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const OnboardingScreen(),
+      pageBuilder: (context, state) => _slidePage(const OnboardingScreen()),
     ),
 
     // Main persistent shell routes
@@ -69,19 +88,21 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/transactions',
-              builder: (context, state) => const TransactionListScreen(),
+              pageBuilder: (context, state) => NoTransitionPage(
+                child: const TransactionListScreen(),
+              ),
               routes: [
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) => const TransactionFormScreen(),
+                  pageBuilder: (context, state) => _slidePage(const TransactionFormScreen()),
                 ),
                 GoRoute(
                   path: 'edit/:id',
                   parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) {
+                  pageBuilder: (context, state) {
                     final transactionId = state.pathParameters['id'];
-                    return TransactionFormScreen(transactionId: transactionId);
+                    return _slidePage(TransactionFormScreen(transactionId: transactionId));
                   },
                 ),
               ],
@@ -92,27 +113,29 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/budgets',
-              builder: (context, state) => const BudgetListScreen(),
+              pageBuilder: (context, state) => NoTransitionPage(
+                child: const BudgetListScreen(),
+              ),
               routes: [
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) => const BudgetFormScreen(),
+                  pageBuilder: (context, state) => _slidePage(const BudgetFormScreen()),
                 ),
                 GoRoute(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
-                  builder: (context, state) {
+                  pageBuilder: (context, state) {
                     final budgetId = state.pathParameters['id'] ?? '';
-                    return BudgetDetailScreen(budgetId: budgetId);
+                    return _slidePage(BudgetDetailScreen(budgetId: budgetId));
                   },
                   routes: [
                     GoRoute(
                       path: 'edit',
                       parentNavigatorKey: _rootNavigatorKey,
-                      builder: (context, state) {
+                      pageBuilder: (context, state) {
                         final budgetId = state.pathParameters['id'];
-                        return BudgetFormScreen(budgetId: budgetId);
+                        return _slidePage(BudgetFormScreen(budgetId: budgetId));
                       },
                     ),
                   ],
@@ -125,7 +148,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/analytics',
-              builder: (context, state) => const AnalyticsScreen(),
+              pageBuilder: (context, state) => NoTransitionPage(
+                child: const AnalyticsScreen(),
+              ),
             ),
           ],
         ),
@@ -133,7 +158,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/settings',
-              builder: (context, state) => const SettingsScreen(),
+              pageBuilder: (context, state) => NoTransitionPage(
+                child: const SettingsScreen(),
+              ),
             ),
           ],
         ),
@@ -144,7 +171,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const SmsReviewScreen(),
+      pageBuilder: (context, state) => _slidePage(const SmsReviewScreen()),
     ),
   ],
 );
