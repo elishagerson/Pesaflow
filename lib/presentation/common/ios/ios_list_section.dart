@@ -150,18 +150,15 @@ class IosListRow extends StatelessWidget {
       Theme.of(context).brightness == Brightness.dark;
 }
 
-class IosToggleRow extends StatelessWidget {
-  final Widget? leading;
-  final Widget title;
-  final Widget? subtitle;
+class IosToggleRow extends IosListRow {
   final bool value;
   final ValueChanged<bool> onChanged;
 
   const IosToggleRow({
     super.key,
-    this.leading,
-    required this.title,
-    this.subtitle,
+    super.leading,
+    required super.title,
+    super.subtitle,
     required this.value,
     required this.onChanged,
   });
@@ -184,20 +181,14 @@ class IosToggleRow extends StatelessWidget {
   }
 }
 
-class IosNavigationRow extends StatelessWidget {
-  final Widget? leading;
-  final Widget title;
-  final Widget? subtitle;
-  final VoidCallback? onTap;
-  final Color? tintColor;
-
+class IosNavigationRow extends IosListRow {
   const IosNavigationRow({
     super.key,
-    this.leading,
-    required this.title,
-    this.subtitle,
-    this.onTap,
-    this.tintColor,
+    super.leading,
+    required super.title,
+    super.subtitle,
+    super.onTap,
+    super.tintColor,
   });
 
   @override

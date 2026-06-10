@@ -10,6 +10,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
@@ -676,7 +677,167 @@ class BudgetListScreen extends ConsumerWidget {
                       ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
                       : 0.0;
                   final daysLeft = _calculateDaysRemaining(goal.targetDate);
-                  
+
+                  return TactileSpringContainer(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => SavingsGoalDetailSheet(goal: goal),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(
+                          color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
+                          width: 0.5,
+                        ),
+                      ),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(width: 5, color: goalColor),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        // Circular Progress Ring
+                                        SizedBox(
+                                          height: 48,
+                                          width: 48,
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              PieChart(PieChartData(
+                                                startDegreeOffset: -90,
+                                                sectionsSpace: 0,
+                                                centerSpaceRadius: 16,
+                                                sections: [
+                                                  PieChartSectionData(
+                                                    value: goalPct * 100,
+                                                    color: goalColor,
+                                                    radius: 4,
+                                                    showTitle: false,
+                                                  ),
+                                                  PieChartSectionData(
+                                                    value: (1.0 - goalPct) * 100,
+                                                    color: goalColor.withOpacity(0.12),
+                                                    radius: 4,
+                                                    showTitle: false,
+                                                  ),
+                                                ],
+                                              )),
+                                              Icon(
+                                                getGoalIcon(goal.icon),
+                                                color: goalColor,
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 14),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                goal.name,
+                                                style: theme.textTheme.titleSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
+                                                style: theme.textTheme.bodySmall?.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            if (goal.isCompleted)
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(0xFF30D158).withOpacity(0.12),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                child: const Text(
+                                                  'COMPLETED',
+                                                  style: TextStyle(
+                                                    fontSize: 9,
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Color(0xFF30D158),
+                                                  ),
+                                                ),
+                                              )
+                                            else
+                                              Text(
+                                                '$daysLeft days remaining',
+                                                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                              ),
+                                            const SizedBox(height: 4),
+                                            GestureDetector(
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  backgroundColor: Colors.transparent,
+                                                  builder: (context) => SavingsGoalFormSheet(existingGoal: goal),
+                                                );
+                                              },
+                                              child: Text(
+                                                'Edit',
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: theme.colorScheme.primary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 14),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          CurrencyFormatter.formatCents(goal.currentAmount),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Target: ' + CurrencyFormatter.formatCents(goal.targetAmount),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: theme.colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: LinearProgressIndicator(
+                                        value: goalPct,
                                         backgroundColor: goalColor.withOpacity(0.12),
                                         color: goalColor,
                                         minHeight: 6,
@@ -707,4 +868,3 @@ class BudgetListScreen extends ConsumerWidget {
     );
   }
 }
-
