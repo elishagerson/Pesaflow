@@ -1,6 +1,6 @@
 class SmsParsed {
   final int amount; // Amount in TZS cents (to prevent floating-point arithmetic errors)
-  final String type; // income, expense, airtime, fee
+  final String type; // income, expense, airtime, fee, loan
   final String senderOrRecipient;
   final String reference;
   final String provider;

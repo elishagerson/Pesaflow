@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:telephony/telephony.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
@@ -89,9 +90,17 @@ class SmsBackgroundService {
   Future<void> _scanInboxOnce() async {
     final now = DateTime.now();
     try {
-      final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-      if (granted != true) {
-        developer.log('Inbox scan skipped: permissions not granted', name: 'SmsBackground');
+      try {
+        final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
+        if (granted != true) {
+          developer.log('Inbox scan skipped: permissions not granted', name: 'SmsBackground');
+          return;
+        }
+      } on MissingPluginException {
+        developer.log('Telephony plugin not available — skipping inbox scan', name: 'SmsBackground');
+        return;
+      } catch (e) {
+        developer.log('Permission request failed: $e', name: 'SmsBackground');
         return;
       }
 
@@ -118,6 +127,8 @@ class SmsBackgroundService {
 
       _lastInboxScan = now;
       developer.log('Inbox startup scan: $processed financial SMS processed', name: 'SmsBackground');
+    } on MissingPluginException {
+      developer.log('Telephony plugin not available — inbox scan failed', name: 'SmsBackground');
     } catch (e) {
       developer.log('Inbox startup scan failed: $e', name: 'SmsBackground');
     }
@@ -126,19 +137,31 @@ class SmsBackgroundService {
   /// Periodically scans the inbox (every 5 minutes) to catch any SMS missed
   /// by the notification listener or broadcast receiver.
   void _startPeriodicInboxScan() {
-    _inboxScanTimer?.cancel();
-    _inboxScanTimer = Timer.periodic(
-      const Duration(minutes: 5),
-      (_) => _scanRecentInbox(),
-    );
-    developer.log('Periodic inbox scan timer started (every 5 min)', name: 'SmsBackground');
+    try {
+      _inboxScanTimer?.cancel();
+      _inboxScanTimer = Timer.periodic(
+        const Duration(minutes: 5),
+        (_) => _scanRecentInbox(),
+      );
+      developer.log('Periodic inbox scan timer started (every 5 min)', name: 'SmsBackground');
+    } catch (e) {
+      developer.log('Periodic inbox scan timer creation failed: $e', name: 'SmsBackground');
+    }
   }
 
   Future<void> _scanRecentInbox() async {
     final now = DateTime.now();
     try {
-      final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-      if (granted != true) return;
+      try {
+        final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
+        if (granted != true) return;
+      } on MissingPluginException {
+        developer.log('Telephony plugin not available — skipping periodic scan', name: 'SmsBackground');
+        return;
+      } catch (e) {
+        developer.log('Permission request failed: $e', name: 'SmsBackground');
+        return;
+      }
 
       final messages = await _telephony.getInboxSms(
         columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.DATE],
@@ -165,6 +188,8 @@ class SmsBackgroundService {
       if (processed > 0) {
         developer.log('Periodic inbox scan: $processed new financial SMS processed', name: 'SmsBackground');
       }
+    } on MissingPluginException {
+      developer.log('Telephony plugin not available — periodic inbox scan failed', name: 'SmsBackground');
     } catch (e) {
       developer.log('Periodic inbox scan failed: $e', name: 'SmsBackground');
     }

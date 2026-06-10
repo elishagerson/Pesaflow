@@ -341,15 +341,35 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
-      // Reconcile account balance to the exact balanceAfter specified in the SMS,
-      // resolving any double-adjustments and repairing out-of-sync balances.
+      // Reconcile account balance: if SMS provides balanceAfter, use it as ground truth.
+      // Otherwise, ensure the DAO adjustment was applied correctly.
       if (smsParsed.balanceAfter != null) {
+        // SMS carriers report the exact balance after transaction — this is ground truth
+        final reconciledAccount = targetAccount.copyWith(
+          balance: smsParsed.balanceAfter!,
+        );
+        await _accountRepo.updateAccount(reconciledAccount);
+        developer.log(
+          'Balance reconciled to ${smsParsed.balanceAfter} (from SMS, ${smsParsed.type})',
+          name: 'SmsProcessor',
+        );
+      } else {
+        // No balanceAfter in SMS — ensure the account reflects the transaction
         final currentAccount = await _accountRepo.getAccountById(targetAccount.id);
-        if (currentAccount != null) {
-          final reconciledAccount = currentAccount.copyWith(
-            balance: smsParsed.balanceAfter!,
+        if (currentAccount != null && finalType != 'transfer') {
+          final delta = (finalType == 'income' || finalType == 'loan') 
+              ? smsParsed.amount 
+              : -smsParsed.amount;
+          final expectedBalance = currentAccount.balance + delta;
+          developer.log(
+            'No balanceAfter in SMS — expected balance $expectedBalance (current: ${currentAccount.balance}, delta: $delta, type: ${smsParsed.type})',
+            name: 'SmsProcessor',
           );
-          await _accountRepo.updateAccount(reconciledAccount);
+          if (currentAccount.balance != expectedBalance) {
+            final correctedAccount = currentAccount.copyWith(balance: expectedBalance);
+            await _accountRepo.updateAccount(correctedAccount);
+            developer.log('Balance corrected from ${currentAccount.balance} to $expectedBalance', name: 'SmsProcessor');
+          }
         }
       }
 
