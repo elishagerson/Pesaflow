@@ -1471,152 +1471,134 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final Color pillBorder = isDark ? const Color(0x1AFFFFFF) : const Color(0x33FFFFFF);
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+      appBar: IosNavBar(
+        title: _getGreeting(),
+        largeTitle: true,
+        leading: TactileSpringContainer(
+          onTap: () => _showWorkspaceSelectorSheet(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF161618) : Colors.white,
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                width: 0.5,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: trackerColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  trackerName,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 14,
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TactileSpringContainer(
+            onTap: () => context.go('/settings'),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isDark
+                      ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
+                      : [Colors.grey[200]!, Colors.grey[300]!],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
+                  width: 0.5,
+                ),
+              ),
+              child: Icon(
+                Icons.person_outline_rounded,
+                color: isDark ? Colors.white : Colors.black,
+                size: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          TactileSpringContainer(
+            onTap: () => context.push('/sms-review'),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF161618) : Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.notifications_none_rounded,
+                    size: 20,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+                if (pendingReviewCount > 0)
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF453A),
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: isDark ? Colors.black : Colors.white,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Text(
+                        '$pendingReviewCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(top: false, child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── 1. Elegant Top Bar (Mobbin inspired) ──
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Left: Account Avatar Settings Trigger
-                  TactileSpringContainer(
-                    onTap: () => context.go('/settings'),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: isDark
-                              ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
-                              : [Colors.grey[200]!, Colors.grey[300]!],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
-                          width: 0.5,
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.person_outline_rounded,
-                        color: isDark ? Colors.white : Colors.black,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-
-                  // Center: PesaFlow Active Workspace Selector
-                  TactileSpringContainer(
-                    onTap: () => _showWorkspaceSelectorSheet(context),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF161618) : Colors.white,
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                          width: 0.5,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: trackerColor,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            trackerName,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            size: 14,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Right: Notification Bell Trigger
-                  TactileSpringContainer(
-                    onTap: () => context.push('/sms-review'),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF161618) : Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                              width: 0.5,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.notifications_none_rounded,
-                            size: 20,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        if (pendingReviewCount > 0)
-                          Positioned(
-                            right: -2,
-                            top: -2,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFF453A),
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: isDark ? Colors.black : Colors.white,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Text(
-                                '$pendingReviewCount',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              
-              // Salutation Greeting Section
-              Text(
-                _getGreeting(),
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: isDark ? Colors.white : Colors.black,
-                  letterSpacing: -0.8,
-                ),
-              ),
-              const SizedBox(height: 20),
 
               // ── 2. "pesaflow cash" Floating Balance Hero Card ──
               Container(
