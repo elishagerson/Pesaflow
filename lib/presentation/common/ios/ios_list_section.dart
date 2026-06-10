@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class IosListSection extends StatelessWidget {
   final String? header;
@@ -36,16 +37,11 @@ class IosListSection extends StatelessWidget {
               ),
             ),
           ),
-        Container(
+        GlassCard(
           margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
-            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            border: Border.all(
-              color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-              width: 0.5,
-            ),
-          ),
+          padding: EdgeInsets.zero,
+          frosted: true,
+          borderRadius: AppTheme.radiusCard,
           child: Column(
             children: List.generate(rows.length, (index) {
               final row = rows[index];

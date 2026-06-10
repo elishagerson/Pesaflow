@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 
 enum AmountType { income, expense, transfer, neutral }
 
-class AmountText extends StatelessWidget {
+class AmountText extends ConsumerWidget {
   final int amountInCents;
   final AmountType type;
   final TextStyle? style;
@@ -21,7 +23,7 @@ class AmountText extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -49,10 +51,13 @@ class AmountText extends StatelessWidget {
             fontWeight: baseStyle.fontWeight ?? FontWeight.w900,
           );
 
+    final globalShowDecimals = ref.watch(currencyShowDecimalsProvider).value ?? false;
+    final finalShowDecimals = showDecimals || globalShowDecimals;
+
     // Build the string representation: Prepend +/- signs for visually dynamic grids
     String displayString = CurrencyFormatter.formatCents(
       amountInCents,
-      showDecimals: showDecimals,
+      showDecimals: finalShowDecimals,
     );
 
     if (type == AmountType.income) {

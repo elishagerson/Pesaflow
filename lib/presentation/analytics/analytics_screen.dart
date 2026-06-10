@@ -36,21 +36,22 @@ class AnalyticsScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Container(
                   height: 38,
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLowLight,
-                    borderRadius: BorderRadius.circular(9),
+                    color: isDark ? const Color(0xE60F1013) : const Color(0xE6E5E5EA),
+                    borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: isDark ? const Color(0x10FFFFFF) : Colors.transparent,
+                      color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
                       width: 0.5,
                     ),
                   ),
                   child: TabBar(
                     indicatorSize: TabBarIndicatorSize.tab,
                     dividerColor: Colors.transparent,
-                    indicatorPadding: const EdgeInsets.all(2),
+                    indicatorPadding: EdgeInsets.zero,
                     indicator: BoxDecoration(
-                      color: isDark ? const Color(0xFF242426) : Colors.white,
-                      borderRadius: BorderRadius.circular(7),
+                      color: isDark ? const Color(0xFF2C2D35) : Colors.white,
+                      borderRadius: BorderRadius.circular(100),
                       boxShadow: isDark
                           ? []
                           : [
@@ -62,14 +63,14 @@ class AnalyticsScreen extends ConsumerWidget {
                             ],
                     ),
                     labelColor: isDark ? Colors.white : Colors.black,
-                    unselectedLabelColor: isDark ? Colors.grey[400] : Colors.grey[600],
+                    unselectedLabelColor: isDark ? Colors.grey[600] : Colors.grey[500],
                     labelStyle: const TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
                     ),
                     unselectedLabelStyle: const TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
                     ),
                     tabs: const [
                       Tab(text: 'Overview'),
@@ -94,6 +95,16 @@ class AnalyticsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+Gradient _getCategoryNeonGradient(Color baseColor) {
+  final hsl = HSLColor.fromColor(baseColor);
+  final brighter = hsl.withLightness((hsl.lightness + 0.15).clamp(0.0, 1.0)).withSaturation((hsl.saturation + 0.1).clamp(0.0, 1.0)).toColor();
+  return LinearGradient(
+    colors: [brighter, baseColor],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
 
 class _OverviewTab extends StatelessWidget {
@@ -126,7 +137,7 @@ class _OverviewTab extends StatelessWidget {
 
               return GlassCard(
                 padding: const EdgeInsets.all(20),
-                frosted: false,
+                frosted: true,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('THIS MONTH', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600], fontSize: 11, letterSpacing: 1.2, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
@@ -192,7 +203,7 @@ class _OverviewTab extends StatelessWidget {
                           width: 250,
                           child: GlassCard(
                             padding: const EdgeInsets.all(16),
-                            frosted: false,
+                            frosted: true,
                             child: Row(
                             children: [
                               SizedBox(
@@ -373,110 +384,149 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Category Donut
-          Text('Top Spending Categories', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16),
-          categoriesAsync.when(
-            data: (cats) {
-              if (cats.isEmpty) return const Center(child: Text('No spending data yet', style: TextStyle(color: Colors.grey)));
-              final total = cats.fold<int>(0, (s, c) => s + c.amount);
-              final colors = [theme.colorScheme.primary, const Color(0xFFF59E0B), const Color(0xFF3B82F6), const Color(0xFF8B5CF6), const Color(0xFFEF4444)];
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 140,
-                    width: 140,
-                    child: PieChart(PieChartData(
-                      sectionsSpace: 2, centerSpaceRadius: 40,
-                      sections: List.generate(cats.length, (i) => PieChartSectionData(
-                        value: cats[i].amount.toDouble(), color: i < colors.length ? colors[i] : hexToColor(cats[i].categoryColor),
-                        radius: 20, showTitle: false,
-                      )),
-                    )),
+          // Category Donut inside a beautiful GlassCard
+          GlassCard(
+            padding: const EdgeInsets.all(20),
+            frosted: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'TOP SPENDING CATEGORIES',
+                  style: TextStyle(
+                    color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 11,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(cats.length, (i) {
-                        final cat = cats[i];
-                        final color = i < colors.length ? colors[i] : hexToColor(cat.categoryColor);
-                        final pct = total > 0 ? (cat.amount / total * 100).round() : 0;
-                        final double pctFactor = total > 0 ? (cat.amount / total) : 0.0;
-                        
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
+                ),
+                const SizedBox(height: 20),
+                categoriesAsync.when(
+                  data: (cats) {
+                    if (cats.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          child: Text('No spending data yet', style: TextStyle(color: Colors.grey)),
+                        ),
+                      );
+                    }
+                    final total = cats.fold<int>(0, (s, c) => s + c.amount);
+                    final colors = [
+                      theme.colorScheme.primary,
+                      const Color(0xFFF59E0B),
+                      const Color(0xFF3B82F6),
+                      const Color(0xFF8B5CF6),
+                      const Color(0xFFEF4444)
+                    ];
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 120,
+                          width: 120,
+                          child: PieChart(
+                            PieChartData(
+                              sectionsSpace: 2,
+                              centerSpaceRadius: 36,
+                              sections: List.generate(cats.length, (i) {
+                                final cat = cats[i];
+                                final color = i < colors.length ? colors[i] : hexToColor(cat.categoryColor);
+                                return PieChartSectionData(
+                                  value: cat.amount.toDouble(),
+                                  gradient: _getCategoryNeonGradient(color),
+                                  radius: 18,
+                                  showTitle: false,
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 8,
-                                        height: 8,
-                                        decoration: BoxDecoration(
-                                          color: color,
-                                          shape: BoxShape.circle,
+                            children: List.generate(cats.length, (i) {
+                              final cat = cats[i];
+                              final color = i < colors.length ? colors[i] : hexToColor(cat.categoryColor);
+                              final pct = total > 0 ? (cat.amount / total * 100).round() : 0;
+                              final double pctFactor = total > 0 ? (cat.amount / total) : 0.0;
+                              
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 10,
+                                              height: 4,
+                                              decoration: BoxDecoration(
+                                                gradient: _getCategoryNeonGradient(color),
+                                                borderRadius: BorderRadius.circular(2),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              cat.categoryName,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        cat.categoryName,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
+                                        Text(
+                                          '$pct%',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[400],
+                                          ),
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '$pct%',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[400],
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              // Curved progress track
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Container(
-                                  height: 5,
-                                  width: double.infinity,
-                                  color: Colors.white.withOpacity(0.06),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: FractionallySizedBox(
-                                      widthFactor: pctFactor,
+                                    const SizedBox(height: 4),
+                                    // Curved progress track
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                          color: color,
-                                          borderRadius: BorderRadius.circular(100),
+                                        height: 5,
+                                        width: double.infinity,
+                                        color: Colors.white.withOpacity(0.06),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: FractionallySizedBox(
+                                            widthFactor: pctFactor,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: _getCategoryNeonGradient(color),
+                                                borderRadius: BorderRadius.circular(100),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            }),
                           ),
-                        );
-                      }),
-                    ),
-                  ),
-                ],
-              );
-            },
-            loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
-            error: (e, _) => Text('Error: $e'),
+                        ),
+                      ],
+                    );
+                  },
+                  loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
+                  error: (e, _) => Text('Error: $e'),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -536,13 +586,9 @@ class _TrendsTab extends StatelessWidget {
                 if (exp > maxVal) maxVal = exp;
               }
 
-              return Container(
+              return GlassCard(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0x15FFFFFF), width: 0.5),
-                ),
+                frosted: true,
                 child: Column(
                   children: [
                     SizedBox(
@@ -582,7 +628,7 @@ class _TrendsTab extends StatelessWidget {
                               return spotIndexes.map((spotIndex) {
                                 return TouchedSpotIndicatorData(
                                   FlLine(
-                                    color: barData.color?.withOpacity(0.3) ?? Colors.grey,
+                                    color: (barData.gradient?.colors.first ?? Colors.grey).withOpacity(0.3),
                                     strokeWidth: 2,
                                     dashArray: [4, 4],
                                   ),
@@ -591,7 +637,7 @@ class _TrendsTab extends StatelessWidget {
                                     getDotPainter: (spot, percent, barData, index) {
                                       return FlDotCirclePainter(
                                         radius: 6,
-                                        color: barData.color ?? Colors.grey,
+                                        color: barData.gradient?.colors.first ?? Colors.grey,
                                         strokeWidth: 2,
                                         strokeColor: Colors.white,
                                       );
@@ -646,11 +692,16 @@ class _TrendsTab extends StatelessWidget {
                           minY: 0,
                           maxY: maxVal * 1.15,
                           lineBarsData: [
-                            // Green Income line
+                            // Neon Cyan/Blue Income line
                             LineChartBarData(
                               spots: incomeSpots,
                               isCurved: true,
-                              color: const Color(0xFF00E5FF),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF00E5FF),
+                                  Color(0xFF0A84FF),
+                                ],
+                              ),
                               barWidth: 3,
                               isStrokeCapRound: true,
                               dotData: const FlDotData(show: false),
@@ -658,7 +709,7 @@ class _TrendsTab extends StatelessWidget {
                                 show: true,
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFF00E5FF).withOpacity(0.12),
+                                    const Color(0xFF00E5FF).withOpacity(0.24),
                                     const Color(0xFF00E5FF).withOpacity(0.0),
                                   ],
                                   begin: Alignment.topCenter,
@@ -666,11 +717,16 @@ class _TrendsTab extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // Red Expense line
+                            // Neon Pink/Red Expense line
                             LineChartBarData(
                               spots: expenseSpots,
                               isCurved: true,
-                              color: const Color(0xFFFF453A),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFFFF453A),
+                                  Color(0xFFE11D48),
+                                ],
+                              ),
                               barWidth: 3,
                               isStrokeCapRound: true,
                               dotData: const FlDotData(show: false),
@@ -678,7 +734,7 @@ class _TrendsTab extends StatelessWidget {
                                 show: true,
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFFFF453A).withOpacity(0.12),
+                                    const Color(0xFFFF453A).withOpacity(0.24),
                                     const Color(0xFFFF453A).withOpacity(0.0),
                                   ],
                                   begin: Alignment.topCenter,
@@ -766,84 +822,75 @@ class _InsightsTab extends StatelessWidget {
               end: Alignment.bottomRight,
             );
 
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+            return GlassCard(
               margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(
-                gradient: gradient,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: color.withOpacity(0.25),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withOpacity(0.02),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Left colored accent border strip
-                      Container(
-                        width: 5,
+              frosted: true,
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Left colored accent border strip with glowing shadow
+                    Container(
+                      width: 5,
+                      decoration: BoxDecoration(
                         color: color,
-                      ),
-                      // Content Row
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: color.withOpacity(0.12),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  _getInsightIcon(insight.icon),
-                                  color: color,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      insight.title,
-                                      style: theme.textTheme.titleSmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      insight.message,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.85),
-                                        height: 1.4,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withOpacity(0.4),
+                            blurRadius: 6,
+                            spreadRadius: 1,
                           ),
+                        ],
+                      ),
+                    ),
+                    // Content Row
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(0.12),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                _getInsightIcon(insight.icon),
+                                color: color,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    insight.title,
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    insight.message,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant.withOpacity(0.85),
+                                      height: 1.4,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

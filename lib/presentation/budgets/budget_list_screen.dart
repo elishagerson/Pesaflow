@@ -93,10 +93,14 @@ class BudgetListScreen extends ConsumerWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFE5E5EA),
-        borderRadius: BorderRadius.circular(12),
+        color: isDark ? const Color(0xE60F1013) : const Color(0xE6E5E5EA),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
+          width: 0.5,
+        ),
       ),
       child: Row(
         children: [
@@ -113,28 +117,19 @@ class BudgetListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: activeTab == 0
-                      ? (isDark ? const Color(0xFF2C2C2E) : Colors.white)
+                      ? (isDark ? const Color(0xFF2C2D35) : Colors.white)
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(9),
-                  boxShadow: activeTab == 0
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(isDark ? 0.4 : 0.06),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : [],
+                  borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
                   'Category Budgets',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
                     color: activeTab == 0
                         ? (isDark ? Colors.white : Colors.black)
-                        : (isDark ? Colors.grey[500] : Colors.grey[600]),
+                        : (isDark ? Colors.grey[600] : Colors.grey[500]),
                   ),
                 ),
               ),
@@ -153,28 +148,19 @@ class BudgetListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: activeTab == 1
-                      ? (isDark ? const Color(0xFF2C2C2E) : Colors.white)
+                      ? (isDark ? const Color(0xFF2C2D35) : Colors.white)
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(9),
-                  boxShadow: activeTab == 1
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(isDark ? 0.4 : 0.06),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : [],
+                  borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
                   'Savings Goals',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
                     color: activeTab == 1
                         ? (isDark ? Colors.white : Colors.black)
-                        : (isDark ? Colors.grey[500] : Colors.grey[600]),
+                        : (isDark ? Colors.grey[600] : Colors.grey[500]),
                   ),
                 ),
               ),
@@ -255,12 +241,19 @@ class BudgetListScreen extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
-              color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+              color: isDark ? const Color(0xFF1B1C22).withOpacity(0.65) : Colors.white,
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
                 width: 0.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,141 +347,140 @@ class BudgetListScreen extends ConsumerWidget {
 
             final catColor = hexToColor(bp.category.color);
 
-            return TactileSpringContainer(
-              onTap: () => context.go('/budgets/${bp.budget.id}'),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
-                    width: 0.5,
-                  ),
-                ),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(width: 5, color: catColor),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+            return Container(
+              margin: const EdgeInsets.only(bottom: 14),
+              child: GlassCard(
+                borderRadius: 20,
+                onTap: () => context.go('/budgets/${bp.budget.id}'),
+                backgroundColor: isDark ? const Color(0xFF1B1C22).withOpacity(0.65) : Colors.white,
+                accentColor: catColor,
+                accentWidth: 2.5,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: catColor.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            getCategoryIcon(bp.category.icon),
+                            color: catColor,
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: catColor.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Icon(
-                                      getCategoryIcon(bp.category.icon),
-                                      color: catColor,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          bp.budget.name,
-                                          style: theme.textTheme.titleSmall?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          bp.category.name,
-                                          style: theme.textTheme.bodySmall?.copyWith(
-                                            color: theme.colorScheme.onSurfaceVariant,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: status.isOverBudget
-                                              ? theme.colorScheme.error.withOpacity(0.1)
-                                              : status.isOnTrack
-                                                  ? (isDark ? const Color(0x1F00E5FF) : const Color(0x1F0A84FF))
-                                                  : Colors.orange.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Text(
-                                          status.paceLabel,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                            color: status.isOverBudget
-                                                ? theme.colorScheme.error
-                                                : status.isOnTrack
-                                                    ? (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))
-                                                    : Colors.orange,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '${status.daysLeft} days left',
-                                        style: const TextStyle(fontSize: 11, color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AmountText(
-                                    amountInCents: bp.spentInPeriod,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: status.isOverBudget ? theme.colorScheme.error : null,
-                                    ),
-                                  ),
-                                  AmountText(
-                                    amountInCents: status.allocated,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: LinearProgressIndicator(
-                                  value: status.percentage.clamp(0.0, 1.0),
-                                  backgroundColor: catColor.withOpacity(0.15),
-                                  color: status.isOverBudget ? theme.colorScheme.error : catColor,
-                                  minHeight: 6,
+                              Text(
+                                bp.budget.name,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                  color: isDark ? Colors.white : Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 2),
                               Text(
-                                '${(status.percentage * 100).round()}% used',
-                                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                bp.category.name,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: isDark ? Colors.white38 : Colors.black38,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: status.isOverBudget
+                                    ? const Color(0xFFFF453A).withOpacity(0.15)
+                                    : status.isOnTrack
+                                        ? const Color(0xFF30D158).withOpacity(0.15)
+                                        : Colors.orange.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                status.paceLabel.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w900,
+                                  color: status.isOverBudget
+                                      ? const Color(0xFFFF453A)
+                                      : status.isOnTrack
+                                          ? const Color(0xFF30D158)
+                                          : Colors.orange,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${status.daysLeft} days left',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: isDark ? Colors.white30 : Colors.black38,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AmountText(
+                          amountInCents: bp.spentInPeriod,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: status.isOverBudget ? const Color(0xFFFF453A) : (isDark ? Colors.white : Colors.black),
+                          ),
+                        ),
+                        AmountText(
+                          amountInCents: status.allocated,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.white54 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: LinearProgressIndicator(
+                        value: status.percentage.clamp(0.0, 1.0),
+                        backgroundColor: isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.black.withOpacity(0.05),
+                        color: status.isOverBudget ? const Color(0xFFFF453A) : catColor,
+                        minHeight: 6,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${(status.percentage * 100).round()}% used',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: isDark ? Colors.white30 : Colors.black38,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -581,12 +573,19 @@ class BudgetListScreen extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                  color: isDark ? const Color(0xFF1B1C22).withOpacity(0.65) : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+                    color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
                     width: 0.5,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -678,166 +677,6 @@ class BudgetListScreen extends ConsumerWidget {
                       : 0.0;
                   final daysLeft = _calculateDaysRemaining(goal.targetDate);
                   
-                  return TactileSpringContainer(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => SavingsGoalDetailSheet(goal: goal),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(
-                          color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
-                          width: 0.5,
-                        ),
-                      ),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Container(width: 5, color: goalColor),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        // Circular Progress Ring
-                                        SizedBox(
-                                          height: 48,
-                                          width: 48,
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              PieChart(PieChartData(
-                                                startDegreeOffset: -90,
-                                                sectionsSpace: 0,
-                                                centerSpaceRadius: 16,
-                                                sections: [
-                                                  PieChartSectionData(
-                                                    value: goalPct * 100,
-                                                    color: goalColor,
-                                                    radius: 4,
-                                                    showTitle: false,
-                                                  ),
-                                                  PieChartSectionData(
-                                                    value: (1.0 - goalPct) * 100,
-                                                    color: goalColor.withOpacity(0.12),
-                                                    radius: 4,
-                                                    showTitle: false,
-                                                  ),
-                                                ],
-                                              )),
-                                              Icon(
-                                                getGoalIcon(goal.icon),
-                                                color: goalColor,
-                                                size: 18,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 14),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                goal.name,
-                                                style: theme.textTheme.titleSmall?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                'Deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                                style: theme.textTheme.bodySmall?.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            if (goal.isCompleted)
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                                decoration: BoxDecoration(
-                                                  color: const Color(0xFF30D158).withOpacity(0.12),
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                                child: const Text(
-                                                  'COMPLETED',
-                                                  style: TextStyle(
-                                                    fontSize: 9,
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Color(0xFF30D158),
-                                                  ),
-                                                ),
-                                              )
-                                            else
-                                              Text(
-                                                '$daysLeft days remaining',
-                                                style: const TextStyle(fontSize: 11, color: Colors.grey),
-                                              ),
-                                            const SizedBox(height: 4),
-                                            GestureDetector(
-                                              onTap: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  backgroundColor: Colors.transparent,
-                                                  builder: (context) => SavingsGoalFormSheet(existingGoal: goal),
-                                                );
-                                              },
-                                              child: Text(
-                                                'Edit',
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  color: theme.colorScheme.primary,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 14),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          CurrencyFormatter.formatCents(goal.currentAmount),
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Target: ' + CurrencyFormatter.formatCents(goal.targetAmount),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: theme.colorScheme.onSurfaceVariant,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(6),
-                                      child: LinearProgressIndicator(
-                                        value: goalPct,
                                         backgroundColor: goalColor.withOpacity(0.12),
                                         color: goalColor,
                                         minHeight: 6,

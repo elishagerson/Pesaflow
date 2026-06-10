@@ -223,3 +223,23 @@ final daysSinceLastSaveProvider = FutureProvider<int>((ref) async {
   if (lastDate == null) return -1;
   return DateTime.now().difference(lastDate).inDays;
 });
+
+final currencyShowDecimalsProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('currency_show_decimals').map((val) => val == 'true');
+});
+
+final appLockEnabledProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('app_lock_enabled').map((val) => val == 'true');
+});
+
+final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('sms_auto_deduplication').map((val) => val == 'true');
+});
+
+final activeAccentColorProvider = StreamProvider<String>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('app_accent_color').map((val) => val ?? '#30D158');
+});

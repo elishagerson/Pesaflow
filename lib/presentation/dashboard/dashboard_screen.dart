@@ -1619,16 +1619,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
-                  gradient: cardGradient,
+                  gradient: isDark
+                      ? LinearGradient(
+                          colors: [
+                            trackerColor.withOpacity(0.15),
+                            const Color(0xFF0F1013),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : cardGradient,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? trackerColor.withOpacity(0.3) : trackerColor.withOpacity(0.15),
+                    color: isDark ? trackerColor.withOpacity(0.25) : trackerColor.withOpacity(0.12),
                     width: 0.8,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: trackerColor.withOpacity(0.08),
-                      blurRadius: 20,
+                      color: isDark ? trackerColor.withOpacity(0.12) : trackerColor.withOpacity(0.08),
+                      blurRadius: 24,
                       offset: const Offset(0, 8),
                     ),
                   ],
@@ -1851,22 +1860,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         decoration: BoxDecoration(
-                          color: isDark ? Colors.white : Colors.black,
+                          color: isDark ? const Color(0xFF1B1C22).withOpacity(0.8) : Colors.black,
                           borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: isDark ? trackerColor.withOpacity(0.4) : Colors.black,
+                            width: 1.0,
+                          ),
+                          boxShadow: isDark ? [
+                            BoxShadow(
+                              color: trackerColor.withOpacity(0.15),
+                              blurRadius: 10,
+                              spreadRadius: 0.5,
+                            )
+                          ] : null,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.add_rounded,
-                              color: isDark ? Colors.black : Colors.white,
+                              color: isDark ? trackerColor : Colors.white,
                               size: 20,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               'Add transaction',
                               style: TextStyle(
-                                color: isDark ? Colors.black : Colors.white,
+                                color: isDark ? trackerColor : Colors.white,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 15,
                               ),
@@ -1883,8 +1903,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
+                          color: isDark ? const Color(0xFF1B1C22).withOpacity(0.8) : const Color(0xFFE5E5EA),
                           borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
+                            width: 0.5,
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -2221,57 +2245,99 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ref.invalidate(netWorthProvider);
                           ref.invalidate(monthlyTotalsProvider);
                         },
-                        child: IosListRow(
-                          onTap: () =>
-                              context.go('/transactions/edit/${trans.id}'),
-                          leading: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: hexToColor(
-                                item.category.color,
-                              ).withOpacity(0.15),
-                              shape: BoxShape.circle,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6.0),
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF1B1C22).withOpacity(0.65)
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
+                              width: 0.5,
                             ),
-                            child: Icon(
-                              getCategoryIcon(item.category.icon),
-                              color: hexToColor(item.category.color),
-                              size: 24,
-                            ),
-                          ),
-                          title: Text(
-                            trans.description.isNotEmpty
-                                ? trans.description
-                                : item.category.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Text(
-                                item.account.name,
-                                style: TextStyle(
-                                  color: trackerColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                trans.createdAt.toString().substring(0, 10),
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 11,
-                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
-                          trailing: AmountText(
-                            amountInCents: trans.amount,
-                            type: amtType,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              fontFamily: 'monospace',
-                            ),
+                          child: Row(
+                            children: [
+                              // Category Icon Container (Squircle Style)
+                              Container(
+                                width: 46,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: hexToColor(item.category.color).withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    getCategoryIcon(item.category.icon),
+                                    color: hexToColor(item.category.color),
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              // Content
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      trans.description.isNotEmpty ? trans.description : item.category.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 15,
+                                        color: isDark ? Colors.white : Colors.black,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          item.account.name,
+                                          style: TextStyle(
+                                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          trans.createdAt.toString().substring(0, 10),
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Amount
+                              AmountText(
+                                amountInCents: trans.amount,
+                                type: amtType,
+                                showDecimals: true,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16,
+                                  color: amtType == AmountType.income
+                                      ? const Color(0xFF30D158)
+                                      : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
