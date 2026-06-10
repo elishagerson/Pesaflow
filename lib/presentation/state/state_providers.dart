@@ -239,7 +239,3 @@ final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
   return repo.watchSetting('sms_auto_deduplication').map((val) => val == 'true');
 });
 
-final activeAccentColorProvider = StreamProvider<String>((ref) {
-  final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting('app_accent_color').map((val) => val ?? '#30D158');
-});
