@@ -321,7 +321,7 @@ class _OverviewTab extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: const AppTheme.transferColorDark.withOpacity(0.12),
+                              color: AppTheme.transferColorDark.withOpacity(0.12),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.savings_rounded, color: AppTheme.transferColorDark, size: 20),

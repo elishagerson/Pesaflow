@@ -399,7 +399,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 color: status.isOverBudget
                                     ? const Color(0xFFFF453A).withOpacity(0.15)
                                     : status.isOnTrack
-                                        ? const AppTheme.transferColorDark.withOpacity(0.15)
+                                        ? AppTheme.transferColorDark.withOpacity(0.15)
                                         : Colors.orange.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(100),
                               ),
@@ -411,7 +411,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   color: status.isOverBudget
                                       ? const Color(0xFFFF453A)
                                       : status.isOnTrack
-                                          ? const AppTheme.transferColorDark
+                                          ? AppTheme.transferColorDark
                                           : Colors.orange,
                                   letterSpacing: 0.3,
                                 ),
@@ -754,7 +754,7 @@ class BudgetListScreen extends ConsumerWidget {
                                               Container(
                                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                                 decoration: BoxDecoration(
-                                                  color: const AppTheme.transferColorDark.withOpacity(0.12),
+                                                  color: AppTheme.transferColorDark.withOpacity(0.12),
                                                   borderRadius: BorderRadius.circular(12),
                                                 ),
                                                 child: const Text(
