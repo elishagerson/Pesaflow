@@ -12,8 +12,7 @@ class IosTabBar extends StatelessWidget {
     required this.onDestinationSelected,
   });
 
-  static const double pillHeight = 60.0;
-  static const double pillRadius = 18.0;
+  static const double navBarHeight = 72.0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,112 +20,167 @@ class IosTabBar extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
+    // Visual position tabs to route index mapping:
+    // Position 0: Assets (Dashboard - index 0)
+    // Position 1: Trade (Transactions - index 1)
+    // Position 2: Analytics Center Button (Analytics - index 3)
+    // Position 3: Vault (Budgets - index 2)
+    // Position 4: Settings (Settings - index 4)
+    final visualTabs = [
+      _TabConfig(
+        routeIndex: 0,
+        label: 'ASSETS',
+        icon: Icons.account_balance_wallet_outlined,
+        activeIcon: Icons.account_balance_wallet_rounded,
+      ),
+      _TabConfig(
+        routeIndex: 1,
+        label: 'TRADE',
+        icon: Icons.swap_horiz_rounded,
+        activeIcon: Icons.swap_horiz_rounded,
+      ),
+      _TabConfig(
+        routeIndex: 3, // Center Button
+        label: '', // No label for center button
+        icon: Icons.query_stats_rounded,
+        activeIcon: Icons.query_stats_rounded,
+        isCenter: true,
+      ),
+      _TabConfig(
+        routeIndex: 2,
+        label: 'VAULT',
+        icon: Icons.lock_outline_rounded,
+        activeIcon: Icons.lock_rounded,
+      ),
+      _TabConfig(
+        routeIndex: 4,
+        label: 'SETTINGS',
+        icon: Icons.settings_outlined,
+        activeIcon: Icons.settings_rounded,
+      ),
+    ];
+
     return Container(
-      height: pillHeight + bottomPadding + 16,
-      alignment: Alignment.topCenter,
-      padding: EdgeInsets.only(bottom: bottomPadding + 8),
+      height: navBarHeight + bottomPadding + 16,
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.only(bottom: bottomPadding > 0 ? bottomPadding : 12, left: 16, right: 16),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(pillRadius),
+        borderRadius: BorderRadius.circular(100),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
           child: Container(
-            height: pillHeight,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            height: navBarHeight,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(pillRadius),
+              borderRadius: BorderRadius.circular(100),
               color: isDark
-                  ? const Color(0xCC000000)
-                  : const Color(0xCCF2F2F7),
+                  ? const Color(0xE60F1013) // Deep dark translucent gray
+                  : const Color(0xE6E5E5EA),
               border: Border.all(
                 color: isDark
-                    ? const Color(0x1AFFFFFF)
-                    : const Color(0x1A000000),
+                    ? const Color(0x1AFFFFFF) // High-end thin white border
+                    : const Color(0x1F000000),
                 width: 0.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: isDark
-                      ? Colors.black.withValues(alpha: 0.4)
-                      : Colors.black.withValues(alpha: 0.12),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withOpacity(isDark ? 0.5 : 0.1),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
             child: Row(
-              children: List.generate(_tabData.length, (index) {
-                final tab = _tabData[index];
-                final isSelected = index == selectedIndex;
-                return Expanded(
-                  child: GestureDetector(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: visualTabs.map((tab) {
+                final isSelected = tab.routeIndex == selectedIndex;
+
+                if (tab.isCenter) {
+                  // Custom glowing center button matching reference
+                  return GestureDetector(
                     onTap: () {
-                      HapticFeedback.lightImpact();
-                      onDestinationSelected(index);
+                      HapticFeedback.mediumImpact();
+                      onDestinationSelected(tab.routeIndex);
                     },
                     behavior: HitTestBehavior.opaque,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutCubic,
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            switchInCurve: Curves.easeOutBack,
-                            switchOutCurve: Curves.easeIn,
-                            transitionBuilder: (child, animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: Icon(
-                              isSelected ? tab.activeIcon : tab.icon,
-                              key: ValueKey(isSelected),
-                              size: 24,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : (isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[500]),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOutCubic,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight:
-                                  isSelected ? FontWeight.w700 : FontWeight.w400,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : (isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[500]),
-                            ),
-                            child: Text(tab.label),
-                          ),
-                          const SizedBox(height: 3),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOutCubic,
-                            width: isSelected ? 20 : 0,
-                            height: 3,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
+                      curve: Curves.easeOutBack,
+                      width: 54,
+                      height: 54,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected
+                            ? const Color(0xFF30D158).withOpacity(0.25)
+                            : const Color(0xFF132219),
+                        border: Border.all(
+                          color: const Color(0xFF30D158),
+                          width: isSelected ? 2.0 : 1.2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF30D158).withOpacity(isSelected ? 0.4 : 0.2),
+                            blurRadius: isSelected ? 16 : 8,
+                            spreadRadius: isSelected ? 1 : 0,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
+                      child: Center(
+                        child: Icon(
+                          tab.icon,
+                          color: const Color(0xFF30D158),
+                          size: 26,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                // Standard tabs
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      onDestinationSelected(tab.routeIndex);
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(scale: animation, child: child);
+                          },
+                          child: Icon(
+                            isSelected ? tab.activeIcon : tab.icon,
+                            key: ValueKey(isSelected),
+                            size: 24,
+                            color: isSelected
+                                ? (isDark ? Colors.white : theme.colorScheme.primary)
+                                : (isDark ? Colors.white30 : Colors.black38),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          tab.label,
+                          style: TextStyle(
+                            fontSize: 9,
+                            letterSpacing: 0.5,
+                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                            color: isSelected
+                                ? (isDark ? Colors.white : theme.colorScheme.primary)
+                                : (isDark ? Colors.white30 : Colors.black38),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
-              }),
+              }).toList(),
             ),
           ),
         ),
@@ -135,20 +189,21 @@ class IosTabBar extends StatelessWidget {
   }
 }
 
-class _TabItem {
+class _TabConfig {
+  final int routeIndex;
+  final String label;
   final IconData icon;
   final IconData activeIcon;
-  final String label;
-  const _TabItem({required this.icon, required this.activeIcon, required this.label});
-}
+  final bool isCenter;
 
-const List<_TabItem> _tabData = [
-  _TabItem(icon: Icons.space_dashboard_outlined, activeIcon: Icons.space_dashboard_rounded, label: 'Dashboard'),
-  _TabItem(icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Transactions'),
-  _TabItem(icon: Icons.pie_chart_outline_rounded, activeIcon: Icons.pie_chart_rounded, label: 'Budgets'),
-  _TabItem(icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Analytics'),
-  _TabItem(icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Settings'),
-];
+  const _TabConfig({
+    required this.routeIndex,
+    required this.label,
+    required this.icon,
+    required this.activeIcon,
+    this.isCenter = false,
+  });
+}
 
 class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

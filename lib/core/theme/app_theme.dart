@@ -30,36 +30,36 @@ class AppTheme {
   static const Color outlineVariantLight = Color(0xFFE2E0E8);
 
   // Dark
-  static const Color primaryDark = Color(0xFF38BDF8); // Sky blue for dark mode
+  static const Color primaryDark = Color(0xFF30D158); // Neon emerald green for main dark accents
   static const Color onPrimaryDark = Color(0xFF000000);
-  static const Color primaryContainerDark = Color(0xFF004A8C);
-  static const Color onPrimaryContainerDark = Color(0xFFBAE6FD);
+  static const Color primaryContainerDark = Color(0xFF003D24);
+  static const Color onPrimaryContainerDark = Color(0xFFD1FAE5);
 
-  static const Color secondaryDark = Color(0xFF34D399); // Emerald light for dark mode
-  static const Color onSecondaryDark = Color(0xFF003D24);
-  static const Color secondaryContainerDark = Color(0xFF005C38);
-  static const Color onSecondaryContainerDark = Color(0xFFD1FAE5);
+  static const Color secondaryDark = Color(0xFF0A84FF); // Sky blue
+  static const Color onSecondaryDark = Color(0xFFFFFFFF);
+  static const Color secondaryContainerDark = Color(0xFF00325E);
+  static const Color onSecondaryContainerDark = Color(0xFFDCF0FF);
 
   static const Color tertiaryDark = Color(0xFFFF9F0A);
   static const Color onTertiaryDark = Color(0xFF000000);
 
-  static const Color bgDark = Color(0xFF000000);
+  static const Color bgDark = Color(0xFF090A0E); // Deep pitch black-gray background
   static const Color onBgDark = Color(0xFFFFFFFF);
-  static const Color surfaceDark = Color(0xFF0F0F10);
+  static const Color surfaceDark = Color(0xFF14151B); // Dark cards background
   static const Color onSurfaceDark = Color(0xFFFFFFFF);
-  static const Color surfaceHighDark = Color(0xFF0F0F10);
-  static const Color surfaceLowDark = Color(0xFF09090A);
+  static const Color surfaceHighDark = Color(0xFF1C1D24); // Elevated cards background
+  static const Color surfaceLowDark = Color(0xFF0E0F13);
 
-  static const Color outlineDark = Color(0xFF2C2C2E);
-  static const Color outlineVariantDark = Color(0xFF1C1C1E);
+  static const Color outlineDark = Color(0x1AFFFFFF); // Translucent border for glassy panels
+  static const Color outlineVariantDark = Color(0x10FFFFFF);
 
   // Finance semantic colors
   static const Color incomeColor = Color(0xFF0A84FF); // Vibrant blue
   static const Color expenseColor = Color(0xFFE11D48);
   static const Color transferColor = Color(0xFF0284C7);
 
-  static const Color incomeColorDark = Color(0xFF00E5FF); // Premium neon cyan/blue
-  static const Color expenseColorDark = Color(0xFFFF453A); // Vibrant red
+  static const Color incomeColorDark = Color(0xFF30D158); // Neon green/emerald
+  static const Color expenseColorDark = Color(0xFFFF453A); // Coral red
   static const Color transferColorDark = Color(0xFF0A84FF); // Vibrant blue
 
   static const Color errorLight = Color(0xFFE11D48);

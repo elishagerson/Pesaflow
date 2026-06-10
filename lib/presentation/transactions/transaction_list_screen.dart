@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +13,8 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/domain/analytics/insight_generator.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -35,7 +37,8 @@ class TransactionListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+    final isDark = theme.brightness == Brightness.dark;
+
     // Watch filters
     final activeType = ref.watch(transactionTypeFilterProvider);
     final activeAccount = ref.watch(transactionAccountFilterProvider);
@@ -51,393 +54,629 @@ class TransactionListScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: IosNavBar(
-        title: 'Transactions',
-        largeTitle: true,
-        actions: [
-          if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
-            IconButton(
-              icon: const Icon(Icons.clear_all_rounded, color: Colors.red),
-              tooltip: 'Clear Filters',
-              onPressed: () {
-                ref.read(transactionTypeFilterProvider.notifier).state = 'All';
-                ref.read(transactionAccountFilterProvider.notifier).state = null;
-                ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                ref.read(transactionSearchQueryProvider.notifier).state = '';
-              },
-            ),
-          IconButton(
-            icon: Icon(
-              Icons.filter_list_rounded,
-              color: (activeAccount != null || activeCategory != null)
-                  ? theme.colorScheme.primary
-                  : (theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600]),
-            ),
-            onPressed: () {
-              _showFiltersBottomSheet(context, ref);
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.add_circle_rounded,
-              color: theme.colorScheme.primary,
-            ),
-            onPressed: () => context.go('/transactions/add'),
-          ),
-        ],
-      ),
-      body: SafeArea(top: false, child: Column(
-          children: [
-            // Live Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: TextField(
-                controller: searchController,
-                onChanged: (val) {
-                  ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search description, recipient or reference...',
-                  hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
-                  prefixIcon: Icon(
-                    Icons.search_rounded, 
-                    color: theme.colorScheme.primary, 
-                    size: 20,
+      body: Stack(
+        children: [
+          // ── TRANSACTIONS LIST LAYER ──
+          transactionsAsync.when(
+            data: (transactionsList) {
+              if (transactionsList.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 120),
+                      Icon(
+                        Icons.search_off_rounded,
+                        size: 64,
+                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'No Transactions Found',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Try adjusting your filters or typing a different query.',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
                   ),
-                  suffixIcon: searchQuery.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear_rounded, size: 18),
-                          onPressed: () {
-                            ref.read(transactionSearchQueryProvider.notifier).state = '';
-                          },
-                        )
-                      : null,
-                  filled: true,
-                  fillColor: theme.brightness == Brightness.dark
-                      ? AppTheme.surfaceHighDark
-                      : const Color(0xFFF2F2F7),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide(
-                      color: theme.brightness == Brightness.dark
-                          ? const Color(0x12FFFFFF)
-                          : Colors.transparent,
-                      width: 0.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide(
-                      color: theme.colorScheme.primary.withOpacity(0.5),
-                      width: 1,
-                    ),
-                  ),
-                ),
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
+                );
+              }
 
-            // Segmented Type Pills
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              // Group items by calendar day
+              final Map<String, List<TransactionWithCategoryAndAccount>> grouped = {};
+              for (final item in transactionsList) {
+                final dayStr = DateFormat('yyyy-MM-dd').format(item.transaction.createdAt);
+                if (grouped[dayStr] == null) {
+                  grouped[dayStr] = [];
+                }
+                grouped[dayStr]!.add(item);
+              }
+
+              final sortedDays = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
+
+              return ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
-                    final isSelected = activeType == type;
-                    
-                    // Distinctive glowing accent colors per pill type
-                    Color activeColor = theme.colorScheme.primary;
-                    if (type == 'Income') {
-                      activeColor = const Color(0xFF30D158);
-                    } else if (type == 'Expense') {
-                      activeColor = const Color(0xFFFF453A);
-                    } else if (type == 'Transfer') {
-                      activeColor = const Color(0xFF0A84FF);
-                    }
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 195.0,
+                  bottom: 110.0,
+                ),
+                itemCount: sortedDays.length + 1,
+                itemBuilder: (context, dayIndex) {
+                  // Append insights card at the end of the transactions list
+                  if (dayIndex == sortedDays.length) {
+                    return _buildInsightsCard(context, ref, isDark);
+                  }
 
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: TactileSpringContainer(
-                        onTap: () {
-                          ref.read(transactionTypeFilterProvider.notifier).state = type;
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: isSelected 
-                                ? activeColor.withOpacity(0.15) 
-                                : (theme.brightness == Brightness.dark 
-                                    ? AppTheme.surfaceContainerDark 
-                                    : Colors.grey.withOpacity(0.06)),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: isSelected ? activeColor : const Color(0x12FFFFFF),
-                              width: 1.2,
+                  final dayStr = sortedDays[dayIndex];
+                  final dayItems = grouped[dayStr]!;
+                  final firstItemDate = dayItems.first.transaction.createdAt;
+
+                  // Calculate daily net balance change (income - expense)
+                  int dailyNetChange = 0;
+                  for (final item in dayItems) {
+                    final type = item.transaction.type.toLowerCase();
+                    if (type == 'income') {
+                      dailyNetChange += item.transaction.amount;
+                    } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
+                      dailyNetChange -= item.transaction.amount;
+                    }
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Group Date Header
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _formatHeaderDate(firstItemDate).toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 1.2,
+                                color: isDark ? Colors.white30 : Colors.black38,
+                              ),
                             ),
-                            boxShadow: isSelected ? [
-                              BoxShadow(
-                                color: activeColor.withOpacity(0.2),
-                                blurRadius: 8,
-                                spreadRadius: 0.5,
-                              )
-                            ] : null,
-                          ),
-                          child: Text(
-                            type,
-                            style: TextStyle(
-                              color: isSelected 
-                                  ? (theme.brightness == Brightness.dark ? Colors.white : activeColor) 
-                                  : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              fontSize: 13,
+                            // Monospace Net Change Indicator
+                            AmountText(
+                              amountInCents: dailyNetChange.abs(),
+                              type: dailyNetChange > 0
+                                  ? AmountType.income
+                                  : (dailyNetChange < 0 ? AmountType.expense : AmountType.neutral),
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                color: dailyNetChange > 0
+                                    ? const Color(0xFF30D158)
+                                    : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
 
-            // Filter Active Indicators
-            if (activeAccount != null || activeCategory != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-                child: Row(
-                  children: [
-                    const Icon(Icons.info_outline_rounded, size: 14, color: Colors.grey),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        'Filters active: '
-                        '${activeAccount != null ? "Account locked" : ""}'
-                        '${(activeAccount != null && activeCategory != null) ? " & " : ""}'
-                        '${activeCategory != null ? "Category locked" : ""}',
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      // Transaction Items as Individual GlassCards
+                      ...dayItems.map((item) {
+                        final trans = item.transaction;
+
+                        AmountType amtType = AmountType.neutral;
+                        if (trans.type.toLowerCase() == 'income') {
+                          amtType = AmountType.income;
+                        } else if (trans.type.toLowerCase() == 'expense' ||
+                                   trans.type.toLowerCase() == 'airtime' ||
+                                   trans.type.toLowerCase() == 'fee') {
+                          amtType = AmountType.expense;
+                        }
+
+                        final categoryColor = hexToColor(item.category.color);
+                        final formattedTime = DateFormat('HH:mm').format(trans.createdAt);
+
+                        return Dismissible(
+                          key: Key(trans.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+                            padding: const EdgeInsets.only(right: 20.0),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.error,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Icon(Icons.delete_rounded, color: Colors.white),
+                          ),
+                          onDismissed: (_) async {
+                            await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
+                            ref.invalidate(filteredTransactionsStreamProvider);
+                            ref.invalidate(accountsStreamProvider);
+                            ref.invalidate(netWorthProvider);
+                          },
+                          child: TactileSpringContainer(
+                            onTap: () => context.go('/transactions/edit/${trans.id}'),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? const Color(0xFF1B1C22).withOpacity(0.65)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
+                                  width: 0.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  // Category Icon Container (Squircle Style)
+                                  Container(
+                                    width: 46,
+                                    height: 46,
+                                    decoration: BoxDecoration(
+                                      color: categoryColor.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        getCategoryIcon(item.category.icon),
+                                        color: categoryColor,
+                                        size: 22,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  // Content
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          trans.description.isNotEmpty ? trans.description : item.category.name,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 15,
+                                            color: isDark ? Colors.white : Colors.black,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 3),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              item.account.name,
+                                              style: TextStyle(
+                                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            if (trans.reference != null && trans.reference!.isNotEmpty) ...[
+                                              const SizedBox(width: 6),
+                                              Text(
+                                                '•',
+                                                style: TextStyle(
+                                                  color: isDark ? Colors.white10 : Colors.black12,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 6),
+                                              Flexible(
+                                                child: Text(
+                                                  trans.reference!,
+                                                  style: TextStyle(
+                                                    color: isDark ? Colors.white30 : Colors.black38,
+                                                    fontSize: 11,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Amount & Time
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      AmountText(
+                                        amountInCents: trans.amount,
+                                        type: amtType,
+                                        showDecimals: true,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 16,
+                                          color: amtType == AmountType.income
+                                              ? const Color(0xFF30D158)
+                                              : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        formattedTime,
+                                        style: TextStyle(
+                                          color: isDark ? Colors.white24 : Colors.black26,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  );
+                },
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, _) => Center(child: Text('Error loading transactions: $err')),
+          ),
+
+          // ── FLOATING GLASSMOGRAPHIC HEADER ──
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 12,
+                    bottom: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xCC0D0E11)
+                        : const Color(0xCCF2F2F7),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
+                        width: 0.5,
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-            // Grouped Transactions List Layer
-            Expanded(
-              child: transactionsAsync.when(
-                data: (transactionsList) {
-                  if (transactionsList.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.search_off_rounded, size: 64, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5)),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'No Transactions Found',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Try adjusting your filters or typing a different query.',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  // Group items by calendar day
-                  final Map<String, List<TransactionWithCategoryAndAccount>> grouped = {};
-                  for (final item in transactionsList) {
-                    final dayStr = DateFormat('yyyy-MM-dd').format(item.transaction.createdAt);
-                    if (grouped[dayStr] == null) {
-                      grouped[dayStr] = [];
-                    }
-                    grouped[dayStr]!.add(item);
-                  }
-
-                  final sortedDays = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
-
-                  return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: sortedDays.length,
-                    itemBuilder: (context, dayIndex) {
-                      final dayStr = sortedDays[dayIndex];
-                      final dayItems = grouped[dayStr]!;
-                      final firstItemDate = dayItems.first.transaction.createdAt;
-                      
-                      // Calculate daily net balance change (income - expense)
-                      int dailyNetChange = 0;
-                      for (final item in dayItems) {
-                        final type = item.transaction.type.toLowerCase();
-                        if (type == 'income') {
-                          dailyNetChange += item.transaction.amount;
-                        } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-                          dailyNetChange -= item.transaction.amount;
-                        }
-                      }
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Group Date Header
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Title, Profile Avatar & Filter Controls
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Transactions',
+                              style: TextStyle(
+                                fontFamily: 'system-ui',
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -1.0,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            Row(
                               children: [
-                                Text(
-                                  _formatHeaderDate(firstItemDate).toUpperCase(),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
-                                    letterSpacing: 1.2,
+                                if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
+                                  IconButton(
+                                    icon: const Icon(Icons.clear_all_rounded, color: Colors.redAccent, size: 20),
+                                    tooltip: 'Clear Filters',
+                                    onPressed: () {
+                                      ref.read(transactionTypeFilterProvider.notifier).state = 'All';
+                                      ref.read(transactionAccountFilterProvider.notifier).state = null;
+                                      ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                                      ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                    },
                                   ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.filter_list_rounded,
+                                    color: (activeAccount != null || activeCategory != null)
+                                        ? theme.colorScheme.primary
+                                        : (isDark ? Colors.white70 : Colors.black87),
+                                    size: 22,
+                                  ),
+                                  onPressed: () {
+                                    _showFiltersBottomSheet(context, ref);
+                                  },
                                 ),
-                                // Monospace Net Change Indicator
-                                AmountText(
-                                  amountInCents: dailyNetChange.abs(),
-                                  type: dailyNetChange > 0
-                                      ? AmountType.income
-                                      : (dailyNetChange < 0 ? AmountType.expense : AmountType.neutral),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                                const SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () => context.go('/settings'),
+                                  child: Container(
+                                    width: 38,
+                                    height: 38,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
+                                        width: 0.8,
+                                      ),
+                                      image: const DecorationImage(
+                                        image: AssetImage('assets/icon/app_icon.png'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-
-                          // Transaction Items under this group inside elegant unified card containers
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: theme.brightness == Brightness.dark 
-                                  ? AppTheme.surfaceContainerDark 
-                                  : AppTheme.surfaceLight,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              border: Border.all(
-                                color: theme.brightness == Brightness.dark 
-                                    ? const Color(0x12FFFFFF) 
-                                    : const Color(0x1F000000),
-                                width: 0.5,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              child: Column(
-                                children: List.generate(dayItems.length, (idx) {
-                                  final item = dayItems[idx];
-                                  final trans = item.transaction;
-                                  final isLast = idx == dayItems.length - 1;
-                                  
-                                  AmountType amtType = AmountType.neutral;
-                                  if (trans.type.toLowerCase() == 'income') {
-                                    amtType = AmountType.income;
-                                  } else if (trans.type.toLowerCase() == 'expense' ||
-                                             trans.type.toLowerCase() == 'airtime' ||
-                                             trans.type.toLowerCase() == 'fee') {
-                                    amtType = AmountType.expense;
-                                  }
-                                  
-                                  return Column(
-                                    children: [
-                                      Dismissible(
-                                        key: Key(trans.id),
-                                        direction: DismissDirection.endToStart,
-                                        background: Container(
-                                          alignment: Alignment.centerRight,
-                                          padding: const EdgeInsets.only(right: 20.0),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme.error,
-                                          ),
-                                          child: const Icon(Icons.delete_rounded, color: Colors.white),
-                                        ),
-                                        onDismissed: (_) async {
-                                          await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                                          ref.invalidate(filteredTransactionsStreamProvider);
-                                          ref.invalidate(accountsStreamProvider);
-                                          ref.invalidate(netWorthProvider);
-                                        },
-                                        child: IosListRow(
-                                          onTap: () => context.go('/transactions/edit/${trans.id}'),
-                                          leading: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                              color: hexToColor(item.category.color).withOpacity(0.12),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              getCategoryIcon(item.category.icon),
-                                              color: hexToColor(item.category.color),
-                                              size: 20,
-                                            ),
-                                          ),
-                                          title: Text(
-                                            trans.description.isNotEmpty ? trans.description : item.category.name,
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                          ),
-                                          subtitle: Row(
-                                            children: [
-                                              Text(
-                                                item.account.name,
-                                                style: TextStyle(
-                                                  color: theme.colorScheme.primary,
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              if (trans.reference != null)
-                                                Text(
-                                                  'Ref: ${trans.reference}',
-                                                  style: const TextStyle(color: Colors.grey, fontSize: 11),
-                                                ),
-                                            ],
-                                          ),
-                                          trailing: AmountText(
-                                            amountInCents: trans.amount,
-                                            type: amtType,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      if (!isLast)
-                                        Divider(
-                                          height: 0.5,
-                                          thickness: 0.5,
-                                          indent: 56,
-                                          color: theme.brightness == Brightness.dark 
-                                              ? const Color(0x12FFFFFF) 
-                                              : const Color(0x1F000000),
-                                        ),
-                                    ],
-                                  );
-                                }),
-                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Search Bar Container
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF1B1C22).withOpacity(0.6)
+                                : Colors.white.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
+                              width: 0.5,
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, _) => Center(child: Text('Error loading transactions: $err')),
+                          child: TextField(
+                            controller: searchController,
+                            onChanged: (val) {
+                              ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Search transactions...',
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                color: isDark ? Colors.white30 : Colors.black38,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.search_rounded,
+                                color: isDark ? Colors.white30 : Colors.black38,
+                                size: 20,
+                              ),
+                              suffixIcon: searchQuery.isNotEmpty
+                                  ? IconButton(
+                                      icon: Icon(Icons.clear_rounded, size: 16, color: isDark ? Colors.white54 : Colors.black54),
+                                      onPressed: () {
+                                        ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                      },
+                                    )
+                                  : null,
+                              filled: false,
+                              contentPadding: const EdgeInsets.symmetric(vertical: 11),
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Horizontal filter tabs row
+                      SizedBox(
+                        height: 38,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
+                            final isSelected = activeType == type;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: TactileSpringContainer(
+                                onTap: () {
+                                  ref.read(transactionTypeFilterProvider.notifier).state = type;
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? (isDark ? const Color(0xFF2C2D35) : Colors.black12)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Text(
+                                    type,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? (isDark ? Colors.white : Colors.black)
+                                          : (isDark ? Colors.white30 : Colors.black38),
+                                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+            ),
+          ),
+        ],
+      ),
+      // Glowing Floating Action Button (FAB)
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 80), // Positioned above the custom tab bar
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF30D158).withOpacity(0.35),
+              blurRadius: 12,
+              spreadRadius: 2,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
+        child: FloatingActionButton(
+          onPressed: () => context.go('/transactions/add'),
+          backgroundColor: const Color(0xFF30D158),
+          foregroundColor: Colors.black,
+          shape: const CircleBorder(),
+          elevation: 0,
+          child: const Icon(
+            Icons.add_rounded,
+            size: 28,
+          ),
+        ),
       ),
+    );
+  }
+
+  // ── INSIGHTS CARD BUILDER ──
+  Widget _buildInsightsCard(BuildContext context, WidgetRef ref, bool isDark) {
+    final insightsAsync = ref.watch(insightsProvider);
+
+    return insightsAsync.maybeWhen(
+      data: (insights) {
+        final String title;
+        final String message;
+
+        if (insights.isNotEmpty) {
+          title = insights.first.title;
+          message = insights.first.message;
+        } else {
+          title = "Spend analysis complete.";
+          message = "You saved 12% more than last month in the 'Dining' category.";
+        }
+
+        return Container(
+          margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+          height: 160,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: const Color(0xFF30D158).withOpacity(0.35),
+              width: 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF30D158).withOpacity(0.12),
+                blurRadius: 16,
+                spreadRadius: 1,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(23),
+            child: Stack(
+              children: [
+                // Dark green gradient background panel
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF0C1911),
+                        Color(0xFF070B08),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+                // Glowing emerald crystal positioned on the right
+                Positioned(
+                  right: -10,
+                  bottom: -10,
+                  top: -10,
+                  child: Opacity(
+                    opacity: 0.85,
+                    child: Image.asset(
+                      'assets/images/emerald_crystal.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                // Text details aligned on the left
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'INSIGHTS',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.5,
+                          color: Color(0xFF30D158),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.52,
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.6,
+                            color: Colors.white,
+                            height: 1.15,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.52,
+                        child: Text(
+                          message,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withOpacity(0.7),
+                            height: 1.25,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
@@ -463,12 +702,18 @@ class TransactionListScreen extends ConsumerWidget {
               IosListRow(
                 title: const Text('All Accounts'),
                 trailing: activeAccount == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () { ref.read(transactionAccountFilterProvider.notifier).state = null; Navigator.of(context).pop(); },
+                onTap: () {
+                  ref.read(transactionAccountFilterProvider.notifier).state = null;
+                  Navigator.of(context).pop();
+                },
               ),
               ...accounts.map((acc) => IosListRow(
                 title: Text(acc.name),
                 trailing: activeAccount == acc.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () { ref.read(transactionAccountFilterProvider.notifier).state = acc.id; Navigator.of(context).pop(); },
+                onTap: () {
+                  ref.read(transactionAccountFilterProvider.notifier).state = acc.id;
+                  Navigator.of(context).pop();
+                },
               )),
             ],
           ),
@@ -479,12 +724,18 @@ class TransactionListScreen extends ConsumerWidget {
               IosListRow(
                 title: const Text('All Categories'),
                 trailing: activeCategory == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () { ref.read(transactionCategoryFilterProvider.notifier).state = null; Navigator.of(context).pop(); },
+                onTap: () {
+                  ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                  Navigator.of(context).pop();
+                },
               ),
               ...categories.map((cat) => IosListRow(
                 title: Text('${cat.type.toUpperCase()}: ${cat.name}'),
                 trailing: activeCategory == cat.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () { ref.read(transactionCategoryFilterProvider.notifier).state = cat.id; Navigator.of(context).pop(); },
+                onTap: () {
+                  ref.read(transactionCategoryFilterProvider.notifier).state = cat.id;
+                  Navigator.of(context).pop();
+                },
               )),
             ],
           ),
@@ -494,4 +745,3 @@ class TransactionListScreen extends ConsumerWidget {
     );
   }
 }
-
