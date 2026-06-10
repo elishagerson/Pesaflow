@@ -39,7 +39,7 @@ class IosListSection extends StatelessWidget {
         Container(
           margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+            color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
               color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
@@ -239,7 +239,7 @@ class IosMetricCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F0F10) : AppTheme.surfaceLight,
+        color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
           color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),

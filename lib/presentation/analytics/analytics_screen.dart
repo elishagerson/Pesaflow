@@ -51,7 +51,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 child: Container(
                   height: 38,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF0F0F10) : const Color(0xFFE5E5EA),
+                    color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLowLight,
                     borderRadius: BorderRadius.circular(9),
                     border: Border.all(
                       color: isDark ? const Color(0x10FFFFFF) : Colors.transparent,
@@ -530,6 +530,7 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 );
               }
+              final isDark = theme.brightness == Brightness.dark;
               final reversed = snapshots.reversed.toList();
               
               // Build points for Income (Green) and Expense (Red)
@@ -552,7 +553,7 @@ class _TrendsTab extends StatelessWidget {
               return Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0F0F10),
+                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: const Color(0x15FFFFFF), width: 0.5),
                 ),

@@ -687,8 +687,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         );
       },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 120),
+      ),
+      error: (_, __) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 120),
+      ),
     );
   }
 
@@ -833,8 +839,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ],
         );
       },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 140),
+      ),
+      error: (_, __) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 140),
+      ),
     );
   }
 
@@ -878,8 +890,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         );
       },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 80),
+      ),
+      error: (_, __) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 80),
+      ),
     );
   }
 
@@ -1053,8 +1071,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         );
       },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 100),
+      ),
+      error: (_, __) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SkeletonCard(height: 100),
+      ),
     );
   }
 
@@ -1895,7 +1919,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F0F10) : const Color(0xFFF2F2F7),
+                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.bgLight,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
                     color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),

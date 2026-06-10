@@ -170,7 +170,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
           builder: (context, setModalState) {
             return Container(
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+                color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               padding: EdgeInsets.only(
@@ -362,7 +362,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+        color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       height: MediaQuery.of(context).size.height * 0.85,

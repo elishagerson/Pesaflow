@@ -129,7 +129,7 @@ class TransactionListScreen extends ConsumerWidget {
                       : null,
                   filled: true,
                   fillColor: theme.brightness == Brightness.dark
-                      ? const Color(0xFF0F0F10)
+                      ? AppTheme.surfaceHighDark
                       : const Color(0xFFF2F2F7),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   enabledBorder: OutlineInputBorder(

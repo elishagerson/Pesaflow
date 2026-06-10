@@ -270,7 +270,7 @@ class BudgetListScreen extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+              color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
               borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               border: Border.all(
                 color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
@@ -596,7 +596,7 @@ class BudgetListScreen extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F0F10) : Colors.white,
+                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
                     color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
