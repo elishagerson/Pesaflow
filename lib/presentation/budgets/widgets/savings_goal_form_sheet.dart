@@ -70,12 +70,6 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     super.dispose();
   }
 
-  Color hexToColor(String hex) {
-    final clean = hex.replaceAll('#', '');
-    if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
-    return Colors.grey;
-  }
-
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 

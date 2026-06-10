@@ -31,26 +31,6 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
   bool _deductFromWallet = false;
   bool _isOperationLoading = false;
 
-  Color hexToColor(String hex) {
-    final clean = hex.replaceAll('#', '');
-    if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
-    return Colors.grey;
-  }
-
-  IconData getGoalIcon(String iconName) {
-    switch (iconName) {
-      case 'savings': return Icons.savings_rounded;
-      case 'laptop': return Icons.laptop_chromebook_rounded;
-      case 'flight': return Icons.flight_takeoff_rounded;
-      case 'home': return Icons.home_rounded;
-      case 'car': return Icons.directions_car_rounded;
-      case 'school': return Icons.school_rounded;
-      case 'heart': return Icons.favorite_rounded;
-      case 'gift': return Icons.card_giftcard_rounded;
-      default: return Icons.savings_rounded;
-    }
-  }
-
   int _calculateDaysRemaining(DateTime targetDate) {
     final diff = targetDate.difference(DateTime.now()).inDays;
     return diff < 0 ? 0 : diff;
