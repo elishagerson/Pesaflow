@@ -8,12 +8,12 @@ class MpesaTzParser implements SmsParser {
     // Swahili: Rej: XXXXX
     final rejRegex = RegExp(r'Rej:\s*([A-Za-z0-9]+)', caseSensitive: false);
     final match = rejRegex.firstMatch(text);
-    if (match != null) return match.group(1)!;
+    if (match != null) return match.group(1) ?? '';
 
     // English: reference word before "Confirmed."
     final engRefRegex = RegExp(r'(\w+)\s+Confirmed\.', caseSensitive: false);
     final engMatch = engRefRegex.firstMatch(text);
-    if (engMatch != null) return engMatch.group(1)!;
+    if (engMatch != null) return engMatch.group(1) ?? '';
 
     return 'MPESA-REF-UNKNOWN';
   }
@@ -23,14 +23,14 @@ class MpesaTzParser implements SmsParser {
     final salioRegex = RegExp(r'Salio:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final match = salioRegex.firstMatch(text);
     if (match != null) {
-      return parseAmount(match.group(1)!);
+      return parseAmount(match.group(1) ?? '');
     }
 
     // English: "New M-PESA balance is Tsh XXX"
     final engBalRegex = RegExp(r'New\s+M[- ]?PESA\s+balance\s+is\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final engMatch = engBalRegex.firstMatch(text);
     if (engMatch != null) {
-      return parseAmount(engMatch.group(1)!);
+      return parseAmount(engMatch.group(1) ?? '');
     }
 
     return null;
@@ -49,8 +49,8 @@ class MpesaTzParser implements SmsParser {
       );
       var match = receivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -74,8 +74,8 @@ class MpesaTzParser implements SmsParser {
       );
       match = sentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -99,7 +99,7 @@ class MpesaTzParser implements SmsParser {
       );
       match = airtimeRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -123,7 +123,7 @@ class MpesaTzParser implements SmsParser {
       );
       match = feeRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -148,7 +148,7 @@ class MpesaTzParser implements SmsParser {
       );
       match = loanRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -174,8 +174,8 @@ class MpesaTzParser implements SmsParser {
       );
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -199,8 +199,8 @@ class MpesaTzParser implements SmsParser {
       );
       match = engSentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -224,8 +224,8 @@ class MpesaTzParser implements SmsParser {
       );
       match = engPaidRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final payee = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final payee = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -249,7 +249,7 @@ class MpesaTzParser implements SmsParser {
       );
       match = engAirtimeRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -273,7 +273,7 @@ class MpesaTzParser implements SmsParser {
       );
       match = engFeeRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 

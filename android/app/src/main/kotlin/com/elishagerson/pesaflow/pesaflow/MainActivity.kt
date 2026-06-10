@@ -69,18 +69,25 @@ class MainActivity : FlutterActivity() {
 
     private fun openNotificationListenerSettings() {
         val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-        startActivity(intent)
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
     }
 
     private fun getPendingSms(): List<String> {
-        val prefs: SharedPreferences = getSharedPreferences("pesaflow_pending_sms", MODE_PRIVATE)
-        val raw = prefs.getString("pending_sms_list", "[]") ?: "[]"
-        val arr = JSONArray(raw)
-        val list = mutableListOf<String>()
-        for (i in 0 until arr.length()) {
-            list.add(arr.getJSONObject(i).toString())
+        return try {
+            val prefs: SharedPreferences = getSharedPreferences("pesaflow_pending_sms", MODE_PRIVATE)
+            val raw = prefs.getString("pending_sms_list", "[]") ?: "[]"
+            val arr = JSONArray(raw)
+            val list = mutableListOf<String>()
+            for (i in 0 until arr.length()) {
+                val obj = arr.optJSONObject(i)
+                if (obj != null) list.add(obj.toString())
+            }
+            list
+        } catch (_: Exception) {
+            emptyList()
         }
-        return list
     }
 
     private fun clearPendingSms() {

@@ -9,12 +9,12 @@ class SelcomPesaParser implements SmsParser {
     // Swahili: Ref/Txn/ID ya muamala: XXXXX
     final swaRegex = RegExp(r'(?:Ref|Txn|ID|ID ya muamala):\s*([A-Za-z0-9]+)', caseSensitive: false);
     final match = swaRegex.firstMatch(text);
-    if (match != null) return match.group(1)!;
+    if (match != null) return match.group(1) ?? '';
 
     // English: word before "Accepted." or "Confirmed."
     final engRegex = RegExp(r'(\w+)\s+(?:Accepted|Confirmed)\.\s*You have', caseSensitive: false);
     final engMatch = engRegex.firstMatch(text);
-    if (engMatch != null) return engMatch.group(1)!;
+    if (engMatch != null) return engMatch.group(1) ?? '';
 
     return 'SELCOM-REF-UNKNOWN';
   }
@@ -27,14 +27,14 @@ class SelcomPesaParser implements SmsParser {
     );
     final match = swaRegex.firstMatch(text);
     if (match != null) {
-      return parseAmount(match.group(1)!);
+      return parseAmount(match.group(1) ?? '');
     }
 
     // English: "Updated balance is TZS XXX"
     final engRegex = RegExp(r'Updated balance is TZS\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final engMatch = engRegex.firstMatch(text);
     if (engMatch != null) {
-      return parseAmount(engMatch.group(1)!);
+      return parseAmount(engMatch.group(1) ?? '');
     }
 
     return null;
@@ -55,8 +55,8 @@ class SelcomPesaParser implements SmsParser {
       );
       var match = engReceivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -80,8 +80,8 @@ class SelcomPesaParser implements SmsParser {
       );
       match = engSentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -114,7 +114,7 @@ class SelcomPesaParser implements SmsParser {
       match = amtRegex.firstMatch(text) ?? fallbackAmtRegex.firstMatch(text);
       if (match == null) return null;
 
-      final amt = parseAmount(match.group(1)!);
+      final amt = parseAmount(match.group(1) ?? '');
       if (amt == 0) return null;
 
       // 4. Determine transaction type (income / expense)
@@ -141,7 +141,7 @@ class SelcomPesaParser implements SmsParser {
 
       final partyMatch = type == 'income' ? fromRegex.firstMatch(text) : toRegex.firstMatch(text);
       if (partyMatch != null) {
-        senderOrRecipient = partyMatch.group(1)!.trim();
+        senderOrRecipient = (partyMatch.group(1) ?? '').trim();
       }
 
       final ref = _extractReference(text);

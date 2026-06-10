@@ -192,7 +192,8 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
 
     final List<CategorySpending> spending = [];
     for (final row in results) {
-      final catId = row.read(transactions.categoryId)!;
+      final catId = row.read(transactions.categoryId);
+      if (catId == null) continue;
       final amount = row.read(transactions.amount.sum()) ?? 0;
       final cat = await (select(categories)..where((c) => c.id.equals(catId))).getSingleOrNull();
       if (cat != null) {

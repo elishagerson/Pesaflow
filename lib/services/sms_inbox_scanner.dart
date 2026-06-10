@@ -57,8 +57,9 @@ class SmsInboxScanner {
       // Process sequentially to prevent SQLite connection locks
       for (int i = 0; i < total; i++) {
         final msg = targetMessages[i];
-        final body = msg.body!;
-        final address = msg.address!;
+        final body = msg.body;
+        final address = msg.address;
+        if (body == null || address == null) continue;
         final timestamp = DateTime.fromMillisecondsSinceEpoch(msg.date ?? DateTime.now().millisecondsSinceEpoch);
 
         await _smsProcessor.processSms(address, body, timestamp);

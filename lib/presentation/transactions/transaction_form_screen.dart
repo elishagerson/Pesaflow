@@ -55,25 +55,38 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Future<void> _loadExistingTransaction() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
-    final repo = ref.read(transactionRepositoryProvider);
-    final list = await repo.watchRecentTransactions(100).first;
-    final match = list.firstWhere((item) => item.transaction.id == widget.transactionId);
-    
-    _existingTransaction = match.transaction;
-    
-    // Convert cents back to decimal base string
-    final double baseValue = match.transaction.amount / 100.0;
-    _amountStr = baseValue % 1 == 0 ? baseValue.toInt().toString() : baseValue.toString();
-    
-    _descriptionController.text = match.transaction.description;
-    _referenceController.text = match.transaction.reference ?? '';
-    _selectedAccountId = match.transaction.accountId;
-    _selectedCategoryId = match.transaction.categoryId;
-    _transactionType = match.transaction.type[0].toUpperCase() + match.transaction.type.substring(1).toLowerCase();
-    _selectedDate = match.transaction.createdAt;
-    
-    setState(() => _isLoading = false);
+    try {
+      final repo = ref.read(transactionRepositoryProvider);
+      final list = await repo.watchRecentTransactions(100).first;
+      if (!mounted) return;
+      final match = list.firstWhere(
+        (item) => item.transaction.id == widget.transactionId,
+        orElse: () => throw StateError('Transaction not found in recent list'),
+      );
+
+      _existingTransaction = match.transaction;
+
+      final double baseValue = match.transaction.amount / 100.0;
+      _amountStr = baseValue % 1 == 0 ? baseValue.toInt().toString() : baseValue.toString();
+
+      _descriptionController.text = match.transaction.description;
+      _referenceController.text = match.transaction.reference ?? '';
+      _selectedAccountId = match.transaction.accountId;
+      _selectedCategoryId = match.transaction.categoryId;
+      _transactionType = match.transaction.type[0].toUpperCase() + match.transaction.type.substring(1).toLowerCase();
+      _selectedDate = match.transaction.createdAt;
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load transaction: $e')),
+      );
+    }
   }
 
   void _keypadPress(String value) {
@@ -145,34 +158,44 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final repo = ref.read(transactionRepositoryProvider);
     setState(() => _isLoading = true);
 
-    if (_isEditMode && _existingTransaction != null) {
-      await repo.deleteTransaction(_existingTransaction!.id);
+    try {
+      if (_isEditMode && _existingTransaction != null) {
+        await repo.deleteTransaction(_existingTransaction!.id);
+      }
+
+      final trackerId = ref.read(activeTrackerIdProvider);
+
+      final newTransaction = Transaction(
+        id: _isEditMode ? _existingTransaction!.id : const Uuid().v4(),
+        accountId: _selectedAccountId!,
+        destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
+        categoryId: _selectedCategoryId!,
+        trackerId: _isEditMode ? _existingTransaction!.trackerId : trackerId,
+        amount: cents,
+        type: _transactionType.toLowerCase(),
+        description: _descriptionController.text.trim(),
+        reference: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
+        source: 'manual',
+        createdAt: _selectedDate,
+        updatedAt: DateTime.now(),
+      );
+
+      await repo.createTransaction(newTransaction);
+
+      ref.invalidate(accountsStreamProvider);
+      ref.invalidate(recentTransactionsStreamProvider);
+      ref.invalidate(filteredTransactionsStreamProvider);
+      ref.invalidate(netWorthProvider);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save transaction: $e')),
+      );
+      return;
     }
 
-    final trackerId = ref.read(activeTrackerIdProvider);
-
-    final newTransaction = Transaction(
-      id: _isEditMode ? _existingTransaction!.id : const Uuid().v4(),
-      accountId: _selectedAccountId!,
-      destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
-      categoryId: _selectedCategoryId!,
-      trackerId: _isEditMode ? _existingTransaction!.trackerId : trackerId,
-      amount: cents,
-      type: _transactionType.toLowerCase(),
-      description: _descriptionController.text.trim(),
-      reference: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
-      source: 'manual',
-      createdAt: _selectedDate,
-      updatedAt: DateTime.now(),
-    );
-
-    await repo.createTransaction(newTransaction);
-
-    ref.invalidate(accountsStreamProvider);
-    ref.invalidate(recentTransactionsStreamProvider);
-    ref.invalidate(filteredTransactionsStreamProvider);
-    ref.invalidate(netWorthProvider);
-
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (mounted) {

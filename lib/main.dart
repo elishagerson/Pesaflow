@@ -48,10 +48,11 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         final raw = call.arguments as String?;
         if (raw != null) {
           try {
-            final data = jsonDecode(raw) as Map<String, dynamic>;
+            final decoded = jsonDecode(raw);
+            if (decoded is! Map<String, dynamic>) return;
             await _handleSmsNotification(
-              sender: data['sender'] as String? ?? '',
-              body: data['body'] as String? ?? '',
+              sender: decoded['sender'] as String? ?? '',
+              body: decoded['body'] as String? ?? '',
             );
           } catch (_) {}
         }
@@ -133,15 +134,16 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
   Future<void> _processPendingSms() async {
     try {
       final result = await _notificationChannel.invokeMethod<List<dynamic>>('getPendingSms');
-      if (result == null || result.isEmpty) return;
+      if (result == null || result is! List || result.isEmpty) return;
       developer.log('Processing ${result.length} pending SMS from notification listener', name: 'SmsNotification');
       for (final raw in result) {
         if (raw is! String) continue;
         try {
-          final data = jsonDecode(raw) as Map<String, dynamic>;
+          final decoded = jsonDecode(raw);
+          if (decoded is! Map<String, dynamic>) continue;
           await _handleSmsNotification(
-            sender: data['sender'] as String? ?? '',
-            body: data['body'] as String? ?? '',
+            sender: decoded['sender'] as String? ?? '',
+            body: decoded['body'] as String? ?? '',
           );
         } catch (_) {}
       }

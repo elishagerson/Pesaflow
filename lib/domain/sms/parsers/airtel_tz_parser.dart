@@ -17,7 +17,7 @@ class AirtelTzParser implements SmsParser {
     );
     final match = regex.firstMatch(text);
     if (match != null) {
-      return parseAmount(match.group(1)!);
+      return parseAmount(match.group(1) ?? '');
     }
     return null;
   }
@@ -35,8 +35,8 @@ class AirtelTzParser implements SmsParser {
       );
       var match = swReceivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -60,8 +60,8 @@ class AirtelTzParser implements SmsParser {
       );
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -85,8 +85,8 @@ class AirtelTzParser implements SmsParser {
       );
       match = swSentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -110,8 +110,8 @@ class AirtelTzParser implements SmsParser {
       );
       match = engSentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -135,7 +135,7 @@ class AirtelTzParser implements SmsParser {
       );
       match = swDepositRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -159,7 +159,7 @@ class AirtelTzParser implements SmsParser {
       );
       match = engDepositRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 

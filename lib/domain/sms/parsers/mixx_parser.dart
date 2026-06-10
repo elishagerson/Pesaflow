@@ -17,7 +17,7 @@ class MixxParser implements SmsParser {
     );
     final match = swaRegex.firstMatch(text);
     if (match != null) {
-      return parseAmount(match.group(1)!);
+      return parseAmount(match.group(1) ?? '');
     }
     return null;
   }
@@ -35,8 +35,8 @@ class MixxParser implements SmsParser {
       );
       var match = receivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -60,8 +60,8 @@ class MixxParser implements SmsParser {
       );
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -85,8 +85,8 @@ class MixxParser implements SmsParser {
       );
       match = sentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -110,8 +110,8 @@ class MixxParser implements SmsParser {
       );
       match = malipoRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(2)!);
-        final recipient = match.group(1)!.trim();
+        final amt = parseAmount(match.group(2) ?? '');
+        final recipient = (match.group(1) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -135,7 +135,7 @@ class MixxParser implements SmsParser {
       );
       match = bundleRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1) ?? '');
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -159,8 +159,8 @@ class MixxParser implements SmsParser {
       );
       match = engSentRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final recipient = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -184,8 +184,8 @@ class MixxParser implements SmsParser {
       );
       match = paidBalanceRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(2)!);
-        final recipient = match.group(1)!.trim();
+        final amt = parseAmount(match.group(2) ?? '');
+        final recipient = (match.group(1) ?? '').trim();
         final ref = _extractReference(text);
         // Balance in this SMS is the loan balance, NOT the wallet balance — skip it
         final int? bal = null;
@@ -210,8 +210,8 @@ class MixxParser implements SmsParser {
       );
       match = engCashInRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseAmount(match.group(1)!);
-        final sender = match.group(2)!.trim();
+        final amt = parseAmount(match.group(1) ?? '');
+        final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
