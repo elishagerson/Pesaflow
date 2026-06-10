@@ -1,13 +1,9 @@
 import 'dart:developer' as developer;
 import '../../../data/models/sms_parsed.dart';
+import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
 class SelcomPesaParser implements SmsParser {
-  int parseAmount(String val) {
-    final clean = val.replaceAll(',', '').trim();
-    final doubleVal = double.tryParse(clean) ?? 0.0;
-    return (doubleVal * 100).round();
-  }
 
   String _extractReference(String text) {
     // Swahili: Ref/Txn/ID ya muamala: XXXXX

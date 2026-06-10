@@ -1,13 +1,7 @@
 import 'dart:developer' as developer;
 import '../../../data/models/sms_parsed.dart';
+import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
-
-// Helper to convert money strings like "50,000.00" or "50000" into integer cents
-int parseBankAmount(String val) {
-  final clean = val.replaceAll(',', '').trim();
-  final doubleVal = double.tryParse(clean) ?? 0.0;
-  return (doubleVal * 100).round();
-}
 
 class NmbBankParser implements SmsParser {
   String _extractReference(String text) {
@@ -20,7 +14,7 @@ class NmbBankParser implements SmsParser {
     final regex = RegExp(r'Salio:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final match = regex.firstMatch(text);
     if (match != null) {
-      return parseBankAmount(match.group(1)!);
+      return parseAmount(match.group(1)!);
     }
     return null;
   }
@@ -38,7 +32,7 @@ class NmbBankParser implements SmsParser {
       );
       var match = debitRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final merchant = match.group(2)!.trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -63,7 +57,7 @@ class NmbBankParser implements SmsParser {
       );
       match = creditRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final source = match.group(2)!.trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -88,7 +82,7 @@ class NmbBankParser implements SmsParser {
       );
       match = feesRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final desc = match.group(2)!.trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -123,7 +117,7 @@ class CrdbBankParser implements SmsParser {
     final regex = RegExp(r'Available:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
     final match = regex.firstMatch(text);
     if (match != null) {
-      return parseBankAmount(match.group(1)!);
+      return parseAmount(match.group(1)!);
     }
     return null;
   }
@@ -141,7 +135,7 @@ class CrdbBankParser implements SmsParser {
       );
       var match = debitRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final merchant = match.group(2)!.trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -166,7 +160,7 @@ class CrdbBankParser implements SmsParser {
       );
       match = creditRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final source = match.group(2)!.trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -204,10 +198,10 @@ class NbcBankParser implements SmsParser {
       );
       var match = debitRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final acct = match.group(2)!.trim();
         final desc = match.group(3)!.trim();
-        final bal = parseBankAmount(match.group(4)!);
+        final bal = parseAmount(match.group(4)!);
 
         return SmsParsed(
           amount: amt,
@@ -229,10 +223,10 @@ class NbcBankParser implements SmsParser {
       );
       match = creditRegex.firstMatch(text);
       if (match != null) {
-        final amt = parseBankAmount(match.group(1)!);
+        final amt = parseAmount(match.group(1)!);
         final acct = match.group(2)!.trim();
         final desc = match.group(3)!.trim();
-        final bal = parseBankAmount(match.group(4)!);
+        final bal = parseAmount(match.group(4)!);
 
         return SmsParsed(
           amount: amt,

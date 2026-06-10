@@ -27,9 +27,10 @@ void main() {
       expect(ProviderMatcher.matchProvider('Airtel'), 'AirtelMoney_TZ');
     });
 
-    test('matches Tigo/Mixx shortcodes', () {
+    test('matches Tigo/Mixx/Yas shortcodes', () {
       expect(ProviderMatcher.matchProvider('TIGO'), 'TigoPesa_TZ');
       expect(ProviderMatcher.matchProvider('MIXX'), 'TigoPesa_TZ');
+      expect(ProviderMatcher.matchProvider('YAS'), 'TigoPesa_TZ');
       expect(ProviderMatcher.matchProvider('T-PESA'), 'TigoPesa_TZ');
     });
 
@@ -411,6 +412,43 @@ void main() {
 
       expect(result, isNotNull);
       expect(result!.senderOrRecipient, 'JOHN DOE');
+    });
+
+    test('parses Malipo yamekamilika kwenda (Nivushe Plus)', () {
+      const sms =
+          'Malipo yamekamilika kwenda Nivushe Plus, Kiasi Tsh645,728. Salio jipya ni Tsh 47,272. Ada Tsh 0. VAT TSh 0. Kumbukumbu no.26394529507543. 21/05/26 16:25.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 64572800);
+      expect(result.senderOrRecipient, 'Nivushe Plus');
+      expect(result.reference, '26394529507543');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 4727200);
+    });
+
+    test('parses paid balance (Bustisha loan repayment)', () {
+      const sms =
+          'You have successfully paid your Bustisha Balance by TSh 117,904.55. Your outstanding balance: TSh 8,330.60. New balance: TSh 0. TxnID: 26794215512428. Loan ID: 202606081844181845670752806590. 10/06/26 10:38.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 11790455);
+      expect(result.senderOrRecipient, 'Bustisha');
+      expect(result.reference, '26794215512428');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 0);
+    });
+
+    test('parses Malipo with Kumbukumbu no. reference', () {
+      const sms =
+          'Malipo yamekamilika kwenda Nivushe Plus, Kiasi Tsh645,728. Salio jipya ni Tsh 47,272. Ada Tsh 0. VAT TSh 0. Kumbukumbu no.26394529507543. 21/05/26 16:25.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.reference, '26394529507543');
     });
   });
 
