@@ -217,13 +217,19 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(largeTitle ? 96.0 : 44.0);
+  Size get preferredSize {
+    if (!largeTitle) return const Size.fromHeight(56.0);
+    final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
+    return Size.fromHeight(hasRow ? 156.0 : 116.0);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final top = MediaQuery.of(context).padding.top;
+
+    final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
 
     return ClipRect(
       child: BackdropFilter(
@@ -238,7 +244,8 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (leading != null || (actions != null && actions!.isNotEmpty))
+              SizedBox(height: hasRow ? 4.0 : 12.0),
+              if (hasRow)
                 SizedBox(
                   height: 44,
                   child: Row(
@@ -251,7 +258,11 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               if (largeTitle)
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, bottom: 8),
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    top: hasRow ? 4.0 : 0,
+                    bottom: 12,
+                  ),
                   child: Text(
                     title,
                     style: TextStyle(
