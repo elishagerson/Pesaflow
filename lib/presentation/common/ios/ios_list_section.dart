@@ -141,12 +141,22 @@ class IosListRow extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          onTap!();
-        },
-        child: content,
+      final isDarkMode = isDark(context);
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap!();
+          },
+          highlightColor: isDarkMode
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.black.withValues(alpha: 0.03),
+          splashColor: isDarkMode
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
+          child: content,
+        ),
       );
     }
     return content;
