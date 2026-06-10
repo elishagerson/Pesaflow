@@ -49,14 +49,20 @@ class SmsBackgroundService {
   final Telephony _telephony = Telephony.instance;
   Timer? _inboxScanTimer;
   DateTime _lastInboxScan = DateTime(2000);
-  bool _permissionsAttempted = false;
+  bool _permissionsChecked = false;
+  bool _permissionsGranted = false;
 
   SmsBackgroundService(this._smsProcessor);
 
   /// Registers live foreground/background SMS listeners AND
   /// starts periodic inbox scanning as a fallback (critical for Android 14+
   /// where RECEIVE_SMS broadcast is restricted).
+  ///
+  /// Permissions are requested first, before any native method channel calls,
+  /// to prevent the telephony plugin from conflating multiple pending
+  /// permission results on its single `result` field.
   Future<void> initialize() async {
+    await _ensurePermissions();
     await _registerSmsListeners();
     await _scanInboxOnce();
     _startPeriodicInboxScan();
@@ -88,11 +94,12 @@ class SmsBackgroundService {
   }
 
   Future<bool> _ensurePermissions() async {
-    if (_permissionsAttempted) return false;
-    _permissionsAttempted = true;
+    if (_permissionsChecked) return _permissionsGranted;
+    _permissionsChecked = true;
     try {
       final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-      return granted == true;
+      _permissionsGranted = granted == true;
+      return _permissionsGranted;
     } on MissingPluginException {
       developer.log('Telephony plugin not available', name: 'SmsBackground');
       return false;
