@@ -54,7 +54,13 @@ class TransactionListScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      body: Stack(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(filteredTransactionsStreamProvider);
+          ref.invalidate(recentTransactionsStreamProvider);
+          ref.invalidate(accountsStreamProvider);
+        },
+        child: Stack(
         children: [
           // ── TRANSACTIONS LIST LAYER ──
           transactionsAsync.when(
@@ -153,7 +159,7 @@ class TransactionListScreen extends ConsumerWidget {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: dailyNetChange > 0
-                                    ? const AppTheme.transferColorDark
+                                    ? AppTheme.transferColorDark
                                     : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
                               ),
                             ),
@@ -303,7 +309,7 @@ class TransactionListScreen extends ConsumerWidget {
                                           fontWeight: FontWeight.w800,
                                           fontSize: 16,
                                           color: amtType == AmountType.income
-                                              ? const AppTheme.transferColorDark
+                                              ? AppTheme.transferColorDark
                                               : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
                                         ),
                                       ),
@@ -527,14 +533,14 @@ class TransactionListScreen extends ConsumerWidget {
           ),
         ],
       ),
-      // Glowing Floating Action Button (FAB)
+      ),
       floatingActionButton: Container(
         margin: const EdgeInsets.only(bottom: 80), // Positioned above the custom tab bar
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: const AppTheme.transferColorDark.withOpacity(0.35),
+              color: AppTheme.transferColorDark.withOpacity(0.35),
               blurRadius: 12,
               spreadRadius: 2,
               offset: const Offset(0, 4),
@@ -543,7 +549,7 @@ class TransactionListScreen extends ConsumerWidget {
         ),
         child: FloatingActionButton(
           onPressed: () => context.go('/transactions/add'),
-          backgroundColor: const AppTheme.transferColorDark,
+          backgroundColor: AppTheme.transferColorDark,
           foregroundColor: Colors.black,
           shape: const CircleBorder(),
           elevation: 0,
@@ -579,12 +585,12 @@ class TransactionListScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: const AppTheme.transferColorDark.withOpacity(0.35),
+              color: AppTheme.transferColorDark.withOpacity(0.35),
               width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: const AppTheme.transferColorDark.withOpacity(0.12),
+                color: AppTheme.transferColorDark.withOpacity(0.12),
                 blurRadius: 16,
                 spreadRadius: 1,
                 offset: const Offset(0, 4),

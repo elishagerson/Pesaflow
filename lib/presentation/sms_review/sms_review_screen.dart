@@ -360,10 +360,10 @@ class SmsReviewScreen extends ConsumerWidget {
                                                 padding: const EdgeInsets.symmetric(
                                                     horizontal: 8, vertical: 4),
                                                 decoration: BoxDecoration(
-                                                  color: const AppTheme.transferColorDark.withOpacity(0.08),
+                                                  color: AppTheme.transferColorDark.withOpacity(0.08),
                                                   borderRadius: BorderRadius.circular(100),
                                                   border: Border.all(
-                                                    color: const AppTheme.transferColorDark.withOpacity(0.2),
+                                                    color: AppTheme.transferColorDark.withOpacity(0.2),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -372,7 +372,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                                   children: [
                                                     ConfidenceRing(
                                                       score: 0.94,
-                                                      color: const AppTheme.transferColorDark,
+                                                      color: AppTheme.transferColorDark,
                                                       size: 12,
                                                     ),
                                                     const SizedBox(width: 6),
@@ -380,7 +380,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                                       '94% MATCH',
                                                       style: TextStyle(
                                                         color: theme.brightness == Brightness.dark
-                                                            ? const AppTheme.transferColorDark
+                                                            ? AppTheme.transferColorDark
                                                             : const Color(0xFF2E7D32),
                                                         fontSize: 9,
                                                         fontWeight: FontWeight.w900,
@@ -674,17 +674,17 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                       decoration: BoxDecoration(
                         color: Colors.green.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(color: const AppTheme.transferColorDark, width: 3),
+                        border: Border.all(color: AppTheme.transferColorDark, width: 3),
                       ),
                       child: Center(
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           decoration: BoxDecoration(
-                            color: const AppTheme.transferColorDark,
+                            color: AppTheme.transferColorDark,
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const AppTheme.transferColorDark.withOpacity(0.4),
+                                color: AppTheme.transferColorDark.withOpacity(0.4),
                                 blurRadius: 15,
                               )
                             ],
