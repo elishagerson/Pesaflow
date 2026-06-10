@@ -94,7 +94,7 @@ class BudgetListScreen extends ConsumerWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withValues(alpha: 0.08)
@@ -399,7 +399,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 color: status.isOverBudget
                                     ? const Color(0xFFFF453A).withOpacity(0.15)
                                     : status.isOnTrack
-                                        ? const Color(0xFF30D158).withOpacity(0.15)
+                                        ? const AppTheme.transferColorDark.withOpacity(0.15)
                                         : Colors.orange.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(100),
                               ),
@@ -411,7 +411,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   color: status.isOverBudget
                                       ? const Color(0xFFFF453A)
                                       : status.isOnTrack
-                                          ? const Color(0xFF30D158)
+                                          ? const AppTheme.transferColorDark
                                           : Colors.orange,
                                   letterSpacing: 0.3,
                                 ),
@@ -754,7 +754,7 @@ class BudgetListScreen extends ConsumerWidget {
                                               Container(
                                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFF30D158).withOpacity(0.12),
+                                                  color: const AppTheme.transferColorDark.withOpacity(0.12),
                                                   borderRadius: BorderRadius.circular(12),
                                                 ),
                                                 child: const Text(
@@ -762,7 +762,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                   style: TextStyle(
                                                     fontSize: 9,
                                                     fontWeight: FontWeight.w900,
-                                                    color: Color(0xFF30D158),
+                                                    color: AppTheme.transferColorDark,
                                                   ),
                                                 ),
                                               )
