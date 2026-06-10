@@ -51,59 +51,43 @@ class TransactionListScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // iOS-style nav header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Transactions',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
-                        IconButton(
-                          icon: const Icon(Icons.clear_all_rounded, color: Colors.red),
-                          tooltip: 'Clear Filters',
-                          onPressed: () {
-                            ref.read(transactionTypeFilterProvider.notifier).state = 'All';
-                            ref.read(transactionAccountFilterProvider.notifier).state = null;
-                            ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                            ref.read(transactionSearchQueryProvider.notifier).state = '';
-                          },
-                        ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.filter_list_rounded,
-                          color: (activeAccount != null || activeCategory != null)
-                              ? theme.colorScheme.primary
-                              : (theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600]),
-                        ),
-                        onPressed: () {
-                          _showFiltersBottomSheet(context, ref);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_circle_rounded,
-                          color: theme.colorScheme.primary,
-                        ),
-                        onPressed: () => context.go('/transactions/add'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+      appBar: IosNavBar(
+        title: 'Transactions',
+        largeTitle: true,
+        actions: [
+          if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
+            IconButton(
+              icon: const Icon(Icons.clear_all_rounded, color: Colors.red),
+              tooltip: 'Clear Filters',
+              onPressed: () {
+                ref.read(transactionTypeFilterProvider.notifier).state = 'All';
+                ref.read(transactionAccountFilterProvider.notifier).state = null;
+                ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                ref.read(transactionSearchQueryProvider.notifier).state = '';
+              },
             ),
+          IconButton(
+            icon: Icon(
+              Icons.filter_list_rounded,
+              color: (activeAccount != null || activeCategory != null)
+                  ? theme.colorScheme.primary
+                  : (theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600]),
+            ),
+            onPressed: () {
+              _showFiltersBottomSheet(context, ref);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.add_circle_rounded,
+              color: theme.colorScheme.primary,
+            ),
+            onPressed: () => context.go('/transactions/add'),
+          ),
+        ],
+      ),
+      body: SafeArea(top: false, child: Column(
+          children: [
             // Live Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
