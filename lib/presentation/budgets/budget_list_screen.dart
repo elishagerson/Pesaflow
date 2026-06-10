@@ -96,12 +96,10 @@ class BudgetListScreen extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xE60F1013) : const Color(0xE6E5E5EA),
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.08)
+            : Colors.black.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
-          width: 0.5,
-        ),
       ),
       child: Row(
         children: [
@@ -118,7 +116,7 @@ class BudgetListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: activeTab == 0
-                      ? (isDark ? const Color(0xFF2C2D35) : Colors.white)
+                      ? Theme.of(context).colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -127,10 +125,11 @@ class BudgetListScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: activeTab == 0 ? FontWeight.w700 : FontWeight.w500,
                     color: activeTab == 0
-                        ? (isDark ? Colors.white : Colors.black)
-                        : (isDark ? Colors.grey[600] : Colors.grey[500]),
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurface
+                            .withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -149,7 +148,7 @@ class BudgetListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: activeTab == 1
-                      ? (isDark ? const Color(0xFF2C2D35) : Colors.white)
+                      ? Theme.of(context).colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -158,10 +157,11 @@ class BudgetListScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: activeTab == 1 ? FontWeight.w700 : FontWeight.w500,
                     color: activeTab == 1
-                        ? (isDark ? Colors.white : Colors.black)
-                        : (isDark ? Colors.grey[600] : Colors.grey[500]),
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurface
+                            .withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -238,33 +238,20 @@ class BudgetListScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Summary Card
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1B1C22).withOpacity(0.65) : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
-                width: 0.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+          GlassCard(
+            padding: const EdgeInsets.all(20),
+            borderRadius: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'BUDGET OVERVIEW',
+                  'Budget Overview',
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: Colors.grey[500],
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.5)
+                        : Colors.black.withValues(alpha: 0.4),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -311,11 +298,11 @@ class BudgetListScreen extends ConsumerWidget {
                   child: LinearProgressIndicator(
                     value: totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.0) : 0,
                     backgroundColor: isDark
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.black.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.06),
                     color: totalSpent > totalAllocated
-                        ? Colors.red[400]
-                        : (isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                        ? AppTheme.expenseColor
+                        : Theme.of(context).colorScheme.primary,
                     minHeight: 8,
                   ),
                 ),
@@ -324,7 +311,12 @@ class BudgetListScreen extends ConsumerWidget {
                   totalAllocated > 0
                       ? '${(totalSpent / totalAllocated * 100).round()}% used'
                       : '0% used',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.5)
+                        : Colors.black.withValues(alpha: 0.4),
+                  ),
                 ),
               ],
             ),
@@ -362,18 +354,18 @@ class BudgetListScreen extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: catColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
+              Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: catColor.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              getCategoryIcon(bp.category.icon),
+                              color: catColor,
+                              size: 22,
+                            ),
                           ),
-                          child: Icon(
-                            getCategoryIcon(bp.category.icon),
-                            color: catColor,
-                            size: 22,
-                          ),
-                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -412,7 +404,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Text(
-                                status.paceLabel.toUpperCase(),
+                                status.paceLabel,
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.w900,
@@ -421,7 +413,7 @@ class BudgetListScreen extends ConsumerWidget {
                                       : status.isOnTrack
                                           ? const Color(0xFF30D158)
                                           : Colors.orange,
-                                  letterSpacing: 0.5,
+                                  letterSpacing: 0.3,
                                 ),
                               ),
                             ),
@@ -570,33 +562,20 @@ class BudgetListScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Overall Savings Summary Box
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1B1C22).withOpacity(0.65) : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
-                    width: 0.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+              GlassCard(
+                padding: const EdgeInsets.all(20),
+                borderRadius: 20,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'SAVINGS OVERVIEW',
+                      'Savings Overview',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.grey[500],
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.4),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -643,16 +622,21 @@ class BudgetListScreen extends ConsumerWidget {
                       child: LinearProgressIndicator(
                         value: overallPct,
                         backgroundColor: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.black.withOpacity(0.05),
-                        color: const Color(0xFF30D158),
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.06),
+                        color: AppTheme.incomeColorDark,
                         minHeight: 8,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       '${(overallPct * 100).round()}% overall progress',
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.4),
+                      ),
                     ),
                   ],
                 ),
@@ -689,20 +673,17 @@ class BudgetListScreen extends ConsumerWidget {
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 12),
-                      clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
-                        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
                         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(
-                          color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
-                          width: 0.5,
-                        ),
+                        color: isDark
+                            ? goalColor.withValues(alpha: 0.08)
+                            : Colors.white.withValues(alpha: 0.65),
                       ),
                       child: IntrinsicHeight(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Container(width: 5, color: goalColor),
+                            Container(width: 4, color: goalColor),
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),

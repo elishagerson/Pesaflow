@@ -21,15 +21,9 @@ class PremiumSegmentedControl extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: isDark
-            ? theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
-            : theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
+            ? Colors.white.withValues(alpha: 0.08)
+            : Colors.black.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: isDark
-              ? theme.colorScheme.outlineVariant.withValues(alpha: 0.3)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-          width: 0.5,
-        ),
       ),
       child: Row(
         children: List.generate(options.length, (i) {
@@ -40,12 +34,10 @@ class PremiumSegmentedControl extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOutCubic,
-                margin: EdgeInsets.all(isSelected ? 3 : 3),
+                margin: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? (isDark
-                          ? theme.colorScheme.primary.withValues(alpha: 0.9)
-                          : theme.colorScheme.primary)
+                      ? theme.colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(19),
                 ),
@@ -56,10 +48,8 @@ class PremiumSegmentedControl extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: isSelected
-                          ? (isDark
-                              ? theme.colorScheme.onPrimary
-                              : theme.colorScheme.onPrimary)
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          ? theme.colorScheme.onPrimary
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ),

@@ -712,7 +712,7 @@ class SettingsScreen extends ConsumerWidget {
                   IosListRow(
                     leading: Icon(Icons.palette_rounded, color: theme.colorScheme.primary, size: 24),
                     title: const Text('App Accent Color'),
-                    subtitle: const _AccentColorPicker(),
+                    subtitle: const _SystemThemeIndicator(),
                   ),
                   IosToggleRow(
                     leading: Icon(Icons.pin_rounded, color: theme.colorScheme.primary, size: 24),
@@ -836,64 +836,34 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _AccentColorPicker extends ConsumerWidget {
-  const _AccentColorPicker();
+class _SystemThemeIndicator extends StatelessWidget {
+  const _SystemThemeIndicator();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final activeColorHex = ref.watch(activeAccentColorProvider).value ?? '#30D158';
-
-    final presets = [
-      {'name': 'Emerald', 'hex': '#30D158'},
-      {'name': 'Sky', 'hex': '#0A84FF'},
-      {'name': 'Rose', 'hex': '#E11D48'},
-      {'name': 'Indigo', 'hex': '#4F46E5'},
-      {'name': 'Gold', 'hex': '#F59E0B'},
-      {'name': 'Coral', 'hex': '#FF453A'},
-    ];
-
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: presets.map((preset) {
-          final color = hexToColor(preset['hex']!);
-          final isSelected = activeColorHex.toUpperCase() == preset['hex']!.toUpperCase();
-
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              ref.read(settingsRepositoryProvider).setSetting('app_accent_color', preset['hex']!);
-            },
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                border: isSelected
-                    ? Border.all(color: Colors.white, width: 2)
-                    : Border.all(color: Colors.transparent, width: 2),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: color.withOpacity(0.4),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        )
-                      ]
-                    : null,
-              ),
-              child: isSelected
-                  ? const Icon(
-                      Icons.check_rounded,
-                      color: Colors.white,
-                      size: 16,
-                    )
-                  : null,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: isDark ? Colors.grey[400] : Colors.grey[500],
+              shape: BoxShape.circle,
             ),
-          );
-        }).toList(),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            'Follows device theme',
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+          ),
+        ],
       ),
     );
   }

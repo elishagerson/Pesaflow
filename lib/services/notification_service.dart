@@ -19,7 +19,15 @@ class NotificationService {
     _initCompleter = Completer<void>();
     try {
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-      const initSettings = InitializationSettings(android: androidInit);
+      const iOSInit = DarwinInitializationSettings();
+      const macOSInit = DarwinInitializationSettings();
+      const linuxInit = LinuxInitializationSettings(defaultActionName: 'Open');
+      const initSettings = InitializationSettings(
+        android: androidInit,
+        iOS: iOSInit,
+        macOS: macOSInit,
+        linux: linuxInit,
+      );
       await _plugin.initialize(settings: initSettings);
       _initCompleter!.complete();
       developer.log('Notification plugin initialized', name: 'NotificationService');

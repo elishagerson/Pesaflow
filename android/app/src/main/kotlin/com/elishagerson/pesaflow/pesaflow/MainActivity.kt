@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
@@ -15,6 +16,7 @@ import org.json.JSONObject
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "pesaflow/notification_listener"
+    private val ACCENT_CHANNEL = "pesaflow/system_accent"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -54,6 +56,17 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        // System accent color channel
+        val accentChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ACCENT_CHANNEL)
+        accentChannel.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "getAccentColor" -> {
+                    result.success(getSystemAccentColor())
+                }
+                else -> result.notImplemented()
+            }
+        }
     }
 
     private fun isNotificationListenerEnabled(): Boolean {
@@ -88,6 +101,27 @@ class MainActivity : FlutterActivity() {
         } catch (_: Exception) {
             emptyList()
         }
+    }
+
+    private fun getSystemAccentColor(): Long {
+        // Android 12+ (API 31): Use Material You dynamic accent color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                val res = Resources.getSystem()
+                val accentResId = res.getIdentifier("system_accent1_500", "color", "android")
+                if (accentResId != 0) {
+                    val colorInt = res.getColor(accentResId, null)
+                    return colorInt.toLong() and 0xFFFFFFFFL
+                }
+            } catch (_: Exception) { }
+        }
+        // Fallback: extract colorPrimary from the activity theme
+        try {
+            val typedValue = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
+            return typedValue.data.toLong() and 0xFFFFFFFFL
+        } catch (_: Exception) { }
+        return 0xFF9E9E9EL // fallback grey
     }
 
     private fun clearPendingSms() {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,19 @@ import 'package:pesaflow/services/budget_alert_service.dart';
 import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 
+const _accentChannel = MethodChannel('pesaflow/system_accent');
+
+const _greyFallback = 0xFF9E9E9E;
+
+Future<int> _getSystemAccentColor() async {
+  if (!Platform.isAndroid) return _greyFallback;
+  try {
+    final result = await _accentChannel.invokeMethod<int>('getAccentColor');
+    if (result != null) return result & 0xFFFFFFFF;
+  } catch (_) {}
+  return _greyFallback;
+}
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
@@ -38,10 +52,12 @@ class PesaFlowApp extends ConsumerStatefulWidget {
 
 class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
   static const _notificationChannel = MethodChannel('pesaflow/notification_listener');
+  int _accentColor = _greyFallback;
 
   @override
   void initState() {
     super.initState();
+    _loadAccentColor();
 
     // Register notification listener method channel handler
     _notificationChannel.setMethodCallHandler((call) async {
@@ -192,10 +208,14 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
     }
   }
 
+  Future<void> _loadAccentColor() async {
+    final color = await _getSystemAccentColor();
+    if (mounted) setState(() => _accentColor = color);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final accentHex = ref.watch(activeAccentColorProvider).value ?? '#30D158';
-    final accentColor = hexToColor(accentHex);
+    final accentColor = Color(_accentColor);
 
     final lightCs = ColorScheme.fromSeed(
       seedColor: accentColor,

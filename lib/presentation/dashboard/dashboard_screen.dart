@@ -822,7 +822,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 124,
+              height: 132,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -1493,12 +1493,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF161618) : Colors.white,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : Colors.black.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(100),
-              border: Border.all(
-                color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                width: 0.5,
-              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -1524,7 +1522,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 14,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.5)
+                      : Colors.black.withValues(alpha: 0.4),
                 ),
               ],
             ),
@@ -1536,18 +1536,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDark
-                      ? [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)]
-                      : [Colors.grey[200]!, Colors.grey[300]!],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
-                  width: 0.5,
-                ),
               ),
               child: Icon(
                 Icons.person_outline_rounded,
@@ -1565,12 +1557,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF161618) : Colors.white,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.04),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isDark ? const Color(0x15FFFFFF) : const Color(0x0F000000),
-                      width: 0.5,
-                    ),
                   ),
                   child: Icon(
                     Icons.notifications_none_rounded,

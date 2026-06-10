@@ -168,16 +168,17 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Period', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600], letterSpacing: 0.5)),
+                        child: Text('Period', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4), letterSpacing: 0.3)),
                       ),
                       const SizedBox(height: 6),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                            color: theme.brightness == Brightness.dark
+                                ? Colors.white.withValues(alpha: 0.08)
+                                : Colors.black.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                            border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
                           ),
                           padding: const EdgeInsets.all(12),
                           child: SegmentedButton<String>(
@@ -227,9 +228,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                              color: theme.brightness == Brightness.dark
+                                  ? Colors.white.withValues(alpha: 0.08)
+                                  : Colors.black.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              border: Border.all(color: theme.brightness == Brightness.dark ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
                             ),
                             padding: const EdgeInsets.all(12),
                             child: SegmentedButton<String>(
@@ -255,7 +257,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Alert Threshold', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600], letterSpacing: 0.5)),
+                        child: Text('Alert Threshold', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4), letterSpacing: 0.3)),
                       ),
                       const SizedBox(height: 6),
                       Padding(

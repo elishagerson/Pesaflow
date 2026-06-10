@@ -5,90 +5,81 @@ import 'package:flutter/services.dart';
 class IosTabBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
+  final bool minimized;
 
   const IosTabBar({
     super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
+    this.minimized = false,
   });
 
   static const double navBarHeight = 72.0;
+  static const double minimizedHeight = 48.0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final height = minimized ? minimizedHeight : navBarHeight;
 
-    // Visual position tabs to route index mapping:
-    // Position 0: Assets (Dashboard - index 0)
-    // Position 1: Trade (Transactions - index 1)
-    // Position 2: Analytics Center Button (Analytics - index 3)
-    // Position 3: Vault (Budgets - index 2)
-    // Position 4: Settings (Settings - index 4)
     final visualTabs = [
       _TabConfig(
         routeIndex: 0,
-        label: 'ASSETS',
+        label: 'Assets',
         icon: Icons.account_balance_wallet_outlined,
         activeIcon: Icons.account_balance_wallet_rounded,
       ),
       _TabConfig(
         routeIndex: 1,
-        label: 'TRADE',
+        label: 'Trade',
         icon: Icons.swap_horiz_rounded,
         activeIcon: Icons.swap_horiz_rounded,
       ),
       _TabConfig(
-        routeIndex: 3, // Center Button
-        label: '', // No label for center button
+        routeIndex: 3,
+        label: '',
         icon: Icons.query_stats_rounded,
         activeIcon: Icons.query_stats_rounded,
         isCenter: true,
       ),
       _TabConfig(
         routeIndex: 2,
-        label: 'VAULT',
+        label: 'Vault',
         icon: Icons.lock_outline_rounded,
         activeIcon: Icons.lock_rounded,
       ),
       _TabConfig(
         routeIndex: 4,
-        label: 'SETTINGS',
+        label: 'Settings',
         icon: Icons.settings_outlined,
         activeIcon: Icons.settings_rounded,
       ),
     ];
 
     return Container(
-      height: navBarHeight + bottomPadding + 16,
+      height: height + bottomPadding + (minimized ? 8 : 16),
       alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: bottomPadding > 0 ? bottomPadding : 12, left: 16, right: 16),
+      padding: EdgeInsets.only(
+        bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 8 : 12),
+        left: minimized ? 24 : 16,
+        right: minimized ? 24 : 16,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-          child: Container(
-            height: navBarHeight,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            height: height,
+            padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
               color: isDark
-                  ? const Color(0xE60F1013) // Deep dark translucent gray
-                  : const Color(0xE6E5E5EA),
-              border: Border.all(
-                color: isDark
-                    ? const Color(0x1AFFFFFF) // High-end thin white border
-                    : const Color(0x1F000000),
-                width: 0.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(isDark ? 0.5 : 0.1),
-                  blurRadius: 24,
-                  offset: const Offset(0, 8),
-                ),
-              ],
+                  ? const Color(0xCC000000)
+                  : const Color(0xCCE5E5EA),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -96,7 +87,6 @@ class IosTabBar extends StatelessWidget {
                 final isSelected = tab.routeIndex == selectedIndex;
 
                 if (tab.isCenter) {
-                  // Custom glowing center button matching reference
                   return GestureDetector(
                     onTap: () {
                       HapticFeedback.mediumImpact();
@@ -106,39 +96,32 @@ class IosTabBar extends StatelessWidget {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeOutBack,
-                      width: 54,
-                      height: 54,
+                      width: minimized ? 36 : 54,
+                      height: minimized ? 36 : 54,
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isSelected
-                            ? const Color(0xFF30D158).withOpacity(0.25)
-                            : const Color(0xFF132219),
-                        border: Border.all(
-                          color: const Color(0xFF30D158),
-                          width: isSelected ? 2.0 : 1.2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF30D158).withOpacity(isSelected ? 0.4 : 0.2),
-                            blurRadius: isSelected ? 16 : 8,
-                            spreadRadius: isSelected ? 1 : 0,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                            ? theme.colorScheme.primary.withValues(alpha: 0.20)
+                            : (isDark
+                                ? Colors.white.withValues(alpha: 0.06)
+                                : Colors.black.withValues(alpha: 0.04)),
                       ),
                       child: Center(
                         child: Icon(
                           tab.icon,
-                          color: const Color(0xFF30D158),
-                          size: 26,
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : (isDark
+                                  ? Colors.white.withValues(alpha: 0.5)
+                                  : Colors.black.withValues(alpha: 0.3)),
+                          size: minimized ? 18 : 26,
                         ),
                       ),
                     ),
                   );
                 }
 
-                // Standard tabs
                 return Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -153,29 +136,43 @@ class IosTabBar extends StatelessWidget {
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
                           transitionBuilder: (child, animation) {
-                            return ScaleTransition(scale: animation, child: child);
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
                           },
                           child: Icon(
                             isSelected ? tab.activeIcon : tab.icon,
                             key: ValueKey(isSelected),
-                            size: 24,
+                            size: minimized ? 20 : 24,
                             color: isSelected
-                                ? (isDark ? Colors.white : theme.colorScheme.primary)
-                                : (isDark ? Colors.white30 : Colors.black38),
+                                ? (isDark
+                                    ? Colors.white
+                                    : theme.colorScheme.primary)
+                                : (isDark
+                                    ? Colors.white.withValues(alpha: 0.35)
+                                    : Colors.black.withValues(alpha: 0.3)),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          tab.label,
-                          style: TextStyle(
-                            fontSize: 9,
-                            letterSpacing: 0.5,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                            color: isSelected
-                                ? (isDark ? Colors.white : theme.colorScheme.primary)
-                                : (isDark ? Colors.white30 : Colors.black38),
+                        if (!minimized) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            tab.label,
+                            style: TextStyle(
+                              fontSize: 9,
+                              letterSpacing: 0.3,
+                              fontWeight:
+                                  isSelected ? FontWeight.w700 : FontWeight.w500,
+                              color: isSelected
+                                  ? (isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.primary)
+                                  : (isDark
+                                      ? Colors.white.withValues(alpha: 0.35)
+                                      : Colors.black.withValues(alpha: 0.3)),
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -230,19 +227,13 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
 
     return ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
         child: Container(
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xCC000000)
-                : const Color(0xCCF2F2F7),
-            border: Border(
-              bottom: BorderSide(
-                color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1A000000),
-                width: 0.5,
-              ),
-            ),
+                ? const Color(0xB8000000)
+                : const Color(0xB8F2F2F7),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

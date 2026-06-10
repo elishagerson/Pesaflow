@@ -575,7 +575,7 @@ class TransactionListScreen extends ConsumerWidget {
 
         return Container(
           margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-          height: 160,
+          height: 180,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
