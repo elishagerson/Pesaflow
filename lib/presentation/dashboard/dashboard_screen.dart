@@ -871,8 +871,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final (icon, message, color) = days >= 14
             ? (Icons.warning_rounded, 'It\'s been $days days since you saved — set aside some money today!', Colors.orange)
             : days >= 7
-                ? (Icons.savings_rounded, 'It\'s been $days days since your last deposit — consider saving today.', const AppTheme.transferColorDark)
-                : (Icons.check_circle_rounded, 'Last saved $days days ago.', const AppTheme.transferColorDark);
+                ? (Icons.savings_rounded, 'It\'s been $days days since your last deposit — consider saving today.', AppTheme.transferColorDark)
+                : (Icons.check_circle_rounded, 'Last saved $days days ago.', AppTheme.transferColorDark);
 
         return Container(
           padding: const EdgeInsets.all(14),
