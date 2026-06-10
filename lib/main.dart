@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
-import 'package:telephony/telephony.dart';
 
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -74,17 +73,6 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         }
       } catch (e) {
         developer.log('Onboarding check failed: $e', name: 'AppLaunch');
-      }
-
-      // Request SMS and Phone permissions on startup for automation
-      try {
-        final bool? granted = await Telephony.instance.requestPhoneAndSmsPermissions;
-        developer.log('Telephony permissions prompt on launch: granted=$granted', name: 'AppLaunch');
-        if (granted != true) {
-          developer.log('SMS automation disabled: permissions not granted', name: 'AppLaunch');
-        }
-      } catch (e) {
-        developer.log('Failed to request telephony permissions: $e', name: 'AppLaunch');
       }
 
       // Request POST_NOTIFICATIONS permission (Android 13+)

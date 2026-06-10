@@ -49,6 +49,7 @@ class SmsBackgroundService {
   final Telephony _telephony = Telephony.instance;
   Timer? _inboxScanTimer;
   DateTime _lastInboxScan = DateTime(2000);
+  bool _permissionsAttempted = false;
 
   SmsBackgroundService(this._smsProcessor);
 
@@ -86,21 +87,27 @@ class SmsBackgroundService {
     }
   }
 
+  Future<bool> _ensurePermissions() async {
+    if (_permissionsAttempted) return false;
+    _permissionsAttempted = true;
+    try {
+      final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
+      return granted == true;
+    } on MissingPluginException {
+      developer.log('Telephony plugin not available', name: 'SmsBackground');
+      return false;
+    } catch (e) {
+      developer.log('Permission request failed: $e', name: 'SmsBackground');
+      return false;
+    }
+  }
+
   /// Scans inbox once on startup to catch SMS missed while the app was closed.
   Future<void> _scanInboxOnce() async {
     final now = DateTime.now();
     try {
-      try {
-        final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-        if (granted != true) {
-          developer.log('Inbox scan skipped: permissions not granted', name: 'SmsBackground');
-          return;
-        }
-      } on MissingPluginException {
-        developer.log('Telephony plugin not available — skipping inbox scan', name: 'SmsBackground');
-        return;
-      } catch (e) {
-        developer.log('Permission request failed: $e', name: 'SmsBackground');
+      if (!await _ensurePermissions()) {
+        developer.log('Inbox scan skipped: permissions not granted', name: 'SmsBackground');
         return;
       }
 
@@ -152,16 +159,7 @@ class SmsBackgroundService {
   Future<void> _scanRecentInbox() async {
     final now = DateTime.now();
     try {
-      try {
-        final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-        if (granted != true) return;
-      } on MissingPluginException {
-        developer.log('Telephony plugin not available — skipping periodic scan', name: 'SmsBackground');
-        return;
-      } catch (e) {
-        developer.log('Permission request failed: $e', name: 'SmsBackground');
-        return;
-      }
+      if (!await _ensurePermissions()) return;
 
       final messages = await _telephony.getInboxSms(
         columns: [SmsColumn.ADDRESS, SmsColumn.BODY, SmsColumn.DATE],
