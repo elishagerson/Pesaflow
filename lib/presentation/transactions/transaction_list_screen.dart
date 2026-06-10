@@ -8,13 +8,12 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
-import 'package:pesaflow/domain/analytics/insight_generator.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -339,22 +338,22 @@ class TransactionListScreen extends ConsumerWidget {
             error: (err, _) => Center(child: Text('Error loading transactions: $err')),
           ),
 
-          // ── FLOATING GLASSMOGRAPHIC HEADER ──
+          // ── GLASS HEADER ──
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: ClipRect(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                 child: Container(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 12,
+                    top: MediaQuery.of(context).padding.top + 16,
                     bottom: 12,
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? const Color(0xCC0D0E11)
+                        ? const Color(0xCC000000)
                         : const Color(0xCCF2F2F7),
                     border: Border(
                       bottom: BorderSide(
@@ -367,7 +366,6 @@ class TransactionListScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Title, Profile Avatar & Filter Controls
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Row(
@@ -375,11 +373,9 @@ class TransactionListScreen extends ConsumerWidget {
                           children: [
                             Text(
                               'Transactions',
-                              style: TextStyle(
-                                fontFamily: 'system-ui',
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -1.0,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.8,
                                 color: isDark ? Colors.white : Colors.black,
                               ),
                             ),
@@ -396,35 +392,42 @@ class TransactionListScreen extends ConsumerWidget {
                                       ref.read(transactionSearchQueryProvider.notifier).state = '';
                                     },
                                   ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.filter_list_rounded,
+                                Container(
+                                  decoration: BoxDecoration(
                                     color: (activeAccount != null || activeCategory != null)
-                                        ? theme.colorScheme.primary
-                                        : (isDark ? Colors.white70 : Colors.black87),
-                                    size: 22,
+                                        ? theme.colorScheme.primary.withOpacity(0.12)
+                                        : (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04)),
+                                    shape: BoxShape.circle,
                                   ),
-                                  onPressed: () {
-                                    _showFiltersBottomSheet(context, ref);
-                                  },
-                                ),
-                                const SizedBox(width: 8),
-                                GestureDetector(
-                                  onTap: () => context.go('/settings'),
-                                  child: Container(
-                                    width: 38,
-                                    height: 38,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: isDark ? const Color(0x33FFFFFF) : const Color(0x1F000000),
-                                        width: 0.8,
-                                      ),
-                                      image: const DecorationImage(
-                                        image: AssetImage('assets/icon/app_icon.png'),
-                                        fit: BoxFit.cover,
-                                      ),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.tune_rounded,
+                                      color: (activeAccount != null || activeCategory != null)
+                                          ? theme.colorScheme.primary
+                                          : (isDark ? Colors.white70 : Colors.black54),
+                                      size: 22,
                                     ),
+                                    onPressed: () {
+                                      _showFiltersBottomSheet(context, ref);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04),
+                                    border: Border.all(
+                                      color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
+                                      width: 0.8,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.person_outline_rounded,
+                                    size: 18,
+                                    color: isDark ? Colors.white70 : Colors.black54,
                                   ),
                                 ),
                               ],
@@ -432,90 +435,62 @@ class TransactionListScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      // Search Bar Container
+                      const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Container(
-                          height: 46,
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? const Color(0xFF1B1C22).withOpacity(0.6)
-                                : Colors.white.withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
-                              width: 0.5,
+                        child: TextField(
+                          controller: searchController,
+                          onChanged: (val) {
+                            ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Search transactions...',
+                            prefixIcon: Icon(
+                              Icons.search_rounded,
+                              size: 20,
                             ),
-                          ),
-                          child: TextField(
-                            controller: searchController,
-                            onChanged: (val) {
-                              ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Search transactions...',
-                              hintStyle: TextStyle(
-                                fontSize: 14,
-                                color: isDark ? Colors.white30 : Colors.black38,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.search_rounded,
-                                color: isDark ? Colors.white30 : Colors.black38,
-                                size: 20,
-                              ),
-                              suffixIcon: searchQuery.isNotEmpty
-                                  ? IconButton(
-                                      icon: Icon(Icons.clear_rounded, size: 16, color: isDark ? Colors.white54 : Colors.black54),
-                                      onPressed: () {
-                                        ref.read(transactionSearchQueryProvider.notifier).state = '';
-                                      },
-                                    )
-                                  : null,
-                              filled: false,
-                              contentPadding: const EdgeInsets.symmetric(vertical: 11),
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
+                            suffixIcon: searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: Icon(Icons.clear_rounded, size: 16, color: isDark ? Colors.white54 : Colors.black54),
+                                    onPressed: () {
+                                      ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                    },
+                                  )
+                                : null,
+                            isDense: true,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      // Horizontal filter tabs row
+                      const SizedBox(height: 10),
                       SizedBox(
-                        height: 38,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        height: 34,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
                             final isSelected = activeType == type;
                             return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: TactileSpringContainer(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: GestureDetector(
                                 onTap: () {
                                   ref.read(transactionTypeFilterProvider.notifier).state = type;
                                 },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeOutCubic,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? const Color(0xFF2C2D35) : Colors.black12)
-                                        : Colors.transparent,
+                                        ? theme.colorScheme.primary
+                                        : (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04)),
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: Text(
                                     type,
                                     style: TextStyle(
                                       color: isSelected
-                                          ? (isDark ? Colors.white : Colors.black)
-                                          : (isDark ? Colors.white30 : Colors.black38),
-                                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                                          ? theme.colorScheme.onPrimary
+                                          : (isDark ? Colors.white60 : Colors.black45),
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                                       fontSize: 13,
                                     ),
                                   ),
@@ -565,32 +540,43 @@ class TransactionListScreen extends ConsumerWidget {
   // ── INSIGHTS CARD BUILDER ──
   Widget _buildInsightsCard(BuildContext context, WidgetRef ref, bool isDark) {
     final insightsAsync = ref.watch(insightsProvider);
+    final monthlyTotalsAsync = ref.watch(monthlyTotalsProvider);
 
     return insightsAsync.maybeWhen(
       data: (insights) {
         final String title;
         final String message;
+        final InsightSeverity severity;
 
         if (insights.isNotEmpty) {
           title = insights.first.title;
           message = insights.first.message;
+          severity = insights.first.severity;
         } else {
           title = "Spend analysis complete.";
           message = "You saved 12% more than last month in the 'Dining' category.";
+          severity = InsightSeverity.positive;
         }
+
+        final Color accentColor = switch (severity) {
+          InsightSeverity.positive => const Color(0xFF30D158),
+          InsightSeverity.neutral => const Color(0xFFFF9F0A),
+          InsightSeverity.warning => const Color(0xFFFF453A),
+          InsightSeverity.critical => const Color(0xFFFF453A),
+        };
 
         return Container(
           margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-          height: 180,
+          height: 170,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: AppTheme.transferColorDark.withOpacity(0.35),
+              color: accentColor.withOpacity(0.3),
               width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.transferColorDark.withOpacity(0.12),
+                color: accentColor.withOpacity(0.1),
                 blurRadius: 16,
                 spreadRadius: 1,
                 offset: const Offset(0, 4),
@@ -599,57 +585,40 @@ class TransactionListScreen extends ConsumerWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(23),
-            child: Stack(
-              children: [
-                // Dark green gradient background panel
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF0C1911),
-                        Color(0xFF070B08),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF0C1911),
+                    Color(0xFF070B08),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                // Glowing emerald crystal positioned on the right
-                Positioned(
-                  right: -10,
-                  bottom: -10,
-                  top: -10,
-                  child: Opacity(
-                    opacity: 0.85,
-                    child: Image.asset(
-                      'assets/images/emerald_crystal.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                // Text details aligned on the left
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'INSIGHTS',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.5,
-                          color: AppTheme.transferColorDark,
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'INSIGHTS',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
+                            color: accentColor,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.52,
-                        child: Text(
+                        const SizedBox(height: 8),
+                        Text(
                           title,
                           style: const TextStyle(
-                            fontSize: 22,
+                            fontSize: 20,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.6,
                             color: Colors.white,
@@ -658,11 +627,8 @@ class TransactionListScreen extends ConsumerWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.52,
-                        child: Text(
+                        const SizedBox(height: 6),
+                        Text(
                           message,
                           style: TextStyle(
                             fontSize: 12,
@@ -673,17 +639,57 @@ class TransactionListScreen extends ConsumerWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 2,
+                    child: monthlyTotalsAsync.when(
+                      data: (totals) {
+                        final income = (totals['income'] ?? 0) / 100.0;
+                        final expense = (totals['expense'] ?? 0) / 100.0;
+                        final maxVal = [income, expense, 1.0].reduce((a, b) => a > b ? a : b);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _MiniBar(
+                              label: 'Income',
+                              value: income,
+                              maxValue: maxVal,
+                              color: const Color(0xFF30D158),
+                              formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                            ),
+                            const SizedBox(height: 10),
+                            _MiniBar(
+                              label: 'Expense',
+                              value: expense,
+                              maxValue: maxVal,
+                              color: accentColor,
+                              formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                            ),
+                          ],
+                        );
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
       orElse: () => const SizedBox.shrink(),
     );
+  }
+
+  String _formatKsh(double val) {
+    if (val >= 1_000_000) return '${(val / 1_000_000).toStringAsFixed(1)}M';
+    if (val >= 1_000) return '${(val / 1_000).toStringAsFixed(1)}K';
+    return val.toStringAsFixed(0);
   }
 
   void _showFiltersBottomSheet(BuildContext context, WidgetRef ref) {
@@ -748,6 +754,83 @@ class TransactionListScreen extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+}
+
+class _MiniBar extends StatelessWidget {
+  final String label;
+  final double value;
+  final double maxValue;
+  final Color color;
+  final String Function(double) formatValue;
+
+  const _MiniBar({
+    required this.label,
+    required this.value,
+    required this.maxValue,
+    required this.color,
+    required this.formatValue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fraction = maxValue > 0 ? (value / maxValue).clamp(0.0, 1.0) : 0.0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+            const Spacer(),
+            Text(
+              formatValue(value),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: fraction),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, val, _) {
+              return Container(
+                height: 8,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: val,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

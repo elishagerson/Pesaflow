@@ -52,7 +52,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         final now = DateTime.now();

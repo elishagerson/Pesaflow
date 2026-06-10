@@ -179,44 +179,93 @@ class BudgetListScreen extends ConsumerWidget {
     if (budgets.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  shape: BoxShape.circle,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: GlassCard(
+            padding: const EdgeInsets.all(32),
+            borderRadius: 24,
+            accentColor: theme.colorScheme.primary,
+            elevation: CardElevation.medium,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.15),
+                        theme.colorScheme.primary.withOpacity(0.02),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withOpacity(0.25),
+                      width: 1,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.pie_chart_outline_rounded,
+                    size: 44,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-                child: Icon(
-                  Icons.pie_chart_outline_rounded,
-                  size: 56,
-                  color: theme.colorScheme.primary,
+                const SizedBox(height: 24),
+                Text(
+                  'No Budgets Yet',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'No Budgets Yet',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 10),
+                Text(
+                  'Create envelope budgets to track spending limits on categories like Food, Transport, or Entertainment.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.8),
+                    height: 1.4,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Create envelope budgets to track spending limits on categories like Food, Transport, or Entertainment.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                const SizedBox(height: 28),
+                TactileSpringContainer(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.go('/budgets/add');
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.add_rounded, color: theme.colorScheme.onPrimary, size: 20),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Create First Budget',
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 28),
-              ElevatedButton.icon(
-                onPressed: () => context.go('/budgets/add'),
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('Create First Budget'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -496,52 +545,99 @@ class BudgetListScreen extends ConsumerWidget {
         if (goals.isEmpty) {
           return Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.1),
-                      shape: BoxShape.circle,
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: GlassCard(
+                padding: const EdgeInsets.all(32),
+                borderRadius: 24,
+                accentColor: theme.colorScheme.primary,
+                elevation: CardElevation.medium,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            theme.colorScheme.primary.withOpacity(0.15),
+                            theme.colorScheme.primary.withOpacity(0.02),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: theme.colorScheme.primary.withOpacity(0.25),
+                          width: 1,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.savings_rounded,
+                        size: 44,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.savings_rounded,
-                      size: 56,
-                      color: theme.colorScheme.primary,
+                    const SizedBox(height: 24),
+                    Text(
+                      'Emergency Reserves & Goals',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Emergency Reserves & Goals',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 10),
+                    Text(
+                      'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.8),
+                        height: 1.4,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                    const SizedBox(height: 28),
+                    TactileSpringContainer(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const SavingsGoalFormSheet(),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withOpacity(0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.add_rounded, color: theme.colorScheme.onPrimary, size: 20),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Set First Savings Goal',
+                              style: TextStyle(
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 28),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => const SavingsGoalFormSheet(),
-                      );
-                    },
-                    icon: const Icon(Icons.add_rounded),
-                    label: const Text('Set First Savings Goal'),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

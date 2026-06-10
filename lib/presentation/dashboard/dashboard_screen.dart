@@ -926,7 +926,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final percentInt = (pct * 100).round();
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1406,8 +1405,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final budgetsAsync = ref.watch(budgetProgressProvider);
     final reviewQueueAsync = ref.watch(reviewQueueStreamProvider);
     final totalsAsync = ref.watch(monthlyTotalsProvider);
+    final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
+    final daysSinceLastSaveAsync = ref.watch(daysSinceLastSaveProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final showReminder = daysSinceLastSaveAsync.maybeWhen(
+      data: (days) => days >= 5,
+      orElse: () => false,
+    );
+
+    final showSavingsGoals = savingsGoalsAsync.maybeWhen(
+      data: (goals) => goals.isNotEmpty,
+      orElse: () => false,
+    );
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -1609,7 +1620,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           },
           child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 4.0,
+            bottom: 16.0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -2068,7 +2084,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
               // Monthly Overview Card (Donut Chart Revamp)
               _buildMonthlyOverview(theme),
@@ -2076,15 +2092,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
               // Budget Progress Rings (Embedded category icons)
               _buildBudgetRings(theme, context),
-              const SizedBox(height: 12),
 
-              // Savings reminder card
-              _buildSavingsReminder(theme),
-              const SizedBox(height: 12),
+              if (showReminder) ...[
+                const SizedBox(height: 24),
+                _buildSavingsReminder(theme),
+              ],
 
-              // Savings Goals Target Bento Box
-              _buildSavingsGoalsDashboard(theme, context),
-              const SizedBox(height: 12),
+              if (showSavingsGoals) ...[
+                const SizedBox(height: 24),
+                _buildSavingsGoalsDashboard(theme, context),
+              ],
+
+              const SizedBox(height: 24),
 
               // Recent Transactions Section
               Row(
@@ -2145,7 +2164,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
               ] else ...[
-                const SizedBox(height: 6),
+                const SizedBox(height: 12),
               ],
 
               recentTransAsync.when(

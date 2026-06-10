@@ -220,7 +220,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize {
     if (!largeTitle) return const Size.fromHeight(56.0);
     final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
-    return Size.fromHeight(hasRow ? 156.0 : 116.0);
+    return Size.fromHeight(hasRow ? 126.0 : 96.0);
   }
 
   @override
@@ -244,24 +244,27 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: hasRow ? 4.0 : 12.0),
+              SizedBox(height: hasRow ? 12.0 : 16.0),
               if (hasRow)
-                SizedBox(
-                  height: 44,
-                  child: Row(
-                    children: [
-                      if (leading != null) leading!,
-                      const Spacer(),
-                      if (actions != null) ...actions!,
-                    ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    height: 44,
+                    child: Row(
+                      children: [
+                        if (leading != null) leading!,
+                        const Spacer(),
+                        if (actions != null) ...actions!,
+                      ],
+                    ),
                   ),
                 ),
               if (largeTitle)
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 16,
-                    top: hasRow ? 4.0 : 0,
-                    bottom: 12,
+                    top: 8.0,
+                    bottom: 8.0,
                   ),
                   child: Text(
                     title,

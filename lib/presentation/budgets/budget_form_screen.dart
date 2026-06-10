@@ -10,6 +10,7 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
@@ -58,6 +59,22 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
   @override
   void dispose() { _nameController.dispose(); _amountController.dispose(); _capController.dispose(); super.dispose(); }
+
+  Widget _buildLeadingIcon(IconData icon, Color color) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: isDark ? 0.15 : 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        icon,
+        color: color,
+        size: 20,
+      ),
+    );
+  }
 
   Future<void> _save() async {
     if (_formKey.currentState == null || !_formKey.currentState!.validate() || _selectedCategoryId == null) {
@@ -121,46 +138,23 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         header: 'Details',
                         rows: [
                           IosListRow(
+                            leading: _buildLeadingIcon(Icons.label_rounded, theme.colorScheme.primary),
                             title: TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              decoration: const InputDecoration(labelText: 'Budget Name', hintText: 'e.g. Monthly Food', prefixIcon: Icon(Icons.label_rounded), border: InputBorder.none),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                labelText: 'Budget Name',
+                                hintText: 'e.g. Monthly Food',
+                                filled: false,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                              ),
                               validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      categoriesAsync.when(
-                        data: (cats) => ModernDropdown<String>(
-                          labelText: 'Category',
-                          value: _selectedCategoryId,
-                          prefixIcon: Icons.category_rounded,
-                          items: cats
-                              .where((c) => c.type == 'expense')
-                              .map((c) => ModernDropdownItem<String>(
-                                    value: c.id,
-                                    label: c.name,
-                                    icon: getCategoryIcon(c.icon),
-                                    color: hexToColor(c.color),
-                                    subtitle: 'Budget category for ${c.name}',
-                                  ))
-                              .toList(),
-                          onChanged: (v) => setState(() => _selectedCategoryId = v),
-                        ),
-                        loading: () => const LinearProgressIndicator(),
-                        error: (e, _) => Text('Error: $e'),
-                      ),
-                      const SizedBox(height: 8),
-                      IosListSection(
-                        header: 'Amount',
-                        rows: [
-                          IosListRow(
-                            title: TextFormField(
-                              controller: _amountController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: 'Budget Amount (Tsh)', hintText: 'e.g. 300000', prefixIcon: Icon(Icons.payments_rounded), border: InputBorder.none),
-                              validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
                             ),
                           ),
                         ],
@@ -168,20 +162,71 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: categoriesAsync.when(
+                          data: (cats) => ModernDropdown<String>(
+                            labelText: 'Category',
+                            value: _selectedCategoryId,
+                            prefixIcon: Icons.category_rounded,
+                            items: cats
+                                .where((c) => c.type == 'expense')
+                                .map((c) => ModernDropdownItem<String>(
+                                      value: c.id,
+                                      label: c.name,
+                                      icon: getCategoryIcon(c.icon),
+                                      color: hexToColor(c.color),
+                                      subtitle: 'Budget category for ${c.name}',
+                                    ))
+                                .toList(),
+                            onChanged: (v) => setState(() => _selectedCategoryId = v),
+                          ),
+                          loading: () => const LinearProgressIndicator(),
+                          error: (e, _) => Text('Error: $e'),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      IosListSection(
+                        header: 'Amount',
+                        rows: [
+                          IosListRow(
+                            leading: _buildLeadingIcon(Icons.payments_rounded, theme.colorScheme.secondary),
+                            title: TextFormField(
+                              controller: _amountController,
+                              keyboardType: TextInputType.number,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                labelText: 'Budget Amount (Tsh)',
+                                hintText: 'e.g. 300000',
+                                filled: false,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                              validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text('Period', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4), letterSpacing: 0.3)),
                       ),
                       const SizedBox(height: 6),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: theme.brightness == Brightness.dark
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : Colors.black.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                          ),
-                          padding: const EdgeInsets.all(12),
+                        child: GlassCard(
+                          padding: const EdgeInsets.all(6),
+                          borderRadius: AppTheme.radiusCard,
                           child: SegmentedButton<String>(
+                            style: SegmentedButton.styleFrom(
+                              side: BorderSide.none,
+                              backgroundColor: Colors.transparent,
+                              selectedBackgroundColor: theme.colorScheme.primary,
+                              selectedForegroundColor: theme.colorScheme.onPrimary,
+                            ),
                             segments: const [
                               ButtonSegment(value: 'weekly', label: Text('Week')),
                               ButtonSegment(value: 'biweekly', label: Text('2 Wk')),
@@ -193,11 +238,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12),
                       IosListSection(
                         header: 'Schedule',
                         rows: [
                           IosListRow(
+                            leading: _buildLeadingIcon(Icons.calendar_today_rounded, Colors.orange),
                             title: const Text('Start Date'),
                             subtitle: Text('${_startDate.day}/${_startDate.month}/${_startDate.year}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             trailing: const Icon(Icons.calendar_today_rounded, size: 20),
@@ -211,30 +257,32 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       IosListSection(
                         header: 'Rollover',
                         rows: [
-                      IosListRow(
-                        title: const Text('Enable Rollover'),
-                        subtitle: const Text('Unused budget carries to next period'),
-                        trailing: CupertinoSwitch(
-                          value: _rollover,
-                          activeColor: theme.colorScheme.primary,
-                          onChanged: (v) => setState(() => _rollover = v),
-                        ),
-                      ),
+                          IosListRow(
+                            leading: _buildLeadingIcon(Icons.replay_rounded, Colors.purple),
+                            title: const Text('Enable Rollover'),
+                            subtitle: const Text('Unused budget carries to next period'),
+                            trailing: CupertinoSwitch(
+                              value: _rollover,
+                              activeTrackColor: theme.colorScheme.primary,
+                              onChanged: (v) => setState(() => _rollover = v),
+                            ),
+                          ),
                         ],
                       ),
                       if (_rollover) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: theme.brightness == Brightness.dark
-                                  ? Colors.white.withValues(alpha: 0.08)
-                                  : Colors.black.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                            ),
-                            padding: const EdgeInsets.all(12),
+                          child: GlassCard(
+                            padding: const EdgeInsets.all(6),
+                            borderRadius: AppTheme.radiusCard,
                             child: SegmentedButton<String>(
+                              style: SegmentedButton.styleFrom(
+                                side: BorderSide.none,
+                                backgroundColor: Colors.transparent,
+                                selectedBackgroundColor: theme.colorScheme.primary,
+                                selectedForegroundColor: theme.colorScheme.onPrimary,
+                              ),
                               segments: const [
                                 ButtonSegment(value: 'all', label: Text('All')),
                                 ButtonSegment(value: 'capped', label: Text('Capped')),
@@ -244,17 +292,35 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             ),
                           ),
                         ),
-                        if (_rolloverType == 'capped')
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                            child: TextFormField(
-                              controller: _capController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: 'Max Rollover (Tsh)', prefixIcon: Icon(Icons.upcoming_rounded)),
-                            ),
+                        if (_rolloverType == 'capped') ...[
+                          const SizedBox(height: 8),
+                          IosListSection(
+                            header: 'Cap Limit',
+                            rows: [
+                              IosListRow(
+                                leading: _buildLeadingIcon(Icons.upcoming_rounded, theme.colorScheme.secondary),
+                                title: TextFormField(
+                                  controller: _capController,
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  decoration: InputDecoration(
+                                    labelText: 'Max Rollover (Tsh)',
+                                    hintText: 'e.g. 50000',
+                                    filled: false,
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    focusedErrorBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                        ],
                       ],
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 24),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text('Alert Threshold', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4), letterSpacing: 0.3)),
@@ -263,25 +329,94 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: GlassCard(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           borderRadius: AppTheme.radiusCard,
                           elevation: CardElevation.medium,
-                          child: Column(children: [
-                            Text('${(_threshold * 100).round()}%', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
-                            Slider(value: _threshold, min: 0.5, max: 1.0, divisions: 10, label: '${(_threshold * 100).round()}%', onChanged: (v) => setState(() => _threshold = v)),
-                          ]),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  _buildLeadingIcon(Icons.notifications_active_rounded, Colors.amber),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Notify when spending reaches',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${(_threshold * 100).round()}%',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 4,
+                                  activeTrackColor: theme.colorScheme.primary,
+                                  inactiveTrackColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+                                  thumbColor: theme.colorScheme.primary,
+                                  overlayColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                                  valueIndicatorShape: const RectangularSliderValueIndicatorShape(),
+                                  valueIndicatorColor: theme.colorScheme.primary,
+                                  valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                ),
+                                child: Slider(
+                                  value: _threshold,
+                                  min: 0.5,
+                                  max: 1.0,
+                                  divisions: 10,
+                                  label: '${(_threshold * 100).round()}%',
+                                  onChanged: (v) => setState(() => _threshold = v),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 36),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _save,
+                        child: TactileSpringContainer(
+                          onTap: _isLoading ? null : _save,
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  theme.colorScheme.primary.withValues(alpha: 0.8),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
                             child: _isLoading
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                                : Text(isEditing ? 'Update Budget' : 'Create Budget'),
+                                : Text(
+                                    isEditing ? 'Update Budget' : 'Create Budget',
+                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                  ),
                           ),
                         ),
                       ),
