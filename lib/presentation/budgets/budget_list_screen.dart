@@ -47,43 +47,30 @@ class BudgetListScreen extends ConsumerWidget {
     final budgetProgressAsync = ref.watch(budgetProgressProvider);
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
+      appBar: IosNavBar(
+        title: activeTab == 0 ? 'Budgets' : 'Savings Goals',
+        largeTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_rounded, size: 28),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              if (activeTab == 0) {
+                context.go('/budgets/add');
+              } else {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const SavingsGoalFormSheet(),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(top: false, child: Column(
           children: [
-            // Header Row
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    activeTab == 0 ? 'Budgets' : 'Savings Goals',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add_rounded, size: 28),
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      if (activeTab == 0) {
-                        context.go('/budgets/add');
-                      } else {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => const SavingsGoalFormSheet(),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-
             // HIG Segmented Control Slider
             _buildSegmentedControl(context, ref),
 
