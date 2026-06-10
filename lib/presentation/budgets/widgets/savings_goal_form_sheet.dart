@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
@@ -69,7 +70,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     super.dispose();
   }
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
     return Colors.grey;
@@ -257,7 +258,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                   separatorBuilder: (_, __) => const SizedBox(width: 14),
                   itemBuilder: (context, index) {
                     final colorHex = _colors[index];
-                    final colorVal = _hexToColor(colorHex);
+                    final colorVal = hexToColor(colorHex);
                     final isSelected = _selectedColor == colorHex;
 
                     return GestureDetector(
@@ -311,7 +312,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                   itemBuilder: (context, index) {
                     final item = _icons[index];
                     final isSelected = _selectedIcon == item['name'];
-                    final themeCol = _hexToColor(_selectedColor);
+                    final themeCol = hexToColor(_selectedColor);
 
                     return GestureDetector(
                       onTap: () {
@@ -350,7 +351,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _save,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _hexToColor(_selectedColor),
+                    backgroundColor: hexToColor(_selectedColor),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),

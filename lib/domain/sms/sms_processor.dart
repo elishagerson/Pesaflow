@@ -131,13 +131,30 @@ class SmsProcessor {
         senderOrRecipient: smsParsed.senderOrRecipient,
       );
 
-      // 6. Find or auto-create account
+      // 6. Find or auto-create account with provider + phone matching
       final accounts = await _accountRepo.getAllAccounts();
+      final providerAccounts = accounts.where((a) => a.provider == provider).toList();
+
       Account? targetAccount;
-      for (final acc in accounts) {
-        if (acc.provider == provider) {
-          targetAccount = acc;
-          break;
+      if (providerAccounts.length == 1) {
+        targetAccount = providerAccounts.first;
+      } else if (providerAccounts.length > 1) {
+        final phoneInSms = _extractPhoneNumber(smsParsed.senderOrRecipient);
+        if (phoneInSms != null) {
+          for (final acc in providerAccounts) {
+            if (acc.phoneNumber != null && acc.phoneNumber == phoneInSms) {
+              targetAccount = acc;
+              break;
+            }
+          }
+        }
+        if (targetAccount == null) {
+          targetAccount = providerAccounts.first;
+          developer.log(
+            'Multiple accounts for provider $provider — using ${targetAccount.name} '
+            '(phone: $phoneInSms vs accounts: ${providerAccounts.map((a) => '${a.name}:${a.phoneNumber}').join(', ')})',
+            name: 'SmsProcessor',
+          );
         }
       }
 
@@ -369,5 +386,16 @@ class SmsProcessor {
       developer.log('SmsProcessor processing failure: $e', error: e, stackTrace: stack, name: 'SmsProcessor');
     }
     return false;
+  }
+
+  /// Extracts a Tanzanian phone number (07XX/06XX/255XX) from text.
+  String? _extractPhoneNumber(String text) {
+    final regex = RegExp(r'(?:\+?255|0)[67]\d{8}(?!\d)');
+    final match = regex.firstMatch(text);
+    if (match != null) return match.group(0);
+    // Also try matching international format like 2557XXXXXXXX
+    final intlRegex = RegExp(r'255[67]\d{8}(?!\d)');
+    final intlMatch = intlRegex.firstMatch(text);
+    return intlMatch?.group(0);
   }
 }

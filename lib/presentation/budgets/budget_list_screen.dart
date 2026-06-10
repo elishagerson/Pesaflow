@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
@@ -31,13 +33,13 @@ final budgetActiveTabProvider = NotifierProvider<BudgetActiveTabNotifier, int>((
 class BudgetListScreen extends ConsumerWidget {
   const BudgetListScreen({super.key});
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
     return Colors.grey;
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'cart': return Icons.shopping_cart_rounded;
       case 'bus': return Icons.directions_bus_rounded;
@@ -59,7 +61,7 @@ class BudgetListScreen extends ConsumerWidget {
     }
   }
 
-  IconData _getGoalIcon(String iconName) {
+  IconData getGoalIcon(String iconName) {
     switch (iconName) {
       case 'savings': return Icons.savings_rounded;
       case 'laptop': return Icons.laptop_chromebook_rounded;
@@ -407,7 +409,7 @@ class BudgetListScreen extends ConsumerWidget {
               periodEnd: bp.currentPeriod?.periodEnd ?? DateTime.now().add(const Duration(days: 30)),
             );
 
-            final catColor = _hexToColor(bp.category.color);
+            final catColor = hexToColor(bp.category.color);
 
             return TactileSpringContainer(
               onTap: () => context.go('/budgets/${bp.budget.id}'),
@@ -442,7 +444,7 @@ class BudgetListScreen extends ConsumerWidget {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
-                                      _getCategoryIcon(bp.category.icon),
+                                      getCategoryIcon(bp.category.icon),
                                       color: catColor,
                                       size: 20,
                                     ),
@@ -727,7 +729,7 @@ class BudgetListScreen extends ConsumerWidget {
                 itemCount: goals.length,
                 itemBuilder: (context, index) {
                   final goal = goals[index];
-                  final goalColor = _hexToColor(goal.color);
+                  final goalColor = hexToColor(goal.color);
                   final goalPct = goal.targetAmount > 0 
                       ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
                       : 0.0;
@@ -793,7 +795,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                 ],
                                               )),
                                               Icon(
-                                                _getGoalIcon(goal.icon),
+                                                getGoalIcon(goal.icon),
                                                 color: goalColor,
                                                 size: 18,
                                               ),

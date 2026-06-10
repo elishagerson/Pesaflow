@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
@@ -31,7 +32,7 @@ class BudgetDetailScreen extends ConsumerWidget {
   final String budgetId;
   const BudgetDetailScreen({required this.budgetId, super.key});
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
     return Colors.grey;
@@ -54,7 +55,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             periodStart: bp.currentPeriod?.periodStart ?? bp.budget.startDate,
             periodEnd: bp.currentPeriod?.periodEnd ?? DateTime.now().add(const Duration(days: 30)),
           );
-          final catColor = _hexToColor(bp.category.color);
+          final catColor = hexToColor(bp.category.color);
 
           return Column(
             children: [

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -139,8 +141,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               .map((c) => ModernDropdownItem<String>(
                                     value: c.id,
                                     label: c.name,
-                                    icon: _getCategoryIcon(c.icon),
-                                    color: _hexToColor(c.color),
+                                    icon: getCategoryIcon(c.icon),
+                                    color: hexToColor(c.color),
                                     subtitle: 'Budget category for ${c.name}',
                                   ))
                               .toList(),
@@ -293,7 +295,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     );
   }
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
       return Color(int.parse('FF$clean', radix: 16));
@@ -301,7 +303,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     return Colors.grey;
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;

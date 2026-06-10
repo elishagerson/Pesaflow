@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
@@ -29,13 +31,13 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
   bool _deductFromWallet = false;
   bool _isOperationLoading = false;
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
     return Colors.grey;
   }
 
-  IconData _getGoalIcon(String iconName) {
+  IconData getGoalIcon(String iconName) {
     switch (iconName) {
       case 'savings': return Icons.savings_rounded;
       case 'laptop': return Icons.laptop_chromebook_rounded;
@@ -368,7 +370,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final goalColor = _hexToColor(widget.goal.color);
+    final goalColor = hexToColor(widget.goal.color);
     
     final contributionsAsync = ref.watch(savingsGoalContributionsStreamProvider(widget.goal.id));
 
@@ -414,7 +416,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                     border: Border.all(color: goalColor.withOpacity(0.3), width: 1.5),
                   ),
                   child: Icon(
-                    _getGoalIcon(widget.goal.icon),
+                    getGoalIcon(widget.goal.icon),
                     color: goalColor,
                     size: 26,
                   ),

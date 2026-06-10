@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
@@ -434,7 +436,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       itemBuilder: (context, index) {
                         final cat = filteredCategories[index];
                         final isSel = cat.id == _selectedCategoryId;
-                        final catColor = _hexToColor(cat.color);
+                        final catColor = hexToColor(cat.color);
 
                         return TactileSpringContainer(
                           onTap: () {
@@ -466,7 +468,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  _getCategoryIcon(cat.icon),
+                                  getCategoryIcon(cat.icon),
                                   color: isSel ? catColor : (theme.brightness == Brightness.dark ? Colors.white60 : Colors.black54),
                                   size: 24,
                                 ),
@@ -612,7 +614,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
       return Color(int.parse('FF$clean', radix: 16));
@@ -620,7 +622,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     return Colors.grey;
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;

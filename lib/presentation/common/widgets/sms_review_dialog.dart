@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
@@ -9,7 +11,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 
-IconData _getCategoryIcon(String iconName) {
+IconData getCategoryIcon(String iconName) {
   switch (iconName) {
     case 'briefcase':
       return Icons.work_rounded;
@@ -51,7 +53,7 @@ IconData _getCategoryIcon(String iconName) {
   }
 }
 
-Color _hexToColor(String hex) {
+Color hexToColor(String hex) {
   final clean = hex.replaceAll('#', '');
   if (clean.length == 6) {
     return Color(int.parse('FF$clean', radix: 16));
@@ -192,11 +194,11 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         leading: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: _hexToColor(cat.color).withOpacity(0.15),
+                            color: hexToColor(cat.color).withOpacity(0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(_getCategoryIcon(cat.icon),
-                            color: _hexToColor(cat.color), size: 18),
+                          child: Icon(getCategoryIcon(cat.icon),
+                            color: hexToColor(cat.color), size: 18),
                         ),
                         title: Text(cat.name, style: TextStyle(
                           fontSize: 14,

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
@@ -29,7 +31,7 @@ class TransactionListScreen extends ConsumerWidget {
     }
   }
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
       return Color(int.parse('FF$clean', radix: 16));
@@ -37,7 +39,7 @@ class TransactionListScreen extends ConsumerWidget {
     return Colors.grey;
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;
@@ -433,12 +435,12 @@ class TransactionListScreen extends ConsumerWidget {
                                           leading: Container(
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
-                                              color: _hexToColor(item.category.color).withOpacity(0.12),
+                                              color: hexToColor(item.category.color).withOpacity(0.12),
                                               shape: BoxShape.circle,
                                             ),
                                             child: Icon(
-                                              _getCategoryIcon(item.category.icon),
-                                              color: _hexToColor(item.category.color),
+                                              getCategoryIcon(item.category.icon),
+                                              color: hexToColor(item.category.color),
                                               size: 20,
                                             ),
                                           ),

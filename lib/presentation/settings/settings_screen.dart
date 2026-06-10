@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
@@ -17,7 +19,7 @@ import 'package:pesaflow/services/backup_service.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
       return Color(int.parse('FF$clean', radix: 16));
@@ -25,7 +27,7 @@ class SettingsScreen extends ConsumerWidget {
     return Colors.grey;
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;
@@ -67,7 +69,7 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  IconData _getAccountIcon(String iconStr) {
+  IconData getAccountIcon(String iconStr) {
     switch (iconStr) {
       case 'phone-android':
         return Icons.phone_android_rounded;
@@ -97,7 +99,7 @@ class SettingsScreen extends ConsumerWidget {
             const Center(child: Padding(padding: EdgeInsets.all(32), child: Text('No active accounts.')))
           else
             ...accounts.map((acc) => IosListRow(
-              leading: Icon(_getAccountIcon(acc.icon), color: theme.colorScheme.primary),
+              leading: Icon(getAccountIcon(acc.icon), color: theme.colorScheme.primary),
               title: Text(acc.name, style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(
                 acc.type.toUpperCase().replaceAll('_', ' ') +
@@ -160,10 +162,10 @@ class SettingsScreen extends ConsumerWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _hexToColor(cat.color).withOpacity(0.15),
+                  color: hexToColor(cat.color).withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(_getCategoryIcon(cat.icon), color: _hexToColor(cat.color)),
+                child: Icon(getCategoryIcon(cat.icon), color: hexToColor(cat.color)),
               ),
               title: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(cat.type.toUpperCase(), style: const TextStyle(fontSize: 11, color: Colors.grey)),
@@ -268,7 +270,7 @@ class SettingsScreen extends ConsumerWidget {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: _hexToColor(hex),
+                        color: hexToColor(hex),
                         shape: BoxShape.circle,
                         border: isSelected
                             ? Border.all(color: theme.brightness == Brightness.dark ? Colors.white : Colors.black, width: 2)
@@ -299,7 +301,7 @@ class SettingsScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 1.5) : null,
                       ),
-                      child: Icon(_getCategoryIcon(icName), size: 24, color: isSelected ? theme.colorScheme.primary : Colors.grey),
+                      child: Icon(getCategoryIcon(icName), size: 24, color: isSelected ? theme.colorScheme.primary : Colors.grey),
                     ),
                   );
                 }).toList(),

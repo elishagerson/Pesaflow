@@ -18,7 +18,9 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:flutter/services.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -298,7 +300,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  IconData _getAccountIcon(String iconStr) {
+  IconData getAccountIcon(String iconStr) {
     switch (iconStr) {
       case 'phone-android':
         return Icons.phone_android_rounded;
@@ -310,7 +312,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  IconData _getCategoryIcon(String iconName) {
+  IconData getCategoryIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;
@@ -352,7 +354,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  IconData _getTrackerIcon(String iconName) {
+  IconData getTrackerIcon(String iconName) {
     switch (iconName) {
       case 'briefcase':
         return Icons.work_rounded;
@@ -371,7 +373,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  Color _hexToColor(String hex) {
+  Color hexToColor(String hex) {
     final clean = hex.replaceAll('#', '');
     if (clean.length == 6) {
       return Color(int.parse('FF$clean', radix: 16));
@@ -893,8 +895,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 itemBuilder: (_, i) {
                   final bp = budgets[i];
                   final pct = bp.percentage.clamp(0.0, 1.0);
-                  final catColor = _hexToColor(bp.category.color);
-                  final catIcon = _getCategoryIcon(bp.category.icon);
+                  final catColor = hexToColor(bp.category.color);
+                  final catIcon = getCategoryIcon(bp.category.icon);
                   
                   return _buildSingleBudgetRing(
                     context: context,
@@ -970,7 +972,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         if (goals.isEmpty) return const SizedBox.shrink();
 
         final goal = goals.first;
-        final goalColor = _hexToColor(goal.color);
+        final goalColor = hexToColor(goal.color);
         final pct = goal.targetAmount > 0 
             ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
             : 0.0;
@@ -1200,7 +1202,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     itemBuilder: (context, index) {
                       final item = trackersList[index];
                       final isSelected = item.id == activeTrackerId;
-                      final itemColor = _hexToColor(item.color);
+                      final itemColor = hexToColor(item.color);
 
                       return TactileSpringContainer(
                         onTap: () {
@@ -1238,7 +1240,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  _getTrackerIcon(item.icon),
+                                  getTrackerIcon(item.icon),
                                   color: itemColor,
                                   size: 20,
                                 ),
@@ -1351,7 +1353,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ),
                       child: Icon(
-                        _getTrackerIcon(ico),
+                        getTrackerIcon(ico),
                         color: isSel
                             ? theme.colorScheme.primary
                             : Colors.grey,
@@ -1374,7 +1376,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: colorsList.map((col) {
                   final isSel = selectedColorHex == col;
-                  final c = _hexToColor(col);
+                  final c = hexToColor(col);
                   return GestureDetector(
                     onTap: () => setState(() => selectedColorHex = col),
                     child: Container(
@@ -1451,7 +1453,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
     final trackerColor = activeTrackerAsync.maybeWhen(
       data: (tracker) => tracker != null
-          ? _hexToColor(tracker.color)
+          ? hexToColor(tracker.color)
           : theme.colorScheme.primary,
       orElse: () => theme.colorScheme.primary,
     );
@@ -1847,7 +1849,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        _getAccountIcon(account.icon),
+                                        getAccountIcon(account.icon),
                                         size: 14,
                                         color: isSelected
                                             ? (isDark ? Colors.white : trackerColor)
@@ -2283,14 +2285,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           leading: Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              color: _hexToColor(
+                              color: hexToColor(
                                 item.category.color,
                               ).withOpacity(0.15),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
-                              _getCategoryIcon(item.category.icon),
-                              color: _hexToColor(item.category.color),
+                              getCategoryIcon(item.category.icon),
+                              color: hexToColor(item.category.color),
                               size: 24,
                             ),
                           ),

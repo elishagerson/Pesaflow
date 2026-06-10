@@ -172,18 +172,17 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
           ),
           actions: [
             TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Remind later'),
+            ),
+            TextButton(
               onPressed: () async {
                 await ref.read(settingsRepositoryProvider).setSetting('notification_access_prompt_dismissed', 'true');
                 if (ctx.mounted) Navigator.of(ctx).pop();
               },
-              child: const Text("Don't ask again"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _notificationChannel.invokeMethod('openNotificationListenerSettings');
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('Not Now'),
+              child: const Text("Don't show again"),
             ),
             FilledButton(
               onPressed: () async {

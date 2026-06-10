@@ -2,6 +2,8 @@ package com.elishagerson.pesaflow.pesaflow
 
 import android.app.Notification
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.service.notification.NotificationListenerService
@@ -32,28 +34,30 @@ class SmsNotificationListener : NotificationListenerService() {
         Log.d(TAG, "onNotificationPosted: pkg=${sbn.packageName} key=${sbn.key}")
 
         val extras = sbn.notification.extras ?: return
+        val sender = extractSender(extras)
+        val body = extractBody(extras)
 
-        // SMS apps typically put the sender in EXTRA_TITLE and the body in EXTRA_TEXT
-        val title = extras.getString(Notification.EXTRA_TITLE, "") ?: ""
-        val text = extras.getString(Notification.EXTRA_TEXT, "") ?: ""
-        val bigText = extras.getString(Notification.EXTRA_BIG_TEXT, "") ?: ""
-        val fullBody = if (bigText.isNotEmpty()) bigText else text
+        if (sender == null && body == null) {
+            logExtras(extras)
+            return
+        }
 
-        Log.d(TAG, "Notification: title='$title' body='${fullBody.take(100)}'")
+        val fullBody = body ?: ""
+        val fullSender = sender ?: ""
 
-        // Filter: only process SMS-like notifications containing financial keywords
-        if (!isLikelyFinancialSms(title, fullBody)) return
+        Log.d(TAG, "Notification: sender='$fullSender' body='${fullBody.take(150)}'")
+
+        if (!isLikelyFinancialSms(fullSender, fullBody, sbn.packageName)) return
 
         Log.d(TAG, "Matched financial SMS notification")
 
         val json = JSONObject().apply {
-            put("sender", title)
+            put("sender", fullSender)
             put("body", fullBody)
             put("package", sbn.packageName)
             put("timestamp", System.currentTimeMillis())
         }
 
-        // If Flutter is alive, forward immediately via MethodChannel on the UI main thread
         val channel = methodChannel
         if (channel != null) {
             Handler(Looper.getMainLooper()).post {
@@ -68,18 +72,105 @@ class SmsNotificationListener : NotificationListenerService() {
             Log.d(TAG, "MethodChannel null — persisted for later retrieval")
         }
 
-        // Always persist to SharedPreferences for startup recovery
         persistPendingSms(json.toString())
     }
 
-    private fun isLikelyFinancialSms(sender: String, body: String): Boolean {
+    private fun extractSender(extras: Bundle): String? {
+        // Try conversation title first (Android 11+ messaging style)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val convTitle = extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)?.toString()
+            if (!convTitle.isNullOrBlank()) return convTitle.trim()
+        }
+
+        // Try Android 14+ conversation title key
+        val convTitleLegacy = extras.getCharSequence("android.conversationTitle")?.toString()
+        if (!convTitleLegacy.isNullOrBlank()) return convTitleLegacy.trim()
+
+        // Try extra title
+        val title = extras.getString(Notification.EXTRA_TITLE)
+        if (!title.isNullOrBlank()) return title.trim()
+
+        // Try SUB_TEXT (sometimes carries sender info)
+        val subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString()
+        if (!subText.isNullOrBlank()) return subText.trim()
+
+        return null
+    }
+
+    private fun extractBody(extras: Bundle): String? {
+        // Try messages list first (Android 7+ messaging style with multiple messages)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+            if (messages != null && messages.isNotEmpty()) {
+                val sb = StringBuilder()
+                for (msg in messages) {
+                    // Each message is a Bundle or CharSequence
+                    val text = when (msg) {
+                        is Bundle -> msg.getCharSequence("text")?.toString()
+                        is CharSequence -> msg.toString()
+                        else -> null
+                    }
+                    if (!text.isNullOrBlank()) {
+                        if (sb.isNotEmpty()) sb.append("\n")
+                        sb.append(text)
+                    }
+                }
+                if (sb.isNotEmpty()) return sb.toString()
+            }
+        }
+
+        // Try big text (expanded notification view)
+        val bigText = extras.getString(Notification.EXTRA_BIG_TEXT)
+        if (!bigText.isNullOrBlank()) return bigText.trim()
+
+        // Try standard text
+        val text = extras.getString(Notification.EXTRA_TEXT)
+        if (!text.isNullOrBlank()) return text.trim()
+
+        // Try sub text as fallback
+        val subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString()
+        if (!subText.isNullOrBlank()) return subText.trim()
+
+        // Try Android 14+ text key variations
+        val title = extras.getString(Notification.EXTRA_TITLE)
+        if (!title.isNullOrBlank()) return title.trim()
+
+        return null
+    }
+
+    private fun isLikelyFinancialSms(sender: String, body: String, packageName: String): Boolean {
         val combined = "$sender $body"
+
+        // Known financial SMS sender packages
+        val knownPackages = listOf(
+            "com.android.mms",
+            "com.android.messaging",
+            "com.google.android.apps.messaging",
+            "com.samsung.android.messaging",
+        )
+
+        // Also process notifications from financial apps directly
+        val financialPackages = listOf(
+            "com.mpesa",
+            "com.crdb",
+            "com.nmb",
+            "com.selcom",
+            "com.airtel",
+            "com.tigo",
+        )
+
+        if (financialPackages.any { packageName.contains(it, ignoreCase = true) }) {
+            return true
+        }
+
         val keywords = listOf(
             "Tsh", "TZS", "sent", "received", "M-PESA", "M-Pesa", "Mixx",
             "Selcom", "NMB", "CRDB", "transaction", "balance",
-            // Swahili keywords for backward compatibility
             "umetuma", "umepokea", "malipo", "kwa", "shilingi",
+            "deposited", "withdrawn", "payment", "transfer",
+            "airtime", "utility", "bought", "paid",
         )
+
         return keywords.any { combined.contains(it, ignoreCase = true) }
     }
 
@@ -93,6 +184,21 @@ class SmsNotificationListener : NotificationListenerService() {
         } catch (_: Exception) {
             // Silently ignore persistence failures — non-critical
         }
+    }
+
+    private fun logExtras(extras: Bundle) {
+        try {
+            val keys = extras.keySet()
+            val details = keys.joinToString(", ") { key ->
+                val value = when (val v = extras.get(key)) {
+                    is String -> "\"$v\""
+                    is Array<*> -> "[${v.size}]"
+                    else -> v?.toString()?.take(80) ?: "null"
+                }
+                "$key=$value"
+            }
+            Log.d(TAG, "Extras keys: $details")
+        } catch (_: Exception) {}
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
