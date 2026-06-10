@@ -115,7 +115,7 @@ class SettingsScreen extends ConsumerWidget {
                     value: 'Cash',
                     label: 'Cash Wallet',
                     icon: Icons.account_balance_wallet_rounded,
-                    color: Color(0xFF30D158),
+                    color: AppTheme.transferColorDark,
                     subtitle: 'Physical cash and local wallets',
                   ),
                   ModernDropdownItem(
@@ -446,7 +446,7 @@ class SettingsScreen extends ConsumerWidget {
                     value: 'Income',
                     label: 'Income',
                     icon: Icons.trending_up_rounded,
-                    color: Color(0xFF30D158),
+                    color: AppTheme.transferColorDark,
                     subtitle: 'Money coming in',
                   ),
                 ],

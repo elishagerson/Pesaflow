@@ -153,7 +153,7 @@ class TransactionListScreen extends ConsumerWidget {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: dailyNetChange > 0
-                                    ? const Color(0xFF30D158)
+                                    ? const AppTheme.transferColorDark
                                     : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
                               ),
                             ),
@@ -303,7 +303,7 @@ class TransactionListScreen extends ConsumerWidget {
                                           fontWeight: FontWeight.w800,
                                           fontSize: 16,
                                           color: amtType == AmountType.income
-                                              ? const Color(0xFF30D158)
+                                              ? const AppTheme.transferColorDark
                                               : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
                                         ),
                                       ),
@@ -534,7 +534,7 @@ class TransactionListScreen extends ConsumerWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF30D158).withOpacity(0.35),
+              color: const AppTheme.transferColorDark.withOpacity(0.35),
               blurRadius: 12,
               spreadRadius: 2,
               offset: const Offset(0, 4),
@@ -543,7 +543,7 @@ class TransactionListScreen extends ConsumerWidget {
         ),
         child: FloatingActionButton(
           onPressed: () => context.go('/transactions/add'),
-          backgroundColor: const Color(0xFF30D158),
+          backgroundColor: const AppTheme.transferColorDark,
           foregroundColor: Colors.black,
           shape: const CircleBorder(),
           elevation: 0,
@@ -579,12 +579,12 @@ class TransactionListScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: const Color(0xFF30D158).withOpacity(0.35),
+              color: const AppTheme.transferColorDark.withOpacity(0.35),
               width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF30D158).withOpacity(0.12),
+                color: const AppTheme.transferColorDark.withOpacity(0.12),
                 blurRadius: 16,
                 spreadRadius: 1,
                 offset: const Offset(0, 4),
@@ -634,7 +634,7 @@ class TransactionListScreen extends ConsumerWidget {
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.5,
-                          color: Color(0xFF30D158),
+                          color: AppTheme.transferColorDark,
                         ),
                       ),
                       const SizedBox(height: 6),

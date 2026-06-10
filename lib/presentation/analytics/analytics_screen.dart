@@ -50,7 +50,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     dividerColor: Colors.transparent,
                     indicatorPadding: EdgeInsets.zero,
                     indicator: BoxDecoration(
-                      color: isDark ? const Color(0xFF2C2D35) : Colors.white,
+                      color: isDark ? AppTheme.surfaceHighDark : Colors.white,
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: isDark
                           ? []
@@ -321,10 +321,10 @@ class _OverviewTab extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF30D158).withOpacity(0.12),
+                              color: const AppTheme.transferColorDark.withOpacity(0.12),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.savings_rounded, color: Color(0xFF30D158), size: 20),
+                            child: const Icon(Icons.savings_rounded, color: AppTheme.transferColorDark, size: 20),
                           ),
                           const SizedBox(width: 12),
                           Expanded(

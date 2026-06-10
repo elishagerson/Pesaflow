@@ -772,18 +772,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Income' 
-                                        ? const Color(0xFF30D158).withOpacity(0.15) 
+                                        ? const AppTheme.transferColorDark.withOpacity(0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
                                     border: _transactionType == 'Income'
-                                        ? Border.all(color: const Color(0xFF30D158), width: 1.2)
+                                        ? Border.all(color: const AppTheme.transferColorDark, width: 1.2)
                                         : null,
                                   ),
                                   child: Center(
                                     child: Text(
                                       'Income',
                                       style: TextStyle(
-                                        color: _transactionType == 'Income' ? const Color(0xFF30D158) : Colors.grey,
+                                        color: _transactionType == 'Income' ? const AppTheme.transferColorDark : Colors.grey,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),

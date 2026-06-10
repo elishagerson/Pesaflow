@@ -21,6 +21,7 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _pageController = PageController();
   int _currentPage = 0;
+  bool _smsPermissionGranted = false;
 
   // Account toggles
   final Map<String, bool> _accounts = {
@@ -62,7 +63,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _nextPage() async {
     if (_currentPage == 1) {
       try {
-        await Telephony.instance.requestPhoneAndSmsPermissions;
+        final granted = await Telephony.instance.requestPhoneAndSmsPermissions;
+        if (mounted) setState(() => _smsPermissionGranted = granted ?? false);
       } catch (_) {}
     }
     if (_currentPage < 3) {
@@ -124,7 +126,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               onPageChanged: (i) => setState(() => _currentPage = i),
               children: [
                 _WelcomePage(theme: theme),
-                _SmsPermissionPage(theme: theme),
+                _SmsPermissionPage(theme: theme, permissionGranted: _smsPermissionGranted),
                 _AccountsPage(theme: theme, accounts: _accounts, icons: _icons, onToggle: (name, val) => setState(() => _accounts[name] = val)),
                 _CompletePage(theme: theme),
               ],
@@ -173,13 +175,32 @@ class _WelcomePage extends StatelessWidget {
 
 class _SmsPermissionPage extends StatelessWidget {
   final ThemeData theme;
-  const _SmsPermissionPage({required this.theme});
+  final bool permissionGranted;
+  const _SmsPermissionPage({required this.theme, this.permissionGranted = false});
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
+        Stack(
+          children: [
+            Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
+            if (permissionGranted)
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.incomeColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: theme.scaffoldBackgroundColor, width: 2),
+                  ),
+                  child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
+                ),
+              ),
+          ],
+        ),
         const SizedBox(height: 32),
         Text('SMS Auto-Tracking', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         const SizedBox(height: 16),
@@ -195,7 +216,23 @@ class _SmsPermissionPage extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 16),
-        Text('You can skip this and add transactions manually.', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              permissionGranted ? Icons.check_circle_rounded : Icons.info_outline_rounded,
+              size: 14,
+              color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              permissionGranted ? 'SMS Permission Granted' : 'You can skip this and add transactions manually.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ]),
     );
   }

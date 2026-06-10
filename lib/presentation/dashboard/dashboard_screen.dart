@@ -110,7 +110,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     value: 'Cash',
                     label: 'Cash Wallet',
                     icon: Icons.account_balance_wallet_rounded,
-                    color: Color(0xFF30D158),
+                    color: AppTheme.transferColorDark,
                     subtitle: 'Physical cash and local wallets',
                   ),
                   ModernDropdownItem(
@@ -871,8 +871,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final (icon, message, color) = days >= 14
             ? (Icons.warning_rounded, 'It\'s been $days days since you saved — set aside some money today!', Colors.orange)
             : days >= 7
-                ? (Icons.savings_rounded, 'It\'s been $days days since your last deposit — consider saving today.', const Color(0xFF30D158))
-                : (Icons.check_circle_rounded, 'Last saved $days days ago.', const Color(0xFF30D158));
+                ? (Icons.savings_rounded, 'It\'s been $days days since your last deposit — consider saving today.', const AppTheme.transferColorDark)
+                : (Icons.check_circle_rounded, 'Last saved $days days ago.', const AppTheme.transferColorDark);
 
         return Container(
           padding: const EdgeInsets.all(14),
@@ -1597,7 +1597,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
         ],
       ),
-      body: SafeArea(top: false, child: SingleChildScrollView(
+      body: SafeArea(top: false, child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(monthlyTotalsProvider);
+            ref.invalidate(netWorthProvider);
+            ref.invalidate(accountsStreamProvider);
+            ref.invalidate(budgetProgressProvider);
+            ref.invalidate(recentTransactionsStreamProvider);
+            ref.invalidate(reviewQueueStreamProvider);
+            ref.invalidate(savingsGoalsStreamProvider);
+          },
+          child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Column(
@@ -2323,7 +2333,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   fontWeight: FontWeight.w800,
                                   fontSize: 16,
                                   color: amtType == AmountType.income
-                                      ? const Color(0xFF30D158)
+                                      ? AppTheme.transferColorDark
                                       : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
                                 ),
                               ),
@@ -2341,6 +2351,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

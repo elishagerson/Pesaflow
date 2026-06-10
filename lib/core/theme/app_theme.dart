@@ -56,7 +56,7 @@ class AppTheme {
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
       fontFamilyFallback: const ['SF Mono', 'JetBrains Mono', 'Roboto Mono', 'Courier New'],
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.w900,
     );
   }
 

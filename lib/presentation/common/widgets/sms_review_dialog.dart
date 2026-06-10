@@ -22,11 +22,19 @@ class SmsReviewDialog extends ConsumerStatefulWidget {
 
 class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
   String? _selectedCategoryId;
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _selectedCategoryId = widget.item.category.id;
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _approve() async {
@@ -122,6 +130,26 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
               const SizedBox(height: 16),
               Text('Assign Category', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: 8),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search categories...',
+                  prefixIcon: const Icon(Icons.search_rounded, size: 18),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear_rounded, size: 16),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                      : null,
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                ),
+                onChanged: (v) => setState(() => _searchQuery = v.toLowerCase()),
+              ),
+              const SizedBox(height: 8),
               if (categories.isEmpty)
                 const Center(child: Padding(
                   padding: EdgeInsets.all(16),
@@ -129,13 +157,18 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                 ))
               else
                 SizedBox(
-                  height: 220,
+                  height: 180,
                   child: ListView.separated(
                     itemCount: categories.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 2),
                     itemBuilder: (context, index) {
                       final cat = categories[index];
                       final isSelected = cat.id == _selectedCategoryId;
+                      if (_searchQuery.isNotEmpty &&
+                          !cat.name.toLowerCase().contains(_searchQuery) &&
+                          !cat.type.toLowerCase().contains(_searchQuery)) {
+                        return const SizedBox.shrink();
+                      }
                       return ListTile(
                         dense: true,
                         selected: isSelected,

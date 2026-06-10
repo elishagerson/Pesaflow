@@ -117,7 +117,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                   ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!' 
                   : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!'
             ),
-            backgroundColor: isDeposit ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+            backgroundColor: isDeposit ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
           ),
         );
 
@@ -226,7 +226,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
-                            color: isDeposit ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+                            color: isDeposit ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -282,7 +282,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                         subtitle: const Text('Updates real balance & logs a transaction'),
                         trailing: CupertinoSwitch(
                           value: _deductFromWallet,
-                          activeColor: isDeposit ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+                          activeColor: isDeposit ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
                           onChanged: (v) {
                             setModalState(() {
                               _deductFromWallet = v;
@@ -325,7 +325,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                     child: ElevatedButton(
                       onPressed: _isOperationLoading ? null : () => _handleContribution(isDeposit),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isDeposit ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+                        backgroundColor: isDeposit ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
@@ -534,14 +534,14 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF30D158).withOpacity(0.15),
+                              color: const AppTheme.transferColorDark.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.add_rounded, color: Color(0xFF30D158), size: 18),
+                                const Icon(Icons.add_rounded, color: AppTheme.transferColorDark, size: 18),
                                 const SizedBox(width: 6),
                                 Text(
                                   'Add Money',
@@ -640,7 +640,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isPos ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+                                    color: isPos ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -677,7 +677,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                         fontFamily: 'monospace',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
-                                        color: isPos ? const Color(0xFF30D158) : const Color(0xFFFF453A),
+                                        color: isPos ? const AppTheme.transferColorDark : const Color(0xFFFF453A),
                                       ),
                                     ),
                                     const SizedBox(height: 2),
