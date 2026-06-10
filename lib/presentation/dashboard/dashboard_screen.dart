@@ -287,14 +287,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               createdAt: DateTime.now(),
             );
 
-            await ref
-                .read(accountRepositoryProvider)
-                .createAccount(newAccount);
+            try {
+              await ref
+                  .read(accountRepositoryProvider)
+                  .createAccount(newAccount);
 
-            // Force Riverpod cache invalidation for accounts stream
-            ref.invalidate(accountsStreamProvider);
+              // Force Riverpod cache invalidation for accounts stream
+              ref.invalidate(accountsStreamProvider);
 
-            if (context.mounted) Navigator.of(context).pop();
+              if (context.mounted) Navigator.of(context).pop();
+            } catch (e) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to create account: $e')),
+              );
+            }
           },
           child: const Text('Create'),
         ),
@@ -1364,18 +1371,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               createdAt: DateTime.now(),
             );
 
-            await ref
-                .read(trackerRepositoryProvider)
-                .createTracker(newTracker);
-            ref.invalidate(allTrackersStreamProvider);
+            try {
+              await ref
+                  .read(trackerRepositoryProvider)
+                  .createTracker(newTracker);
+              ref.invalidate(allTrackersStreamProvider);
 
-            // Set newly created tracker as active
-            await ref
-                .read(activeTrackerIdProvider.notifier)
-                .setTrackerId(newTracker.id);
+              // Set newly created tracker as active
+              await ref
+                  .read(activeTrackerIdProvider.notifier)
+                  .setTrackerId(newTracker.id);
 
-            if (context.mounted) {
-              Navigator.of(context).pop();
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+            } catch (e) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to create workspace: $e')),
+              );
             }
           },
           child: const Text('Create'),

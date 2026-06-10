@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,7 +97,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         );
       }
     }
-  }
   }
 
   @override

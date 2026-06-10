@@ -250,6 +250,8 @@ class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
           builder: (_) => SmsReviewDialog(item: pendingItem),
         ).then((_) {
           _dialogOpen = false;
+        }).catchError((_) {
+          _dialogOpen = false;
         });
       });
     }

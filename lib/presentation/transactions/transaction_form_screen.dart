@@ -159,18 +159,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     setState(() => _isLoading = true);
 
     try {
-      if (_isEditMode && _existingTransaction != null) {
-        await repo.deleteTransaction(_existingTransaction!.id);
+      final existingTransaction = _isEditMode ? _existingTransaction : null;
+      if (existingTransaction != null) {
+        await repo.deleteTransaction(existingTransaction.id);
       }
 
       final trackerId = ref.read(activeTrackerIdProvider);
 
       final newTransaction = Transaction(
-        id: _isEditMode ? _existingTransaction!.id : const Uuid().v4(),
+        id: existingTransaction?.id ?? const Uuid().v4(),
         accountId: _selectedAccountId!,
         destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
         categoryId: _selectedCategoryId!,
-        trackerId: _isEditMode ? _existingTransaction!.trackerId : trackerId,
+        trackerId: existingTransaction?.trackerId ?? trackerId,
         amount: cents,
         type: _transactionType.toLowerCase(),
         description: _descriptionController.text.trim(),
@@ -891,7 +892,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   children: [
                                     Text(
                                       _selectedDestinationAccountId != null
-                                          ? 'To ${accounts.firstWhere((a) => a.id == _selectedDestinationAccountId).name}'
+                                          ? 'To ${accounts.firstWhere((a) => a.id == _selectedDestinationAccountId, orElse: () => Account(id: '', name: 'Unknown', type: '', balance: 0, icon: '', sortOrder: 0, isArchived: false, createdAt: DateTime.now())).name}'
                                           : 'To',
                                       style: const TextStyle(
                                         color: Colors.white70, 

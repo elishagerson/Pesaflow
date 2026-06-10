@@ -52,10 +52,18 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () async {
-                      await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
-                      ref.invalidate(accountsStreamProvider);
-                      ref.invalidate(netWorthProvider);
-                      if (context.mounted) Navigator.of(context).pop();
+                      try {
+                        await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
+                        ref.invalidate(accountsStreamProvider);
+                        ref.invalidate(netWorthProvider);
+                        if (context.mounted) Navigator.of(context).pop();
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to delete account: $e')),
+                          );
+                        }
+                      }
                     },
                     child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
                   ),
@@ -119,10 +127,18 @@ class SettingsScreen extends ConsumerWidget {
                     )
                   : GestureDetector(
                       onTap: () async {
-                        await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
-                        ref.invalidate(categoriesFutureProvider);
-                        ref.invalidate(filteredTransactionsStreamProvider);
-                        if (context.mounted) Navigator.of(context).pop();
+                        try {
+                          await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
+                          ref.invalidate(categoriesFutureProvider);
+                          ref.invalidate(filteredTransactionsStreamProvider);
+                          if (context.mounted) Navigator.of(context).pop();
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Failed to delete category: $e')),
+                            );
+                          }
+                        }
                       },
                       child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
                     ),

@@ -106,6 +106,7 @@ class SmsReviewScreen extends ConsumerWidget {
     );
 
     if (selectedCategoryId != null) {
+      if (!context.mounted) return;
       await ref.read(transactionRepositoryProvider).approveReviewedTransaction(
             item.transaction.id,
             newCategoryId: selectedCategoryId,

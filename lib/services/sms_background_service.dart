@@ -21,14 +21,14 @@ void backgroundMessageHandler(SmsMessage message) async {
     message.date ?? DateTime.now().millisecondsSinceEpoch,
   );
 
+  final container = ProviderContainer();
   try {
-    // Spin up an isolated ProviderContainer to access Drift DB and dependencies on this isolate
-    final container = ProviderContainer();
     final processor = container.read(smsProcessorProvider);
     await processor.processSms(sender, body, timestamp);
-    container.dispose();
   } catch (e) {
     developer.log('Background SMS processing failure: $e', name: 'SmsBackground');
+  } finally {
+    container.dispose();
   }
 }
 
