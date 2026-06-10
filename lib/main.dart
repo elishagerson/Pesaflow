@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
@@ -192,13 +194,18 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
 
   @override
   Widget build(BuildContext context) {
+    final accentHex = ref.watch(activeAccentColorProvider).value ?? '#30D158';
+    final accentColor = hexToColor(accentHex);
+
     final lightCs = ColorScheme.fromSeed(
-      seedColor: AppTheme.primaryLight,
+      seedColor: accentColor,
       brightness: Brightness.light,
     );
     final darkCs = ColorScheme.fromSeed(
-      seedColor: AppTheme.primaryDark,
+      seedColor: accentColor,
       brightness: Brightness.dark,
+    ).copyWith(
+      primary: accentColor,
     );
 
     return MaterialApp.router(
