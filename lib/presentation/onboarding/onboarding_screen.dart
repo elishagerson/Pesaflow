@@ -70,23 +70,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _finish() async {
-    // Create selected accounts
-    final accountRepo = ref.read(accountRepositoryProvider);
-    const uuid = Uuid();
-    for (final entry in _accounts.entries) {
-      if (entry.value) {
-        final iconStr = _types[entry.key] == 'mobile_money' ? 'phone-android' : _types[entry.key] == 'bank' ? 'account-balance' : 'wallet';
-        await accountRepo.createAccount(Account(
-          id: uuid.v4(), name: entry.key, type: _types[entry.key]!,
-          balance: 0, provider: _providers[entry.key]!.isNotEmpty ? _providers[entry.key] : null,
-          icon: iconStr, sortOrder: 0, isArchived: false, createdAt: DateTime.now(),
-        ));
+    try {
+      final accountRepo = ref.read(accountRepositoryProvider);
+      const uuid = Uuid();
+      for (final entry in _accounts.entries) {
+        if (entry.value) {
+          final accType = _types[entry.key] ?? 'mobile_money';
+          final iconStr = accType == 'mobile_money' ? 'phone-android' : accType == 'bank' ? 'account-balance' : 'wallet';
+          final provider = _providers[entry.key];
+          await accountRepo.createAccount(Account(
+            id: uuid.v4(), name: entry.key, type: accType,
+            balance: 0, provider: (provider != null && provider.isNotEmpty) ? provider : null,
+            icon: iconStr, sortOrder: 0, isArchived: false, createdAt: DateTime.now(),
+          ));
+        }
+      }
+      await ref.read(settingsRepositoryProvider).markOnboardingComplete();
+      ref.invalidate(accountsStreamProvider);
+      if (mounted) context.go('/');
+    } catch (e) {
+      developer.log('Onboarding account creation failed: $e', name: 'Onboarding');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create accounts: $e')),
+        );
       }
     }
-    // Mark onboarding complete
-    await ref.read(settingsRepositoryProvider).markOnboardingComplete();
-    ref.invalidate(accountsStreamProvider);
-    if (mounted) context.go('/');
+  }
   }
 
   @override

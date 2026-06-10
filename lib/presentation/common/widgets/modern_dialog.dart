@@ -109,7 +109,7 @@ class ModernDialog extends StatelessWidget {
                       ],
                       Expanded(
                         child: DefaultTextStyle(
-                          style: theme.textTheme.titleLarge!.copyWith(
+                          style: (theme.textTheme.titleLarge ?? theme.textTheme.titleMedium!).copyWith(
                             fontWeight: FontWeight.bold,
                             color: isDark ? Colors.white : Colors.black87,
                           ),
@@ -125,7 +125,7 @@ class ModernDialog extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: DefaultTextStyle(
-                      style: theme.textTheme.bodyMedium!.copyWith(
+                      style: (theme.textTheme.bodyMedium ?? theme.textTheme.bodySmall!).copyWith(
                         color: isDark ? Colors.grey[300] : Colors.grey[700],
                       ),
                       child: content,

@@ -49,8 +49,8 @@ class GlassCard extends StatelessWidget {
             : AppTheme.surfaceLight);
     final borderColor = hasBorder
         ? (isDark
-            ? colorScheme.outline!.withValues(alpha: 0.15)
-            : colorScheme.outline!.withValues(alpha: 0.12))
+            ? (colorScheme.outline ?? Colors.grey).withValues(alpha: 0.15)
+            : (colorScheme.outline ?? Colors.grey).withValues(alpha: 0.12))
         : Colors.transparent;
     final shadowList = _buildShadow(isDark, colorScheme);
 

@@ -60,7 +60,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   void dispose() { _nameController.dispose(); _amountController.dispose(); _capController.dispose(); super.dispose(); }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate() || _selectedCategoryId == null) {
+    if (_formKey.currentState == null || !_formKey.currentState!.validate() || _selectedCategoryId == null) {
       if (_selectedCategoryId == null) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }

@@ -77,9 +77,13 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final selectedItem = items.firstWhere(
       (item) => item.value == value,
-      orElse: () => items.isNotEmpty ? items.first : ModernDropdownItem<T>(value: null as T, label: ''),
+      orElse: () => items.first,
     );
 
     return Column(
