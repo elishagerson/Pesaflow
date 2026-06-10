@@ -6,6 +6,8 @@ import 'package:pesaflow/domain/sms/parsers/halopesa_parser.dart';
 import 'package:pesaflow/domain/sms/parsers/bank_base.dart';
 import 'package:pesaflow/domain/sms/parsers/selcom_pesa_parser.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
+import 'package:pesaflow/domain/sms/parsers/sms_parser_interface.dart';
+import 'fixtures/sms_corpus.dart';
 
 void main() {
   final now = DateTime(2026, 5, 15, 14, 30);
@@ -744,5 +746,80 @@ void main() {
       expect(result!.amount, 1525);
       expect(result.balanceAfter, 99975);
     });
+  });
+
+  // ===========================================================================
+  // Corpus-driven regression tests
+  // ===========================================================================
+  group('SmsCorpus', () {
+    /// Maps provider strings to their parsers.
+    SmsParser _parserFor(String provider) {
+      switch (provider) {
+        case 'M-Pesa_TZ':
+          return MpesaTzParser();
+        case 'AirtelMoney_TZ':
+          return AirtelTzParser();
+        case 'TigoPesa_TZ':
+          return MixxParser();
+        case 'Halopesa_TZ':
+          return HalopesaParser();
+        case 'NMB_Bank':
+          return NmbBankParser();
+        case 'CRDB_Bank':
+          return CrdbBankParser();
+        case 'NBC_Bank':
+          return NbcBankParser();
+        case 'SelcomPesa_TZ':
+          return SelcomPesaParser();
+        default:
+          throw ArgumentError('Unknown provider: $provider');
+      }
+    }
+
+    for (final entry in smsCorpus) {
+      test(entry.label, () {
+        final provider = ProviderMatcher.matchProvider(entry.sender);
+
+        if (entry.expect.expectsNull) {
+          if (provider == null) {
+            return; // unrecognized sender = null, correct
+          }
+          final parser = _parserFor(provider);
+          expect(parser.parse(entry.body, entry.timestamp), isNull,
+              reason: 'Expected null for "${entry.label}"');
+          return;
+        }
+
+        expect(provider, isNotNull,
+            reason: 'No provider matched sender "${entry.sender}" for "${entry.label}"');
+        final parser = _parserFor(provider!);
+        final result = parser.parse(entry.body, entry.timestamp);
+
+        expect(result, isNotNull,
+            reason: 'Parser returned null for "${entry.label}"');
+        if (result == null) return;
+
+        if (entry.expect.amount != null) {
+          expect(result.amount, entry.expect.amount,
+              reason: 'amount mismatch for "${entry.label}"');
+        }
+        if (entry.expect.type != null) {
+          expect(result.type, entry.expect.type,
+              reason: 'type mismatch for "${entry.label}"');
+        }
+        if (entry.expect.senderOrRecipient != null) {
+          expect(result.senderOrRecipient, entry.expect.senderOrRecipient,
+              reason: 'senderOrRecipient mismatch for "${entry.label}"');
+        }
+        if (entry.expect.reference != null) {
+          expect(result.reference, entry.expect.reference,
+              reason: 'reference mismatch for "${entry.label}"');
+        }
+        if (entry.expect.balanceAfter != null) {
+          expect(result.balanceAfter, entry.expect.balanceAfter,
+              reason: 'balanceAfter mismatch for "${entry.label}"');
+        }
+      });
+    }
   });
 }
