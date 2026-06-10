@@ -32,12 +32,6 @@ class BudgetDetailScreen extends ConsumerWidget {
   final String budgetId;
   const BudgetDetailScreen({required this.budgetId, super.key});
 
-  Color hexToColor(String hex) {
-    final clean = hex.replaceAll('#', '');
-    if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
-    return Colors.grey;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailAsync = ref.watch(budgetDetailProvider(budgetId));
