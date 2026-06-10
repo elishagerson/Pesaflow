@@ -360,7 +360,7 @@ class SmsProcessor {
           final delta = (finalType == 'income' || finalType == 'loan') 
               ? smsParsed.amount 
               : -smsParsed.amount;
-          final expectedBalance = currentAccount.balance + delta;
+          final expectedBalance = targetAccount.balance + delta;
           developer.log(
             'No balanceAfter in SMS — expected balance $expectedBalance (current: ${currentAccount.balance}, delta: $delta, type: ${smsParsed.type})',
             name: 'SmsProcessor',
