@@ -145,6 +145,31 @@ class MpesaTzParser implements SmsParser {
         );
       }
 
+      // 5. Check for Loan disbursement (Income — money received as loan)
+      // Example (Swahili): "Pesa zimekopeshwa Tsh 100,000.00. Maliza ndani ya siku 30. Rej: P65ABC. Salio: Tsh 250,000.00"
+      // Example (English): "You have received a loan of Tsh 100,000.00. Pay within 30 days. Ref: P65ABC. New M-PESA balance is Tsh 250,000.00"
+      final loanRegex = RegExp(
+        r'(?:Pesa zimekopeshwa|Umekopeshwa|Umekopwa|received a loan|loan of)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = loanRegex.firstMatch(text);
+      if (match != null) {
+        final amt = _parseAmount(match.group(1)!);
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: 'Mobile Money Loan',
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
       // ========== English-format patterns (Vodacom Tanzania) ==========
 
       // 5. English: Received Money (Income)

@@ -114,7 +114,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       // 3. Compute new balance
       int balanceDelta = 0;
       final type = transaction.type.toLowerCase();
-      if (type == 'income') {
+      if (type == 'income' || type == 'loan') {
         balanceDelta = transaction.amount;
       } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
         balanceDelta = -transaction.amount;
@@ -160,7 +160,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         // 3. Compute reversed balance
         int balanceDelta = 0;
         final type = transactionObj.type.toLowerCase();
-        if (type == 'income') {
+        if (type == 'income' || type == 'loan') {
           // Subtract original added income
           balanceDelta = -transactionObj.amount;
         } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
