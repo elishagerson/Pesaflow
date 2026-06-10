@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:drift/drift.dart' hide Column;
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -49,22 +50,14 @@ class SettingsScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AmountText(amountInCents: acc.balance, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: () async {
-                      try {
-                        await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
-                        ref.invalidate(accountsStreamProvider);
-                        ref.invalidate(netWorthProvider);
-                        if (context.mounted) Navigator.of(context).pop();
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to delete account: $e')),
-                          );
-                        }
-                      }
-                    },
+                    onTap: () => _showEditAccountDialog(context, ref, acc),
+                    child: Icon(Icons.edit_rounded, size: 18, color: theme.colorScheme.primary),
+                  ),
+                  const SizedBox(width: 4),
+                  GestureDetector(
+                    onTap: () => _confirmDeleteAccount(context, ref, acc),
                     child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
                   ),
                 ],
@@ -73,6 +66,262 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
+    final nameController = TextEditingController(text: acc.name);
+    String accountType;
+    switch (acc.type) {
+      case 'mobile_money':
+        accountType = 'Mobile Money';
+        break;
+      case 'bank':
+        accountType = 'Bank';
+        break;
+      default:
+        accountType = 'Cash';
+    }
+    String? phoneNumber = acc.phoneNumber;
+    String? provider = acc.provider;
+
+    ModernDialog.show(
+      context: context,
+      title: const Text('Edit Account'),
+      titleIcon: Icons.edit_rounded,
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Account Name',
+                  hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
+                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                ),
+                textCapitalization: TextCapitalization.words,
+              ),
+              const SizedBox(height: 16),
+              ModernDropdown<String>(
+                labelText: 'Account Type',
+                value: accountType,
+                prefixIcon: Icons.wallet_rounded,
+                items: const [
+                  ModernDropdownItem(
+                    value: 'Cash',
+                    label: 'Cash Wallet',
+                    icon: Icons.account_balance_wallet_rounded,
+                    color: Color(0xFF30D158),
+                    subtitle: 'Physical cash and local wallets',
+                  ),
+                  ModernDropdownItem(
+                    value: 'Mobile Money',
+                    label: 'Mobile Money',
+                    icon: Icons.phone_android_rounded,
+                    color: Color(0xFF0A84FF),
+                    subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
+                  ),
+                  ModernDropdownItem(
+                    value: 'Bank',
+                    label: 'Bank Account',
+                    icon: Icons.account_balance_rounded,
+                    color: Color(0xFFFF9F0A),
+                    subtitle: 'NMB, CRDB, NBC, and other banks',
+                  ),
+                ],
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {
+                      accountType = val;
+                      if (accountType == 'Mobile Money') {
+                        provider = provider ?? 'M-Pesa_TZ';
+                      } else if (accountType == 'Bank') {
+                        provider = provider ?? 'NMB';
+                      } else {
+                        provider = null;
+                      }
+                    });
+                  }
+                },
+              ),
+              if (accountType == 'Mobile Money') ...[
+                const SizedBox(height: 16),
+                ModernDropdown<String>(
+                  labelText: 'Carrier Provider',
+                  value: provider ?? 'M-Pesa_TZ',
+                  prefixIcon: Icons.phone_iphone_rounded,
+                  items: const [
+                    ModernDropdownItem(
+                      value: 'M-Pesa_TZ',
+                      label: 'Vodacom M-Pesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.redAccent,
+                      subtitle: 'Vodacom Mobile Money service',
+                    ),
+                    ModernDropdownItem(
+                      value: 'TigoPesa_TZ',
+                      label: 'Tigo Pesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.blueAccent,
+                      subtitle: 'Tigo Mobile Money service',
+                    ),
+                    ModernDropdownItem(
+                      value: 'AirtelMoney_TZ',
+                      label: 'Airtel Money',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.red,
+                      subtitle: 'Airtel Mobile Money service',
+                    ),
+                    ModernDropdownItem(
+                      value: 'Halopesa_TZ',
+                      label: 'HaloPesa',
+                      icon: Icons.offline_bolt_rounded,
+                      color: Colors.orangeAccent,
+                      subtitle: 'Halotel Mobile Money service',
+                    ),
+                  ],
+                  onChanged: (val) {
+                    setState(() {
+                      provider = val;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    hintText: 'e.g. 076XXXXXXX',
+                    prefixIcon: Icon(Icons.phone_rounded, size: 18),
+                  ),
+                  controller: TextEditingController(text: phoneNumber ?? ''),
+                  onChanged: (val) {
+                    phoneNumber = val;
+                  },
+                ),
+              ],
+              if (accountType == 'Bank') ...[
+                const SizedBox(height: 16),
+                ModernDropdown<String>(
+                  labelText: 'Bank Brand',
+                  value: provider ?? 'NMB',
+                  prefixIcon: Icons.account_balance_rounded,
+                  items: const [
+                    ModernDropdownItem(
+                      value: 'NMB',
+                      label: 'NMB Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.blue,
+                      subtitle: 'National Microfinance Bank',
+                    ),
+                    ModernDropdownItem(
+                      value: 'CRDB',
+                      label: 'CRDB Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.green,
+                      subtitle: 'CRDB Bank Plc',
+                    ),
+                    ModernDropdownItem(
+                      value: 'NBC',
+                      label: 'NBC Bank',
+                      icon: Icons.account_balance_rounded,
+                      color: Colors.cyan,
+                      subtitle: 'National Bank of Commerce',
+                    ),
+                  ],
+                  onChanged: (val) {
+                    setState(() {
+                      provider = val;
+                    });
+                  },
+                ),
+              ],
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (nameController.text.trim().isEmpty) return;
+
+            String iconName = 'wallet';
+            if (accountType == 'Mobile Money') {
+              iconName = 'phone-android';
+            } else if (accountType == 'Bank') {
+              iconName = 'account-balance';
+            }
+
+            final type = accountType.toLowerCase().replaceAll(' ', '_');
+            final updated = acc.copyWith(
+              name: nameController.text.trim(),
+              type: type,
+              icon: iconName,
+              provider: Value<String?>(provider),
+              phoneNumber: Value<String?>(accountType == 'Mobile Money' ? phoneNumber : null),
+            );
+
+            try {
+              await ref.read(accountRepositoryProvider).updateAccount(updated);
+              ref.invalidate(accountsStreamProvider);
+              ref.invalidate(netWorthProvider);
+              if (context.mounted) Navigator.of(context).pop();
+            } catch (e) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to update account: $e')),
+              );
+            }
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+
+  void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
+    ModernDialog.show(
+      context: context,
+      title: const Text('Delete Account'),
+      titleIcon: Icons.delete_rounded,
+      iconColor: Colors.red,
+      content: Text('Delete "${acc.name}" and all its transactions? This cannot be undone.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+          onPressed: () async {
+            Navigator.of(context, rootNavigator: true).pop();
+            try {
+              await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
+              ref.invalidate(accountsStreamProvider);
+              ref.invalidate(netWorthProvider);
+              if (context.mounted) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('"${acc.name}" deleted')),
+                );
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete account: $e')),
+                );
+              }
+            }
+          },
+          child: const Text('Delete'),
+        ),
+      ],
     );
   }
 

@@ -134,7 +134,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
   Future<void> _processPendingSms() async {
     try {
       final result = await _notificationChannel.invokeMethod<List<dynamic>>('getPendingSms');
-      if (result == null || result is! List || result.isEmpty) return;
+      if (result == null || result.isEmpty) return;
       developer.log('Processing ${result.length} pending SMS from notification listener', name: 'SmsNotification');
       for (final raw in result) {
         if (raw is! String) continue;
@@ -204,11 +204,20 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
 
   @override
   Widget build(BuildContext context) {
+    final lightCs = ColorScheme.fromSeed(
+      seedColor: AppTheme.primaryLight,
+      brightness: Brightness.light,
+    );
+    final darkCs = ColorScheme.fromSeed(
+      seedColor: AppTheme.primaryDark,
+      brightness: Brightness.dark,
+    );
+
     return MaterialApp.router(
       title: 'PesaFlow',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.fromColorScheme(lightCs, Brightness.light),
+      darkTheme: AppTheme.fromColorScheme(darkCs, Brightness.dark),
       themeMode: ThemeMode.system,
       routerConfig: appRouter,
       builder: (context, child) {
@@ -216,7 +225,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
           behavior: CupertinoScrollBehavior(),
           child: Stack(
             children: [
-              if (child != null) child,
+              ?child,
               _PendingReviewOverlay(),
             ],
           ),

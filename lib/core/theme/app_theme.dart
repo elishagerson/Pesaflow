@@ -192,138 +192,22 @@ class AppTheme {
     ));
   }
 
-  static ThemeData get lightTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.light,
-      fontFamily: GoogleFonts.outfit().fontFamily,
-      textTheme: _buildTextTheme(onBgLight),
-      colorScheme: ColorScheme(
-        brightness: Brightness.light,
-        primary: primaryLight,
-        onPrimary: onPrimaryLight,
-        primaryContainer: primaryContainerLight,
-        onPrimaryContainer: onPrimaryContainerLight,
-        secondary: secondaryLight,
-        onSecondary: onSecondaryLight,
-        secondaryContainer: secondaryContainerLight,
-        onSecondaryContainer: onSecondaryContainerLight,
-        tertiary: tertiaryLight,
-        onTertiary: onTertiaryLight,
-        surface: bgLight,
-        onSurface: onBgLight,
-        surfaceContainerHigh: surfaceHighLight,
-        surfaceContainerLow: surfaceLowLight,
-        outline: outlineLight,
-        outlineVariant: outlineVariantLight,
-        error: errorLight,
-        onError: onErrorLight,
-      ),
-      scaffoldBackgroundColor: bgLight,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
-        scrolledUnderElevation: 1,
-        titleTextStyle: TextStyle(
-          fontFamily: 'system-ui',
-          fontSize: 22.0,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1C1C1E),
-        ),
-        iconTheme: IconThemeData(color: Color(0xFF1C1C1E)),
-      ),
-      cardTheme: CardThemeData(
-        elevation: 0,
-        color: surfaceHighLight,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x0F000000), width: 0.5),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: surfaceHighLight,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: primaryLight, width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryLight,
-          foregroundColor: onPrimaryLight,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radiusButton),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
-        ),
-      ),
-      segmentedButtonTheme: SegmentedButtonThemeData(
-        style: SegmentedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          selectedBackgroundColor: primaryLight,
-          selectedForegroundColor: onPrimaryLight,
-        ),
-      ),
-      dividerTheme: const DividerThemeData(
-        space: 0,
-        thickness: 0.5,
-        color: Color(0x0F000000),
-      ),
-      chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        side: BorderSide(color: outlineLight.withValues(alpha: 0.4)),
-      ),
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        },
-      ),
-    );
-  }
+  static ThemeData get lightTheme => fromColorScheme(null, Brightness.light);
 
-  static ThemeData get darkTheme {
+  static ThemeData get darkTheme => fromColorScheme(null, Brightness.dark);
+
+  static ThemeData fromColorScheme(ColorScheme? cs, Brightness brightness) {
+    final isLight = brightness == Brightness.light;
+    final scheme = cs ?? _defaultColorScheme(brightness);
+
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: brightness,
       fontFamily: GoogleFonts.outfit().fontFamily,
-      textTheme: _buildTextTheme(onBgDark),
-      colorScheme: ColorScheme(
-        brightness: Brightness.dark,
-        primary: primaryDark,
-        onPrimary: Colors.black,
-        primaryContainer: primaryContainerDark,
-        onPrimaryContainer: onPrimaryContainerDark,
-        secondary: secondaryDark,
-        onSecondary: onSecondaryDark,
-        secondaryContainer: secondaryContainerDark,
-        onSecondaryContainer: onSecondaryContainerDark,
-        tertiary: tertiaryDark,
-        onTertiary: onTertiaryDark,
-        surface: bgDark,
-        onSurface: onBgDark,
-        surfaceContainerHigh: surfaceHighDark,
-        surfaceContainerLow: surfaceLowDark,
-        outline: outlineDark,
-        outlineVariant: outlineVariantDark,
-        error: errorDark,
-        onError: onErrorDark,
-      ),
-      scaffoldBackgroundColor: bgDark,
-      appBarTheme: const AppBarTheme(
+      textTheme: _buildTextTheme(isLight ? onBgLight : onBgDark),
+      colorScheme: scheme,
+      scaffoldBackgroundColor: isLight ? bgLight : bgDark,
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
@@ -332,41 +216,44 @@ class AppTheme {
           fontFamily: 'system-ui',
           fontSize: 22.0,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFF5F5F7),
+          color: isLight ? const Color(0xFF1C1C1E) : const Color(0xFFF5F5F7),
         ),
-        iconTheme: IconThemeData(color: Color(0xFFF5F5F7)),
+        iconTheme: IconThemeData(color: isLight ? const Color(0xFF1C1C1E) : const Color(0xFFF5F5F7)),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: surfaceHighDark,
+        color: isLight ? surfaceHighLight : surfaceHighDark,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: Color(0x12FFFFFF), width: 0.5),
+          side: BorderSide(
+            color: isLight ? const Color(0x0F000000) : const Color(0x12FFFFFF),
+            width: 0.5,
+          ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceHighDark,
+        fillColor: isLight ? surfaceHighLight : surfaceHighDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: primaryDark, width: 1.5),
+          borderSide: BorderSide(color: scheme.primary, width: isLight ? 2 : 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: isLight ? 12.0 : 14.0),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryDark,
-          foregroundColor: Colors.black,
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          textStyle: const TextStyle(
+          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: isLight ? 14.0 : 16.0),
+          textStyle: isLight ? null : const TextStyle(
             fontFamily: 'system-ui',
             fontWeight: FontWeight.w900,
             fontSize: 16,
@@ -378,20 +265,20 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          selectedBackgroundColor: primaryDark,
-          selectedForegroundColor: Colors.black,
+          selectedBackgroundColor: scheme.primary,
+          selectedForegroundColor: scheme.onPrimary,
         ),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         space: 0,
         thickness: 0.5,
-        color: Color(0x12FFFFFF),
+        color: isLight ? const Color(0x0F000000) : const Color(0x12FFFFFF),
       ),
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        side: BorderSide(color: outlineDark.withValues(alpha: 0.4)),
+        side: BorderSide(color: scheme.outline.withValues(alpha: 0.4)),
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
@@ -400,6 +287,31 @@ class AppTheme {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         },
       ),
+    );
+  }
+
+  static ColorScheme _defaultColorScheme(Brightness brightness) {
+    final isLight = brightness == Brightness.light;
+    return ColorScheme(
+      brightness: brightness,
+      primary: isLight ? primaryLight : primaryDark,
+      onPrimary: isLight ? onPrimaryLight : Colors.black,
+      primaryContainer: isLight ? primaryContainerLight : primaryContainerDark,
+      onPrimaryContainer: isLight ? onPrimaryContainerLight : onPrimaryContainerDark,
+      secondary: isLight ? secondaryLight : secondaryDark,
+      onSecondary: isLight ? onSecondaryLight : onSecondaryDark,
+      secondaryContainer: isLight ? secondaryContainerLight : secondaryContainerDark,
+      onSecondaryContainer: isLight ? onSecondaryContainerLight : onSecondaryContainerDark,
+      tertiary: isLight ? tertiaryLight : tertiaryDark,
+      onTertiary: isLight ? onTertiaryLight : Colors.black,
+      surface: isLight ? bgLight : bgDark,
+      onSurface: isLight ? onBgLight : onBgDark,
+      surfaceContainerHigh: isLight ? surfaceHighLight : surfaceHighDark,
+      surfaceContainerLow: isLight ? surfaceLowLight : surfaceLowDark,
+      outline: isLight ? outlineLight : outlineDark,
+      outlineVariant: isLight ? outlineVariantLight : outlineVariantDark,
+      error: isLight ? errorLight : errorDark,
+      onError: isLight ? onErrorLight : onErrorDark,
     );
   }
 }
