@@ -210,9 +210,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         return Container(
           decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
+            color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -227,7 +228,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 20.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
@@ -254,13 +255,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: isSelected 
-                            ? theme.colorScheme.primary.withOpacity(0.08) 
-                            : AppTheme.surfaceContainerDark,
+                            ? theme.colorScheme.primary.withValues(alpha: 0.08) 
+                            : (isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05)),
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
                           color: isSelected 
-                              ? theme.colorScheme.primary.withOpacity(0.3) 
-                              : const Color(0x15FFFFFF),
+                              ? theme.colorScheme.primary.withValues(alpha: 0.3) 
+                              : (isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                         ),
                       ),
                       child: Row(
@@ -299,9 +300,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         return Container(
           decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
+            color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -316,7 +318,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 20.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
@@ -345,13 +347,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: isSelected 
-                            ? theme.colorScheme.primary.withOpacity(0.08) 
-                            : AppTheme.surfaceContainerDark,
+                            ? theme.colorScheme.primary.withValues(alpha: 0.08) 
+                            : (isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05)),
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
                           color: isSelected 
-                              ? theme.colorScheme.primary.withOpacity(0.3) 
-                              : const Color(0x15FFFFFF),
+                              ? theme.colorScheme.primary.withValues(alpha: 0.3) 
+                              : (isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                         ),
                       ),
                       child: Row(
@@ -407,6 +409,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       isScrollControlled: true,
       builder: (context) {
         final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return AnimatedPadding(
@@ -414,7 +417,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               duration: const Duration(milliseconds: 100),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
+                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -429,7 +432,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         height: 4,
                         margin: const EdgeInsets.only(bottom: 20.0),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -545,9 +548,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6.0),
                             child: ActionChip(
-                              label: Text(suggestion, style: const TextStyle(fontSize: 12)),
-                              backgroundColor: AppTheme.surfaceContainerDark,
-                              side: const BorderSide(color: Color(0x15FFFFFF)),
+                              label: Text(suggestion, style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.black87)),
+                              backgroundColor: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
+                              side: BorderSide(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                               onPressed: () {
                                 setSheetState(() {
@@ -570,6 +573,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     TextField(
                       controller: _referenceController,
                       textCapitalization: TextCapitalization.characters,
+                      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
                       decoration: const InputDecoration(
                         hintText: 'e.g. PP230489A1',
                       ),
@@ -595,16 +599,16 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
                         decoration: BoxDecoration(
-                          color: AppTheme.surfaceContainerDark,
+                          color: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0x15FFFFFF)),
+                          border: Border.all(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 14, color: isDark ? Colors.white : Colors.black87),
                             ),
                             const Icon(Icons.calendar_month_rounded, color: Colors.grey, size: 20),
                           ],
@@ -643,6 +647,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
 
@@ -719,9 +724,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         width: 320,
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
-                          color: AppTheme.surfaceContainerDark,
+                          color: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: const Color(0x15FFFFFF)),
+                          border: Border.all(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                         ),
                         child: Row(
                           children: [
@@ -838,7 +843,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             style: TextStyle(
                               fontSize: fontSize,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'monospace',
                               letterSpacing: -1.0,
                             ),
@@ -855,23 +860,23 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF1B1B1D),
+                                color: isDark ? const Color(0xFF1B1B1D) : Colors.black.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(100),
-                                border: Border.all(color: const Color(0x15FFFFFF)),
+                                border: Border.all(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     'From ${activeAccount.name}',
-                                    style: const TextStyle(
-                                      color: Colors.white70, 
+                                    style: TextStyle(
+                                      color: isDark ? Colors.white70 : Colors.black87, 
                                       fontWeight: FontWeight.bold,
                                       fontSize: 13,
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
+                                  Icon(Icons.keyboard_arrow_down_rounded, color: isDark ? Colors.grey : Colors.black54, size: 18),
                                 ],
                               ),
                             ),
@@ -883,9 +888,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF1B1B1D),
+                                  color: isDark ? const Color(0xFF1B1B1D) : Colors.black.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(color: const Color(0x15FFFFFF)),
+                                  border: Border.all(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -894,14 +899,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       _selectedDestinationAccountId != null
                                           ? 'To ${accounts.firstWhere((a) => a.id == _selectedDestinationAccountId, orElse: () => Account(id: '', name: 'Unknown', type: '', balance: 0, icon: '', sortOrder: 0, isArchived: false, createdAt: DateTime.now())).name}'
                                           : 'To',
-                                      style: const TextStyle(
-                                        color: Colors.white70, 
+                                      style: TextStyle(
+                                        color: isDark ? Colors.white70 : Colors.black87, 
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),
                                     ),
                                     const SizedBox(width: 4),
-                                    const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey, size: 18),
+                                    Icon(Icons.keyboard_arrow_down_rounded, color: isDark ? Colors.grey : Colors.black54, size: 18),
                                   ],
                                 ),
                               ),
@@ -913,9 +918,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
                       // Numeric Keypad Grid (Edge-to-edge with elegant thin line grid dividers)
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           border: Border(
-                            bottom: BorderSide(color: Color(0x12FFFFFF), width: 0.5),
+                            bottom: BorderSide(
+                              color: isDark ? const Color(0x12FFFFFF) : Colors.black.withValues(alpha: 0.08),
+                              width: 0.5,
+                            ),
                           ),
                         ),
                         child: Column(
@@ -948,6 +956,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Widget _buildKeypadRow(List<String> keys) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final dividerColor = isDark ? const Color(0x12FFFFFF) : Colors.black.withValues(alpha: 0.08);
+
     return Row(
       children: keys.asMap().entries.map((entry) {
         final index = entry.key;
@@ -959,21 +972,21 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               height: 64,
               decoration: BoxDecoration(
                 border: Border(
-                  top: const BorderSide(color: Color(0x12FFFFFF), width: 0.5),
+                  top: BorderSide(color: dividerColor, width: 0.5),
                   right: index < 2
-                      ? const BorderSide(color: Color(0x12FFFFFF), width: 0.5)
+                      ? BorderSide(color: dividerColor, width: 0.5)
                       : BorderSide.none,
                 ),
               ),
               child: Center(
                 child: key == '<'
-                    ? const Icon(Icons.backspace_outlined, color: Colors.white, size: 20)
+                    ? Icon(Icons.backspace_outlined, color: textColor, size: 20)
                     : Text(
                         key,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: textColor,
                         ),
                       ),
               ),

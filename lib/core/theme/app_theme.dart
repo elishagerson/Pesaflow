@@ -208,16 +208,40 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isLight ? surfaceLight : surfaceDark,
+        fillColor: isLight
+            ? const Color(0xFFF2F2F7)
+            : const Color(0xFF2C2C2E),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusInput),
+          borderSide: BorderSide(
+            color: isLight ? Colors.black.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.08),
+            width: 0.8,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide(color: scheme.primary, width: 1.5),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusInput),
+          borderSide: BorderSide(color: scheme.error, width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusInput),
+          borderSide: BorderSide(color: scheme.error, width: 1.5),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radiusInput),
+          borderSide: BorderSide(
+            color: isLight ? Colors.black.withValues(alpha: 0.02) : Colors.white.withValues(alpha: 0.03),
+            width: 0.8,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

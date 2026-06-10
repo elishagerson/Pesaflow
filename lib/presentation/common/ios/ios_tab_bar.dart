@@ -27,28 +27,27 @@ class IosTabBar extends StatelessWidget {
     final visualTabs = [
       _TabConfig(
         routeIndex: 0,
-        label: 'Assets',
-        icon: Icons.account_balance_wallet_outlined,
-        activeIcon: Icons.account_balance_wallet_rounded,
+        label: 'Dashboard',
+        icon: Icons.space_dashboard_outlined,
+        activeIcon: Icons.space_dashboard_rounded,
       ),
       _TabConfig(
         routeIndex: 1,
-        label: 'Trade',
-        icon: Icons.swap_horiz_rounded,
-        activeIcon: Icons.swap_horiz_rounded,
-      ),
-      _TabConfig(
-        routeIndex: 3,
-        label: '',
-        icon: Icons.query_stats_rounded,
-        activeIcon: Icons.query_stats_rounded,
-        isCenter: true,
+        label: 'Transactions',
+        icon: Icons.receipt_long_outlined,
+        activeIcon: Icons.receipt_long_rounded,
       ),
       _TabConfig(
         routeIndex: 2,
-        label: 'Vault',
-        icon: Icons.lock_outline_rounded,
-        activeIcon: Icons.lock_rounded,
+        label: 'Budgets',
+        icon: Icons.pie_chart_outline_rounded,
+        activeIcon: Icons.pie_chart_rounded,
+      ),
+      _TabConfig(
+        routeIndex: 3,
+        label: 'Analytics',
+        icon: Icons.analytics_outlined,
+        activeIcon: Icons.analytics_rounded,
       ),
       _TabConfig(
         routeIndex: 4,
@@ -57,6 +56,7 @@ class IosTabBar extends StatelessWidget {
         activeIcon: Icons.settings_rounded,
       ),
     ];
+
 
     return Container(
       height: height + bottomPadding + (minimized ? 8 : 16),

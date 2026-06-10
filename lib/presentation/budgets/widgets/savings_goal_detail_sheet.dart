@@ -215,7 +215,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                   // Amount Entry field
                   Container(
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1C1C1E) : Colors.grey[100],
+                      color: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
