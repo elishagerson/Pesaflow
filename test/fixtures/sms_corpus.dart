@@ -442,7 +442,7 @@ final List<SmsCorpusEntry> smsCorpus = [
       type: 'expense',
       senderOrRecipient: 'Bustisha',
       reference: '26794215512428',
-      balanceAfter: 0,
+      // balanceAfter is null — "New balance" in this SMS is the loan balance
     ),
   ),
 

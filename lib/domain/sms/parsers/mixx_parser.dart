@@ -187,7 +187,8 @@ class MixxParser implements SmsParser {
         final amt = parseAmount(match.group(2)!);
         final recipient = match.group(1)!.trim();
         final ref = _extractReference(text);
-        final bal = _extractBalance(text);
+        // Balance in this SMS is the loan balance, NOT the wallet balance — skip it
+        final int? bal = null;
 
         return SmsParsed(
           amount: amt,

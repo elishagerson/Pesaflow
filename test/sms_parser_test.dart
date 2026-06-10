@@ -441,7 +441,7 @@ void main() {
       expect(result.senderOrRecipient, 'Bustisha');
       expect(result.reference, '26794215512428');
       expect(result.provider, 'TigoPesa_TZ');
-      expect(result.balanceAfter, 0);
+      expect(result.balanceAfter, isNull); // loan balance, not wallet balance
     });
 
     test('parses Malipo with Kumbukumbu no. reference', () {
