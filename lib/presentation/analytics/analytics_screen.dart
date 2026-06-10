@@ -20,12 +20,6 @@ import 'package:flutter/services.dart';
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
 
-  Color hexToColor(String hex) {
-    final clean = hex.replaceAll('#', '');
-    if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
-    return Colors.grey;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
