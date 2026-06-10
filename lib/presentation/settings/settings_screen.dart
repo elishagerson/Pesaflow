@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
@@ -363,24 +364,12 @@ class SettingsScreen extends ConsumerWidget {
     final recentTransactions = ref.watch(recentTransactionsStreamProvider).value ?? [];
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+      appBar: const IosNavBar(title: 'Settings', largeTitle: true),
+      body: SafeArea(top: false, child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // iOS-style nav header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
 
               // Privacy section
               IosListSection(

@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -27,24 +28,9 @@ class AnalyticsScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: SafeArea(
-          child: Column(
+        appBar: const IosNavBar(title: 'Analytics', largeTitle: true),
+        body: SafeArea(top: false, child: Column(
             children: [
-              // iOS-style nav header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Analytics',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
-              ),
               // iOS-style sliding capsule control
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
