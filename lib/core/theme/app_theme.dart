@@ -5,12 +5,12 @@ class AppTheme {
   // ── Liquid Glass iOS 26+ Palette ──
 
   // Light
-  static const Color primaryLight = Color(0xFF0A84FF);
+  static const Color primaryLight = Color(0xFF609F8A);
   static const Color onPrimaryLight = Color(0xFFFFFFFF);
-  static const Color primaryContainerLight = Color(0xFFDCF0FF);
-  static const Color onPrimaryContainerLight = Color(0xFF00325E);
+  static const Color primaryContainerLight = Color(0xFFE4F0EC);
+  static const Color onPrimaryContainerLight = Color(0xFF122C23);
 
-  static const Color secondaryLight = Color(0xFF34C759); // Apple system green
+  static const Color secondaryLight = Color(0xFF609F8A); // Sage green
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
   static const Color secondaryContainerLight = Color(0xFFD1FAE5);
   static const Color onSecondaryContainerLight = Color(0xFF003D24);
@@ -31,13 +31,13 @@ class AppTheme {
   static const Color surfaceHighDark = Color(0xFF2C2C2E);
 
   // Finance semantic colors — Apple system colors
-  static const Color incomeColor = Color(0xFF007AFF);   // Apple system blue (light)
+  static const Color incomeColor = Color(0xFF609F8A);   // Sage green (light)
   static const Color expenseColor = Color(0xFFFF3B30);  // Apple system red (light)
-  static const Color transferColor = Color(0xFF34C759); // Apple system green (light)
+  static const Color transferColor = Color(0xFF609F8A); // Sage green (light)
 
-  static const Color incomeColorDark = Color(0xFF0A84FF);   // Vibrant blue (dark)
+  static const Color incomeColorDark = Color(0xFF609F8A);   // Sage green (dark)
   static const Color expenseColorDark = Color(0xFFFF453A);  // Coral red (dark)
-  static const Color transferColorDark = Color(0xFF30D158); // Neon green (dark)
+  static const Color transferColorDark = Color(0xFF609F8A); // Sage green (dark)
 
   static const Color errorLight = Color(0xFFFF3B30);
   static const Color onErrorLight = Color(0xFFFFFFFF);

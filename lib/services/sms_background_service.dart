@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:telephony/telephony.dart';
+import 'package:another_telephony/telephony.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 import '../domain/sms/pending_review_notifier.dart';
@@ -97,14 +98,12 @@ class SmsBackgroundService {
     if (_permissionsChecked) return _permissionsGranted;
     _permissionsChecked = true;
     try {
-      final bool? granted = await _telephony.requestPhoneAndSmsPermissions;
-      _permissionsGranted = granted == true;
+      final smsGranted = await Permission.sms.isGranted;
+      final phoneGranted = await Permission.phone.isGranted;
+      _permissionsGranted = smsGranted && phoneGranted;
       return _permissionsGranted;
-    } on MissingPluginException {
-      developer.log('Telephony plugin not available', name: 'SmsBackground');
-      return false;
     } catch (e) {
-      developer.log('Permission request failed: $e', name: 'SmsBackground');
+      developer.log('Permission check failed: $e', name: 'SmsBackground');
       return false;
     }
   }

@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/database/app_database.dart';
 import '../../data/repositories/analytics_repository.dart';
 
 final insightGeneratorProvider = Provider<InsightGenerator>((ref) {
@@ -78,7 +77,7 @@ class InsightGenerator {
             type: InsightType.spendingTrend,
             title: increased ? 'Spending Up' : 'Spending Down',
             message: increased
-                ? 'Spending is ${changePercent}% higher than last month.'
+                ? 'Spending is $changePercent% higher than last month.'
                 : 'Spending is ${-changePercent}% lower than last month. Great work!',
             severity: increased ? InsightSeverity.warning : InsightSeverity.positive,
             icon: increased ? 'arrow_upward' : 'arrow_downward',
@@ -94,7 +93,7 @@ class InsightGenerator {
             type: InsightType.incomeConsistency,
             title: incomeChange > 0 ? 'Income Increase' : 'Income Decrease',
             message: incomeChange > 0
-                ? 'Income is ${incomeChange}% higher than last month.'
+                ? 'Income is $incomeChange% higher than last month.'
                 : 'Income dropped by ${-incomeChange}% compared to last month.',
             severity: incomeChange > 0 ? InsightSeverity.positive : InsightSeverity.warning,
             icon: 'account_balance_wallet',

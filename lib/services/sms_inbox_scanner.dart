@@ -1,4 +1,5 @@
-import 'package:telephony/telephony.dart';
+import 'package:another_telephony/telephony.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
 import '../domain/sms/sms_processor.dart';
@@ -22,8 +23,13 @@ class SmsInboxScanner {
     required void Function(int processed, int total) onProgress,
   }) async {
     try {
-      final bool? permissionGranted = await _telephony.requestPhoneAndSmsPermissions;
-      if (permissionGranted != true) {
+      final statuses = await [
+        Permission.sms,
+        Permission.phone,
+      ].request();
+      final permissionGranted = statuses[Permission.sms]?.isGranted == true &&
+                                statuses[Permission.phone]?.isGranted == true;
+      if (!permissionGranted) {
         developer.log('SMS inbox scanning denied: permissions not granted', name: 'SmsInboxScanner');
         return;
       }

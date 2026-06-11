@@ -40,10 +40,12 @@ class BackupService {
 
       await tempFile.writeAsString(csvString);
 
-      await Share.shareXFiles(
-        [XFile(tempFile.path)],
-        subject: 'PesaFlow Transactions Export',
-        text: 'Exported transaction logs from PesaFlow.',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(tempFile.path)],
+          subject: 'PesaFlow Transactions Export',
+          text: 'Exported transaction logs from PesaFlow.',
+        ),
       );
     } catch (e) {
       developer.log('CSV export failed: $e', name: 'BackupService');
@@ -65,10 +67,12 @@ class BackupService {
 
       await dbFile.copy(backupFile.path);
 
-      await Share.shareXFiles(
-        [XFile(backupFile.path)],
-        subject: 'PesaFlow Database Backup',
-        text: 'Encrypted PesaFlow offline database backup.',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(backupFile.path)],
+          subject: 'PesaFlow Database Backup',
+          text: 'Encrypted PesaFlow offline database backup.',
+        ),
       );
     } catch (e) {
       developer.log('Database backup failed: $e', name: 'BackupService');

@@ -8,12 +8,8 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
-import 'package:pesaflow/data/repositories/account_repository.dart';
-import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
-import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
@@ -474,10 +470,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             duration: const Duration(milliseconds: 200),
                             decoration: BoxDecoration(
                               color: isSel 
-                                  ? catColor.withOpacity(0.15) 
+                                  ? catColor.withValues(alpha: 0.15) 
                                   : (theme.brightness == Brightness.dark 
                                       ? const Color(0xFF1B1B1D) 
-                                      : Colors.grey.withOpacity(0.05)),
+                                      : Colors.grey.withValues(alpha: 0.05)),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: isSel ? catColor : Colors.transparent,
@@ -485,7 +481,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               ),
                               boxShadow: isSel ? [
                                 BoxShadow(
-                                  color: catColor.withOpacity(0.25),
+                                  color: catColor.withValues(alpha: 0.25),
                                   blurRadius: 8,
                                   spreadRadius: 1,
                                 )
@@ -741,7 +737,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Expense' 
-                                        ? const Color(0xFFFF453A).withOpacity(0.15) 
+                                        ? const Color(0xFFFF453A).withValues(alpha: 0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
                                     border: _transactionType == 'Expense'
@@ -772,7 +768,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Income' 
-                                        ? AppTheme.transferColorDark.withOpacity(0.15) 
+                                        ? AppTheme.transferColorDark.withValues(alpha: 0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
                                     border: _transactionType == 'Income'
@@ -803,18 +799,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                                   decoration: BoxDecoration(
                                     color: _transactionType == 'Transfer' 
-                                        ? const Color(0xFF0A84FF).withOpacity(0.15) 
+                                        ? AppTheme.transferColorDark.withValues(alpha: 0.15) 
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(100),
                                     border: _transactionType == 'Transfer'
-                                        ? Border.all(color: const Color(0xFF0A84FF), width: 1.2)
+                                        ? Border.all(color: AppTheme.transferColorDark, width: 1.2)
                                         : null,
                                   ),
                                   child: Center(
                                     child: Text(
                                       'Transfer',
                                       style: TextStyle(
-                                        color: _transactionType == 'Transfer' ? const Color(0xFF0A84FF) : Colors.grey,
+                                        color: _transactionType == 'Transfer' ? AppTheme.transferColorDark : Colors.grey,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),

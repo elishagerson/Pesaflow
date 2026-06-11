@@ -73,7 +73,7 @@ class TransactionListScreen extends ConsumerWidget {
                       Icon(
                         Icons.search_off_rounded,
                         size: 64,
-                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
                       const SizedBox(height: 16),
                       const Text(
@@ -208,7 +208,7 @@ class TransactionListScreen extends ConsumerWidget {
                               padding: const EdgeInsets.all(16.0),
                               decoration: BoxDecoration(
                                 color: isDark
-                                    ? const Color(0xFF1B1C22).withOpacity(0.65)
+                                    ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
                                     : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
@@ -217,7 +217,7 @@ class TransactionListScreen extends ConsumerWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -230,7 +230,7 @@ class TransactionListScreen extends ConsumerWidget {
                                     width: 46,
                                     height: 46,
                                     decoration: BoxDecoration(
-                                      color: categoryColor.withOpacity(0.15),
+                                      color: categoryColor.withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                     child: Center(
@@ -328,7 +328,7 @@ class TransactionListScreen extends ConsumerWidget {
                             ),
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   );
                 },
@@ -395,8 +395,8 @@ class TransactionListScreen extends ConsumerWidget {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: (activeAccount != null || activeCategory != null)
-                                        ? theme.colorScheme.primary.withOpacity(0.12)
-                                        : (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04)),
+                                        ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                                        : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
                                     shape: BoxShape.circle,
                                   ),
                                   child: IconButton(
@@ -418,7 +418,7 @@ class TransactionListScreen extends ConsumerWidget {
                                   height: 36,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04),
+                                    color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04),
                                     border: Border.all(
                                       color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
                                       width: 0.8,
@@ -481,7 +481,7 @@ class TransactionListScreen extends ConsumerWidget {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? theme.colorScheme.primary
-                                        : (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04)),
+                                        : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: Text(
@@ -515,7 +515,7 @@ class TransactionListScreen extends ConsumerWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppTheme.transferColorDark.withOpacity(0.35),
+              color: AppTheme.transferColorDark.withValues(alpha: 0.35),
               blurRadius: 12,
               spreadRadius: 2,
               offset: const Offset(0, 4),
@@ -559,7 +559,7 @@ class TransactionListScreen extends ConsumerWidget {
         }
 
         final Color accentColor = switch (severity) {
-          InsightSeverity.positive => const Color(0xFF30D158),
+          InsightSeverity.positive => const Color(0xFF609F8A),
           InsightSeverity.neutral => const Color(0xFFFF9F0A),
           InsightSeverity.warning => const Color(0xFFFF453A),
           InsightSeverity.critical => const Color(0xFFFF453A),
@@ -571,12 +571,12 @@ class TransactionListScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: accentColor.withOpacity(0.3),
+              color: accentColor.withValues(alpha: 0.3),
               width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: accentColor.withOpacity(0.1),
+                color: accentColor.withValues(alpha: 0.1),
                 blurRadius: 16,
                 spreadRadius: 1,
                 offset: const Offset(0, 4),
@@ -633,7 +633,7 @@ class TransactionListScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             height: 1.25,
                           ),
                           maxLines: 2,
@@ -658,7 +658,7 @@ class TransactionListScreen extends ConsumerWidget {
                               label: 'Income',
                               value: income,
                               maxValue: maxVal,
-                              color: const Color(0xFF30D158),
+                              color: const Color(0xFF609F8A),
                               formatValue: (v) => 'TSh ${_formatKsh(v)}',
                             ),
                             const SizedBox(height: 10),
@@ -787,7 +787,7 @@ class _MiniBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             const Spacer(),
@@ -796,7 +796,7 @@ class _MiniBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -813,7 +813,7 @@ class _MiniBar extends StatelessWidget {
                 height: 8,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(

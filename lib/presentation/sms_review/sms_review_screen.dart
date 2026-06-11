@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
-import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -71,7 +68,7 @@ class SmsReviewScreen extends ConsumerWidget {
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: hexToColor(cat.color).withOpacity(0.15),
+                            color: hexToColor(cat.color).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -142,7 +139,7 @@ class SmsReviewScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -163,7 +160,7 @@ class SmsReviewScreen extends ConsumerWidget {
                       'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                         fontSize: 14,
                       ),
                     ),
@@ -188,12 +185,12 @@ class SmsReviewScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                       gradient: LinearGradient(
                         colors: [
-                          theme.colorScheme.tertiary.withOpacity(0.15),
-                          theme.colorScheme.tertiary.withOpacity(0.05),
+                          theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                          theme.colorScheme.tertiary.withValues(alpha: 0.05),
                         ],
                       ),
                       border: Border.all(
-                        color: theme.colorScheme.tertiary.withOpacity(0.3),
+                        color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -218,7 +215,7 @@ class SmsReviewScreen extends ConsumerWidget {
                               Text(
                                 'Swipe right to approve, left to reject',
                                 style: TextStyle(
-                                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
+                                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                                   fontSize: 12,
                                 ),
                               ),
@@ -269,7 +266,7 @@ class SmsReviewScreen extends ConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Transaction approved: ${trans.description}'),
-                        backgroundColor: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                        backgroundColor: theme.colorScheme.primary,
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
@@ -313,7 +310,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                     Container(
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: hexToColor(item.category.color).withOpacity(0.15),
+                                        color: hexToColor(item.category.color).withValues(alpha: 0.15),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Icon(
@@ -342,7 +339,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                                 padding: const EdgeInsets.symmetric(
                                                     horizontal: 8, vertical: 2),
                                                 decoration: BoxDecoration(
-                                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                                                   borderRadius: BorderRadius.circular(12),
                                                 ),
                                                 child: Text(
@@ -360,10 +357,10 @@ class SmsReviewScreen extends ConsumerWidget {
                                                 padding: const EdgeInsets.symmetric(
                                                     horizontal: 8, vertical: 4),
                                                 decoration: BoxDecoration(
-                                                  color: AppTheme.transferColorDark.withOpacity(0.08),
+                                                  color: AppTheme.transferColorDark.withValues(alpha: 0.08),
                                                   borderRadius: BorderRadius.circular(100),
                                                   border: Border.all(
-                                                    color: AppTheme.transferColorDark.withOpacity(0.2),
+                                                    color: AppTheme.transferColorDark.withValues(alpha: 0.2),
                                                     width: 1,
                                                   ),
                                                 ),
@@ -415,7 +412,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.03),
+                                      color: Colors.white.withValues(alpha: 0.03),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
@@ -426,7 +423,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                         fontSize: 11,
                                         fontFamily: 'monospace',
                                         color: theme.colorScheme.onSurfaceVariant
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ),
@@ -453,11 +450,11 @@ class SmsReviewScreen extends ConsumerWidget {
                                         ref.invalidate(recentTransactionsStreamProvider);
                                       },
                                       icon: Icon(Icons.check_rounded,
-                                          size: 16, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)),
+                                          size: 16, color: theme.colorScheme.primary),
                                       label: Text('Approve',
                                           style: TextStyle(
                                               fontSize: 12,
-                                              color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF))),
+                                              color: theme.colorScheme.primary)),
                                     ),
                                   ],
                                 ),
@@ -525,7 +522,7 @@ class _ConfidenceRingPainter extends CustomPainter {
     final radius = size.width / 2 - 1;
 
     final bgPaint = Paint()
-      ..color = color.withOpacity(0.18)
+      ..color = color.withValues(alpha: 0.18)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
     
@@ -672,7 +669,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                     opacity: approveOpacity,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.08),
+                        color: Colors.green.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                         border: Border.all(color: AppTheme.transferColorDark, width: 3),
                       ),
@@ -684,7 +681,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.transferColorDark.withOpacity(0.4),
+                                color: AppTheme.transferColorDark.withValues(alpha: 0.4),
                                 blurRadius: 15,
                               )
                             ],
@@ -709,7 +706,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                     opacity: rejectOpacity,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.08),
+                        color: Colors.red.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                         border: Border.all(color: const Color(0xFFFF453A), width: 3),
                       ),
@@ -721,7 +718,7 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFF453A).withOpacity(0.4),
+                                color: const Color(0xFFFF453A).withValues(alpha: 0.4),
                                 blurRadius: 15,
                               )
                             ],

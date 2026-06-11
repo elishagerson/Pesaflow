@@ -107,7 +107,6 @@ class BudgetRepository {
 
          int rolloverAmount = 0;
          if (budget.rollover) {
-           final remaining = currentPeriod.allocated - spent;
            rolloverAmount = BudgetEngine.computeRollover(
              allocated: currentPeriod.allocated,
              spent: spent,

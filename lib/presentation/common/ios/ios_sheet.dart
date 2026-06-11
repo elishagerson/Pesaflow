@@ -24,9 +24,9 @@ class IosBottomSheet extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => IosBottomSheet(
-        child: child,
         initialChildSize: initialChildSize,
         maxChildSize: maxChildSize,
+        child: child,
       ),
     );
   }

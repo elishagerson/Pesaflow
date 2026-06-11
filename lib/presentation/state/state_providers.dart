@@ -72,7 +72,7 @@ final netWorthProvider = Provider<int>((ref) {
   return accountsAsync.when(
     data: (accounts) => accounts.fold<int>(0, (sum, acc) => sum + acc.balance),
     loading: () => 0,
-    error: (_, __) => 0,
+    error: (_, _) => 0,
   );
 });
 
@@ -201,7 +201,7 @@ final savingsGoalsTotalSavedProvider = Provider<int>((ref) {
   return goalsAsync.when(
     data: (goals) => goals.fold<int>(0, (sum, goal) => sum + goal.currentAmount),
     loading: () => 0,
-    error: (_, __) => 0,
+    error: (_, _) => 0,
   );
 });
 

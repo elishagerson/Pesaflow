@@ -14,7 +14,6 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
@@ -59,7 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           Icon(
             Icons.check_circle_rounded,
             size: 10,
-            color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+            color: const Color(0xFF609F8A),
           ),
           const SizedBox(width: 4),
           Text(
@@ -117,7 +116,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     value: 'Mobile Money',
                     label: 'Mobile Money',
                     icon: Icons.phone_android_rounded,
-                    color: Color(0xFF0A84FF),
+                    color: Color(0xFF609F8A),
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(
@@ -252,7 +251,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         ElevatedButton(
@@ -295,7 +294,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // Force Riverpod cache invalidation for accounts stream
               ref.invalidate(accountsStreamProvider);
 
-              if (context.mounted) Navigator.of(context).pop();
+              if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
             } catch (e) {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -364,7 +363,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         value: 1.0,
                         strokeWidth: 4.5,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          catColor.withOpacity(0.12),
+                          catColor.withValues(alpha: 0.12),
                         ),
                       ),
                     ),
@@ -440,7 +439,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.08),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -461,7 +460,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Text(
                   'Start automatic SMS synchronization or log transactions manually to view your financial charts here.',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -516,8 +515,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: netSavings >= 0
-                            ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor).withOpacity(0.12)
-                            : (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor).withOpacity(0.12),
+                            ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor).withValues(alpha: 0.12)
+                            : (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor).withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text(
@@ -700,7 +699,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 120),
       ),
-      error: (_, __) => const Padding(
+      error: (_, _) => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 120),
       ),
@@ -758,7 +757,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.08),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.08),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -778,7 +777,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Text(
                       'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -852,7 +851,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 140),
       ),
-      error: (_, __) => const Padding(
+      error: (_, _) => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 140),
       ),
@@ -877,9 +876,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            border: Border.all(color: color.withOpacity(0.15), width: 0.5),
+            border: Border.all(color: color.withValues(alpha: 0.15), width: 0.5),
           ),
           child: Row(
             children: [
@@ -903,7 +902,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 80),
       ),
-      error: (_, __) => const Padding(
+      error: (_, _) => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 80),
       ),
@@ -925,10 +924,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             : 0.0;
         final percentInt = (pct * 100).round();
 
-        return Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1005,7 +1003,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                                 PieChartSectionData(
                                   value: (1.0 - pct) * 100,
-                                  color: goalColor.withOpacity(0.12),
+                                  color: goalColor.withValues(alpha: 0.12),
                                   radius: 4,
                                   showTitle: false,
                                 ),
@@ -1076,14 +1074,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
             ],
-          ),
-        );
+          );
       },
       loading: () => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 100),
       ),
-      error: (_, __) => const Padding(
+      error: (_, _) => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 100),
       ),
@@ -1120,7 +1117,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 20.0),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
@@ -1168,7 +1165,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? itemColor.withOpacity(0.08)
+                                ? itemColor.withValues(alpha: 0.08)
                                 : (theme.brightness == Brightness.dark
                                       ? AppTheme.surfaceContainerDark
                                       : AppTheme.surfaceLight),
@@ -1177,7 +1174,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             border: Border.all(
                               color: isSelected
-                                  ? itemColor.withOpacity(0.3)
+                                  ? itemColor.withValues(alpha: 0.3)
                                   : (theme.brightness == Brightness.dark
                                         ? const Color(0x1FFFFFFF)
                                         : const Color(0x1F000000)),
@@ -1188,7 +1185,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               Container(
                                 padding: const EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
-                                  color: itemColor.withOpacity(0.12),
+                                  color: itemColor.withValues(alpha: 0.12),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -1294,13 +1291,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: isSel
-                            ? theme.colorScheme.primary.withOpacity(0.12)
+                            ? theme.colorScheme.primary.withValues(alpha: 0.12)
                             : Colors.transparent,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isSel
                               ? theme.colorScheme.primary
-                              : Colors.grey.withOpacity(0.2),
+                              : Colors.grey.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -1354,7 +1351,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         ElevatedButton(
@@ -1382,7 +1379,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   .setTrackerId(newTracker.id);
 
               if (context.mounted) {
-                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).pop();
               }
             } catch (e) {
               if (!context.mounted) return;
@@ -1475,7 +1472,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final cardGradient = isDark
         ? LinearGradient(
             colors: [
-              trackerColor.withOpacity(0.24),
+              trackerColor.withValues(alpha: 0.24),
               const Color(0xFF09090A),
             ],
             begin: Alignment.topLeft,
@@ -1484,15 +1481,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         : LinearGradient(
             colors: [
               trackerColor,
-              trackerColor.withOpacity(0.82),
+              trackerColor.withValues(alpha: 0.82),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           );
 
     final Color heroTextColor = Colors.white;
-    final Color heroSubColor = isDark ? Colors.grey[400]! : Colors.white.withOpacity(0.8);
-    final Color pillBg = isDark ? Colors.white.withOpacity(0.06) : Colors.white.withOpacity(0.18);
+    final Color heroSubColor = isDark ? Colors.grey[400]! : Colors.white.withValues(alpha: 0.8);
+    final Color pillBg = isDark ? Colors.white.withValues(alpha: 0.06) : Colors.white.withValues(alpha: 0.18);
     final Color pillBorder = isDark ? const Color(0x1AFFFFFF) : const Color(0x33FFFFFF);
 
     return Scaffold(
@@ -1638,7 +1635,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   gradient: isDark
                       ? LinearGradient(
                           colors: [
-                            trackerColor.withOpacity(0.15),
+                            trackerColor.withValues(alpha: 0.15),
                             const Color(0xFF0F1013),
                           ],
                           begin: Alignment.topLeft,
@@ -1647,12 +1644,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       : cardGradient,
                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   border: Border.all(
-                    color: isDark ? trackerColor.withOpacity(0.25) : trackerColor.withOpacity(0.12),
+                    color: isDark ? trackerColor.withValues(alpha: 0.25) : trackerColor.withValues(alpha: 0.12),
                     width: 0.8,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? trackerColor.withOpacity(0.12) : trackerColor.withOpacity(0.08),
+                      color: isDark ? trackerColor.withValues(alpha: 0.12) : trackerColor.withValues(alpha: 0.08),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
                     ),
@@ -1672,7 +1669,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 19,
-                                color: isDark ? const Color(0xFF00E5FF) : Colors.white,
+                                color: isDark ? const Color(0xFF609F8A) : Colors.white,
                                 letterSpacing: -0.5,
                               ),
                             ),
@@ -1691,7 +1688,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: Row(
@@ -1802,7 +1799,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? trackerColor.withOpacity(0.35) : Colors.white)
+                                        ? (isDark ? trackerColor.withValues(alpha: 0.35) : Colors.white)
                                         : pillBg,
                                     borderRadius: BorderRadius.circular(100),
                                     border: Border.all(
@@ -1841,8 +1838,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           fontFamily: 'monospace',
                                           fontWeight: FontWeight.bold,
                                           color: isSelected
-                                              ? (isDark ? Colors.white.withOpacity(0.9) : trackerColor.withOpacity(0.9))
-                                              : heroTextColor.withOpacity(0.8),
+                                              ? (isDark ? Colors.white.withValues(alpha: 0.9) : trackerColor.withValues(alpha: 0.9))
+                                              : heroTextColor.withValues(alpha: 0.8),
                                         ),
                                       ),
                                     ],
@@ -1876,15 +1873,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1B1C22).withOpacity(0.8) : Colors.black,
+                          color: isDark ? const Color(0xFF1B1C22).withValues(alpha: 0.8) : Colors.black,
                           borderRadius: BorderRadius.circular(100),
                           border: Border.all(
-                            color: isDark ? trackerColor.withOpacity(0.4) : Colors.black,
+                            color: isDark ? trackerColor.withValues(alpha: 0.4) : Colors.black,
                             width: 1.0,
                           ),
                           boxShadow: isDark ? [
                             BoxShadow(
-                              color: trackerColor.withOpacity(0.15),
+                              color: trackerColor.withValues(alpha: 0.15),
                               blurRadius: 10,
                               spreadRadius: 0.5,
                             )
@@ -1919,7 +1916,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1B1C22).withOpacity(0.8) : const Color(0xFFE5E5EA),
+                          color: isDark ? const Color(0xFF1B1C22).withValues(alpha: 0.8) : const Color(0xFFE5E5EA),
                           borderRadius: BorderRadius.circular(100),
                           border: Border.all(
                             color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
@@ -1976,7 +1973,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             Icon(
                               Icons.message_rounded,
                               size: 16,
-                              color: isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                              color: const Color(0xFF609F8A),
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -1995,7 +1992,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: pendingReviewCount > 0
-                                ? const Color(0xFFFF9F0A).withOpacity(0.12)
+                                ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
                                 : (isDark ? Colors.white10 : Colors.black12),
                             borderRadius: BorderRadius.circular(100),
                           ),
@@ -2136,18 +2133,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary,
+                            color: theme.colorScheme.primary,
                           ),
                         ),
-                        backgroundColor: (isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary).withOpacity(0.08),
+                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.08),
                         side: BorderSide(
-                          color: (isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary).withOpacity(0.2),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.2),
                           width: 0.8,
                         ),
                         deleteIcon: Icon(
                           Icons.cancel_rounded,
                           size: 16,
-                          color: isDark ? const Color(0xFF00E5FF) : theme.colorScheme.primary,
+                          color: theme.colorScheme.primary,
                         ),
                         onDeleted: () {
                           setState(() {
@@ -2199,7 +2196,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             Icons.receipt_long_outlined,
                             size: 40,
                             color: theme.colorScheme.onSurfaceVariant
-                                .withOpacity(0.4),
+                                .withValues(alpha: 0.4),
                           ),
                           const SizedBox(height: 12),
                           const Text(
@@ -2269,7 +2266,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? const Color(0xFF1B1C22).withOpacity(0.65)
+                                ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
@@ -2278,7 +2275,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -2291,7 +2288,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 width: 46,
                                 height: 46,
                                 decoration: BoxDecoration(
-                                  color: hexToColor(item.category.color).withOpacity(0.15),
+                                  color: hexToColor(item.category.color).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Center(

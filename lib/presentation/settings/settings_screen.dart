@@ -122,7 +122,7 @@ class SettingsScreen extends ConsumerWidget {
                     value: 'Mobile Money',
                     label: 'Mobile Money',
                     icon: Icons.phone_android_rounded,
-                    color: Color(0xFF0A84FF),
+                    color: Color(0xFF609F8A),
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(
@@ -246,7 +246,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         ElevatedButton(
@@ -273,7 +273,7 @@ class SettingsScreen extends ConsumerWidget {
               await ref.read(accountRepositoryProvider).updateAccount(updated);
               ref.invalidate(accountsStreamProvider);
               ref.invalidate(netWorthProvider);
-              if (context.mounted) Navigator.of(context).pop();
+              if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
             } catch (e) {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -360,7 +360,7 @@ class SettingsScreen extends ConsumerWidget {
               leading: Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: hexToColor(cat.color).withOpacity(0.15),
+                  color: hexToColor(cat.color).withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(getCategoryIcon(cat.icon), color: hexToColor(cat.color)),
@@ -371,7 +371,7 @@ class SettingsScreen extends ConsumerWidget {
                   ? Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                       decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4.0),
                       ),
                       child: const Text('System', style: TextStyle(fontSize: 10, color: Colors.grey)),
@@ -503,7 +503,7 @@ class SettingsScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        color: isSelected ? theme.colorScheme.primary.withOpacity(0.15) : Colors.transparent,
+                        color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.15) : Colors.transparent,
                         borderRadius: BorderRadius.circular(8.0),
                         border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 1.5) : null,
                       ),
@@ -518,7 +518,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         ElevatedButton(
@@ -539,7 +539,7 @@ class SettingsScreen extends ConsumerWidget {
             await ref.read(categoryRepositoryProvider).createCategory(newCategory);
             ref.invalidate(categoriesFutureProvider);
             ref.invalidate(filteredTransactionsStreamProvider);
-            if (context.mounted) Navigator.of(context).pop();
+            if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
           },
           child: const Text('Create'),
         ),
@@ -614,7 +614,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
               child: const Text('Close'),
             ),
           ],
@@ -645,7 +645,7 @@ class SettingsScreen extends ConsumerWidget {
                     leading: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.12),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(Icons.shield_rounded, color: theme.colorScheme.primary, size: 22),
@@ -683,7 +683,7 @@ class SettingsScreen extends ConsumerWidget {
                   IosListRow(
                     leading: Icon(
                       Icons.file_download_rounded,
-                      color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF),
+                      color: theme.colorScheme.primary,
                       size: 24,
                     ),
                     title: const Text('Export to CSV'),
@@ -705,15 +705,10 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
 
-              // Preferences & Design System Theme
+              // Preferences & Design Theme
               IosListSection(
                 header: 'Preferences & Theme',
                 rows: [
-                  IosListRow(
-                    leading: Icon(Icons.palette_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('App Accent Color'),
-                    subtitle: const _SystemThemeIndicator(),
-                  ),
                   IosToggleRow(
                     leading: Icon(Icons.pin_rounded, color: theme.colorScheme.primary, size: 24),
                     title: const Text('Show Decimals'),
@@ -743,25 +738,6 @@ class SettingsScreen extends ConsumerWidget {
                       HapticFeedback.lightImpact();
                       ref.read(settingsRepositoryProvider).setSetting('sms_auto_deduplication', val.toString());
                     },
-                  ),
-                  IosListRow(
-                    leading: const Icon(Icons.translate_rounded, size: 24),
-                    title: const Text('Interface Language'),
-                    subtitle: const Text('English (only option in Phase 1)'),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text('English', style: TextStyle(fontSize: 12, color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
-                    ),
-                  ),
-                  IosListRow(
-                    leading: const Icon(Icons.dark_mode_rounded, size: 24),
-                    title: const Text('Visual Display Mode'),
-                    subtitle: const Text('Follows system theme (Light/Dark)'),
-                    trailing: const Icon(Icons.brightness_medium_rounded, size: 20),
                   ),
                 ],
               ),
@@ -836,36 +812,5 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _SystemThemeIndicator extends StatelessWidget {
-  const _SystemThemeIndicator();
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey[400] : Colors.grey[500],
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Follows device theme',
-            style: TextStyle(
-              fontSize: 13,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 

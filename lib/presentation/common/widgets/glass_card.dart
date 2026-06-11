@@ -58,7 +58,6 @@ class GlassCard extends StatelessWidget {
     }
 
     Widget body = Container(
-      padding: padding,
       decoration: BoxDecoration(
         color: glassColor,
         gradient: backgroundGradient,
@@ -104,9 +103,11 @@ class GlassCard extends StatelessWidget {
                 ),
               ),
             Padding(
-              padding: accentColor != null
-                  ? EdgeInsets.only(top: 3 + 2)
-                  : EdgeInsets.zero,
+              padding: (padding ?? EdgeInsets.zero).add(
+                accentColor != null
+                    ? const EdgeInsets.only(top: 3 + 2)
+                    : EdgeInsets.zero,
+              ),
               child: child,
             ),
           ],

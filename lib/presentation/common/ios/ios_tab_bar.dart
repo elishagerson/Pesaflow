@@ -198,8 +198,7 @@ class _TabConfig {
     required this.label,
     required this.icon,
     required this.activeIcon,
-    this.isCenter = false,
-  });
+  }) : isCenter = false;
 }
 
 class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
@@ -252,9 +251,9 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                     height: 44,
                     child: Row(
                       children: [
-                        if (leading != null) leading!,
+                        ?leading,
                         const Spacer(),
-                        if (actions != null) ...actions!,
+                        ...?actions,
                       ],
                     ),
                   ),
@@ -271,7 +270,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onBackground,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ),

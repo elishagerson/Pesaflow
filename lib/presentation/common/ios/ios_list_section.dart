@@ -189,7 +189,7 @@ class IosToggleRow extends IosListRow {
         scale: 0.85,
         child: CupertinoSwitch(
           value: value,
-          activeColor: Theme.of(context).colorScheme.primary,
+          activeTrackColor: Theme.of(context).colorScheme.primary,
           onChanged: onChanged,
         ),
       ),

@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
-import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
-import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -45,7 +43,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     ref.invalidate(reviewQueueStreamProvider);
     ref.invalidate(recentTransactionsStreamProvider);
     ref.read(pendingReviewProvider.notifier).clear();
-    if (context.mounted) Navigator.of(context).pop();
+    if (mounted) Navigator.of(context).pop();
   }
 
   Future<void> _reject() async {
@@ -54,7 +52,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     ref.invalidate(recentTransactionsStreamProvider);
     ref.invalidate(accountsStreamProvider);
     ref.read(pendingReviewProvider.notifier).clear();
-    if (context.mounted) Navigator.of(context).pop();
+    if (mounted) Navigator.of(context).pop();
   }
 
   @override
@@ -103,7 +101,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -118,7 +116,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(widget.item.account.name,
@@ -160,7 +158,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   height: 180,
                   child: ListView.separated(
                     itemCount: categories.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 2),
+                    separatorBuilder: (_, _) => const SizedBox(height: 2),
                     itemBuilder: (context, index) {
                       final cat = categories[index];
                       final isSelected = cat.id == _selectedCategoryId;
@@ -172,12 +170,12 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       return ListTile(
                         dense: true,
                         selected: isSelected,
-                        selectedTileColor: theme.colorScheme.primary.withOpacity(0.08),
+                        selectedTileColor: theme.colorScheme.primary.withValues(alpha: 0.08),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         leading: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: hexToColor(cat.color).withOpacity(0.15),
+                            color: hexToColor(cat.color).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(getCategoryIcon(cat.icon),
@@ -207,7 +205,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       label: const Text('Reject'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: theme.colorScheme.error,
-                        side: BorderSide(color: theme.colorScheme.error.withOpacity(0.4)),
+                        side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.4)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),

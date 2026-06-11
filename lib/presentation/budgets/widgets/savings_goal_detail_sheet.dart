@@ -282,7 +282,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                         subtitle: const Text('Updates real balance & logs a transaction'),
                         trailing: CupertinoSwitch(
                           value: _deductFromWallet,
-                          activeColor: isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
+                          activeTrackColor: isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
                           onChanged: (v) {
                             setModalState(() {
                               _deductFromWallet = v;
@@ -391,9 +391,9 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: goalColor.withOpacity(0.12),
+                    color: goalColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
-                    border: Border.all(color: goalColor.withOpacity(0.3), width: 1.5),
+                    border: Border.all(color: goalColor.withValues(alpha: 0.3), width: 1.5),
                   ),
                   child: Icon(
                     getGoalIcon(widget.goal.icon),
@@ -469,7 +469,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                   ),
                                   PieChartSectionData(
                                     value: (1.0 - pct) * 100,
-                                    color: goalColor.withOpacity(0.12),
+                                    color: goalColor.withValues(alpha: 0.12),
                                     radius: 6,
                                     showTitle: false,
                                   ),
@@ -534,7 +534,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: AppTheme.transferColorDark.withOpacity(0.15),
+                              color: AppTheme.transferColorDark.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
@@ -566,7 +566,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFF453A).withOpacity(0.15),
+                              color: const Color(0xFFFF453A).withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
@@ -623,7 +623,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: logs.length,
-                        separatorBuilder: (_, __) => Divider(
+                        separatorBuilder: (_, _) => Divider(
                           color: isDark ? const Color(0xFF2C2C2E) : Colors.grey[200],
                           height: 1,
                         ),
@@ -710,7 +710,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                       child: Icon(
                                         Icons.delete_outline_rounded,
                                         size: 16,
-                                        color: Colors.red.withOpacity(0.7),
+                                        color: Colors.red.withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ],

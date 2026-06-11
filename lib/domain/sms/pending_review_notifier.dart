@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/database/app_database.dart';
 import '../../data/database/daos/transaction_dao.dart';
 
 class PendingReviewNotifier extends Notifier<TransactionWithCategoryAndAccount?> {

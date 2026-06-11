@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
-import 'dart:io' show Platform;
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -15,22 +16,12 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
 import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 
-const _accentChannel = MethodChannel('pesaflow/system_accent');
 
-const _greyFallback = 0xFF9E9E9E;
-
-Future<int> _getSystemAccentColor() async {
-  if (!Platform.isAndroid) return _greyFallback;
-  try {
-    final result = await _accentChannel.invokeMethod<int>('getAccentColor');
-    if (result != null) return result & 0xFFFFFFFF;
-  } catch (_) {}
-  return _greyFallback;
-}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,14 +39,14 @@ class PesaFlowApp extends ConsumerStatefulWidget {
   ConsumerState<PesaFlowApp> createState() => _PesaFlowAppState();
 }
 
-class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
+class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingObserver {
   static const _notificationChannel = MethodChannel('pesaflow/notification_listener');
-  int _accentColor = _greyFallback;
+  bool _isAuthenticated = false;
 
   @override
   void initState() {
     super.initState();
-    _loadAccentColor();
+    WidgetsBinding.instance.addObserver(this);
 
     // Register notification listener method channel handler
     _notificationChannel.setMethodCallHandler((call) async {
@@ -86,6 +77,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
         final completed = await ref.read(settingsRepositoryProvider).isOnboardingComplete();
         if (!completed) {
           appRouter.go('/onboarding');
+          return;
         }
       } catch (e) {
         developer.log('Onboarding check failed: $e', name: 'AppLaunch');
@@ -122,6 +114,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
 
       // Check if Notification Access is enabled; if not, prompt once
       await _checkNotificationAccess();
+
+      // Trigger app lock if enabled
+      await _triggerBiometricAuthIfNeeded();
     });
   }
 
@@ -159,7 +154,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
   }
 
   Future<void> _checkNotificationAccess() async {
-    if (!context.mounted) return;
+    if (!mounted) return;
     try {
       final dismissed = await ref.read(settingsRepositoryProvider).getSetting('notification_access_prompt_dismissed');
       if (dismissed == 'true') return;
@@ -168,6 +163,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
       if (enabled == true) return;
 
       developer.log('Notification Access not enabled — prompting user', name: 'AppLaunch');
+      if (!mounted) return;
       await showDialog(
         context: context,
         barrierDismissible: false,
@@ -194,7 +190,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
             FilledButton(
               onPressed: () async {
                 await _notificationChannel.invokeMethod('openNotificationListenerSettings');
-                Navigator.of(ctx).pop();
+                if (ctx.mounted) Navigator.of(ctx).pop();
               },
               child: const Text('Open Settings'),
             ),
@@ -206,18 +202,69 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
     }
   }
 
-  Future<void> _loadAccentColor() async {
-    final color = await _getSystemAccentColor();
-    if (mounted) setState(() => _accentColor = color);
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      setState(() {
+        _isAuthenticated = false;
+      });
+    } else if (state == AppLifecycleState.resumed) {
+      _triggerBiometricAuthIfNeeded();
+    }
+  }
+
+  Future<void> _triggerBiometricAuthIfNeeded() async {
+    final lockEnabled = ref.read(appLockEnabledProvider).value ?? false;
+    if (lockEnabled && !_isAuthenticated) {
+      await _authenticate();
+    }
+  }
+
+  Future<void> _authenticate() async {
+    final localAuth = LocalAuthentication();
+    try {
+      final isSupported = await localAuth.isDeviceSupported();
+      final canCheckBiometrics = await localAuth.canCheckBiometrics;
+      if (!isSupported && !canCheckBiometrics) {
+        setState(() {
+          _isAuthenticated = true;
+        });
+        return;
+      }
+
+      final authenticated = await localAuth.authenticate(
+        localizedReason: 'Authenticate to unlock PesaFlow',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: false,
+        ),
+      );
+
+      if (authenticated) {
+        setState(() {
+          _isAuthenticated = true;
+        });
+      }
+    } catch (e) {
+      developer.log('Biometric authentication failed: $e', name: 'BiometricLock');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final accentColor = Color(_accentColor);
+    const accentColor = Color(0xFF609F8A);
 
     final lightCs = ColorScheme.fromSeed(
       seedColor: accentColor,
       brightness: Brightness.light,
+    ).copyWith(
+      primary: accentColor,
     );
     final darkCs = ColorScheme.fromSeed(
       seedColor: accentColor,
@@ -225,6 +272,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
     ).copyWith(
       primary: accentColor,
     );
+
+    final lockEnabled = ref.watch(appLockEnabledProvider).value ?? false;
+    final showLockOverlay = lockEnabled && !_isAuthenticated;
 
     return MaterialApp.router(
       title: 'PesaFlow',
@@ -240,6 +290,82 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> {
             children: [
               ?child,
               _PendingReviewOverlay(),
+              if (showLockOverlay)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.85),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                      child: Center(
+                        child: Card(
+                          color: Colors.white.withValues(alpha: 0.08),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            side: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.12),
+                              width: 1,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF609F8A).withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.lock_outline_rounded,
+                                    color: Color(0xFF609F8A),
+                                    size: 48,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                const Text(
+                                  'PesaFlow Locked',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Authentication required to access offline data',
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 13,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 32),
+                                FilledButton.icon(
+                                  onPressed: _authenticate,
+                                  icon: const Icon(Icons.fingerprint_rounded),
+                                  label: const Text('Unlock App'),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: const Color(0xFF609F8A),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 14,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         );

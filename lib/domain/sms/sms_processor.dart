@@ -4,7 +4,6 @@ import 'dart:developer' as developer;
 
 import '../../data/database/app_database.dart';
 import '../../data/database/daos/transaction_dao.dart';
-import '../../data/models/sms_parsed.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
@@ -51,21 +50,15 @@ class SmsProcessor {
   void Function(TransactionWithCategoryAndAccount item)? onReviewNeeded;
 
   SmsProcessor({
-    required AccountRepository accountRepo,
-    required CategoryRepository categoryRepo,
-    required TransactionRepository transactionRepo,
-    required SettingsRepository settingsRepo,
-    required Deduplicator deduplicator,
-    required AutoCategorizer categorizer,
-    required NotificationService notificationService,
+    required this._accountRepo,
+    required this._categoryRepo,
+    required this._transactionRepo,
+    required this._settingsRepo,
+    required this._deduplicator,
+    required this._categorizer,
+    required this._notificationService,
     this.onReviewNeeded,
-  })  : _accountRepo = accountRepo,
-        _categoryRepo = categoryRepo,
-        _transactionRepo = transactionRepo,
-        _settingsRepo = settingsRepo,
-        _deduplicator = deduplicator,
-        _categorizer = categorizer,
-        _notificationService = notificationService;
+  });
 
   /// Processes a raw incoming SMS string and timestamp.
   /// If recognized as a transaction and not a duplicate, parses, categorizes,
@@ -118,10 +111,13 @@ class SmsProcessor {
       }
 
       // 4. Check for duplicate logs
-      final isDup = await _deduplicator.isDuplicate(smsParsed);
-      if (isDup) {
-        developer.log('SMS ignored: Duplicate transaction detected. Reference: ${smsParsed.reference}', name: 'SmsProcessor');
-        return false;
+      final isDeduplicationEnabled = await _settingsRepo.getSetting('sms_auto_deduplication') != 'false';
+      if (isDeduplicationEnabled) {
+        final isDup = await _deduplicator.isDuplicate(smsParsed);
+        if (isDup) {
+          developer.log('SMS ignored: Duplicate transaction detected. Reference: ${smsParsed.reference}', name: 'SmsProcessor');
+          return false;
+        }
       }
 
       // 5. Categorize transaction
@@ -225,7 +221,7 @@ class SmsProcessor {
       String finalDescription = smsParsed.senderOrRecipient;
       double finalConfidence = catResult.confidence;
 
-      final textToScan = '${smsParsed.senderOrRecipient} ${body}'.toLowerCase();
+      final textToScan = '${smsParsed.senderOrRecipient} $body'.toLowerCase();
       final providerKeywords = {
         'M-Pesa_TZ': ['mpesa', 'm-pesa', 'vodacom'],
         'AirtelMoney_TZ': ['airtel'],

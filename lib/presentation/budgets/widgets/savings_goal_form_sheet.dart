@@ -250,7 +250,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _colors.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 14),
+                  separatorBuilder: (_, _) => const SizedBox(width: 14),
                   itemBuilder: (context, index) {
                     final colorHex = _colors[index];
                     final colorVal = hexToColor(colorHex);
@@ -273,7 +273,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: colorVal.withOpacity(0.5),
+                                    color: colorVal.withValues(alpha: 0.5),
                                     blurRadius: 8,
                                     spreadRadius: 1,
                                   ),
@@ -303,7 +303,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _icons.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  separatorBuilder: (_, _) => const SizedBox(width: 12),
                   itemBuilder: (context, index) {
                     final item = _icons[index];
                     final isSelected = _selectedIcon == item['name'];
@@ -319,7 +319,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         height: 44,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? themeCol.withOpacity(0.15)
+                              ? themeCol.withValues(alpha: 0.15)
                               : (isDark ? const Color(0xFF1C1C1E) : Colors.grey[100]),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(

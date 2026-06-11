@@ -753,7 +753,7 @@ void main() {
   // ===========================================================================
   group('SmsCorpus', () {
     /// Maps provider strings to their parsers.
-    SmsParser _parserFor(String provider) {
+    SmsParser parserFor(String provider) {
       switch (provider) {
         case 'M-Pesa_TZ':
           return MpesaTzParser();
@@ -784,7 +784,7 @@ void main() {
           if (provider == null) {
             return; // unrecognized sender = null, correct
           }
-          final parser = _parserFor(provider);
+          final parser = parserFor(provider);
           expect(parser.parse(entry.body, entry.timestamp), isNull,
               reason: 'Expected null for "${entry.label}"');
           return;
@@ -792,7 +792,7 @@ void main() {
 
         expect(provider, isNotNull,
             reason: 'No provider matched sender "${entry.sender}" for "${entry.label}"');
-        final parser = _parserFor(provider!);
+        final parser = parserFor(provider!);
         final result = parser.parse(entry.body, entry.timestamp);
 
         expect(result, isNotNull,

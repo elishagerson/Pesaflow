@@ -1,16 +1,16 @@
 import 'dart:developer' as developer;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
-import 'package:telephony/telephony.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/services/sms_background_service.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -63,8 +63,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _nextPage() async {
     if (_currentPage == 1) {
       try {
-        final granted = await Telephony.instance.requestPhoneAndSmsPermissions;
-        if (mounted) setState(() => _smsPermissionGranted = granted ?? false);
+        final statuses = await [
+          Permission.sms,
+          Permission.phone,
+        ].request();
+        final granted = statuses[Permission.sms]?.isGranted == true &&
+                        statuses[Permission.phone]?.isGranted == true;
+        if (mounted) setState(() => _smsPermissionGranted = granted);
       } catch (_) {}
     }
     if (_currentPage < 3) {
@@ -90,6 +95,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       }
       await ref.read(settingsRepositoryProvider).markOnboardingComplete();
       ref.invalidate(accountsStreamProvider);
+      try {
+        await ref.read(smsBackgroundServiceProvider).initialize();
+        developer.log('Background SMS service initialized successfully from onboarding', name: 'Onboarding');
+      } catch (e) {
+        developer.log('Failed to initialize SMS background service: $e', name: 'Onboarding');
+      }
       if (mounted) context.go('/');
     } catch (e) {
       developer.log('Onboarding account creation failed: $e', name: 'Onboarding');
@@ -159,7 +170,7 @@ class _WelcomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(28),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.7)]),
+            gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]),
             shape: BoxShape.circle,
           ),
           child: const Icon(Icons.account_balance_wallet_rounded, size: 64, color: Colors.white),
@@ -184,7 +195,7 @@ class _SmsPermissionPage extends StatelessWidget {
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Stack(
           children: [
-            Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
+            Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
             if (permissionGranted)
               Positioned(
                 right: 0,
@@ -208,7 +219,7 @@ class _SmsPermissionPage extends StatelessWidget {
         const SizedBox(height: 24),
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.3))),
+          decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3))),
           child: Row(children: [
             Icon(Icons.lock_rounded, color: theme.colorScheme.primary, size: 20),
             const SizedBox(width: 12),
@@ -287,7 +298,7 @@ class _AccountsPage extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? theme.colorScheme.primary.withOpacity(0.08)
+                          ? theme.colorScheme.primary.withValues(alpha: 0.08)
                           : (theme.brightness == Brightness.dark
                               ? AppTheme.surfaceContainerDark
                               : AppTheme.surfaceLight),
@@ -303,7 +314,7 @@ class _AccountsPage extends StatelessWidget {
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: theme.colorScheme.primary.withOpacity(0.06),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.06),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -318,10 +329,10 @@ class _AccountsPage extends StatelessWidget {
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? theme.colorScheme.primary.withOpacity(0.12)
+                                ? theme.colorScheme.primary.withValues(alpha: 0.12)
                                 : (theme.brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.05)
-                                    : Colors.black.withOpacity(0.05)),
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : Colors.black.withValues(alpha: 0.05)),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -380,7 +391,7 @@ class _CompletePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withOpacity(0.15), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.incomeColor)),
+        Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.incomeColor)),
         const SizedBox(height: 32),
         Text('You\'re All Set!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
         const SizedBox(height: 16),

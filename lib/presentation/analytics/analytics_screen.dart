@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
-import 'package:collection/collection.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
-import 'package:pesaflow/data/database/app_database.dart';
-import 'package:pesaflow/data/database/daos/analytics_dao.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -56,7 +52,7 @@ class AnalyticsScreen extends ConsumerWidget {
                           ? []
                           : [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: 0.04),
                                 blurRadius: 1,
                                 offset: const Offset(0, 1),
                               ),
@@ -132,7 +128,7 @@ class _OverviewTab extends StatelessWidget {
               final net = income - expense;
               final savingsRate = income > 0 ? ((net / income) * 100).round() : 0;
               final isDark = theme.brightness == Brightness.dark;
-              final incomeColorVal = isDark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF);
+              final incomeColorVal = const Color(0xFF609F8A);
               final expenseColorVal = isDark ? const Color(0xFFFF453A) : const Color(0xFFE11D48);
 
               return GlassCard(
@@ -180,7 +176,7 @@ class _OverviewTab extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
                     itemCount: goals.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    separatorBuilder: (_, _) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
                       final goal = goals[index];
                       final goalColor = hexToColor(goal.color);
@@ -225,7 +221,7 @@ class _OverviewTab extends StatelessWidget {
                                         ),
                                         PieChartSectionData(
                                           value: (1.0 - goalPct) * 100,
-                                          color: goalColor.withOpacity(0.12),
+                                          color: goalColor.withValues(alpha: 0.12),
                                           radius: 4,
                                           showTitle: false,
                                         ),
@@ -303,13 +299,13 @@ class _OverviewTab extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: isDark 
-                        ? Colors.white.withOpacity(0.04) 
-                        : Colors.black.withOpacity(0.03),
+                        ? Colors.white.withValues(alpha: 0.04) 
+                        : Colors.black.withValues(alpha: 0.03),
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                     border: Border.all(
                       color: isDark 
-                          ? Colors.white.withOpacity(0.08) 
-                          : Colors.black.withOpacity(0.06),
+                          ? Colors.white.withValues(alpha: 0.08) 
+                          : Colors.black.withValues(alpha: 0.06),
                       width: 0.5,
                     ),
                   ),
@@ -321,7 +317,7 @@ class _OverviewTab extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: AppTheme.transferColorDark.withOpacity(0.12),
+                              color: AppTheme.transferColorDark.withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.savings_rounded, color: AppTheme.transferColorDark, size: 20),
@@ -380,7 +376,7 @@ class _OverviewTab extends StatelessWidget {
               }
             },
             loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
-            error: (_, __) => const SizedBox(),
+            error: (_, _) => const SizedBox(),
           ),
           const SizedBox(height: 24),
 
@@ -498,7 +494,7 @@ class _OverviewTab extends StatelessWidget {
                                       child: Container(
                                         height: 5,
                                         width: double.infinity,
-                                        color: Colors.white.withOpacity(0.06),
+                                        color: Colors.white.withValues(alpha: 0.06),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: FractionallySizedBox(
@@ -566,7 +562,6 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 );
               }
-              final isDark = theme.brightness == Brightness.dark;
               final reversed = snapshots.reversed.toList();
               
               // Build points for Income (Green) and Expense (Red)
@@ -600,8 +595,8 @@ class _TrendsTab extends StatelessWidget {
                             touchTooltipData: LineTouchTooltipData(
                               getTooltipColor: (touchedSpot) {
                                 return theme.brightness == Brightness.dark
-                                    ? const Color(0xFF1B1B1D).withOpacity(0.95)
-                                    : Colors.white.withOpacity(0.95);
+                                    ? const Color(0xFF1B1B1D).withValues(alpha: 0.95)
+                                    : Colors.white.withValues(alpha: 0.95);
                               },
                               tooltipBorderRadius: BorderRadius.circular(12),
                               tooltipBorder: BorderSide(
@@ -615,7 +610,7 @@ class _TrendsTab extends StatelessWidget {
                                     '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
                                     TextStyle(
                                       color: isIncome
-                                          ? const Color(0xFF00E5FF)
+                                          ? const Color(0xFF609F8A)
                                           : const Color(0xFFFF453A),
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
@@ -628,7 +623,7 @@ class _TrendsTab extends StatelessWidget {
                               return spotIndexes.map((spotIndex) {
                                 return TouchedSpotIndicatorData(
                                   FlLine(
-                                    color: (barData.gradient?.colors.first ?? Colors.grey).withOpacity(0.3),
+                                    color: (barData.gradient?.colors.first ?? Colors.grey).withValues(alpha: 0.3),
                                     strokeWidth: 2,
                                     dashArray: [4, 4],
                                   ),
@@ -652,7 +647,7 @@ class _TrendsTab extends StatelessWidget {
                             drawVerticalLine: false,
                             horizontalInterval: maxVal > 0 ? maxVal / 4 : 1000,
                             getDrawingHorizontalLine: (value) => FlLine(
-                              color: Colors.white.withOpacity(0.04),
+                              color: Colors.white.withValues(alpha: 0.04),
                               strokeWidth: 1,
                               dashArray: [5, 5],
                             ),
@@ -693,25 +688,25 @@ class _TrendsTab extends StatelessWidget {
                           maxY: maxVal * 1.15,
                           lineBarsData: [
                             // Neon Cyan/Blue Income line
-                            LineChartBarData(
-                              spots: incomeSpots,
-                              isCurved: true,
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF00E5FF),
-                                  Color(0xFF0A84FF),
-                                ],
-                              ),
+                             LineChartBarData(
+                               spots: incomeSpots,
+                               isCurved: true,
+                               gradient: const LinearGradient(
+                                 colors: [
+                                   Color(0xFF609F8A),
+                                   Color(0xFF609F8A),
+                                 ],
+                               ),
                               barWidth: 3,
                               isStrokeCapRound: true,
                               dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(
-                                show: true,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    const Color(0xFF00E5FF).withOpacity(0.24),
-                                    const Color(0xFF00E5FF).withOpacity(0.0),
-                                  ],
+                               belowBarData: BarAreaData(
+                                 show: true,
+                                 gradient: LinearGradient(
+                                   colors: [
+                                     const Color(0xFF609F8A).withValues(alpha: 0.24),
+                                     const Color(0xFF609F8A).withValues(alpha: 0.0),
+                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                 ),
@@ -734,8 +729,8 @@ class _TrendsTab extends StatelessWidget {
                                 show: true,
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFFFF453A).withOpacity(0.24),
-                                    const Color(0xFFFF453A).withOpacity(0.0),
+                                    const Color(0xFFFF453A).withValues(alpha: 0.24),
+                                    const Color(0xFFFF453A).withValues(alpha: 0.0),
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -758,7 +753,7 @@ class _TrendsTab extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF00E5FF), shape: BoxShape.circle)),
+              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF609F8A), shape: BoxShape.circle)),
               const SizedBox(width: 6),
               const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
               const SizedBox(width: 24),
@@ -813,14 +808,7 @@ class _InsightsTab extends StatelessWidget {
           itemBuilder: (context, index) {
             final insight = insights[index];
             final color = _getSeverityColor(insight.severity);
-            final gradient = LinearGradient(
-              colors: [
-                color.withOpacity(0.08),
-                color.withOpacity(0.01),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            );
+
 
             return GlassCard(
               margin: const EdgeInsets.only(bottom: 14),
@@ -836,7 +824,7 @@ class _InsightsTab extends StatelessWidget {
                         color: color,
                         boxShadow: [
                           BoxShadow(
-                            color: color.withOpacity(0.4),
+                            color: color.withValues(alpha: 0.4),
                             blurRadius: 6,
                             spreadRadius: 1,
                           ),
@@ -853,7 +841,7 @@ class _InsightsTab extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: color.withOpacity(0.12),
+                                color: color.withValues(alpha: 0.12),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -878,7 +866,7 @@ class _InsightsTab extends StatelessWidget {
                                   Text(
                                     insight.message,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant.withOpacity(0.85),
+                                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.85),
                                       height: 1.4,
                                       fontSize: 12,
                                     ),

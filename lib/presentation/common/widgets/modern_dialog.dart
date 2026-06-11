@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 
 class ModernDialog extends StatelessWidget {
   final Widget title;
@@ -31,7 +30,7 @@ class ModernDialog extends StatelessWidget {
       context: context,
       barrierDismissible: barrierDismissible,
       barrierLabel: 'Dismiss',
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
@@ -77,7 +76,7 @@ class ModernDialog extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withValues(alpha: 0.25),
                   blurRadius: 24,
                   offset: const Offset(0, 12),
                 ),
@@ -96,7 +95,7 @@ class ModernDialog extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: (iconColor ?? theme.colorScheme.primary).withOpacity(0.12),
+                            color: (iconColor ?? theme.colorScheme.primary).withValues(alpha: 0.12),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

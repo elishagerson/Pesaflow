@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
@@ -73,11 +72,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                         content: const Text('This will permanently remove this budget and all its history.'),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.pop(context, false),
+                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(false),
                             child: const Text('Cancel'),
                           ),
                           TextButton(
-                            onPressed: () => Navigator.pop(context, true),
+                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
                             child: const Text('Delete', style: TextStyle(color: Colors.red)),
                           ),
                         ],
@@ -111,7 +110,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                           centerSpaceRadius: 70,
                           sections: [
                             PieChartSectionData(value: status.percentage.clamp(0.0, 1.0) * 100, color: status.isOverBudget ? theme.colorScheme.error : catColor, radius: 20, showTitle: false),
-                            PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withOpacity(0.15), radius: 20, showTitle: false),
+                            PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withValues(alpha: 0.15), radius: 20, showTitle: false),
                           ],
                         )),
                         Column(mainAxisSize: MainAxisSize.min, children: [
@@ -128,9 +127,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                 Row(children: [
                   Expanded(child: _StatCard(label: 'Spent', amount: bp.spentInPeriod, color: status.isOverBudget ? theme.colorScheme.error : catColor, theme: theme)),
                   const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)) : theme.colorScheme.error, theme: theme)),
+                  Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? theme.colorScheme.primary : theme.colorScheme.error, theme: theme)),
                   const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF), theme: theme)),
+                  Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.colorScheme.primary, theme: theme)),
                 ]),
                 const SizedBox(height: 20),
 
@@ -141,7 +140,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                   child: Row(children: [
                     Icon(
                       status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
-                      color: status.isOnTrack ? (theme.brightness == Brightness.dark ? const Color(0xFF00E5FF) : const Color(0xFF0A84FF)) : Colors.orange,
+                      color: status.isOnTrack ? theme.colorScheme.primary : Colors.orange,
                       size: 28,
                     ),
                     const SizedBox(width: 12),

@@ -105,7 +105,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -254,12 +254,12 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                   padding: const EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? itemColor.withOpacity(0.08)
-                                        : (isDark ? Colors.white.withOpacity(0.02) : Colors.black.withOpacity(0.01)),
+                                        ? itemColor.withValues(alpha: 0.08)
+                                        : (isDark ? Colors.white.withValues(alpha: 0.02) : Colors.black.withValues(alpha: 0.01)),
                                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                     border: Border.all(
                                       color: isSelected
-                                          ? itemColor.withOpacity(0.3)
+                                          ? itemColor.withValues(alpha: 0.3)
                                           : Colors.transparent,
                                       width: 1.0,
                                     ),
@@ -271,7 +271,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                           padding: const EdgeInsets.all(10.0),
                                           decoration: BoxDecoration(
                                             color: isSelected
-                                                ? itemColor.withOpacity(0.15)
+                                                ? itemColor.withValues(alpha: 0.15)
                                                 : (isDark ? Colors.white10 : Colors.black12),
                                             shape: BoxShape.circle,
                                           ),
