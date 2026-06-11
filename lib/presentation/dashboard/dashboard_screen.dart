@@ -1206,12 +1206,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                               ),
-                              if (isSelected)
+                              IconButton(
+                                icon: const Icon(Icons.edit_rounded, size: 18),
+                                color: isSelected ? itemColor : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                                onPressed: () {
+                                  Navigator.pop(context); // Close the bottom sheet first
+                                  _showManageTrackerDialog(context, item, activeTrackerId, trackersList);
+                                },
+                              ),
+                              if (isSelected) ...[
+                                const SizedBox(width: 8),
                                 Icon(
                                   Icons.check_circle_rounded,
                                   color: itemColor,
                                   size: 20,
                                 ),
+                              ],
                             ],
                           ),
                         ),
@@ -1389,6 +1399,232 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             }
           },
           child: const Text('Create'),
+        ),
+      ],
+    );
+  }
+
+  void _showManageTrackerDialog(
+    BuildContext context,
+    Tracker tracker,
+    String activeTrackerId,
+    List<Tracker> trackersList,
+  ) {
+    final nameController = TextEditingController(text: tracker.name);
+    String selectedIcon = tracker.icon;
+    String selectedColorHex = tracker.color;
+    final canDelete = trackersList.length > 1;
+
+    final iconsList = [
+      'person',
+      'briefcase',
+      'home',
+      'flight',
+      'shopping_cart',
+      'payments',
+    ];
+    final colorsList = [
+      '#0A84FF', // Light Blue
+      '#4F46E5', // Indigo
+      '#F43F5E', // Rose
+      '#F59E0B', // Amber
+      '#059669', // Emerald
+      '#06B6D4', // Cyan
+    ];
+
+    ModernDialog.show(
+      context: context,
+      title: const Text('Edit Workspace'),
+      titleIcon: Icons.edit_rounded,
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          final theme = Theme.of(context);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Workspace Name',
+                  hintText: 'e.g. Side Gig, Paris Trip',
+                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                ),
+                textCapitalization: TextCapitalization.words,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Select Icon',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: iconsList.map((ico) {
+                  final isSel = selectedIcon == ico;
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedIcon = ico),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isSel
+                            ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSel
+                              ? theme.colorScheme.primary
+                              : Colors.grey.withValues(alpha: 0.2),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        getTrackerIcon(ico),
+                        color: isSel
+                            ? theme.colorScheme.primary
+                            : Colors.grey,
+                        size: 20,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Select Color',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: colorsList.map((col) {
+                  final isSel = selectedColorHex == col;
+                  final c = hexToColor(col);
+                  return GestureDetector(
+                    onTap: () => setState(() => selectedColorHex = col),
+                    child: Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: c,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSel
+                              ? theme.colorScheme.onSurface
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        if (canDelete)
+          TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              _confirmDeleteTracker(context, tracker, activeTrackerId, trackersList);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (nameController.text.trim().isEmpty) return;
+
+            final updatedTracker = tracker.copyWith(
+              name: nameController.text.trim(),
+              icon: selectedIcon,
+              color: selectedColorHex,
+            );
+
+            try {
+              await ref
+                  .read(trackerRepositoryProvider)
+                  .updateTracker(updatedTracker);
+              ref.invalidate(allTrackersStreamProvider);
+              ref.invalidate(activeTrackerProvider);
+              if (context.mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
+            } catch (e) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to update workspace: $e')),
+              );
+            }
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+
+  void _confirmDeleteTracker(
+    BuildContext context,
+    Tracker tracker,
+    String activeTrackerId,
+    List<Tracker> trackersList,
+  ) {
+    final theme = Theme.of(context);
+    ModernDialog.show(
+      context: context,
+      title: const Text('Delete Workspace?'),
+      titleIcon: Icons.warning_amber_rounded,
+      content: Text(
+        'Are you sure you want to delete "${tracker.name}"? This will permanently delete all transactions and savings goals in this workspace.',
+        style: const TextStyle(fontSize: 14),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              if (tracker.id == activeTrackerId) {
+                final anotherTracker = trackersList.firstWhere((t) => t.id != tracker.id);
+                await ref
+                    .read(activeTrackerIdProvider.notifier)
+                    .setTrackerId(anotherTracker.id);
+              }
+              await ref
+                  .read(trackerRepositoryProvider)
+                  .deleteTracker(tracker.id);
+              ref.invalidate(allTrackersStreamProvider);
+              if (context.mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
+            } catch (e) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to delete workspace: $e')),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.colorScheme.error,
+            foregroundColor: theme.colorScheme.onError,
+          ),
+          child: const Text('Delete'),
         ),
       ],
     );
