@@ -22,12 +22,10 @@ class SavingsReminderService {
   static const int _reminderIntervalDays = 7;
 
   SavingsReminderService({
-    required SavingsGoalsDao dao,
-    required NotificationService notificationService,
+    required this._dao,
+    required this._notificationService,
     required String trackerIdProvider,
-  })  : _dao = dao,
-        _notificationService = notificationService,
-        _trackerId = trackerIdProvider;
+  })  : _trackerId = trackerIdProvider;
 
   Future<DateTime?> getLastContributionDate() async {
     try {

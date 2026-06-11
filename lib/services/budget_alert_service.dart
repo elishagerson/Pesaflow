@@ -19,10 +19,9 @@ class BudgetAlertService {
   int _notificationCounter = 1000;
 
   BudgetAlertService({
-    required BudgetDao budgetDao,
-    required NotificationService notificationService,
-  })  : _budgetDao = budgetDao,
-        _notificationService = notificationService;
+    required this._budgetDao,
+    required this._notificationService,
+  });
 
   Future<void> checkBudgetsAfterTransaction(String categoryId) async {
     try {
