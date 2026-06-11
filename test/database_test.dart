@@ -5,6 +5,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/account_dao.dart';
 import 'package:pesaflow/data/database/daos/category_dao.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
+import 'package:pesaflow/data/database/daos/tracker_dao.dart';
 
 void main() {
 
@@ -176,5 +177,112 @@ void main() {
       expect(retrieved.source, 'sms_auto');
       expect(retrieved.trackerId, 'default_personal');
     });
+
+    test('tracker deletion cascade deletes transactions, savings goals and contribution adjustments', () async {
+      final uuid = const Uuid();
+      final accountId = uuid.v4();
+      final trackerId = uuid.v4();
+
+      // 1. Create a workspace (tracker)
+      final mockTracker = Tracker(
+        id: trackerId,
+        name: 'Trip Fund',
+        icon: 'flight',
+        color: '#F43F5E',
+        isArchived: false,
+        createdAt: DateTime.now(),
+      );
+      await database.into(database.trackers).insert(mockTracker);
+
+      // 2. Create an account with balance 100,000 cents (100,000 Tsh)
+      final mockAccount = Account(
+        id: accountId,
+        name: 'M-Pesa Test',
+        type: 'mobile_money',
+        balance: 10000000,
+        provider: 'M-Pesa_TZ',
+        icon: 'phone-android',
+        sortOrder: 0,
+        isArchived: false,
+        createdAt: DateTime.now(),
+      );
+      await accountDao.insertAccount(mockAccount);
+
+      // Find category
+      final categoriesList = await categoryDao.getAllCategories();
+      final foodCat = categoriesList.firstWhere((cat) => cat.name == 'Food & Groceries');
+
+      // 3. Write a transaction (15,000 Tsh expense) in the new workspace
+      final tx = Transaction(
+        id: uuid.v4(),
+        accountId: accountId,
+        categoryId: foodCat.id,
+        trackerId: trackerId,
+        amount: 1500000,
+        type: 'expense',
+        description: 'Dinner',
+        source: 'manual',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      await transactionDao.writeTransactionWithBalanceAdjustment(tx);
+
+      // Verify account balance is adjusted to 100,000 - 15,000 = 85,000
+      var account = await accountDao.getAccountById(accountId);
+      expect(account?.balance, 8500000);
+
+      // 4. Add a savings goal in the new workspace
+      final goalId = uuid.v4();
+      final mockGoal = SavingsGoal(
+        id: goalId,
+        name: 'New Car',
+        targetAmount: 5000000,
+        currentAmount: 0,
+        targetDate: DateTime.now().add(const Duration(days: 30)),
+        color: '#4CAF50',
+        icon: 'piggy-bank',
+        trackerId: trackerId,
+        isCompleted: false,
+        createdAt: DateTime.now(),
+      );
+      await database.into(database.savingsGoals).insert(mockGoal);
+
+      // 5. Add a savings goal contribution
+      final contribution = SavingsGoalContribution(
+        id: uuid.v4(),
+        savingsGoalId: goalId,
+        amount: 500000,
+        createdAt: DateTime.now(),
+      );
+      await database.into(database.savingsGoalContributions).insert(contribution);
+
+      // Verify they exist in DB
+      final goalsBefore = await (database.select(database.savingsGoals)..where((t) => t.trackerId.equals(trackerId))).get();
+      expect(goalsBefore.length, 1);
+      final txsBefore = await (database.select(database.transactions)..where((t) => t.trackerId.equals(trackerId))).get();
+      expect(txsBefore.length, 1);
+
+      // 6. Delete tracker with cascade
+      final trackerDao = TrackerDao(database);
+      await trackerDao.deleteTrackerWithCascade(trackerId);
+
+      // 7. Verify all entities associated with tracker are deleted
+      final trackersAfter = await (database.select(database.trackers)..where((t) => t.id.equals(trackerId))).get();
+      expect(trackersAfter.isEmpty, true);
+
+      final txsAfter = await (database.select(database.transactions)..where((t) => t.trackerId.equals(trackerId))).get();
+      expect(txsAfter.isEmpty, true);
+
+      final goalsAfter = await (database.select(database.savingsGoals)..where((t) => t.trackerId.equals(trackerId))).get();
+      expect(goalsAfter.isEmpty, true);
+
+      final contributionsAfter = await (database.select(database.savingsGoalContributions)..where((t) => t.savingsGoalId.equals(goalId))).get();
+      expect(contributionsAfter.isEmpty, true);
+
+      // 8. Verify account balance is reversed to 100,000 Tsh
+      account = await accountDao.getAccountById(accountId);
+      expect(account?.balance, 10000000);
+    });
   });
 }
+

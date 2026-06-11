@@ -1133,7 +1133,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   TextButton.icon(
                     onPressed: () {
-                      Navigator.pop(context);
                       _showAddTrackerDialog(context);
                     },
                     icon: const Icon(Icons.add_rounded, size: 18),
@@ -1210,7 +1209,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 icon: const Icon(Icons.edit_rounded, size: 18),
                                 color: isSelected ? itemColor : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                                 onPressed: () {
-                                  Navigator.pop(context); // Close the bottom sheet first
                                   _showManageTrackerDialog(context, item, activeTrackerId, trackersList);
                                 },
                               ),

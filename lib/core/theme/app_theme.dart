@@ -291,6 +291,46 @@ class AppTheme {
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
       ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: isLight ? bgLight : surfaceHighDark,
+        elevation: 0,
+        headerBackgroundColor: isLight ? const Color(0xFFF2F2F7) : const Color(0xFF1C1C1E),
+        headerForegroundColor: isLight ? Colors.black : Colors.white,
+        headerHeadlineStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        dayStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        weekdayStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isLight ? Colors.grey[700] : Colors.grey[400]),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.0),
+          side: BorderSide(
+            color: isLight ? Colors.black.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.08),
+            width: 1.0,
+          ),
+        ),
+        dayBackgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return Colors.transparent;
+        }),
+        dayForegroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return Colors.white;
+          }
+          if (states.contains(WidgetState.disabled)) {
+            return isLight ? Colors.grey[300] : Colors.grey[700];
+          }
+          return isLight ? Colors.black : Colors.white;
+        }),
+        todayBackgroundColor: WidgetStateProperty.all(Colors.transparent),
+        todayForegroundColor: WidgetStateProperty.all(scheme.primary),
+        todayBorder: BorderSide(color: scheme.primary, width: 1.5),
+        cancelButtonStyle: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all(isLight ? Colors.grey[700] : Colors.grey[400]),
+        ),
+        confirmButtonStyle: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all(scheme.primary),
+        ),
+      ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

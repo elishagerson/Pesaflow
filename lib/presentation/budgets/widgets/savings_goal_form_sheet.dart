@@ -6,8 +6,9 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -168,69 +169,44 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               const SizedBox(height: 16),
 
               // Form fields
-              IosListSection(
-                header: 'GOAL DETAIL',
-                rows: [
-                  IosListRow(
-                    title: TextFormField(
-                      controller: _nameController,
-                      textCapitalization: TextCapitalization.words,
-                      style: const TextStyle(fontSize: 15),
-                      decoration: const InputDecoration(
-                        labelText: 'Goal Title',
-                        hintText: 'e.g. Vacation to Zanzibar, Emergency Fund',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      validator: (v) => v == null || v.trim().isEmpty ? 'Title is required' : null,
-                    ),
-                  ),
-                  IosListRow(
-                    title: TextFormField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      style: const TextStyle(fontSize: 15, fontFamily: 'monospace', fontWeight: FontWeight.bold),
-                      decoration: const InputDecoration(
-                        labelText: 'Target Amount (Tsh)',
-                        hintText: 'e.g. 1500000',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Target is required';
-                        final val = int.tryParse(v) ?? 0;
-                        if (val <= 0) return 'Must be greater than 0';
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
+              TextFormField(
+                controller: _nameController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Goal Title',
+                  hintText: 'e.g. Vacation to Zanzibar, Emergency Fund',
+                  prefixIcon: Icon(Icons.title_rounded),
+                ),
+                validator: (v) => v == null || v.trim().isEmpty ? 'Title is required' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+                decoration: const InputDecoration(
+                  labelText: 'Target Amount (Tsh)',
+                  hintText: 'e.g. 1500000',
+                  prefixIcon: Icon(Icons.payments_rounded),
+                ),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Target is required';
+                  final val = int.tryParse(v) ?? 0;
+                  if (val <= 0) return 'Must be greater than 0';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
 
               // Date Picker section
-              IosListSection(
-                header: 'TARGET TIMELINE',
-                rows: [
-                  IosListRow(
-                    title: const Text('Target Date', style: TextStyle(fontSize: 15)),
-                    subtitle: Text(
-                      '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
-                    ),
-                    trailing: const Icon(Icons.calendar_month_rounded, size: 20),
-                    onTap: () async {
-                      final d = await showDatePicker(
-                        context: context,
-                        initialDate: _selectedDate,
-                        firstDate: DateTime.now().subtract(const Duration(days: 1)),
-                        lastDate: DateTime(2035),
-                      );
-                      if (d != null) setState(() => _selectedDate = d);
-                    },
-                  ),
-                ],
+              ModernDateSelector(
+                labelText: 'Target Date',
+                value: _selectedDate,
+                prefixIcon: Icons.calendar_month_rounded,
+                firstDate: DateTime.now().subtract(const Duration(days: 1)),
+                lastDate: DateTime(2035),
+                onChanged: (d) => setState(() => _selectedDate = d),
               ),
               const SizedBox(height: 16),
 

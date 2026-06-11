@@ -10,6 +10,7 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -134,30 +135,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 8),
-                      IosListSection(
-                        header: 'Details',
-                        rows: [
-                          IosListRow(
-                            leading: _buildLeadingIcon(Icons.label_rounded, theme.colorScheme.primary),
-                            title: TextFormField(
-                              controller: _nameController,
-                              textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                              decoration: InputDecoration(
-                                labelText: 'Budget Name',
-                                hintText: 'e.g. Monthly Food',
-                                filled: false,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none,
-                                contentPadding: EdgeInsets.zero,
-                              ),
-                              validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: TextFormField(
+                          controller: _nameController,
+                          textCapitalization: TextCapitalization.words,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          decoration: const InputDecoration(
+                            labelText: 'Budget Name',
+                            hintText: 'e.g. Monthly Food',
+                            prefixIcon: Icon(Icons.label_rounded),
                           ),
-                        ],
+                          validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Padding(
@@ -184,30 +174,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      IosListSection(
-                        header: 'Amount',
-                        rows: [
-                          IosListRow(
-                            leading: _buildLeadingIcon(Icons.payments_rounded, theme.colorScheme.secondary),
-                            title: TextFormField(
-                              controller: _amountController,
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                              decoration: InputDecoration(
-                                labelText: 'Budget Amount (Tsh)',
-                                hintText: 'e.g. 300000',
-                                filled: false,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none,
-                                contentPadding: EdgeInsets.zero,
-                              ),
-                              validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
+                          decoration: const InputDecoration(
+                            labelText: 'Budget Amount (Tsh)',
+                            hintText: 'e.g. 300000',
+                            prefixIcon: Icon(Icons.payments_rounded),
                           ),
-                        ],
+                          validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       Padding(
@@ -239,20 +218,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      IosListSection(
-                        header: 'Schedule',
-                        rows: [
-                          IosListRow(
-                            leading: _buildLeadingIcon(Icons.calendar_today_rounded, Colors.orange),
-                            title: const Text('Start Date'),
-                            subtitle: Text('${_startDate.day}/${_startDate.month}/${_startDate.year}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            trailing: const Icon(Icons.calendar_today_rounded, size: 20),
-                            onTap: () async {
-                              final d = await showDatePicker(context: context, initialDate: _startDate, firstDate: DateTime(2020), lastDate: DateTime(2030));
-                              if (d != null) setState(() => _startDate = d);
-                            },
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: ModernDateSelector(
+                          labelText: 'Start Date',
+                          value: _startDate,
+                          prefixIcon: Icons.calendar_today_rounded,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                          onChanged: (d) => setState(() => _startDate = d),
+                        ),
                       ),
                       IosListSection(
                         header: 'Rollover',
@@ -294,29 +269,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         ),
                         if (_rolloverType == 'capped') ...[
                           const SizedBox(height: 8),
-                          IosListSection(
-                            header: 'Cap Limit',
-                            rows: [
-                              IosListRow(
-                                leading: _buildLeadingIcon(Icons.upcoming_rounded, theme.colorScheme.secondary),
-                                title: TextFormField(
-                                  controller: _capController,
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                  decoration: InputDecoration(
-                                    labelText: 'Max Rollover (Tsh)',
-                                    hintText: 'e.g. 50000',
-                                    filled: false,
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                  ),
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextFormField(
+                              controller: _capController,
+                              keyboardType: TextInputType.number,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
+                              decoration: const InputDecoration(
+                                labelText: 'Max Rollover (Tsh)',
+                                hintText: 'e.g. 50000',
+                                prefixIcon: Icon(Icons.upcoming_rounded),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ],

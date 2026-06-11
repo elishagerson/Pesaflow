@@ -12,6 +12,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -577,39 +578,16 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     const SizedBox(height: 20),
 
                     // Date input selector
-                    const Text('Transaction Date', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
-                    const SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: _selectedDate,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          setSheetState(() => _selectedDate = picked);
-                          setState(() => _selectedDate = picked);
-                        }
+                    ModernDateSelector(
+                      labelText: 'Transaction Date',
+                      value: _selectedDate,
+                      prefixIcon: Icons.calendar_today_rounded,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2101),
+                      onChanged: (picked) {
+                        setSheetState(() => _selectedDate = picked);
+                        setState(() => _selectedDate = picked);
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
-                        decoration: BoxDecoration(
-                          color: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
-                              style: TextStyle(fontSize: 14, color: isDark ? Colors.white : Colors.black87),
-                            ),
-                            const Icon(Icons.calendar_month_rounded, color: Colors.grey, size: 20),
-                          ],
-                        ),
-                      ),
                     ),
                     const SizedBox(height: 32),
 

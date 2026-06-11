@@ -240,10 +240,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
 
       final authenticated = await localAuth.authenticate(
         localizedReason: 'Authenticate to unlock PesaFlow',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: false,
-        ),
+        biometricOnly: false,
+        persistAcrossBackgrounding: true,
       );
 
       if (authenticated) {
