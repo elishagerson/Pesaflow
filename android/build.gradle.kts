@@ -31,7 +31,7 @@ subprojects {
         android.buildToolsVersion = "36.0.0"
         if (android.namespace == null) {
             android.namespace = "com.pesaflow." + name.replace("-", "_")
-            if (name == "telephony") {
+            if (name == "telephony" || name == "another_telephony") {
                 android.namespace = "com.shounakmulay.telephony"
             }
         }
