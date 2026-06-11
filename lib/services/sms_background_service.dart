@@ -131,7 +131,7 @@ class SmsBackgroundService {
         final timestamp = DateTime.fromMillisecondsSinceEpoch(msg.date ?? 0);
         if (timestamp.isBefore(cutoff)) continue;
 
-        final provider = ProviderMatcher.matchProvider(address);
+        final provider = ProviderMatcher.matchProvider(address, body: body);
         if (provider == null) continue;
 
         await _smsProcessor.processSms(address, body, timestamp);
@@ -181,7 +181,7 @@ class SmsBackgroundService {
         // Only process messages newer than last scan (plus 1 min overlap)
         if (!timestamp.isAfter(_lastInboxScan.subtract(const Duration(minutes: 1)))) continue;
 
-        final provider = ProviderMatcher.matchProvider(address);
+        final provider = ProviderMatcher.matchProvider(address, body: body);
         if (provider == null) continue;
 
         await _smsProcessor.processSms(address, body, timestamp);

@@ -66,7 +66,7 @@ class SmsProcessor {
   Future<bool> processSms(String sender, String body, DateTime timestamp) async {
     try {
       // 1. Identify provider
-      final provider = ProviderMatcher.matchProvider(sender);
+      final provider = ProviderMatcher.matchProvider(sender, body: body);
       if (provider == null) {
         developer.log('SMS ignored: Unrecognized sender shortcode $sender', name: 'SmsProcessor');
         return false;

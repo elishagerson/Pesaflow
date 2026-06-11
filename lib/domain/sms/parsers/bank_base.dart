@@ -5,9 +5,17 @@ import 'sms_parser_interface.dart';
 
 class NmbBankParser implements SmsParser {
   String _extractReference(String text) {
-    final regex = RegExp(r'Ref:\s*([A-Za-z0-9]+)', caseSensitive: false);
-    final match = regex.firstMatch(text);
-    return match?.group(1) ?? 'NMB-REF-UNKNOWN';
+    // New format: "Kumb: GWX102246282556 Imethibitishwa."
+    final kumbRegex = RegExp(r'Kumb:\s*(\w+)', caseSensitive: false);
+    final kumbMatch = kumbRegex.firstMatch(text);
+    if (kumbMatch != null) return 'NMB-${kumbMatch.group(1)}';
+
+    // Old format: "Ref: ABC123"
+    final refRegex = RegExp(r'Ref:\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final refMatch = refRegex.firstMatch(text);
+    if (refMatch != null) return 'NMB-${refMatch.group(1)}';
+
+    return 'NMB-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
@@ -24,13 +32,89 @@ class NmbBankParser implements SmsParser {
     final text = rawSmsBody.trim();
 
     try {
-      // 1. Check for Debit
-      // Example: "Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00"
-      final debitRegex = RegExp(
+      // ── New format patterns ──
+      // Real-world NMB Tanzania SMS uses these templates (as of 2026):
+
+      // 1. Debit (expense) — "Kimetumwa" (sent)
+      // "Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta"
+      var match = RegExp(
+        r'Kiasi\s+cha\s+(?:TSH|TZS)\s*([\d,]+)\s+kimetumwa\s+kutoka\s+katika\s+akaunti\s+inayoishia\s+na\s+\d+\s+kwenda\s+(.+?)(?:\.\s|\.$|$)',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'NMB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 2. Credit (income) — "Kimewekwa" (deposited)
+      // "Kiasi cha TZS 335000 kimewekwa kwenye akaunti yako inayoishia na 11222 tarehe 10-06-2026. Kama hutambui muamala huu piga 0800002002. NMB Karibu yako"
+      match = RegExp(
+        r'Kiasi\s+cha\s+(?:TSH|TZS)\s*([\d,]+)\s+kimewekwa\s+kwenye\s+akaunti\s+yako\s+inayoishia\s+na?\s*\d+',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: 'Deposit',
+          reference: ref,
+          provider: 'NMB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 3. Credit (income) — "Umepokea" (received from person)
+      // "Umepokea kiasi cha TZS 8500 kwenye akaunti yako inayoishia 11222 kutoka  5525102063444 ELISHA NDUNDULU Tar 09.06.2026 11:04:55. NMB Karibu yako"
+      match = RegExp(
+        r'Umepokea\s+kiasi\s+cha\s+(?:TSH|TZS)\s*([\d,]+)\s+kwenye\s+akaunti\s+yako\s+inayoishia\s+\d+\s+kutoka\s+(\d+)\s+(.+?)\s+Tar',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final senderPhone = match.group(2) ?? '';
+        final senderName = (match.group(3) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: '$senderName $senderPhone',
+          reference: ref,
+          provider: 'NMB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // ── Fallback: old format patterns (may still be used by some NMB channels) ──
+
+      // 4. Old Debit — "Tumekutoa"
+      // "Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00"
+      match = RegExp(
         r'Tumekutoa\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+kwa\s+(.+?)\s+tarehe',
         caseSensitive: false,
-      );
-      var match = debitRegex.firstMatch(text);
+      ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
         final merchant = (match.group(2) ?? '').trim();
@@ -49,13 +133,12 @@ class NmbBankParser implements SmsParser {
         );
       }
 
-      // 2. Check for Credit (Deposit/Salary)
-      // Example: "Tumeongeza TZS 500,000.00 kutoka SALARY/MONTHLY tarehe 15/05/2026. Salio: TZS 1,750,000.00"
-      final creditRegex = RegExp(
+      // 5. Old Credit — "Tumeongeza"
+      // "Tumeongeza TZS 500,000.00 kutoka SALARY/MONTHLY tarehe 15/05/2026. Salio: TZS 1,750,000.00"
+      match = RegExp(
         r'Tumeongeza\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+kutoka\s+(.+?)\s+tarehe',
         caseSensitive: false,
-      );
-      match = creditRegex.firstMatch(text);
+      ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
         final source = (match.group(2) ?? '').trim();
@@ -74,13 +157,12 @@ class NmbBankParser implements SmsParser {
         );
       }
 
-      // 3. Check for Fees
-      // Example: "Fees: TZS 1,000.00 kwa ATM WITHDRAWAL. Salio: TZS 1,249,000.00"
-      final feesRegex = RegExp(
+      // 6. Old Fees — "Fees:"
+      // "Fees: TZS 1,000.00 kwa ATM WITHDRAWAL. Salio: TZS 1,249,000.00"
+      match = RegExp(
         r'Fees:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+kwa\s+(.+?)\.',
         caseSensitive: false,
-      );
-      match = feesRegex.firstMatch(text);
+      ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
         final desc = (match.group(2) ?? '').trim();

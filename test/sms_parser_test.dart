@@ -778,7 +778,7 @@ void main() {
 
     for (final entry in smsCorpus) {
       test(entry.label, () {
-        final provider = ProviderMatcher.matchProvider(entry.sender);
+        final provider = ProviderMatcher.matchProvider(entry.sender, body: entry.body);
 
         if (entry.expect.expectsNull) {
           if (provider == null) {

@@ -1,7 +1,9 @@
 class ProviderMatcher {
   /// Matches a sender shortcode or phone number to a unified Tanzanian provider string.
-  /// Returns null if the sender is not a recognized carrier/bank transaction notifier.
-  static String? matchProvider(String senderAddress) {
+  /// If [senderAddress] doesn't match any known provider, falls back to scanning
+  /// the optional [body] for known transaction keywords (handles numeric shortcodes
+  /// like NMB's 15200 that don't contain the provider name).
+  static String? matchProvider(String senderAddress, {String? body}) {
     final address = senderAddress.trim().toUpperCase();
 
     // Selcom Pesa
@@ -57,6 +59,38 @@ class ProviderMatcher {
     // NBC Bank
     if (address.contains('NBC')) {
       return 'NBC_Bank';
+    }
+
+    // ── Fallback: scan body for known keywords ──
+    // Handles banks that send SMS from numeric shortcodes that don't include the
+    // provider name (e.g. NMB uses shortcode 15200).
+    if (body != null && body.isNotEmpty) {
+      final upperBody = body.toUpperCase();
+
+      if (upperBody.contains('TUMEKUTOA') || upperBody.contains('TUMEONGEZA') || upperBody.contains('FEES:')) {
+        return 'NMB_Bank';
+      }
+      if (upperBody.contains('CRDB:')) {
+        return 'CRDB_Bank';
+      }
+      if (upperBody.contains('NBC:')) {
+        return 'NBC_Bank';
+      }
+      if (upperBody.contains('SELCOM')) {
+        return 'SelcomPesa_TZ';
+      }
+      if (upperBody.contains('MPESA') || upperBody.contains('M-PESA')) {
+        return 'M-Pesa_TZ';
+      }
+      if (upperBody.contains('AIRTEL')) {
+        return 'AirtelMoney_TZ';
+      }
+      if (upperBody.contains('MIXX') || upperBody.contains('TIGO') || upperBody.contains('YAS')) {
+        return 'TigoPesa_TZ';
+      }
+      if (upperBody.contains('HALOPESA') || upperBody.contains('HALO')) {
+        return 'Halopesa_TZ';
+      }
     }
 
     return null;

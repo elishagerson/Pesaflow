@@ -583,6 +583,56 @@ final List<SmsCorpusEntry> smsCorpus = [
     ),
   ),
 
+  // Body-fallback: numeric shortcode that doesn't contain "NMB"
+  // Tests the ProviderMatcher body-content fallback path.
+  SmsCorpusEntry(
+    label: 'nmb_debit_numeric_sender',
+    sender: '15200',
+    body: 'Tumekutoa TZS 150,000.00 kwa POS/MERCHANT/0123456789 tarehe 15/05/2026. Salio: TZS 1,250,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 15000000,
+      type: 'expense',
+      senderOrRecipient: 'POS/MERCHANT/0123456789',
+      balanceAfter: 125000000,
+    ),
+  ),
+
+  // Real-world NMB templates (provided by user, June 2026)
+  SmsCorpusEntry(
+    label: 'nmb_debit_kimetumwa',
+    sender: 'NMB',
+    body: 'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13. Teleza Kidigitali na Mshiko Fasta',
+    timestamp: DateTime(2026, 6, 10, 20, 11),
+    expect: SmsExpectation(
+      amount: 33450000,
+      type: 'expense',
+      senderOrRecipient: 'ELISHA NDUNDULU 255763559341',
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'nmb_credit_kimewekwa',
+    sender: 'NMB',
+    body: 'Kiasi cha TZS 335000 kimewekwa kwenye akaunti yako inayoishia na 11222 tarehe 10-06-2026. Kama hutambui muamala huu piga 0800002002. NMB Karibu yako',
+    timestamp: DateTime(2026, 6, 10),
+    expect: SmsExpectation(
+      amount: 33500000,
+      type: 'income',
+      senderOrRecipient: 'Deposit',
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'nmb_credit_umepokea',
+    sender: 'NMB',
+    body: 'Umepokea kiasi cha TZS 8500 kwenye akaunti yako inayoishia 11222 kutoka  5525102063444 ELISHA NDUNDULU Tar 09.06.2026 11:04:55. NMB Karibu yako',
+    timestamp: DateTime(2026, 6, 9, 11, 04),
+    expect: SmsExpectation(
+      amount: 850000,
+      type: 'income',
+      senderOrRecipient: 'ELISHA NDUNDULU 5525102063444',
+    ),
+  ),
+
   // =========================================================================
   // CRDB Bank
   // =========================================================================

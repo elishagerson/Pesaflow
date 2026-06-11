@@ -51,7 +51,7 @@ class SmsInboxScanner {
         final timestamp = DateTime.fromMillisecondsSinceEpoch(msg.date ?? 0);
         if (timestamp.isBefore(cutoffDate)) continue;
 
-        final provider = ProviderMatcher.matchProvider(address);
+        final provider = ProviderMatcher.matchProvider(address, body: body);
         if (provider != null) {
           targetMessages.add(msg);
         }
