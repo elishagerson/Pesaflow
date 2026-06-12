@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -134,25 +135,29 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: TextFormField(
-                          controller: _nameController,
-                          textCapitalization: TextCapitalization.words,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                          decoration: const InputDecoration(
-                            labelText: 'Budget Name',
-                            hintText: 'e.g. Monthly Food',
-                            prefixIcon: Icon(Icons.label_rounded),
+                      StaggeredFadeSlide(
+                        index: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: TextFormField(
+                            controller: _nameController,
+                            textCapitalization: TextCapitalization.words,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                            decoration: const InputDecoration(
+                              labelText: 'Budget Name',
+                              hintText: 'e.g. Monthly Food',
+                              prefixIcon: Icon(Icons.label_rounded),
+                            ),
+                            validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
                           ),
-                          validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: categoriesAsync.when(
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: categoriesAsync.when(
                           data: (cats) => ModernDropdown<String>(
                             labelText: 'Category',
                             value: _selectedCategoryId,
