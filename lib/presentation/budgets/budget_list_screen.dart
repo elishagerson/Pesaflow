@@ -392,7 +392,7 @@ class BudgetListScreen extends ConsumerWidget {
 
             final catColor = hexToColor(bp.category.color);
 
-            return Container(
+            final cardContent = Container(
               margin: const EdgeInsets.only(bottom: 14),
               child: GlassCard(
                 borderRadius: 20,
@@ -525,6 +525,7 @@ class BudgetListScreen extends ConsumerWidget {
                         color: isDark ? Colors.white30 : Colors.black38,
                       ),
                     ),
+                  ],
                 ),
               ),
             );
