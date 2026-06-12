@@ -10,7 +10,9 @@ import 'package:pesaflow/data/database/daos/settings_dao.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/data/database/daos/loan_dao.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
@@ -37,6 +39,7 @@ void main() {
   late AccountRepository accountRepo;
   late CategoryRepository categoryRepo;
   late TransactionRepository transactionRepo;
+  late LoanRepository loanRepo;
   late SettingsRepository settingsRepo;
   late Deduplicator deduplicator;
   late AutoCategorizer categorizer;
@@ -51,6 +54,7 @@ void main() {
     accountRepo = AccountRepository(accountDao);
     categoryRepo = CategoryRepository(categoryDao);
     transactionRepo = TransactionRepository(transactionDao, null);
+    loanRepo = LoanRepository(LoanDao(database));
     settingsRepo = SettingsRepository(settingsDao);
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);

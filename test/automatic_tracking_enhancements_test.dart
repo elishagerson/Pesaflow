@@ -41,6 +41,7 @@ void main() {
   late AccountRepository accountRepo;
   late CategoryRepository categoryRepo;
   late TransactionRepository transactionRepo;
+  late LoanRepository loanRepo;
   late SettingsRepository settingsRepo;
   late Deduplicator deduplicator;
   late AutoCategorizer categorizer;
@@ -57,6 +58,7 @@ void main() {
     accountRepo = AccountRepository(accountDao);
     categoryRepo = CategoryRepository(categoryDao);
     transactionRepo = TransactionRepository(transactionDao, null);
+    loanRepo = LoanRepository(LoanDao(database));
     settingsRepo = SettingsRepository(settingsDao);
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
@@ -66,6 +68,7 @@ void main() {
       accountRepo: accountRepo,
       categoryRepo: categoryRepo,
       transactionRepo: transactionRepo,
+      loanRepo: loanRepo,
       settingsRepo: settingsRepo,
       deduplicator: deduplicator,
       categorizer: categorizer,
