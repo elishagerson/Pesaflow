@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 
@@ -168,7 +169,9 @@ class TransactionListScreen extends ConsumerWidget {
                       ),
 
                       // Transaction Items as Individual GlassCards
-                      ...dayItems.map((item) {
+                      ...dayItems.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final item = entry.value;
                         final trans = item.transaction;
 
                         AmountType amtType = AmountType.neutral;
@@ -183,7 +186,9 @@ class TransactionListScreen extends ConsumerWidget {
                         final categoryColor = hexToColor(item.category.color);
                         final formattedTime = DateFormat('HH:mm').format(trans.createdAt);
 
-                        return Dismissible(
+                        return StaggeredFadeSlide(
+                          index: index,
+                          child: Dismissible(
                           key: Key(trans.id),
                           direction: DismissDirection.endToStart,
                           background: Container(
@@ -328,7 +333,8 @@ class TransactionListScreen extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        );
+                        ),
+                      );
                       }),
                     ],
                   );

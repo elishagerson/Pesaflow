@@ -12,6 +12,7 @@ import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
@@ -379,7 +380,9 @@ class BudgetListScreen extends ConsumerWidget {
           const SizedBox(height: 12),
 
           // Budget cards list
-          ...budgets.map((bp) {
+          ...budgets.asMap().entries.map((entry) {
+            final index = entry.key;
+            final bp = entry.value;
             final status = BudgetEngine.computeStatus(
               allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
               spent: bp.spentInPeriod,
@@ -522,9 +525,12 @@ class BudgetListScreen extends ConsumerWidget {
                         color: isDark ? Colors.white30 : Colors.black38,
                       ),
                     ),
-                  ],
                 ),
               ),
+            );
+            return StaggeredFadeSlide(
+              index: index,
+              child: cardContent,
             );
           }),
         ],

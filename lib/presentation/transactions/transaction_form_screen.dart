@@ -688,7 +688,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
                         largeTitle: false,
                         leading: IconButton(
-                          icon: const Icon(Icons.close_rounded),
+                          icon: const Icon(Icons.arrow_back_rounded),
                           onPressed: () => context.pop(),
                         ),
                       ),

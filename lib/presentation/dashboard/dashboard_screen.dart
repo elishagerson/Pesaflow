@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
@@ -832,14 +833,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   final catColor = hexToColor(bp.category.color);
                   final catIcon = getCategoryIcon(bp.category.icon);
                   
-                  return _buildSingleBudgetRing(
-                    context: context,
-                    bp: bp,
-                    catColor: catColor,
-                    catIcon: catIcon,
-                    pct: pct,
-                    theme: theme,
-                    isDark: isDark,
+                  return StaggeredFadeSlide(
+                    index: i,
+                    child: _buildSingleBudgetRing(
+                      context: context,
+                      bp: bp,
+                      catColor: catColor,
+                      catIcon: catIcon,
+                      pct: pct,
+                      theme: theme,
+                      isDark: isDark,
+                    ),
                   );
                 },
               ),
@@ -2832,125 +2836,128 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         amtType = AmountType.expense;
                       }
 
-                      return Dismissible(
-                        key: Key(trans.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20.0),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.error,
-                            borderRadius: BorderRadius.circular(
-                              AppTheme.radiusCard,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.delete_rounded,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onDismissed: (_) async {
-                          await ref
-                              .read(transactionRepositoryProvider)
-                              .deleteTransaction(trans.id);
-                          ref.invalidate(recentTransactionsStreamProvider);
-                          ref.invalidate(accountsStreamProvider);
-                          ref.invalidate(netWorthProvider);
-                          ref.invalidate(monthlyTotalsProvider);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 6.0),
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
-                              width: 0.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
+                      return StaggeredFadeSlide(
+                        index: index,
+                        child: Dismissible(
+                          key: Key(trans.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20.0),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.error,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
                               ),
-                            ],
+                            ),
+                            child: const Icon(
+                              Icons.delete_rounded,
+                              color: Colors.white,
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              // Category Icon Container (Squircle Style)
-                              Container(
-                                width: 46,
-                                height: 46,
-                                decoration: BoxDecoration(
-                                  color: hexToColor(item.category.color).withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(14),
+                          onDismissed: (_) async {
+                            await ref
+                                .read(transactionRepositoryProvider)
+                                .deleteTransaction(trans.id);
+                            ref.invalidate(recentTransactionsStreamProvider);
+                            ref.invalidate(accountsStreamProvider);
+                            ref.invalidate(netWorthProvider);
+                            ref.invalidate(monthlyTotalsProvider);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 6.0),
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
                                 ),
-                                child: Center(
-                                  child: Icon(
-                                    getCategoryIcon(item.category.icon),
-                                    color: hexToColor(item.category.color),
-                                    size: 22,
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                // Category Icon Container (Squircle Style)
+                                Container(
+                                  width: 46,
+                                  height: 46,
+                                  decoration: BoxDecoration(
+                                    color: hexToColor(item.category.color).withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      getCategoryIcon(item.category.icon),
+                                      color: hexToColor(item.category.color),
+                                      size: 22,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 14),
-                              // Content
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      trans.description.isNotEmpty ? trans.description : item.category.name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 15,
-                                        color: isDark ? Colors.white : Colors.black,
+                                const SizedBox(width: 14),
+                                // Content
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        trans.description.isNotEmpty ? trans.description : item.category.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 15,
+                                          color: isDark ? Colors.white : Colors.black,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          item.account.name,
-                                          style: TextStyle(
-                                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w600,
+                                      const SizedBox(height: 3),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            item.account.name,
+                                            style: TextStyle(
+                                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          trans.createdAt.toString().substring(0, 10),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 11,
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            trans.createdAt.toString().substring(0, 10),
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 11,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              // Amount
-                              AmountText(
-                                amountInCents: trans.amount,
-                                type: amtType,
-                                showDecimals: true,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16,
-                                  color: amtType == AmountType.income
-                                      ? AppTheme.transferColorDark
-                                      : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
+                                const SizedBox(width: 12),
+                                // Amount
+                                AmountText(
+                                  amountInCents: trans.amount,
+                                  type: amtType,
+                                  showDecimals: true,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: amtType == AmountType.income
+                                        ? AppTheme.transferColorDark
+                                        : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );

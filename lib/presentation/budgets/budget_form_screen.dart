@@ -122,7 +122,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               title: isEditing ? 'Edit Budget' : 'New Budget',
               largeTitle: false,
               leading: IconButton(
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => context.pop(),
               ),
             ),
