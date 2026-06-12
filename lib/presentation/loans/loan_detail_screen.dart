@@ -189,6 +189,8 @@ class LoanDetailScreen extends ConsumerWidget {
             _infoRow('Reference', loan.reference ?? 'N/A', isDark),
             _infoRow('Sender', loan.sender ?? 'N/A', isDark),
             _infoRow('Disbursed', _formatDate(loan.disbursedAt), isDark),
+            if (loan.dueAt != null)
+              _infoRow('Due Date', _formatDate(loan.dueAt!), isDark),
             _infoRow('Status', loan.status == 'paid' ? 'Paid' : loan.status == 'active' ? 'Active' : 'Defaulted', isDark),
           ],
         ),
@@ -205,6 +207,16 @@ class LoanDetailScreen extends ConsumerWidget {
         isCompleted: true,
       ),
     ];
+    if (loan.dueAt != null) {
+      final isOverdue = loan.dueAt!.isBefore(DateTime.now()) && loan.status == 'active';
+      events.add(_TimelineEvent(
+        title: isOverdue ? 'Due Date (Overdue)' : 'Due Date',
+        subtitle: isOverdue ? 'PAYMENT OVERDUE' : 'Scheduled repayment',
+        date: loan.dueAt!,
+        isCompleted: loan.status == 'paid',
+        isWarning: isOverdue,
+      ));
+    }
     if (loan.status == 'paid' && loan.paidAt != null) {
       events.add(_TimelineEvent(
         title: 'Loan Paid',
@@ -252,14 +264,16 @@ class LoanDetailScreen extends ConsumerWidget {
             width: 24,
             child: Column(
               children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: event.isCompleted ? const Color(0xFF609F8A) : Colors.grey,
-                    shape: BoxShape.circle,
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: event.isWarning
+                          ? const Color(0xFFE53935)
+                          : event.isCompleted ? const Color(0xFF609F8A) : Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
                 if (!event.isLast)
                   Expanded(
                     child: Container(
@@ -396,6 +410,7 @@ class _TimelineEvent {
   final DateTime? date;
   final bool isCompleted;
   final bool isLast;
+  final bool isWarning;
 
   _TimelineEvent({
     required this.title,
@@ -403,5 +418,6 @@ class _TimelineEvent {
     this.date,
     this.isCompleted = false,
     this.isLast = false,
+    this.isWarning = false,
   });
 }

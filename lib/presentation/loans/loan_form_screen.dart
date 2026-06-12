@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class LoanFormScreen extends ConsumerStatefulWidget {
   const LoanFormScreen({super.key});
@@ -20,6 +22,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   final _senderController = TextEditingController();
   final _referenceController = TextEditingController();
   DateTime _disbursedAt = DateTime.now();
+  DateTime? _dueAt;
 
   @override
   void dispose() {
@@ -30,15 +33,22 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     super.dispose();
   }
 
-  Future<void> _pickDate() async {
+  Future<void> _pickDate({required bool dueDate}) async {
+    final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
-      initialDate: _disbursedAt,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+      initialDate: dueDate ? (_dueAt ?? now.add(const Duration(days: 30))) : _disbursedAt,
+      firstDate: dueDate ? _disbursedAt : DateTime(2020),
+      lastDate: dueDate ? now.add(const Duration(days: 365 * 5)) : now,
     );
     if (picked != null) {
-      setState(() => _disbursedAt = picked);
+      setState(() {
+        if (dueDate) {
+          _dueAt = picked;
+        } else {
+          _disbursedAt = picked;
+        }
+      });
     }
   }
 
@@ -65,6 +75,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       reference: _referenceController.text.trim().isEmpty
           ? null : _referenceController.text.trim(),
       disbursedAt: _disbursedAt,
+      dueAt: _dueAt,
       trackerId: activeTrackerId,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -100,83 +111,15 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Loan Amount (Tsh)',
-                  hintText: 'e.g. 100000',
-                  prefixIcon: const Icon(Icons.money_rounded, size: 18),
-                  filled: true,
-                  fillColor: inputFill,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'Enter loan amount';
-                  final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
-                  final parsed = int.tryParse(cleaned);
-                  if (parsed == null || parsed <= 0) return 'Enter a valid amount';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Description (optional)',
-                  hintText: 'e.g. M-Pesa Loan, Bank Loan',
-                  prefixIcon: const Icon(Icons.edit_rounded, size: 18),
-                  filled: true,
-                  fillColor: inputFill,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                textCapitalization: TextCapitalization.sentences,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _senderController,
-                decoration: InputDecoration(
-                  labelText: 'Lender / Source (optional)',
-                  hintText: 'e.g. Vodacom, NMB Bank',
-                  prefixIcon: const Icon(Icons.person_rounded, size: 18),
-                  filled: true,
-                  fillColor: inputFill,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                textCapitalization: TextCapitalization.words,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _referenceController,
-                decoration: InputDecoration(
-                  labelText: 'Reference (optional)',
-                  hintText: 'e.g. loan reference number',
-                  prefixIcon: const Icon(Icons.tag_rounded, size: 18),
-                  filled: true,
-                  fillColor: inputFill,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              InkWell(
-                onTap: _pickDate,
-                borderRadius: BorderRadius.circular(12),
-                child: InputDecorator(
+              StaggeredFadeSlide(
+                index: 0,
+                child: TextFormField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Disbursement Date',
-                    prefixIcon: const Icon(Icons.calendar_today_rounded, size: 18),
+                    labelText: 'Loan Amount (Tsh)',
+                    hintText: 'e.g. 100000',
+                    prefixIcon: const Icon(Icons.money_rounded, size: 18),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -184,26 +127,159 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  child: Text(
-                    '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'Enter loan amount';
+                    final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
+                    final parsed = int.tryParse(cleaned);
+                    if (parsed == null || parsed <= 0) return 'Enter a valid amount';
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 1,
+                child: TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Description (optional)',
+                    hintText: 'e.g. M-Pesa Loan, Bank Loan',
+                    prefixIcon: const Icon(Icons.edit_rounded, size: 18),
+                    filled: true,
+                    fillColor: inputFill,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 2,
+                child: TextField(
+                  controller: _senderController,
+                  decoration: InputDecoration(
+                    labelText: 'Lender / Source (optional)',
+                    hintText: 'e.g. Vodacom, NMB Bank',
+                    prefixIcon: const Icon(Icons.person_rounded, size: 18),
+                    filled: true,
+                    fillColor: inputFill,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  textCapitalization: TextCapitalization.words,
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 3,
+                child: TextField(
+                  controller: _referenceController,
+                  decoration: InputDecoration(
+                    labelText: 'Reference (optional)',
+                    hintText: 'e.g. loan reference number',
+                    prefixIcon: const Icon(Icons.tag_rounded, size: 18),
+                    filled: true,
+                    fillColor: inputFill,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 4,
+                child: InkWell(
+                  onTap: () => _pickDate(dueDate: false),
+                  borderRadius: BorderRadius.circular(12),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: 'Disbursement Date',
+                      prefixIcon: const Icon(Icons.calendar_today_rounded, size: 18),
+                      filled: true,
+                      fillColor: inputFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    child: Text(
+                      '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 5,
+                child: InkWell(
+                  onTap: () => _pickDate(dueDate: true),
+                  borderRadius: BorderRadius.circular(12),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: 'Due Date (optional)',
+                      prefixIcon: const Icon(Icons.event_rounded, size: 18),
+                      filled: true,
+                      fillColor: inputFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _dueAt != null
+                              ? '${_dueAt!.day}/${_dueAt!.month}/${_dueAt!.year}'
+                              : 'Set due date',
+                          style: TextStyle(
+                            color: _dueAt != null
+                                ? (isDark ? Colors.white : Colors.black)
+                                : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                          ),
+                        ),
+                        if (_dueAt != null)
+                          GestureDetector(
+                            onTap: () => setState(() => _dueAt = null),
+                            child: Icon(Icons.close_rounded, size: 18, color: Colors.grey[500]),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              StaggeredFadeSlide(
+                index: 6,
+                child: TactileSpringContainer(
+                  onTap: _submit,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'Add Loan',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Add Loan',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ],

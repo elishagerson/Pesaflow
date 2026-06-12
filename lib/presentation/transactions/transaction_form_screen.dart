@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -694,7 +695,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                       // Header Segment Toggle (internal styled pill like first screenshot)
                       const SizedBox(height: 16),
-                      Container(
+                      StaggeredFadeSlide(
+                        index: 0,
+                        child: Container(
                         width: 320,
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
@@ -800,33 +803,43 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ],
                         ),
                       ),
+                    ),
                       const Spacer(),
 
                       // Giant visual amount display
-                      const Text(
-                        'Amount',
-                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 6),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: KeypadSpringText(
-                            text: 'Tsh $formattedDisplay',
-                            style: TextStyle(
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'monospace',
-                              letterSpacing: -1.0,
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Amount',
+                              style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
                             ),
-                          ),
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: KeypadSpringText(
+                                  text: 'Tsh $formattedDisplay',
+                                  style: TextStyle(
+                                    fontSize: fontSize,
+                                    fontWeight: FontWeight.w900,
+                                    color: isDark ? Colors.white : Colors.black,
+                                    fontFamily: 'monospace',
+                                    letterSpacing: -1.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 14),
 
-                      Row(
+                      StaggeredFadeSlide(
+                        index: 2,
+                        child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TactileSpringContainer(
@@ -888,10 +901,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ],
                         ],
                       ),
+                      ),
                       const Spacer(),
 
                       // Numeric Keypad Grid (Edge-to-edge with elegant thin line grid dividers)
-                      Container(
+                      StaggeredFadeSlide(
+                        index: 3,
+                        child: Container(
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -908,6 +924,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             _buildKeypadRow(['.', '0', '<']),
                           ],
                         ),
+                      ),
                       ),
                       const SizedBox(height: 24),
 

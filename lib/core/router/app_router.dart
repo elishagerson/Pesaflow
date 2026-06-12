@@ -1,6 +1,5 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
@@ -20,60 +19,122 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
-/// Spring-like overshoot curve — starts fast, overshoots slightly, settles back.
-/// Creates a lively, physical feel for page entrances.
-class _SpringBounceCurve extends Curve {
-  const _SpringBounceCurve();
+/// Spring-driven page transition that gives a continuous physical feel.
+///
+/// On push: the incoming page slides from 30% right with a spring bounce,
+/// while the outgoing page scales down and fades back for depth.
+/// On pop: reverses with the same physics — no abrupt curve cutoffs.
+class _SpringSlideTransition extends StatefulWidget {
+  final Animation<double> animation;
+  final Animation<double> secondaryAnimation;
+  final Widget child;
+
+  const _SpringSlideTransition({
+    required this.animation,
+    required this.secondaryAnimation,
+    required this.child,
+  });
 
   @override
-  double transformInternal(double t) {
-    const c1 = 1.80158;
-    const c3 = c1 + 1;
-    return 1 + c3 * math.pow(t - 1, 3) + c1 * math.pow(t - 1, 2);
+  State<_SpringSlideTransition> createState() => _SpringSlideTransitionState();
+}
+
+class _SpringSlideTransitionState extends State<_SpringSlideTransition>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _springController;
+  late Animation<Offset> _slide;
+
+  late Animation<double> _outScale;
+  late Animation<double> _outFade;
+
+  AnimationStatus _lastStatus = AnimationStatus.dismissed;
+
+  static const _spring = SpringDescription(
+    mass: 1.0,
+    stiffness: 220.0,
+    damping: 21.0,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _springController = AnimationController(vsync: this);
+    _slide = Tween<Offset>(
+      begin: const Offset(0.3, 0),
+      end: Offset.zero,
+    ).animate(_springController);
+
+    _outScale = Tween<double>(begin: 1.0, end: 0.93).animate(
+      CurvedAnimation(
+        parent: widget.secondaryAnimation,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+    _outFade = Tween<double>(begin: 1.0, end: 0.7).animate(
+      CurvedAnimation(
+        parent: widget.secondaryAnimation,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    _lastStatus = widget.animation.status;
+    if (_lastStatus == AnimationStatus.forward) {
+      _startSpring(0.0, 1.0);
+    } else if (_lastStatus == AnimationStatus.completed) {
+      _springController.value = 1.0;
+    }
+    widget.animation.addListener(_onAnimationChanged);
+  }
+
+  void _onAnimationChanged() {
+    final status = widget.animation.status;
+    if (status != _lastStatus) {
+      if (status == AnimationStatus.forward) {
+        _startSpring(0.0, 1.0);
+      } else if (status == AnimationStatus.reverse) {
+        _startSpring(1.0, 0.0);
+      }
+      _lastStatus = status;
+    }
+  }
+
+  void _startSpring(double from, double to) {
+    _springController.value = from;
+    _springController.animateWith(SpringSimulation(_spring, from, to, 0.0));
+  }
+
+  @override
+  void dispose() {
+    widget.animation.removeListener(_onAnimationChanged);
+    _springController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _outFade,
+      child: ScaleTransition(
+        scale: _outScale,
+        child: SlideTransition(
+          position: _slide,
+          child: widget.child,
+        ),
+      ),
+    );
   }
 }
 
-/// Page transition with spring-physics slide + depth effect.
-/// Incoming page slides from 30% right with a spring overshoot.
-/// Outgoing page scales down (0.93) and fades (0.7) as it's pushed back.
+/// Page-level transition using a `SpringSimulation` for continuous physics.
+/// Incoming page slides from 30% right; outgoing page scales+fades for depth.
 Page<dynamic> _springSlidePage(Widget child) {
   return CustomTransitionPage(
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final slideAnimation = Tween<Offset>(
-        begin: const Offset(0.3, 0),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: animation,
-        curve: const _SpringBounceCurve(),
-        reverseCurve: Curves.fastOutSlowIn,
-      ));
-
-      final outScaleAnimation = Tween<double>(
-        begin: 1.0,
-        end: 0.93,
-      ).animate(CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.easeOutCubic,
-      ));
-
-      final outFadeAnimation = Tween<double>(
-        begin: 1.0,
-        end: 0.7,
-      ).animate(CurvedAnimation(
-        parent: secondaryAnimation,
-        curve: Curves.easeOutCubic,
-      ));
-
-      return FadeTransition(
-        opacity: outFadeAnimation,
-        child: ScaleTransition(
-          scale: outScaleAnimation,
-          child: SlideTransition(
-            position: slideAnimation,
-            child: child,
-          ),
-        ),
+      return _SpringSlideTransition(
+        animation: animation,
+        secondaryAnimation: secondaryAnimation,
+        child: child,
       );
     },
   );

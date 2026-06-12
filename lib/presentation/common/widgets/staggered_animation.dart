@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 
 class StaggeredFadeSlide extends StatefulWidget {
   final int index;
   final Widget child;
-  final Duration duration;
   final double offset;
 
   const StaggeredFadeSlide({
     super.key,
     required this.index,
     required this.child,
-    this.duration = const Duration(milliseconds: 400),
     this.offset = 20,
   });
 
@@ -27,17 +26,22 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: widget.duration);
-    _fade = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _controller = AnimationController(vsync: this);
+    _fade = Tween<double>(begin: 0, end: 1).animate(_controller);
     _slide = Tween<Offset>(
-      begin: Offset(0, widget.offset / 100),
+      begin: Offset(0, widget.offset / 60),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+    ).animate(_controller);
 
-    Future.delayed(Duration(milliseconds: widget.index * 60), () {
-      if (mounted) _controller.forward();
+    Future.delayed(Duration(milliseconds: widget.index * 40), () {
+      if (mounted) {
+        const spring = SpringDescription(
+          mass: 1.0,
+          stiffness: 180.0,
+          damping: 19.0,
+        );
+        _controller.animateWith(SpringSimulation(spring, 0.0, 1.0, 0.0));
+      }
     });
   }
 

@@ -6,7 +6,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class IosListSection extends StatelessWidget {
   final String? header;
-  final List<IosListRow> rows;
+  final List<Widget> rows;
   final EdgeInsetsGeometry? margin;
 
   const IosListSection({
@@ -55,7 +55,7 @@ class IosListSection extends StatelessWidget {
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      indent: row.indent ?? 56,
+                      indent: row is IosListRow ? row.indent ?? 56 : 56,
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.08)
                           : Colors.black.withValues(alpha: 0.06),

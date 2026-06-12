@@ -19,6 +19,8 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/backup_service.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -639,7 +641,9 @@ class SettingsScreen extends ConsumerWidget {
             children: [
 
               // Privacy section
-              IosListSection(
+              StaggeredFadeSlide(
+                index: 0,
+                child: IosListSection(
                 rows: [
                   IosListRow(
                     leading: Container(
@@ -656,31 +660,43 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              ),
 
               // System Management
-              IosListSection(
+              StaggeredFadeSlide(
+                index: 5,
+                child: IosListSection(
                 header: 'System Management',
                 rows: [
-                  IosListRow(
+                  TactileSpringContainer(
+                    onTap: () => _showAccountsManager(context, ref),
+                    child: IosListRow(
                     leading: Icon(Icons.account_balance_wallet_rounded, color: theme.colorScheme.primary, size: 24),
                     title: const Text('Accounts Manager'),
                     subtitle: const Text('Manage bank, mobile money & cash wallets'),
                     onTap: () => _showAccountsManager(context, ref),
-                  ),
-                  IosListRow(
+                  ),),
+                  TactileSpringContainer(
+                    onTap: () => _showCategoriesManager(context, ref),
+                    child: IosListRow(
                     leading: Icon(Icons.category_rounded, color: theme.colorScheme.primary, size: 24),
                     title: const Text('Categories Manager'),
                     subtitle: const Text('Add custom financial categories'),
                     onTap: () => _showCategoriesManager(context, ref),
-                  ),
+                  ),),
                 ],
+              ),
               ),
 
               // Data Management
-              IosListSection(
+              StaggeredFadeSlide(
+                index: 10,
+                child: IosListSection(
                 header: 'Data Management',
                 rows: [
-                  IosListRow(
+                  TactileSpringContainer(
+                    onTap: () => _handleExportCsv(context, ref),
+                    child: IosListRow(
                     leading: Icon(
                       Icons.file_download_rounded,
                       color: theme.colorScheme.primary,
@@ -689,24 +705,31 @@ class SettingsScreen extends ConsumerWidget {
                     title: const Text('Export to CSV'),
                     subtitle: const Text('Download transactions as CSV file'),
                     onTap: () => _handleExportCsv(context, ref),
-                  ),
-                  IosListRow(
+                  ),),
+                  TactileSpringContainer(
+                    onTap: () => _handleBackupDb(context, ref),
+                    child: IosListRow(
                     leading: const Icon(Icons.backup_rounded, color: Colors.blue, size: 24),
                     title: const Text('Backup Database'),
                     subtitle: const Text('Save an offline backup of your data'),
                     onTap: () => _handleBackupDb(context, ref),
-                  ),
-                  IosListRow(
+                  ),),
+                  TactileSpringContainer(
+                    onTap: () => _handleRestoreDb(context, ref),
+                    child: IosListRow(
                     leading: const Icon(Icons.restore_rounded, color: Colors.orange, size: 24),
                     title: const Text('Restore Database'),
                     subtitle: const Text('Restore from a previous backup'),
                     onTap: () => _handleRestoreDb(context, ref),
-                  ),
+                  ),),
                 ],
+              ),
               ),
 
               // Preferences & Design Theme
-              IosListSection(
+              StaggeredFadeSlide(
+                index: 15,
+                child: IosListSection(
                 header: 'Preferences & Theme',
                 rows: [
                   IosToggleRow(
@@ -741,9 +764,14 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              ),
 
               // Database Health
-              Padding(
+              StaggeredFadeSlide(
+                index: 20,
+                child: Column(
+                  children: [
+                Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 6, top: 24),
                 child: Text(
                   'DATABASE HEALTH'.toUpperCase(),
@@ -782,6 +810,9 @@ class SettingsScreen extends ConsumerWidget {
                         value: '${recentTransactions.length}',
                       ),
                     ),
+                  ],
+                ),
+              ),
                   ],
                 ),
               ),

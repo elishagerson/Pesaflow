@@ -791,7 +791,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            StaggeredFadeSlide(
+              index: 5,
+              child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -819,6 +821,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: const Text('See All'),
                 ),
               ],
+            ),
             ),
             const SizedBox(height: 12),
             SizedBox(
@@ -2225,7 +2228,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: [
 
               // ── 2. "pesaflow cash" Floating Balance Hero Card ──
-              Container(
+              StaggeredFadeSlide(
+                index: 0,
+                child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
@@ -2459,10 +2464,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
+              ),
               const SizedBox(height: 16),
 
               // ── 3. High-Contrast Action Buttons ──
-              Row(
+              StaggeredFadeSlide(
+                index: 1,
+                child: Row(
                 children: [
                   Expanded(
                     child: TactileSpringContainer(
@@ -2544,14 +2552,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
+              ),
               const SizedBox(height: 24),
 
               // ── 4. Loan / Debt Overview ──
-              _buildLoanOverview(theme, context),
+              StaggeredFadeSlide(
+                index: 2,
+                child: _buildLoanOverview(theme, context),
+              ),
               const SizedBox(height: 24),
 
               // ── 5. SMS Review Queue Card (Setup Bonus Vibe) ──
-              Container(
+              StaggeredFadeSlide(
+                index: 3,
+                child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
@@ -2682,10 +2696,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
+              ),
               const SizedBox(height: 24),
 
               // Monthly Overview Card (Donut Chart Revamp)
-              _buildMonthlyOverview(theme),
+              StaggeredFadeSlide(
+                index: 4,
+                child: _buildMonthlyOverview(theme),
+              ),
               const SizedBox(height: 24),
 
               // Budget Progress Rings (Embedded category icons)
@@ -2693,18 +2711,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
               if (showReminder) ...[
                 const SizedBox(height: 24),
-                _buildSavingsReminder(theme),
+                StaggeredFadeSlide(
+                  index: 6,
+                  child: _buildSavingsReminder(theme),
+                ),
               ],
 
               if (showSavingsGoals) ...[
                 const SizedBox(height: 24),
-                _buildSavingsGoalsDashboard(theme, context),
+                StaggeredFadeSlide(
+                  index: 7,
+                  child: _buildSavingsGoalsDashboard(theme, context),
+                ),
               ],
 
               const SizedBox(height: 24),
 
               // Recent Transactions Section
-              Row(
+              StaggeredFadeSlide(
+                index: 8,
+                child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -2720,6 +2746,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     child: const Text('See All'),
                   ),
                 ],
+              ),
               ),
               
               // Clear account filter chip row if _selectedAccountId is active

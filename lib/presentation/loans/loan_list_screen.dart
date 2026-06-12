@@ -31,7 +31,9 @@ class LoanListScreen extends ConsumerWidget {
       body: Column(
         children: [
           totalOutstandingAsync.when(
-            data: (total) => total > 0 ? _buildOutstandingHeader(context, total, isDark) : const SizedBox.shrink(),
+            data: (total) => total > 0
+                ? StaggeredFadeSlide(index: 0, child: _buildOutstandingHeader(context, total, isDark))
+                : const SizedBox.shrink(),
             loading: () => const SizedBox.shrink(),
             error: (_, _) => const SizedBox.shrink(),
           ),
@@ -39,13 +41,13 @@ class LoanListScreen extends ConsumerWidget {
             child: loansAsync.when(
               data: (loans) {
                 if (loans.isEmpty) {
-                  return _buildEmptyState(theme, isDark);
+                  return StaggeredFadeSlide(index: 0, child: _buildEmptyState(theme, isDark));
                 }
                 return ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                   itemCount: loans.length,
                   itemBuilder: (_, i) => StaggeredFadeSlide(
-                    index: i,
+                    index: i + 1,
                     child: _buildLoanTile(context, loans[i], theme, isDark),
                   ),
                 );
@@ -209,6 +211,21 @@ class LoanListScreen extends ConsumerWidget {
                           color: progressColor,
                         ),
                       ),
+                      if (loan.dueAt != null && isActive) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          loan.dueAt!.isBefore(DateTime.now())
+                              ? 'OVERDUE'
+                              : 'Due ${loan.dueAt!.day}/${loan.dueAt!.month}/${loan.dueAt!.year}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: loan.dueAt!.isBefore(DateTime.now())
+                                ? const Color(0xFFE53935)
+                                : Colors.grey[500],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
