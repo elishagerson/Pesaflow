@@ -154,7 +154,7 @@ class MpesaTzParser implements SmsParser {
 
         return SmsParsed(
           amount: amt,
-          type: 'income',
+          type: 'loan',
           senderOrRecipient: 'Mobile Money Loan',
           reference: ref,
           provider: 'M-Pesa_TZ',

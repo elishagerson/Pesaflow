@@ -31,7 +31,7 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
 
   /// Computes and upserts a daily snapshot for the given date string (e.g. "2026-05-15").
   Future<void> upsertDailySnapshot(String dateStr, DateTime dayStart, DateTime dayEnd) async {
-    // Sum income
+    // Sum income (exclude loan disbursements)
     final incomeQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
       ..where(transactions.type.equals('income') &
@@ -40,7 +40,7 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
     final incomeResult = await incomeQuery.getSingle();
     final totalIncome = incomeResult.read(transactions.amount.sum()) ?? 0;
 
-    // Sum expenses
+    // Sum expenses (loan repayments ARE expenses, but loan disbursements are not income)
     final expenseQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
       ..where((transactions.type.equals('expense') |
@@ -83,7 +83,7 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
 
   /// Computes and upserts a monthly snapshot for the given year-month (e.g. "2026-05").
   Future<void> upsertMonthlySnapshot(String yearMonth, DateTime monthStart, DateTime monthEnd) async {
-    // Sum income
+    // Sum income (exclude loan disbursements)
     final incomeQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
       ..where(transactions.type.equals('income') &

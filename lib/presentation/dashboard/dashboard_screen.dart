@@ -8,6 +8,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -1084,6 +1085,168 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SkeletonCard(height: 100),
       ),
+    );
+  }
+
+  Widget _buildLoanOverview(ThemeData theme, BuildContext context) {
+    final isDark = theme.brightness == Brightness.dark;
+    final activeLoansAsync = ref.watch(activeLoansStreamProvider);
+    final totalOutstandingAsync = ref.watch(totalOutstandingLoanProvider);
+
+    final hasActiveLoans = activeLoansAsync.maybeWhen(
+      data: (loans) => loans.isNotEmpty,
+      orElse: () => false,
+    );
+
+    if (!hasActiveLoans) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Active Loans',
+                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'OUTSTANDING DEBT',
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                    color: isDark ? Colors.grey[500] : Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+            TextButton(
+              onPressed: () => context.go('/loans'),
+              child: const Text('See All'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        activeLoansAsync.when(
+          data: (loans) {
+            if (loans.isEmpty) return const SizedBox.shrink();
+            return Column(
+              children: loans.take(2).map((loan) {
+                final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
+                final progressColor = ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A);
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              loan.description ?? 'Loan',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            CurrencyFormatter.formatCents(loan.remaining),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: progressColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: ratio.clamp(0.0, 1.0),
+                          backgroundColor: progressColor.withValues(alpha: 0.12),
+                          valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                          minHeight: 4,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${(ratio * 100).round()}% remaining',
+                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
+                          Text(
+                            '${CurrencyFormatter.formatCents(loan.amount)} total',
+                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
+        ),
+        totalOutstandingAsync.when(
+          data: (total) {
+            if (total <= 0) return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE53935).withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                border: Border.all(
+                  color: const Color(0xFFE53935).withValues(alpha: 0.12),
+                  width: 0.5,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total Outstanding',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: isDark ? Colors.grey[300] : Colors.grey[700],
+                    ),
+                  ),
+                  Text(
+                    CurrencyFormatter.formatCents(total),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14,
+                      color: Color(0xFFE53935),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
+        ),
+      ],
     );
   }
 
@@ -2333,6 +2496,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 const SizedBox(height: 24),
                 _buildSavingsGoalsDashboard(theme, context),
               ],
+
+              const SizedBox(height: 24),
+              _buildLoanOverview(theme, context),
 
               const SizedBox(height: 24),
 

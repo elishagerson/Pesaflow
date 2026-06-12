@@ -11,6 +11,7 @@ import '../../data/repositories/analytics_repository.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
+import '../../data/repositories/loan_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 class ActiveTrackerIdNotifier extends Notifier<String> {
@@ -237,5 +238,32 @@ final appLockEnabledProvider = StreamProvider<bool>((ref) {
 final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
   return repo.watchSetting('sms_auto_deduplication').map((val) => val == 'true');
+});
+
+// ═══════════════════════════════════════════════════════
+// Loan Providers
+// ═══════════════════════════════════════════════════════
+
+final loansStreamProvider = StreamProvider<List<Loan>>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchAllLoans(trackerId: trackerId);
+});
+
+final activeLoansStreamProvider = StreamProvider<List<Loan>>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchActiveLoans(trackerId: trackerId);
+});
+
+final loanTransactionsStreamProvider = StreamProvider.family<List<Transaction>, String>((ref, loanId) {
+  final repo = ref.watch(loanRepositoryProvider);
+  return repo.watchLoanTransactions(loanId);
+});
+
+final totalOutstandingLoanProvider = FutureProvider<int>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.getTotalOutstanding(trackerId: trackerId);
 });
 

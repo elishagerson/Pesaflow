@@ -7,6 +7,7 @@ import '../../data/database/daos/transaction_dao.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
+import '../../data/repositories/loan_repository.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../services/notification_service.dart';
 import '../categorization/auto_categorizer.dart';
@@ -24,6 +25,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
   final categoryRepo = ref.watch(categoryRepositoryProvider);
   final transactionRepo = ref.watch(transactionRepositoryProvider);
+  final loanRepo = ref.watch(loanRepositoryProvider);
   final settingsRepo = ref.watch(settingsRepositoryProvider);
   final deduplicator = ref.watch(deduplicatorProvider);
   final categorizer = ref.watch(autoCategorizerProvider);
@@ -32,6 +34,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
     accountRepo: accountRepo,
     categoryRepo: categoryRepo,
     transactionRepo: transactionRepo,
+    loanRepo: loanRepo,
     settingsRepo: settingsRepo,
     deduplicator: deduplicator,
     categorizer: categorizer,
@@ -43,6 +46,7 @@ class SmsProcessor {
   final AccountRepository _accountRepo;
   final CategoryRepository _categoryRepo;
   final TransactionRepository _transactionRepo;
+  final LoanRepository _loanRepo;
   final SettingsRepository _settingsRepo;
   final Deduplicator _deduplicator;
   final AutoCategorizer _categorizer;
@@ -53,6 +57,7 @@ class SmsProcessor {
     required this._accountRepo,
     required this._categoryRepo,
     required this._transactionRepo,
+    required this._loanRepo,
     required this._settingsRepo,
     required this._deduplicator,
     required this._categorizer,
@@ -309,15 +314,57 @@ class SmsProcessor {
         }
       }
 
-      // 7. Persist Transaction
+      // 7. Loan handling: create loan record for loan disbursements
+      final activeTrackerId = await _settingsRepo.getSetting('active_tracker_id') ?? 'default_personal';
+      String? loanId;
+      if (finalType == 'loan') {
+        loanId = const Uuid().v4();
+        final loan = Loan(
+          id: loanId,
+          amount: smsParsed.amount,
+          remaining: smsParsed.amount,
+          status: 'active',
+          provider: provider,
+          description: finalDescription,
+          sender: smsParsed.senderOrRecipient,
+          reference: smsParsed.reference,
+          disbursedAt: smsParsed.timestamp,
+          trackerId: activeTrackerId,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        await _loanRepo.createLoan(loan);
+        developer.log('Created loan record $loanId for ${smsParsed.amount} cents', name: 'SmsProcessor');
+      }
+
+      // 7.5 Repayment detection: match expense to existing active loan
+      if (loanId == null && (finalType == 'expense' || finalType == 'airtime' || finalType == 'fee')) {
+        final textToCheck = '${finalDescription} $body'.toLowerCase();
+        final isLoanRepayment = textToCheck.contains('loan') ||
+            textToCheck.contains('mkopo') ||
+            textToCheck.contains('repayment') ||
+            textToCheck.contains('lipa mkopo') ||
+            textToCheck.contains('loan repayment');
+        if (isLoanRepayment) {
+          final activeLoans = await _loanRepo.getActiveLoans(trackerId: activeTrackerId);
+          if (activeLoans.isNotEmpty) {
+            final matched = activeLoans.first;
+            loanId = matched.id;
+            await _loanRepo.applyPayment(matched.id, smsParsed.amount);
+            developer.log('Linked expense as repayment to loan ${matched.id}', name: 'SmsProcessor');
+          }
+        }
+      }
+
+      // 8. Persist Transaction
       final isAutoApproved = finalConfidence >= 0.90;
       final source = isAutoApproved ? 'sms_auto' : 'sms_reviewed';
-      final activeTrackerId = await _settingsRepo.getSetting('active_tracker_id') ?? 'default_personal';
 
       final transaction = Transaction(
         id: const Uuid().v4(),
         accountId: finalAccountId,
         destinationAccountId: finalDestinationAccountId,
+        loanId: loanId,
         categoryId: finalCategoryId,
         trackerId: activeTrackerId,
         amount: smsParsed.amount,
