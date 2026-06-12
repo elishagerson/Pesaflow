@@ -132,7 +132,9 @@ class _OverviewTab extends StatelessWidget {
               final incomeColorVal = const Color(0xFF609F8A);
               final expenseColorVal = isDark ? const Color(0xFFFF453A) : const Color(0xFFE11D48);
 
-              return GlassCard(
+              return StaggeredFadeSlide(
+                index: 0,
+                child: GlassCard(
                 padding: const EdgeInsets.all(20),
                 frosted: true,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -158,6 +160,7 @@ class _OverviewTab extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text('Savings rate: $savingsRate%', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600], fontSize: 11)),
                 ]),
+              ),
               );
             },
             loading: () => const SizedBox(height: 160, child: Center(child: CircularProgressIndicator())),
@@ -422,7 +425,9 @@ class _OverviewTab extends StatelessWidget {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
+                        StaggeredFadeSlide(
+                          index: 1,
+                          child: SizedBox(
                           height: 120,
                           width: 120,
                           child: PieChart(
@@ -441,6 +446,7 @@ class _OverviewTab extends StatelessWidget {
                               }),
                             ),
                           ),
+                        ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
@@ -552,9 +558,17 @@ class _TrendsTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          StaggeredFadeSlide(
+            index: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
           Text('Income & Expense Trends', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           Text('Curved trend waves over the last 12 months', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              ],
+            ),
+          ),
           const SizedBox(height: 16),
           snapshotsAsync.when(
             data: (snapshots) {
@@ -588,7 +602,9 @@ class _TrendsTab extends StatelessWidget {
                 if (exp > maxVal) maxVal = exp;
               }
 
-              return GlassCard(
+              return StaggeredFadeSlide(
+                index: 1,
+                child: GlassCard(
                 padding: const EdgeInsets.all(20),
                 frosted: true,
                 child: Column(
@@ -696,29 +712,29 @@ class _TrendsTab extends StatelessWidget {
                           lineBarsData: [
                             // Neon Cyan/Blue Income line
                              LineChartBarData(
-                               spots: incomeSpots,
-                               isCurved: true,
-                               gradient: const LinearGradient(
-                                 colors: [
-                                   Color(0xFF609F8A),
-                                   Color(0xFF609F8A),
-                                 ],
-                               ),
-                              barWidth: 3,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                               belowBarData: BarAreaData(
-                                 show: true,
-                                 gradient: LinearGradient(
-                                   colors: [
-                                     const Color(0xFF609F8A).withValues(alpha: 0.24),
-                                     const Color(0xFF609F8A).withValues(alpha: 0.0),
-                                   ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
+                                spots: incomeSpots,
+                                isCurved: true,
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF609F8A),
+                                    Color(0xFF609F8A),
+                                  ],
                                 ),
-                              ),
-                            ),
+                               barWidth: 3,
+                               isStrokeCapRound: true,
+                               dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      const Color(0xFF609F8A).withValues(alpha: 0.24),
+                                      const Color(0xFF609F8A).withValues(alpha: 0.0),
+                                    ],
+                                   begin: Alignment.topCenter,
+                                   end: Alignment.bottomCenter,
+                                 ),
+                               ),
+                             ),
                             // Neon Pink/Red Expense line
                             LineChartBarData(
                               spots: expenseSpots,
@@ -750,6 +766,7 @@ class _TrendsTab extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
               );
             },
             loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
@@ -757,7 +774,9 @@ class _TrendsTab extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Legend
-          Row(
+          StaggeredFadeSlide(
+            index: 2,
+            child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF609F8A), shape: BoxShape.circle)),
@@ -768,6 +787,7 @@ class _TrendsTab extends StatelessWidget {
               const SizedBox(width: 6),
               const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
             ],
+          ),
           ),
         ],
       ),

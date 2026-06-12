@@ -445,97 +445,112 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Category squircle grid selection
-                    const Text('Category', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
-                    const SizedBox(height: 12),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 1.0,
-                      ),
-                      itemCount: filteredCategories.length,
-                      itemBuilder: (context, index) {
-                        final cat = filteredCategories[index];
-                        final isSel = cat.id == _selectedCategoryId;
-                        final catColor = hexToColor(cat.color);
-
-                        return TactileSpringContainer(
-                          onTap: () {
-                            setSheetState(() => _selectedCategoryId = cat.id);
-                            setState(() => _selectedCategoryId = cat.id);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            decoration: BoxDecoration(
-                              color: isSel 
-                                  ? catColor.withValues(alpha: 0.15) 
-                                  : (theme.brightness == Brightness.dark 
-                                      ? const Color(0xFF1B1B1D) 
-                                      : Colors.grey.withValues(alpha: 0.05)),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSel ? catColor : Colors.transparent,
-                                width: 2,
-                              ),
-                              boxShadow: isSel ? [
-                                BoxShadow(
-                                  color: catColor.withValues(alpha: 0.25),
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
-                                )
-                              ] : null,
+                    StaggeredFadeSlide(
+                      index: 0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Category', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                          const SizedBox(height: 12),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1.0,
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  getCategoryIcon(cat.icon),
-                                  color: isSel ? catColor : (theme.brightness == Brightness.dark ? Colors.white60 : Colors.black54),
-                                  size: 24,
-                                ),
-                                const SizedBox(height: 6),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                  child: Text(
-                                    cat.name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: isSel 
-                                          ? (theme.brightness == Brightness.dark ? Colors.white : catColor) 
-                                          : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
-                                      fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                      fontSize: 11,
+                            itemCount: filteredCategories.length,
+                            itemBuilder: (context, index) {
+                              final cat = filteredCategories[index];
+                              final isSel = cat.id == _selectedCategoryId;
+                              final catColor = hexToColor(cat.color);
+
+                              return TactileSpringContainer(
+                                onTap: () {
+                                  setSheetState(() => _selectedCategoryId = cat.id);
+                                  setState(() => _selectedCategoryId = cat.id);
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  decoration: BoxDecoration(
+                                    color: isSel 
+                                        ? catColor.withValues(alpha: 0.15) 
+                                        : (theme.brightness == Brightness.dark 
+                                            ? const Color(0xFF1B1B1D) 
+                                            : Colors.grey.withValues(alpha: 0.05)),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: isSel ? catColor : Colors.transparent,
+                                      width: 2,
                                     ),
+                                    boxShadow: isSel ? [
+                                      BoxShadow(
+                                        color: catColor.withValues(alpha: 0.25),
+                                        blurRadius: 8,
+                                        spreadRadius: 1,
+                                      )
+                                    ] : null,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        getCategoryIcon(cat.icon),
+                                        color: isSel ? catColor : (theme.brightness == Brightness.dark ? Colors.white60 : Colors.black54),
+                                        size: 24,
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        child: Text(
+                                          cat.name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: isSel 
+                                                ? (theme.brightness == Brightness.dark ? Colors.white : catColor) 
+                                                : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
+                                            fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
 
-                    // Description text input
-                    const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _descriptionController,
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        hintText: 'e.g. Lunch, taxi, data bundle',
+                    StaggeredFadeSlide(
+                      index: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _descriptionController,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: const InputDecoration(
+                              hintText: 'e.g. Lunch, taxi, data bundle',
+                            ),
+                            onChanged: (val) => setState(() {}),
+                          ),
+                        ],
                       ),
-                      onChanged: (val) => setState(() {}),
                     ),
                     const SizedBox(height: 10),
 
-                    // Suggestion chips
-                    SingleChildScrollView(
+                    StaggeredFadeSlide(
+                      index: 2,
+                      child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
                       child: Row(
@@ -563,6 +578,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         }).toList(),
                       ),
                     ),
+                    ),
                     const SizedBox(height: 20),
 
                     // Carrier Reference field
@@ -578,8 +594,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Date input selector
-                    ModernDateSelector(
+                    StaggeredFadeSlide(
+                      index: 3,
+                      child: ModernDateSelector(
                       labelText: 'Transaction Date',
                       value: _selectedDate,
                       prefixIcon: Icons.calendar_today_rounded,
@@ -590,10 +607,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         setState(() => _selectedDate = picked);
                       },
                     ),
+                    ),
                     const SizedBox(height: 32),
 
-                    // Final save record button
-                    SizedBox(
+                    StaggeredFadeSlide(
+                      index: 4,
+                      child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -606,6 +625,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         },
                         child: Text(_isEditMode ? 'Update Transaction' : 'Record Transaction'),
                       ),
+                    ),
                     ),
                   ],
                 ),
@@ -929,7 +949,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       const SizedBox(height: 24),
 
                       // Continue Button (stark white visual CTA)
-                      Padding(
+                      StaggeredFadeSlide(
+                        index: 4,
+                        child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                         child: SizedBox(
                           width: double.infinity,
@@ -938,6 +960,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             child: const Text('Continue'),
                           ),
                         ),
+                      ),
                       ),
                       const SizedBox(height: 16),
                     ],

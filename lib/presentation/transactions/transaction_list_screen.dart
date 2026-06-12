@@ -67,27 +67,30 @@ class TransactionListScreen extends ConsumerWidget {
           transactionsAsync.when(
             data: (transactionsList) {
               if (transactionsList.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 120),
-                      Icon(
-                        Icons.search_off_rounded,
-                        size: 64,
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'No Transactions Found',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Try adjusting your filters or typing a different query.',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
+                return StaggeredFadeSlide(
+                  index: 0,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 120),
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 64,
+                          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'No Transactions Found',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Try adjusting your filters or typing a different query.',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
@@ -114,7 +117,10 @@ class TransactionListScreen extends ConsumerWidget {
                 itemBuilder: (context, dayIndex) {
                   // Append insights card at the end of the transactions list
                   if (dayIndex == sortedDays.length) {
-                    return _buildInsightsCard(context, ref, isDark);
+                    return StaggeredFadeSlide(
+                      index: sortedDays.length,
+                      child: _buildInsightsCard(context, ref, isDark),
+                    );
                   }
 
                   final dayStr = sortedDays[dayIndex];
@@ -136,37 +142,40 @@ class TransactionListScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Group Date Header
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              _formatHeaderDate(firstItemDate).toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1.2,
-                                color: isDark ? Colors.white30 : Colors.black38,
+                      StaggeredFadeSlide(
+                        index: dayIndex,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _formatHeaderDate(firstItemDate).toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.2,
+                                  color: isDark ? Colors.white30 : Colors.black38,
+                                ),
                               ),
-                            ),
-                            // Monospace Net Change Indicator
-                            AmountText(
-                              amountInCents: dailyNetChange.abs(),
-                              type: dailyNetChange > 0
-                                  ? AmountType.income
-                                  : (dailyNetChange < 0 ? AmountType.expense : AmountType.neutral),
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: dailyNetChange > 0
-                                    ? AppTheme.transferColorDark
-                                    : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
-                              ),
+                              // Monospace Net Change Indicator
+                              AmountText(
+                                amountInCents: dailyNetChange.abs(),
+                                type: dailyNetChange > 0
+                                    ? AmountType.income
+                                    : (dailyNetChange < 0 ? AmountType.expense : AmountType.neutral),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: dailyNetChange > 0
+                                      ? AppTheme.transferColorDark
+                                      : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
+                                ),
                             ),
                           ],
                         ),
                       ),
+                    ),
 
                       // Transaction Items as Individual GlassCards
                       ...dayItems.asMap().entries.map((entry) {
@@ -350,9 +359,11 @@ class TransactionListScreen extends ConsumerWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+            child: StaggeredFadeSlide(
+              index: 0,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                 child: Container(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 16,
@@ -512,6 +523,7 @@ class TransactionListScreen extends ConsumerWidget {
                 ),
               ),
             ),
+          ),
           ),
         ],
       ),
