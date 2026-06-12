@@ -1,45 +1,147 @@
-# Miscellaneous
+# ── OS / Editor Temp Files ──
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+Icon*
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+*.bak
+*.orig
 *.class
 *.log
 *.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+*.pyo
 
-# IntelliJ related
+# ── IDE / Editor ──
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
+.atom/
+.vscode/
+.vscode/settings.json
+.history
+.svn/
+.swiftpm/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# ── Dart / Flutter Build ──
 .dart_tool/
-.flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
-/coverage/
+build/
+flutter_*.png
+linked_*.ds
+unlinked.dsym
+unlinked.rrindex
+*.dill
+*.dill.d
+*.dep
+*.dart_tool
+*.packages
+*.precompiled
 
-# Symbolication related
-app.*.symbols
+# ── Flutter Generated (do NOT ignore .g.dart — they are tracked in VCS) ──
+**/generated_plugin_registrant.dart
 
-# Obfuscation related
-app.*.map.json
+# ── Flutter Plugins ──
+.flutter-plugins
+.flutter-plugins-dependencies
+flutter_export_environment.sh
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# ── Code Coverage ──
+coverage/
+*.lcov
+*.info
+
+# ── API Docs ──
+doc/api/
+**/doc/api/
+
+# ── Android ──
+android/app/build/
+android/.gradle/
+android/local.properties
+**/android/**/build/
+*.apk
+*.aab
+*.dex
+*.ap_
+
+# ── iOS ──
+ios/Flutter/.last_build_id
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Pods/
+ios/.symlinks/
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Runner/GoogleService-Info.plist
+**/ios/**/build/
+
+# ── macOS ──
+macos/Flutter/Flutter.framework
+macos/Flutter/Flutter.podspec
+macos/Pods/
+macos/.symlinks/
+**/macos/**/build/
+
+# ── Linux ──
+linux/flutter/ephemeral/
+linux/flutter/flutter_export_environment.sh
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+**/linux/**/build/
+
+# ── Windows ──
+windows/flutter/ephemeral/
+windows/flutter/flutter_export_environment.sh
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h
+**/windows/**/build/
+
+# ── Web ──
+**/web/**/build/
+
+# ── Environment / Secrets ──
+*.env
+.env.*
+!.env.example
+**/secrets.*
+**/credentials.*
+service_account.json
+
+# ── Signing & Keystores ──
+*.jks
+*.keystore
+android/key.properties
+android/key.properties.template
+**/upload-keystore.jks
+
+# ── Firebase ──
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+**/google-services.json
+**/GoogleService-Info.plist
+
+# ── Testing ──
+test/**/coverage/
+**/.test_history
+
+# ── Flutter Version Management ──
+.fvm/flutter_sdk
+.fvm/flutter.framework
+.fvm/flutter.podspec
+
+# ── Misc ──
+migrate_working_dir/
+**/Pods/
+**/.last_build_id
+**/Build/
+**/DerivedData/
+*.symbols
+*.map.json
