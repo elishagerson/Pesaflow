@@ -178,7 +178,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           error: (e, _) => Text('Error: $e'),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                    ),
+                    const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: TextFormField(
