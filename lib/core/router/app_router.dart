@@ -118,9 +118,7 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'loans',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => NoTransitionPage(
-                    child: const LoanListScreen(),
-                  ),
+                  pageBuilder: (context, state) => _slidePage(const LoanListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',

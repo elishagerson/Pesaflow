@@ -15,6 +15,7 @@ import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
@@ -164,37 +165,39 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
 
       developer.log('Notification Access not enabled — prompting user', name: 'AppLaunch');
       if (!mounted) return;
-      await showDialog(
+      await ModernDialog.showCustom(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Enable Notification Access'),
-          content: const Text(
-            'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
-            'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+        child: Builder(
+          builder: (dialogCtx) => AlertDialog(
+            title: const Text('Enable Notification Access'),
+            content: const Text(
+              'PesaFlow needs Notification Access to detect transaction SMS on Android 14+.\n\n'
+              'Tap "Open Settings" and toggle PesaFlow ON in the list.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogCtx).pop();
+                },
+                child: const Text('Remind later'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await ref.read(settingsRepositoryProvider).setSetting('notification_access_prompt_dismissed', 'true');
+                  if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
+                },
+                child: const Text("Don't show again"),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  await _notificationChannel.invokeMethod('openNotificationListenerSettings');
+                  if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
+                },
+                child: const Text('Open Settings'),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('Remind later'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await ref.read(settingsRepositoryProvider).setSetting('notification_access_prompt_dismissed', 'true');
-                if (ctx.mounted) Navigator.of(ctx).pop();
-              },
-              child: const Text("Don't show again"),
-            ),
-            FilledButton(
-              onPressed: () async {
-                await _notificationChannel.invokeMethod('openNotificationListenerSettings');
-                if (ctx.mounted) Navigator.of(ctx).pop();
-              },
-              child: const Text('Open Settings'),
-            ),
-          ],
         ),
       );
     } catch (e) {
@@ -390,10 +393,10 @@ class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
       _dialogOpen = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!context.mounted) return;
-        showDialog(
+        ModernDialog.showCustom(
           context: context,
           barrierDismissible: false,
-          builder: (_) => SmsReviewDialog(item: pendingItem),
+          child: SmsReviewDialog(item: pendingItem),
         ).then((_) {
           _dialogOpen = false;
         }).catchError((_) {

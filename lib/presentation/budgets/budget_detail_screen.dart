@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 /// Provider for loading a specific budget's full data.
@@ -98,87 +99,114 @@ class BudgetDetailScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Radial ring chart
-                Center(
-                  child: SizedBox(
-                    height: 200, width: 200,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        PieChart(PieChartData(
-                          startDegreeOffset: -90,
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 70,
-                          sections: [
-                            PieChartSectionData(value: status.percentage.clamp(0.0, 1.0) * 100, color: status.isOverBudget ? theme.colorScheme.error : catColor, radius: 20, showTitle: false),
-                            PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withValues(alpha: 0.15), radius: 20, showTitle: false),
-                          ],
-                        )),
-                        Column(mainAxisSize: MainAxisSize.min, children: [
-                          Text('${(status.percentage * 100).round()}%', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
-                          Text('used', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
-                        ]),
-                      ],
+                StaggeredFadeSlide(
+                  index: 0,
+                  child: Center(
+                    child: SizedBox(
+                      height: 200, width: 200,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          PieChart(PieChartData(
+                            startDegreeOffset: -90,
+                            sectionsSpace: 0,
+                            centerSpaceRadius: 70,
+                            sections: [
+                              PieChartSectionData(value: status.percentage.clamp(0.0, 1.0) * 100, color: status.isOverBudget ? theme.colorScheme.error : catColor, radius: 20, showTitle: false),
+                              PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withValues(alpha: 0.15), radius: 20, showTitle: false),
+                            ],
+                          )),
+                          Column(mainAxisSize: MainAxisSize.min, children: [
+                            Text('${(status.percentage * 100).round()}%', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                            Text('used', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+                          ]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
 
                 // Stats row
-                Row(children: [
-                  Expanded(child: _StatCard(label: 'Spent', amount: bp.spentInPeriod, color: status.isOverBudget ? theme.colorScheme.error : catColor, theme: theme)),
-                  const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? theme.colorScheme.primary : theme.colorScheme.error, theme: theme)),
-                  const SizedBox(width: 12),
-                  Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.colorScheme.primary, theme: theme)),
-                ]),
+                StaggeredFadeSlide(
+                  index: 1,
+                  child: Row(children: [
+                    Expanded(child: _StatCard(label: 'Spent', amount: bp.spentInPeriod, color: status.isOverBudget ? theme.colorScheme.error : catColor, theme: theme)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _StatCard(label: 'Remaining', amount: status.remaining, color: status.remaining >= 0 ? theme.colorScheme.primary : theme.colorScheme.error, theme: theme)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _StatCard(label: 'Allocated', amount: status.allocated, color: theme.colorScheme.primary, theme: theme)),
+                  ]),
+                ),
                 const SizedBox(height: 20),
 
                 // Pace card
-                GlassCard(
-                  padding: const EdgeInsets.all(16),
-                  frosted: false,
-                  child: Row(children: [
-                    Icon(
-                      status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
-                      color: status.isOnTrack ? theme.colorScheme.primary : Colors.orange,
-                      size: 28,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(status.paceLabel, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-                      Text('${status.daysLeft} days remaining in this period', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
-                    ])),
-                  ]),
+                StaggeredFadeSlide(
+                  index: 2,
+                  child: GlassCard(
+                    padding: const EdgeInsets.all(16),
+                    frosted: false,
+                    child: Row(children: [
+                      Icon(
+                        status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
+                        color: status.isOnTrack ? theme.colorScheme.primary : Colors.orange,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(status.paceLabel, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                        Text('${status.daysLeft} days remaining in this period', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                      ])),
+                    ]),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
                 // Period info
-                Text('Period: ${bp.budget.period}', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
-                Text('Rollover: ${bp.budget.rollover ? bp.budget.rolloverType : "disabled"}', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                StaggeredFadeSlide(
+                  index: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Period: ${bp.budget.period}', style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold)),
+                      Text('Rollover: ${bp.budget.rollover ? bp.budget.rolloverType : "disabled"}', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
 
                 // Historical Periods
-                Text('Period History', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                StaggeredFadeSlide(
+                  index: 4,
+                  child: Text('Period History', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                ),
                 const SizedBox(height: 12),
                 periodsAsync.when(
-                  data: (periods) => Column(children: periods.map((p) {
-                    final pctUsed = p.allocated > 0 ? (p.spent / p.allocated * 100).round() : 0;
-                    return GlassCard(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(12),
-                      borderRadius: 8,
-                      frosted: false,
-                      child: Row(children: [
-                        Icon(p.isClosed ? Icons.lock_rounded : Icons.lock_open_rounded, size: 16, color: Colors.grey),
-                        const SizedBox(width: 8),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text('${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                          Text('$pctUsed% used${p.rolledFrom != null && p.rolledFrom != 0 ? " • Rolled: Tsh ${p.rolledFrom! ~/ 100}" : ""}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                        ])),
-                        AmountText(amountInCents: p.spent, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                      ]),
-                    );
-                  } ).toList()),
+                  data: (periods) => Column(
+                    children: periods.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final p = entry.value;
+                      final pctUsed = p.allocated > 0 ? (p.spent / p.allocated * 100).round() : 0;
+                      return StaggeredFadeSlide(
+                        index: 5 + idx,
+                        child: GlassCard(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 8,
+                          frosted: false,
+                          child: Row(children: [
+                            Icon(p.isClosed ? Icons.lock_rounded : Icons.lock_open_rounded, size: 16, color: Colors.grey),
+                            const SizedBox(width: 8),
+                            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              Text('${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                              Text('$pctUsed% used${p.rolledFrom != null && p.rolledFrom != 0 ? " • Rolled: Tsh ${p.rolledFrom! ~/ 100}" : ""}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                            ])),
+                            AmountText(amountInCents: p.spent, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          ]),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                   loading: () => const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text('Error: $e'),
                 ),

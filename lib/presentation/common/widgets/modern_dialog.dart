@@ -31,7 +31,7 @@ class ModernDialog extends StatelessWidget {
       barrierDismissible: barrierDismissible,
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      transitionDuration: const Duration(milliseconds: 250),
+      transitionDuration: const Duration(milliseconds: 320),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
         final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
@@ -46,6 +46,31 @@ class ModernDialog extends StatelessWidget {
               titleIcon: titleIcon,
               iconColor: iconColor,
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<T?> showCustom<T>({
+    required BuildContext context,
+    required Widget child,
+    bool barrierDismissible = true,
+  }) {
+    return showGeneralDialog<T>(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      barrierLabel: 'Dismiss',
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      transitionDuration: const Duration(milliseconds: 320),
+      pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
+      transitionBuilder: (context, anim1, anim2, childWidget) {
+        final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
+        return ScaleTransition(
+          scale: curve,
+          child: FadeTransition(
+            opacity: anim1,
+            child: child,
           ),
         );
       },

@@ -5,6 +5,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
   final String loanId;
@@ -35,33 +36,55 @@ class LoanDetailScreen extends ConsumerWidget {
           body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _buildLoanHeader(loan, theme, isDark),
+              StaggeredFadeSlide(
+                index: 0,
+                child: _buildLoanHeader(loan, theme, isDark),
+              ),
               const SizedBox(height: 16),
-              _buildLoanInfo(loan, theme, isDark),
+              StaggeredFadeSlide(
+                index: 1,
+                child: _buildLoanInfo(loan, theme, isDark),
+              ),
               const SizedBox(height: 16),
-              _buildStatusTimeline(loan, theme, isDark),
+              StaggeredFadeSlide(
+                index: 2,
+                child: _buildStatusTimeline(loan, theme, isDark),
+              ),
               const SizedBox(height: 20),
-              Text(
-                'Payment History',
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              StaggeredFadeSlide(
+                index: 3,
+                child: Text(
+                  'Payment History',
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 8),
               transactionsAsync.when(
                 data: (txs) {
                   if (txs.isEmpty) {
-                    return GlassCard(
-                      padding: const EdgeInsets.all(20),
-                      borderRadius: AppTheme.radiusCard,
-                      child: Center(
-                        child: Text(
-                          'No payment transactions recorded',
-                          style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                    return StaggeredFadeSlide(
+                      index: 4,
+                      child: GlassCard(
+                        padding: const EdgeInsets.all(20),
+                        borderRadius: AppTheme.radiusCard,
+                        child: Center(
+                          child: Text(
+                            'No payment transactions recorded',
+                            style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
                         ),
                       ),
                     );
                   }
                   return Column(
-                    children: txs.map((tx) => _buildTransactionTile(tx, theme, isDark)).toList(),
+                    children: txs.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final tx = entry.value;
+                      return StaggeredFadeSlide(
+                        index: 4 + idx,
+                        child: _buildTransactionTile(tx, theme, isDark),
+                      );
+                    }).toList(),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),

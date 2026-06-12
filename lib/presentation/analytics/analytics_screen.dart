@@ -8,6 +8,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
@@ -185,102 +186,105 @@ class _OverviewTab extends StatelessWidget {
                           : 0.0;
                       final percentInt = (goalPct * 100).round();
 
-                      return GestureDetector(
-                        onTap: () {
-                          HapticFeedback.mediumImpact();
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => SavingsGoalDetailSheet(goal: goal),
-                          );
-                        },
-                        child: SizedBox(
-                          width: 250,
-                          child: GlassCard(
-                            padding: const EdgeInsets.all(16),
-                            frosted: true,
-                            child: Row(
-                            children: [
-                              SizedBox(
-                                height: 56,
-                                width: 56,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    PieChart(PieChartData(
-                                      startDegreeOffset: -90,
-                                      sectionsSpace: 0,
-                                      centerSpaceRadius: 20,
-                                      sections: [
-                                        PieChartSectionData(
-                                          value: goalPct * 100,
-                                          color: goalColor,
-                                          radius: 4,
-                                          showTitle: false,
-                                        ),
-                                        PieChartSectionData(
-                                          value: (1.0 - goalPct) * 100,
-                                          color: goalColor.withValues(alpha: 0.12),
-                                          radius: 4,
-                                          showTitle: false,
-                                        ),
-                                      ],
-                                    )),
-                                    Icon(
-                                      goal.icon == 'savings' 
-                                          ? Icons.savings_rounded 
-                                          : goal.icon == 'laptop' 
-                                              ? Icons.laptop_chromebook_rounded 
-                                              : goal.icon == 'flight' 
-                                                  ? Icons.flight_takeoff_rounded 
-                                                  : goal.icon == 'home' 
-                                                      ? Icons.home_rounded 
-                                                      : goal.icon == 'car' 
-                                                          ? Icons.directions_car_rounded 
-                                                          : goal.icon == 'school' 
-                                                              ? Icons.school_rounded 
-                                                              : goal.icon == 'heart' 
-                                                                  ? Icons.favorite_rounded 
-                                                                  : Icons.savings_rounded,
-                                      color: goalColor,
-                                      size: 18,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      goal.name,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '$percentInt% Completed',
-                                      style: TextStyle(
+                      return StaggeredFadeSlide(
+                        index: index,
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticFeedback.mediumImpact();
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => SavingsGoalDetailSheet(goal: goal),
+                            );
+                          },
+                          child: SizedBox(
+                            width: 250,
+                            child: GlassCard(
+                              padding: const EdgeInsets.all(16),
+                              frosted: true,
+                              child: Row(
+                              children: [
+                                SizedBox(
+                                  height: 56,
+                                  width: 56,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      PieChart(PieChartData(
+                                        startDegreeOffset: -90,
+                                        sectionsSpace: 0,
+                                        centerSpaceRadius: 20,
+                                        sections: [
+                                          PieChartSectionData(
+                                            value: goalPct * 100,
+                                            color: goalColor,
+                                            radius: 4,
+                                            showTitle: false,
+                                          ),
+                                          PieChartSectionData(
+                                            value: (1.0 - goalPct) * 100,
+                                            color: goalColor.withValues(alpha: 0.12),
+                                            radius: 4,
+                                            showTitle: false,
+                                          ),
+                                        ],
+                                      )),
+                                      Icon(
+                                        goal.icon == 'savings' 
+                                            ? Icons.savings_rounded 
+                                            : goal.icon == 'laptop' 
+                                                ? Icons.laptop_chromebook_rounded 
+                                                : goal.icon == 'flight' 
+                                                    ? Icons.flight_takeoff_rounded 
+                                                    : goal.icon == 'home' 
+                                                        ? Icons.home_rounded 
+                                                        : goal.icon == 'car' 
+                                                            ? Icons.directions_car_rounded 
+                                                            : goal.icon == 'school' 
+                                                                ? Icons.school_rounded 
+                                                                : goal.icon == 'heart' 
+                                                                    ? Icons.favorite_rounded 
+                                                                    : Icons.savings_rounded,
                                         color: goalColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        size: 18,
                                       ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
-                                      style: const TextStyle(color: Colors.grey, fontSize: 10),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        goal.name,
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '$percentInt% Completed',
+                                        style: TextStyle(
+                                          color: goalColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
+                                        style: const TextStyle(color: Colors.grey, fontSize: 10),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -448,68 +452,71 @@ class _OverviewTab extends StatelessWidget {
                               final pct = total > 0 ? (cat.amount / total * 100).round() : 0;
                               final double pctFactor = total > 0 ? (cat.amount / total) : 0.0;
                               
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 10,
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                gradient: _getCategoryNeonGradient(color),
-                                                borderRadius: BorderRadius.circular(2),
+                              return StaggeredFadeSlide(
+                                index: i,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 10,
+                                                height: 4,
+                                                decoration: BoxDecoration(
+                                                  gradient: _getCategoryNeonGradient(color),
+                                                  borderRadius: BorderRadius.circular(2),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              cat.categoryName,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                cat.categoryName,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          '$pct%',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[400],
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    // Curved progress track
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Container(
-                                        height: 5,
-                                        width: double.infinity,
-                                        color: Colors.white.withValues(alpha: 0.06),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: FractionallySizedBox(
-                                            widthFactor: pctFactor,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                gradient: _getCategoryNeonGradient(color),
-                                                borderRadius: BorderRadius.circular(100),
+                                          Text(
+                                            '$pct%',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      // Curved progress track
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(100),
+                                        child: Container(
+                                          height: 5,
+                                          width: double.infinity,
+                                          color: Colors.white.withValues(alpha: 0.06),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: FractionallySizedBox(
+                                              widthFactor: pctFactor,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: _getCategoryNeonGradient(color),
+                                                  borderRadius: BorderRadius.circular(100),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -810,75 +817,78 @@ class _InsightsTab extends StatelessWidget {
             final color = _getSeverityColor(insight.severity);
 
 
-            return GlassCard(
-              margin: const EdgeInsets.only(bottom: 14),
-              frosted: true,
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Left colored accent border strip with glowing shadow
-                    Container(
-                      width: 5,
-                      decoration: BoxDecoration(
-                        color: color,
-                        boxShadow: [
-                          BoxShadow(
-                            color: color.withValues(alpha: 0.4),
-                            blurRadius: 6,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Content Row
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: color.withValues(alpha: 0.12),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                _getInsightIcon(insight.icon),
-                                color: color,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    insight.title,
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    insight.message,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.85),
-                                      height: 1.4,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
+            return StaggeredFadeSlide(
+              index: index,
+              child: GlassCard(
+                margin: const EdgeInsets.only(bottom: 14),
+                frosted: true,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Left colored accent border strip with glowing shadow
+                      Container(
+                        width: 5,
+                        decoration: BoxDecoration(
+                          color: color,
+                          boxShadow: [
+                            BoxShadow(
+                              color: color.withValues(alpha: 0.4),
+                              blurRadius: 6,
+                              spreadRadius: 1,
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      // Content Row
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: color.withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  _getInsightIcon(insight.icon),
+                                  color: color,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      insight.title,
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      insight.message,
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.85),
+                                        height: 1.4,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

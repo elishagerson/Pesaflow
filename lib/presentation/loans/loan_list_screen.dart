@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class LoanListScreen extends ConsumerWidget {
@@ -43,7 +44,10 @@ class LoanListScreen extends ConsumerWidget {
                 return ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                   itemCount: loans.length,
-                  itemBuilder: (_, i) => _buildLoanTile(context, loans[i], theme, isDark),
+                  itemBuilder: (_, i) => StaggeredFadeSlide(
+                    index: i,
+                    child: _buildLoanTile(context, loans[i], theme, isDark),
+                  ),
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),

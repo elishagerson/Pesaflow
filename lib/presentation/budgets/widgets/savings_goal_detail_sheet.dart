@@ -15,6 +15,8 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
@@ -124,10 +126,10 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
         if (reachedMilestone) {
           Future.delayed(const Duration(milliseconds: 300), () {
             if (mounted) {
-              showDialog(
+              ModernDialog.showCustom(
                 context: context,
                 barrierDismissible: true,
-                builder: (_) => SuccessConfettiDialog(
+                child: SuccessConfettiDialog(
                   goalName: widget.goal.name,
                   targetAmount: widget.goal.targetAmount,
                 ),
@@ -631,91 +633,94 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                           final log = logs[idx];
                           final isPos = log.amount >= 0;
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Row(
-                              children: [
-                                // Dot indicator
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: isPos ? AppTheme.transferColorDark : const Color(0xFFFF453A),
-                                    shape: BoxShape.circle,
+                          return StaggeredFadeSlide(
+                            index: idx,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Row(
+                                children: [
+                                  // Dot indicator
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: isPos ? AppTheme.transferColorDark : const Color(0xFFFF453A),
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        isPos ? 'Savings Deposit' : 'Savings Withdrawal',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                                      ),
-                                      if (log.notes != null) ...[
-                                        const SizedBox(height: 3),
+                                  const SizedBox(width: 14),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
                                         Text(
-                                          log.notes!,
-                                          style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                                          isPos ? 'Savings Deposit' : 'Savings Withdrawal',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                        ),
+                                        if (log.notes != null) ...[
+                                          const SizedBox(height: 3),
+                                          Text(
+                                            log.notes!,
+                                            style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                                          ),
+                                        ],
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
+                                          style: TextStyle(color: Colors.grey[500], fontSize: 9),
                                         ),
                                       ],
-                                      const SizedBox(height: 2),
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
                                       Text(
-                                        '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
-                                        style: TextStyle(color: Colors.grey[500], fontSize: 9),
+                                        (isPos ? '+' : '-') + CurrencyFormatter.formatCents(log.amount.abs()),
+                                        style: TextStyle(
+                                          fontFamily: 'monospace',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: isPos ? AppTheme.transferColorDark : const Color(0xFFFF453A),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final confirm = await ModernDialog.showCustom<bool>(
+                                            context: context,
+                                            child: AlertDialog(
+                                              title: const Text('Delete Contribution?'),
+                                              content: const Text('This will undo this deposit/withdrawal from this visual savings goal balance.'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(true),
+                                                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          if (confirm == true) {
+                                            await ref.read(savingsGoalRepositoryProvider).deleteContribution(log.id);
+                                            ref.invalidate(savingsGoalsStreamProvider);
+                                            ref.invalidate(savingsGoalsTotalSavedProvider);
+                                          }
+                                        },
+                                        child: Icon(
+                                          Icons.delete_outline_rounded,
+                                          size: 16,
+                                          color: Colors.red.withValues(alpha: 0.7),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      (isPos ? '+' : '-') + CurrencyFormatter.formatCents(log.amount.abs()),
-                                      style: TextStyle(
-                                        fontFamily: 'monospace',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: isPos ? AppTheme.transferColorDark : const Color(0xFFFF453A),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final confirm = await showDialog<bool>(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text('Delete Contribution?'),
-                                            content: const Text('This will undo this deposit/withdrawal from this visual savings goal balance.'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.of(context).pop(false),
-                                                child: const Text('Cancel'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () => Navigator.of(context).pop(true),
-                                                child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-
-                                        if (confirm == true) {
-                                          await ref.read(savingsGoalRepositoryProvider).deleteContribution(log.id);
-                                          ref.invalidate(savingsGoalsStreamProvider);
-                                          ref.invalidate(savingsGoalsTotalSavedProvider);
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.delete_outline_rounded,
-                                        size: 16,
-                                        color: Colors.red.withValues(alpha: 0.7),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },

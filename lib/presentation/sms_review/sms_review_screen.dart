@@ -7,6 +7,7 @@ import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class SmsReviewScreen extends ConsumerWidget {
@@ -177,7 +178,9 @@ class SmsReviewScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               if (index == 0) {
                 // Header
-                return Padding(
+                return StaggeredFadeSlide(
+                  index: 0,
+                  child: Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -225,6 +228,7 @@ class SmsReviewScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
+                ),
                 );
               }
 
@@ -240,7 +244,9 @@ class SmsReviewScreen extends ConsumerWidget {
                 amtType = AmountType.expense;
               }
 
-              return SwipeableCard(
+              return StaggeredFadeSlide(
+                index: index,
+                child: SwipeableCard(
                 onSwipeLeft: () async {
                   // Reject: delete the transaction
                   await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
@@ -466,6 +472,7 @@ class SmsReviewScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+              ),
               );
             },
           );
