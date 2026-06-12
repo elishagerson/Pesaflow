@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -18,20 +20,81 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
-Page<dynamic> _slidePage(Widget child) {
+/// Spring-like overshoot curve — starts fast, overshoots slightly, settles back.
+/// Creates a lively, physical feel for page entrances.
+class _SpringBounceCurve extends Curve {
+  const _SpringBounceCurve();
+
+  @override
+  double transformInternal(double t) {
+    const c1 = 1.80158;
+    const c3 = c1 + 1;
+    return 1 + c3 * math.pow(t - 1, 3) + c1 * math.pow(t - 1, 2);
+  }
+}
+
+/// Page transition with spring-physics slide + depth effect.
+/// Incoming page slides from 30% right with a spring overshoot.
+/// Outgoing page scales down (0.93) and fades (0.7) as it's pushed back.
+Page<dynamic> _springSlidePage(Widget child) {
   return CustomTransitionPage(
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-          reverseCurve: Curves.easeInCubic,
-        )),
-        child: child,
+      final slideAnimation = Tween<Offset>(
+        begin: const Offset(0.3, 0),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(
+        parent: animation,
+        curve: const _SpringBounceCurve(),
+        reverseCurve: Curves.fastOutSlowIn,
+      ));
+
+      final outScaleAnimation = Tween<double>(
+        begin: 1.0,
+        end: 0.93,
+      ).animate(CurvedAnimation(
+        parent: secondaryAnimation,
+        curve: Curves.easeOutCubic,
+      ));
+
+      final outFadeAnimation = Tween<double>(
+        begin: 1.0,
+        end: 0.7,
+      ).animate(CurvedAnimation(
+        parent: secondaryAnimation,
+        curve: Curves.easeOutCubic,
+      ));
+
+      return FadeTransition(
+        opacity: outFadeAnimation,
+        child: ScaleTransition(
+          scale: outScaleAnimation,
+          child: SlideTransition(
+            position: slideAnimation,
+            child: child,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+/// Subtle cross-fade + scale transition for tab switches.
+/// Replaces NoTransitionPage to make tab changes feel connected.
+Page<dynamic> _tabTransitionPage(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(parent: animation, curve: Curves.easeOut),
+        ),
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.96, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+          ),
+          child: child,
+        ),
       );
     },
   );
@@ -100,7 +163,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) => _slidePage(const OnboardingScreen()),
+      pageBuilder: (context, state) => _springSlidePage(const OnboardingScreen()),
     ),
 
     // Main persistent shell routes
@@ -118,12 +181,12 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'loans',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _slidePage(const LoanListScreen()),
+                  pageBuilder: (context, state) => _springSlidePage(const LoanListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _slidePage(const LoanFormScreen()),
+                      pageBuilder: (context, state) => _springSlidePage(const LoanFormScreen()),
                     ),
                   ],
                 ),
@@ -132,7 +195,7 @@ final GoRouter appRouter = GoRouter(
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     final loanId = state.pathParameters['id'] ?? '';
-                    return _slidePage(LoanDetailScreen(loanId: loanId));
+                    return _springSlidePage(LoanDetailScreen(loanId: loanId));
                   },
                 ),
               ],
@@ -143,21 +206,21 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/transactions',
-              pageBuilder: (context, state) => NoTransitionPage(
-                child: const TransactionListScreen(),
+              pageBuilder: (context, state) => _tabTransitionPage(
+                const TransactionListScreen(),
               ),
               routes: [
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _slidePage(const TransactionFormScreen()),
+                  pageBuilder: (context, state) => _springSlidePage(const TransactionFormScreen()),
                 ),
                 GoRoute(
                   path: 'edit/:id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     final transactionId = state.pathParameters['id'];
-                    return _slidePage(TransactionFormScreen(transactionId: transactionId));
+                    return _springSlidePage(TransactionFormScreen(transactionId: transactionId));
                   },
                 ),
               ],
@@ -168,21 +231,21 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/budgets',
-              pageBuilder: (context, state) => NoTransitionPage(
-                child: const BudgetListScreen(),
+              pageBuilder: (context, state) => _tabTransitionPage(
+                const BudgetListScreen(),
               ),
               routes: [
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _slidePage(const BudgetFormScreen()),
+                  pageBuilder: (context, state) => _springSlidePage(const BudgetFormScreen()),
                 ),
                 GoRoute(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     final budgetId = state.pathParameters['id'] ?? '';
-                    return _slidePage(BudgetDetailScreen(budgetId: budgetId));
+                    return _springSlidePage(BudgetDetailScreen(budgetId: budgetId));
                   },
                   routes: [
                     GoRoute(
@@ -190,7 +253,7 @@ final GoRouter appRouter = GoRouter(
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
                         final budgetId = state.pathParameters['id'];
-                        return _slidePage(BudgetFormScreen(budgetId: budgetId));
+                        return _springSlidePage(BudgetFormScreen(budgetId: budgetId));
                       },
                     ),
                   ],
@@ -203,8 +266,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/analytics',
-              pageBuilder: (context, state) => NoTransitionPage(
-                child: const AnalyticsScreen(),
+              pageBuilder: (context, state) => _tabTransitionPage(
+                const AnalyticsScreen(),
               ),
             ),
           ],
@@ -213,8 +276,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/settings',
-              pageBuilder: (context, state) => NoTransitionPage(
-                child: const SettingsScreen(),
+              pageBuilder: (context, state) => _tabTransitionPage(
+                const SettingsScreen(),
               ),
             ),
           ],
@@ -226,7 +289,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
-      pageBuilder: (context, state) => _slidePage(const SmsReviewScreen()),
+      pageBuilder: (context, state) => _springSlidePage(const SmsReviewScreen()),
     ),
   ],
 );
