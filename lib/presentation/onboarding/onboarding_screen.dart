@@ -8,6 +8,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
@@ -164,22 +165,25 @@ class _WelcomePage extends StatelessWidget {
   const _WelcomePage({required this.theme});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-          padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]),
-            shape: BoxShape.circle,
+    return StaggeredFadeSlide(
+      index: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.account_balance_wallet_rounded, size: 64, color: Colors.white),
           ),
-          child: const Icon(Icons.account_balance_wallet_rounded, size: 64, color: Colors.white),
-        ),
-        const SizedBox(height: 32),
-        Text('Welcome to PesaFlow', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        const SizedBox(height: 16),
-        Text('Track your finances offline.\n100% private — data never leaves your device.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
-      ]),
+          const SizedBox(height: 32),
+          Text('Welcome to PesaFlow', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          Text('Track your finances offline.\n100% private — data never leaves your device.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
+        ]),
+      ),
     );
   }
 }
@@ -190,61 +194,64 @@ class _SmsPermissionPage extends StatelessWidget {
   const _SmsPermissionPage({required this.theme, this.permissionGranted = false});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Stack(
-          children: [
-            Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
-            if (permissionGranted)
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.incomeColor,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: theme.scaffoldBackgroundColor, width: 2),
+    return StaggeredFadeSlide(
+      index: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Stack(
+            children: [
+              Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
+              if (permissionGranted)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.incomeColor,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: theme.scaffoldBackgroundColor, width: 2),
+                    ),
+                    child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
                   ),
-                  child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
                 ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        Text('SMS Auto-Tracking', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        const SizedBox(height: 16),
-        Text('PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.', textAlign: TextAlign.center, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        const SizedBox(height: 24),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3))),
-          child: Row(children: [
-            Icon(Icons.lock_rounded, color: theme.colorScheme.primary, size: 20),
-            const SizedBox(width: 12),
-            Expanded(child: Text('SMS data is processed locally and never sent anywhere.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant))),
-          ]),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              permissionGranted ? Icons.check_circle_rounded : Icons.info_outline_rounded,
-              size: 14,
-              color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              permissionGranted ? 'SMS Permission Granted' : 'You can skip this and add transactions manually.',
-              style: theme.textTheme.bodySmall?.copyWith(
+            ],
+          ),
+          const SizedBox(height: 32),
+          Text('SMS Auto-Tracking', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          Text('PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.', textAlign: TextAlign.center, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3))),
+            child: Row(children: [
+              Icon(Icons.lock_rounded, color: theme.colorScheme.primary, size: 20),
+              const SizedBox(width: 12),
+              Expanded(child: Text('SMS data is processed locally and never sent anywhere.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant))),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                permissionGranted ? Icons.check_circle_rounded : Icons.info_outline_rounded,
+                size: 14,
                 color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
               ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Text(
+                permissionGranted ? 'SMS Permission Granted' : 'You can skip this and add transactions manually.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+                ),
+              ),
+            ],
         ),
       ]),
+    ),
     );
   }
 }
@@ -270,18 +277,24 @@ class _AccountsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          Text(
-            'Set Up Accounts',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.5,
+          StaggeredFadeSlide(
+            index: 0,
+            child: Text(
+              'Set Up Accounts',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Select the accounts you use. You can add more later.',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          StaggeredFadeSlide(
+            index: 1,
+            child: Text(
+              'Select the accounts you use. You can add more later.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -291,9 +304,13 @@ class _AccountsPage extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               physics: const BouncingScrollPhysics(),
-              children: accounts.entries.map((e) {
+              children: accounts.entries.toList().asMap().entries.map((entry) {
+                final i = entry.key;
+                final e = entry.value;
                 final isSelected = e.value;
-                return TactileSpringContainer(
+                return StaggeredFadeSlide(
+                  index: 2 + i,
+                  child: TactileSpringContainer(
                   onTap: () => onToggle(e.key, !isSelected),
                   child: Container(
                     decoration: BoxDecoration(
@@ -372,9 +389,10 @@ class _AccountsPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    ),
                   ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
             ),
           ),
         ],
@@ -388,15 +406,18 @@ class _CompletePage extends StatelessWidget {
   const _CompletePage({required this.theme});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.incomeColor)),
-        const SizedBox(height: 32),
-        Text('You\'re All Set!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-        const SizedBox(height: 16),
-        Text('Your offline finance tracker is ready.\nStart recording transactions and take control of your money.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
-      ]),
+    return StaggeredFadeSlide(
+      index: 0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.incomeColor)),
+          const SizedBox(height: 32),
+          Text('You\'re All Set!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          Text('Your offline finance tracker is ready.\nStart recording transactions and take control of your money.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
+        ]),
+      ),
     );
   }
 }
