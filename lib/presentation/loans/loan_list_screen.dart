@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class LoanListScreen extends ConsumerWidget {
@@ -21,6 +22,10 @@ class LoanListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Loans'),
         centerTitle: true,
+      ),
+      floatingActionButton: PremiumExtendedFab(
+        onPressed: () => context.push('/loans/add'),
+        label: 'Add Loan',
       ),
       body: Column(
         children: [
@@ -136,7 +141,7 @@ class LoanListScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Loan disbursements from M-Pesa and other\nproviders will appear here automatically.',
+              'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),

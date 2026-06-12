@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
@@ -509,29 +510,10 @@ class TransactionListScreen extends ConsumerWidget {
         ],
       ),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 80), // Positioned above the custom tab bar
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.transferColorDark.withValues(alpha: 0.35),
-              blurRadius: 12,
-              spreadRadius: 2,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: PremiumFab(
           onPressed: () => context.go('/transactions/add'),
-          backgroundColor: AppTheme.transferColorDark,
-          foregroundColor: Colors.black,
-          shape: const CircleBorder(),
-          elevation: 0,
-          child: const Icon(
-            Icons.add_rounded,
-            size: 28,
-          ),
         ),
       ),
     );

@@ -1090,14 +1090,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildLoanOverview(ThemeData theme, BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
-    final totalOutstandingAsync = ref.watch(totalOutstandingLoanProvider);
-
-    final hasActiveLoans = activeLoansAsync.maybeWhen(
-      data: (loans) => loans.isNotEmpty,
-      orElse: () => false,
-    );
-
-    if (!hasActiveLoans) return const SizedBox.shrink();
+    final netWorth = ref.watch(netWorthProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1109,11 +1102,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Active Loans',
+                  'Loans',
                   style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'OUTSTANDING DEBT',
+                  'DEBT OVERVIEW',
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w800,
@@ -1131,115 +1124,319 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
         const SizedBox(height: 12),
         activeLoansAsync.when(
-          data: (loans) {
-            if (loans.isEmpty) return const SizedBox.shrink();
-            return Column(
-              children: loans.take(2).map((loan) {
-                final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
-                final progressColor = ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A);
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.all(14),
+          data: (activeLoans) {
+            if (activeLoans.isEmpty) {
+              return GestureDetector(
+                onTap: () => context.go('/loans'),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF609F8A).withValues(alpha: 0.1),
+                        const Color(0xFF609F8A).withValues(alpha: 0.02),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                     border: Border.all(
-                      color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
+                      color: const Color(0xFF609F8A).withValues(alpha: 0.2),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.check_circle_rounded, color: Color(0xFF609F8A), size: 22),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          'No active debt. Keep it that way.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            final totalOutstanding = activeLoans.fold<int>(0, (sum, l) => sum + l.remaining);
+            final debtRatio = netWorth > 0 ? totalOutstanding / netWorth : 999.0;
+            final severityLevel = debtRatio > 1.0
+                ? 'CRITICAL'
+                : debtRatio > 0.5
+                    ? 'HIGH'
+                    : debtRatio > 0.2
+                        ? 'MODERATE'
+                        : 'LOW';
+            final severityColor = debtRatio > 1.0
+                ? const Color(0xFFE53935)
+                : debtRatio > 0.5
+                    ? const Color(0xFFFF6B35)
+                    : debtRatio > 0.2
+                        ? const Color(0xFFFF9F0A)
+                        : const Color(0xFF609F8A);
+
+            return Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        severityColor.withValues(alpha: 0.15),
+                        severityColor.withValues(alpha: 0.03),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                    border: Border.all(
+                      color: severityColor.withValues(alpha: 0.25),
                       width: 0.5,
                     ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Text(
-                              loan.description ?? 'Loan',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: severityColor.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              debtRatio > 0.5 ? Icons.warning_rounded : Icons.trending_up_rounded,
+                              color: severityColor,
+                              size: 22,
                             ),
                           ),
-                          Text(
-                            CurrencyFormatter.formatCents(loan.remaining),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: progressColor,
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  CurrencyFormatter.formatCents(totalOutstanding),
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                    color: isDark ? Colors.white : Colors.black,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '$severityLevel DEBT BURDEN',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w900,
+                                    color: severityColor,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: severityColor.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: severityColor,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 14),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: ratio.clamp(0.0, 1.0),
-                          backgroundColor: progressColor.withValues(alpha: 0.12),
-                          valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                          minHeight: 4,
+                        borderRadius: BorderRadius.circular(6),
+                        child: SizedBox(
+                          height: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: severityColor.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: FractionallySizedBox(
+                                    alignment: Alignment.centerLeft,
+                                    widthFactor: (debtRatio.clamp(0.0, 1.0)),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            severityColor,
+                                            severityColor.withValues(alpha: 0.6),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${(ratio * 100).round()}% remaining',
-                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                            '${(debtRatio * 100).round()}% of net worth',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: severityColor,
+                            ),
                           ),
                           Text(
-                            '${CurrencyFormatter.formatCents(loan.amount)} total',
-                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                            netWorth > 0
+                                ? 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}'
+                                : 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                );
-              }).toList(),
-            );
-          },
-          loading: () => const SizedBox.shrink(),
-          error: (_, _) => const SizedBox.shrink(),
-        ),
-        totalOutstandingAsync.when(
-          data: (total) {
-            if (total <= 0) return const SizedBox.shrink();
-            return Container(
-              margin: const EdgeInsets.only(top: 4),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE53935).withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                border: Border.all(
-                  color: const Color(0xFFE53935).withValues(alpha: 0.12),
-                  width: 0.5,
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Outstanding',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: isDark ? Colors.grey[300] : Colors.grey[700],
-                    ),
-                  ),
-                  Text(
-                    CurrencyFormatter.formatCents(total),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 14,
-                      color: Color(0xFFE53935),
-                    ),
-                  ),
-                ],
-              ),
+                const SizedBox(height: 8),
+                ...activeLoans.take(2).map((loan) {
+                  final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
+                  final loanSeverity = ratio > 0.7 ? const Color(0xFFE53935) : ratio > 0.4 ? const Color(0xFFFF9F0A) : const Color(0xFF609F8A);
+                  return GestureDetector(
+                    onTap: () => context.go('/loans/${loan.id}'),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(
+                          color: loanSeverity.withValues(alpha: 0.2),
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: loanSeverity.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  ratio > 0.5 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+                                  color: loanSeverity,
+                                  size: 14,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      loan.description ?? 'Loan',
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      '${ratio > 0.5 ? '⚠' : ''} ${(ratio * 100).round()}% unpaid',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w700,
+                                        color: loanSeverity,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                CurrencyFormatter.formatCents(loan.remaining),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 14,
+                                  color: loanSeverity,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: SizedBox(
+                              height: 6,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: loanSeverity.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: FractionallySizedBox(
+                                        alignment: Alignment.centerLeft,
+                                        widthFactor: ratio.clamp(0.0, 1.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                loanSeverity,
+                                                loanSeverity.withValues(alpha: 0.5),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      ),
+                    );
+                  }),
+              ],
             );
           },
           loading: () => const SizedBox.shrink(),
@@ -2345,7 +2542,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 24),
 
-              // ── 4. SMS Review Queue Card (Setup Bonus Vibe) ──
+              // ── 4. Loan / Debt Overview ──
+              _buildLoanOverview(theme, context),
+              const SizedBox(height: 24),
+
+              // ── 5. SMS Review Queue Card (Setup Bonus Vibe) ──
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20.0),
@@ -2495,9 +2696,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 const SizedBox(height: 24),
                 _buildSavingsGoalsDashboard(theme, context),
               ],
-
-              const SizedBox(height: 24),
-              _buildLoanOverview(theme, context),
 
               const SizedBox(height: 24),
 

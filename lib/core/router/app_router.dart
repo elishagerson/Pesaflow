@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/transactions/transaction_form_screen.dart'
 import 'package:pesaflow/presentation/transactions/transaction_list_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_list_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_detail_screen.dart';
+import 'package:pesaflow/presentation/loans/loan_form_screen.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -120,6 +121,13 @@ final GoRouter appRouter = GoRouter(
                   pageBuilder: (context, state) => NoTransitionPage(
                     child: const LoanListScreen(),
                   ),
+                  routes: [
+                    GoRoute(
+                      path: 'add',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) => _slidePage(const LoanFormScreen()),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: 'loans/:id',
