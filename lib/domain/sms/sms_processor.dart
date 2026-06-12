@@ -339,7 +339,7 @@ class SmsProcessor {
 
       // 7.5 Repayment detection: match expense to existing active loan
       if (loanId == null && (finalType == 'expense' || finalType == 'airtime' || finalType == 'fee')) {
-        final textToCheck = '${finalDescription} $body'.toLowerCase();
+        final textToCheck = '$finalDescription $body'.toLowerCase();
         final isLoanRepayment = textToCheck.contains('loan') ||
             textToCheck.contains('mkopo') ||
             textToCheck.contains('repayment') ||

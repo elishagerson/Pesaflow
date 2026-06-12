@@ -62,6 +62,7 @@ void main() {
       accountRepo: accountRepo,
       categoryRepo: categoryRepo,
       transactionRepo: transactionRepo,
+      loanRepo: loanRepo,
       settingsRepo: settingsRepo,
       deduplicator: deduplicator,
       categorizer: categorizer,
