@@ -120,7 +120,7 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
     await update(loans).replace(loan.copyWith(
       remaining: newRemaining,
       status: isPaid ? 'paid' : loan.status,
-      paidAt: isPaid ? Value(DateTime.now()) : loan.paidAt,
+      paidAt: isPaid ? Value(DateTime.now()) : Value(loan.paidAt),
       updatedAt: DateTime.now(),
     ));
   }
