@@ -237,11 +237,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                             ),
                             child: const Icon(Icons.delete_rounded, color: Colors.white),
                           ),
-                          onDismissed: (_) async {
+                          confirmDismiss: (_) async {
                             await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
                             ref.invalidate(filteredTransactionsStreamProvider);
                             ref.invalidate(accountsStreamProvider);
                             ref.invalidate(netWorthProvider);
+                            return true;
                           },
                           child: TactileSpringContainer(
                             onTap: () => context.go('/transactions/edit/${trans.id}'),

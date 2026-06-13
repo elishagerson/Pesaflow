@@ -58,7 +58,7 @@ class IosBottomSheet extends StatelessWidget {
                 ),
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   const SizedBox(height: 8),
                   Container(
