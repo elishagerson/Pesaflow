@@ -659,35 +659,35 @@ class LoanDetailScreen extends ConsumerWidget {
                   filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                   child: LiquidGlassOverlay(
                     child: Container(
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xF01C1C1E)
-                          : const Color(0xF0F2F2F7),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const SizedBox(height: 10),
-                        Container(
-                          width: 38,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(100),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? const Color(0xF01C1C1E)
+                            : const Color(0xF0F2F2F7),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 38,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.2)
+                                  : Colors.black.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        Expanded(
-                          child: RawScrollbar(
-                            controller: scrollController,
-                            child: SingleChildScrollView(
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: RawScrollbar(
                               controller: scrollController,
-                              physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                              child: Column(
+                              child: SingleChildScrollView(
+                                controller: scrollController,
+                                physics: const ClampingScrollPhysics(),
+                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                                child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // ── Header ──
