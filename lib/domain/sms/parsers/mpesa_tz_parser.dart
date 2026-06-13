@@ -26,8 +26,11 @@ class MpesaTzParser implements SmsParser {
       return parseAmount(match.group(1) ?? '');
     }
 
-    // English: "New M-PESA balance is Tsh XXX"
-    final engBalRegex = RegExp(r'New\s+M[- ]?PESA\s+balance\s+is\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    // English: "New M-PESA balance is Tsh XXX" or "Balance is Tsh XXX"
+    final engBalRegex = RegExp(
+      r'(?:New\s+M[- ]?PESA\s+)?Balance\s+is\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
     final engMatch = engBalRegex.firstMatch(text);
     if (engMatch != null) {
       return parseAmount(engMatch.group(1) ?? '');
@@ -168,8 +171,9 @@ class MpesaTzParser implements SmsParser {
 
       // 5. English: Received Money (Income)
       // Example: "Z10DN636 Confirmed.You have received Tsh50,000 from FREDRICK KIMARO on 27/1/14 at 1:19 PM New M-PESA balance is Tsh214,676"
+      // Also: "DFDFI1D6RN confirmed. You have received a payment of Tsh26,000.00 from 922749 - TIPS-Mixx By Yas on 13/6/26 at 5:48 pm."
       final engReceivedRegex = RegExp(
-        r'Confirmed\.\s*You have received\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)(?:\.|\s+on|\s+New M[- ]?PESA|$)',
+        r'Confirmed\.\s*You have received\s+(?:a payment of\s+)?(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)(?:\.|\s+on|\s+New M[- ]?PESA|$)',
         caseSensitive: false,
       );
       match = engReceivedRegex.firstMatch(text);
@@ -198,6 +202,31 @@ class MpesaTzParser implements SmsParser {
         caseSensitive: false,
       );
       match = engSentRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 6a. English: Sent Money — modern format (Expense)
+      // Example: "DF3FI18H5B Confirmed. Tsh150,000.00 sent to TIPS-SELCOM MF for account 255763559341 on 3/6/26 at 2:04 pm Total fee Tsh3,500.00. Balance is Tsh2,561.00"
+      final engSentModernRegex = RegExp(
+        r'Confirmed\.\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+sent\s+to\s+(.+?)(?:\s+for account|\s+on|\.?\s*Total fee|\s*Balance|$)',
+        caseSensitive: false,
+      );
+      match = engSentModernRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
         final recipient = (match.group(2) ?? '').trim();
@@ -281,6 +310,31 @@ class MpesaTzParser implements SmsParser {
           amount: amt,
           type: 'fee',
           senderOrRecipient: 'Vodacom Service Fee',
+          reference: ref,
+          provider: 'M-Pesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 9a. English: Overdraft Repayment (Expense)
+      // Example: "DFDFI1D4UA Confirmed. Tsh5,698.00 has been deducted from your M-Pesa account on 13/6/26 at 2:26 pm as a repayment of M-Pesa Overdraft service. New M-Pesa balance is Tsh36,577.00."
+      final engOverdraftRegex = RegExp(
+        r'Confirmed\.\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+has been deducted from your M[- ]?PESA account.+?as a repayment of\s+(.+?)(?:\.|$)',
+        caseSensitive: false,
+      );
+      match = engOverdraftRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final service = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: service,
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,

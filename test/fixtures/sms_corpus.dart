@@ -223,6 +223,71 @@ final List<SmsCorpusEntry> smsCorpus = [
       balanceAfter: 25000000,
     ),
   ),
+  SmsCorpusEntry(
+    label: 'mpesa_sent_modern_with_fee',
+    sender: 'M-PESA',
+    body: 'DF3FI18H5B Confirmed. Tsh150,000.00 sent to TIPS-SELCOM MF for account 255763559341 on 3/6/26 at 2:04 pm Total fee Tsh3,500.00 (M-Pesa fee Tsh3,500.00 + Government Levy Tsh0.00). Balance is Tsh2,561.00.',
+    timestamp: DateTime(2026, 6, 3, 14, 4),
+    expect: SmsExpectation(
+      amount: 15000000,
+      type: 'expense',
+      senderOrRecipient: 'TIPS-SELCOM MF',
+      reference: 'DF3FI18H5B',
+      balanceAfter: 256100,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mpesa_sent_modern_no_fee',
+    sender: 'M-PESA',
+    body: 'DEPFI13LA0 Confirmed. Tsh85,000.00 sent to TIPS-Mixx By Yas for account 19938686 on 25/5/26 at 8:49 am Total fee Tsh2,500.00 (M-Pesa fee Tsh2,500.00 + Government Levy Tsh0.00). Balance is Tsh3,536.00.',
+    timestamp: DateTime(2026, 5, 25, 8, 49),
+    expect: SmsExpectation(
+      amount: 8500000,
+      type: 'expense',
+      senderOrRecipient: 'TIPS-Mixx By Yas',
+      reference: 'DEPFI13LA0',
+      balanceAfter: 353600,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mpesa_received_payment_of',
+    sender: 'M-PESA',
+    body: 'DFDFI1D6RN confirmed. You have received a payment of Tsh26,000.00 from 922749 - TIPS-Mixx By Yas on 13/6/26 at 5:48 pm. New M-Pesa balance is Tsh26,505.00',
+    timestamp: DateTime(2026, 6, 13, 17, 48),
+    expect: SmsExpectation(
+      amount: 2600000,
+      type: 'income',
+      senderOrRecipient: '922749 - TIPS-Mixx By Yas',
+      reference: 'DFDFI1D6RN',
+      balanceAfter: 2650500,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mpesa_received_modern',
+    sender: 'M-PESA',
+    body: 'DEOM013DRD Confirmed.You have received Tsh150,000.00 from 255744055083 - FABIAN EVARISTO MWIPOPO  on 24/5/26 at 7:38 am New M-Pesa balance is Tsh150,000.00.',
+    timestamp: DateTime(2026, 5, 24, 7, 38),
+    expect: SmsExpectation(
+      amount: 15000000,
+      type: 'income',
+      senderOrRecipient: '255744055083 - FABIAN EVARISTO MWIPOPO',
+      reference: 'DEOM013DRD',
+      balanceAfter: 15000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mpesa_overdraft_repayment',
+    sender: 'M-PESA',
+    body: 'DFDFI1D4UA Confirmed. Tsh5,698.00 has been deducted from your M-Pesa account on 13/6/26 at 2:26 pm as a repayment of M-Pesa Overdraft service. New M-Pesa balance is Tsh36,577.00.',
+    timestamp: DateTime(2026, 6, 13, 14, 26),
+    expect: SmsExpectation(
+      amount: 569800,
+      type: 'expense',
+      senderOrRecipient: 'M-Pesa Overdraft service',
+      reference: 'DFDFI1D4UA',
+      balanceAfter: 3657700,
+    ),
+  ),
 
   // =========================================================================
   // Airtel Money Tanzania — Swahili
