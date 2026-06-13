@@ -2436,7 +2436,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'TOTAL NET WORTH',
+                          _selectedAccountId != null
+                              ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
+                              : 'TOTAL NET WORTH',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w900,
@@ -2448,7 +2450,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     const SizedBox(height: 8),
                     AmountText(
-                      amountInCents: netWorth,
+                      amountInCents: _selectedAccountId != null
+                          ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                          : netWorth,
                       useMonospace: false,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,

@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
 
 void main() {
@@ -150,6 +152,192 @@ void main() {
           notificationThreshold: 0.8,
         );
         expect(alerts, isEmpty);
+      });
+    });
+
+    group('checkBudgetThresholds', () {
+      test('no alerts when budgets are on track', () {
+        final now = DateTime.now();
+        final result = BudgetEngine.checkBudgetThresholds([
+          BudgetWithProgress(
+            budget: Budget(
+              id: 'b1',
+              name: 'Food',
+              categoryId: 'cat1',
+              amount: 30000000,
+              notificationThreshold: 0.8,
+              type: 'monthly',
+              startDate: now.subtract(const Duration(days: 15)),
+              endDate: now.add(const Duration(days: 15)),
+              trackerId: 'default',
+              rolloverType: 'none',
+              createdAt: now,
+              updatedAt: now,
+            ),
+            spentInPeriod: 5000000,
+            percentage: 0.17,
+            category: Category(
+              id: 'cat1',
+              name: 'Food',
+              icon: 'cart',
+              color: '#FF9800',
+              type: 'expense',
+              isSystem: true,
+              sortOrder: 1,
+              createdAt: now,
+            ),
+            currentPeriod: BudgetPeriod(
+              id: 'p1',
+              budgetId: 'b1',
+              allocated: 30000000,
+              periodStart: now.subtract(const Duration(days: 15)),
+              periodEnd: now.add(const Duration(days: 15)),
+              rolloverFromPrevious: 0,
+              createdAt: now,
+            ),
+          ),
+        ]);
+
+        expect(result.crossedThreshold, isEmpty);
+        expect(result.exceeded, isEmpty);
+        expect(result.projectedToExceed, isEmpty);
+      });
+
+      test('detects crossed threshold when percentage >= notificationThreshold', () {
+        final now = DateTime.now();
+        final result = BudgetEngine.checkBudgetThresholds([
+          BudgetWithProgress(
+            budget: Budget(
+              id: 'b1',
+              name: 'Food',
+              categoryId: 'cat1',
+              amount: 30000000,
+              notificationThreshold: 0.8,
+              type: 'monthly',
+              startDate: now.subtract(const Duration(days: 20)),
+              endDate: now.add(const Duration(days: 10)),
+              trackerId: 'default',
+              rolloverType: 'none',
+              createdAt: now,
+              updatedAt: now,
+            ),
+            spentInPeriod: 28000000,
+            percentage: 0.93,
+            category: Category(
+              id: 'cat1',
+              name: 'Food',
+              icon: 'cart',
+              color: '#FF9800',
+              type: 'expense',
+              isSystem: true,
+              sortOrder: 1,
+              createdAt: now,
+            ),
+            currentPeriod: BudgetPeriod(
+              id: 'p1',
+              budgetId: 'b1',
+              allocated: 30000000,
+              periodStart: now.subtract(const Duration(days: 20)),
+              periodEnd: now.add(const Duration(days: 10)),
+              rolloverFromPrevious: 0,
+              createdAt: now,
+            ),
+          ),
+        ]);
+
+        expect(result.crossedThreshold, contains('b1'));
+        expect(result.exceeded, isEmpty);
+      });
+
+      test('detects exceeded when spent > allocated', () {
+        final now = DateTime.now();
+        final result = BudgetEngine.checkBudgetThresholds([
+          BudgetWithProgress(
+            budget: Budget(
+              id: 'b1',
+              name: 'Food',
+              categoryId: 'cat1',
+              amount: 30000000,
+              notificationThreshold: 0.8,
+              type: 'monthly',
+              startDate: now.subtract(const Duration(days: 20)),
+              endDate: now.add(const Duration(days: 10)),
+              trackerId: 'default',
+              rolloverType: 'none',
+              createdAt: now,
+              updatedAt: now,
+            ),
+            spentInPeriod: 35000000,
+            percentage: 1.17,
+            category: Category(
+              id: 'cat1',
+              name: 'Food',
+              icon: 'cart',
+              color: '#FF9800',
+              type: 'expense',
+              isSystem: true,
+              sortOrder: 1,
+              createdAt: now,
+            ),
+            currentPeriod: BudgetPeriod(
+              id: 'p1',
+              budgetId: 'b1',
+              allocated: 30000000,
+              periodStart: now.subtract(const Duration(days: 20)),
+              periodEnd: now.add(const Duration(days: 10)),
+              rolloverFromPrevious: 0,
+              createdAt: now,
+            ),
+          ),
+        ]);
+
+        expect(result.exceeded, contains('b1'));
+      });
+
+      test('handles empty budget list', () {
+        final result = BudgetEngine.checkBudgetThresholds([]);
+        expect(result.crossedThreshold, isEmpty);
+        expect(result.exceeded, isEmpty);
+        expect(result.projectedToExceed, isEmpty);
+      });
+
+      test('skips budgets without current period', () {
+        final now = DateTime.now();
+        final result = BudgetEngine.checkBudgetThresholds([
+          BudgetWithProgress(
+            budget: Budget(
+              id: 'b1',
+              name: 'Food',
+              categoryId: 'cat1',
+              amount: 30000000,
+              notificationThreshold: 0.8,
+              type: 'monthly',
+              startDate: now.subtract(const Duration(days: 20)),
+              endDate: now.add(const Duration(days: 10)),
+              trackerId: 'default',
+              rolloverType: 'none',
+              createdAt: now,
+              updatedAt: now,
+            ),
+            spentInPeriod: 0,
+            percentage: 0.0,
+            category: Category(
+              id: 'cat1',
+              name: 'Food',
+              icon: 'cart',
+              color: '#FF9800',
+              type: 'expense',
+              isSystem: true,
+              sortOrder: 1,
+              createdAt: now,
+            ),
+            currentPeriod: null,
+          ),
+        ]);
+
+        expect(result.crossedThreshold, isEmpty);
+        expect(result.exceeded, isEmpty);
+        expect(result.projectedToExceed, isEmpty);
       });
     });
   });

@@ -26,10 +26,18 @@ class TransactionListScreen extends ConsumerStatefulWidget {
 
 class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   Timer? _searchDebounce;
+  late TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
 
   @override
   void dispose() {
     _searchDebounce?.cancel();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -66,10 +74,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     // Watch streams/futures
     final transactionsAsync = ref.watch(filteredTransactionsStreamProvider);
 
-    final searchController = TextEditingController(text: searchQuery);
-    searchController.selection = TextSelection.fromPosition(
-      TextPosition(offset: searchController.text.length),
-    );
+    if (_searchController.text != searchQuery) {
+      _searchController.text = searchQuery;
+      _searchController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _searchController.text.length),
+      );
+    }
 
     return Scaffold(
       body: RefreshIndicator(
@@ -473,7 +483,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: TextField(
-                          controller: searchController,
+                          controller: _searchController,
                           onChanged: (val) {
                             _searchDebounce?.cancel();
                             _searchDebounce = Timer(const Duration(milliseconds: 300), () {
