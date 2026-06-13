@@ -18,7 +18,7 @@ class NotificationService {
     if (_initCompleter != null) return _initCompleter!.future;
     _initCompleter = Completer<void>();
     try {
-      const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidInit = AndroidInitializationSettings('@drawable/ic_notification_pesaflow');
       const iOSInit = DarwinInitializationSettings();
       const macOSInit = DarwinInitializationSettings();
       const linuxInit = LinuxInitializationSettings(defaultActionName: 'Open');
@@ -53,6 +53,7 @@ class NotificationService {
       'pesaflow_sms_channel',
       'PesaFlow Transactions',
       channelDescription: 'Real-time transactional confirmations from PesaFlow',
+      icon: '@drawable/ic_notification_pesaflow',
       importance: Importance.max,
       priority: Priority.high,
       fullScreenIntent: needsReview,
