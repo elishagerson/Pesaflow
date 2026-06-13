@@ -1994,6 +1994,104 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
+    final isDark = theme.brightness == Brightness.dark;
+    final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
+
+    return recurringAsync.when(
+      data: (recurring) {
+        if (recurring.isEmpty) return const SizedBox.shrink();
+
+        final limited = recurring.take(3).toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Upcoming Payments',
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'RECURRING',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () => context.go('/recurring'),
+                  child: const Text('Manage'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...limited.map((r) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: GlassCard(
+                borderRadius: AppTheme.radiusCard,
+                elevation: CardElevation.low,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: (r.type == 'income' ? const Color(0xFF609F8A) : const Color(0xFFE53935)).withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        r.type == 'income' ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                        size: 14,
+                        color: r.type == 'income' ? const Color(0xFF609F8A) : const Color(0xFFE53935),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            r.description ?? r.frequency,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${r.frequency} · ${r.nextDate.day}/${r.nextDate.month}',
+                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AmountText(
+                      amountInCents: r.amount,
+                      type: r.type == 'income' ? AmountType.income : AmountType.expense,
+                      useMonospace: true,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final netWorth = ref.watch(netWorthProvider);
@@ -2699,9 +2797,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 24),
 
+              // ── 6. Upcoming Recurring Transactions ──
+              _buildUpcomingRecurring(theme, context),
+
+              const SizedBox(height: 24),
+
               // Monthly Overview Card (Donut Chart Revamp)
               StaggeredFadeSlide(
-                index: 4,
+                index: 5,
                 child: _buildMonthlyOverview(theme),
               ),
               const SizedBox(height: 24),
@@ -2712,7 +2815,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               if (showReminder) ...[
                 const SizedBox(height: 24),
                 StaggeredFadeSlide(
-                  index: 6,
+                  index: 7,
                   child: _buildSavingsReminder(theme),
                 ),
               ],
@@ -2720,7 +2823,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               if (showSavingsGoals) ...[
                 const SizedBox(height: 24),
                 StaggeredFadeSlide(
-                  index: 7,
+                  index: 8,
                   child: _buildSavingsGoalsDashboard(theme, context),
                 ),
               ],
@@ -2729,7 +2832,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
               // Recent Transactions Section
               StaggeredFadeSlide(
-                index: 8,
+                index: 9,
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -18,10 +18,9 @@ class RecurringTransactionService {
   final TransactionDao _transactionDao;
 
   RecurringTransactionService({
-    required RecurringTransactionDao recurringDao,
-    required TransactionDao transactionDao,
-  })  : _recurringDao = recurringDao,
-        _transactionDao = transactionDao;
+    required this._recurringDao,
+    required this._transactionDao,
+  });
 
   /// Calculates the next occurrence date for a recurring transaction
   /// based on its frequency and interval value.

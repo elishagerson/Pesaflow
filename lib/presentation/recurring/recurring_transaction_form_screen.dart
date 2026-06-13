@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -198,7 +199,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                 index: 0,
                 child: accountsAsync.when(
                   data: (accounts) => DropdownButtonFormField<String>(
-                    value: _selectedAccountId,
+                    initialValue: _selectedAccountId,
                     decoration: InputDecoration(
                       labelText: 'Account',
                       prefixIcon: const Icon(Icons.account_balance_rounded, size: 18),
@@ -227,7 +228,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   data: (categories) {
                     final filtered = categories.where((c) => c.type == _type).toList();
                     return DropdownButtonFormField<String>(
-                      value: _selectedCategoryId,
+                      initialValue: _selectedCategoryId,
                       decoration: InputDecoration(
                         labelText: 'Category',
                         prefixIcon: const Icon(Icons.category_rounded, size: 18),
@@ -317,7 +318,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
               StaggeredFadeSlide(
                 index: 5,
                 child: DropdownButtonFormField<String>(
-                  value: _frequency,
+                  initialValue: _frequency,
                   decoration: InputDecoration(
                     labelText: 'Frequency',
                     prefixIcon: const Icon(Icons.repeat_rounded, size: 18),

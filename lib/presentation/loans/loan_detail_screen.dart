@@ -486,8 +486,6 @@ class LoanDetailScreen extends ConsumerWidget {
       description = 'Estimated payoff within 1 year';
     }
 
-    if (estimatedDate == null) return const SizedBox.shrink();
-
     final daysLeft = DateTime.now().difference(estimatedDate).inDays.abs();
 
     return Padding(
