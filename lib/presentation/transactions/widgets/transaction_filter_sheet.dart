@@ -11,25 +11,17 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
   final accounts = ref.watch(accountsStreamProvider).value ?? [];
-  final categories = ref.watch(categoriesFutureProvider).value ?? [];
-  final activeType = ref.watch(transactionTypeFilterProvider);
-  final activeAccount = ref.watch(transactionAccountFilterProvider);
-  final activeCategory = ref.watch(transactionCategoryFilterProvider);
-  final amountMin = ref.watch(transactionAmountMinProvider);
-  final amountMax = ref.watch(transactionAmountMaxProvider);
-  final dateFrom = ref.watch(transactionDateFromProvider);
-  final dateTo = ref.watch(transactionDateToProvider);
-
-  final filteredCategories = categories
-      .where((c) => activeType == 'All' || c.type.toLowerCase() == activeType.toLowerCase())
-      .toList();
+  final allCategories = ref.watch(categoriesFutureProvider).value ?? [];
 
   final minCtl = TextEditingController(
-    text: amountMin != null ? (amountMin / 100).toStringAsFixed(0) : '',
+    text: (ref.read(transactionAmountMinProvider) ?? 0 / 100).toStringAsFixed(0),
   );
   final maxCtl = TextEditingController(
-    text: amountMax != null ? (amountMax / 100).toStringAsFixed(0) : '',
+    text: (ref.read(transactionAmountMaxProvider) ?? 0 / 100).toStringAsFixed(0),
   );
+
+  minCtl.selection = TextSelection.collapsed(offset: minCtl.text.length);
+  maxCtl.selection = TextSelection.collapsed(offset: maxCtl.text.length);
 
   return IosBottomSheet.show(
     context: context,
@@ -37,14 +29,7 @@ Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
     maxChildSize: 0.95,
     child: _TransactionFilterSheetContent(
       accounts: accounts,
-      categories: filteredCategories,
-      activeType: activeType,
-      activeAccount: activeAccount,
-      activeCategory: activeCategory,
-      amountMin: amountMin,
-      amountMax: amountMax,
-      dateFrom: dateFrom,
-      dateTo: dateTo,
+      allCategories: allCategories,
       minCtl: minCtl,
       maxCtl: maxCtl,
     ),
@@ -53,27 +38,13 @@ Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
 
 class _TransactionFilterSheetContent extends ConsumerWidget {
   final List<Account> accounts;
-  final List<Category> categories;
-  final String activeType;
-  final String? activeAccount;
-  final String? activeCategory;
-  final int? amountMin;
-  final int? amountMax;
-  final DateTime? dateFrom;
-  final DateTime? dateTo;
+  final List<Category> allCategories;
   final TextEditingController minCtl;
   final TextEditingController maxCtl;
 
   const _TransactionFilterSheetContent({
     required this.accounts,
-    required this.categories,
-    required this.activeType,
-    required this.activeAccount,
-    required this.activeCategory,
-    required this.amountMin,
-    required this.amountMax,
-    required this.dateFrom,
-    required this.dateTo,
+    required this.allCategories,
     required this.minCtl,
     required this.maxCtl,
   });
@@ -82,6 +53,16 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final activeType = ref.watch(transactionTypeFilterProvider);
+    final activeAccount = ref.watch(transactionAccountFilterProvider);
+    final activeCategory = ref.watch(transactionCategoryFilterProvider);
+    final dateFrom = ref.watch(transactionDateFromProvider);
+    final dateTo = ref.watch(transactionDateToProvider);
+
+    final categories = allCategories
+        .where((c) => activeType == 'All' || c.type.toLowerCase() == activeType.toLowerCase())
+        .toList();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
