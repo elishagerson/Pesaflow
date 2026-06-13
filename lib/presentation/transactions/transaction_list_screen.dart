@@ -50,7 +50,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -59,6 +59,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     final activeAccount = ref.watch(transactionAccountFilterProvider);
     final activeCategory = ref.watch(transactionCategoryFilterProvider);
     final searchQuery = ref.watch(transactionSearchQueryProvider);
+    final amountMin = ref.watch(transactionAmountMinProvider);
+    final amountMax = ref.watch(transactionAmountMaxProvider);
+    final dateFrom = ref.watch(transactionDateFromProvider);
+    final dateTo = ref.watch(transactionDateToProvider);
 
     // Watch streams/futures
     final transactionsAsync = ref.watch(filteredTransactionsStreamProvider);
@@ -413,7 +417,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                             ),
                             Row(
                               children: [
-                                if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All')
+                                if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All' || amountMin != null || amountMax != null || dateFrom != null || dateTo != null)
                                   IconButton(
                                     icon: const Icon(Icons.clear_all_rounded, color: Colors.redAccent, size: 20),
                                     tooltip: 'Clear Filters',
@@ -422,27 +426,26 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       ref.read(transactionAccountFilterProvider.notifier).state = null;
                                       ref.read(transactionCategoryFilterProvider.notifier).state = null;
                                       ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                      ref.read(transactionAmountMinProvider.notifier).state = null;
+                                      ref.read(transactionAmountMaxProvider.notifier).state = null;
+                                      ref.read(transactionDateFromProvider.notifier).state = null;
+                                      ref.read(transactionDateToProvider.notifier).state = null;
                                     },
                                   ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: (activeAccount != null || activeCategory != null)
-                                        ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                                        : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.tune_rounded,
-                                      color: (activeAccount != null || activeCategory != null)
-                                          ? theme.colorScheme.primary
-                                          : (isDark ? Colors.white70 : Colors.black54),
-                                      size: 22,
-                                    ),
-                                    onPressed: () {
-                                      _showFiltersBottomSheet(context, ref);
-                                    },
-                                  ),
+                                _FilterButton(
+                                  isActive: activeAccount != null || activeCategory != null ||
+                                      amountMin != null || amountMax != null ||
+                                      dateFrom != null || dateTo != null ||
+                                      searchQuery.isNotEmpty || activeType != 'All',
+                                  activeCount: [
+                                    if (activeType != 'All') 1,
+                                    if (activeAccount != null) 1,
+                                    if (activeCategory != null) 1,
+                                    if (searchQuery.isNotEmpty) 1,
+                                    if (amountMin != null || amountMax != null) 1,
+                                    if (dateFrom != null || dateTo != null) 1,
+                                  ].length,
+                                  onPressed: () => showTransactionFilterSheet(context, ref),
                                 ),
                                 const SizedBox(width: 4),
                                 Container(
@@ -473,7 +476,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         child: TextField(
                           controller: searchController,
                           onChanged: (val) {
-                            ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+                              ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
+                            });
                           },
                           decoration: InputDecoration(
                             hintText: 'Search transactions...',
@@ -706,71 +712,70 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     return val.toStringAsFixed(0);
   }
 
-  void _showFiltersBottomSheet(BuildContext context, WidgetRef ref) {
-    final accounts = ref.watch(accountsStreamProvider).value ?? [];
-    final categories = ref.watch(categoriesFutureProvider).value ?? [];
-    final activeAccount = ref.watch(transactionAccountFilterProvider);
-    final activeCategory = ref.watch(transactionCategoryFilterProvider);
+}
 
-    IosBottomSheet.show(
-      context: context,
-      initialChildSize: 0.6,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+class _FilterButton extends StatelessWidget {
+  final bool isActive;
+  final int activeCount;
+  final VoidCallback onPressed;
+
+  const _FilterButton({
+    required this.isActive,
+    required this.activeCount,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isActive
+            ? theme.colorScheme.primary.withValues(alpha: 0.12)
+            : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
+        shape: BoxShape.circle,
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Text('Filter Transactions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          IconButton(
+            icon: Icon(
+              Icons.tune_rounded,
+              color: isActive
+                  ? theme.colorScheme.primary
+                  : (isDark ? Colors.white70 : Colors.black54),
+              size: 22,
+            ),
+            onPressed: onPressed,
           ),
-          IosListSection(
-            header: 'Account',
-            rows: [
-              IosListRow(
-                title: const Text('All Accounts'),
-                trailing: activeAccount == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () {
-                  ref.read(transactionAccountFilterProvider.notifier).state = null;
-                  Navigator.of(context).pop();
-                },
+          if (isActive && activeCount > 0)
+            Positioned(
+              right: 2,
+              top: 2,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                child: Text(
+                  '$activeCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              ...accounts.map((acc) => IosListRow(
-                title: Text(acc.name),
-                trailing: activeAccount == acc.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () {
-                  ref.read(transactionAccountFilterProvider.notifier).state = acc.id;
-                  Navigator.of(context).pop();
-                },
-              )),
-            ],
-          ),
-          const SizedBox(height: 16),
-          IosListSection(
-            header: 'Category',
-            rows: [
-              IosListRow(
-                title: const Text('All Categories'),
-                trailing: activeCategory == null ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () {
-                  ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                  Navigator.of(context).pop();
-                },
-              ),
-              ...categories.map((cat) => IosListRow(
-                title: Text('${cat.type.toUpperCase()}: ${cat.name}'),
-                trailing: activeCategory == cat.id ? Icon(Icons.check_rounded, size: 20, color: Theme.of(context).colorScheme.primary) : null,
-                onTap: () {
-                  ref.read(transactionCategoryFilterProvider.notifier).state = cat.id;
-                  Navigator.of(context).pop();
-                },
-              )),
-            ],
-          ),
-          const SizedBox(height: 24),
+            ),
         ],
       ),
     );
   }
-}
 
 class _MiniBar extends StatelessWidget {
   final String label;

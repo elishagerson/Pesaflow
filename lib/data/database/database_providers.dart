@@ -61,3 +61,8 @@ final loanDaoProvider = Provider<LoanDao>((ref) {
   final db = ref.watch(databaseProvider);
   return LoanDao(db);
 });
+
+final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((ref) {
+  final db = ref.watch(databaseProvider);
+  return RecurringTransactionDao(db);
+});

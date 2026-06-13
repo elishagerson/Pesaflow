@@ -12,6 +12,7 @@ import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
 import '../../data/repositories/loan_repository.dart';
+import '../../data/repositories/recurring_transaction_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 class ActiveTrackerIdNotifier extends Notifier<String> {
@@ -317,5 +318,20 @@ final totalOutstandingLoanProvider = FutureProvider<int>((ref) {
   final repo = ref.watch(loanRepositoryProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
   return repo.getTotalOutstanding(trackerId: trackerId);
+});
+
+// ═══════════════════════════════════════════════════════
+// Recurring Transaction Providers
+// ═══════════════════════════════════════════════════════
+
+final recurringTransactionsStreamProvider = StreamProvider<List<RecurringTransaction>>((ref) {
+  final repo = ref.watch(recurringTransactionRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchAll(trackerId: trackerId);
+});
+
+final dueRecurringTransactionsProvider = FutureProvider<List<RecurringTransaction>>((ref) {
+  final repo = ref.watch(recurringTransactionRepositoryProvider);
+  return repo.getDueTransactions(DateTime.now());
 });
 

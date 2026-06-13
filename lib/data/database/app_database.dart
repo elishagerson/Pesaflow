@@ -183,6 +183,7 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(loans, loans.installmentAmount);
           await m.addColumn(loans, loans.totalInstallments);
           await m.addColumn(loans, loans.paidInstallments);
+          await m.addColumn(loans, loans.frequencyInDays);
         }
       },
     );

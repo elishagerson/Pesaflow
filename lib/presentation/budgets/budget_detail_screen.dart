@@ -45,6 +45,7 @@ class BudgetDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detailAsync = ref.watch(budgetDetailProvider(budgetId));
     final periodsAsync = ref.watch(budgetPeriodsProvider(budgetId));
+    final dailyAsync = ref.watch(dailySpendProvider(budgetId));
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -165,15 +166,102 @@ class BudgetDetailScreen extends ConsumerWidget {
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(status.paceLabel, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                         Text('${status.daysLeft} days remaining in this period', style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                        if (!status.isOnTrack && !status.isOverBudget && status.daysLeft > 0 && status.percentage > 0)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              _projectedOverspendDate(status),
+                              style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange, fontWeight: FontWeight.w600),
+                            ),
+                          ),
                       ])),
                     ]),
                   ),
                 ),
                 const SizedBox(height: 24),
 
+                // Daily spend bar chart
+                dailyAsync.when(
+                  data: (dailyData) {
+                    if (dailyData.isEmpty) return const SizedBox.shrink();
+                    final maxAmount = dailyData.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+                    return StaggeredFadeSlide(
+                      index: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Daily Spend', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 120,
+                            child: BarChart(
+                              BarChartData(
+                                alignment: BarChartAlignment.spaceAround,
+                                maxY: maxAmount * 1.2,
+                                barTouchData: BarTouchData(enabled: false),
+                                titlesData: FlTitlesData(
+                                  show: true,
+                                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 4),
+                                          child: Text('${value.toInt()}', style: const TextStyle(fontSize: 9)),
+                                        );
+                                      },
+                                      reservedSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                gridData: FlGridData(
+                                  show: true,
+                                  horizontalInterval: maxAmount / 4,
+                                  drawVerticalLine: false,
+                                  getDrawingHorizontalLine: (value) => FlLine(
+                                    color: Colors.grey.withValues(alpha: 0.2),
+                                    strokeWidth: 0.5,
+                                  ),
+                                ),
+                                borderData: FlBorderData(show: false),
+                                barGroups: dailyData.map((entry) {
+                                  return BarChartGroupData(
+                                    x: entry.key.day,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: entry.value.toDouble(),
+                                        color: catColor,
+                                        width: 8,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4),
+                                          topRight: Radius.circular(4),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
+                const SizedBox(height: 16),
+
+                // Previous period comparison
+                _buildPeriodComparison(periodsAsync, bp, theme),
+                const SizedBox(height: 24),
+
                 // Period info
                 StaggeredFadeSlide(
-                  index: 3,
+                  index: 5,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -186,7 +274,7 @@ class BudgetDetailScreen extends ConsumerWidget {
 
                 // Historical Periods
                 StaggeredFadeSlide(
-                  index: 4,
+                  index: 6,
                   child: Text('Period History', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 12),
@@ -197,7 +285,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                       final p = entry.value;
                       final pctUsed = p.allocated > 0 ? (p.spent / p.allocated * 100).round() : 0;
                       return StaggeredFadeSlide(
-                        index: 5 + idx,
+                        index: 7 + idx,
                         child: GlassCard(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.all(12),
@@ -230,6 +318,53 @@ loading: () => const Center(child: CircularProgressIndicator()),
 error: (e, _) => Center(child: Text('Error: $e')),
 ),
     ));
+  }
+
+  String _projectedOverspendDate(BudgetStatus status) {
+    final daysElapsed = status.totalDays - status.daysLeft;
+    if (daysElapsed <= 0 || status.spent <= 0) return '';
+    final dailyRate = status.spent / daysElapsed;
+    if (dailyRate <= 0) return '';
+    final remaining = status.remaining;
+    final daysUntilExhaustion = remaining / dailyRate;
+    if (daysUntilExhaustion <= 0) return '';
+    final projectedDate = DateTime.now().add(Duration(days: daysUntilExhaustion.ceil()));
+    return 'Projected to overspend on ${projectedDate.day}/${projectedDate.month}/${projectedDate.year}';
+  }
+
+  Widget _buildPeriodComparison(AsyncValue<List<BudgetPeriod>> periodsAsync, BudgetWithProgress bp, ThemeData theme) {
+    return periodsAsync.when(
+      data: (periods) {
+        final closed = periods.where((p) => p.isClosed).toList()
+          ..sort((a, b) => b.periodStart.compareTo(a.periodStart));
+        if (closed.length < 2) return const SizedBox.shrink();
+        final prev = closed[1];
+        if (prev.spent <= 0) return const SizedBox.shrink();
+        final diff = ((bp.spentInPeriod - prev.spent) / prev.spent * 100);
+        return StaggeredFadeSlide(
+          index: 4,
+          child: Row(
+            children: [
+              Icon(
+                diff > 0 ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                size: 14,
+                color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '${diff.abs().round()}% ${diff > 0 ? 'higher' : 'lower'} than last period',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
   }
 }
 

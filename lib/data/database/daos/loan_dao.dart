@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:drift/drift.dart';
 import '../app_database.dart';
 import '../tables/loans_table.dart';
@@ -119,7 +120,8 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
     int installments,
   ) {
     final monthlyRate = interestRate / 100 / 12;
-    final payment = amount * monthlyRate * (1 + monthlyRate).pow(installments) / ((1 + monthlyRate).pow(installments) - 1);
+    final compound = pow(1 + monthlyRate, installments).toDouble();
+    final payment = amount * monthlyRate * compound / (compound - 1);
     final schedule = <Map<String, double>>[];
     var balance = amount.toDouble();
 

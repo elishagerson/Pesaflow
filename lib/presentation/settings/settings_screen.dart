@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -683,6 +684,28 @@ class SettingsScreen extends ConsumerWidget {
                     title: const Text('Categories Manager'),
                     subtitle: const Text('Add custom financial categories'),
                     onTap: () => _showCategoriesManager(context, ref),
+                  ),),
+                ],
+              ),
+              ),
+
+              // Data Export
+              StaggeredFadeSlide(
+                index: 8,
+                child: IosListSection(
+                header: 'Data Export',
+                rows: [
+                  TactileSpringContainer(
+                    onTap: () => showExportDialog(context, ref),
+                    child: IosListRow(
+                    leading: Icon(
+                      Icons.insert_drive_file_rounded,
+                      color: theme.colorScheme.primary,
+                      size: 24,
+                    ),
+                    title: const Text('Export Monthly Statement'),
+                    subtitle: const Text('Download as PDF or CSV'),
+                    onTap: () => showExportDialog(context, ref),
                   ),),
                 ],
               ),

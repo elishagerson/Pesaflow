@@ -17,7 +17,8 @@ class Loans extends Table {
   RealColumn get interestRate => real().nullable()();
   IntColumn get installmentAmount => integer().nullable()();
   IntColumn get totalInstallments => integer().nullable()();
-  IntColumn get paidInstallments => integer().withDefault(const Constant(0))();
+  IntColumn get paidInstallments => integer().nullable()();
+  IntColumn get frequencyInDays => integer().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
