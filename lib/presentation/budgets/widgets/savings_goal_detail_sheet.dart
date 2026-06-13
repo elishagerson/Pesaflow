@@ -507,6 +507,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
               ),
             ),
           ),
+        ),
         );
       },
     );

@@ -1095,7 +1095,8 @@ class LoanDetailScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            );
+            ),
+          );
           },
         );
       },
