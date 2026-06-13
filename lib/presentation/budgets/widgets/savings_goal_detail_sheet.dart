@@ -279,15 +279,30 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                             keyboardType: TextInputType.number,
                                             autofocus: true,
                                             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 28,
                                               fontFamily: 'monospace',
                                               fontWeight: FontWeight.bold,
+                                              color: isDark ? Colors.white : Colors.black,
                                             ),
-                                            decoration: const InputDecoration(
+                                            decoration: InputDecoration(
                                               hintText: '0',
-                                              border: InputBorder.none,
-                                              contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                              hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
+                                              filled: true,
+                                              fillColor: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(14),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(14),
+                                                borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(14),
+                                                borderSide: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5), width: 1.5),
+                                              ),
+                                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                             ),
                                           ),
                                         ),
@@ -314,28 +329,30 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                   // Note
                                   const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
                                   const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(alpha: 0.08)
-                                            : Colors.black.withValues(alpha: 0.06),
+                                  TextFormField(
+                                    controller: _noteController,
+                                    textCapitalization: TextCapitalization.sentences,
+                                    style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
+                                    decoration: InputDecoration(
+                                      hintText: 'Add an optional note (e.g. Salary bonus)',
+                                      hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
+                                      prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                          color: isDark ? Colors.white38 : Colors.black26),
+                                      filled: true,
+                                      fillColor: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide.none,
                                       ),
-                                    ),
-                                    child: TextFormField(
-                                      controller: _noteController,
-                                      textCapitalization: TextCapitalization.sentences,
-                                      style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
-                                      decoration: InputDecoration(
-                                        hintText: 'Add an optional note (e.g. Salary bonus)',
-                                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                        prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
-                                            color: isDark ? Colors.white38 : Colors.black26),
-                                        border: InputBorder.none,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
                                       ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5), width: 1.5),
+                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                                     ),
                                   ),
                                   const SizedBox(height: 20),
@@ -852,22 +869,21 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                       const SizedBox(height: 2),
                                       GestureDetector(
                                         onTap: () async {
-                                          final confirm = await ModernDialog.showCustom<bool>(
+                                          final confirm = await ModernDialog.show<bool>(
                                             context: context,
-                                            child: AlertDialog(
-                                              title: const Text('Delete Contribution?'),
-                                              content: const Text('This will undo this deposit/withdrawal from this visual savings goal balance.'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(false),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(true),
-                                                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                                ),
-                                              ],
-                                            ),
+                                            title: const Text('Delete Contribution?'),
+                                            titleIcon: Icons.warning_amber_rounded,
+                                            content: const Text('This will undo this deposit/withdrawal from this visual savings goal balance.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(false),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(true),
+                                                child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                              ),
+                                            ],
                                           );
 
                                           if (confirm == true) {

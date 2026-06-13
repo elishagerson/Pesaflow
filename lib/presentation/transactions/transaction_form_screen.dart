@@ -748,20 +748,34 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
                     StaggeredFadeSlide(
                       index: 4,
-                      child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          foregroundColor: theme.scaffoldBackgroundColor,
-                        ),
-                        onPressed: () {
+                      child: TactileSpringContainer(
+                        onTap: () {
                           Navigator.pop(context);
                           _saveTransaction();
                         },
-                        child: Text(_isEditMode ? 'Update Transaction' : 'Record Transaction'),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                            ),
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            _isEditMode ? 'Update Transaction' : 'Record Transaction',
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ),
                       ),
-                    ),
                     ),
                   ],
                 ),
@@ -830,9 +844,25 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           style: TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () => context.go('/'),
-                          child: const Text('Go to Dashboard'),
+                        TactileSpringContainer(
+                          onTap: () => context.go('/'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: const Text('Go to Dashboard', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
                         ),
                       ],
                     ),
@@ -1089,11 +1119,26 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         index: 4,
                         child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () => _showSecondaryDetailsSheet(context, categories),
-                            child: const Text('Continue'),
+                        child: TactileSpringContainer(
+                          onTap: () => _showSecondaryDetailsSheet(context, categories),
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: const Text('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                           ),
                         ),
                       ),

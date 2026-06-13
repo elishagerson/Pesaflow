@@ -71,6 +71,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     final dateFrom = ref.watch(transactionDateFromProvider);
     final dateTo = ref.watch(transactionDateToProvider);
 
+    // Invalidate stream provider whenever any filter changes
+    ref.listen(transactionTypeFilterProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionAccountFilterProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionCategoryFilterProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionAmountMinProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionAmountMaxProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionDateFromProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+    ref.listen(transactionDateToProvider, (_, _) => ref.invalidate(filteredTransactionsStreamProvider));
+
     // Watch streams/futures
     final transactionsAsync = ref.watch(filteredTransactionsStreamProvider);
 

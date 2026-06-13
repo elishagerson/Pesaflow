@@ -206,7 +206,14 @@ final activeBudgetsStreamProvider = StreamProvider<List<Budget>>((ref) {
   return repo.watchAllActiveBudgets();
 });
 
+final _transactionChangesProvider = StreamProvider<int>((ref) {
+  final dao = ref.watch(budgetDaoProvider);
+  return dao.watchTransactionChanges();
+});
+
 final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) {
+  ref.watch(_transactionChangesProvider);
+  ref.watch(activeBudgetsStreamProvider);
   final repo = ref.watch(budgetRepositoryProvider);
   return repo.getActiveBudgetsWithProgress();
 });

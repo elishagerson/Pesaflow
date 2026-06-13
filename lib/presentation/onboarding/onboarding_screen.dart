@@ -150,8 +150,48 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             child: Row(children: [
               if (_currentPage > 0 && _currentPage < 3) TextButton(onPressed: () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut), child: const Text('Back')),
               const Spacer(),
-              if (_currentPage < 3) ElevatedButton(onPressed: _nextPage, child: const Text('Continue'))
-              else ElevatedButton(onPressed: _finish, child: const Text('Start Tracking')),
+              if (_currentPage < 3)
+                TactileSpringContainer(
+                  onTap: _nextPage,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Text('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                )
+              else
+                TactileSpringContainer(
+                  onTap: _finish,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Text('Start Tracking', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
             ]),
           ),
         ]),
