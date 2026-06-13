@@ -13,11 +13,13 @@ Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
   final accounts = ref.watch(accountsStreamProvider).value ?? [];
   final allCategories = ref.watch(categoriesFutureProvider).value ?? [];
 
+  final amountMinInitial = ref.read(transactionAmountMinProvider);
+  final amountMaxInitial = ref.read(transactionAmountMaxProvider);
   final minCtl = TextEditingController(
-    text: (ref.read(transactionAmountMinProvider) ?? 0 / 100).toStringAsFixed(0),
+    text: amountMinInitial != null ? (amountMinInitial / 100).toStringAsFixed(0) : '',
   );
   final maxCtl = TextEditingController(
-    text: (ref.read(transactionAmountMaxProvider) ?? 0 / 100).toStringAsFixed(0),
+    text: amountMaxInitial != null ? (amountMaxInitial / 100).toStringAsFixed(0) : '',
   );
 
   minCtl.selection = TextSelection.collapsed(offset: minCtl.text.length);
@@ -247,7 +249,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       : null,
                   onTap: () {
                     ref.read(transactionAccountFilterProvider.notifier).state = null;
-                    ref.invalidate(filteredTransactionsStreamProvider);
                   },
                 ),
                 ...accounts.map((acc) => IosListRow(
@@ -257,7 +258,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       : null,
                   onTap: () {
                     ref.read(transactionAccountFilterProvider.notifier).state = acc.id;
-                    ref.invalidate(filteredTransactionsStreamProvider);
                   },
                 )),
               ],
