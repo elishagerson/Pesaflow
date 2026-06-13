@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class ModernDialog extends StatelessWidget {
   final Widget title;
@@ -90,7 +91,8 @@ class ModernDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(28.0),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
+          child: LiquidGlassOverlay(
+            child: Container(
             constraints: const BoxConstraints(maxWidth: 400),
             decoration: BoxDecoration(
               color: isDark ? const Color(0xE6161618) : const Color(0xE6FFFFFF),
@@ -175,9 +177,10 @@ class ModernDialog extends StatelessWidget {
                 ],
               ],
             ),
-          ),
-        ),
-      ),
+          ), // Container
+        ), // LiquidGlassOverlay
+        ), // BackdropFilter
+      ), // ClipRRect
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class IosBottomSheet extends StatelessWidget {
   final Widget child;
@@ -48,7 +49,8 @@ class IosBottomSheet extends StatelessWidget {
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-            child: Container(
+            child: LiquidGlassOverlay(
+              child: Container(
               decoration: BoxDecoration(
                 color: isDark
                     ? const Color(0xF01C1C1E)

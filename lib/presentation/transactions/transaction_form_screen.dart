@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -220,7 +221,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: Container(
+              child: LiquidGlassOverlay(
+                child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -369,7 +371,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: Container(
+              child: LiquidGlassOverlay(
+                child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

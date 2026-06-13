@@ -14,6 +14,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
   final String loanId;
@@ -656,7 +657,8 @@ class LoanDetailScreen extends ConsumerWidget {
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                  child: Container(
+                  child: LiquidGlassOverlay(
+                    child: Container(
                     decoration: BoxDecoration(
                       color: isDark
                           ? const Color(0xF01C1C1E)

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 enum CardElevation { none, low, medium, high }
 
@@ -114,6 +115,8 @@ class GlassCard extends StatelessWidget {
         ),
       ),
     );
+
+    body = LiquidGlassOverlay(child: body);
 
     if (margin != null) {
       body = Padding(padding: margin!, child: body);

@@ -11,13 +11,13 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
@@ -179,7 +179,8 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: Container(
+              child: LiquidGlassOverlay(
+                child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
