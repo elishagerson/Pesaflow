@@ -156,12 +156,12 @@ void main() {
     });
 
     group('checkBudgetThresholds', () {
-      Category _cat(String id) => Category(
+      Category cat(String id) => Category(
         id: id, name: 'Food', icon: 'cart', color: '#FF9800',
         type: 'expense', isSystem: true, sortOrder: 1, createdAt: DateTime.now(),
       );
 
-      Budget _budget(String id, {int amount = 30000000, double threshold = 0.8}) => Budget(
+      Budget budget(String id, {int amount = 30000000, double threshold = 0.8}) => Budget(
         id: id, name: 'Food', categoryId: 'cat1',
         period: 'monthly', amount: amount,
         rollover: false, rolloverType: 'none',
@@ -171,7 +171,7 @@ void main() {
         isActive: true, createdAt: DateTime.now(),
       );
 
-      BudgetPeriod _period(String budgetId, int allocated, {int spent = 0}) => BudgetPeriod(
+      BudgetPeriod period(String budgetId, int allocated, {int spent = 0}) => BudgetPeriod(
         id: 'p_$budgetId', budgetId: budgetId,
         periodStart: DateTime.now().subtract(const Duration(days: 15)),
         periodEnd: DateTime.now().add(const Duration(days: 15)),
@@ -182,10 +182,10 @@ void main() {
       test('no alerts when budgets are on track', () {
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: _budget('b1'),
+            budget: budget('b1'),
             spentInPeriod: 5000000,
-            category: _cat('cat1'),
-            currentPeriod: _period('b1', 30000000),
+            category: cat('cat1'),
+            currentPeriod: period('b1', 30000000),
           ),
         ]);
 
@@ -197,10 +197,10 @@ void main() {
       test('detects crossed threshold when percentage >= notificationThreshold', () {
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: _budget('b1'),
+            budget: budget('b1'),
             spentInPeriod: 28000000,
-            category: _cat('cat1'),
-            currentPeriod: _period('b1', 30000000),
+            category: cat('cat1'),
+            currentPeriod: period('b1', 30000000),
           ),
         ]);
 
@@ -211,10 +211,10 @@ void main() {
       test('detects exceeded when spent > allocated', () {
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: _budget('b2'),
+            budget: budget('b2'),
             spentInPeriod: 35000000,
-            category: _cat('cat1'),
-            currentPeriod: _period('b2', 30000000),
+            category: cat('cat1'),
+            currentPeriod: period('b2', 30000000),
           ),
         ]);
 
@@ -231,9 +231,9 @@ void main() {
       test('skips budgets without current period', () {
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: _budget('b3'),
+            budget: budget('b3'),
             spentInPeriod: 0,
-            category: _cat('cat1'),
+            category: cat('cat1'),
             currentPeriod: null,
           ),
         ]);
