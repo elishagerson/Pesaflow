@@ -3,6 +3,7 @@ import '../../data/database/app_database.dart';
 import '../../data/database/daos/transaction_dao.dart';
 import '../../data/database/daos/budget_dao.dart';
 import '../../data/database/daos/analytics_dao.dart';
+import '../../data/database/database_providers.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';

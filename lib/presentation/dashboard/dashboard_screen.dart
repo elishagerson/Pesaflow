@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -1526,9 +1528,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final trackersAsync = ref.watch(allTrackersStreamProvider);
         final activeTrackerId = ref.watch(activeTrackerIdProvider);
 
-        return Container(
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+            child: LiquidGlassOverlay(
+              child: Container(
           decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
+            color: theme.brightness == Brightness.dark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(24.0),
             ),
@@ -1662,6 +1669,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 20),
             ],
           ),
+        ),
+        ),
+        ),
         );
       },
     );

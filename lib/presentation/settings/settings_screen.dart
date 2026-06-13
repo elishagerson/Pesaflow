@@ -101,10 +101,31 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Account Name',
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                   prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withValues(alpha: 0.08)
+                          : Colors.black.withValues(alpha: 0.06),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      width: 1.5,
+                    ),
+                  ),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -196,10 +217,31 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 TextField(
                   keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Phone Number',
                     hintText: 'e.g. 076XXXXXXX',
                     prefixIcon: Icon(Icons.phone_rounded, size: 18),
+                    filled: true,
+                    fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.06),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                        width: 1.5,
+                      ),
+                    ),
                   ),
                   controller: TextEditingController(text: phoneNumber ?? ''),
                   onChanged: (val) {
@@ -253,6 +295,12 @@ class SettingsScreen extends ConsumerWidget {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
 
@@ -425,10 +473,31 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Category Name',
                   hintText: 'e.g. Subscriptions, Laundry',
                   prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withValues(alpha: 0.08)
+                          : Colors.black.withValues(alpha: 0.06),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      width: 1.5,
+                    ),
+                  ),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -525,6 +594,12 @@ class SettingsScreen extends ConsumerWidget {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
 

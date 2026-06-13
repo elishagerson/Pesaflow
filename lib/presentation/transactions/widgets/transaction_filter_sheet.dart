@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
@@ -85,8 +86,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Modern header
-        Padding(
+        StaggeredFadeSlide(
+          index: 0,
+          child: Padding(
           padding: const EdgeInsets.fromLTRB(4, 12, 4, 12),
           child: Row(
             children: [
@@ -126,12 +128,15 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
             ],
           ),
         ),
+        ),
         ListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           children: [
             // Amount Range
-            IosListSection(
+            StaggeredFadeSlide(
+              index: 1,
+              child: IosListSection(
               header: 'Amount Range (TSh)',
               rows: [
                 Padding(
@@ -193,10 +198,13 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ),
               ],
             ),
+            ),
             const SizedBox(height: 8),
 
             // Date Range
-            IosListSection(
+            StaggeredFadeSlide(
+              index: 2,
+              child: IosListSection(
               header: 'Date Range',
               rows: [
                 Padding(
@@ -243,10 +251,13 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ),
               ],
             ),
+            ),
             const SizedBox(height: 8),
 
             // Account Selector
-            IosListSection(
+            StaggeredFadeSlide(
+              index: 3,
+              child: IosListSection(
               header: 'Account',
               rows: [
                 IosListRow(
@@ -271,10 +282,13 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 )),
               ],
             ),
+            ),
             const SizedBox(height: 8),
 
             // Category
-            IosListSection(
+            StaggeredFadeSlide(
+              index: 4,
+              child: IosListSection(
               header: 'Category',
               rows: [
                 Padding(
@@ -312,12 +326,15 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ),
               ],
             ),
+            ),
             const SizedBox(height: 24),
           ],
         ),
 
         // Apply / Reset buttons
-        Padding(
+        StaggeredFadeSlide(
+          index: 5,
+          child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           child: Row(
             children: [
@@ -376,6 +393,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
               ),
             ],
           ),
+        ),
         ),
       ],
     );
