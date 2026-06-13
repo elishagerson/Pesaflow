@@ -96,7 +96,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ref.read(transactionCategoryFilterProvider.notifier).state = null;
                     ref.read(transactionTypeFilterProvider.notifier).state = 'All';
                     ref.read(transactionSearchQueryProvider.notifier).state = '';
-                    ref.invalidate(filteredTransactionsStreamProvider);
                     Navigator.of(context).pop();
                   },
                   style: TextButton.styleFrom(
