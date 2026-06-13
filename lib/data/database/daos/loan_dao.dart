@@ -111,6 +111,33 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
     ));
   }
 
+  /// Calculate a simple amortization schedule for a loan.
+  /// Returns a list of maps with keys: payment, principal, interest, balance.
+  static List<Map<String, double>> calculateAmortization(
+    int amount,
+    double interestRate,
+    int installments,
+  ) {
+    final monthlyRate = interestRate / 100 / 12;
+    final payment = amount * monthlyRate * (1 + monthlyRate).pow(installments) / ((1 + monthlyRate).pow(installments) - 1);
+    final schedule = <Map<String, double>>[];
+    var balance = amount.toDouble();
+
+    for (var i = 0; i < installments; i++) {
+      final interest = balance * monthlyRate;
+      final principal = payment - interest;
+      balance -= principal;
+      schedule.add({
+        'payment': payment,
+        'principal': principal,
+        'interest': interest,
+        'balance': balance < 0 ? 0 : balance,
+      });
+    }
+
+    return schedule;
+  }
+
   /// Reduce remaining balance by a payment amount
   Future<void> applyPayment(String loanId, int paymentAmount) async {
     final loan = await getLoanById(loanId);

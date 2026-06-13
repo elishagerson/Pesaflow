@@ -29,6 +29,8 @@ class TransactionRepository {
     DateTime? startDate,
     DateTime? endDate,
     String? trackerId,
+    int? amountMin,
+    int? amountMax,
   }) {
     return _transactionDao.watchFilteredTransactions(
       accountId: accountId,
@@ -38,6 +40,8 @@ class TransactionRepository {
       startDate: startDate,
       endDate: endDate,
       trackerId: trackerId,
+      amountMin: amountMin,
+      amountMax: amountMax,
     );
   }
 

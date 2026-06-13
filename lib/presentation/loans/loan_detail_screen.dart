@@ -50,9 +50,20 @@ class LoanDetailScreen extends ConsumerWidget {
                 index: 2,
                 child: _buildStatusTimeline(loan, theme, isDark),
               ),
+              if (loan.installmentAmount != null) ...[
+                const SizedBox(height: 16),
+                StaggeredFadeSlide(
+                  index: 3,
+                  child: _buildInstallmentSchedule(loan, theme, isDark),
+                ),
+              ],
+              StaggeredFadeSlide(
+                index: 4,
+                child: _buildPayoffProjection(loan, theme, isDark),
+              ),
               const SizedBox(height: 20),
               StaggeredFadeSlide(
-                index: 3,
+                index: 5,
                 child: Text(
                   'Payment History',
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -63,7 +74,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 data: (txs) {
                   if (txs.isEmpty) {
                     return StaggeredFadeSlide(
-                      index: 4,
+                      index: 6,
                       child: GlassCard(
                         padding: const EdgeInsets.all(20),
                         borderRadius: AppTheme.radiusCard,
@@ -81,7 +92,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       final idx = entry.key;
                       final tx = entry.value;
                       return StaggeredFadeSlide(
-                        index: 4 + idx,
+                        index: 7 + idx,
                         child: _buildTransactionTile(tx, theme, isDark),
                       );
                     }).toList(),
@@ -186,6 +197,8 @@ class LoanDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             _infoRow('Provider', loan.provider ?? 'N/A', isDark),
+            if (loan.interestRate != null)
+              _infoRow('APR', '${loan.interestRate!.toStringAsFixed(1)}%', isDark),
             _infoRow('Reference', loan.reference ?? 'N/A', isDark),
             _infoRow('Sender', loan.sender ?? 'N/A', isDark),
             _infoRow('Disbursed', _formatDate(loan.disbursedAt), isDark),
@@ -322,6 +335,213 @@ class LoanDetailScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInstallmentSchedule(Loan loan, ThemeData theme, bool isDark) {
+    final total = loan.totalInstallments ?? 0;
+    final paid = loan.paidInstallments ?? 0;
+    final amount = loan.installmentAmount ?? 0;
+    final ratio = total > 0 ? paid / total : 0.0;
+
+    return GlassCard(
+      borderRadius: AppTheme.radiusCard,
+      elevation: CardElevation.low,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Payment Schedule',
+              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$paid of $total installments paid',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: ratio.clamp(0.0, 1.0),
+                          backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
+                          valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF609F8A),
+                          ),
+                          minHeight: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  '${(ratio * 100).round()}%',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Color.lerp(const Color(0xFFE53935), const Color(0xFF609F8A), ratio),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ...List.generate(total, (i) {
+              final isPaid = i < paid;
+              return Padding(
+                padding: EdgeInsets.only(bottom: i < total - 1 ? 6 : 0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: isPaid
+                            ? const Color(0xFF609F8A).withValues(alpha: 0.15)
+                            : (isDark ? Colors.grey[800] : Colors.grey[200]),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isPaid ? Icons.check_rounded : Icons.schedule_rounded,
+                        size: 12,
+                        color: isPaid
+                            ? const Color(0xFF609F8A)
+                            : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Installment ${i + 1}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      CurrencyFormatter.formatCents(amount),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: isPaid
+                            ? const Color(0xFF609F8A).withValues(alpha: 0.12)
+                            : const Color(0xFFFF9F0A).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        isPaid ? 'Paid' : 'Pending',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: isPaid ? const Color(0xFF609F8A) : const Color(0xFFFF9F0A),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPayoffProjection(Loan loan, ThemeData theme, bool isDark) {
+    if (loan.status == 'paid') return const SizedBox.shrink();
+
+    DateTime? estimatedDate;
+    String description;
+
+    if (loan.installmentAmount != null && (loan.totalInstallments ?? 0) > 0) {
+      final remaining = (loan.totalInstallments! - (loan.paidInstallments ?? 0)).clamp(0, loan.totalInstallments!);
+      final freqDays = loan.frequencyInDays ?? 30;
+      estimatedDate = DateTime.now().add(Duration(days: remaining * freqDays));
+      description = remaining > 0
+          ? 'Estimated payoff in $remaining installments'
+          : 'All installments completed';
+    } else {
+      // Estimate based on remaining balance assuming 30-day cycle
+      estimatedDate = DateTime.now().add(const Duration(days: 365));
+      description = 'Estimated payoff within 1 year';
+    }
+
+    if (estimatedDate == null) return const SizedBox.shrink();
+
+    final daysLeft = DateTime.now().difference(estimatedDate).inDays.abs();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: GlassCard(
+        borderRadius: AppTheme.radiusCard,
+        elevation: CardElevation.low,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF9F0A).withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.event_rounded, size: 20, color: Color(0xFFFF9F0A)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _formatDate(estimatedDate),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${daysLeft}d',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFFFF9F0A),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

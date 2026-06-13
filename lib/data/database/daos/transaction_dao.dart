@@ -31,6 +31,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     DateTime? startDate,
     DateTime? endDate,
     String? trackerId,
+    int? amountMin,
+    int? amountMax,
   }) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
@@ -60,6 +62,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     }
     if (endDate != null) {
       query.where(transactions.createdAt.isSmallerOrEqual(Constant(endDate)));
+    }
+    if (amountMin != null) {
+      query.where(transactions.amount.isBiggerOrEqual(Constant(amountMin)));
+    }
+    if (amountMax != null) {
+      query.where(transactions.amount.isSmallerOrEqual(Constant(amountMax)));
     }
 
     query.orderBy([OrderingTerm.desc(transactions.createdAt)]);

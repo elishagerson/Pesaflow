@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,10 +16,23 @@ import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
+import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 
-class TransactionListScreen extends ConsumerWidget {
+class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
+
+  @override
+  ConsumerState<TransactionListScreen> createState() => _TransactionListScreenState();
+}
+
+class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
+  Timer? _searchDebounce;
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
+  }
 
   String _formatHeaderDate(DateTime date) {
     final now = DateTime.now();

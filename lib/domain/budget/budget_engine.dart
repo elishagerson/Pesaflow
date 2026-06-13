@@ -1,3 +1,5 @@
+import 'package:pesaflow/data/database/daos/budget_dao.dart';
+
 /// Budget computation engine for envelope-style budget management.
 class BudgetEngine {
   /// Computes the budget status for a given period.
@@ -89,6 +91,55 @@ class BudgetEngine {
 
     return alerts;
   }
+
+  /// Analyzes a list of budgets and returns categorized alert results.
+  static BudgetThresholdResult checkBudgetThresholds(List<BudgetWithProgress> budgets) {
+    final crossedThreshold = <String>[];
+    final exceeded = <String>[];
+    final projectedToExceed = <String>[];
+
+    for (final bp in budgets) {
+      if (bp.currentPeriod == null) continue;
+
+      final status = computeStatus(
+        allocated: bp.currentPeriod!.allocated,
+        spent: bp.spentInPeriod,
+        periodStart: bp.currentPeriod!.periodStart,
+        periodEnd: bp.currentPeriod!.periodEnd,
+      );
+
+      final threshold = bp.budget.notificationThreshold;
+
+      if (status.percentage >= 1.0 && status.spent > status.allocated) {
+        exceeded.add(bp.budget.id);
+      } else if (status.percentage >= threshold) {
+        crossedThreshold.add(bp.budget.id);
+      }
+
+      if (!status.isOnTrack && !status.isOverBudget) {
+        projectedToExceed.add(bp.budget.id);
+      }
+    }
+
+    return BudgetThresholdResult(
+      crossedThreshold: crossedThreshold,
+      exceeded: exceeded,
+      projectedToExceed: projectedToExceed,
+    );
+  }
+}
+
+/// Result of threshold checking across multiple budgets.
+class BudgetThresholdResult {
+  final List<String> crossedThreshold;
+  final List<String> exceeded;
+  final List<String> projectedToExceed;
+
+  const BudgetThresholdResult({
+    required this.crossedThreshold,
+    required this.exceeded,
+    required this.projectedToExceed,
+  });
 }
 
 class BudgetStatus {

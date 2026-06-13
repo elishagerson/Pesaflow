@@ -14,6 +14,10 @@ class Loans extends Table {
   DateTimeColumn get dueAt => dateTime().nullable()();
   DateTimeColumn get paidAt => dateTime().nullable()();
   TextColumn get trackerId => text().nullable()();
+  RealColumn get interestRate => real().nullable()();
+  IntColumn get installmentAmount => integer().nullable()();
+  IntColumn get totalInstallments => integer().nullable()();
+  IntColumn get paidInstallments => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 

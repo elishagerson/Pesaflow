@@ -21,6 +21,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   final _amountController = TextEditingController();
   final _senderController = TextEditingController();
   final _referenceController = TextEditingController();
+  final _interestRateController = TextEditingController();
   DateTime _disbursedAt = DateTime.now();
   DateTime? _dueAt;
 
@@ -30,6 +31,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     _amountController.dispose();
     _senderController.dispose();
     _referenceController.dispose();
+    _interestRateController.dispose();
     super.dispose();
   }
 
@@ -76,6 +78,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           ? null : _referenceController.text.trim(),
       disbursedAt: _disbursedAt,
       dueAt: _dueAt,
+      interestRate: double.tryParse(_interestRateController.text),
       trackerId: activeTrackerId,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -221,6 +224,25 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               const SizedBox(height: 16),
               StaggeredFadeSlide(
                 index: 5,
+                child: TextField(
+                  controller: _interestRateController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Interest Rate (optional)',
+                    hintText: 'e.g. 18.5',
+                    prefixIcon: const Icon(Icons.percent_rounded, size: 18),
+                    filled: true,
+                    fillColor: inputFill,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              StaggeredFadeSlide(
+                index: 6,
                 child: InkWell(
                   onTap: () => _pickDate(dueDate: true),
                   borderRadius: BorderRadius.circular(12),
@@ -260,7 +282,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               ),
               const SizedBox(height: 32),
               StaggeredFadeSlide(
-                index: 6,
+                index: 7,
                 child: TactileSpringContainer(
                   onTap: _submit,
                   child: Container(

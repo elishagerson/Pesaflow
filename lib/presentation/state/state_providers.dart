@@ -122,12 +122,60 @@ final transactionSearchQueryProvider = NotifierProvider<TransactionSearchQueryNo
   return TransactionSearchQueryNotifier();
 });
 
+class TransactionAmountMinNotifier extends Notifier<int?> {
+  @override
+  int? build() => null;
+
+  @override
+  set state(int? value) => super.state = value;
+}
+final transactionAmountMinProvider = NotifierProvider<TransactionAmountMinNotifier, int?>(() {
+  return TransactionAmountMinNotifier();
+});
+
+class TransactionAmountMaxNotifier extends Notifier<int?> {
+  @override
+  int? build() => null;
+
+  @override
+  set state(int? value) => super.state = value;
+}
+final transactionAmountMaxProvider = NotifierProvider<TransactionAmountMaxNotifier, int?>(() {
+  return TransactionAmountMaxNotifier();
+});
+
+class TransactionDateFromNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  @override
+  set state(DateTime? value) => super.state = value;
+}
+final transactionDateFromProvider = NotifierProvider<TransactionDateFromNotifier, DateTime?>(() {
+  return TransactionDateFromNotifier();
+});
+
+class TransactionDateToNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  @override
+  set state(DateTime? value) => super.state = value;
+}
+final transactionDateToProvider = NotifierProvider<TransactionDateToNotifier, DateTime?>(() {
+  return TransactionDateToNotifier();
+});
+
 final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
   final type = ref.watch(transactionTypeFilterProvider);
   final accountId = ref.watch(transactionAccountFilterProvider);
   final categoryId = ref.watch(transactionCategoryFilterProvider);
   final search = ref.watch(transactionSearchQueryProvider);
+  final amountMin = ref.watch(transactionAmountMinProvider);
+  final amountMax = ref.watch(transactionAmountMaxProvider);
+  final dateFrom = ref.watch(transactionDateFromProvider);
+  final dateTo = ref.watch(transactionDateToProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
 
   return repo.watchFilteredTransactions(
@@ -135,6 +183,10 @@ final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCa
     categoryId: categoryId,
     type: type,
     searchQuery: search,
+    amountMin: amountMin,
+    amountMax: amountMax,
+    startDate: dateFrom,
+    endDate: dateTo,
     trackerId: trackerId,
   );
 });

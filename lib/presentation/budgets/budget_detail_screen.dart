@@ -28,6 +28,15 @@ final budgetPeriodsProvider = FutureProvider.family<List<BudgetPeriod>, String>(
   return repo.getPeriodsForBudget(budgetId);
 });
 
+final dailySpendProvider = FutureProvider.family<List<MapEntry<DateTime, int>>, String>((ref, budgetId) async {
+  final repo = ref.watch(budgetRepositoryProvider);
+  final budget = await repo.getBudgetById(budgetId);
+  if (budget == null) return [];
+  final currentPeriod = await repo.getCurrentPeriod(budgetId);
+  if (currentPeriod == null) return [];
+  return repo.getDailySpendForBudget(budgetId, currentPeriod.periodStart, currentPeriod.periodEnd);
+});
+
 class BudgetDetailScreen extends ConsumerWidget {
   final String budgetId;
   const BudgetDetailScreen({required this.budgetId, super.key});

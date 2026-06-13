@@ -9,6 +9,7 @@ import 'daos/settings_dao.dart';
 import 'daos/tracker_dao.dart';
 import 'daos/savings_goals_dao.dart';
 import 'daos/loan_dao.dart';
+import 'daos/recurring_transaction_dao.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();

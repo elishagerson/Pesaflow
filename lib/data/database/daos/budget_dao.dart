@@ -214,6 +214,45 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
        ));
      }
      
-     return result;
-   }
+      return result;
+    }
+  }
+
+  /// Gets daily spending amounts for a budget's category within a date range.
+  Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(
+    String budgetId,
+    DateTime periodStart,
+    DateTime periodEnd,
+  ) async {
+    final budget = await getBudgetById(budgetId);
+    if (budget == null) return [];
+
+    final txns = await (select(transactions)
+          ..where((t) =>
+              t.categoryId.equals(budget.categoryId) &
+              t.createdAt.isBiggerOrEqual(Constant(periodStart)) &
+              t.createdAt.isSmallerOrEqual(Constant(periodEnd)) &
+              (t.type.equals('expense') |
+               t.type.equals('airtime') |
+               t.type.equals('fee')))
+          ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+        .get();
+
+    final dailyMap = <DateTime, int>{};
+    for (final t in txns) {
+      final day = DateTime(t.createdAt.year, t.createdAt.month, t.createdAt.day);
+      dailyMap[day] = (dailyMap[day] ?? 0) + t.amount;
+    }
+
+    final sorted = dailyMap.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    return sorted;
+  }
+
+  /// Gets total spent for a budget's category within an arbitrary date range.
+  Future<int> getSpentForBudgetInRange(String budgetId, DateTime start, DateTime end) async {
+    final budget = await getBudgetById(budgetId);
+    if (budget == null) return 0;
+    return getSpentForCategoryInPeriod(budget.categoryId, start, end);
+  }
 }

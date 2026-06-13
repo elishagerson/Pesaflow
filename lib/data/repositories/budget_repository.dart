@@ -88,6 +88,16 @@ class BudgetRepository {
      return await _budgetDao.getActiveBudgetsWithProgressOptimized();
    }
 
+  Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(
+    String budgetId,
+    DateTime periodStart,
+    DateTime periodEnd,
+  ) =>
+      _budgetDao.getDailySpendForBudget(budgetId, periodStart, periodEnd);
+
+  Future<int> getSpentForBudgetInRange(String budgetId, DateTime start, DateTime end) =>
+      _budgetDao.getSpentForBudgetInRange(budgetId, start, end);
+
    /// Checks and closes any expired budget periods, creating new ones with rollover.
    Future<void> checkAndCloseExpiredPeriods() async {
      final activeBudgets = await _budgetDao.getAllActiveBudgets();

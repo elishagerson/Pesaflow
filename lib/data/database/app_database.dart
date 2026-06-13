@@ -17,6 +17,7 @@ import 'tables/trackers_table.dart';
 import 'tables/savings_goals_table.dart';
 import 'tables/savings_goal_contributions_table.dart';
 import 'tables/loans_table.dart';
+import 'tables/recurring_transactions_table.dart';
 
 part 'app_database.g.dart';
 
@@ -33,12 +34,13 @@ part 'app_database.g.dart';
   SavingsGoals,
   SavingsGoalContributions,
   Loans,
+  RecurringTransactions,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -172,6 +174,15 @@ class AppDatabase extends _$AppDatabase {
         if (from < 6) {
           await m.createTable(loans);
           await m.addColumn(transactions, transactions.loanId);
+        }
+
+        // Migration from schema version 6 → 7: add recurring_transactions & loan polish columns
+        if (from < 7) {
+          await m.createTable(recurringTransactions);
+          await m.addColumn(loans, loans.interestRate);
+          await m.addColumn(loans, loans.installmentAmount);
+          await m.addColumn(loans, loans.totalInstallments);
+          await m.addColumn(loans, loans.paidInstallments);
         }
       },
     );
