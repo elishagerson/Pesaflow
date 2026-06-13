@@ -35,7 +35,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               children: [
                 // Month picker
                 DropdownButtonFormField<int>(
-                  value: selectedMonth,
+                  initialValue: selectedMonth,
                   decoration: const InputDecoration(
                     labelText: 'Month',
                     prefixIcon: Icon(Icons.calendar_month_rounded),
@@ -51,7 +51,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 const SizedBox(height: 16),
                 // Year picker
                 DropdownButtonFormField<int>(
-                  value: selectedYear,
+                  initialValue: selectedYear,
                   decoration: const InputDecoration(
                     labelText: 'Year',
                     prefixIcon: Icon(Icons.date_range_rounded),
@@ -67,7 +67,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 const SizedBox(height: 16),
                 // Format selector
                 DropdownButtonFormField<ExportFormat>(
-                  value: format,
+                  initialValue: format,
                   decoration: const InputDecoration(
                     labelText: 'Format',
                     prefixIcon: Icon(Icons.description_rounded),
@@ -142,7 +142,7 @@ Future<void> _generateAndShare(
       subject = 'PesaFlow CSV Export - $monthName';
       text = 'Transaction data exported from PesaFlow.';
     } else {
-      final pdfBytes = generateMonthlyPdf(year, month, transactions, accounts, totals);
+      final pdfBytes = await generateMonthlyPdf(year, month, transactions, accounts, totals);
       filePath = p.join(tempDir.path, 'pesaflow_${monthName}_$timestamp.pdf');
       await File(filePath).writeAsBytes(pdfBytes);
       subject = 'PesaFlow Monthly Statement - $monthName';

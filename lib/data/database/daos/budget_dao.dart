@@ -215,8 +215,7 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
      }
      
       return result;
-    }
-  }
+     }
 
   /// Gets daily spending amounts for a budget's category within a date range.
   Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(

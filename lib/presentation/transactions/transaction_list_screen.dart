@@ -10,7 +10,6 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
-import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -776,6 +775,7 @@ class _FilterButton extends StatelessWidget {
       ),
     );
   }
+}
 
 class _MiniBar extends StatelessWidget {
   final String label;

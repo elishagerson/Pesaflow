@@ -1,16 +1,17 @@
+import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 
-List<int> generateMonthlyPdf(
+Future<Uint8List> generateMonthlyPdf(
   int year,
   int month,
   List<TransactionWithCategoryAndAccount> transactions,
   List<Account> accounts,
   Map<String, int> totals,
-) {
+) async {
   final pdf = pw.Document();
   final monthName = DateFormat('MMMM').format(DateTime(year, month));
   final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
@@ -37,7 +38,7 @@ List<int> generateMonthlyPdf(
         pw.SizedBox(height: 16),
         pw.Header(
           level: 1,
-          child: pw.Text('Summary', style: const pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Summary', style: pw.TextStyle(fontSize: 16)),
         ),
         pw.SizedBox(height: 8),
         pw.Row(
@@ -79,32 +80,32 @@ List<int> generateMonthlyPdf(
         pw.SizedBox(height: 20),
         pw.Header(
           level: 1,
-          child: pw.Text('Account Balances', style: const pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Account Balances', style: pw.TextStyle(fontSize: 16)),
         ),
         pw.SizedBox(height: 8),
         ...accounts.map((acc) => pw.Padding(
           padding: const pw.EdgeInsets.symmetric(vertical: 2),
           child: pw.Text(
             '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
-            style: const pw.TextStyle(fontSize: 11),
+            style: pw.TextStyle(fontSize: 11),
           ),
         )),
         pw.SizedBox(height: 20),
         pw.Header(
           level: 1,
-          child: pw.Text('Transactions', style: const pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Transactions', style: pw.TextStyle(fontSize: 16)),
         ),
         pw.SizedBox(height: 8),
         pw.TableHelper.fromTextArray(
-          headerStyle: const pw.TextStyle(
+          headerStyle: pw.TextStyle(
             fontSize: 10,
             fontWeight: pw.FontWeight.bold,
             color: PdfColors.white,
           ),
-          headerDecoration: const pw.BoxDecoration(
+          headerDecoration: pw.BoxDecoration(
             color: PdfColor.fromInt(0xFF1A1A2E),
           ),
-          cellStyle: const pw.TextStyle(fontSize: 9),
+          cellStyle: pw.TextStyle(fontSize: 9),
           cellAlignments: {
             0: pw.Alignment.centerLeft,
             1: pw.Alignment.centerLeft,
@@ -126,10 +127,10 @@ List<int> generateMonthlyPdf(
         pw.SizedBox(height: 20),
         pw.Header(
           level: 1,
-          child: pw.Text('Notes', style: const pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Notes', style: pw.TextStyle(fontSize: 16)),
         ),
         pw.SizedBox(height: 8),
-        const pw.Text(
+        pw.Text(
           'This statement was generated automatically by PesaFlow. '
           'All amounts are in Tanzanian Shillings (TSh).',
           style: pw.TextStyle(fontSize: 9, color: PdfColors.grey),
