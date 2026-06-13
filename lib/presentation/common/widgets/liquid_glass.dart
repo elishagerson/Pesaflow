@@ -40,15 +40,18 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     return RepaintBoundary(
       child: AnimatedBuilder(
         animation: _controller,
-        builder: (context, _) => Stack(
+        child: widget.child,
+        builder: (context, child) => Stack(
           children: [
-            widget.child,
+            child!,
             Positioned.fill(
-              child: CustomPaint(
-                painter: _LiquidGlassPainter(
-                  time: _controller.value,
-                  isDark: isDark,
-                  accentColor: widget.accentColor,
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: _LiquidGlassPainter(
+                    time: _controller.value,
+                    isDark: isDark,
+                    accentColor: widget.accentColor,
+                  ),
                 ),
               ),
             ),
