@@ -371,7 +371,7 @@ class SmsProcessor {
         type: finalType,
         description: finalDescription,
         provider: smsParsed.provider,
-        sender: smsParsed.type == 'income' ? smsParsed.senderOrRecipient : null,
+        sender: (smsParsed.type == 'income' || smsParsed.type == 'loan') ? smsParsed.senderOrRecipient : null,
         recipient: smsParsed.type == 'expense' ? smsParsed.senderOrRecipient : null,
         reference: smsParsed.reference,
         rawSms: smsParsed.rawSmsBody,
@@ -418,10 +418,11 @@ class SmsProcessor {
 
       // 8. Trigger local notification (non-fatal — transaction is already saved)
       final amountFormatted = 'Tsh ${(smsParsed.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
+      final isCredit = smsParsed.type == 'income' || smsParsed.type == 'loan';
       final alertTitle = isAutoApproved ? 'Transaction Auto-Logged' : 'Review Required';
       final alertBody = isAutoApproved
-          ? '$amountFormatted ${smsParsed.type == 'income' ? 'received' : 'sent'} (${catResult.category.name}) ✓'
-          : '$amountFormatted ${smsParsed.type == 'income' ? 'received' : 'sent'} — tap to review category';
+          ? '$amountFormatted ${isCredit ? 'received' : 'sent'} (${catResult.category.name}) ✓'
+          : '$amountFormatted ${isCredit ? 'received' : 'sent'} — tap to review category';
 
       try {
         await _notificationService.showNotification(

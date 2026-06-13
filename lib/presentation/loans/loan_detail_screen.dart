@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/repositories/account_repository.dart';
+import 'package:pesaflow/data/repositories/category_repository.dart';
+import 'package:pesaflow/data/repositories/loan_repository.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -61,9 +67,16 @@ class LoanDetailScreen extends ConsumerWidget {
                 index: 4,
                 child: _buildPayoffProjection(loan, theme, isDark),
               ),
+              if (loan.status == 'active') ...[
+                const SizedBox(height: 16),
+                StaggeredFadeSlide(
+                  index: 5,
+                  child: _buildPaymentButton(context, loan, theme, isDark, ref),
+                ),
+              ],
               const SizedBox(height: 20),
               StaggeredFadeSlide(
-                index: 5,
+                index: loan.status == 'active' ? 6 : 5,
                 child: Text(
                   'Payment History',
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -542,6 +555,293 @@ class LoanDetailScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildPaymentButton(BuildContext context, Loan loan, ThemeData theme, bool isDark, WidgetRef ref) {
+    return GlassCard(
+      borderRadius: AppTheme.radiusCard,
+      elevation: CardElevation.low,
+      accentColor: const Color(0xFF609F8A),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.payments_rounded, size: 20, color: Color(0xFF609F8A)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Ready to pay?',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      Text(
+                        '${CurrencyFormatter.formatCents(loan.remaining)} remaining',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _showPaymentSheet(context, ref, loan),
+                icon: const Icon(Icons.payment_rounded, size: 18),
+                label: const Text('Make a Payment'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF609F8A),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
+    final amountController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        int paymentAmount = 0;
+        String? selectedAccountId;
+
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 20,
+                right: 20,
+                top: 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[700] : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Make a Payment',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Remaining: ${CurrencyFormatter.formatCents(loan.remaining)}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Amount',
+                      prefixText: 'Tsh ',
+                      prefixStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                      hintText: '0',
+                      filled: true,
+                      fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: (val) {
+                      setSheetState(() {
+                        paymentAmount = CurrencyFormatter.parseToCents(val);
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      labelText: 'Description (optional)',
+                      hintText: 'e.g. Manual payment',
+                      filled: true,
+                      fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  FutureBuilder<List<Account>>(
+                    future: ref.read(accountRepositoryProvider).getAllAccounts(),
+                    builder: (context, snapshot) {
+                      final accounts = snapshot.data ?? [];
+                      if (accounts.isEmpty) return const SizedBox.shrink();
+                      return DropdownButtonFormField<String>(
+                        initialValue: selectedAccountId,
+                        decoration: InputDecoration(
+                          labelText: 'From account (optional)',
+                          filled: true,
+                          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        items: accounts.map((a) => DropdownMenuItem(
+                          value: a.id,
+                          child: Text('${a.name} — ${CurrencyFormatter.formatCents(a.balance)}'),
+                        )).toList(),
+                        onChanged: (val) {
+                          setSheetState(() => selectedAccountId = val);
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: paymentAmount <= 0
+                          ? null
+                          : () async {
+                              final desc = descriptionController.text.trim();
+                              await _processPayment(
+                                context: sheetContext,
+                                ref: ref,
+                                loan: loan,
+                                amount: paymentAmount,
+                                description: desc.isNotEmpty ? desc : 'Manual loan payment',
+                                accountId: selectedAccountId,
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF609F8A),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        paymentAmount <= 0
+                            ? 'Enter an amount'
+                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount)}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _processPayment({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Loan loan,
+    required int amount,
+    required String description,
+    String? accountId,
+  }) async {
+    try {
+      final activeTrackerId = await ref.read(settingsRepositoryProvider).getSetting('active_tracker_id') ?? 'default_personal';
+      final categories = await ref.read(categoryRepositoryProvider).getAllCategories();
+      final expenseCat = categories.firstWhere(
+        (c) => c.type == 'expense',
+        orElse: () => categories.first,
+      );
+
+      final txn = Transaction(
+        id: const Uuid().v4(),
+        accountId: accountId ?? 'default_account',
+        categoryId: expenseCat.id,
+        trackerId: activeTrackerId,
+        loanId: loan.id,
+        amount: amount,
+        type: 'expense',
+        description: description,
+        source: 'manual',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await ref.read(transactionRepositoryNoAlertsProvider).createTransaction(txn);
+      await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
+            backgroundColor: const Color(0xFF609F8A),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
+        );
+      }
+    }
   }
 
   Widget _buildTransactionTile(Transaction tx, ThemeData theme, bool isDark) {

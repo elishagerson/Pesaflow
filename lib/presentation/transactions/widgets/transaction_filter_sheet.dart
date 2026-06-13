@@ -89,10 +89,10 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: 16),
           child: Text('Filter Transactions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
-        Expanded(
-          child: ListView(
-            physics: const ClampingScrollPhysics(),
-            children: [
+        ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
               // Amount Range
               IosListSection(
                 header: 'Amount Range (TSh)',
@@ -260,7 +260,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
               const SizedBox(height: 24),
             ],
           ),
-        ),
 
         // Apply / Clear buttons
         Padding(

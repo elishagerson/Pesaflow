@@ -19,6 +19,8 @@ class Deduplicator {
         sms.reference != 'AIRTEL-REF-UNKNOWN' &&
         sms.reference != 'TIGO-REF-UNKNOWN' &&
         sms.reference != 'HALO-REF-UNKNOWN' &&
+        sms.reference != 'NMB-REF-UNKNOWN' &&
+        sms.reference != 'SELCOM-REF-UNKNOWN' &&
         !sms.reference.startsWith('NBC-REF-')) {
       final exists = await _transactionRepository.transactionExistsByReference(sms.reference);
       if (exists) return true;
