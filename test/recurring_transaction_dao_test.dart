@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
@@ -95,7 +96,7 @@ void main() {
     });
 
     test('updates a recurring transaction', () async {
-      final recurring = _makeRecurring(description: 'Old description');
+      final recurring = _makeRecurring();
       await dao.insertRecurringTransaction(recurring);
 
       final updated = recurring.copyWith(description: const Value('New description'));

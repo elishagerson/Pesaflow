@@ -11,12 +11,14 @@ void main() {
   late AppDatabase database;
   late LoanDao loanDao;
   late AccountDao accountDao;
+  late CategoryDao categoryDao;
   late TransactionDao transactionDao;
 
   setUp(() {
     database = AppDatabase(NativeDatabase.memory());
     loanDao = LoanDao(database);
     accountDao = AccountDao(database);
+    categoryDao = CategoryDao(database);
     transactionDao = TransactionDao(database);
   });
 
@@ -240,9 +242,11 @@ void main() {
         updatedAt: DateTime.now(),
       ));
 
-      await transactionDao.insertTransaction(Transaction(
-        id: const Uuid().v4(),
-        accountId: (await accountDao.getAllAccounts()).first.id,
+      final accountId = (await accountDao.getAllAccounts()).first.id;
+      final txId = const Uuid().v4();
+      await transactionDao.writeTransactionWithBalanceAdjustment(Transaction(
+        id: txId,
+        accountId: accountId,
         categoryId: salaryCat.id,
         loanId: loanId,
         amount: 1000000,
@@ -254,7 +258,6 @@ void main() {
       ));
 
       await loanDao.deleteLoan(loanId);
-
       expect(await loanDao.getLoanById(loanId), isNull);
     });
 

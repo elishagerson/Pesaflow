@@ -184,7 +184,7 @@ void main() {
       expect(processed, 1);
 
       // Verify transaction was created
-      final allTxns = await transactionDao.getAllTransactions();
+      final allTxns = await database.select(database.transactions).get();
       expect(allTxns.length, 1);
       expect(allTxns.first.description, 'Monthly groceries (auto)');
       expect(allTxns.first.amount, 5000000);
@@ -219,7 +219,7 @@ void main() {
       final processed = await service.processDueTransactions();
       expect(processed, 0);
 
-      final allTxns = await transactionDao.getAllTransactions();
+      final allTxns = await database.select(database.transactions).get();
       expect(allTxns, isEmpty);
     });
   });

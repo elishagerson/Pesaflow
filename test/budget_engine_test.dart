@@ -156,45 +156,36 @@ void main() {
     });
 
     group('checkBudgetThresholds', () {
+      Category _cat(String id) => Category(
+        id: id, name: 'Food', icon: 'cart', color: '#FF9800',
+        type: 'expense', isSystem: true, sortOrder: 1, createdAt: DateTime.now(),
+      );
+
+      Budget _budget(String id, {int amount = 30000000, double threshold = 0.8}) => Budget(
+        id: id, name: 'Food', categoryId: 'cat1',
+        period: 'monthly', amount: amount,
+        rollover: false, rolloverType: 'none',
+        startDate: DateTime.now().subtract(const Duration(days: 15)),
+        endDate: DateTime.now().add(const Duration(days: 15)),
+        notificationThreshold: threshold,
+        isActive: true, createdAt: DateTime.now(),
+      );
+
+      BudgetPeriod _period(String budgetId, int allocated, {int spent = 0}) => BudgetPeriod(
+        id: 'p_$budgetId', budgetId: budgetId,
+        periodStart: DateTime.now().subtract(const Duration(days: 15)),
+        periodEnd: DateTime.now().add(const Duration(days: 15)),
+        allocated: allocated, spent: spent,
+        isClosed: false, createdAt: DateTime.now(),
+      );
+
       test('no alerts when budgets are on track', () {
-        final now = DateTime.now();
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: Budget(
-              id: 'b1',
-              name: 'Food',
-              categoryId: 'cat1',
-              amount: 30000000,
-              notificationThreshold: 0.8,
-              type: 'monthly',
-              startDate: now.subtract(const Duration(days: 15)),
-              endDate: now.add(const Duration(days: 15)),
-              trackerId: 'default',
-              rolloverType: 'none',
-              createdAt: now,
-              updatedAt: now,
-            ),
+            budget: _budget('b1'),
             spentInPeriod: 5000000,
-            percentage: 0.17,
-            category: Category(
-              id: 'cat1',
-              name: 'Food',
-              icon: 'cart',
-              color: '#FF9800',
-              type: 'expense',
-              isSystem: true,
-              sortOrder: 1,
-              createdAt: now,
-            ),
-            currentPeriod: BudgetPeriod(
-              id: 'p1',
-              budgetId: 'b1',
-              allocated: 30000000,
-              periodStart: now.subtract(const Duration(days: 15)),
-              periodEnd: now.add(const Duration(days: 15)),
-              rolloverFromPrevious: 0,
-              createdAt: now,
-            ),
+            category: _cat('cat1'),
+            currentPeriod: _period('b1', 30000000),
           ),
         ]);
 
@@ -204,44 +195,12 @@ void main() {
       });
 
       test('detects crossed threshold when percentage >= notificationThreshold', () {
-        final now = DateTime.now();
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: Budget(
-              id: 'b1',
-              name: 'Food',
-              categoryId: 'cat1',
-              amount: 30000000,
-              notificationThreshold: 0.8,
-              type: 'monthly',
-              startDate: now.subtract(const Duration(days: 20)),
-              endDate: now.add(const Duration(days: 10)),
-              trackerId: 'default',
-              rolloverType: 'none',
-              createdAt: now,
-              updatedAt: now,
-            ),
+            budget: _budget('b1'),
             spentInPeriod: 28000000,
-            percentage: 0.93,
-            category: Category(
-              id: 'cat1',
-              name: 'Food',
-              icon: 'cart',
-              color: '#FF9800',
-              type: 'expense',
-              isSystem: true,
-              sortOrder: 1,
-              createdAt: now,
-            ),
-            currentPeriod: BudgetPeriod(
-              id: 'p1',
-              budgetId: 'b1',
-              allocated: 30000000,
-              periodStart: now.subtract(const Duration(days: 20)),
-              periodEnd: now.add(const Duration(days: 10)),
-              rolloverFromPrevious: 0,
-              createdAt: now,
-            ),
+            category: _cat('cat1'),
+            currentPeriod: _period('b1', 30000000),
           ),
         ]);
 
@@ -250,48 +209,16 @@ void main() {
       });
 
       test('detects exceeded when spent > allocated', () {
-        final now = DateTime.now();
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: Budget(
-              id: 'b1',
-              name: 'Food',
-              categoryId: 'cat1',
-              amount: 30000000,
-              notificationThreshold: 0.8,
-              type: 'monthly',
-              startDate: now.subtract(const Duration(days: 20)),
-              endDate: now.add(const Duration(days: 10)),
-              trackerId: 'default',
-              rolloverType: 'none',
-              createdAt: now,
-              updatedAt: now,
-            ),
+            budget: _budget('b2'),
             spentInPeriod: 35000000,
-            percentage: 1.17,
-            category: Category(
-              id: 'cat1',
-              name: 'Food',
-              icon: 'cart',
-              color: '#FF9800',
-              type: 'expense',
-              isSystem: true,
-              sortOrder: 1,
-              createdAt: now,
-            ),
-            currentPeriod: BudgetPeriod(
-              id: 'p1',
-              budgetId: 'b1',
-              allocated: 30000000,
-              periodStart: now.subtract(const Duration(days: 20)),
-              periodEnd: now.add(const Duration(days: 10)),
-              rolloverFromPrevious: 0,
-              createdAt: now,
-            ),
+            category: _cat('cat1'),
+            currentPeriod: _period('b2', 30000000),
           ),
         ]);
 
-        expect(result.exceeded, contains('b1'));
+        expect(result.exceeded, contains('b2'));
       });
 
       test('handles empty budget list', () {
@@ -302,35 +229,11 @@ void main() {
       });
 
       test('skips budgets without current period', () {
-        final now = DateTime.now();
         final result = BudgetEngine.checkBudgetThresholds([
           BudgetWithProgress(
-            budget: Budget(
-              id: 'b1',
-              name: 'Food',
-              categoryId: 'cat1',
-              amount: 30000000,
-              notificationThreshold: 0.8,
-              type: 'monthly',
-              startDate: now.subtract(const Duration(days: 20)),
-              endDate: now.add(const Duration(days: 10)),
-              trackerId: 'default',
-              rolloverType: 'none',
-              createdAt: now,
-              updatedAt: now,
-            ),
+            budget: _budget('b3'),
             spentInPeriod: 0,
-            percentage: 0.0,
-            category: Category(
-              id: 'cat1',
-              name: 'Food',
-              icon: 'cart',
-              color: '#FF9800',
-              type: 'expense',
-              isSystem: true,
-              sortOrder: 1,
-              createdAt: now,
-            ),
+            category: _cat('cat1'),
             currentPeriod: null,
           ),
         ]);

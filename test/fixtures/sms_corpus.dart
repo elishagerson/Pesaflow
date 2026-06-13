@@ -109,7 +109,7 @@ final List<SmsCorpusEntry> smsCorpus = [
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 10000000,
-      type: 'income',
+      type: 'loan',
       senderOrRecipient: 'Mobile Money Loan',
       reference: 'P65ABC',
       balanceAfter: 25000000,
@@ -217,7 +217,7 @@ final List<SmsCorpusEntry> smsCorpus = [
     timestamp: DateTime(2026, 5, 15, 12, 0),
     expect: SmsExpectation(
       amount: 10000000,
-      type: 'income',
+      type: 'loan',
       senderOrRecipient: 'Mobile Money Loan',
       reference: 'P65DEF',
       balanceAfter: 25000000,
