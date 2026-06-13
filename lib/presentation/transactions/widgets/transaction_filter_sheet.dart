@@ -286,7 +286,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                               textColor: activeCategory == null ? theme.colorScheme.onPrimary : null,
                               onTap: () {
                                 ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                                ref.invalidate(filteredTransactionsStreamProvider);
                               },
                             ),
                             ...categories.map((cat) => _CategoryChip(
@@ -298,7 +297,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                               onTap: () {
                                 ref.read(transactionCategoryFilterProvider.notifier).state =
                                     activeCategory == cat.id ? null : cat.id;
-                                ref.invalidate(filteredTransactionsStreamProvider);
                               },
                             )),
                           ],
@@ -358,7 +356,6 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       ref.read(transactionAmountMaxProvider.notifier).state = null;
                     }
 
-                    ref.invalidate(filteredTransactionsStreamProvider);
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
