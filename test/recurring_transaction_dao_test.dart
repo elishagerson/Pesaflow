@@ -18,7 +18,7 @@ void main() {
     await database.close();
   });
 
-  RecurringTransaction _makeRecurring({
+  RecurringTransaction makeRecurring({
     String? id,
     String frequency = 'monthly',
     int intervalValue = 1,
@@ -44,7 +44,7 @@ void main() {
 
   group('RecurringTransactionDao', () {
     test('inserts and retrieves a recurring transaction', () async {
-      final recurring = _makeRecurring();
+      final recurring = makeRecurring();
       await dao.insertRecurringTransaction(recurring);
 
       final retrieved = await dao.getById(recurring.id);
@@ -55,8 +55,8 @@ void main() {
     });
 
     test('getAll returns all recurring transactions', () async {
-      await dao.insertRecurringTransaction(_makeRecurring(frequency: 'weekly'));
-      await dao.insertRecurringTransaction(_makeRecurring(frequency: 'monthly'));
+      await dao.insertRecurringTransaction(makeRecurring(frequency: 'weekly'));
+      await dao.insertRecurringTransaction(makeRecurring(frequency: 'monthly'));
 
       final all = await dao.getAll();
       expect(all.length, 2);
@@ -66,15 +66,15 @@ void main() {
       final pastDate = DateTime.now().subtract(const Duration(days: 5));
       final futureDate = DateTime.now().add(const Duration(days: 5));
 
-      await dao.insertRecurringTransaction(_makeRecurring(
+      await dao.insertRecurringTransaction(makeRecurring(
         nextDate: pastDate,
         status: 'active',
       ));
-      await dao.insertRecurringTransaction(_makeRecurring(
+      await dao.insertRecurringTransaction(makeRecurring(
         nextDate: futureDate,
         status: 'active',
       ));
-      await dao.insertRecurringTransaction(_makeRecurring(
+      await dao.insertRecurringTransaction(makeRecurring(
         nextDate: pastDate,
         status: 'paused',
       ));
@@ -86,7 +86,7 @@ void main() {
 
     test('getDueTransactions returns empty when none are due', () async {
       final futureDate = DateTime.now().add(const Duration(days: 30));
-      await dao.insertRecurringTransaction(_makeRecurring(
+      await dao.insertRecurringTransaction(makeRecurring(
         nextDate: futureDate,
         status: 'active',
       ));
@@ -96,7 +96,7 @@ void main() {
     });
 
     test('updates a recurring transaction', () async {
-      final recurring = _makeRecurring();
+      final recurring = makeRecurring();
       await dao.insertRecurringTransaction(recurring);
 
       final updated = recurring.copyWith(description: const Value('New description'));
@@ -107,7 +107,7 @@ void main() {
     });
 
     test('deletes a recurring transaction', () async {
-      final recurring = _makeRecurring();
+      final recurring = makeRecurring();
       await dao.insertRecurringTransaction(recurring);
       await dao.deleteRecurringTransaction(recurring.id);
 
@@ -117,7 +117,7 @@ void main() {
     test('markAsProcessed updates nextDate and updatedAt', () async {
       final today = DateTime.now();
       final nextOccurrence = today.add(const Duration(days: 30));
-      final recurring = _makeRecurring(nextDate: today);
+      final recurring = makeRecurring(nextDate: today);
       await dao.insertRecurringTransaction(recurring);
 
       await dao.markAsProcessed(recurring.id, nextOccurrence);
