@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:pesaflow/domain/export/pdf_report_generator.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 enum ExportFormat { csv, pdf }
 
@@ -18,88 +19,123 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
   int selectedMonth = DateTime.now().month;
   ExportFormat format = ExportFormat.pdf;
 
-  await showDialog(
+  await ModernDialog.show(
     context: context,
-    builder: (ctx) {
-      return StatefulBuilder(
-        builder: (ctx, setState) {
-          final months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December',
-          ];
-
-          return AlertDialog(
-            title: const Text('Export Monthly Statement'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Month picker
-                DropdownButtonFormField<int>(
-                  initialValue: selectedMonth,
-                  decoration: const InputDecoration(
-                    labelText: 'Month',
-                    prefixIcon: Icon(Icons.calendar_month_rounded),
-                  ),
-                  items: List.generate(12, (i) => DropdownMenuItem(
-                    value: i + 1,
-                    child: Text(months[i]),
-                  )),
-                  onChanged: (val) {
-                    if (val != null) setState(() => selectedMonth = val);
-                  },
+    titleIcon: Icons.file_download_rounded,
+    iconColor: const Color(0xFF609F8A),
+    title: const Text('Export Monthly Statement'),
+    content: StatefulBuilder(
+      builder: (ctx, setState) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 4),
+            DropdownButtonFormField<int>(
+              initialValue: selectedMonth,
+              decoration: InputDecoration(
+                labelText: 'Month',
+                prefixIcon: const Icon(Icons.calendar_month_rounded, size: 20),
+                filled: true,
+                fillColor: Colors.transparent,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
                 ),
-                const SizedBox(height: 16),
-                // Year picker
-                DropdownButtonFormField<int>(
-                  initialValue: selectedYear,
-                  decoration: const InputDecoration(
-                    labelText: 'Year',
-                    prefixIcon: Icon(Icons.date_range_rounded),
-                  ),
-                  items: List.generate(10, (i) {
-                    final year = DateTime.now().year - 5 + i;
-                    return DropdownMenuItem(value: year, child: Text('$year'));
-                  }),
-                  onChanged: (val) {
-                    if (val != null) setState(() => selectedYear = val);
-                  },
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
                 ),
-                const SizedBox(height: 16),
-                // Format selector
-                DropdownButtonFormField<ExportFormat>(
-                  initialValue: format,
-                  decoration: const InputDecoration(
-                    labelText: 'Format',
-                    prefixIcon: Icon(Icons.description_rounded),
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: ExportFormat.pdf, child: Text('PDF')),
-                    DropdownMenuItem(value: ExportFormat.csv, child: Text('CSV')),
-                  ],
-                  onChanged: (val) {
-                    if (val != null) setState(() => format = val);
-                  },
-                ),
-              ],
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+              items: List.generate(12, (i) => DropdownMenuItem(
+                value: i + 1,
+                child: Text(DateFormat('MMMM').format(DateTime(2000, i + 1))),
+              )),
+              onChanged: (val) {
+                if (val != null) setState(() => selectedMonth = val);
+              },
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: const Text('Cancel'),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<int>(
+              initialValue: selectedYear,
+              decoration: InputDecoration(
+                labelText: 'Year',
+                prefixIcon: const Icon(Icons.date_range_rounded, size: 20),
+                filled: true,
+                fillColor: Colors.transparent,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.file_download_rounded, size: 18),
-                label: const Text('Export'),
-                onPressed: () async {
-                  Navigator.of(ctx).pop();
-                  await _generateAndShare(context, ref, selectedYear, selectedMonth, format);
-                },
+              items: List.generate(10, (i) {
+                final year = DateTime.now().year - 5 + i;
+                return DropdownMenuItem(value: year, child: Text('$year'));
+              }),
+              onChanged: (val) {
+                if (val != null) setState(() => selectedYear = val);
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<ExportFormat>(
+              initialValue: format,
+              decoration: InputDecoration(
+                labelText: 'Format',
+                prefixIcon: const Icon(Icons.description_rounded, size: 20),
+                filled: true,
+                fillColor: Colors.transparent,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
-            ],
-          );
+              items: const [
+                DropdownMenuItem(value: ExportFormat.pdf, child: Text('PDF - Professional report')),
+                DropdownMenuItem(value: ExportFormat.csv, child: Text('CSV - Spreadsheet data')),
+              ],
+              onChanged: (val) {
+                if (val != null) setState(() => format = val);
+              },
+            ),
+          ],
+        );
+      },
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.grey[600],
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        ),
+        child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w600)),
+      ),
+      ElevatedButton.icon(
+        icon: const Icon(Icons.file_download_rounded, size: 18),
+        label: const Text('Export'),
+        onPressed: () async {
+          Navigator.of(context).pop();
+          await _generateAndShare(context, ref, selectedYear, selectedMonth, format);
         },
-      );
-    },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF609F8A),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    ],
   );
 }
 

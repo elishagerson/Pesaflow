@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -164,185 +165,347 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) {
-        final theme = Theme.of(context);
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
         final isDark = theme.brightness == Brightness.dark;
+        final accentColor = isDeposit ? const Color(0xFF609F8A) : const Color(0xFFFF453A);
 
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Container(
-              decoration: BoxDecoration(
-                color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-                left: 16,
-                right: 16,
-                top: 8,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top indicator
-                  Center(
-                    child: Container(
-                      width: 36,
-                      height: 5,
-                      margin: const EdgeInsets.only(bottom: 16, top: 4),
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.grey[800] : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2.5),
-                      ),
-                    ),
-                  ),
-
-                  // Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isDeposit ? 'Deposit Savings' : 'Withdraw Savings',
-                        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: const Icon(Icons.close_rounded),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Amount Entry field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
+        return DraggableScrollableSheet(
+          initialChildSize: 0.65,
+          maxChildSize: 0.9,
+          minChildSize: 0.4,
+          expand: false,
+          builder: (context, scrollController) => ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: StatefulBuilder(
+                  builder: (context, setModalState) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text(
-                          'Tsh',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            color: isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: 38,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.2)
+                                : Colors.black.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(height: 16),
                         Expanded(
-                          child: TextFormField(
-                            controller: _amountController,
-                            keyboardType: TextInputType.number,
-                            autofocus: true,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontFamily: 'monospace',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            decoration: const InputDecoration(
-                              hintText: '0',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
+                          child: RawScrollbar(
+                            controller: scrollController,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              physics: const ClampingScrollPhysics(),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Header
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: accentColor.withValues(alpha: 0.12),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          isDeposit ? Icons.savings_rounded : Icons.account_balance_wallet_rounded,
+                                          color: accentColor,
+                                          size: 22,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              isDeposit ? 'Deposit Savings' : 'Withdraw Savings',
+                                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              isDeposit ? 'Add money to your savings goal' : 'Take money out of your savings goal',
+                                              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 24),
+
+                                  // Amount Entry
+                                  const Text('AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? Colors.white.withValues(alpha: 0.08)
+                                            : Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'TSh',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                            color: accentColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: TextFormField(
+                                            controller: _amountController,
+                                            keyboardType: TextInputType.number,
+                                            autofocus: true,
+                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                            style: const TextStyle(
+                                              fontSize: 28,
+                                              fontFamily: 'monospace',
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            decoration: const InputDecoration(
+                                              hintText: '0',
+                                              border: InputBorder.none,
+                                              contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        if (_amountController.text.isNotEmpty)
+                                          GestureDetector(
+                                            onTap: () {
+                                              _amountController.clear();
+                                              setModalState(() {});
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Note
+                                  const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? Colors.white.withValues(alpha: 0.08)
+                                            : Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                                    child: TextFormField(
+                                      controller: _noteController,
+                                      textCapitalization: TextCapitalization.sentences,
+                                      style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
+                                      decoration: InputDecoration(
+                                        hintText: 'Add an optional note (e.g. Salary bonus)',
+                                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
+                                        prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                            color: isDark ? Colors.white38 : Colors.black26),
+                                        border: InputBorder.none,
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Wallet deduct toggle
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? Colors.white.withValues(alpha: 0.08)
+                                            : Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      isDeposit ? 'Deduct from Wallet' : 'Refund to Wallet',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 15,
+                                                        color: isDark ? Colors.white : Colors.black87,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 2),
+                                                    Text(
+                                                      'Updates real balance & logs a transaction',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: isDark ? Colors.white38 : Colors.black38,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              CupertinoSwitch(
+                                                value: _deductFromWallet,
+                                                activeTrackColor: accentColor,
+                                                onChanged: (v) {
+                                                  setModalState(() {
+                                                    _deductFromWallet = v;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if (_deductFromWallet) ...[
+                                          Divider(
+                                            height: 0.5,
+                                            thickness: 0.5,
+                                            color: isDark
+                                                ? Colors.white.withValues(alpha: 0.08)
+                                                : Colors.black.withValues(alpha: 0.06),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.account_balance_wallet_rounded, size: 18,
+                                                    color: isDark ? Colors.white38 : Colors.black38),
+                                                const SizedBox(width: 10),
+                                                const Expanded(
+                                                  child: Text('Source Account',
+                                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                                                ),
+                                                DropdownButton<String>(
+                                                  value: _selectedAccountId,
+                                                  dropdownColor: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                                  underline: const SizedBox(),
+                                                  icon: Icon(Icons.keyboard_arrow_down_rounded, size: 20,
+                                                      color: isDark ? Colors.white54 : Colors.black45),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDark ? Colors.white : Colors.black87,
+                                                  ),
+                                                  items: accounts.map((acc) {
+                                                    return DropdownMenuItem<String>(
+                                                      value: acc.id,
+                                                      child: Text('${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})'),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (v) {
+                                                    setModalState(() {
+                                                      _selectedAccountId = v;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 28),
+
+                                  // Action Submit Button
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 54,
+                                    child: AnimatedContainer(
+                                      duration: const Duration(milliseconds: 250),
+                                      curve: Curves.easeOutCubic,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        boxShadow: !_isOperationLoading
+                                            ? [
+                                                BoxShadow(
+                                                  color: accentColor.withValues(alpha: 0.3),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ]
+                                            : [],
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: _isOperationLoading ? null : () => _handleContribution(isDeposit),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: accentColor,
+                                          foregroundColor: Colors.white,
+                                          disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                        ),
+                                        child: _isOperationLoading
+                                            ? const SizedBox(
+                                                width: 22,
+                                                height: 22,
+                                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                                              )
+                                            : Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                      isDeposit ? Icons.add_circle_outline_rounded : Icons.remove_circle_outline_rounded,
+                                                      size: 18,
+                                                      color: Colors.white.withValues(alpha: 0.8)),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    isDeposit ? 'Confirm Deposit' : 'Confirm Withdrawal',
+                                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Note entry field
-                  IosListSection(
-                    header: 'MEMO',
-                    rows: [
-                      IosListRow(
-                        title: TextFormField(
-                          controller: _noteController,
-                          textCapitalization: TextCapitalization.sentences,
-                          style: const TextStyle(fontSize: 14),
-                          decoration: const InputDecoration(
-                            hintText: 'Add an optional note (e.g. Salary bonus)',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Deduct option
-                  IosListSection(
-                    header: 'ACCOUNT TRANSACTION LOG',
-                    rows: [
-                      IosListRow(
-                        title: Text(isDeposit ? 'Deduct from Account Wallet' : 'Refund to Account Wallet'),
-                        subtitle: const Text('Updates real balance & logs a transaction'),
-                        trailing: CupertinoSwitch(
-                          value: _deductFromWallet,
-                          activeTrackColor: isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
-                          onChanged: (v) {
-                            setModalState(() {
-                              _deductFromWallet = v;
-                            });
-                          },
-                        ),
-                      ),
-                      if (_deductFromWallet)
-                        IosListRow(
-                          title: const Text('Source Account'),
-                          trailing: DropdownButton<String>(
-                            value: _selectedAccountId,
-                            dropdownColor: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-                            underline: const SizedBox(),
-                            icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                            items: accounts.map((acc) {
-                              return DropdownMenuItem<String>(
-                                value: acc.id,
-                                child: Text(
-                                  acc.name,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (v) {
-                              setModalState(() {
-                                _selectedAccountId = v;
-                              });
-                            },
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Action Submit Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _isOperationLoading ? null : () => _handleContribution(isDeposit),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: _isOperationLoading
-                          ? const CupertinoActivityIndicator(color: Colors.white)
-                          : Text(
-                              isDeposit ? 'Confirm Deposit' : 'Confirm Withdrawal',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );

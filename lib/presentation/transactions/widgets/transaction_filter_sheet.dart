@@ -85,189 +85,25 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Text('Filter Transactions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ),
-        ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-              // Amount Range
-              IosListSection(
-                header: 'Amount Range (TSh)',
-                rows: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: minCtl,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Min',
-                              hintText: '0',
-                              prefixText: 'TSh ',
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text('—', style: TextStyle(fontSize: 18, color: isDark ? Colors.white38 : Colors.black26)),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: maxCtl,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Max',
-                              hintText: '1000000',
-                              prefixText: 'TSh ',
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              // Date Range
-              IosListSection(
-                header: 'Date Range',
-                rows: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _DateButton(
-                            label: 'From',
-                            date: dateFrom,
-                            onTap: () async {
-                              final picked = await showDatePicker(
-                                context: context,
-                                initialDate: dateFrom ?? DateTime.now(),
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime.now(),
-                              );
-                              if (picked != null) {
-                                ref.read(transactionDateFromProvider.notifier).state = picked;
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: _DateButton(
-                            label: 'To',
-                            date: dateTo,
-                            onTap: () async {
-                              final picked = await showDatePicker(
-                                context: context,
-                                initialDate: dateTo ?? DateTime.now(),
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime.now(),
-                              );
-                              if (picked != null) {
-                                ref.read(transactionDateToProvider.notifier).state = picked;
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              // Account Selector
-              IosListSection(
-                header: 'Account',
-                rows: [
-                  IosListRow(
-                    title: const Text('All Accounts'),
-                    trailing: activeAccount == null
-                        ? Icon(Icons.check_rounded, size: 20, color: theme.colorScheme.primary)
-                        : null,
-                    onTap: () {
-                      ref.read(transactionAccountFilterProvider.notifier).state = null;
-                    },
-                  ),
-                  ...accounts.map((acc) => IosListRow(
-                    title: Text(acc.name),
-                    trailing: activeAccount == acc.id
-                        ? Icon(Icons.check_rounded, size: 20, color: theme.colorScheme.primary)
-                        : null,
-                    onTap: () {
-                      ref.read(transactionAccountFilterProvider.notifier).state = acc.id;
-                    },
-                  )),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              // Category Chips
-              IosListSection(
-                header: 'Category',
-                rows: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: categories.isEmpty
-                        ? Text('No categories for selected type',
-                            style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13))
-                        : Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              _CategoryChip(
-                                label: 'All',
-                                color: activeCategory == null ? theme.colorScheme.primary : null,
-                                textColor: activeCategory == null ? theme.colorScheme.onPrimary : null,
-                                onTap: () {
-                                  ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                                },
-                              ),
-                              ...categories.map((cat) => _CategoryChip(
-                                label: cat.name,
-                                icon: getCategoryIcon(cat.icon),
-                                iconColor: hexToColor(cat.color),
-                                color: activeCategory == cat.id ? hexToColor(cat.color) : null,
-                                textColor: activeCategory == cat.id ? Colors.white : null,
-                                onTap: () {
-                                  ref.read(transactionCategoryFilterProvider.notifier).state =
-                                      activeCategory == cat.id ? null : cat.id;
-                                },
-                              )),
-                            ],
-                          ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
-
-        // Apply / Clear buttons
+        // Modern header
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+          padding: const EdgeInsets.fromLTRB(4, 12, 4, 12),
           child: Row(
             children: [
-              Expanded(
-                child: OutlinedButton(
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.filter_alt_rounded, size: 18, color: theme.colorScheme.primary),
+              ),
+              const SizedBox(width: 12),
+              const Text('Filter Transactions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              SizedBox(
+                height: 32,
+                child: TextButton(
                   onPressed: () {
                     ref.read(transactionAmountMinProvider.notifier).state = null;
                     ref.read(transactionAmountMaxProvider.notifier).state = null;
@@ -279,13 +115,219 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ref.read(transactionSearchQueryProvider.notifier).state = '';
                     Navigator.of(context).pop();
                   },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.redAccent,
-                    side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.4)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                   ),
-                  child: const Text('Clear All', style: TextStyle(fontWeight: FontWeight.w600)),
+                  child: const Text('Reset', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                ),
+              ),
+            ],
+          ),
+        ),
+        ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            // Amount Range
+            IosListSection(
+              header: 'Amount Range (TSh)',
+              rows: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: minCtl,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Min',
+                            hintText: '0',
+                            prefixText: 'TSh ',
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.black.withValues(alpha: 0.1)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+                            ),
+                            filled: true,
+                            fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.02),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('—', style: TextStyle(fontSize: 18, color: isDark ? Colors.white38 : Colors.black26)),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: maxCtl,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Max',
+                            hintText: '1000000',
+                            prefixText: 'TSh ',
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.black.withValues(alpha: 0.1)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+                            ),
+                            filled: true,
+                            fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.02),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Date Range
+            IosListSection(
+              header: 'Date Range',
+              rows: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _DateButton(
+                          label: 'From',
+                          date: dateFrom,
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: dateFrom ?? DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime.now(),
+                            );
+                            if (picked != null) {
+                              ref.read(transactionDateFromProvider.notifier).state = picked;
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _DateButton(
+                          label: 'To',
+                          date: dateTo,
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                              context: context,
+                              initialDate: dateTo ?? DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime.now(),
+                            );
+                            if (picked != null) {
+                              ref.read(transactionDateToProvider.notifier).state = picked;
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Account Selector
+            IosListSection(
+              header: 'Account',
+              rows: [
+                IosListRow(
+                  title: const Text('All Accounts'),
+                  trailing: activeAccount == null
+                      ? Icon(Icons.check_rounded, size: 20, color: theme.colorScheme.primary)
+                      : null,
+                  onTap: () {
+                    ref.read(transactionAccountFilterProvider.notifier).state = null;
+                  },
+                ),
+                ...accounts.map((acc) => IosListRow(
+                  title: Text(acc.name),
+                  trailing: activeAccount == acc.id
+                      ? Icon(Icons.check_rounded, size: 20, color: theme.colorScheme.primary)
+                      : null,
+                  onTap: () {
+                    ref.read(transactionAccountFilterProvider.notifier).state = acc.id;
+                  },
+                )),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Category
+            IosListSection(
+              header: 'Category',
+              rows: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: categories.isEmpty
+                      ? Text('No categories for selected type',
+                          style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13))
+                      : Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _CategoryChip(
+                              label: 'All',
+                              color: activeCategory == null ? theme.colorScheme.primary : null,
+                              textColor: activeCategory == null ? theme.colorScheme.onPrimary : null,
+                              onTap: () {
+                                ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                              },
+                            ),
+                            ...categories.map((cat) => _CategoryChip(
+                              label: cat.name,
+                              icon: getCategoryIcon(cat.icon),
+                              iconColor: hexToColor(cat.color),
+                              color: activeCategory == cat.id ? hexToColor(cat.color) : null,
+                              textColor: activeCategory == cat.id ? Colors.white : null,
+                              onTap: () {
+                                ref.read(transactionCategoryFilterProvider.notifier).state =
+                                    activeCategory == cat.id ? null : cat.id;
+                              },
+                            )),
+                          ],
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+
+        // Apply / Reset buttons
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: isDark ? Colors.white60 : Colors.black45,
+                    side: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.black.withValues(alpha: 0.1)),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w600)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -319,10 +361,11 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: theme.colorScheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.w600)),
+                  child: const Text('Apply Filters', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                 ),
               ),
             ],

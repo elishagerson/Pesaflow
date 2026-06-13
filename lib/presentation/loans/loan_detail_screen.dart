@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -630,166 +632,546 @@ class LoanDetailScreen extends ConsumerWidget {
     final amountController = TextEditingController();
     final descriptionController = TextEditingController();
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final remainingCents = loan.remaining;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         int paymentAmount = 0;
         String? selectedAccountId;
+        bool isProcessing = false;
 
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 20,
-                right: 20,
-                top: 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.grey[700] : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
+            final canSubmit = paymentAmount > 0 && selectedAccountId != null && !isProcessing;
+
+            return DraggableScrollableSheet(
+              initialChildSize: 0.7,
+              maxChildSize: 0.9,
+              minChildSize: 0.5,
+              expand: false,
+              builder: (ctx, scrollController) => ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xF01C1C1E)
+                          : const Color(0xF0F2F2F7),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Make a Payment',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Remaining: ${CurrencyFormatter.formatCents(loan.remaining)}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: amountController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Amount',
-                      prefixText: 'Tsh ',
-                      prefixStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      hintText: '0',
-                      filled: true,
-                      fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    onChanged: (val) {
-                      setSheetState(() {
-                        paymentAmount = CurrencyFormatter.parseToCents(val);
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: descriptionController,
-                    decoration: InputDecoration(
-                      labelText: 'Description (optional)',
-                      hintText: 'e.g. Manual payment',
-                      filled: true,
-                      fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  FutureBuilder<List<Account>>(
-                    future: ref.read(accountRepositoryProvider).getAllAccounts(),
-                    builder: (context, snapshot) {
-                      final accounts = snapshot.data ?? [];
-                      if (accounts.isEmpty) return const SizedBox.shrink();
-                      return DropdownButtonFormField<String>(
-                        initialValue: selectedAccountId,
-                        decoration: InputDecoration(
-                          labelText: 'From account (optional)',
-                          filled: true,
-                          fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(height: 10),
+                        Container(
+                          width: 38,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.2)
+                                : Colors.black.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        items: accounts.map((a) => DropdownMenuItem(
-                          value: a.id,
-                          child: Text('${a.name} — ${CurrencyFormatter.formatCents(a.balance)}'),
-                        )).toList(),
-                        onChanged: (val) {
-                          setSheetState(() => selectedAccountId = val);
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: paymentAmount <= 0
-                          ? null
-                          : () async {
-                              final desc = descriptionController.text.trim();
-                              await _processPayment(
-                                context: sheetContext,
-                                ref: ref,
-                                loan: loan,
-                                amount: paymentAmount,
-                                description: desc.isNotEmpty ? desc : 'Manual loan payment',
-                                accountId: selectedAccountId,
-                              );
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF609F8A),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: RawScrollbar(
+                            controller: scrollController,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              physics: const ClampingScrollPhysics(),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // ── Header ──
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(Icons.payments_rounded, color: Color(0xFF609F8A), size: 22),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Make a Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
+                                            style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 24),
+
+                                  // ── Loan Progress Ring ──
+                                  _buildLoanProgressRing(loan, remainingCents, isDark),
+                                  const SizedBox(height: 24),
+
+                                  // ── Amount Input ──
+                                  const Text('PAYMENT AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? Colors.white.withValues(alpha: 0.08)
+                                            : Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'TSh',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                            color: isDark ? Colors.white60 : Colors.black45,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: amountController,
+                                            keyboardType: TextInputType.number,
+                                            autofocus: true,
+                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                            style: TextStyle(
+                                              fontSize: 28,
+                                              fontFamily: 'monospace',
+                                              fontWeight: FontWeight.bold,
+                                              color: isDark ? Colors.white : Colors.black,
+                                            ),
+                                            decoration: const InputDecoration(
+                                              hintText: '0',
+                                              border: InputBorder.none,
+                                              contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                            ),
+                                            onChanged: (val) {
+                                              setSheetState(() {
+                                                paymentAmount = CurrencyFormatter.parseToCents(val);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        if (paymentAmount > 0)
+                                          GestureDetector(
+                                            onTap: () {
+                                              amountController.clear();
+                                              setSheetState(() => paymentAmount = 0);
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // ── Quick Amount Suggestions ──
+                                  Row(
+                                    children: [
+                                      _QuickAmountChip(
+                                        label: '25%',
+                                        amount: (remainingCents * 0.25).round(),
+                                        isActive: paymentAmount == (remainingCents * 0.25).round(),
+                                        onTap: () {
+                                          amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
+                                          amountController.selection = TextSelection.fromPosition(
+                                            TextPosition(offset: amountController.text.length),
+                                          );
+                                          setSheetState(() => paymentAmount = (remainingCents * 0.25).round());
+                                        },
+                                        isDark: isDark,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      _QuickAmountChip(
+                                        label: '50%',
+                                        amount: (remainingCents * 0.5).round(),
+                                        isActive: paymentAmount == (remainingCents * 0.5).round(),
+                                        onTap: () {
+                                          amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
+                                          amountController.selection = TextSelection.fromPosition(
+                                            TextPosition(offset: amountController.text.length),
+                                          );
+                                          setSheetState(() => paymentAmount = (remainingCents * 0.5).round());
+                                        },
+                                        isDark: isDark,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      _QuickAmountChip(
+                                        label: '75%',
+                                        amount: (remainingCents * 0.75).round(),
+                                        isActive: paymentAmount == (remainingCents * 0.75).round(),
+                                        onTap: () {
+                                          amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
+                                          amountController.selection = TextSelection.fromPosition(
+                                            TextPosition(offset: amountController.text.length),
+                                          );
+                                          setSheetState(() => paymentAmount = (remainingCents * 0.75).round());
+                                        },
+                                        isDark: isDark,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      _QuickAmountChip(
+                                        label: '100%',
+                                        amount: remainingCents,
+                                        isActive: paymentAmount == remainingCents,
+                                        onTap: () {
+                                          amountController.text = (remainingCents / 100).toStringAsFixed(0);
+                                          amountController.selection = TextSelection.fromPosition(
+                                            TextPosition(offset: amountController.text.length),
+                                          );
+                                          setSheetState(() => paymentAmount = remainingCents);
+                                        },
+                                        isDark: isDark,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 24),
+
+                                  // ── Description Field ──
+                                  const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? Colors.white.withValues(alpha: 0.08)
+                                            : Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                                    child: TextField(
+                                      controller: descriptionController,
+                                      textCapitalization: TextCapitalization.sentences,
+                                      style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
+                                      decoration: InputDecoration(
+                                        hintText: 'Add a note (optional)',
+                                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
+                                        prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                            color: isDark ? Colors.white38 : Colors.black26),
+                                        border: InputBorder.none,
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+
+                                  // ── Account Selection ──
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('FROM ACCOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                      if (selectedAccountId != null)
+                                        GestureDetector(
+                                          onTap: () => setSheetState(() => selectedAccountId = null),
+                                          child: Text('Clear', style: TextStyle(fontSize: 12, color: const Color(0xFFE53935).withValues(alpha: 0.8))),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  FutureBuilder<List<Account>>(
+                                    future: ref.read(accountRepositoryProvider).getAllAccounts(),
+                                    builder: (context, snapshot) {
+                                      final accounts = snapshot.data ?? [];
+                                      if (accounts.isEmpty) {
+                                        return Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFE53935).withValues(alpha: 0.08),
+                                            borderRadius: BorderRadius.circular(14),
+                                            border: Border.all(color: const Color(0xFFE53935).withValues(alpha: 0.2)),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              const Icon(Icons.warning_rounded, size: 18, color: Color(0xFFE53935)),
+                                              const SizedBox(width: 10),
+                                              Text('No accounts available. Create one first.',
+                                                  style: TextStyle(fontSize: 13, color: const Color(0xFFE53935).withValues(alpha: 0.9))),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      return Column(
+                                        children: accounts.map((account) {
+                                          final isSelected = account.id == selectedAccountId;
+                                          final balanceCents = account.balance;
+                                          final hasFunds = balanceCents >= paymentAmount;
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 8),
+                                            child: GestureDetector(
+                                              onTap: () => setSheetState(() => selectedAccountId = account.id),
+                                              child: AnimatedContainer(
+                                                duration: const Duration(milliseconds: 200),
+                                                curve: Curves.easeOutCubic,
+                                                padding: const EdgeInsets.all(14),
+                                                decoration: BoxDecoration(
+                                                  color: isSelected
+                                                      ? const Color(0xFF609F8A).withValues(alpha: isDark ? 0.15 : 0.08)
+                                                      : isDark
+                                                          ? const Color(0xFF1C1C1E)
+                                                          : Colors.white,
+                                                  borderRadius: BorderRadius.circular(14),
+                                                  border: Border.all(
+                                                    color: isSelected
+                                                        ? const Color(0xFF609F8A).withValues(alpha: 0.5)
+                                                        : isDark
+                                                            ? Colors.white.withValues(alpha: 0.08)
+                                                            : Colors.black.withValues(alpha: 0.06),
+                                                    width: isSelected ? 1.5 : 1,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets.all(8),
+                                                      decoration: BoxDecoration(
+                                                        color: isSelected
+                                                            ? const Color(0xFF609F8A).withValues(alpha: 0.2)
+                                                            : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04)),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Icon(
+                                                        isSelected ? Icons.check_circle_rounded : Icons.account_balance_wallet_rounded,
+                                                        size: 20,
+                                                        color: isSelected
+                                                            ? const Color(0xFF609F8A)
+                                                            : (isDark ? Colors.white54 : Colors.black45),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 12),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(account.name,
+                                                              style: TextStyle(
+                                                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                                fontSize: 15,
+                                                                color: isSelected
+                                                                    ? (isDark ? Colors.white : const Color(0xFF609F8A))
+                                                                    : (isDark ? Colors.white : Colors.black87),
+                                                              )),
+                                                          const SizedBox(height: 1),
+                                                          Row(
+                                                            children: [
+                                                              Text('Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
+                                                                  style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
+                                                              if (selectedAccountId != null && !hasFunds && paymentAmount > 0) ...[
+                                                                const SizedBox(width: 8),
+                                                                Container(
+                                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                                  decoration: BoxDecoration(
+                                                                    color: const Color(0xFFE53935).withValues(alpha: 0.12),
+                                                                    borderRadius: BorderRadius.circular(4),
+                                                                  ),
+                                                                  child: const Text('Insufficient', style: TextStyle(fontSize: 10, color: Color(0xFFE53935), fontWeight: FontWeight.w600)),
+                                                                ),
+                                                              ],
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    if (isSelected)
+                                                      Container(
+                                                        padding: const EdgeInsets.all(4),
+                                                        decoration: BoxDecoration(
+                                                          color: const Color(0xFF609F8A).withValues(alpha: 0.15),
+                                                          shape: BoxShape.circle,
+                                                        ),
+                                                        child: const Icon(Icons.check_rounded, size: 16, color: Color(0xFF609F8A)),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 24),
+
+                                  // ── Pay Button ──
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 54,
+                                    child: AnimatedContainer(
+                                      duration: const Duration(milliseconds: 250),
+                                      curve: Curves.easeOutCubic,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        boxShadow: canSubmit
+                                            ? [
+                                                BoxShadow(
+                                                  color: const Color(0xFF609F8A).withValues(alpha: 0.3),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ]
+                                            : [],
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: canSubmit
+                                            ? () async {
+                                                setSheetState(() => isProcessing = true);
+                                                final desc = descriptionController.text.trim();
+                                                await _processPayment(
+                                                  context: sheetContext,
+                                                  ref: ref,
+                                                  loan: loan,
+                                                  amount: paymentAmount,
+                                                  description: desc.isNotEmpty ? desc : 'Manual loan payment',
+                                                  accountId: selectedAccountId!,
+                                                );
+                                              }
+                                            : null,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFF609F8A),
+                                          foregroundColor: Colors.white,
+                                          disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                                          disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                        ),
+                                        child: isProcessing
+                                            ? const SizedBox(
+                                                width: 22,
+                                                height: 22,
+                                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                                              )
+                                            : Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  if (paymentAmount > 0 && selectedAccountId != null)
+                                                    Icon(Icons.lock_rounded, size: 16, color: Colors.white.withValues(alpha: 0.8)),
+                                                  if (paymentAmount > 0 && selectedAccountId != null) const SizedBox(width: 8),
+                                                  Text(
+                                                    paymentAmount <= 0
+                                                        ? 'Enter an amount'
+                                                        : selectedAccountId == null
+                                                            ? 'Select an account'
+                                                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount)}',
+                                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        paymentAmount <= 0
-                            ? 'Enter an amount'
-                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount)}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildLoanProgressRing(Loan loan, int remainingCents, bool isDark) {
+    final totalInstallments = loan.totalInstallments ?? 0;
+    final paidInstallments = loan.paidInstallments ?? 0;
+    final totalAmount = loan.amount;
+    final paidAmount = totalAmount - remainingCents;
+
+    final paidFraction = totalAmount > 0
+        ? (paidAmount / totalAmount).clamp(0.0, 1.0)
+        : 0.0;
+
+    return Row(
+      children: [
+        SizedBox(
+          width: 64,
+          height: 64,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 64,
+                height: 64,
+                child: CircularProgressIndicator(
+                  value: paidFraction,
+                  strokeWidth: 5,
+                  backgroundColor: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF609F8A)),
+                ),
+              ),
+              Text(
+                '${(paidFraction * 100).round()}%',
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Paid', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                  Text(CurrencyFormatter.formatCents(paidAmount),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF609F8A))),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Remaining', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                  Text(CurrencyFormatter.formatCents(remainingCents),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFE53935))),
+                ],
+              ),
+              if (totalInstallments > 0) ...[
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Installments', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                    Text('$paidInstallments/$totalInstallments',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -799,7 +1181,7 @@ class LoanDetailScreen extends ConsumerWidget {
     required Loan loan,
     required int amount,
     required String description,
-    String? accountId,
+    required String accountId,
   }) async {
     try {
       final activeTrackerId = await ref.read(settingsRepositoryProvider).getSetting('active_tracker_id') ?? 'default_personal';
@@ -811,7 +1193,7 @@ class LoanDetailScreen extends ConsumerWidget {
 
       final txn = Transaction(
         id: const Uuid().v4(),
-        accountId: accountId ?? 'default_account',
+        accountId: accountId,
         categoryId: expenseCat.id,
         trackerId: activeTrackerId,
         loanId: loan.id,
@@ -919,6 +1301,76 @@ class LoanDetailScreen extends ConsumerWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _QuickAmountChip extends StatelessWidget {
+  final String label;
+  final int amount;
+  final bool isActive;
+  final VoidCallback onTap;
+  final bool isDark;
+
+  const _QuickAmountChip({
+    required this.label,
+    required this.amount,
+    required this.isActive,
+    required this.onTap,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive
+                ? const Color(0xFF609F8A).withValues(alpha: 0.15)
+                : isDark
+                    ? Colors.white.withValues(alpha: 0.06)
+                    : Colors.black.withValues(alpha: 0.04),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isActive
+                  ? const Color(0xFF609F8A).withValues(alpha: 0.5)
+                  : isDark
+                      ? Colors.white.withValues(alpha: 0.08)
+                      : Colors.black.withValues(alpha: 0.06),
+            ),
+          ),
+          child: Column(
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: isActive
+                      ? const Color(0xFF609F8A)
+                      : (isDark ? Colors.white70 : Colors.black54),
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                CurrencyFormatter.formatCents(amount),
+                style: TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white38 : Colors.black38,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
