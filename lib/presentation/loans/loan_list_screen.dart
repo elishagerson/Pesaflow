@@ -62,7 +62,8 @@ class LoanListScreen extends ConsumerWidget {
             // Active Loans section
             activeLoansAsync.when(
               data: (activeLoans) {
-                if (activeLoans.isEmpty && paidLoansAsync.asData?.value.isEmpty == true) {
+                final paidData = paidLoansAsync.asData?.value;
+                if (activeLoans.isEmpty && (paidData == null || paidData.isEmpty)) {
                   return StaggeredFadeSlide(index: 1, child: _buildEmptyState(theme, isDark));
                 }
                 if (activeLoans.isEmpty) return const SizedBox.shrink();

@@ -423,22 +423,12 @@ class SmsProcessor {
         // No balanceAfter in SMS — read the latest DB balance (post-DAO adjustment)
         final currentAccount = await _accountRepo.getAccountById(targetAccount.id);
         if (currentAccount != null && finalType != 'transfer') {
+          // The DAO already adjusted the balance — trust the fresh DB value
           developer.log(
             'No balanceAfter — account ${currentAccount.name} balance after DAO: ${currentAccount.balance} '
             '(type: ${smsParsed.type}, amount: ${smsParsed.amount})',
             name: 'SmsProcessor',
           );
-          // The DAO already adjusted the balance correctly — no further action needed
-          // Only log if the adjustment seems off
-          final delta = (finalType == 'income' || finalType == 'loan')
-              ? smsParsed.amount
-              : -smsParsed.amount;
-          final expectedBalance = targetAccount.balance + delta;
-          if (currentAccount.balance != expectedBalance) {
-            final correctedAccount = currentAccount.copyWith(balance: expectedBalance);
-            await _accountRepo.updateAccount(correctedAccount);
-            developer.log('Fallback: balance corrected from ${currentAccount.balance} to $expectedBalance', name: 'SmsProcessor');
-          }
         }
       }
 

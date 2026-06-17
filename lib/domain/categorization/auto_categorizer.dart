@@ -72,7 +72,7 @@ class AutoCategorizer {
           orElse: () => otherCategory,
         );
         if (matchedCategory.id != otherCategory.id) {
-          final confidence = mostCommon.value.length >= 2 ? 0.99 : 0.85;
+          final confidence = mostCommon.value >= 2 ? 0.99 : 0.85;
           return AutoCategorizerResult(category: matchedCategory, confidence: confidence);
         }
       }
@@ -102,16 +102,12 @@ class AutoCategorizer {
       'mall': 'Shopping',
       'pos': 'Shopping',
       'merchant': 'Shopping',
-      'kadi': 'Shopping',
 
       // Food & Dining
       'restaurant': 'Food & Groceries',
       'hotel': 'Food & Groceries',
       'mkahawa': 'Food & Groceries',
       'chakula': 'Food & Groceries',
-      'food': 'Food & Groceries',
-      'cafe': 'Food & Groceries',
-      'coffee': 'Food & Groceries',
       'pizza': 'Food & Groceries',
 
       // Transport / Travel
@@ -123,7 +119,6 @@ class AutoCategorizer {
       'bolt': 'Transport',
       'taxify': 'Transport',
       'mwendokasi': 'Transport',
-      'bas': 'Transport',
       'travel': 'Travel',
       'ndege': 'Travel',
       'flight': 'Travel',
@@ -158,7 +153,6 @@ class AutoCategorizer {
       'akiba': 'Savings',
       'investment': 'Investment',
       'hisa': 'Investment',
-      'utp': 'Investment',
     };
 
     // Scan lowercase combined text for these keywords
