@@ -21,6 +21,15 @@ class LoanRepository {
 
   Future<List<Loan>> getActiveLoans({String? trackerId}) => _loanDao.getActiveLoans(trackerId: trackerId);
 
+  Stream<List<Loan>> watchPaidLoans({String? trackerId}) => _loanDao.watchPaidLoans(trackerId: trackerId);
+
+  Future<List<Loan>> getPaidLoans({String? trackerId}) => _loanDao.getPaidLoans(trackerId: trackerId);
+
+  Future<int> getActiveLoanCountPastMonths(int months, {String? trackerId}) =>
+      _loanDao.getActiveLoanCountPastMonths(months, trackerId: trackerId);
+
+  Future<int> getTotalPaid({String? trackerId}) => _loanDao.getTotalPaid(trackerId: trackerId);
+
   Future<Loan?> getLoanById(String id) => _loanDao.getLoanById(id);
 
   Future<int> createLoan(Loan loan) => _loanDao.insertLoan(loan);

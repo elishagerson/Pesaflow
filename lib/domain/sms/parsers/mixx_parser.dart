@@ -4,6 +4,14 @@ import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
 class MixxParser implements SmsParser {
+  // Known TigoPesa/Mixx loan product names (lowercase for matching)
+  static const _loanProducts = {'bustisha', 'nivushe', 'nivushe plus'};
+
+  static bool _isLoanProduct(String name) {
+    final lower = name.toLowerCase();
+    return _loanProducts.any((p) => lower.contains(p));
+  }
+
   String _extractReference(String text) {
     final swaRegex = RegExp(r'(?:Kumbukumbu\s+no\.?|Kumbukumbu|Rej|TxnID|TxnId):?\s*([A-Za-z0-9]+)', caseSensitive: false);
     final match = swaRegex.firstMatch(text);
@@ -39,10 +47,11 @@ class MixxParser implements SmsParser {
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
+        final isLoan = _isLoanProduct(sender);
 
         return SmsParsed(
           amount: amt,
-          type: 'income',
+          type: isLoan ? 'loan' : 'income',
           senderOrRecipient: sender,
           reference: ref,
           provider: 'TigoPesa_TZ',
@@ -52,7 +61,7 @@ class MixxParser implements SmsParser {
         );
       }
 
-      // 2. English Received Money (Income)
+      // 2. English Received Money (Income) — also covers loan disbursements
       // Example: "You have received TZS 25,000.00 from 0712345678. TxnID: MX789012. Balance: TZS 150,000.00"
       final engReceivedRegex = RegExp(
         r'You have received\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)(?:\.|\s+TxnID|\s+TxnId|\s+Balance|\s+on|$)',
@@ -64,10 +73,11 @@ class MixxParser implements SmsParser {
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
+        final isLoan = _isLoanProduct(sender);
 
         return SmsParsed(
           amount: amt,
-          type: 'income',
+          type: isLoan ? 'loan' : 'income',
           senderOrRecipient: sender,
           reference: ref,
           provider: 'TigoPesa_TZ',

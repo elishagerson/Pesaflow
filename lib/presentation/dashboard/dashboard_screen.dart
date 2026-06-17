@@ -1163,6 +1163,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final isDark = theme.brightness == Brightness.dark;
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
     final netWorth = ref.watch(netWorthProvider);
+    final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
+    final paidLoansCountAsync = ref.watch(paidLoansCountProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1188,9 +1190,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ],
             ),
-            TextButton(
-              onPressed: () => context.go('/loans'),
-              child: const Text('See All'),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                paidLoansCountAsync.when(
+                  data: (count) => count > 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Text(
+                            '$count paid',
+                            style: TextStyle(fontSize: 11, color: const Color(0xFF609F8A), fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
+                TextButton(
+                  onPressed: () => context.go('/loans'),
+                  child: const Text('See All'),
+                ),
+              ],
             ),
           ],
         ),
@@ -1198,51 +1218,92 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         activeLoansAsync.when(
           data: (activeLoans) {
             if (activeLoans.isEmpty) {
-              return GestureDetector(
-                onTap: () => context.go('/loans'),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF609F8A).withValues(alpha: 0.1),
-                        const Color(0xFF609F8A).withValues(alpha: 0.02),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: const Color(0xFF609F8A).withValues(alpha: 0.2),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF609F8A).withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
+              return Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.go('/loans'),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFF609F8A).withValues(alpha: 0.1),
+                            const Color(0xFF609F8A).withValues(alpha: 0.02),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        child: const Icon(Icons.check_circle_rounded, color: Color(0xFF609F8A), size: 22),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(
+                          color: const Color(0xFF609F8A).withValues(alpha: 0.2),
+                          width: 0.5,
+                        ),
                       ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(
-                          'No active debt. Keep it that way.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: isDark ? Colors.white : Colors.black,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.check_circle_rounded, color: Color(0xFF609F8A), size: 22),
                           ),
-                        ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              'No active debt. Keep it that way.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
+                        ],
                       ),
-                      const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
-                    ],
+                    ),
                   ),
-                ),
+                  // Paid history hint
+                  paidLoansCountAsync.when(
+                    data: (paidCount) => paidCount > 0
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: GestureDetector(
+                              onTap: () => context.go('/loans'),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                  border: Border.all(
+                                    color: const Color(0xFF609F8A).withValues(alpha: 0.15),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.history_rounded, size: 16, color: const Color(0xFF609F8A)),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '$paidCount loan${paidCount == 1 ? '' : 's'} paid off',
+                                      style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                                    ),
+                                    const Spacer(),
+                                    Icon(Icons.chevron_right_rounded, size: 16, color: Colors.grey),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
+                  ),
+                ],
               );
             }
 
@@ -1404,6 +1465,54 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                // Loan burden warning
+                recentLoanCountAsync.when(
+                  data: (count) => count >= 3
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xFFFF6B35).withValues(alpha: 0.1),
+                                  const Color(0xFFFF6B35).withValues(alpha: 0.02),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(
+                                color: const Color(0xFFFF6B35).withValues(alpha: 0.2),
+                                width: 0.5,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFF6B35).withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.speed_rounded, color: Color(0xFFFF6B35), size: 16),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    '$count active loans in 3 months — consider reducing new borrowing',
+                                    style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[300] : Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
                 ...activeLoans.take(2).map((loan) {
                   final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
                   final loanSeverity = ratio > 0.7 ? const Color(0xFFE53935) : ratio > 0.4 ? const Color(0xFFFF9F0A) : const Color(0xFF609F8A);

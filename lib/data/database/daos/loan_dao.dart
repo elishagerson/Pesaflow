@@ -88,6 +88,51 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
         .get();
   }
 
+  /// Stream only paid loans
+  Stream<List<Loan>> watchPaidLoans({String? trackerId}) {
+    final query = select(loans)
+      ..where((l) => l.status.equals('paid'))
+      ..orderBy([(l) => OrderingTerm.desc(l.paidAt)]);
+    if (trackerId != null) {
+      query.where((l) => l.trackerId.equals(trackerId));
+    }
+    return query.watch();
+  }
+
+  /// One-shot fetch of paid loans
+  Future<List<Loan>> getPaidLoans({String? trackerId}) {
+    final query = select(loans)
+      ..where((l) => l.status.equals('paid'))
+      ..orderBy([(l) => OrderingTerm.desc(l.paidAt)]);
+    if (trackerId != null) {
+      query.where((l) => l.trackerId.equals(trackerId));
+    }
+    return query.get();
+  }
+
+  /// Count how many active loans were taken in the last N months
+  Future<int> getActiveLoanCountPastMonths(int months, {String? trackerId}) async {
+    final cutoff = DateTime.now().subtract(Duration(days: 30 * months));
+    final query = select(loans)
+      ..where((l) => l.status.equals('active') & l.disbursedAt.isBiggerOrEqual(Constant(cutoff)));
+    if (trackerId != null) {
+      query.where((l) => l.trackerId.equals(trackerId));
+    }
+    return query.get().then((r) => r.length);
+  }
+
+  /// Total amount (cents) ever paid across all paid loans
+  Future<int> getTotalPaid({String? trackerId}) async {
+    final query = selectOnly(loans)
+      ..addColumns([loans.amount.sum()])
+      ..where(loans.status.equals('paid'));
+    if (trackerId != null) {
+      query.where(loans.trackerId.equals(trackerId));
+    }
+    final result = await query.getSingle();
+    return result.read(loans.amount.sum()) ?? 0;
+  }
+
   /// Get total outstanding loan balance for active loans
   Future<int> getTotalOutstanding({String? trackerId}) async {
     final query = selectOnly(loans)

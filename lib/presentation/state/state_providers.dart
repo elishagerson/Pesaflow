@@ -317,6 +317,29 @@ final activeLoansStreamProvider = StreamProvider<List<Loan>>((ref) {
   return repo.watchActiveLoans(trackerId: trackerId);
 });
 
+final paidLoansStreamProvider = StreamProvider<List<Loan>>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.watchPaidLoans(trackerId: trackerId);
+});
+
+final paidLoansCountProvider = FutureProvider<int>((ref) {
+  final paidAsync = ref.watch(paidLoansStreamProvider);
+  return paidAsync.when(data: (l) => l.length, loading: () => 0, error: (_, _) => 0);
+});
+
+final totalPaidLoanAmountProvider = FutureProvider<int>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.getTotalPaid(trackerId: trackerId);
+});
+
+final recentLoanActivityProvider = FutureProvider<int>((ref) {
+  final repo = ref.watch(loanRepositoryProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  return repo.getActiveLoanCountPastMonths(3, trackerId: trackerId);
+});
+
 final loanTransactionsStreamProvider = StreamProvider.family<List<Transaction>, String>((ref, loanId) {
   final repo = ref.watch(loanRepositoryProvider);
   return repo.watchLoanTransactions(loanId);

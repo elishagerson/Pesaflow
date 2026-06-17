@@ -58,20 +58,25 @@ class AutoCategorizer {
     final otherCategory = getCategoryByName('Other');
 
     // 1.5 Dynamic categorization learning from transaction history
+    // Requires 2+ consistent matches before applying high confidence.
     try {
-      final lastCategoryId = await _transactionDao.findLastCategoryForDescription(description, senderOrRecipient);
-      if (lastCategoryId != null) {
+      final recentCategoryIds = await _transactionDao.findRecentCategoriesForDescription(description, senderOrRecipient);
+      if (recentCategoryIds.isNotEmpty) {
+        final freq = <String, int>{};
+        for (final id in recentCategoryIds) {
+          freq[id] = (freq[id] ?? 0) + 1;
+        }
+        final mostCommon = freq.entries.reduce((a, b) => a.value >= b.value ? a : b);
         final matchedCategory = categories.firstWhere(
-          (cat) => cat.id == lastCategoryId,
+          (cat) => cat.id == mostCommon.key,
           orElse: () => otherCategory,
         );
         if (matchedCategory.id != otherCategory.id) {
-          return AutoCategorizerResult(category: matchedCategory, confidence: 0.99);
+          final confidence = mostCommon.value.length >= 2 ? 0.99 : 0.85;
+          return AutoCategorizerResult(category: matchedCategory, confidence: confidence);
         }
       }
-    } catch (_) {
-      // Fallback gracefully on query failure (e.g. database not initialized in tests)
-    }
+    } catch (_) {} // Fallback gracefully on query failure
 
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {
