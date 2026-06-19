@@ -120,19 +120,26 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       if (account == null) return;
 
       // 3. Compute new balance
-      int balanceDelta = 0;
+      // If the SMS provided a carrier-reported balanceAfter, use it as ground truth.
+      // Otherwise compute the delta from the transaction type.
+      int newBalance;
       final type = transaction.type.toLowerCase();
-      if (type == 'income' || type == 'loan') {
-        balanceDelta = transaction.amount;
-      } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-        balanceDelta = -transaction.amount;
-      } else if (type == 'transfer') {
-        balanceDelta = -transaction.amount;
+
+      if (transaction.balanceAfter != null) {
+        newBalance = transaction.balanceAfter!;
+      } else {
+        int balanceDelta = 0;
+        if (type == 'income' || type == 'loan') {
+          balanceDelta = transaction.amount;
+        } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
+          balanceDelta = -transaction.amount;
+        } else if (type == 'transfer') {
+          balanceDelta = -transaction.amount;
+        }
+        newBalance = account.balance + balanceDelta;
       }
 
-      final updatedAccount = account.copyWith(
-        balance: account.balance + balanceDelta,
-      );
+      final updatedAccount = account.copyWith(balance: newBalance);
 
       // 4. Update the source account balance
       await update(accounts).replace(updatedAccount);
@@ -142,10 +149,11 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         final destQuery = select(accounts)..where((t) => t.id.equals(transaction.destinationAccountId!));
         final destAccount = await destQuery.getSingleOrNull();
         if (destAccount != null) {
-        final updatedDest = destAccount.copyWith(
-          balance: destAccount.balance + transaction.amount,
-        );
-        await update(accounts).replace(updatedDest);
+          // For transfers, always use delta for the destination (no carrier balance available).
+          final updatedDest = destAccount.copyWith(
+            balance: destAccount.balance + transaction.amount,
+          );
+          await update(accounts).replace(updatedDest);
         }
       }
     });

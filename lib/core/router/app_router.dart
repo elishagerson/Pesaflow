@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/recurring/recurring_transaction_list_scree
 import 'package:pesaflow/presentation/subscriptions/subscription_form_screen.dart';
 import 'package:pesaflow/presentation/subscriptions/subscription_list_screen.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'route_params.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -259,8 +260,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'loans/:id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    final loanId = state.pathParameters['id'] ?? '';
-                    return _springSlidePage(LoanDetailScreen(loanId: loanId));
+                    return _springSlidePage(LoanDetailScreen(loanId: state.param('id')));
                   },
                 ),
                 GoRoute(
@@ -277,8 +277,7 @@ final GoRouter appRouter = GoRouter(
                       path: ':id/edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        final id = state.pathParameters['id'] ?? '';
-                        return _springSlidePage(RecurringTransactionFormScreen(recurringId: id));
+                        return _springSlidePage(RecurringTransactionFormScreen(recurringId: state.param('id')));
                       },
                     ),
                   ],
@@ -297,8 +296,7 @@ final GoRouter appRouter = GoRouter(
                       path: ':id/edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        final id = state.pathParameters['id'] ?? '';
-                        return _springSlidePage(SubscriptionFormScreen(subscriptionId: id));
+                        return _springSlidePage(SubscriptionFormScreen(subscriptionId: state.param('id')));
                       },
                     ),
                   ],
@@ -324,8 +322,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'edit/:id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    final transactionId = state.pathParameters['id'];
-                    return _springSlidePage(TransactionFormScreen(transactionId: transactionId));
+                    return _springSlidePage(TransactionFormScreen(transactionId: state.optParam('id')));
                   },
                 ),
               ],
@@ -349,16 +346,14 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    final budgetId = state.pathParameters['id'] ?? '';
-                    return _springSlidePage(BudgetDetailScreen(budgetId: budgetId));
+                    return _springSlidePage(BudgetDetailScreen(budgetId: state.param('id')));
                   },
                   routes: [
                     GoRoute(
                       path: 'edit',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        final budgetId = state.pathParameters['id'];
-                        return _springSlidePage(BudgetFormScreen(budgetId: budgetId));
+                        return _springSlidePage(BudgetFormScreen(budgetId: state.optParam('id')));
                       },
                     ),
                   ],

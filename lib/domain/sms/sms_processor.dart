@@ -14,14 +14,7 @@ import '../../services/notification_service.dart';
 import '../categorization/auto_categorizer.dart';
 import 'deduplicator.dart';
 import 'provider_matcher.dart';
-import 'parsers/sms_parser_interface.dart';
-import 'parsers/mpesa_tz_parser.dart';
-import 'parsers/airtel_tz_parser.dart';
-import 'parsers/mixx_parser.dart';
-import 'parsers/halopesa_parser.dart';
-import 'parsers/bank_base.dart';
-import 'parsers/selcom_pesa_parser.dart';
-import 'parsers/generic_fallback_parser.dart';
+import 'provider_config.dart';
 
 final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
@@ -84,44 +77,15 @@ class SmsProcessor {
         return false;
       }
 
-      // 2. Select the parser
-      SmsParser parser;
-      switch (provider) {
-        case 'M-Pesa_TZ':
-          parser = MpesaTzParser();
-          break;
-        case 'AirtelMoney_TZ':
-          parser = AirtelTzParser();
-          break;
-        case 'TigoPesa_TZ':
-          parser = MixxParser();
-          break;
-        case 'Halopesa_TZ':
-          parser = HalopesaParser();
-          break;
-        case 'NMB_Bank':
-          parser = NmbBankParser();
-          break;
-        case 'CRDB_Bank':
-          parser = CrdbBankParser();
-          break;
-        case 'NBC_Bank':
-          parser = NbcBankParser();
-          break;
-        case 'SelcomPesa_TZ':
-          parser = SelcomPesaParser();
-          break;
-        default:
-          developer.log('SMS processor: unknown provider $provider — treating as generic', name: 'SmsProcessor');
-          parser = GenericFallbackParser(provider: provider);
-      }
+      // 2. Select the parser via provider registry
+      final parser = ProviderRegistry.parserFor(provider);
 
-      // 3. Parse raw text — try provider-specific parser, then generic fallback
+      // 3. Parse raw text — try primary parser, then generic fallback
       bool usedGenericFallback = false;
       var smsParsed = parser.parse(body, timestamp);
       if (smsParsed == null) {
-        developer.log('SMS: provider parser returned null for $provider — trying generic fallback', name: 'SmsProcessor');
-        final fallback = GenericFallbackParser(provider: provider);
+        developer.log('SMS: primary parser returned null for $provider — trying generic fallback', name: 'SmsProcessor');
+        final fallback = ProviderRegistry.fallbackFor(provider);
         smsParsed = fallback.parse(body, timestamp);
         if (smsParsed == null) {
           developer.log('SMS ignored: all parsers failed for provider $provider', name: 'SmsProcessor');
@@ -177,45 +141,9 @@ class SmsProcessor {
 
       if (targetAccount == null) {
         // Auto-create account
-        String friendlyName;
-        String type;
-        switch (provider) {
-          case 'M-Pesa_TZ':
-            friendlyName = 'M-Pesa';
-            type = 'mobile_money';
-            break;
-          case 'AirtelMoney_TZ':
-            friendlyName = 'Airtel Money';
-            type = 'mobile_money';
-            break;
-          case 'TigoPesa_TZ':
-            friendlyName = 'Tigo Pesa';
-            type = 'mobile_money';
-            break;
-          case 'Halopesa_TZ':
-            friendlyName = 'Halopesa';
-            type = 'mobile_money';
-            break;
-          case 'NMB_Bank':
-            friendlyName = 'NMB Bank';
-            type = 'bank';
-            break;
-          case 'CRDB_Bank':
-            friendlyName = 'CRDB Bank';
-            type = 'bank';
-            break;
-          case 'NBC_Bank':
-            friendlyName = 'NBC Bank';
-            type = 'bank';
-            break;
-          case 'SelcomPesa_TZ':
-            friendlyName = 'Selcom Pesa';
-            type = 'mobile_money';
-            break;
-          default:
-            friendlyName = 'Carrier Account';
-            type = 'mobile_money';
-        }
+        final meta = ProviderRegistry.accountMetaFor(provider);
+        final friendlyName = meta?.friendlyName ?? 'Carrier Account';
+        final type = meta?.type ?? 'mobile_money';
 
         final newAccount = Account(
           id: const Uuid().v4(),
@@ -417,55 +345,9 @@ class SmsProcessor {
         } catch (_) {}
       }
 
-      // Reconcile account balance: if SMS provides balanceAfter, use it as ground truth.
-      // Otherwise, ensure the DAO adjustment was applied correctly.
-      if (sms.balanceAfter != null) {
-        // Carrier-reported balance is authoritative — always trust it
-        final oldBalance = targetAccount.balance;
-        final newBalance = sms.balanceAfter!;
-        final reconciledAccount = targetAccount.copyWith(balance: newBalance);
-        await _accountRepo.updateAccount(reconciledAccount);
-
-        // Diagnostic: log significant discrepancies for debugging
-        final expectedDelta = (finalType == 'income' || finalType == 'loan')
-            ? sms.amount
-            : (finalType == 'expense' || finalType == 'airtime' || finalType == 'fee')
-                ? -sms.amount
-                : 0;
-        final naiveBalance = oldBalance + expectedDelta;
-        final drift = (naiveBalance - newBalance).abs();
-        if (drift > sms.amount * 0.5) {
-          developer.log(
-            'BalanceAfter ($newBalance) differs significantly from expected ($naiveBalance) '
-            'by $drift cents (type: ${sms.type}, amount: ${sms.amount}) — '
-            'carrier balance trusted as ground truth',
-            name: 'SmsProcessor',
-          );
-        }
-
-        // For transfers, also ensure the destination account is in sync
-        if (finalType == 'transfer' && finalDestinationAccountId != null && finalDestinationAccountId != finalAccountId) {
-          final destAccount = await _accountRepo.getAccountById(finalDestinationAccountId);
-          if (destAccount != null && sms.type == 'expense') {
-            // The destination was credited by the DAO — verify it roughly matches
-            developer.log(
-              'Transfer destination ${destAccount.name} balance: ${destAccount.balance}',
-              name: 'SmsProcessor',
-            );
-          }
-        }
-      } else {
-        // No balanceAfter in SMS — read the latest DB balance (post-DAO adjustment)
-        final currentAccount = await _accountRepo.getAccountById(targetAccount.id);
-        if (currentAccount != null && finalType != 'transfer') {
-          // The DAO already adjusted the balance — trust the fresh DB value
-          developer.log(
-            'No balanceAfter — account ${currentAccount.name} balance after DAO: ${currentAccount.balance} '
-            '(type: ${sms.type}, amount: ${sms.amount})',
-            name: 'SmsProcessor',
-          );
-        }
-      }
+      // Balance reconciliation is handled by [TransactionDao.writeTransactionWithBalanceAdjustment],
+      // which uses [transaction.balanceAfter] as ground truth when the SMS provided it,
+      // otherwise falls back to delta-based adjustment. No redundant update needed here.
 
       // 8. Trigger local notification (non-fatal — transaction is already saved)
       final amountFormatted = 'Tsh ${(sms.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
