@@ -17,6 +17,8 @@ import 'package:pesaflow/presentation/loans/loan_detail_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_form_screen.dart';
 import 'package:pesaflow/presentation/recurring/recurring_transaction_form_screen.dart';
 import 'package:pesaflow/presentation/recurring/recurring_transaction_list_screen.dart';
+import 'package:pesaflow/presentation/subscriptions/subscription_form_screen.dart';
+import 'package:pesaflow/presentation/subscriptions/subscription_list_screen.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -277,6 +279,26 @@ final GoRouter appRouter = GoRouter(
                       pageBuilder: (context, state) {
                         final id = state.pathParameters['id'] ?? '';
                         return _springSlidePage(RecurringTransactionFormScreen(recurringId: id));
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  path: 'subscriptions',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) => _springSlidePage(const SubscriptionListScreen()),
+                  routes: [
+                    GoRoute(
+                      path: 'add',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) => _springSlidePage(const SubscriptionFormScreen()),
+                    ),
+                    GoRoute(
+                      path: ':id/edit',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) {
+                        final id = state.pathParameters['id'] ?? '';
+                        return _springSlidePage(SubscriptionFormScreen(subscriptionId: id));
                       },
                     ),
                   ],

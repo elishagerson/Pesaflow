@@ -9,6 +9,7 @@ import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/loan_repository.dart';
 import '../../data/repositories/settings_repository.dart';
+import '../../data/repositories/subscription_repository.dart';
 import '../../services/notification_service.dart';
 import '../categorization/auto_categorizer.dart';
 import 'deduplicator.dart';
@@ -20,6 +21,7 @@ import 'parsers/mixx_parser.dart';
 import 'parsers/halopesa_parser.dart';
 import 'parsers/bank_base.dart';
 import 'parsers/selcom_pesa_parser.dart';
+import 'parsers/generic_fallback_parser.dart';
 
 final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
@@ -27,6 +29,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final transactionRepo = ref.watch(transactionRepositoryProvider);
   final loanRepo = ref.watch(loanRepositoryProvider);
   final settingsRepo = ref.watch(settingsRepositoryProvider);
+  final subscriptionRepo = ref.watch(subscriptionRepositoryProvider);
   final deduplicator = ref.watch(deduplicatorProvider);
   final categorizer = ref.watch(autoCategorizerProvider);
   final notificationService = ref.watch(notificationServiceProvider);
@@ -36,6 +39,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
     transactionRepo: transactionRepo,
     loanRepo: loanRepo,
     settingsRepo: settingsRepo,
+    subscriptionRepo: subscriptionRepo,
     deduplicator: deduplicator,
     categorizer: categorizer,
     notificationService: notificationService,
@@ -48,6 +52,7 @@ class SmsProcessor {
   final TransactionRepository _transactionRepo;
   final LoanRepository _loanRepo;
   final SettingsRepository _settingsRepo;
+  final SubscriptionRepository _subscriptionRepo;
   final Deduplicator _deduplicator;
   final AutoCategorizer _categorizer;
   final NotificationService _notificationService;
@@ -59,6 +64,7 @@ class SmsProcessor {
     required this._transactionRepo,
     required this._loanRepo,
     required this._settingsRepo,
+    required this._subscriptionRepo,
     required this._deduplicator,
     required this._categorizer,
     required this._notificationService,
@@ -69,6 +75,7 @@ class SmsProcessor {
   /// If recognized as a transaction and not a duplicate, parses, categorizes,
   /// auto-creates accounts if needed, persists, and notifies the user.
   Future<bool> processSms(String sender, String body, DateTime timestamp) async {
+    String? loanId;
     try {
       // 1. Identify provider
       final provider = ProviderMatcher.matchProvider(sender, body: body);
@@ -105,31 +112,40 @@ class SmsProcessor {
           parser = SelcomPesaParser();
           break;
         default:
-          return false;
+          developer.log('SMS processor: unknown provider $provider — treating as generic', name: 'SmsProcessor');
+          parser = GenericFallbackParser(provider: provider);
       }
 
-      // 3. Parse raw text
-      final smsParsed = parser.parse(body, timestamp);
+      // 3. Parse raw text — try provider-specific parser, then generic fallback
+      bool usedGenericFallback = false;
+      var smsParsed = parser.parse(body, timestamp);
       if (smsParsed == null) {
-        developer.log('SMS ignored: Parsing failed for provider $provider', name: 'SmsProcessor');
-        return false;
+        developer.log('SMS: provider parser returned null for $provider — trying generic fallback', name: 'SmsProcessor');
+        final fallback = GenericFallbackParser(provider: provider);
+        smsParsed = fallback.parse(body, timestamp);
+        if (smsParsed == null) {
+          developer.log('SMS ignored: all parsers failed for provider $provider', name: 'SmsProcessor');
+          return false;
+        }
+        usedGenericFallback = true;
       }
+      final sms = smsParsed;
 
       // 4. Check for duplicate logs
       final isDeduplicationEnabled = await _settingsRepo.getSetting('sms_auto_deduplication') != 'false';
       if (isDeduplicationEnabled) {
-        final isDup = await _deduplicator.isDuplicate(smsParsed);
+        final isDup = await _deduplicator.isDuplicate(sms);
         if (isDup) {
-          developer.log('SMS ignored: Duplicate transaction detected. Reference: ${smsParsed.reference}', name: 'SmsProcessor');
+          developer.log('SMS ignored: Duplicate transaction detected. Reference: ${sms.reference}', name: 'SmsProcessor');
           return false;
         }
       }
 
       // 5. Categorize transaction
       final catResult = await _categorizer.categorize(
-        type: smsParsed.type,
-        description: smsParsed.senderOrRecipient,
-        senderOrRecipient: smsParsed.senderOrRecipient,
+        type: sms.type,
+        description: sms.senderOrRecipient,
+        senderOrRecipient: sms.senderOrRecipient,
       );
 
       // 6. Find or auto-create account with provider + phone matching
@@ -140,7 +156,7 @@ class SmsProcessor {
       if (providerAccounts.length == 1) {
         targetAccount = providerAccounts.first;
       } else if (providerAccounts.length > 1) {
-        final phoneInSms = _extractPhoneNumber(smsParsed.senderOrRecipient);
+        final phoneInSms = _extractPhoneNumber(sms.senderOrRecipient);
         if (phoneInSms != null) {
           for (final acc in providerAccounts) {
             if (acc.phoneNumber != null && acc.phoneNumber == phoneInSms) {
@@ -219,11 +235,11 @@ class SmsProcessor {
       }
 
       // 6.5 Automated transfer detection & dynamic deduplication
-      String finalType = smsParsed.type;
+      String finalType = sms.type;
       String finalCategoryId = catResult.category.id;
       String finalAccountId = targetAccount.id;
       String? finalDestinationAccountId;
-      String finalDescription = smsParsed.senderOrRecipient;
+      String finalDescription = sms.senderOrRecipient;
       double finalConfidence = catResult.confidence;
 
       // Determine if the destination is one of the user's own accounts.
@@ -231,7 +247,7 @@ class SmsProcessor {
       Account? matchedOwnAccount;
 
       // 1) Phone number matching — compare extracted destination phone against account phone numbers
-      final destPhone = _extractPhoneNumber(smsParsed.senderOrRecipient);
+      final destPhone = _extractPhoneNumber(sms.senderOrRecipient);
       if (destPhone != null) {
         for (final acc in accounts) {
           if (acc.id != targetAccount.id && acc.phoneNumber != null && acc.phoneNumber == destPhone) {
@@ -257,7 +273,7 @@ class SmsProcessor {
         // Determine direction:
         // If this is an income SMS (deposit/credit to targetAccount), money is coming FROM matchedOwnAccount TO targetAccount.
         // If this is an expense SMS (withdrawal/debit from targetAccount), money is going FROM targetAccount TO matchedOwnAccount.
-        if (smsParsed.type == 'income') {
+        if (sms.type == 'income') {
           finalAccountId = matchedOwnAccount.id;
           finalDestinationAccountId = targetAccount.id;
           finalDescription = 'Transfer from ${matchedOwnAccount.name} to ${targetAccount.name}';
@@ -269,12 +285,12 @@ class SmsProcessor {
 
         // Dynamic Transfer Deduplication:
         // Check if there is an existing transfer within +-90s window
-        final startWindow = smsParsed.timestamp.subtract(const Duration(seconds: 90));
-        final endWindow = smsParsed.timestamp.add(const Duration(seconds: 90));
+        final startWindow = sms.timestamp.subtract(const Duration(seconds: 90));
+        final endWindow = sms.timestamp.add(const Duration(seconds: 90));
         final dupTransfer = await _transactionRepo.findFuzzyTransferMatch(
           accountId: finalAccountId,
           destinationAccountId: finalDestinationAccountId,
-          amount: smsParsed.amount,
+          amount: sms.amount,
           start: startWindow,
           end: endWindow,
         );
@@ -285,9 +301,9 @@ class SmsProcessor {
           developer.log('Transfer already processed via other account SMS. Skipping duplicate creation.', name: 'SmsProcessor');
           
           // Still perform balance reconciliation for the targetAccount using the ground truth from its own SMS!
-          if (smsParsed.balanceAfter != null) {
+          if (sms.balanceAfter != null) {
             final reconciledAccount = targetAccount.copyWith(
-              balance: smsParsed.balanceAfter!,
+              balance: sms.balanceAfter!,
             );
             await _accountRepo.updateAccount(reconciledAccount);
           }
@@ -297,25 +313,24 @@ class SmsProcessor {
 
       // 7. Loan handling: create loan record for loan disbursements
       final activeTrackerId = await _settingsRepo.getSetting('active_tracker_id') ?? 'default_personal';
-      String? loanId;
       if (finalType == 'loan') {
         loanId = const Uuid().v4();
         final loan = Loan(
           id: loanId,
-          amount: smsParsed.amount,
-          remaining: smsParsed.amount,
+          amount: sms.amount,
+          remaining: sms.amount,
           status: 'active',
           provider: provider,
           description: finalDescription,
-          sender: smsParsed.senderOrRecipient,
-          reference: smsParsed.reference,
-          disbursedAt: smsParsed.timestamp,
+          sender: sms.senderOrRecipient,
+          reference: sms.reference,
+          disbursedAt: sms.timestamp,
           trackerId: activeTrackerId,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
         await _loanRepo.createLoan(loan);
-        developer.log('Created loan record $loanId for ${smsParsed.amount} cents', name: 'SmsProcessor');
+        developer.log('Created loan record $loanId for ${sms.amount} cents', name: 'SmsProcessor');
       }
 
       // 7.5 Repayment detection: match expense to existing active loan
@@ -333,21 +348,21 @@ class SmsProcessor {
           final activeLoans = await _loanRepo.getActiveLoans(trackerId: activeTrackerId);
           if (activeLoans.isNotEmpty) {
             // Match by amount: exact remaining match, then nearest with remaining >= amount
-            final exact = activeLoans.where((l) => l.remaining == smsParsed.amount).toList();
+            final exact = activeLoans.where((l) => l.remaining == sms.amount).toList();
             if (exact.isNotEmpty) {
               loanId = exact.first.id;
-              await _loanRepo.applyPayment(exact.first.id, smsParsed.amount);
-              developer.log('Exact repayment match: loan ${exact.first.id} (remaining: ${exact.first.remaining}, paid: ${smsParsed.amount})', name: 'SmsProcessor');
+              await _loanRepo.applyPayment(exact.first.id, sms.amount);
+              developer.log('Exact repayment match: loan ${exact.first.id} (remaining: ${exact.first.remaining}, paid: ${sms.amount})', name: 'SmsProcessor');
             } else {
-              final candidates = activeLoans.where((l) => l.remaining >= smsParsed.amount).toList();
+              final candidates = activeLoans.where((l) => l.remaining >= sms.amount).toList();
               if (candidates.isNotEmpty) {
                 final matched = candidates.reduce((a, b) =>
-                    (a.remaining - smsParsed.amount).abs() < (b.remaining - smsParsed.amount).abs() ? a : b);
+                    (a.remaining - sms.amount).abs() < (b.remaining - sms.amount).abs() ? a : b);
                 loanId = matched.id;
-                await _loanRepo.applyPayment(matched.id, smsParsed.amount);
-                developer.log('Approximate repayment match: loan ${matched.id} (remaining: ${matched.remaining}, paid: ${smsParsed.amount})', name: 'SmsProcessor');
+                await _loanRepo.applyPayment(matched.id, sms.amount);
+                developer.log('Approximate repayment match: loan ${matched.id} (remaining: ${matched.remaining}, paid: ${sms.amount})', name: 'SmsProcessor');
               } else {
-                developer.log('No loan with remaining >= ${smsParsed.amount} — skipping repayment link', name: 'SmsProcessor');
+                developer.log('No loan with remaining >= ${sms.amount} — skipping repayment link', name: 'SmsProcessor');
               }
             }
           }
@@ -355,6 +370,10 @@ class SmsProcessor {
       }
 
       // 8. Persist Transaction
+      // Generic fallback results always go to review regardless of keyword confidence
+      if (usedGenericFallback && finalConfidence > 0.40) {
+        finalConfidence = 0.40;
+      }
       final isAutoApproved = finalConfidence >= 0.90;
       final source = isAutoApproved ? 'sms_auto' : 'sms_reviewed';
 
@@ -365,16 +384,16 @@ class SmsProcessor {
         loanId: loanId,
         categoryId: finalCategoryId,
         trackerId: activeTrackerId,
-        amount: smsParsed.amount,
+        amount: sms.amount,
         type: finalType,
         description: finalDescription,
-        provider: smsParsed.provider,
-        sender: (smsParsed.type == 'income' || smsParsed.type == 'loan') ? smsParsed.senderOrRecipient : null,
-        recipient: smsParsed.type == 'expense' ? smsParsed.senderOrRecipient : null,
-        reference: smsParsed.reference,
-        rawSms: smsParsed.rawSmsBody,
-        smsTimestamp: smsParsed.timestamp,
-        balanceAfter: smsParsed.balanceAfter,
+        provider: sms.provider,
+        sender: (sms.type == 'income' || sms.type == 'loan') ? sms.senderOrRecipient : null,
+        recipient: sms.type == 'expense' ? sms.senderOrRecipient : null,
+        reference: sms.reference,
+        rawSms: sms.rawSmsBody,
+        smsTimestamp: sms.timestamp,
+        balanceAfter: sms.balanceAfter,
         source: source,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -382,27 +401,43 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
+      // 8.5 Subscription matching: link expense to subscription if recipient matches keywords
+      if (finalType == 'expense') {
+        try {
+          final activeSubs = await _subscriptionRepo.getActive();
+          final textToMatch = '$finalDescription $body'.toLowerCase();
+          for (final sub in activeSubs) {
+            final keywords = sub.merchantKeywords.split(',').map((k) => k.trim().toLowerCase());
+            if (keywords.any((k) => k.isNotEmpty && textToMatch.contains(k))) {
+              await _subscriptionRepo.recordPayment(sub.id, sms.amount, DateTime.now());
+              developer.log('Linked expense to subscription ${sub.name} (amount: ${sms.amount})', name: 'SmsProcessor');
+              break;
+            }
+          }
+        } catch (_) {}
+      }
+
       // Reconcile account balance: if SMS provides balanceAfter, use it as ground truth.
       // Otherwise, ensure the DAO adjustment was applied correctly.
-      if (smsParsed.balanceAfter != null) {
+      if (sms.balanceAfter != null) {
         // Carrier-reported balance is authoritative — always trust it
         final oldBalance = targetAccount.balance;
-        final newBalance = smsParsed.balanceAfter!;
+        final newBalance = sms.balanceAfter!;
         final reconciledAccount = targetAccount.copyWith(balance: newBalance);
         await _accountRepo.updateAccount(reconciledAccount);
 
         // Diagnostic: log significant discrepancies for debugging
         final expectedDelta = (finalType == 'income' || finalType == 'loan')
-            ? smsParsed.amount
+            ? sms.amount
             : (finalType == 'expense' || finalType == 'airtime' || finalType == 'fee')
-                ? -smsParsed.amount
+                ? -sms.amount
                 : 0;
         final naiveBalance = oldBalance + expectedDelta;
         final drift = (naiveBalance - newBalance).abs();
-        if (drift > smsParsed.amount * 0.5) {
+        if (drift > sms.amount * 0.5) {
           developer.log(
             'BalanceAfter ($newBalance) differs significantly from expected ($naiveBalance) '
-            'by $drift cents (type: ${smsParsed.type}, amount: ${smsParsed.amount}) — '
+            'by $drift cents (type: ${sms.type}, amount: ${sms.amount}) — '
             'carrier balance trusted as ground truth',
             name: 'SmsProcessor',
           );
@@ -411,7 +446,7 @@ class SmsProcessor {
         // For transfers, also ensure the destination account is in sync
         if (finalType == 'transfer' && finalDestinationAccountId != null && finalDestinationAccountId != finalAccountId) {
           final destAccount = await _accountRepo.getAccountById(finalDestinationAccountId);
-          if (destAccount != null && smsParsed.type == 'expense') {
+          if (destAccount != null && sms.type == 'expense') {
             // The destination was credited by the DAO — verify it roughly matches
             developer.log(
               'Transfer destination ${destAccount.name} balance: ${destAccount.balance}',
@@ -426,15 +461,15 @@ class SmsProcessor {
           // The DAO already adjusted the balance — trust the fresh DB value
           developer.log(
             'No balanceAfter — account ${currentAccount.name} balance after DAO: ${currentAccount.balance} '
-            '(type: ${smsParsed.type}, amount: ${smsParsed.amount})',
+            '(type: ${sms.type}, amount: ${sms.amount})',
             name: 'SmsProcessor',
           );
         }
       }
 
       // 8. Trigger local notification (non-fatal — transaction is already saved)
-      final amountFormatted = 'Tsh ${(smsParsed.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
-      final isCredit = smsParsed.type == 'income' || smsParsed.type == 'loan';
+      final amountFormatted = 'Tsh ${(sms.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
+      final isCredit = sms.type == 'income' || sms.type == 'loan';
       final alertTitle = isAutoApproved ? 'Transaction Auto-Logged' : 'Review Required';
       final alertBody = isAutoApproved
           ? '$amountFormatted ${isCredit ? 'received' : 'sent'} (${catResult.category.name}) ✓'
@@ -463,6 +498,13 @@ class SmsProcessor {
 
       return true;
     } catch (e, stack) {
+      // Rollback orphaned loan if one was created but transaction failed
+      if (loanId != null) {
+        try {
+          await _loanRepo.deleteLoan(loanId);
+          developer.log('Rolled back orphaned loan $loanId due to processing failure', name: 'SmsProcessor');
+        } catch (_) {}
+      }
       developer.log('SmsProcessor processing failure: $e', error: e, stackTrace: stack, name: 'SmsProcessor');
     }
     return false;

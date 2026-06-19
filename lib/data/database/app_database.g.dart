@@ -8256,6 +8256,914 @@ class RecurringTransactionsCompanion
   }
 }
 
+class $SubscriptionsTable extends Subscriptions
+    with TableInfo<$SubscriptionsTable, Subscription> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SubscriptionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+    'category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _merchantKeywordsMeta = const VerificationMeta(
+    'merchantKeywords',
+  );
+  @override
+  late final GeneratedColumn<String> merchantKeywords = GeneratedColumn<String>(
+    'merchant_keywords',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _frequencyMeta = const VerificationMeta(
+    'frequency',
+  );
+  @override
+  late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
+    'frequency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _intervalValueMeta = const VerificationMeta(
+    'intervalValue',
+  );
+  @override
+  late final GeneratedColumn<int> intervalValue = GeneratedColumn<int>(
+    'interval_value',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _nextDueDateMeta = const VerificationMeta(
+    'nextDueDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> nextDueDate = GeneratedColumn<DateTime>(
+    'next_due_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastPaidDateMeta = const VerificationMeta(
+    'lastPaidDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastPaidDate = GeneratedColumn<DateTime>(
+    'last_paid_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalPaidMeta = const VerificationMeta(
+    'totalPaid',
+  );
+  @override
+  late final GeneratedColumn<int> totalPaid = GeneratedColumn<int>(
+    'total_paid',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _paymentCountMeta = const VerificationMeta(
+    'paymentCount',
+  );
+  @override
+  late final GeneratedColumn<int> paymentCount = GeneratedColumn<int>(
+    'payment_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('active'),
+  );
+  static const VerificationMeta _trackerIdMeta = const VerificationMeta(
+    'trackerId',
+  );
+  @override
+  late final GeneratedColumn<String> trackerId = GeneratedColumn<String>(
+    'tracker_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    accountId,
+    categoryId,
+    amount,
+    name,
+    merchantKeywords,
+    frequency,
+    intervalValue,
+    nextDueDate,
+    lastPaidDate,
+    totalPaid,
+    paymentCount,
+    status,
+    trackerId,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'subscriptions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Subscription> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('merchant_keywords')) {
+      context.handle(
+        _merchantKeywordsMeta,
+        merchantKeywords.isAcceptableOrUnknown(
+          data['merchant_keywords']!,
+          _merchantKeywordsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_merchantKeywordsMeta);
+    }
+    if (data.containsKey('frequency')) {
+      context.handle(
+        _frequencyMeta,
+        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_frequencyMeta);
+    }
+    if (data.containsKey('interval_value')) {
+      context.handle(
+        _intervalValueMeta,
+        intervalValue.isAcceptableOrUnknown(
+          data['interval_value']!,
+          _intervalValueMeta,
+        ),
+      );
+    }
+    if (data.containsKey('next_due_date')) {
+      context.handle(
+        _nextDueDateMeta,
+        nextDueDate.isAcceptableOrUnknown(
+          data['next_due_date']!,
+          _nextDueDateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_nextDueDateMeta);
+    }
+    if (data.containsKey('last_paid_date')) {
+      context.handle(
+        _lastPaidDateMeta,
+        lastPaidDate.isAcceptableOrUnknown(
+          data['last_paid_date']!,
+          _lastPaidDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('total_paid')) {
+      context.handle(
+        _totalPaidMeta,
+        totalPaid.isAcceptableOrUnknown(data['total_paid']!, _totalPaidMeta),
+      );
+    }
+    if (data.containsKey('payment_count')) {
+      context.handle(
+        _paymentCountMeta,
+        paymentCount.isAcceptableOrUnknown(
+          data['payment_count']!,
+          _paymentCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('tracker_id')) {
+      context.handle(
+        _trackerIdMeta,
+        trackerId.isAcceptableOrUnknown(data['tracker_id']!, _trackerIdMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Subscription map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Subscription(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category_id'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      merchantKeywords: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}merchant_keywords'],
+      )!,
+      frequency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}frequency'],
+      )!,
+      intervalValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}interval_value'],
+      )!,
+      nextDueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}next_due_date'],
+      )!,
+      lastPaidDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_paid_date'],
+      ),
+      totalPaid: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_paid'],
+      )!,
+      paymentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}payment_count'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      trackerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tracker_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SubscriptionsTable createAlias(String alias) {
+    return $SubscriptionsTable(attachedDatabase, alias);
+  }
+}
+
+class Subscription extends DataClass implements Insertable<Subscription> {
+  final String id;
+  final String accountId;
+  final String? categoryId;
+  final int amount;
+  final String name;
+  final String merchantKeywords;
+  final String frequency;
+  final int intervalValue;
+  final DateTime nextDueDate;
+  final DateTime? lastPaidDate;
+  final int totalPaid;
+  final int paymentCount;
+  final String status;
+  final String? trackerId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Subscription({
+    required this.id,
+    required this.accountId,
+    this.categoryId,
+    required this.amount,
+    required this.name,
+    required this.merchantKeywords,
+    required this.frequency,
+    required this.intervalValue,
+    required this.nextDueDate,
+    this.lastPaidDate,
+    required this.totalPaid,
+    required this.paymentCount,
+    required this.status,
+    this.trackerId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['account_id'] = Variable<String>(accountId);
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<String>(categoryId);
+    }
+    map['amount'] = Variable<int>(amount);
+    map['name'] = Variable<String>(name);
+    map['merchant_keywords'] = Variable<String>(merchantKeywords);
+    map['frequency'] = Variable<String>(frequency);
+    map['interval_value'] = Variable<int>(intervalValue);
+    map['next_due_date'] = Variable<DateTime>(nextDueDate);
+    if (!nullToAbsent || lastPaidDate != null) {
+      map['last_paid_date'] = Variable<DateTime>(lastPaidDate);
+    }
+    map['total_paid'] = Variable<int>(totalPaid);
+    map['payment_count'] = Variable<int>(paymentCount);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || trackerId != null) {
+      map['tracker_id'] = Variable<String>(trackerId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SubscriptionsCompanion toCompanion(bool nullToAbsent) {
+    return SubscriptionsCompanion(
+      id: Value(id),
+      accountId: Value(accountId),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      amount: Value(amount),
+      name: Value(name),
+      merchantKeywords: Value(merchantKeywords),
+      frequency: Value(frequency),
+      intervalValue: Value(intervalValue),
+      nextDueDate: Value(nextDueDate),
+      lastPaidDate: lastPaidDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastPaidDate),
+      totalPaid: Value(totalPaid),
+      paymentCount: Value(paymentCount),
+      status: Value(status),
+      trackerId: trackerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trackerId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Subscription.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Subscription(
+      id: serializer.fromJson<String>(json['id']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      categoryId: serializer.fromJson<String?>(json['categoryId']),
+      amount: serializer.fromJson<int>(json['amount']),
+      name: serializer.fromJson<String>(json['name']),
+      merchantKeywords: serializer.fromJson<String>(json['merchantKeywords']),
+      frequency: serializer.fromJson<String>(json['frequency']),
+      intervalValue: serializer.fromJson<int>(json['intervalValue']),
+      nextDueDate: serializer.fromJson<DateTime>(json['nextDueDate']),
+      lastPaidDate: serializer.fromJson<DateTime?>(json['lastPaidDate']),
+      totalPaid: serializer.fromJson<int>(json['totalPaid']),
+      paymentCount: serializer.fromJson<int>(json['paymentCount']),
+      status: serializer.fromJson<String>(json['status']),
+      trackerId: serializer.fromJson<String?>(json['trackerId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'accountId': serializer.toJson<String>(accountId),
+      'categoryId': serializer.toJson<String?>(categoryId),
+      'amount': serializer.toJson<int>(amount),
+      'name': serializer.toJson<String>(name),
+      'merchantKeywords': serializer.toJson<String>(merchantKeywords),
+      'frequency': serializer.toJson<String>(frequency),
+      'intervalValue': serializer.toJson<int>(intervalValue),
+      'nextDueDate': serializer.toJson<DateTime>(nextDueDate),
+      'lastPaidDate': serializer.toJson<DateTime?>(lastPaidDate),
+      'totalPaid': serializer.toJson<int>(totalPaid),
+      'paymentCount': serializer.toJson<int>(paymentCount),
+      'status': serializer.toJson<String>(status),
+      'trackerId': serializer.toJson<String?>(trackerId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Subscription copyWith({
+    String? id,
+    String? accountId,
+    Value<String?> categoryId = const Value.absent(),
+    int? amount,
+    String? name,
+    String? merchantKeywords,
+    String? frequency,
+    int? intervalValue,
+    DateTime? nextDueDate,
+    Value<DateTime?> lastPaidDate = const Value.absent(),
+    int? totalPaid,
+    int? paymentCount,
+    String? status,
+    Value<String?> trackerId = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Subscription(
+    id: id ?? this.id,
+    accountId: accountId ?? this.accountId,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    amount: amount ?? this.amount,
+    name: name ?? this.name,
+    merchantKeywords: merchantKeywords ?? this.merchantKeywords,
+    frequency: frequency ?? this.frequency,
+    intervalValue: intervalValue ?? this.intervalValue,
+    nextDueDate: nextDueDate ?? this.nextDueDate,
+    lastPaidDate: lastPaidDate.present ? lastPaidDate.value : this.lastPaidDate,
+    totalPaid: totalPaid ?? this.totalPaid,
+    paymentCount: paymentCount ?? this.paymentCount,
+    status: status ?? this.status,
+    trackerId: trackerId.present ? trackerId.value : this.trackerId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Subscription copyWithCompanion(SubscriptionsCompanion data) {
+    return Subscription(
+      id: data.id.present ? data.id.value : this.id,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      name: data.name.present ? data.name.value : this.name,
+      merchantKeywords: data.merchantKeywords.present
+          ? data.merchantKeywords.value
+          : this.merchantKeywords,
+      frequency: data.frequency.present ? data.frequency.value : this.frequency,
+      intervalValue: data.intervalValue.present
+          ? data.intervalValue.value
+          : this.intervalValue,
+      nextDueDate: data.nextDueDate.present
+          ? data.nextDueDate.value
+          : this.nextDueDate,
+      lastPaidDate: data.lastPaidDate.present
+          ? data.lastPaidDate.value
+          : this.lastPaidDate,
+      totalPaid: data.totalPaid.present ? data.totalPaid.value : this.totalPaid,
+      paymentCount: data.paymentCount.present
+          ? data.paymentCount.value
+          : this.paymentCount,
+      status: data.status.present ? data.status.value : this.status,
+      trackerId: data.trackerId.present ? data.trackerId.value : this.trackerId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Subscription(')
+          ..write('id: $id, ')
+          ..write('accountId: $accountId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('amount: $amount, ')
+          ..write('name: $name, ')
+          ..write('merchantKeywords: $merchantKeywords, ')
+          ..write('frequency: $frequency, ')
+          ..write('intervalValue: $intervalValue, ')
+          ..write('nextDueDate: $nextDueDate, ')
+          ..write('lastPaidDate: $lastPaidDate, ')
+          ..write('totalPaid: $totalPaid, ')
+          ..write('paymentCount: $paymentCount, ')
+          ..write('status: $status, ')
+          ..write('trackerId: $trackerId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    accountId,
+    categoryId,
+    amount,
+    name,
+    merchantKeywords,
+    frequency,
+    intervalValue,
+    nextDueDate,
+    lastPaidDate,
+    totalPaid,
+    paymentCount,
+    status,
+    trackerId,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Subscription &&
+          other.id == this.id &&
+          other.accountId == this.accountId &&
+          other.categoryId == this.categoryId &&
+          other.amount == this.amount &&
+          other.name == this.name &&
+          other.merchantKeywords == this.merchantKeywords &&
+          other.frequency == this.frequency &&
+          other.intervalValue == this.intervalValue &&
+          other.nextDueDate == this.nextDueDate &&
+          other.lastPaidDate == this.lastPaidDate &&
+          other.totalPaid == this.totalPaid &&
+          other.paymentCount == this.paymentCount &&
+          other.status == this.status &&
+          other.trackerId == this.trackerId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SubscriptionsCompanion extends UpdateCompanion<Subscription> {
+  final Value<String> id;
+  final Value<String> accountId;
+  final Value<String?> categoryId;
+  final Value<int> amount;
+  final Value<String> name;
+  final Value<String> merchantKeywords;
+  final Value<String> frequency;
+  final Value<int> intervalValue;
+  final Value<DateTime> nextDueDate;
+  final Value<DateTime?> lastPaidDate;
+  final Value<int> totalPaid;
+  final Value<int> paymentCount;
+  final Value<String> status;
+  final Value<String?> trackerId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const SubscriptionsCompanion({
+    this.id = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.name = const Value.absent(),
+    this.merchantKeywords = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.intervalValue = const Value.absent(),
+    this.nextDueDate = const Value.absent(),
+    this.lastPaidDate = const Value.absent(),
+    this.totalPaid = const Value.absent(),
+    this.paymentCount = const Value.absent(),
+    this.status = const Value.absent(),
+    this.trackerId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SubscriptionsCompanion.insert({
+    required String id,
+    required String accountId,
+    this.categoryId = const Value.absent(),
+    required int amount,
+    required String name,
+    required String merchantKeywords,
+    required String frequency,
+    this.intervalValue = const Value.absent(),
+    required DateTime nextDueDate,
+    this.lastPaidDate = const Value.absent(),
+    this.totalPaid = const Value.absent(),
+    this.paymentCount = const Value.absent(),
+    this.status = const Value.absent(),
+    this.trackerId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       accountId = Value(accountId),
+       amount = Value(amount),
+       name = Value(name),
+       merchantKeywords = Value(merchantKeywords),
+       frequency = Value(frequency),
+       nextDueDate = Value(nextDueDate);
+  static Insertable<Subscription> custom({
+    Expression<String>? id,
+    Expression<String>? accountId,
+    Expression<String>? categoryId,
+    Expression<int>? amount,
+    Expression<String>? name,
+    Expression<String>? merchantKeywords,
+    Expression<String>? frequency,
+    Expression<int>? intervalValue,
+    Expression<DateTime>? nextDueDate,
+    Expression<DateTime>? lastPaidDate,
+    Expression<int>? totalPaid,
+    Expression<int>? paymentCount,
+    Expression<String>? status,
+    Expression<String>? trackerId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (accountId != null) 'account_id': accountId,
+      if (categoryId != null) 'category_id': categoryId,
+      if (amount != null) 'amount': amount,
+      if (name != null) 'name': name,
+      if (merchantKeywords != null) 'merchant_keywords': merchantKeywords,
+      if (frequency != null) 'frequency': frequency,
+      if (intervalValue != null) 'interval_value': intervalValue,
+      if (nextDueDate != null) 'next_due_date': nextDueDate,
+      if (lastPaidDate != null) 'last_paid_date': lastPaidDate,
+      if (totalPaid != null) 'total_paid': totalPaid,
+      if (paymentCount != null) 'payment_count': paymentCount,
+      if (status != null) 'status': status,
+      if (trackerId != null) 'tracker_id': trackerId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SubscriptionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? accountId,
+    Value<String?>? categoryId,
+    Value<int>? amount,
+    Value<String>? name,
+    Value<String>? merchantKeywords,
+    Value<String>? frequency,
+    Value<int>? intervalValue,
+    Value<DateTime>? nextDueDate,
+    Value<DateTime?>? lastPaidDate,
+    Value<int>? totalPaid,
+    Value<int>? paymentCount,
+    Value<String>? status,
+    Value<String?>? trackerId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return SubscriptionsCompanion(
+      id: id ?? this.id,
+      accountId: accountId ?? this.accountId,
+      categoryId: categoryId ?? this.categoryId,
+      amount: amount ?? this.amount,
+      name: name ?? this.name,
+      merchantKeywords: merchantKeywords ?? this.merchantKeywords,
+      frequency: frequency ?? this.frequency,
+      intervalValue: intervalValue ?? this.intervalValue,
+      nextDueDate: nextDueDate ?? this.nextDueDate,
+      lastPaidDate: lastPaidDate ?? this.lastPaidDate,
+      totalPaid: totalPaid ?? this.totalPaid,
+      paymentCount: paymentCount ?? this.paymentCount,
+      status: status ?? this.status,
+      trackerId: trackerId ?? this.trackerId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (merchantKeywords.present) {
+      map['merchant_keywords'] = Variable<String>(merchantKeywords.value);
+    }
+    if (frequency.present) {
+      map['frequency'] = Variable<String>(frequency.value);
+    }
+    if (intervalValue.present) {
+      map['interval_value'] = Variable<int>(intervalValue.value);
+    }
+    if (nextDueDate.present) {
+      map['next_due_date'] = Variable<DateTime>(nextDueDate.value);
+    }
+    if (lastPaidDate.present) {
+      map['last_paid_date'] = Variable<DateTime>(lastPaidDate.value);
+    }
+    if (totalPaid.present) {
+      map['total_paid'] = Variable<int>(totalPaid.value);
+    }
+    if (paymentCount.present) {
+      map['payment_count'] = Variable<int>(paymentCount.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (trackerId.present) {
+      map['tracker_id'] = Variable<String>(trackerId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubscriptionsCompanion(')
+          ..write('id: $id, ')
+          ..write('accountId: $accountId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('amount: $amount, ')
+          ..write('name: $name, ')
+          ..write('merchantKeywords: $merchantKeywords, ')
+          ..write('frequency: $frequency, ')
+          ..write('intervalValue: $intervalValue, ')
+          ..write('nextDueDate: $nextDueDate, ')
+          ..write('lastPaidDate: $lastPaidDate, ')
+          ..write('totalPaid: $totalPaid, ')
+          ..write('paymentCount: $paymentCount, ')
+          ..write('status: $status, ')
+          ..write('trackerId: $trackerId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8276,6 +9184,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $LoansTable loans = $LoansTable(this);
   late final $RecurringTransactionsTable recurringTransactions =
       $RecurringTransactionsTable(this);
+  late final $SubscriptionsTable subscriptions = $SubscriptionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8294,6 +9203,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     savingsGoalContributions,
     loans,
     recurringTransactions,
+    subscriptions,
   ];
 }
 
@@ -12320,6 +13230,427 @@ typedef $$RecurringTransactionsTableProcessedTableManager =
       RecurringTransaction,
       PrefetchHooks Function()
     >;
+typedef $$SubscriptionsTableCreateCompanionBuilder =
+    SubscriptionsCompanion Function({
+      required String id,
+      required String accountId,
+      Value<String?> categoryId,
+      required int amount,
+      required String name,
+      required String merchantKeywords,
+      required String frequency,
+      Value<int> intervalValue,
+      required DateTime nextDueDate,
+      Value<DateTime?> lastPaidDate,
+      Value<int> totalPaid,
+      Value<int> paymentCount,
+      Value<String> status,
+      Value<String?> trackerId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+typedef $$SubscriptionsTableUpdateCompanionBuilder =
+    SubscriptionsCompanion Function({
+      Value<String> id,
+      Value<String> accountId,
+      Value<String?> categoryId,
+      Value<int> amount,
+      Value<String> name,
+      Value<String> merchantKeywords,
+      Value<String> frequency,
+      Value<int> intervalValue,
+      Value<DateTime> nextDueDate,
+      Value<DateTime?> lastPaidDate,
+      Value<int> totalPaid,
+      Value<int> paymentCount,
+      Value<String> status,
+      Value<String?> trackerId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$SubscriptionsTableFilterComposer
+    extends Composer<_$AppDatabase, $SubscriptionsTable> {
+  $$SubscriptionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get merchantKeywords => $composableBuilder(
+    column: $table.merchantKeywords,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get intervalValue => $composableBuilder(
+    column: $table.intervalValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastPaidDate => $composableBuilder(
+    column: $table.lastPaidDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalPaid => $composableBuilder(
+    column: $table.totalPaid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get paymentCount => $composableBuilder(
+    column: $table.paymentCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get trackerId => $composableBuilder(
+    column: $table.trackerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SubscriptionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SubscriptionsTable> {
+  $$SubscriptionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get merchantKeywords => $composableBuilder(
+    column: $table.merchantKeywords,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get frequency => $composableBuilder(
+    column: $table.frequency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get intervalValue => $composableBuilder(
+    column: $table.intervalValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastPaidDate => $composableBuilder(
+    column: $table.lastPaidDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalPaid => $composableBuilder(
+    column: $table.totalPaid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get paymentCount => $composableBuilder(
+    column: $table.paymentCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get trackerId => $composableBuilder(
+    column: $table.trackerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SubscriptionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SubscriptionsTable> {
+  $$SubscriptionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryId => $composableBuilder(
+    column: $table.categoryId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get merchantKeywords => $composableBuilder(
+    column: $table.merchantKeywords,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get frequency =>
+      $composableBuilder(column: $table.frequency, builder: (column) => column);
+
+  GeneratedColumn<int> get intervalValue => $composableBuilder(
+    column: $table.intervalValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get nextDueDate => $composableBuilder(
+    column: $table.nextDueDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastPaidDate => $composableBuilder(
+    column: $table.lastPaidDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get totalPaid =>
+      $composableBuilder(column: $table.totalPaid, builder: (column) => column);
+
+  GeneratedColumn<int> get paymentCount => $composableBuilder(
+    column: $table.paymentCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get trackerId =>
+      $composableBuilder(column: $table.trackerId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SubscriptionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SubscriptionsTable,
+          Subscription,
+          $$SubscriptionsTableFilterComposer,
+          $$SubscriptionsTableOrderingComposer,
+          $$SubscriptionsTableAnnotationComposer,
+          $$SubscriptionsTableCreateCompanionBuilder,
+          $$SubscriptionsTableUpdateCompanionBuilder,
+          (
+            Subscription,
+            BaseReferences<_$AppDatabase, $SubscriptionsTable, Subscription>,
+          ),
+          Subscription,
+          PrefetchHooks Function()
+        > {
+  $$SubscriptionsTableTableManager(_$AppDatabase db, $SubscriptionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SubscriptionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SubscriptionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SubscriptionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<String?> categoryId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> merchantKeywords = const Value.absent(),
+                Value<String> frequency = const Value.absent(),
+                Value<int> intervalValue = const Value.absent(),
+                Value<DateTime> nextDueDate = const Value.absent(),
+                Value<DateTime?> lastPaidDate = const Value.absent(),
+                Value<int> totalPaid = const Value.absent(),
+                Value<int> paymentCount = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> trackerId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SubscriptionsCompanion(
+                id: id,
+                accountId: accountId,
+                categoryId: categoryId,
+                amount: amount,
+                name: name,
+                merchantKeywords: merchantKeywords,
+                frequency: frequency,
+                intervalValue: intervalValue,
+                nextDueDate: nextDueDate,
+                lastPaidDate: lastPaidDate,
+                totalPaid: totalPaid,
+                paymentCount: paymentCount,
+                status: status,
+                trackerId: trackerId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String accountId,
+                Value<String?> categoryId = const Value.absent(),
+                required int amount,
+                required String name,
+                required String merchantKeywords,
+                required String frequency,
+                Value<int> intervalValue = const Value.absent(),
+                required DateTime nextDueDate,
+                Value<DateTime?> lastPaidDate = const Value.absent(),
+                Value<int> totalPaid = const Value.absent(),
+                Value<int> paymentCount = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> trackerId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SubscriptionsCompanion.insert(
+                id: id,
+                accountId: accountId,
+                categoryId: categoryId,
+                amount: amount,
+                name: name,
+                merchantKeywords: merchantKeywords,
+                frequency: frequency,
+                intervalValue: intervalValue,
+                nextDueDate: nextDueDate,
+                lastPaidDate: lastPaidDate,
+                totalPaid: totalPaid,
+                paymentCount: paymentCount,
+                status: status,
+                trackerId: trackerId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SubscriptionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SubscriptionsTable,
+      Subscription,
+      $$SubscriptionsTableFilterComposer,
+      $$SubscriptionsTableOrderingComposer,
+      $$SubscriptionsTableAnnotationComposer,
+      $$SubscriptionsTableCreateCompanionBuilder,
+      $$SubscriptionsTableUpdateCompanionBuilder,
+      (
+        Subscription,
+        BaseReferences<_$AppDatabase, $SubscriptionsTable, Subscription>,
+      ),
+      Subscription,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12353,4 +13684,6 @@ class $AppDatabaseManager {
       $$LoansTableTableManager(_db, _db.loans);
   $$RecurringTransactionsTableTableManager get recurringTransactions =>
       $$RecurringTransactionsTableTableManager(_db, _db.recurringTransactions);
+  $$SubscriptionsTableTableManager get subscriptions =>
+      $$SubscriptionsTableTableManager(_db, _db.subscriptions);
 }

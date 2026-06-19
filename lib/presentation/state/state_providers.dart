@@ -14,6 +14,7 @@ import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
 import '../../data/repositories/loan_repository.dart';
 import '../../data/repositories/recurring_transaction_repository.dart';
+import '../../data/repositories/subscription_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 class ActiveTrackerIdNotifier extends Notifier<String> {
@@ -364,5 +365,21 @@ final recurringTransactionsStreamProvider = StreamProvider<List<RecurringTransac
 final dueRecurringTransactionsProvider = FutureProvider<List<RecurringTransaction>>((ref) {
   final repo = ref.watch(recurringTransactionRepositoryProvider);
   return repo.getDueTransactions(DateTime.now());
+});
+
+// ── Subscription Providers ───────────────────────────────────────────
+final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
+  final repo = ref.watch(subscriptionRepositoryProvider);
+  return repo.watchAll();
+});
+
+final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
+  final repo = ref.watch(subscriptionRepositoryProvider);
+  return repo.getDue(DateTime.now());
+});
+
+final activeSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
+  final repo = ref.watch(subscriptionRepositoryProvider);
+  return repo.getActive();
 });
 

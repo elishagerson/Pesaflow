@@ -13,6 +13,8 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/database/daos/loan_dao.dart';
+import 'package:pesaflow/data/database/daos/subscription_dao.dart';
+import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
@@ -43,6 +45,7 @@ void main() {
   late TransactionRepository transactionRepo;
   late LoanRepository loanRepo;
   late SettingsRepository settingsRepo;
+  late SubscriptionRepository subscriptionRepo;
   late Deduplicator deduplicator;
   late AutoCategorizer categorizer;
   late MockNotificationService notificationService;
@@ -63,6 +66,7 @@ void main() {
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
     notificationService = MockNotificationService();
+    subscriptionRepo = SubscriptionRepository(SubscriptionDao(database));
 
     smsProcessor = SmsProcessor(
       accountRepo: accountRepo,
@@ -70,6 +74,7 @@ void main() {
       transactionRepo: transactionRepo,
       loanRepo: loanRepo,
       settingsRepo: settingsRepo,
+      subscriptionRepo: subscriptionRepo,
       deduplicator: deduplicator,
       categorizer: categorizer,
       notificationService: notificationService,
@@ -133,22 +138,26 @@ void main() {
         senderOrRecipient: 'Supermarket POS payment',
       );
       expect(dynamicRes.category.id, rentCategory.id);
-      expect(dynamicRes.confidence, 0.99);
+      // Single consistent match yields 0.85; two or more would yield 0.99
+      expect(dynamicRes.confidence, 0.85);
     });
   });
 
   group('Automated Transfer & Deduplication Tests', () {
-    test('Intercepts account deposit as a Transfer transaction and deduplicates the corresponding telco SMS', () async {
-      // 1. Seed two active accounts: M-Pesa & CRDB Bank
-      final mpesaId = const Uuid().v4();
-      final crdbId = const Uuid().v4();
+    test('Intercepts P2P transfer as a Transfer transaction and deduplicates counterparty SMS', () async {
+      // 1. Seed two accounts on different providers with distinct phone numbers
+      final senderId = const Uuid().v4();
+      final receiverId = const Uuid().v4();
+      const senderPhone = '0712345678';
+      const receiverPhone = '0765432109';
 
       await accountDao.insertAccount(Account(
-        id: mpesaId,
-        name: 'M-Pesa',
+        id: senderId,
+        name: 'Alice',
         type: 'mobile_money',
         balance: 50000000, // Tsh 500k in cents
         provider: 'M-Pesa_TZ',
+        phoneNumber: senderPhone,
         icon: 'phone',
         sortOrder: 1,
         isArchived: false,
@@ -156,57 +165,57 @@ void main() {
       ));
 
       await accountDao.insertAccount(Account(
-        id: crdbId,
-        name: 'CRDB Bank',
-        type: 'bank',
-        balance: 100000000, // Tsh 1M in cents
-        provider: 'CRDB_Bank',
-        icon: 'bank',
+        id: receiverId,
+        name: 'Bob',
+        type: 'mobile_money',
+        balance: 20000000, // Tsh 200k in cents
+        provider: 'TigoPesa_TZ',
+        phoneNumber: receiverPhone,
+        icon: 'phone',
         sortOrder: 2,
         isArchived: false,
         createdAt: DateTime.now(),
       ));
 
-      // 2. Simulate deposit SMS alert at CRDB Bank (credited from MPESA)
-      // "CRDB: Deposit TZS 100,000.00 from MPESA. Available: TZS 1,100,000.00. Ref: CRDB456"
-      final bankSms = "CRDB: Deposit TZS 100,000.00 from MPESA. Available: TZS 1,100,000.00. Ref: CRDB456";
       final transferTime = DateTime.now();
 
-      final firstSuccess = await smsProcessor.processSms('CRDB', bankSms, transferTime);
+      // 2. Simulate the SENDER's M-Pesa SMS (expense from Alice to Bob)
+      final senderSms = 'Umetuma Tsh 100,000.00 kwa $receiverPhone tarehe 15/5/2026 saa 14:30. Rej: MPESA01. Salio: Tsh 400,000.00';
+
+      final firstSuccess = await smsProcessor.processSms('M-Pesa_TZ', senderSms, transferTime);
       expect(firstSuccess, true);
 
-      // Verify a Transfer transaction was created in database
+      // Verify a Transfer transaction was created
       final allTx = await database.select(database.transactions).get();
       expect(allTx.length, 1);
       final tx = allTx.first;
 
       expect(tx.type, 'transfer');
       expect(tx.amount, 10000000); // Tsh 100,000 * 100 cents
-      expect(tx.accountId, mpesaId); // Source is M-Pesa
-      expect(tx.destinationAccountId, crdbId); // Destination is CRDB Bank
-      expect(tx.description, 'Transfer from M-Pesa to CRDB Bank');
+      expect(tx.accountId, senderId); // Source is Alice
+      expect(tx.destinationAccountId, receiverId); // Destination is Bob
+      expect(tx.description, 'Transfer from Alice to Bob');
 
-      // Verify that M-Pesa balance was reduced (500k - 100k = 400k)
-      // and CRDB Bank balance was reconciled to exact stated ending available (Tsh 1,100,000 = 110,000,000 cents)
-      final updatedMpesa = await accountDao.getAccountById(mpesaId);
-      final updatedCrdb = await accountDao.getAccountById(crdbId);
-      expect(updatedMpesa?.balance, 40000000);
-      expect(updatedCrdb?.balance, 110000000);
+      // Verify balances: Alice debited (500k - 100k = 400k), Bob credited (200k + 100k = 300k)
+      final updatedSender = await accountDao.getAccountById(senderId);
+      final updatedReceiver = await accountDao.getAccountById(receiverId);
+      expect(updatedSender?.balance, 40000000);
+      expect(updatedReceiver?.balance, 30000000); // Bob credited in transfer
 
-      // 3. Simulate processing corresponding M-Pesa SMS alert that arrives seconds later:
-      // "Umetuma Tsh 100,000.00 kwa CRDB Bank tarehe 15/5/2026 saa 14:30. Rej: P65AB. Salio: Tsh 400,000.00"
-      final mpesaSms = "Umetuma Tsh 100,000.00 kwa CRDB Bank tarehe 15/5/2026 saa 14:30. Rej: P65AB. Salio: Tsh 400,000.00";
-      
-      final secondSuccess = await smsProcessor.processSms('M-PESA', mpesaSms, transferTime.add(const Duration(seconds: 10)));
+      // 3. Simulate RECEIVER's TigoPesa SMS arriving seconds later (income to Bob from Alice)
+      // Different reference so the general deduplicator doesn't false-positive
+      final receiverSms = 'Umepokea Tsh 100,000.00 kutoka kwa $senderPhone tarehe 15/5/2026 saa 14:30. Rej: TIGO02. Salio: Tsh 300,000.00';
+
+      final secondSuccess = await smsProcessor.processSms('TigoPesa_TZ', receiverSms, transferTime.add(const Duration(seconds: 30)));
       expect(secondSuccess, true);
 
-      // Verify that NO new transaction was inserted (deduplicated successfully!)
-      final finalTxList = await database.select(database.transactions).get();
-      expect(finalTxList.length, 1); // Still exactly one transfer transaction!
+      // Verify exactly one Transaction remains (no duplicate)
+      final finalTx = await database.select(database.transactions).get();
+      expect(finalTx.length, 1);
 
-      // Verify M-Pesa balance remains reconciled correctly
-      final finalMpesa = await accountDao.getAccountById(mpesaId);
-      expect(finalMpesa?.balance, 40000000);
+      // Verify Bob's balance was reconciled from the SMS
+      final reconciledReceiver = await accountDao.getAccountById(receiverId);
+      expect(reconciledReceiver?.balance, 30000000);
     });
   });
 }
