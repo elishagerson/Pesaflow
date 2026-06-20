@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -82,7 +83,7 @@ class SubscriptionListScreen extends ConsumerWidget {
   }
 
   Widget _buildSubscriptionTile(BuildContext context, Subscription sub, bool isDark, bool isDue) {
-    final freqLabel = _frequencyLabel(sub.frequency, sub.intervalValue);
+    final freqLabel = frequencyLabel(sub.frequency, sub.intervalValue);
     final statusColor = sub.status == 'active' ? const Color(0xFF609F8A) : Colors.grey;
 
     return Container(
@@ -141,15 +142,4 @@ class SubscriptionListScreen extends ConsumerWidget {
     );
   }
 
-  String _frequencyLabel(String frequency, int interval) {
-    final label = switch (frequency) {
-      'weekly' => 'week',
-      'biweekly' => '2 weeks',
-      'monthly' => 'month',
-      'quarterly' => 'quarter',
-      'yearly' => 'year',
-      _ => frequency,
-    };
-    return interval > 1 ? 'Every $interval $label' : 'Every $label';
-  }
 }

@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -2317,8 +2318,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            _frequencyLabel(sub.frequency, sub.intervalValue),
+                            Text(
+                              frequencyLabel(sub.frequency, sub.intervalValue),
                             style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                           ),
                         ],
@@ -2340,18 +2341,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
     );
-  }
-
-  String _frequencyLabel(String frequency, int interval) {
-    final label = switch (frequency) {
-      'weekly' => 'week',
-      'biweekly' => '2 weeks',
-      'monthly' => 'month',
-      'quarterly' => 'quarter',
-      'yearly' => 'year',
-      _ => frequency,
-    };
-    return interval > 1 ? 'Every $interval $label' : 'Every $label';
   }
 
   Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
