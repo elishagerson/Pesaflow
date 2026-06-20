@@ -12,7 +12,9 @@ import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:pesaflow/data/database/daos/loan_dao.dart';
+import 'package:pesaflow/data/database/daos/analytics_dao.dart';
 import 'package:pesaflow/data/database/daos/subscription_dao.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
@@ -60,7 +62,7 @@ void main() {
 
     accountRepo = AccountRepository(accountDao);
     categoryRepo = CategoryRepository(categoryDao);
-    transactionRepo = TransactionRepository(transactionDao, null);
+    transactionRepo = TransactionRepository(transactionDao, null, AnalyticsRepository(AnalyticsDao(database)));
     loanRepo = LoanRepository(LoanDao(database));
     settingsRepo = SettingsRepository(settingsDao);
     deduplicator = Deduplicator(transactionRepo);

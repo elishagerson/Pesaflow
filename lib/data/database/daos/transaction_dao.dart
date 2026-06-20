@@ -295,6 +295,11 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Finds an existing transfer transaction between two accounts with the exact same amount
   /// within a specific time window.
+  Future<Transaction?> getTransactionById(String id) async {
+    final query = select(transactions)..where((t) => t.id.equals(id));
+    return query.getSingleOrNull();
+  }
+
   Future<Transaction?> findFuzzyTransferMatch({
     required String accountId,
     required String destinationAccountId,

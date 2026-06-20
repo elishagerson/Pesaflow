@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/app_database.dart';
 import '../database/daos/analytics_dao.dart';
@@ -30,9 +31,16 @@ class AnalyticsRepository {
   }
 
   /// Refreshes both daily and monthly snapshots for a date.
+  /// Each refresh is independent so a failure in one doesn't block the other.
   Future<void> refreshAllSnapshots(DateTime date) async {
-    await refreshSnapshotsForDate(date);
-    await refreshSnapshotsForMonth(date);
+    await Future.wait([
+      refreshSnapshotsForDate(date).catchError((e) {
+        developer.log('Daily snapshot refresh failed: $e', name: 'AnalyticsRepo');
+      }),
+      refreshSnapshotsForMonth(date).catchError((e) {
+        developer.log('Monthly snapshot refresh failed: $e', name: 'AnalyticsRepo');
+      }),
+    ]);
   }
 
   /// Gets daily snapshots for a date range.
