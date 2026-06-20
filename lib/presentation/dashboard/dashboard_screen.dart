@@ -2230,6 +2230,131 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  Widget _buildSubscriptionsDashboard(ThemeData theme, BuildContext context) {
+    final isDark = theme.brightness == Brightness.dark;
+    final subsAsync = ref.watch(subscriptionsStreamProvider);
+    final dueAsync = ref.watch(dueSubscriptionsProvider);
+
+    return subsAsync.when(
+      data: (subscriptions) {
+        if (subscriptions.isEmpty) return const SizedBox.shrink();
+        final due = dueAsync.asData?.value ?? [];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Subscriptions',
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '${subscriptions.length} ACTIVE',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+                if (due.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      '${due.length} due',
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFFF6B35),
+                      ),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () => context.push('/subscriptions'),
+                  child: const Text('Manage'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...subscriptions.take(3).map((sub) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: GlassCard(
+                borderRadius: AppTheme.radiusCard,
+                elevation: CardElevation.low,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: due.contains(sub) ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : const Color(0xFF609F8A).withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.subscriptions_rounded,
+                        size: 14,
+                        color: due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            sub.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _frequencyLabel(sub.frequency, sub.intervalValue),
+                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AmountText(
+                      amountInCents: sub.amount,
+                      type: AmountType.expense,
+                      useMonospace: true,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
+  String _frequencyLabel(String frequency, int interval) {
+    final label = switch (frequency) {
+      'weekly' => 'week',
+      'biweekly' => '2 weeks',
+      'monthly' => 'month',
+      'quarterly' => 'quarter',
+      'yearly' => 'year',
+      _ => frequency,
+    };
+    return interval > 1 ? 'Every $interval $label' : 'Every $label';
+  }
+
   Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
     final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -3037,7 +3162,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 24),
 
-              // ── 6. Upcoming Recurring Transactions ──
+              // ── 6. Upcoming Subscriptions ──
+              StaggeredFadeSlide(
+                index: 4,
+                child: _buildSubscriptionsDashboard(theme, context),
+              ),
+              const SizedBox(height: 24),
+
+              // ── 7. Upcoming Recurring Transactions ──
               _buildUpcomingRecurring(theme, context),
 
               const SizedBox(height: 24),
