@@ -21,6 +21,10 @@ class GenericFallbackParser implements SmsParser {
       }
 
       final type = _determineType(text);
+      if (type == null) {
+        developer.log('GenericFallbackParser: no transaction keywords in "$text"', name: 'Parser');
+        return null;
+      }
       final ref = _extractAnyReference(text);
       final bal = _extractAnyBalance(text);
 
@@ -55,7 +59,7 @@ class GenericFallbackParser implements SmsParser {
     return 0;
   }
 
-  static String _determineType(String text) {
+  static String? _determineType(String text) {
     final lower = text.toLowerCase();
     final incomeWords = [
       'umepokea', 'umepewa', 'zimewekwa', 'received', 'deposit',
@@ -81,7 +85,8 @@ class GenericFallbackParser implements SmsParser {
       if (lower.contains(w)) return 'loan';
     }
 
-    return 'expense';
+    // No transaction keywords found — likely an ad or promo, not a real transaction.
+    return null;
   }
 
   static String _extractAnyReference(String text) {
