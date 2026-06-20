@@ -329,12 +329,6 @@ final paidLoansCountProvider = FutureProvider<int>((ref) {
   return paidAsync.when(data: (l) => l.length, loading: () => 0, error: (_, _) => 0);
 });
 
-final totalPaidLoanAmountProvider = FutureProvider<int>((ref) {
-  final repo = ref.watch(loanRepositoryProvider);
-  final trackerId = ref.watch(activeTrackerIdProvider);
-  return repo.getTotalPaid(trackerId: trackerId);
-});
-
 final recentLoanActivityProvider = FutureProvider<int>((ref) {
   final repo = ref.watch(loanRepositoryProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
@@ -376,10 +370,5 @@ final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
 final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
   final repo = ref.watch(subscriptionRepositoryProvider);
   return repo.getDue(DateTime.now());
-});
-
-final activeSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
-  final repo = ref.watch(subscriptionRepositoryProvider);
-  return repo.getActive();
 });
 
