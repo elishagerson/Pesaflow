@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
-import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -182,7 +181,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           ],
         ),
         const Spacer(),
-        if (trailing != null) trailing,
+        ?trailing,
       ],
     );
   }

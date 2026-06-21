@@ -89,7 +89,7 @@ class TransactionRepository {
   }
 
   Future<TransactionWithCategoryAndAccount?> getTransactionById(String id) {
-    return _transactionDao.getTransactionById(id);
+    return _transactionDao.getTransactionWithDetailsById(id);
   }
 
   Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {

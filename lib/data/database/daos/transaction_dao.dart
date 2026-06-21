@@ -300,6 +300,23 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     return query.getSingleOrNull();
   }
 
+  /// Fetches a single transaction with its category and account details by ID.
+  Future<TransactionWithCategoryAndAccount?> getTransactionWithDetailsById(String id) async {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
+      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+    ])
+      ..where(transactions.id.equals(id));
+
+    final row = await query.getSingleOrNull();
+    if (row == null) return null;
+    return TransactionWithCategoryAndAccount(
+      transaction: row.readTable(transactions),
+      category: row.readTable(categories),
+      account: row.readTable(accounts),
+    );
+  }
+
   Future<Transaction?> findFuzzyTransferMatch({
     required String accountId,
     required String destinationAccountId,
