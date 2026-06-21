@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
 import '../../data/database/daos/transaction_dao.dart';
@@ -370,5 +371,9 @@ final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
 final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
   final repo = ref.watch(subscriptionRepositoryProvider);
   return repo.getDue(DateTime.now());
+});
+
+final themeModeProvider = StateProvider<ThemeMode>((ref) {
+  return ThemeMode.system;
 });
 
