@@ -1879,12 +1879,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 20),
             ],
           ),
-        ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -3374,6 +3373,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                               ],
+                            ),
                             ),
                           ),
                         ),
