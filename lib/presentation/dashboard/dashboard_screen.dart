@@ -3107,63 +3107,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: 20),
 
-              // ── 4. Loan / Debt Overview ──
+              // ── 3. Monthly Overview — "How your money moved" ──
               StaggeredFadeSlide(
                 index: 2,
-                child: _buildLoanOverview(theme, context),
+                child: _buildMonthlyOverview(theme),
               ),
               const SizedBox(height: 20),
 
-              // ── 4+5. Monthly Overview & SMS Card in 2-column grid ──
+              // ── 4. Recent Activity — "The transactions behind it" ──
               StaggeredFadeSlide(
                 index: 3,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _buildMonthlyOverview(theme)),
-                    const SizedBox(width: 16),
-                    Expanded(child: _buildSmsReviewCard(theme, isDark, pendingReviewCount)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // ── 6. Upcoming Subscriptions ──
-              StaggeredFadeSlide(
-                index: 4,
-                child: _buildSubscriptionsDashboard(theme, context),
-              ),
-              const SizedBox(height: 20),
-
-              // ── 7. Upcoming Recurring Transactions ──
-              _buildUpcomingRecurring(theme, context),
-
-              const SizedBox(height: 20),
-
-              // Budget Progress Rings (Embedded category icons)
-              _buildBudgetRings(theme, context),
-
-              if (showReminder) ...[
-                const SizedBox(height: 20),
-                StaggeredFadeSlide(
-                  index: 5,
-                  child: _buildSavingsReminder(theme),
-                ),
-              ],
-
-              if (showSavingsGoals) ...[
-                const SizedBox(height: 20),
-                StaggeredFadeSlide(
-                  index: 6,
-                  child: _buildSavingsGoalsDashboard(theme, context),
-                ),
-              ],
-
-              const SizedBox(height: 20),
-
-              // Recent Transactions Section
-              StaggeredFadeSlide(
-                index: 7,
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -3428,6 +3381,52 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, _) =>
                     Center(child: Text('Error loading activity: $err')),
+              ),
+
+              // ── 5. Budget Progress — "Your Financial Targets" ──
+              _buildBudgetRings(theme, context),
+
+              if (showSavingsGoals) ...[
+                const SizedBox(height: 20),
+                StaggeredFadeSlide(
+                  index: 4,
+                  child: _buildSavingsGoalsDashboard(theme, context),
+                ),
+              ],
+
+              if (showReminder) ...[
+                const SizedBox(height: 20),
+                StaggeredFadeSlide(
+                  index: 5,
+                  child: _buildSavingsReminder(theme),
+                ),
+              ],
+
+              const SizedBox(height: 20),
+
+              // ── 6. Upcoming Payments — "Subscriptions" ──
+              StaggeredFadeSlide(
+                index: 6,
+                child: _buildSubscriptionsDashboard(theme, context),
+              ),
+
+              // ── 7. Upcoming Payments — "Recurring" ──
+              _buildUpcomingRecurring(theme, context),
+
+              const SizedBox(height: 20),
+
+              // ── 8. Loan / Debt Overview ──
+              StaggeredFadeSlide(
+                index: 7,
+                child: _buildLoanOverview(theme, context),
+              ),
+
+              const SizedBox(height: 20),
+
+              // ── 9. SMS Auto-Tracking — "How it works" ──
+              StaggeredFadeSlide(
+                index: 8,
+                child: _buildSmsReviewCard(theme, isDark, pendingReviewCount),
               ),
             ],
           ),

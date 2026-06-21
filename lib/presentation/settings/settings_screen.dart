@@ -655,23 +655,32 @@ class SettingsScreen extends ConsumerWidget {
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
 
-            final newCategory = Category(
-              id: const Uuid().v4(),
-              name: nameController.text.trim(),
-              icon: selectedIcon,
-              color: selectedHexColor,
-              type: categoryType.toLowerCase(),
-              isSystem: false,
-              sortOrder: 100,
-              createdAt: DateTime.now(),
-            );
-
-            await ref.read(categoryRepositoryProvider).createCategory(newCategory);
+            if (isEditing) {
+              final updated = existing.copyWith(
+                name: nameController.text.trim(),
+                icon: selectedIcon,
+                color: selectedHexColor,
+                type: categoryType.toLowerCase(),
+              );
+              await ref.read(categoryRepositoryProvider).updateCategory(updated);
+            } else {
+              final newCategory = Category(
+                id: const Uuid().v4(),
+                name: nameController.text.trim(),
+                icon: selectedIcon,
+                color: selectedHexColor,
+                type: categoryType.toLowerCase(),
+                isSystem: false,
+                sortOrder: 100,
+                createdAt: DateTime.now(),
+              );
+              await ref.read(categoryRepositoryProvider).createCategory(newCategory);
+            }
             ref.invalidate(categoriesFutureProvider);
             ref.invalidate(filteredTransactionsStreamProvider);
             if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
           },
-          child: const Text('Create'),
+          child: Text(isEditing ? 'Save' : 'Create'),
         ),
       ],
     );
