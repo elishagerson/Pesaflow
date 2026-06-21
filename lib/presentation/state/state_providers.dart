@@ -373,7 +373,35 @@ final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
   return repo.getDue(DateTime.now());
 });
 
-final themeModeProvider = StateProvider<ThemeMode>((ref) {
-  return ThemeMode.system;
+class ThemeModeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() {
+    _load();
+    return ThemeMode.system;
+  }
+
+  Future<void> _load() async {
+    final repo = ref.read(settingsRepositoryProvider);
+    final saved = await repo.getThemeMode();
+    state = switch (saved) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    state = mode;
+    final repo = ref.read(settingsRepositoryProvider);
+    await repo.setThemeMode(switch (mode) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      _ => 'system',
+    });
+  }
+}
+
+final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(() {
+  return ThemeModeNotifier();
 });
 

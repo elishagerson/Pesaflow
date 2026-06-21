@@ -276,13 +276,14 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
 
     final lockEnabled = ref.watch(appLockEnabledProvider).value ?? false;
     final showLockOverlay = lockEnabled && !_isAuthenticated;
+    final mode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       title: 'PesaFlow',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.fromColorScheme(lightCs, Brightness.light),
       darkTheme: AppTheme.fromColorScheme(darkCs, Brightness.dark),
-      themeMode: ThemeMode.system,
+      themeMode: mode,
       routerConfig: appRouter,
       builder: (context, child) {
         return ScrollConfiguration(
