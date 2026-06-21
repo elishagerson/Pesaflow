@@ -773,6 +773,106 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  Widget _buildSmsReviewCard(ThemeData theme, bool isDark, int pendingReviewCount) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.surfaceHighDark : AppTheme.bgLight,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(
+          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+          width: 0.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.message_rounded, size: 14, color: const Color(0xFF609F8A)),
+                  const SizedBox(width: 6),
+                  Text('SMS AUTO-TRACKING', style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  )),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: pendingReviewCount > 0
+                      ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
+                      : (isDark ? Colors.white10 : Colors.black12),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  pendingReviewCount > 0 ? '$pendingReviewCount PENDING' : '0 PENDING',
+                  style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900,
+                    color: pendingReviewCount > 0 ? const Color(0xFFFF9F0A) : Colors.grey[500],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Review parsed mobile money & bank transactions from your SMS.',
+            style: TextStyle(fontSize: 11, height: 1.3,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: 4, runSpacing: 4,
+                  children: [
+                    _buildActiveParserBadge(isDark, 'M-Pesa'),
+                    _buildActiveParserBadge(isDark, 'Tigo'),
+                    _buildActiveParserBadge(isDark, 'Airtel'),
+                    _buildActiveParserBadge(isDark, 'Selcom'),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              TactileSpringContainer(
+                onTap: () => context.push('/sms-review'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Let's go", style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold, fontSize: 11,
+                      )),
+                      const SizedBox(width: 2),
+                      Icon(Icons.chevron_right_rounded, size: 12,
+                        color: isDark ? Colors.white : Colors.black),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBudgetRings(ThemeData theme, BuildContext context) {
     final budgetsAsync = ref.watch(budgetProgressProvider);
     final isDark = theme.brightness == Brightness.dark;
@@ -3005,195 +3105,65 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ],
               ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // ── 4. Loan / Debt Overview ──
               StaggeredFadeSlide(
                 index: 2,
                 child: _buildLoanOverview(theme, context),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // ── 5. SMS Review Queue Card (Setup Bonus Vibe) ──
+              // ── 4+5. Monthly Overview & SMS Card in 2-column grid ──
               StaggeredFadeSlide(
                 index: 3,
-                child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: isDark ? AppTheme.surfaceHighDark : AppTheme.bgLight,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
-                    width: 0.5,
-                  ),
-                ),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header Row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.message_rounded,
-                              size: 16,
-                              color: const Color(0xFF609F8A),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'SMS AUTO-TRACKING',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                                letterSpacing: 1.2,
-                                color: isDark ? Colors.grey[400] : Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Pending Count Capsule
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: pendingReviewCount > 0
-                                ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
-                                : (isDark ? Colors.white10 : Colors.black12),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Text(
-                            pendingReviewCount > 0
-                                ? '$pendingReviewCount PENDING'
-                                : '0 PENDING',
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.5,
-                              color: pendingReviewCount > 0
-                                  ? const Color(0xFFFF9F0A)
-                                  : Colors.grey[500],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    Text(
-                      'Review and categorize parsed mobile money & bank transactions automatically extracted from your SMS notifications.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        height: 1.4,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
-                    const SizedBox(height: 14),
-                    // Active Parsers and Action Button Row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Active Parsers Chips
-                        Expanded(
-                          child: Wrap(
-                            spacing: 6,
-                            runSpacing: 4,
-                            children: [
-                              _buildActiveParserBadge(isDark, 'M-Pesa'),
-                              _buildActiveParserBadge(isDark, 'Tigo'),
-                              _buildActiveParserBadge(isDark, 'Airtel'),
-                              _buildActiveParserBadge(isDark, 'Selcom'),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Action Button
-                        TactileSpringContainer(
-                          onTap: () => context.push('/sms-review'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Let's go",
-                                  style: TextStyle(
-                                    color: isDark ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.chevron_right_rounded,
-                                  size: 14,
-                                  color: isDark ? Colors.white : Colors.black,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    Expanded(child: _buildMonthlyOverview(theme)),
+                    const SizedBox(width: 16),
+                    Expanded(child: _buildSmsReviewCard(theme, isDark, pendingReviewCount)),
                   ],
                 ),
               ),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // ── 6. Upcoming Subscriptions ──
               StaggeredFadeSlide(
                 index: 4,
                 child: _buildSubscriptionsDashboard(theme, context),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // ── 7. Upcoming Recurring Transactions ──
               _buildUpcomingRecurring(theme, context),
 
-              const SizedBox(height: 24),
-
-              // Monthly Overview Card (Donut Chart Revamp)
-              StaggeredFadeSlide(
-                index: 5,
-                child: _buildMonthlyOverview(theme),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // Budget Progress Rings (Embedded category icons)
               _buildBudgetRings(theme, context),
 
               if (showReminder) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 StaggeredFadeSlide(
-                  index: 7,
+                  index: 5,
                   child: _buildSavingsReminder(theme),
                 ),
               ],
 
               if (showSavingsGoals) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 StaggeredFadeSlide(
-                  index: 8,
+                  index: 6,
                   child: _buildSavingsGoalsDashboard(theme, context),
                 ),
               ],
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // Recent Transactions Section
               StaggeredFadeSlide(
-                index: 9,
+                index: 7,
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
