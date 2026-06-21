@@ -89,6 +89,7 @@ class SettingsScreen extends ConsumerWidget {
     }
     String? phoneNumber = acc.phoneNumber;
     String? provider = acc.provider;
+    final balanceController = TextEditingController(text: (acc.balance / 100).toStringAsFixed(0));
 
     ModernDialog.show(
       context: context,
@@ -285,6 +286,37 @@ class SettingsScreen extends ConsumerWidget {
                   },
                 ),
               ],
+              const SizedBox(height: 16),
+              TextField(
+                controller: balanceController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: 'Balance (Tsh)',
+                  hintText: 'e.g. 150,000',
+                  prefixIcon: Icon(Icons.payments_rounded, size: 18),
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withValues(alpha: 0.08)
+                          : Colors.black.withValues(alpha: 0.06),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
             ],
           );
         },
@@ -312,10 +344,16 @@ class SettingsScreen extends ConsumerWidget {
             }
 
             final type = accountType.toLowerCase().replaceAll(' ', '_');
+            final rawAmount = balanceController.text;
+            final cleanAmount = rawAmount.replaceAll(RegExp(r'[^0-9.]'), '');
+            final parsedDouble = double.tryParse(cleanAmount) ?? (acc.balance / 100);
+            final newBalance = (parsedDouble * 100).round();
+
             final updated = acc.copyWith(
               name: nameController.text.trim(),
               type: type,
               icon: iconName,
+              balance: newBalance,
               provider: Value<String?>(provider),
               phoneNumber: Value<String?>(accountType == 'Mobile Money' ? phoneNumber : null),
             );
@@ -427,23 +465,36 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       child: const Text('System', style: TextStyle(fontSize: 10, color: Colors.grey)),
                     )
-                  : GestureDetector(
-                      onTap: () async {
-                        try {
-                          await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
-                          ref.invalidate(categoriesFutureProvider);
-                          ref.invalidate(filteredTransactionsStreamProvider);
-                          if (context.mounted) Navigator.of(context).pop();
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed to delete category: $e')),
-                            );
-                          }
-                        }
-                      },
-                      child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
-                    ),
+                   : Row(
+                       mainAxisSize: MainAxisSize.min,
+                       children: [
+                         GestureDetector(
+                           onTap: () {
+                             Navigator.of(context).pop();
+                             _showAddCategoryDialog(context, ref, existing: cat);
+                           },
+                           child: const Icon(Icons.edit_rounded, size: 20, color: Colors.blue),
+                         ),
+                         const SizedBox(width: 12),
+                         GestureDetector(
+                           onTap: () async {
+                             try {
+                               await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
+                               ref.invalidate(categoriesFutureProvider);
+                               ref.invalidate(filteredTransactionsStreamProvider);
+                               if (context.mounted) Navigator.of(context).pop();
+                             } catch (e) {
+                               if (context.mounted) {
+                                 ScaffoldMessenger.of(context).showSnackBar(
+                                   SnackBar(content: Text('Failed to delete category: $e')),
+                                 );
+                               }
+                             }
+                           },
+                           child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
+                         ),
+                       ],
+                     ),
             )),
           const SizedBox(height: 24),
         ],
@@ -451,18 +502,19 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context, WidgetRef ref) {
-    final nameController = TextEditingController();
-    String categoryType = 'Expense';
-    String selectedHexColor = '#FF9800'; // Default Orange
-    String selectedIcon = 'cart';
+  void _showAddCategoryDialog(BuildContext context, WidgetRef ref, {Category? existing}) {
+    final isEditing = existing != null;
+    final nameController = TextEditingController(text: existing?.name ?? '');
+    String categoryType = existing?.type == 'income' ? 'Income' : 'Expense';
+    String selectedHexColor = existing?.color ?? '#FF9800';
+    String selectedIcon = existing?.icon ?? 'cart';
 
     final hexColors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#2196F3', '#00BCD4', '#009688', '#4CAF50', '#FFC107', '#FF9800', '#795548', '#607D8B'];
     final icons = ['cart', 'briefcase', 'store', 'bus', 'home', 'zap', 'phone', 'heart', 'book', 'film', 'coffee', 'send', 'piggy-bank'];
 
     ModernDialog.show(
       context: context,
-      title: const Text('Add Custom Category'),
+      title: Text(isEditing ? 'Edit Category' : 'Add Custom Category'),
       titleIcon: Icons.category_rounded,
       content: StatefulBuilder(
         builder: (context, setState) {
