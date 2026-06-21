@@ -2775,7 +2775,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // ── 2. "pesaflow cash" Floating Balance Hero Card ──
+              // ── 2. Balance Hero Card — "Your Money" ──
               StaggeredFadeSlide(
                 index: 0,
                 child: Container(
