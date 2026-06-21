@@ -88,6 +88,10 @@ class TransactionRepository {
     return _transactionDao.watchReviewQueueTransactions();
   }
 
+  Future<TransactionWithCategoryAndAccount?> getTransactionById(String id) {
+    return _transactionDao.getTransactionById(id);
+  }
+
   Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
     await _transactionDao.approveReviewedTransaction(transactionId, newCategoryId: newCategoryId);
     final tx = await _transactionDao.getTransactionById(transactionId);

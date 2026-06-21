@@ -30,16 +30,24 @@ class RecurringTransactionListScreen extends ConsumerWidget {
       ),
       body: recurringAsync.when(
         data: (recurring) {
-          if (recurring.isEmpty) {
-            return StaggeredFadeSlide(index: 0, child: _buildEmptyState(theme, isDark));
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-            itemCount: recurring.length,
-            itemBuilder: (_, i) => StaggeredFadeSlide(
-              index: i + 1,
-              child: _buildRecurringTile(context, recurring[i], theme, isDark),
-            ),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(recurringTransactionsStreamProvider);
+              ref.invalidate(dueRecurringTransactionsProvider);
+            },
+            child: recurring.isEmpty
+                ? SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: StaggeredFadeSlide(index: 0, child: _buildEmptyState(theme, isDark)),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                    itemCount: recurring.length,
+                    itemBuilder: (_, i) => StaggeredFadeSlide(
+                      index: i + 1,
+                      child: _buildRecurringTile(context, recurring[i], theme, isDark),
+                    ),
+                  ),
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),

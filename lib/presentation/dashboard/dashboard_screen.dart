@@ -1880,10 +1880,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ],
           ),
         ),
-        ),
-        ),
-        );
-      },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
     );
   }
 
@@ -3278,8 +3279,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ref.invalidate(netWorthProvider);
                             ref.invalidate(monthlyTotalsProvider);
                           },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 6.0),
+                          child: TactileSpringContainer(
+                            onTap: () => context.push('/transactions/${trans.id}'),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 6.0),
                             padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               color: isDark

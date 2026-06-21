@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/settings/settings_screen.dart';
 import 'package:pesaflow/presentation/sms_review/sms_review_screen.dart';
 import 'package:pesaflow/presentation/transactions/transaction_form_screen.dart';
 import 'package:pesaflow/presentation/transactions/transaction_list_screen.dart';
+import 'package:pesaflow/presentation/transactions/transaction_detail_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_list_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_detail_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_form_screen.dart';
@@ -313,6 +314,13 @@ final GoRouter appRouter = GoRouter(
                 const TransactionListScreen(),
               ),
               routes: [
+                GoRoute(
+                  path: ':id',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) {
+                    return _springSlidePage(TransactionDetailScreen(transactionId: state.param('id')));
+                  },
+                ),
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,

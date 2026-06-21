@@ -405,3 +405,8 @@ final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(() {
   return ThemeModeNotifier();
 });
 
+final transactionDetailProvider = FutureProvider.family<TransactionWithCategoryAndAccount?, String>((ref, id) {
+  final repo = ref.watch(transactionRepositoryProvider);
+  return repo.getTransactionById(id);
+});
+
