@@ -762,6 +762,101 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  void _showThemePicker(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(themeModeProvider);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36, height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+              const Text('App Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              _themeOption(ctx, ref, ThemeMode.system, current, 'System default', Icons.settings_brightness_rounded, 'Follow your device settings'),
+              _themeOption(ctx, ref, ThemeMode.light, current, 'Light', Icons.light_mode_rounded, 'Always use light mode'),
+              _themeOption(ctx, ref, ThemeMode.dark, current, 'Dark', Icons.dark_mode_rounded, 'Always use dark mode'),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _themeOption(BuildContext ctx, WidgetRef ref, ThemeMode mode, ThemeMode current, String label, IconData icon, String subtitle) {
+    final isSelected = mode == current;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: GestureDetector(
+        onTap: () {
+          ref.read(themeModeProvider.notifier).setThemeMode(mode);
+          Navigator.pop(ctx);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08)
+                : (Theme.of(context).brightness == Brightness.dark
+                    ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            border: Border.all(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+                  : (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.12)
+                      : Colors.grey.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey, size: 20),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
+                    Text(subtitle, style: TextStyle(fontSize: 11, color: isSelected ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.7) : Colors.grey)),
+                  ],
+                ),
+              ),
+              if (isSelected)
+                Icon(Icons.check_circle_rounded, color: Theme.of(context).colorScheme.primary, size: 22),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
