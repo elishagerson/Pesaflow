@@ -921,6 +921,17 @@ class SettingsScreen extends ConsumerWidget {
                       ref.read(settingsRepositoryProvider).setSetting('sms_auto_deduplication', val.toString());
                     },
                   ),
+                  IosListRow(
+                    leading: Icon(Icons.brightness_6_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('App Theme'),
+                    subtitle: Text(switch (ref.watch(themeModeProvider)) {
+                      ThemeMode.light => 'Light',
+                      ThemeMode.dark => 'Dark',
+                      _ => 'System default',
+                    }),
+                    trailing: const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
+                    onTap: () => _showThemePicker(context, ref),
+                  ),
                 ],
               ),
               ),
