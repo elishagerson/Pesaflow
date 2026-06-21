@@ -61,28 +61,29 @@ class GenericFallbackParser implements SmsParser {
 
   static String? _determineType(String text) {
     final lower = text.toLowerCase();
+    final loanWords = [
+      'loan', 'mkopo', 'kopeshwa', 'kopa', 'borrowed',
+    ];
     final incomeWords = [
       'umepokea', 'umepewa', 'zimewekwa', 'received', 'deposit',
-      'tumeongeza', 'tumekutoa', 'credit', 'payment from',
+      'tumeongeza', 'credit', 'payment from',
       'cash-in', 'cash in',
     ];
     final expenseWords = [
       'umetuma', 'sent', 'paid', 'payment to', 'deducted',
       'purchase', 'withdrawal', 'withdraw', 'fee', 'charges',
-      'airtime', 'bought',
-    ];
-    final loanWords = [
-      'loan', 'mkopo', 'kopeshwa', 'kopa', 'borrowed',
+      'airtime', 'bought', 'tumekutoa',
     ];
 
+    // Check loan first — most specific, prevents "received a loan" from being income.
+    for (final w in loanWords) {
+      if (lower.contains(w)) return 'loan';
+    }
     for (final w in incomeWords) {
       if (lower.contains(w)) return 'income';
     }
     for (final w in expenseWords) {
       if (lower.contains(w)) return 'expense';
-    }
-    for (final w in loanWords) {
-      if (lower.contains(w)) return 'loan';
     }
 
     // No transaction keywords found — likely an ad or promo, not a real transaction.

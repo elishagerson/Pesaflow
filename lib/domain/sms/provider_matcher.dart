@@ -64,9 +64,12 @@ class ProviderMatcher {
     // ── Fallback: scan body for known keywords ──
     // Handles banks that send SMS from numeric shortcodes that don't include the
     // provider name (e.g. NMB uses shortcode 15200).
+    // For mobile-money provider names in body, requires a financial amount pattern
+    // to avoid routing ads/promos that merely mention a provider name.
     if (body != null && body.isNotEmpty) {
       final upperBody = body.toUpperCase();
 
+      // Bank-specific keywords are already transaction indicators — safe to route.
       if (upperBody.contains('TUMEKUTOA') || upperBody.contains('TUMEONGEZA') || upperBody.contains('FEES:')) {
         return 'NMB_Bank';
       }
@@ -76,6 +79,11 @@ class ProviderMatcher {
       if (upperBody.contains('NBC:')) {
         return 'NBC_Bank';
       }
+
+      // Mobile-money body matches require a financial amount pattern to avoid
+      // routing promos that casually mention a provider name.
+      if (!_hasAmountPattern(upperBody)) return null;
+
       if (upperBody.contains('SELCOM')) {
         return 'SelcomPesa_TZ';
       }
@@ -94,5 +102,11 @@ class ProviderMatcher {
     }
 
     return null;
+  }
+
+  /// Returns true if [text] contains a recognized financial amount pattern like
+  /// "TSH 500", "TZS 1,000", or "500/=".
+  static bool _hasAmountPattern(String text) {
+    return RegExp(r'(?:TSH|TZS|Tsh|TSh|/=\s)').hasMatch(text);
   }
 }

@@ -119,7 +119,7 @@ class SelcomPesaParser implements SmsParser {
 
       // 4. Determine transaction type (income / expense)
       String type = 'expense';
-      final incomeKeywords = ['receive', 'deposit', 'credit', 'umepokea', 'tumeongeza', 'ingia', 'ingizwa'];
+      final incomeKeywords = ['receive', 'deposit', 'credit', 'umepokea', 'tumeongeza'];
       final lowercaseBody = text.toLowerCase();
       for (final kw in incomeKeywords) {
         if (lowercaseBody.contains(kw)) {
