@@ -804,6 +804,7 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _themeOption(BuildContext ctx, WidgetRef ref, ThemeMode mode, ThemeMode current, String label, IconData icon, String subtitle) {
     final isSelected = mode == current;
+    final theme = Theme.of(ctx);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: GestureDetector(
@@ -815,14 +816,14 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08)
-                : (Theme.of(context).brightness == Brightness.dark
+                ? theme.colorScheme.primary.withValues(alpha: 0.08)
+                : (theme.brightness == Brightness.dark
                     ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
-                  : (Theme.of(context).brightness == Brightness.dark
+                  ? theme.colorScheme.primary.withValues(alpha: 0.3)
+                  : (theme.brightness == Brightness.dark
                       ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
             ),
           ),
@@ -832,24 +833,24 @@ class SettingsScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.12)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.12)
                       : Colors.grey.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey, size: 20),
+                child: Icon(icon, color: isSelected ? theme.colorScheme.primary : Colors.grey, size: 20),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isSelected ? Theme.of(context).colorScheme.primary : null)),
-                    Text(subtitle, style: TextStyle(fontSize: 11, color: isSelected ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.7) : Colors.grey)),
+                    Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isSelected ? theme.colorScheme.primary : null)),
+                    Text(subtitle, style: TextStyle(fontSize: 11, color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.7) : Colors.grey)),
                   ],
                 ),
               ),
               if (isSelected)
-                Icon(Icons.check_circle_rounded, color: Theme.of(context).colorScheme.primary, size: 22),
+                Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary, size: 22),
             ],
           ),
         ),

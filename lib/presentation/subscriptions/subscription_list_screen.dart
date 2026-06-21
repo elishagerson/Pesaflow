@@ -30,50 +30,57 @@ class SubscriptionListScreen extends ConsumerWidget {
       ),
       body: subscriptionsAsync.when(
         data: (subscriptions) {
-          if (subscriptions.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.subscriptions_outlined, size: 64, color: isDark ? Colors.grey[600] : Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text('No subscriptions yet', style: TextStyle(fontSize: 17, color: isDark ? Colors.grey[400] : Colors.grey[500])),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => context.push('/subscriptions/add'),
-                    child: const Text('Add a subscription'),
-                  ),
-                ],
-              ),
-            );
-          }
-
           final due = dueSubscriptionsAsync.asData?.value ?? [];
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-            children: [
-              if (due.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                      border: Border.all(color: const Color(0xFFFF6B35).withValues(alpha: 0.2)),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(subscriptionsStreamProvider);
+              ref.invalidate(dueSubscriptionsProvider);
+            },
+            child: subscriptions.isEmpty
+                ? SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.subscriptions_outlined, size: 64, color: isDark ? Colors.grey[600] : Colors.grey[300]),
+                          const SizedBox(height: 16),
+                          Text('No subscriptions yet', style: TextStyle(fontSize: 17, color: isDark ? Colors.grey[400] : Colors.grey[500])),
+                          const SizedBox(height: 8),
+                          TextButton(
+                            onPressed: () => context.push('/subscriptions/add'),
+                            child: const Text('Add a subscription'),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
-                        const SizedBox(width: 10),
-                        Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                      ],
-                    ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                    children: [
+                      if (due.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                              border: Border.all(color: const Color(0xFFFF6B35).withValues(alpha: 0.2)),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
+                                const SizedBox(width: 10),
+                                Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
+                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ...subscriptions.map((sub) => _buildSubscriptionTile(context, sub, isDark, due.contains(sub))),
+                    ],
                   ),
-                ),
-              ...subscriptions.map((sub) => _buildSubscriptionTile(context, sub, isDark, due.contains(sub))),
-            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),

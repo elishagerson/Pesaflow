@@ -281,12 +281,18 @@ class BudgetListScreen extends ConsumerWidget {
 
     final isDark = theme.brightness == Brightness.dark;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(budgetProgressProvider);
+        ref.invalidate(savingsGoalsStreamProvider);
+        ref.invalidate(categoriesFutureProvider);
+      },
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Summary Card
           GlassCard(
             padding: const EdgeInsets.all(20),
@@ -536,6 +542,7 @@ class BudgetListScreen extends ConsumerWidget {
           }),
         ],
       ),
+      ),
     );
   }
 
@@ -658,12 +665,18 @@ class BudgetListScreen extends ConsumerWidget {
 
         final overallPct = totalTarget > 0 ? (totalSaved / totalTarget).clamp(0.0, 1.0) : 0.0;
 
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(budgetProgressProvider);
+            ref.invalidate(savingsGoalsStreamProvider);
+            ref.invalidate(categoriesFutureProvider);
+          },
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Overall Savings Summary Box
               GlassCard(
                 padding: const EdgeInsets.all(20),
@@ -951,6 +964,7 @@ class BudgetListScreen extends ConsumerWidget {
                 },
               ),
             ],
+          ),
           ),
         );
       },
