@@ -9,6 +9,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 class RecurringTransactionListScreen extends ConsumerWidget {
   const RecurringTransactionListScreen({super.key});
@@ -20,9 +21,9 @@ class RecurringTransactionListScreen extends ConsumerWidget {
     final recurringAsync = ref.watch(recurringTransactionsStreamProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recurring'),
-        centerTitle: true,
+      appBar: const IosNavBar(
+        title: 'Recurring',
+        largeTitle: true,
       ),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/recurring/add'),

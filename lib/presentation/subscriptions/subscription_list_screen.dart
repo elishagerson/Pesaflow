@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 class SubscriptionListScreen extends ConsumerWidget {
   const SubscriptionListScreen({super.key});
@@ -18,12 +19,12 @@ class SubscriptionListScreen extends ConsumerWidget {
     final dueSubscriptionsAsync = ref.watch(dueSubscriptionsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Subscriptions'),
-        centerTitle: true,
+      appBar: IosNavBar(
+        title: 'Subscriptions',
+        largeTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded),
+            icon: const Icon(Icons.add_rounded, size: 28),
             onPressed: () => context.push('/subscriptions/add'),
           ),
         ],
