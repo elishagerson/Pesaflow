@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -74,115 +75,337 @@ class TransactionDetailScreen extends ConsumerWidget {
     final isIncome = t.type == 'income';
     final amountColor = isIncome ? const Color(0xFF609F8A) : const Color(0xFFFF453A);
 
+    final hasExtraDetails = (t.reference != null && t.reference!.isNotEmpty) ||
+        (t.sender != null && t.sender!.isNotEmpty) ||
+        (t.recipient != null && t.recipient!.isNotEmpty) ||
+        (t.balanceAfter != null);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Amount Hero
           GlassCard(
-            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
             borderRadius: AppTheme.radiusCard,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: amountColor.withValues(alpha: 0.12),
+                    color: catColor.withValues(alpha: isDark ? 0.15 : 0.1),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: catColor.withValues(alpha: 0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: catColor.withValues(alpha: 0.2),
+                        blurRadius: 15,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
                   child: Icon(
-                    isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
-                    color: amountColor,
-                    size: 28,
+                    getCategoryIcon(cat.icon),
+                    color: catColor,
+                    size: 32,
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isIncome ? 'Income' : 'Expense',
+                  t.description.isNotEmpty ? t.description : 'No Description',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    letterSpacing: 1.5,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? Colors.white : Colors.black87,
+                    letterSpacing: -0.2,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: amountColor.withValues(alpha: isDark ? 0.15 : 0.1),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: amountColor.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                        color: amountColor,
+                        size: 12,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        isIncome ? 'INCOME' : 'EXPENSE',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: amountColor,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Text(
-                  CurrencyFormatter.formatCents(t.amount),
+                  (isIncome ? '+ ' : '- ') + CurrencyFormatter.formatCents(t.amount),
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 38,
                     fontWeight: FontWeight.w900,
                     color: amountColor,
                     letterSpacing: -1,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
-          // Details
+          // Main Details Card (Category, Account, Date in a Grid)
           GlassCard(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
             borderRadius: AppTheme.radiusCard,
-            child: Column(
+            child: Row(
               children: [
-                _detailRow(theme, Icons.description_rounded, 'Description', t.description.isNotEmpty ? t.description : 'No description'),
-                const Divider(height: 24, thickness: 0.5),
-                _detailRow(theme, Icons.category_rounded, 'Category', cat.name,
-                  trailing: Container(
-                    width: 12, height: 12,
-                    decoration: BoxDecoration(color: catColor, shape: BoxShape.circle),
+                Expanded(
+                  child: _gridItem(
+                    context,
+                    icon: getCategoryIcon(cat.icon),
+                    iconColor: catColor,
+                    label: 'Category',
+                    value: cat.name,
                   ),
                 ),
-                const Divider(height: 24, thickness: 0.5),
-                _detailRow(theme, Icons.account_balance_wallet_rounded, 'Account', acc.name),
-                if (t.reference != null && t.reference!.isNotEmpty) ...[
-                  const Divider(height: 24, thickness: 0.5),
-                  _detailRow(theme, Icons.tag_rounded, 'Reference', t.reference!),
-                ],
-                if (t.sender != null && t.sender!.isNotEmpty) ...[
-                  const Divider(height: 24, thickness: 0.5),
-                  _detailRow(theme, Icons.person_outline_rounded, 'Sender', t.sender!),
-                ],
-                if (t.recipient != null && t.recipient!.isNotEmpty) ...[
-                  const Divider(height: 24, thickness: 0.5),
-                  _detailRow(theme, Icons.person_rounded, 'Recipient', t.recipient!),
-                ],
-                if (t.balanceAfter != null) ...[
-                  const Divider(height: 24, thickness: 0.5),
-                  _detailRow(theme, Icons.account_balance_rounded, 'Balance After',
-                    CurrencyFormatter.formatCents(t.balanceAfter!),
-                    valueColor: isDark ? Colors.white : Colors.black,
+                _verticalDivider(isDark),
+                Expanded(
+                  child: _gridItem(
+                    context,
+                    icon: getAccountIcon(acc.icon),
+                    iconColor: isDark ? Colors.white70 : Colors.black87,
+                    label: 'Account',
+                    value: acc.name,
                   ),
-                ],
-                const Divider(height: 24, thickness: 0.5),
-                _detailRow(theme, Icons.calendar_today_rounded, 'Date', '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}'),
+                ),
+                _verticalDivider(isDark),
+                Expanded(
+                  child: _gridItem(
+                    context,
+                    icon: Icons.calendar_today_rounded,
+                    iconColor: Colors.blueAccent,
+                    label: 'Date',
+                    value: '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}',
+                  ),
+                ),
               ],
             ),
           ),
+
+          if (hasExtraDetails) ...[
+            const SizedBox(height: 16),
+            GlassCard(
+              padding: const EdgeInsets.all(16),
+              borderRadius: AppTheme.radiusCard,
+              child: Column(
+                children: [
+                  if (t.reference != null && t.reference!.isNotEmpty) ...[
+                    _copyableDetailRow(
+                      context,
+                      theme,
+                      Icons.tag_rounded,
+                      'Reference',
+                      t.reference!,
+                    ),
+                  ],
+                  if (t.sender != null && t.sender!.isNotEmpty) ...[
+                    if (t.reference != null && t.reference!.isNotEmpty)
+                      _divider(isDark),
+                    _copyableDetailRow(
+                      context,
+                      theme,
+                      Icons.person_outline_rounded,
+                      'Sender',
+                      t.sender!,
+                    ),
+                  ],
+                  if (t.recipient != null && t.recipient!.isNotEmpty) ...[
+                    if ((t.reference != null && t.reference!.isNotEmpty) ||
+                        (t.sender != null && t.sender!.isNotEmpty))
+                      _divider(isDark),
+                    _copyableDetailRow(
+                      context,
+                      theme,
+                      Icons.person_rounded,
+                      'Recipient',
+                      t.recipient!,
+                    ),
+                  ],
+                  if (t.balanceAfter != null) ...[
+                    if ((t.reference != null && t.reference!.isNotEmpty) ||
+                        (t.sender != null && t.sender!.isNotEmpty) ||
+                        (t.recipient != null && t.recipient!.isNotEmpty))
+                      _divider(isDark),
+                    _detailRow(
+                      theme,
+                      Icons.account_balance_rounded,
+                      'Balance After',
+                      CurrencyFormatter.formatCents(t.balanceAfter!),
+                      valueColor: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _detailRow(ThemeData theme, IconData icon, String label, String value, {Widget? trailing, Color? valueColor}) {
-    return Row(
+  Widget _gridItem(
+    BuildContext context, {
+    required IconData icon,
+    required Color iconColor,
+    required String label,
+    required String value,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Icon(icon, size: 20, color: iconColor),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  Widget _verticalDivider(bool isDark) {
+    return Container(
+      width: 0.5,
+      height: 36,
+      color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.08),
+    );
+  }
+
+  Widget _divider(bool isDark) {
+    return Divider(
+      height: 24,
+      thickness: 0.5,
+      color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.08),
+    );
+  }
+
+  Widget _copyableDetailRow(BuildContext context, ThemeData theme, IconData icon, String label, String value) {
+    return InkWell(
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: value));
+        HapticFeedback.lightImpact();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Copied $label to clipboard'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            width: 250,
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        child: Row(
           children: [
-            Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey)),
-            const SizedBox(height: 2),
-            Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: valueColor ?? (theme.brightness == Brightness.dark ? Colors.white : Colors.black))),
+            Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey)),
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Icon(
+              Icons.copy_rounded,
+              size: 14,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+            ),
           ],
         ),
-        const Spacer(),
-        ?trailing,
-      ],
+      ),
+    );
+  }
+
+  Widget _detailRow(ThemeData theme, IconData icon, String label, String value, {Widget? trailing, Color? valueColor}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey)),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: valueColor ?? (theme.brightness == Brightness.dark ? Colors.white : Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (trailing != null) ...[
+            const SizedBox(width: 12),
+            trailing,
+          ],
+        ],
+      ),
     );
   }
 
