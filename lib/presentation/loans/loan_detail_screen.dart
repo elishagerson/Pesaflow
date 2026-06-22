@@ -52,7 +52,7 @@ class LoanDetailScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               StaggeredFadeSlide(
                 index: 1,
-                child: _buildLoanInfo(loan, theme, isDark),
+                child: _buildLoanInfo(context, loan, theme, isDark),
               ),
               const SizedBox(height: 16),
               StaggeredFadeSlide(
@@ -198,25 +198,28 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanInfo(Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildLoanInfo(BuildContext context, Loan loan, ThemeData theme, bool isDark) {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Loan Information',
-              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Text(
+                'Loan Information',
+                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 12),
-            _infoRow('Provider', loan.provider ?? 'N/A', isDark),
+            _copyableInfoRow(context, 'Provider', loan.provider ?? 'N/A', isDark),
             if (loan.interestRate != null)
               _infoRow('APR', '${loan.interestRate!.toStringAsFixed(1)}%', isDark),
-            _infoRow('Reference', loan.reference ?? 'N/A', isDark),
-            _infoRow('Sender', loan.sender ?? 'N/A', isDark),
+            _copyableInfoRow(context, 'Reference', loan.reference ?? 'N/A', isDark),
+            _copyableInfoRow(context, 'Sender', loan.sender ?? 'N/A', isDark),
             _infoRow('Disbursed', _formatDate(loan.disbursedAt), isDark),
             if (loan.dueAt != null)
               _infoRow('Due Date', _formatDate(loan.dueAt!), isDark),
@@ -1291,13 +1294,59 @@ class LoanDetailScreen extends ConsumerWidget {
 
   Widget _infoRow(String label, String value, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
           Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
         ],
+      ),
+    );
+  }
+
+  Widget _copyableInfoRow(BuildContext context, String label, String value, bool isDark) {
+    if (value == 'N/A' || value.isEmpty) {
+      return _infoRow(label, value, isDark);
+    }
+    return InkWell(
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: value));
+        HapticFeedback.lightImpact();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Copied $label to clipboard'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            width: 250,
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  value,
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.copy_rounded,
+                  size: 12,
+                  color: isDark ? Colors.white30 : Colors.black26,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
