@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class SubscriptionListScreen extends ConsumerWidget {
   const SubscriptionListScreen({super.key});
@@ -60,26 +61,36 @@ class SubscriptionListScreen extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                     children: [
                       if (due.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Container(
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                              border: Border.all(color: const Color(0xFFFF6B35).withValues(alpha: 0.2)),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
-                                const SizedBox(width: 10),
-                                Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                              ],
+                        StaggeredFadeSlide(
+                          index: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                border: Border.all(color: const Color(0xFFFF6B35).withValues(alpha: 0.2)),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
+                                  const SizedBox(width: 10),
+                                  Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
+                                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ...subscriptions.map((sub) => _buildSubscriptionTile(context, sub, isDark, due.contains(sub))),
+                      ...subscriptions.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final sub = entry.value;
+                        return StaggeredFadeSlide(
+                          index: idx + (due.isNotEmpty ? 1 : 0),
+                          child: _buildSubscriptionTile(context, sub, isDark, due.contains(sub)),
+                        );
+                      }),
                     ],
                   ),
           );
