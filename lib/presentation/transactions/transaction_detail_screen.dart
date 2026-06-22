@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:flutter/services.dart';
 
@@ -59,7 +60,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           if (item == null) {
             return const Center(child: Text('Transaction not found'));
           }
-          return _buildDetail(context, theme, isDark, item);
+          return _buildDetail(context, ref, theme, isDark, item);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text('Error: $err')),
@@ -67,7 +68,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetail(BuildContext context, ThemeData theme, bool isDark, TransactionWithCategoryAndAccount item) {
+  Widget _buildDetail(BuildContext context, WidgetRef ref, ThemeData theme, bool isDark, TransactionWithCategoryAndAccount item) {
     final t = item.transaction;
     final cat = item.category;
     final acc = item.account;
@@ -80,197 +81,335 @@ class TransactionDetailScreen extends ConsumerWidget {
         (t.recipient != null && t.recipient!.isNotEmpty) ||
         (t.balanceAfter != null);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Amount Hero
-          GlassCard(
-            padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
-            borderRadius: AppTheme.radiusCard,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: catColor.withValues(alpha: isDark ? 0.15 : 0.1),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: catColor.withValues(alpha: 0.3),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: catColor.withValues(alpha: 0.2),
-                        blurRadius: 15,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    getCategoryIcon(cat.icon),
-                    color: catColor,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  t.description.isNotEmpty ? t.description : 'No Description',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : Colors.black87,
-                    letterSpacing: -0.2,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: amountColor.withValues(alpha: isDark ? 0.15 : 0.1),
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: amountColor.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
-                        color: amountColor,
-                        size: 12,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        isIncome ? 'INCOME' : 'EXPENSE',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: amountColor,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  (isIncome ? '+ ' : '- ') + CurrencyFormatter.formatCents(t.amount),
-                  style: TextStyle(
-                    fontSize: 38,
-                    fontWeight: FontWeight.w900,
-                    color: amountColor,
-                    letterSpacing: -1,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Main Details Card (Category, Account, Date in a Grid)
-          GlassCard(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            borderRadius: AppTheme.radiusCard,
-            child: Row(
-              children: [
-                Expanded(
-                  child: _gridItem(
-                    context,
-                    icon: getCategoryIcon(cat.icon),
-                    iconColor: catColor,
-                    label: 'Category',
-                    value: cat.name,
-                  ),
-                ),
-                _verticalDivider(isDark),
-                Expanded(
-                  child: _gridItem(
-                    context,
-                    icon: getAccountIcon(acc.icon),
-                    iconColor: isDark ? Colors.white70 : Colors.black87,
-                    label: 'Account',
-                    value: acc.name,
-                  ),
-                ),
-                _verticalDivider(isDark),
-                Expanded(
-                  child: _gridItem(
-                    context,
-                    icon: Icons.calendar_today_rounded,
-                    iconColor: Colors.blueAccent,
-                    label: 'Date',
-                    value: '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}',
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          if (hasExtraDetails) ...[
-            const SizedBox(height: 16),
-            GlassCard(
-              padding: const EdgeInsets.all(16),
-              borderRadius: AppTheme.radiusCard,
-              child: Column(
-                children: [
-                  if (t.reference != null && t.reference!.isNotEmpty) ...[
-                    _copyableDetailRow(
-                      context,
-                      theme,
-                      Icons.tag_rounded,
-                      'Reference',
-                      t.reference!,
-                    ),
+    return Stack(
+      children: [
+        // Ambient Category Glow Backdrop
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.05,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    catColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                    catColor.withValues(alpha: isDark ? 0.06 : 0.03),
+                    Colors.transparent,
                   ],
-                  if (t.sender != null && t.sender!.isNotEmpty) ...[
-                    if (t.reference != null && t.reference!.isNotEmpty)
-                      _divider(isDark),
-                    _copyableDetailRow(
-                      context,
-                      theme,
-                      Icons.person_outline_rounded,
-                      'Sender',
-                      t.sender!,
-                    ),
-                  ],
-                  if (t.recipient != null && t.recipient!.isNotEmpty) ...[
-                    if ((t.reference != null && t.reference!.isNotEmpty) ||
-                        (t.sender != null && t.sender!.isNotEmpty))
-                      _divider(isDark),
-                    _copyableDetailRow(
-                      context,
-                      theme,
-                      Icons.person_rounded,
-                      'Recipient',
-                      t.recipient!,
-                    ),
-                  ],
-                  if (t.balanceAfter != null) ...[
-                    if ((t.reference != null && t.reference!.isNotEmpty) ||
-                        (t.sender != null && t.sender!.isNotEmpty) ||
-                        (t.recipient != null && t.recipient!.isNotEmpty))
-                      _divider(isDark),
-                    _detailRow(
-                      theme,
-                      Icons.account_balance_rounded,
-                      'Balance After',
-                      CurrencyFormatter.formatCents(t.balanceAfter!),
-                      valueColor: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ],
-                ],
+                  stops: const [0.0, 0.6, 1.0],
+                ),
               ),
             ),
-          ],
-        ],
-      ),
+          ),
+        ),
+        // Scrollable Content
+        SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              StaggeredFadeSlide(
+                index: 0,
+                child: GlassCard(
+                  padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+                  borderRadius: AppTheme.radiusCard,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Floating glowing icon circle
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: catColor.withValues(alpha: isDark ? 0.18 : 0.1),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: catColor.withValues(alpha: 0.35),
+                              width: 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: catColor.withValues(alpha: isDark ? 0.25 : 0.15),
+                                blurRadius: 20,
+                                spreadRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            getCategoryIcon(cat.icon),
+                            color: catColor,
+                            size: 34,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Merchant name / Description
+                        Text(
+                          t.description.isNotEmpty ? t.description : 'No Description',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? Colors.white : Colors.black87,
+                            letterSpacing: -0.4,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        // Transaction Type Pill
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: amountColor.withValues(alpha: isDark ? 0.15 : 0.08),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: amountColor.withValues(alpha: 0.25),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                                color: amountColor,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                isIncome ? 'INCOME' : 'EXPENSE',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                  color: amountColor,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Display Amount
+                        Text(
+                          (isIncome ? '+ ' : '- ') + CurrencyFormatter.formatCents(t.amount),
+                          style: TextStyle(
+                            fontSize: 38,
+                            fontWeight: FontWeight.w900,
+                            color: amountColor,
+                            letterSpacing: -1.2,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        
+                        // Perforated Ticket Divider & Mask Cutouts
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 28),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              DashedDivider(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.15)
+                                    : Colors.black.withValues(alpha: 0.1),
+                                height: 1.5,
+                                dashWidth: 5,
+                                dashSpace: 4,
+                              ),
+                              // Left masking cutout (offset by padding of card: 24, plus half cutout width: 8)
+                              Positioned(
+                                left: -32,
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    color: theme.scaffoldBackgroundColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                              // Right masking cutout
+                              Positioned(
+                                right: -32,
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    color: theme.scaffoldBackgroundColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        // Info Grid (Category, Account, Date)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _gridItem(
+                                context,
+                                icon: getCategoryIcon(cat.icon),
+                                iconColor: catColor,
+                                label: 'Category',
+                                value: cat.name,
+                              ),
+                            ),
+                            _verticalDivider(isDark),
+                            Expanded(
+                              child: _gridItem(
+                                context,
+                                icon: getAccountIcon(acc.icon),
+                                iconColor: isDark ? Colors.white70 : Colors.black87,
+                                label: 'Account',
+                                value: acc.name,
+                              ),
+                            ),
+                            _verticalDivider(isDark),
+                            Expanded(
+                              child: _gridItem(
+                                context,
+                                icon: Icons.calendar_today_rounded,
+                                iconColor: Colors.blueAccent,
+                                label: 'Date',
+                                value: '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}',
+                              ),
+                            ),
+                          ],
+                        ),
+                        
+                        // Extra Details
+                        if (hasExtraDetails) ...[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24),
+                            child: _divider(isDark),
+                          ),
+                          const SizedBox(height: 16),
+                          if (t.reference != null && t.reference!.isNotEmpty) ...[
+                            _copyableDetailRow(
+                              context,
+                              theme,
+                              Icons.tag_rounded,
+                              'Reference',
+                              t.reference!,
+                            ),
+                          ],
+                          if (t.sender != null && t.sender!.isNotEmpty) ...[
+                            if (t.reference != null && t.reference!.isNotEmpty)
+                              const SizedBox(height: 12),
+                            _copyableDetailRow(
+                              context,
+                              theme,
+                              Icons.person_outline_rounded,
+                              'Sender',
+                              t.sender!,
+                            ),
+                          ],
+                          if (t.recipient != null && t.recipient!.isNotEmpty) ...[
+                            if ((t.reference != null && t.reference!.isNotEmpty) ||
+                                (t.sender != null && t.sender!.isNotEmpty))
+                              const SizedBox(height: 12),
+                            _copyableDetailRow(
+                              context,
+                              theme,
+                              Icons.person_rounded,
+                              'Recipient',
+                              t.recipient!,
+                            ),
+                          ],
+                          if (t.balanceAfter != null) ...[
+                            if ((t.reference != null && t.reference!.isNotEmpty) ||
+                                (t.sender != null && t.sender!.isNotEmpty) ||
+                                (t.recipient != null && t.recipient!.isNotEmpty))
+                              const SizedBox(height: 12),
+                            _detailRow(
+                              theme,
+                              Icons.account_balance_rounded,
+                              'Balance After',
+                              CurrencyFormatter.formatCents(t.balanceAfter!),
+                              valueColor: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ],
+                        ],
+                        
+                        // Receipt Footer/Barcode
+                        Padding(
+                          padding: const EdgeInsets.only(top: 28),
+                          child: _divider(isDark),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildBarcode(t.id, isDark),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              
+              // Bottom Action Buttons
+              StaggeredFadeSlide(
+                index: 1,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GlassCard(
+                        onTap: () => context.go('/transactions/edit/${t.id}'),
+                        backgroundColor: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        borderRadius: 16,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit_rounded, size: 16, color: isDark ? Colors.white : Colors.black87),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Edit Details',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GlassCard(
+                        onTap: () => _confirmDelete(context, ref),
+                        backgroundColor: const Color(0xFFFF453A).withValues(alpha: 0.12),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        borderRadius: 16,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete_rounded, size: 16, color: Color(0xFFFF453A)),
+                            SizedBox(width: 8),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color(0xFFFF453A),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -319,93 +458,162 @@ class TransactionDetailScreen extends ConsumerWidget {
 
   Widget _divider(bool isDark) {
     return Divider(
-      height: 24,
+      height: 1,
       thickness: 0.5,
       color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.08),
     );
   }
 
   Widget _copyableDetailRow(BuildContext context, ThemeData theme, IconData icon, String label, String value) {
-    return InkWell(
-      onTap: () {
-        Clipboard.setData(ClipboardData(text: value));
-        HapticFeedback.lightImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Copied $label to clipboard'),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            width: 250,
-          ),
-        );
-      },
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-        child: Row(
-          children: [
-            Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey)),
-                  const SizedBox(height: 2),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ],
+    final isDark = theme.brightness == Brightness.dark;
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.015),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.04),
+          width: 0.5,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: value));
+            HapticFeedback.lightImpact();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Copied $label to clipboard'),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                width: 250,
               ),
+            );
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.grey)),
+                      const SizedBox(height: 2),
+                      Text(
+                        value,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(
+                  Icons.copy_rounded,
+                  size: 14,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Icon(
-              Icons.copy_rounded,
-              size: 14,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _detailRow(ThemeData theme, IconData icon, String label, String value, {Widget? trailing, Color? valueColor}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+  Widget _detailRow(ThemeData theme, IconData icon, String label, String value, {Color? valueColor}) {
+    final isDark = theme.brightness == Brightness.dark;
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.03) : Colors.black.withValues(alpha: 0.015),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.04),
+          width: 0.5,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8)),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey)),
+                Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.grey)),
                 const SizedBox(height: 2),
                 Text(
                   value,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: valueColor ?? (theme.brightness == Brightness.dark ? Colors.white : Colors.black),
+                    fontWeight: FontWeight.w700,
+                    color: valueColor ?? (isDark ? Colors.white : Colors.black87),
                   ),
                 ),
               ],
             ),
           ),
-          if (trailing != null) ...[
-            const SizedBox(width: 12),
-            trailing,
-          ],
         ],
       ),
+    );
+  }
+
+  Widget _buildBarcode(String id, bool isDark) {
+    final random = id.hashCode;
+    final barColor = isDark ? Colors.white.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.15);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 36,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(24, (index) {
+              final width = ((index + random) % 3 + 1.0);
+              final space = ((index * random) % 2 + 1.0);
+              return Container(
+                width: width,
+                color: barColor,
+                margin: EdgeInsets.only(right: space),
+              );
+            }),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'PESAFLOW-TXN-${id.length > 8 ? id.substring(0, 8).toUpperCase() : id.toUpperCase()}',
+          style: TextStyle(
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white38 : Colors.black38,
+            letterSpacing: 2,
+          ),
+        ),
+      ],
     );
   }
 
@@ -449,3 +657,41 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 }
+
+class DashedDivider extends StatelessWidget {
+  final double height;
+  final double dashWidth;
+  final double dashSpace;
+  final Color color;
+
+  const DashedDivider({
+    super.key,
+    this.height = 1,
+    this.dashWidth = 6,
+    this.dashSpace = 4,
+    this.color = Colors.grey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxWidth = constraints.constrainWidth();
+        final dashCount = (boxWidth / (dashWidth + dashSpace)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(dashCount, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: height,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: color),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+}
+
