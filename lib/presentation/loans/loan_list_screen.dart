@@ -8,6 +8,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 
 class LoanListScreen extends ConsumerWidget {
   const LoanListScreen({super.key});
@@ -22,9 +23,9 @@ class LoanListScreen extends ConsumerWidget {
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Loans'),
-        centerTitle: true,
+      appBar: const IosNavBar(
+        title: 'Loans',
+        largeTitle: true,
       ),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/loans/add'),
