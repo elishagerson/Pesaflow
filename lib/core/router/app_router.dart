@@ -355,13 +355,6 @@ final GoRouter appRouter = GoRouter(
               ),
               routes: [
                 GoRoute(
-                  path: ':id',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) {
-                    return _springSlidePage(TransactionDetailScreen(transactionId: state.param('id')));
-                  },
-                ),
-                GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) => _springSlidePage(const TransactionFormScreen()),
@@ -371,6 +364,13 @@ final GoRouter appRouter = GoRouter(
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     return _springSlidePage(TransactionFormScreen(transactionId: state.optParam('id')));
+                  },
+                ),
+                GoRoute(
+                  path: ':id',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) {
+                    return _springSlidePage(TransactionDetailScreen(transactionId: state.param('id')));
                   },
                 ),
               ],
