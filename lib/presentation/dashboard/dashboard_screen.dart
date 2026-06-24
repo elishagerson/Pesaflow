@@ -1136,7 +1136,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 onTap: () {
                   HapticFeedback.mediumImpact();
                   context.push('/savings-goals/${goal.id}');
-                  );
                 },
                 child: Container(
                   width: double.infinity,
