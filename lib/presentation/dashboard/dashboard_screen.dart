@@ -2338,7 +2338,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final totals = ref.watch(subscriptionTotalsProvider);
     final upcoming = ref.watch(upcomingRenewalsProvider);
 
-    return subsAsync.when(
+        return subsAsync.when(
       data: (subscriptions) {
         if (subscriptions.isEmpty) return const SizedBox.shrink();
         final due = dueAsync.asData?.value ?? [];
@@ -2350,6 +2350,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           final cat = categories.where((c) => c.id == catId).firstOrNull;
           return cat != null ? hexToColor(cat.color) : null;
         }
+
+        // Upcoming renewals already shown in timeline — exclude from active tiles
+        final upcomingIds = upcoming.map((s) => s.id).toSet();
+        final remaining = active.where((s) => !upcomingIds.contains(s.id)).toList();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2366,7 +2370,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${subscriptions.length} ACTIVE',
+                      '${active.length} ACTIVE',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
@@ -2499,8 +2503,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 4),
             ],
 
-            // ── Subscription tiles with category colors ──
-            ...active.take(3).map((sub) => Padding(
+            // ── Remaining subscription tiles (excluding those in upcoming) ──
+            ...remaining.take(3).map((sub) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: GlassCard(
                 borderRadius: AppTheme.radiusCard,
@@ -2511,13 +2515,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: (catColor(sub.categoryId) ?? (due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A))).withValues(alpha: 0.12),
+                        color: (catColor(sub.categoryId) ?? const Color(0xFF609F8A)).withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.subscriptions_rounded,
                         size: 14,
-                        color: catColor(sub.categoryId) ?? (due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A)),
+                        color: catColor(sub.categoryId) ?? const Color(0xFF609F8A),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -2591,7 +2595,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   /// Formats cents as a compact number without "Tsh" prefix.
   String _fmtShort(int cents) {
-    return CurrencyFormatter.formatCents(cents).replaceFirst('Tsh ', '');
+    if (cents <= 0) return '0';
+    final raw = CurrencyFormatter.formatCents(cents);
+    return raw.startsWith('Tsh ') ? raw.substring(4) : raw;
   }
 
   Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {

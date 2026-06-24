@@ -9,7 +9,6 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
-import 'package:pesaflow/services/notification_service.dart';
 
 class SubscriptionFormScreen extends ConsumerStatefulWidget {
   final String? subscriptionId;
@@ -65,14 +64,9 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       final amountCents = (double.parse(_amountController.text) * 100).round();
       final now = DateTime.now();
 
-      String? subId;
-      DateTime? nextDue;
-
       if (widget.subscriptionId != null) {
         final existing = await repo.getById(widget.subscriptionId!);
         if (existing != null) {
-          subId = existing.id;
-          nextDue = existing.nextDueDate;
           await repo.updateSubscription(existing.copyWith(
             name: _nameController.text,
             merchantKeywords: _keywordsController.text,
@@ -84,12 +78,11 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
           ));
         }
       } else {
-        subId = const Uuid().v4();
-        nextDue = now;
         await repo.createSubscription(Subscription(
-          id: subId!,
+          id: const Uuid().v4(),
           accountId: '',
           categoryId: _selectedCategoryId,
+          amount: amountCents,
           name: _nameController.text,
           merchantKeywords: _keywordsController.text,
           frequency: _frequency,
@@ -103,16 +96,6 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
           createdAt: now,
           updatedAt: now,
         ));
-      }
-
-      if (subId != null && nextDue != null) {
-        final notif = ref.read(notificationServiceProvider);
-        await notif.scheduleRenewalReminder(
-          subId: subId,
-          subName: _nameController.text,
-          amountCents: amountCents,
-          nextDueDate: nextDue,
-        );
       }
 
       if (mounted) context.pop();

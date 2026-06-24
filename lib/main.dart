@@ -115,19 +115,17 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
         await ref.read(savingsReminderServiceProvider).checkAndSendReminder();
       } catch (_) {}
 
-      // Schedule renewal reminders for active subscriptions
+      // Check for upcoming subscription renewals
       try {
         final subRepo = ref.read(subscriptionRepositoryProvider);
         final notif = ref.read(notificationServiceProvider);
         final subs = await subRepo.getAll();
-        for (final sub in subs.where((s) => s.status == 'active')) {
-          await notif.scheduleRenewalReminder(
-            subId: sub.id,
-            subName: sub.name,
-            amountCents: sub.amount,
-            nextDueDate: sub.nextDueDate,
-          );
-        }
+        await notif.checkSubscriptionRenewals(
+          subs: subs
+              .where((s) => s.status == 'active')
+              .map((s) => (name: s.name, amountCents: s.amount, nextDueDate: s.nextDueDate))
+              .toList(),
+        );
       } catch (_) {}
 
       // Check if Notification Access is enabled; if not, prompt once

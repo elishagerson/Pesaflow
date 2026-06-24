@@ -382,16 +382,22 @@ class SubscriptionTotals {
         yearly = 0;
 }
 
-int _monthlyCost(int amountCents, String frequency, int interval) {
-  final paymentsPerYear = switch (frequency) {
+/// Number of payments per year for a given frequency and interval.
+int _paymentsPerYear(String frequency, int interval) {
+  final interval_ = interval < 1 ? 1 : interval;
+  return switch (frequency) {
     'weekly' => 52,
     'biweekly' => 26,
     'monthly' => 12,
     'quarterly' => 4,
     'yearly' => 1,
     _ => 12,
-  } ~/ interval;
-  return amountCents * paymentsPerYear ~/ 12;
+  } ~/ interval_;
+}
+
+/// Monthly-equivalent cost for a subscription amount in cents.
+int _monthlyCost(int amountCents, String frequency, int interval) {
+  return amountCents * _paymentsPerYear(frequency, interval) ~/ 12;
 }
 
 final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
@@ -412,14 +418,7 @@ final subscriptionTotalsProvider = Provider<SubscriptionTotals>((ref) {
       int monthly = 0, yearly = 0;
       for (final s in active) {
         monthly += _monthlyCost(s.amount, s.frequency, s.intervalValue);
-        yearly += s.amount * (switch (s.frequency) {
-          'weekly' => 52,
-          'biweekly' => 26,
-          'monthly' => 12,
-          'quarterly' => 4,
-          'yearly' => 1,
-          _ => 12,
-        } ~/ s.intervalValue);
+        yearly += s.amount * _paymentsPerYear(s.frequency, s.intervalValue);
       }
       return SubscriptionTotals(
         monthly: monthly,
