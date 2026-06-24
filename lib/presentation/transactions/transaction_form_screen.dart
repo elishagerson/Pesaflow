@@ -59,12 +59,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(transactionRepositoryProvider);
-      final list = await repo.watchRecentTransactions(100).first;
+      final match = await repo.getTransactionById(widget.transactionId!);
       if (!mounted) return;
-      final match = list.firstWhere(
-        (item) => item.transaction.id == widget.transactionId,
-        orElse: () => throw StateError('Transaction not found in recent list'),
-      );
+      if (match == null) throw StateError('Transaction not found');
 
       _existingTransaction = match.transaction;
 

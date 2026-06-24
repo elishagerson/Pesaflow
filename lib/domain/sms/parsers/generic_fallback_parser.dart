@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:uuid/uuid.dart';
 import '../../../data/models/sms_parsed.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
@@ -45,16 +46,19 @@ class GenericFallbackParser implements SmsParser {
   }
 
   static int _extractFirstAmount(String text) {
-    final regex = RegExp(r'(?:Tsh|TZS|TSh|Tshs|tsh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
-    final matches = regex.allMatches(text);
-    for (final m in matches) {
-      final val = m.group(1);
-      if (val == null) continue;
-      final numeric = val.replaceAll(',', '');
-      final parsed = double.tryParse(numeric);
-      if (parsed != null && parsed > 0) {
-        return (parsed * 100).round();
-      }
+    // Require a currency prefix (Tsh, TZS, /=) to avoid matching dates/phone numbers
+    final regex = RegExp(
+      r'(?:Tsh|TZS|TSh|Tshs|\d+\/=)\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final match = regex.firstMatch(text);
+    if (match == null) return 0;
+    final val = match.group(1);
+    if (val == null) return 0;
+    final numeric = val.replaceAll(',', '');
+    final parsed = double.tryParse(numeric);
+    if (parsed != null && parsed > 0) {
+      return (parsed * 100).round();
     }
     return 0;
   }
@@ -96,10 +100,11 @@ class GenericFallbackParser implements SmsParser {
       caseSensitive: false,
     );
     final match = regex.firstMatch(text);
-    return match?.group(1) ?? 'GEN-${DateTime.now().millisecondsSinceEpoch}';
+    return match?.group(1) ?? 'GEN-${Uuid().v4()}';
   }
 
   static int? _extractAnyBalance(String text) {
+    // Require a balance keyword before the number to avoid picking up the transaction amount
     final regex = RegExp(
       r'(?:Salio|Balance|New balance|Bal)[:\s]*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,

@@ -6,15 +6,15 @@ import 'sms_parser_interface.dart';
 class SelcomPesaParser implements SmsParser {
 
   String _extractReference(String text) {
-    // Swahili: Ref/Txn/ID ya muamala: XXXXX
-    final swaRegex = RegExp(r'(?:Ref|Txn|ID|ID ya muamala):\s*([A-Za-z0-9]+)', caseSensitive: false);
-    final match = swaRegex.firstMatch(text);
-    if (match != null) return match.group(1) ?? '';
-
     // English: word before "Accepted." or "Confirmed."
     final engRegex = RegExp(r'(\w+)\s+(?:Accepted|Confirmed)\.\s*You have', caseSensitive: false);
     final engMatch = engRegex.firstMatch(text);
     if (engMatch != null) return engMatch.group(1) ?? '';
+
+    // Swahili: Ref/Txn/ID ya muamala: XXXXX
+    final swaRegex = RegExp(r'(?:Ref|Txn|ID|ID ya muamala):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final match = swaRegex.firstMatch(text);
+    if (match != null) return match.group(1) ?? '';
 
     return 'SELCOM-REF-UNKNOWN';
   }
@@ -99,9 +99,9 @@ class SelcomPesaParser implements SmsParser {
 
       // ========== Swahili-format patterns (legacy) ==========
 
-      // 3. Swahili/Fallback: Amount Extraction
+      // 3. Swahili/Fallback: Amount Extraction — require currency prefix
       final amtRegex = RegExp(
-        r'(?:Tsh|TZS)?\s*([\d,]+(?:\.[\d]{2})?)\s*(?:credited|debited|sent|received|umepokea|umetuma|imehamishwa|imesafirishwa)',
+        r'(?:Tsh|TZS)\s*([\d,]+(?:\.[\d]{2})?)\s*(?:credited|debited|sent|received|umepokea|umetuma|imehamishwa|imesafirishwa)',
         caseSensitive: false,
       );
 

@@ -395,11 +395,6 @@ class SmsProcessor {
   /// Extracts a Tanzanian phone number (07XX/06XX/255XX) from text.
   String? _extractPhoneNumber(String text) {
     final regex = RegExp(r'(?:\+?255|0)[67]\d{8}(?!\d)');
-    final match = regex.firstMatch(text);
-    if (match != null) return match.group(0);
-    // Also try matching international format like 2557XXXXXXXX
-    final intlRegex = RegExp(r'255[67]\d{8}(?!\d)');
-    final intlMatch = intlRegex.firstMatch(text);
-    return intlMatch?.group(0);
+    return regex.firstMatch(text)?.group(0);
   }
 }

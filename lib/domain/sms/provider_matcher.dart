@@ -106,7 +106,8 @@ class ProviderMatcher {
 
   /// Returns true if [text] contains a recognized financial amount pattern like
   /// "TSH 500", "TZS 1,000", or "500/=".
+  /// [text] should already be uppercased for consistent matching.
   static bool _hasAmountPattern(String text) {
-    return RegExp(r'(?:TSH|TZS|Tsh|TSh|/=\s)').hasMatch(text);
+    return RegExp(r'(?:TSH|TZS|/=\s)').hasMatch(text);
   }
 }
