@@ -23,5 +23,5 @@ class AccountRepository {
 
   Future<bool> updateAccount(Account account) => _accountDao.updateAccount(account);
 
-  Future<int> deleteAccount(String id) => _accountDao.deleteAccount(id);
+  Future<void> deleteAccount(String id) => _accountDao.deleteAccount(id);
 }
