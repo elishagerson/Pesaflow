@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -88,7 +89,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                         final sub = entry.value;
                         return StaggeredFadeSlide(
                           index: idx + (due.isNotEmpty ? 1 : 0),
-                          child: _buildSubscriptionTile(context, sub, isDark, due.contains(sub)),
+                          child: _buildSubscriptionTile(context, ref, sub, isDark, due.contains(sub)),
                         );
                       }),
                     ],
@@ -101,9 +102,15 @@ class SubscriptionListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSubscriptionTile(BuildContext context, Subscription sub, bool isDark, bool isDue) {
+  Widget _buildSubscriptionTile(BuildContext context, WidgetRef ref, Subscription sub, bool isDark, bool isDue) {
     final freqLabel = frequencyLabel(sub.frequency, sub.intervalValue);
     final statusColor = sub.status == 'active' ? const Color(0xFF609F8A) : Colors.grey;
+    final catColor = sub.categoryId != null
+        ? (ref.read(categoriesFutureProvider).asData?.value
+            .where((c) => c.id == sub.categoryId)
+            .map((c) => hexToColor(c.color))
+            .firstOrNull)
+        : null;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -125,17 +132,25 @@ class SubscriptionListScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15),
+                    color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.subscriptions_rounded, color: isDue ? const Color(0xFFFF6B35) : statusColor, size: 20),
+                  child: Icon(Icons.subscriptions_rounded, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                      Row(
+                        children: [
+                          if (catColor != null) ...[
+                            Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
+                            const SizedBox(width: 6),
+                          ],
+                          Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
+                        ],
+                      ),
                       const SizedBox(height: 2),
                       Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
                     ],

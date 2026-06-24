@@ -67,4 +67,46 @@ class NotificationService {
       notificationDetails: details,
     );
   }
+
+  /// Schedules a renewal reminder notification for a subscription.
+  /// [daysBefore] controls how many days before the due date the notification fires.
+  Future<void> scheduleRenewalReminder({
+    required String subId,
+    required String subName,
+    required int amountCents,
+    required DateTime nextDueDate,
+    int daysBefore = 3,
+  }) async {
+    await ensureInitialized();
+
+    final reminderDate = nextDueDate.subtract(Duration(days: daysBefore));
+    final now = DateTime.now();
+    if (reminderDate.isBefore(now)) return;
+
+    final amountStr = (amountCents / 100).toStringAsFixed(0);
+    final androidChannel = AndroidNotificationDetails(
+      'pesaflow_renewal_channel',
+      'Subscription Renewals',
+      channelDescription: 'Upcoming subscription renewal reminders',
+      icon: '@drawable/ic_notification_pesaflow',
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    );
+    final details = NotificationDetails(android: androidChannel);
+
+    await _plugin.schedule(
+      id: subId.hashCode,
+      title: '$subName renewing soon',
+      body: '$subName (Tsh $amountStr) renews on ${nextDueDate.day}/${nextDueDate.month}/${nextDueDate.year}',
+      scheduledDate: reminderDate,
+      notificationDetails: details,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
+    developer.log('Scheduled renewal reminder for $subName on $reminderDate', name: 'NotificationService');
+  }
+
+  /// Cancels a scheduled renewal notification for a subscription.
+  Future<void> cancelRenewalReminder(String subId) async {
+    await _plugin.cancel(subId.hashCode);
+  }
 }

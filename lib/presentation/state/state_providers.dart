@@ -363,6 +363,37 @@ final dueRecurringTransactionsProvider = FutureProvider<List<RecurringTransactio
 });
 
 // ── Subscription Providers ───────────────────────────────────────────
+
+class SubscriptionTotals {
+  final int monthly;
+  final int weekly;
+  final int daily;
+  final int yearly;
+  const SubscriptionTotals({
+    required this.monthly,
+    required this.weekly,
+    required this.daily,
+    required this.yearly,
+  });
+  const SubscriptionTotals.zero()
+      : monthly = 0,
+        weekly = 0,
+        daily = 0,
+        yearly = 0;
+}
+
+int _monthlyCost(int amountCents, String frequency, int interval) {
+  final paymentsPerYear = switch (frequency) {
+    'weekly' => 52,
+    'biweekly' => 26,
+    'monthly' => 12,
+    'quarterly' => 4,
+    'yearly' => 1,
+    _ => 12,
+  } ~/ interval;
+  return amountCents * paymentsPerYear ~/ 12;
+}
+
 final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
   final repo = ref.watch(subscriptionRepositoryProvider);
   return repo.watchAll();
@@ -371,6 +402,48 @@ final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
 final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
   final repo = ref.watch(subscriptionRepositoryProvider);
   return repo.getDue(DateTime.now());
+});
+
+final subscriptionTotalsProvider = Provider<SubscriptionTotals>((ref) {
+  final subsAsync = ref.watch(subscriptionsStreamProvider);
+  return subsAsync.when(
+    data: (subs) {
+      final active = subs.where((s) => s.status == 'active');
+      int monthly = 0, yearly = 0;
+      for (final s in active) {
+        monthly += _monthlyCost(s.amount, s.frequency, s.intervalValue);
+        yearly += s.amount * (switch (s.frequency) {
+          'weekly' => 52,
+          'biweekly' => 26,
+          'monthly' => 12,
+          'quarterly' => 4,
+          'yearly' => 1,
+          _ => 12,
+        } ~/ s.intervalValue);
+      }
+      return SubscriptionTotals(
+        monthly: monthly,
+        weekly: monthly * 12 ~/ 52,
+        daily: yearly ~/ 365,
+        yearly: yearly,
+      );
+    },
+    loading: () => const SubscriptionTotals.zero(),
+    error: (_, _) => const SubscriptionTotals.zero(),
+  );
+});
+
+final upcomingRenewalsProvider = Provider<List<Subscription>>((ref) {
+  final subsAsync = ref.watch(subscriptionsStreamProvider);
+  return subsAsync.when(
+    data: (subs) {
+      final active = subs.where((s) => s.status == 'active').toList();
+      active.sort((a, b) => a.nextDueDate.compareTo(b.nextDueDate));
+      return active.take(5).toList();
+    },
+    loading: () => [],
+    error: (_, _) => [],
+  );
 });
 
 class ThemeModeNotifier extends Notifier<ThemeMode> {

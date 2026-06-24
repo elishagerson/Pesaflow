@@ -1,9 +1,15 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
+import 'package:pesaflow/services/notification_service.dart';
 
 class SubscriptionFormScreen extends ConsumerStatefulWidget {
   final String? subscriptionId;
@@ -20,6 +26,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   final _amountController = TextEditingController();
   String _frequency = 'monthly';
   int _intervalValue = 1;
+  String? _selectedCategoryId;
   bool _isLoading = false;
 
   @override
@@ -37,6 +44,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       _amountController.text = (sub.amount / 100).toStringAsFixed(0);
       _frequency = sub.frequency;
       _intervalValue = sub.intervalValue;
+      _selectedCategoryId = sub.categoryId;
     }
   }
 
@@ -57,24 +65,31 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       final amountCents = (double.parse(_amountController.text) * 100).round();
       final now = DateTime.now();
 
+      String? subId;
+      DateTime? nextDue;
+
       if (widget.subscriptionId != null) {
         final existing = await repo.getById(widget.subscriptionId!);
         if (existing != null) {
+          subId = existing.id;
+          nextDue = existing.nextDueDate;
           await repo.updateSubscription(existing.copyWith(
             name: _nameController.text,
             merchantKeywords: _keywordsController.text,
             amount: amountCents,
             frequency: _frequency,
             intervalValue: _intervalValue,
+            categoryId: _selectedCategoryId != null ? Value(_selectedCategoryId) : const Value(null),
             updatedAt: now,
           ));
         }
       } else {
+        subId = const Uuid().v4();
+        nextDue = now;
         await repo.createSubscription(Subscription(
-          id: const Uuid().v4(),
+          id: subId!,
           accountId: '',
-          categoryId: null,
-          amount: amountCents,
+          categoryId: _selectedCategoryId,
           name: _nameController.text,
           merchantKeywords: _keywordsController.text,
           frequency: _frequency,
@@ -88,6 +103,16 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
           createdAt: now,
           updatedAt: now,
         ));
+      }
+
+      if (subId != null && nextDue != null) {
+        final notif = ref.read(notificationServiceProvider);
+        await notif.scheduleRenewalReminder(
+          subId: subId,
+          subName: _nameController.text,
+          amountCents: amountCents,
+          nextDueDate: nextDue,
+        );
       }
 
       if (mounted) context.pop();
@@ -116,6 +141,32 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               decoration: const InputDecoration(labelText: 'Service name', hintText: 'Netflix, Spotify, DStv...'),
               validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
             ),
+            const SizedBox(height: 16),
+            Consumer(builder: (context, watchRef, _) {
+              final catsAsync = watchRef.watch(categoriesFutureProvider);
+              return catsAsync.when(
+                data: (cats) {
+                  final expenseCats = cats.where((c) => c.type == 'expense').toList();
+                  return ModernDropdown<String>(
+                    labelText: 'Category (optional)',
+                    value: _selectedCategoryId,
+                    prefixIcon: Icons.category_rounded,
+                    items: [
+                      const ModernDropdownItem<String>(value: '', label: 'None', icon: Icons.block, color: Colors.grey),
+                      ...expenseCats.map((c) => ModernDropdownItem<String>(
+                        value: c.id,
+                        label: c.name,
+                        icon: getCategoryIcon(c.icon),
+                        color: hexToColor(c.color),
+                      )),
+                    ],
+                    onChanged: (v) => setState(() => _selectedCategoryId = v == '' ? null : v),
+                  );
+                },
+                loading: () => const LinearProgressIndicator(),
+                error: (e, _) => Text('Error: $e'),
+              );
+            }),
             const SizedBox(height: 16),
             TextFormField(
               controller: _keywordsController,

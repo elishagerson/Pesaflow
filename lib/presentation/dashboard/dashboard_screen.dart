@@ -2335,14 +2335,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final isDark = theme.brightness == Brightness.dark;
     final subsAsync = ref.watch(subscriptionsStreamProvider);
     final dueAsync = ref.watch(dueSubscriptionsProvider);
+    final totals = ref.watch(subscriptionTotalsProvider);
+    final upcoming = ref.watch(upcomingRenewalsProvider);
 
     return subsAsync.when(
       data: (subscriptions) {
         if (subscriptions.isEmpty) return const SizedBox.shrink();
         final due = dueAsync.asData?.value ?? [];
+        final active = subscriptions.where((s) => s.status == 'active').toList();
+        final categories = ref.read(categoriesFutureProvider).asData?.value ?? [];
+
+        Color? catColor(String? catId) {
+          if (catId == null) return null;
+          final cat = categories.where((c) => c.id == catId).firstOrNull;
+          return cat != null ? hexToColor(cat.color) : null;
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Header row ──
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -2364,30 +2376,131 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ],
                 ),
-                if (due.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      '${due.length} due',
-                      style: const TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFFFF6B35),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (due.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          '${due.length} due',
+                          style: const TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFFFF6B35),
+                          ),
+                        ),
                       ),
+                    TextButton(
+                      onPressed: () => context.push('/subscriptions'),
+                      child: const Text('Manage'),
                     ),
-                  ),
-                TextButton(
-                  onPressed: () => context.push('/subscriptions'),
-                  child: const Text('Manage'),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            ...subscriptions.take(3).map((sub) => Padding(
+
+            // ── Hero total card ──
+            if (totals.monthly > 0)
+              GlassCard(
+                borderRadius: AppTheme.radiusCard,
+                elevation: CardElevation.medium,
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  children: [
+                    Text(
+                      '${CurrencyFormatter.formatCents(totals.monthly)}/mo',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _cycleChip('${_fmtShort(totals.daily)}/day', isDark),
+                        const SizedBox(width: 8),
+                        _cycleChip('${_fmtShort(totals.weekly)}/wk', isDark),
+                        const SizedBox(width: 8),
+                        _cycleChip('${_fmtShort(totals.yearly)}/yr', isDark),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+            // ── Upcoming renewals ──
+            if (upcoming.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.event_rounded, size: 14, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                    const SizedBox(width: 6),
+                    Text(
+                      'UPCOMING RENEWALS',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ...upcoming.take(3).map((sub) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: GlassCard(
+                  borderRadius: AppTheme.radiusCard,
+                  elevation: CardElevation.low,
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: due.contains(sub) ? const Color(0xFFFF6B35) : (catColor(sub.categoryId) ?? const Color(0xFF609F8A)),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          sub.name,
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        _formatDate(sub.nextDueDate),
+                        style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                      ),
+                      const SizedBox(width: 8),
+                      AmountText(
+                        amountInCents: sub.amount,
+                        type: AmountType.expense,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+              const SizedBox(height: 4),
+            ],
+
+            // ── Subscription tiles with category colors ──
+            ...active.take(3).map((sub) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: GlassCard(
                 borderRadius: AppTheme.radiusCard,
@@ -2398,13 +2511,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: due.contains(sub) ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : const Color(0xFF609F8A).withValues(alpha: 0.12),
+                        color: (catColor(sub.categoryId) ?? (due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A))).withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.subscriptions_rounded,
                         size: 14,
-                        color: due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A),
+                        color: catColor(sub.categoryId) ?? (due.contains(sub) ? const Color(0xFFFF6B35) : const Color(0xFF609F8A)),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -2412,15 +2525,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            sub.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Row(
+                            children: [
+                              if (catColor(sub.categoryId) != null) ...[
+                                Container(width: 6, height: 6, decoration: BoxDecoration(color: catColor(sub.categoryId), shape: BoxShape.circle)),
+                                const SizedBox(width: 6),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  sub.name,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 2),
-                            Text(
-                              frequencyLabel(sub.frequency, sub.intervalValue),
+                          Text(
+                            frequencyLabel(sub.frequency, sub.intervalValue),
                             style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                           ),
                         ],
@@ -2442,6 +2565,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
     );
+  }
+
+  Widget _cycleChip(String text, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.grey[400] : Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day}/${dt.month}';
+  }
+
+  /// Formats cents as a compact number without "Tsh" prefix.
+  String _fmtShort(int cents) {
+    return CurrencyFormatter.formatCents(cents).replaceFirst('Tsh ', '');
   }
 
   Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
