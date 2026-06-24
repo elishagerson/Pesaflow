@@ -18,9 +18,11 @@ import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
 import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
+import 'package:pesaflow/services/notification_service.dart';
 
 
 
@@ -111,6 +113,21 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       // Check savings reminder — alert if no saving activity in 7+ days
       try {
         await ref.read(savingsReminderServiceProvider).checkAndSendReminder();
+      } catch (_) {}
+
+      // Schedule renewal reminders for active subscriptions
+      try {
+        final subRepo = ref.read(subscriptionRepositoryProvider);
+        final notif = ref.read(notificationServiceProvider);
+        final subs = await subRepo.getAll();
+        for (final sub in subs.where((s) => s.status == 'active')) {
+          await notif.scheduleRenewalReminder(
+            subId: sub.id,
+            subName: sub.name,
+            amountCents: sub.amount,
+            nextDueDate: sub.nextDueDate,
+          );
+        }
       } catch (_) {}
 
       // Check if Notification Access is enabled; if not, prompt once
