@@ -18,7 +18,6 @@ import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -1126,8 +1125,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   TextButton(
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      ref.read(budgetActiveTabProvider.notifier).state = 1;
-                      context.go('/budgets');
+                      context.push('/savings-goals');
                     },
                     child: const Text('See All'),
                   ),
@@ -1137,11 +1135,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               GestureDetector(
                 onTap: () {
                   HapticFeedback.mediumImpact();
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => SavingsGoalDetailSheet(goal: goal),
+                  context.push('/savings-goals/${goal.id}');
                   );
                 },
                 child: Container(
