@@ -274,34 +274,36 @@ final GoRouter appRouter = GoRouter(
                         ),
                       ],
                     ),
+                  ],
+                ),
+                GoRoute(
+                  path: 'savings-goals',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) => _springSlidePage(const SavingsGoalListScreen()),
+                  routes: [
                     GoRoute(
-                      path: 'savings-goals',
+                      path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _springSlidePage(const SavingsGoalListScreen()),
+                      pageBuilder: (context, state) => _springSlidePage(const SavingsGoalFormScreen()),
+                    ),
+                    GoRoute(
+                      path: ':id',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) {
+                        return _springSlidePage(SavingsGoalDetailScreen(goalId: state.pathParameters['id']!));
+                      },
                       routes: [
                         GoRoute(
-                          path: 'add',
-                          parentNavigatorKey: _rootNavigatorKey,
-                          pageBuilder: (context, state) => _springSlidePage(const SavingsGoalFormScreen()),
-                        ),
-                        GoRoute(
-                          path: ':id',
+                          path: 'edit',
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
-                            return _springSlidePage(SavingsGoalDetailScreen(goalId: state.pathParameters['id']!));
+                            return _springSlidePage(SavingsGoalFormScreen(goalId: state.pathParameters['id']));
                           },
-                          routes: [
-                            GoRoute(
-                              path: 'edit',
-                              parentNavigatorKey: _rootNavigatorKey,
-                              pageBuilder: (context, state) {
-                                return _springSlidePage(SavingsGoalFormScreen(goalId: state.pathParameters['id']));
-                              },
-                            ),
-                          ],
                         ),
                       ],
                     ),
+                  ],
+                ),
                 GoRoute(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
