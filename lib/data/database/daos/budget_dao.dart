@@ -145,6 +145,14 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
      }
    }
 
+   /// Updates the current period's allocated amount for a budget.
+   Future<void> updateCurrentPeriodAllocated(String budgetId, int newAllocated) async {
+     final period = await getCurrentPeriod(budgetId);
+     if (period != null) {
+       await update(budgetPeriods).replace(period.copyWith(allocated: newAllocated));
+     }
+   }
+
   /// Watches for changes to the transactions table.
   /// Fires on every insert, update, or delete of any transaction.
   Stream<int> watchTransactionChanges() {
@@ -195,30 +203,36 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
        }
      }
      
-     // For each budget, get the spent amount for its current period
-     final result = <BudgetWithProgress>[];
-     for (final budget in activeBudgets) {
-       final category = categoriesMap[budget.categoryId];
-       if (category == null) continue;
-       
-       final currentPeriod = periodsMap[budget.id];
-       int spent = 0;
-       
-       if (currentPeriod != null) {
-         spent = await getSpentForCategoryInPeriod(
-           budget.categoryId,
-           currentPeriod.periodStart,
-           currentPeriod.periodEnd,
-         );
-       }
-       
-       result.add(BudgetWithProgress(
-         budget: budget,
-         category: category,
-         currentPeriod: currentPeriod,
-         spentInPeriod: spent,
-       ));
-     }
+      // For each budget, get the spent amount for its current period (concurrently)
+      final spentFutures = <Future<void>>[];
+      final spentResults = <String, int>{};
+      for (final budget in activeBudgets) {
+        final currentPeriod = periodsMap[budget.id];
+        if (currentPeriod != null) {
+          spentFutures.add(() async {
+            final spent = await getSpentForCategoryInPeriod(
+              budget.categoryId,
+              currentPeriod.periodStart,
+              currentPeriod.periodEnd,
+            );
+            spentResults[budget.id] = spent;
+          }());
+        }
+      }
+      await Future.wait(spentFutures);
+
+      final result = <BudgetWithProgress>[];
+      for (final budget in activeBudgets) {
+        final category = categoriesMap[budget.categoryId];
+        if (category == null) continue;
+        
+        result.add(BudgetWithProgress(
+          budget: budget,
+          category: category,
+          currentPeriod: periodsMap[budget.id],
+          spentInPeriod: spentResults[budget.id] ?? 0,
+        ));
+      }
      
       return result;
      }

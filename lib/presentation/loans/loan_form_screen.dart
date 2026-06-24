@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,8 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class LoanFormScreen extends ConsumerStatefulWidget {
-  const LoanFormScreen({super.key});
+  final String? loanId;
+  const LoanFormScreen({this.loanId, super.key});
 
   @override
   ConsumerState<LoanFormScreen> createState() => _LoanFormScreenState();
@@ -24,6 +26,29 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   final _interestRateController = TextEditingController();
   DateTime _disbursedAt = DateTime.now();
   DateTime? _dueAt;
+  Loan? _existingLoan;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.loanId != null) _loadExistingLoan();
+  }
+
+  Future<void> _loadExistingLoan() async {
+    final loan = await ref.read(loanRepositoryProvider).getLoanById(widget.loanId!);
+    if (loan != null && mounted) {
+      setState(() {
+        _existingLoan = loan;
+        _amountController.text = (loan.amount ~/ 100).toString();
+        if (loan.description != null) _descriptionController.text = loan.description!;
+        if (loan.sender != null) _senderController.text = loan.sender!;
+        if (loan.reference != null) _referenceController.text = loan.reference!;
+        _disbursedAt = loan.disbursedAt;
+        _dueAt = loan.dueAt;
+        if (loan.interestRate != null) _interestRateController.text = loan.interestRate.toString();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -62,37 +87,65 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     if (amount == null || amount <= 0) return;
 
     final amountCents = amount * 100;
-    final loanId = const Uuid().v4();
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 
-    final loan = Loan(
-      id: loanId,
-      amount: amountCents,
-      remaining: amountCents,
-      status: 'active',
-      description: _descriptionController.text.trim().isEmpty
-          ? null : _descriptionController.text.trim(),
-      sender: _senderController.text.trim().isEmpty
-          ? null : _senderController.text.trim(),
-      reference: _referenceController.text.trim().isEmpty
-          ? null : _referenceController.text.trim(),
-      disbursedAt: _disbursedAt,
-      dueAt: _dueAt,
-      interestRate: double.tryParse(_interestRateController.text),
-      trackerId: activeTrackerId,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-
-    try {
-      await ref.read(loanRepositoryProvider).createLoan(loan);
-      if (!mounted) return;
-      context.pop();
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create loan: $e')),
+    if (_existingLoan != null) {
+      final updatedRemaining = amountCents.clamp(0, _existingLoan!.remaining);
+      final updatedLoan = _existingLoan!.copyWith(
+        amount: amountCents,
+        remaining: updatedRemaining,
+        description: _descriptionController.text.trim().isEmpty
+            ? const Value(null) : Value(_descriptionController.text.trim()),
+        sender: _senderController.text.trim().isEmpty
+            ? const Value(null) : Value(_senderController.text.trim()),
+        reference: _referenceController.text.trim().isEmpty
+            ? const Value(null) : Value(_referenceController.text.trim()),
+        disbursedAt: _disbursedAt,
+        dueAt: _dueAt != null ? Value(_dueAt) : const Value(null),
+        interestRate: double.tryParse(_interestRateController.text) != null
+            ? Value(double.tryParse(_interestRateController.text)) : const Value(null),
+        updatedAt: DateTime.now(),
       );
+      try {
+        await ref.read(loanRepositoryProvider).updateLoan(updatedLoan);
+        if (!mounted) return;
+        context.pop();
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update loan: $e')),
+        );
+      }
+    } else {
+      final loanId = const Uuid().v4();
+      final loan = Loan(
+        id: loanId,
+        amount: amountCents,
+        remaining: amountCents,
+        status: 'active',
+        description: _descriptionController.text.trim().isEmpty
+            ? null : _descriptionController.text.trim(),
+        sender: _senderController.text.trim().isEmpty
+            ? null : _senderController.text.trim(),
+        reference: _referenceController.text.trim().isEmpty
+            ? null : _referenceController.text.trim(),
+        disbursedAt: _disbursedAt,
+        dueAt: _dueAt,
+        interestRate: double.tryParse(_interestRateController.text),
+        trackerId: activeTrackerId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      try {
+        await ref.read(loanRepositoryProvider).createLoan(loan);
+        if (!mounted) return;
+        context.pop();
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create loan: $e')),
+        );
+      }
     }
   }
 
@@ -104,7 +157,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Loan'),
+        title: Text(_existingLoan != null ? 'Edit Loan' : 'Add Loan'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -292,8 +345,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Add Loan',
+                    child: Text(
+                      _existingLoan != null ? 'Update Loan' : 'Add Loan',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

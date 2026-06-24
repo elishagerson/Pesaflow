@@ -94,7 +94,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       if (widget.budgetId != null) {
         final existing = await repo.getBudgetById(widget.budgetId!);
         if (existing != null) {
-          await repo.updateBudget(existing.copyWith(name: _nameController.text.trim(), categoryId: _selectedCategoryId!, period: _period, amount: amountCents, rollover: _rollover, rolloverType: _rolloverType, notificationThreshold: _threshold));
+          await repo.updateBudgetWithPeriodAllocation(existing.copyWith(name: _nameController.text.trim(), categoryId: _selectedCategoryId!, period: _period, amount: amountCents, rollover: _rollover, rolloverType: _rolloverType, notificationThreshold: _threshold));
         }
       } else {
         await repo.createBudget(name: _nameController.text.trim(), categoryId: _selectedCategoryId!, period: _period, amount: amountCents, rollover: _rollover, rolloverType: _rolloverType, rolloverCap: rolloverCap, startDate: _startDate, notificationThreshold: _threshold);
@@ -288,7 +288,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             trailing: CupertinoSwitch(
                               value: _rollover,
                               activeTrackColor: theme.colorScheme.primary,
-                              onChanged: (v) => setState(() => _rollover = v),
+                              onChanged: (v) => setState(() {
+                                _rollover = v;
+                                if (v && _rolloverType == 'none') _rolloverType = 'all';
+                              }),
                             ),
                           ),
                         ],
@@ -314,7 +317,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       ButtonSegment(value: 'all', label: Text('All')),
                                       ButtonSegment(value: 'capped', label: Text('Capped')),
                                     ],
-                                    selected: {_rolloverType == 'none' ? 'all' : _rolloverType},
+                                    selected: {_rolloverType},
                                     onSelectionChanged: (v) => setState(() => _rolloverType = v.first),
                                   ),
                                   if (_rolloverType == 'capped') ...[

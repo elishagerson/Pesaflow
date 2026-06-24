@@ -255,14 +255,23 @@ final GoRouter appRouter = GoRouter(
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) => _springSlidePage(const LoanFormScreen()),
                     ),
+                    GoRoute(
+                      path: ':id',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) {
+                        return _springSlidePage(LoanDetailScreen(loanId: state.pathParameters['id']!));
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'edit',
+                          parentNavigatorKey: _rootNavigatorKey,
+                          pageBuilder: (context, state) {
+                            return _springSlidePage(LoanFormScreen(loanId: state.pathParameters['id']));
+                          },
+                        ),
+                      ],
+                    ),
                   ],
-                ),
-                GoRoute(
-                  path: 'loans/:id',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) {
-                    return _springSlidePage(LoanDetailScreen(loanId: state.param('id')));
-                  },
                 ),
                 GoRoute(
                   path: 'recurring',

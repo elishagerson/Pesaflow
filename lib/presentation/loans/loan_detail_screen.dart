@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -41,6 +42,12 @@ class LoanDetailScreen extends ConsumerWidget {
           appBar: AppBar(
             title: const Text('Loan Details'),
             centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit_rounded),
+                onPressed: () => context.push('/loans/${loan.id}/edit'),
+              ),
+            ],
           ),
           body: ListView(
             padding: const EdgeInsets.all(16),
