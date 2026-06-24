@@ -20,6 +20,9 @@ import 'package:pesaflow/presentation/recurring/recurring_transaction_form_scree
 import 'package:pesaflow/presentation/recurring/recurring_transaction_list_screen.dart';
 import 'package:pesaflow/presentation/subscriptions/subscription_form_screen.dart';
 import 'package:pesaflow/presentation/subscriptions/subscription_list_screen.dart';
+import 'package:pesaflow/presentation/savings_goals/savings_goal_list_screen.dart';
+import 'package:pesaflow/presentation/savings_goals/savings_goal_form_screen.dart';
+import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'route_params.dart';
 
@@ -267,6 +270,30 @@ final GoRouter appRouter = GoRouter(
                           parentNavigatorKey: _rootNavigatorKey,
                           pageBuilder: (context, state) {
                             return _springSlidePage(LoanFormScreen(loanId: state.pathParameters['id']));
+                          },
+                ),
+                GoRoute(
+                  path: 'savings-goals',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  pageBuilder: (context, state) => _springSlidePage(const SavingsGoalListScreen()),
+                  routes: [
+                    GoRoute(
+                      path: 'add',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) => _springSlidePage(const SavingsGoalFormScreen()),
+                    ),
+                    GoRoute(
+                      path: ':id',
+                      parentNavigatorKey: _rootNavigatorKey,
+                      pageBuilder: (context, state) {
+                        return _springSlidePage(SavingsGoalDetailScreen(goalId: state.pathParameters['id']!));
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'edit',
+                          parentNavigatorKey: _rootNavigatorKey,
+                          pageBuilder: (context, state) {
+                            return _springSlidePage(SavingsGoalFormScreen(goalId: state.pathParameters['id']));
                           },
                         ),
                       ],
