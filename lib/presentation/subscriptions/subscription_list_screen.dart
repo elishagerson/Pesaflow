@@ -124,53 +124,53 @@ class SubscriptionListScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          onTap: () => context.push('/subscriptions/${sub.id}/edit'),
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.subscriptions_rounded, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
+        onTap: () => context.push('/subscriptions/${sub.id}'),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          if (catColor != null) ...[
-                            Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
-                            const SizedBox(width: 6),
-                          ],
-                          Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Icon(Icons.subscriptions_rounded, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(CurrencyFormatter.formatCents(sub.amount),
-                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                    const SizedBox(height: 2),
-                    Text(
-                      sub.status == 'active' ? (isDue ? 'Due' : 'Active') : sub.status,
-                      style: TextStyle(fontSize: 11, color: isDue ? const Color(0xFFFF6B35) : statusColor, fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        if (catColor != null) ...[
+                          Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
+                          const SizedBox(width: 6),
+                        ],
+                        Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
+                      ],
                     ),
+                    const SizedBox(height: 2),
+                    Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(CurrencyFormatter.formatCents(sub.amount),
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                  const SizedBox(height: 2),
+                  Text(
+                    sub.status == 'active' ? (isDue ? 'Due' : 'Active') : 'Paused',
+                    style: TextStyle(fontSize: 11, color: isDue ? const Color(0xFFFF6B35) : statusColor, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ],
           ),
+        ),
         ),
       ),
     );
