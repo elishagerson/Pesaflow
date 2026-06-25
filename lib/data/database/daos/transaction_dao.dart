@@ -116,11 +116,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
-      // 2. Skip balance adjustment for unreviewed transactions.
-      //    Balance will be applied when the user approves via approveReviewedTransaction().
-      if (transaction.source == 'sms_reviewed') return;
-
-      // 3. Load the linked account
+      // 2. Load the linked account
       final accountQuery = select(accounts)..where((t) => t.id.equals(transaction.accountId));
       final account = await accountQuery.getSingleOrNull();
       if (account == null) return;
@@ -285,39 +281,6 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         updatedAt: DateTime.now(),
       );
       await update(transactions).replace(updated);
-
-      // Apply deferred balance adjustment (was skipped at insert time for sms_reviewed).
-      final accountQuery = select(accounts)..where((t) => t.id.equals(updated.accountId));
-      final account = await accountQuery.getSingleOrNull();
-      if (account == null) return;
-
-      final type = updated.type.toLowerCase();
-      int newBalance;
-
-      // Use delta-based adjustment for reviewed transactions (the carrier-reported
-      // balanceAfter may be stale by the time the user approves).
-      int balanceDelta = 0;
-      if (type == 'income' || type == 'loan') {
-        balanceDelta = updated.amount;
-      } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-        balanceDelta = -updated.amount;
-      } else if (type == 'transfer') {
-        balanceDelta = -updated.amount;
-      }
-      newBalance = account.balance + balanceDelta;
-
-      await update(accounts).replace(account.copyWith(balance: newBalance));
-
-      // For transfers, also credit the destination account.
-      if (type == 'transfer' && updated.destinationAccountId != null) {
-        final destQuery = select(accounts)..where((t) => t.id.equals(updated.destinationAccountId!));
-        final destAccount = await destQuery.getSingleOrNull();
-        if (destAccount != null) {
-          await update(accounts).replace(
-            destAccount.copyWith(balance: destAccount.balance + updated.amount),
-          );
-        }
-      }
     });
   }
 
