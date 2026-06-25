@@ -7,12 +7,12 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 final subscriptionTransactionsProvider = StreamProvider.family<List<TransactionWithCategoryAndAccount>, Subscription>((ref, sub) {
@@ -319,11 +319,11 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                       InkWell(
                         onTap: () => _confirmDelete(context, ref, sub),
                         borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppTheme.radiusCard)),
-                        child: const Padding(
-                          padding: EdgeInsets.all(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              Icon(Icons.delete_outline_rounded, color: Colors.red, size: 24),
+                              const Icon(Icons.delete_outline_rounded, color: Colors.red, size: 24),
                               const SizedBox(width: 14),
                               Expanded(
                                 child: Column(

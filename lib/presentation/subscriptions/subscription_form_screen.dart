@@ -216,7 +216,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _frequency,
+              initialValue: _frequency,
               decoration: const InputDecoration(labelText: 'Frequency'),
               items: const [
                 DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
