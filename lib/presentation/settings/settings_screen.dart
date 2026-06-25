@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -916,6 +917,14 @@ class SettingsScreen extends ConsumerWidget {
                     title: const Text('Categories Manager'),
                     subtitle: const Text('Add custom financial categories'),
                     onTap: () => _showCategoriesManager(context, ref),
+                  ),),
+                  TactileSpringContainer(
+                    onTap: () => context.push('/subscriptions'),
+                    child: IosListRow(
+                    leading: Icon(Icons.subscriptions_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Subscriptions Manager'),
+                    subtitle: const Text('Manage your recurring service subscriptions'),
+                    onTap: () => context.push('/subscriptions'),
                   ),),
                 ],
               ),
