@@ -109,12 +109,18 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   /// Inserts a transaction and adjusts the linked account(s) balance inside a transaction.
+  /// Transactions pending user review (source == 'sms_reviewed') are inserted without
+  /// adjusting balances — the adjustment is deferred to [approveReviewedTransaction].
   Future<void> writeTransactionWithBalanceAdjustment(Transaction transaction) async {
     await attachedDatabase.transaction(() async {
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
-      // 2. Load the linked account
+      // 2. Skip balance adjustment for unreviewed transactions.
+      //    Balance will be applied when the user approves via approveReviewedTransaction().
+      if (transaction.source == 'sms_reviewed') return;
+
+      // 3. Load the linked account
       final accountQuery = select(accounts)..where((t) => t.id.equals(transaction.accountId));
       final account = await accountQuery.getSingleOrNull();
       if (account == null) return;
@@ -257,27 +263,62 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     });
   }
 
-  /// Approves a reviewed transaction by updating its source to 'sms_auto'
-  /// and optionally changing its category.
+  /// Approves a reviewed transaction by updating its source to 'sms_auto',
+  /// optionally changing its category, and applying the deferred balance adjustment.
   Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
-    final query = select(transactions)..where((t) => t.id.equals(transactionId));
-    final existing = await query.getSingleOrNull();
-    if (existing == null) return;
+    await attachedDatabase.transaction(() async {
+      final query = select(transactions)..where((t) => t.id.equals(transactionId));
+      final existing = await query.getSingleOrNull();
+      if (existing == null) return;
 
-    String? trackerId = existing.trackerId;
-    if (trackerId == null) {
-      final settingsQuery = db.select(db.appSettings)..where((t) => t.key.equals('active_tracker_id'));
-      final setting = await settingsQuery.getSingleOrNull();
-      trackerId = setting?.value ?? 'default_personal';
-    }
+      String? trackerId = existing.trackerId;
+      if (trackerId == null) {
+        final settingsQuery = db.select(db.appSettings)..where((t) => t.key.equals('active_tracker_id'));
+        final setting = await settingsQuery.getSingleOrNull();
+        trackerId = setting?.value ?? 'default_personal';
+      }
 
-    final updated = existing.copyWith(
-      source: 'sms_auto',
-      categoryId: newCategoryId ?? existing.categoryId,
-      trackerId: Value(trackerId),
-      updatedAt: DateTime.now(),
-    );
-    await update(transactions).replace(updated);
+      final updated = existing.copyWith(
+        source: 'sms_auto',
+        categoryId: newCategoryId ?? existing.categoryId,
+        trackerId: Value(trackerId),
+        updatedAt: DateTime.now(),
+      );
+      await update(transactions).replace(updated);
+
+      // Apply deferred balance adjustment (was skipped at insert time for sms_reviewed).
+      final accountQuery = select(accounts)..where((t) => t.id.equals(updated.accountId));
+      final account = await accountQuery.getSingleOrNull();
+      if (account == null) return;
+
+      final type = updated.type.toLowerCase();
+      int newBalance;
+
+      // Use delta-based adjustment for reviewed transactions (the carrier-reported
+      // balanceAfter may be stale by the time the user approves).
+      int balanceDelta = 0;
+      if (type == 'income' || type == 'loan') {
+        balanceDelta = updated.amount;
+      } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
+        balanceDelta = -updated.amount;
+      } else if (type == 'transfer') {
+        balanceDelta = -updated.amount;
+      }
+      newBalance = account.balance + balanceDelta;
+
+      await update(accounts).replace(account.copyWith(balance: newBalance));
+
+      // For transfers, also credit the destination account.
+      if (type == 'transfer' && updated.destinationAccountId != null) {
+        final destQuery = select(accounts)..where((t) => t.id.equals(updated.destinationAccountId!));
+        final destAccount = await destQuery.getSingleOrNull();
+        if (destAccount != null) {
+          await update(accounts).replace(
+            destAccount.copyWith(balance: destAccount.balance + updated.amount),
+          );
+        }
+      }
+    });
   }
 
   /// Finds the category ID of the most recent transaction that matches the description

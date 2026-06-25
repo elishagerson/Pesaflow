@@ -26,6 +26,8 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   String _frequency = 'monthly';
   int _intervalValue = 1;
   String? _selectedCategoryId;
+  String? _selectedAccountId;
+  DateTime _nextDueDate = DateTime.now();
   bool _isLoading = false;
 
   @override
@@ -44,6 +46,8 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       _frequency = sub.frequency;
       _intervalValue = sub.intervalValue;
       _selectedCategoryId = sub.categoryId;
+      _selectedAccountId = sub.accountId.isEmpty ? null : sub.accountId;
+      _nextDueDate = sub.nextDueDate;
     }
   }
 
@@ -57,6 +61,12 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+    if (_selectedAccountId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select an account')),
+      );
+      return;
+    }
 
     setState(() => _isLoading = true);
     try {
@@ -74,20 +84,22 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
             frequency: _frequency,
             intervalValue: _intervalValue,
             categoryId: _selectedCategoryId != null ? Value(_selectedCategoryId) : const Value(null),
+            accountId: _selectedAccountId!,
+            nextDueDate: _nextDueDate,
             updatedAt: now,
           ));
         }
       } else {
         await repo.createSubscription(Subscription(
           id: const Uuid().v4(),
-          accountId: '',
+          accountId: _selectedAccountId!,
           categoryId: _selectedCategoryId,
           amount: amountCents,
           name: _nameController.text,
           merchantKeywords: _keywordsController.text,
           frequency: _frequency,
           intervalValue: _intervalValue,
-          nextDueDate: now,
+          nextDueDate: _nextDueDate,
           lastPaidDate: null,
           totalPaid: 0,
           paymentCount: 0,
@@ -111,6 +123,16 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accountsAsync = ref.watch(accountsStreamProvider);
+
+    // Auto-select first account if not set yet
+    accountsAsync.whenData((accounts) {
+      if (_selectedAccountId == null && accounts.isNotEmpty && widget.subscriptionId == null) {
+        setState(() {
+          _selectedAccountId = accounts.first.id;
+        });
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.subscriptionId != null ? 'Edit Subscription' : 'Add Subscription')),
@@ -123,6 +145,26 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Service name', hintText: 'Netflix, Spotify, DStv...'),
               validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+            ),
+            const SizedBox(height: 16),
+            accountsAsync.when(
+              data: (accounts) {
+                return ModernDropdown<String>(
+                  labelText: 'Account',
+                  value: _selectedAccountId,
+                  prefixIcon: Icons.account_balance_rounded,
+                  items: accounts.map((a) => ModernDropdownItem<String>(
+                    value: a.id,
+                    label: a.name,
+                    subtitle: a.type.toUpperCase().replaceAll('_', ' '),
+                    icon: Icons.account_balance_wallet_rounded,
+                  )).toList(),
+                  onChanged: (v) => setState(() => _selectedAccountId = v),
+                  validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                );
+              },
+              loading: () => const LinearProgressIndicator(),
+              error: (e, _) => Text('Error loading accounts: $e'),
             ),
             const SizedBox(height: 16),
             Consumer(builder: (context, watchRef, _) {
@@ -174,7 +216,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              initialValue: _frequency,
+              value: _frequency,
               decoration: const InputDecoration(labelText: 'Frequency'),
               items: const [
                 DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
@@ -211,6 +253,39 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 const SizedBox(width: 8),
                 Text(_frequencyLabel(_frequency), style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[300] : Colors.grey[700])),
               ],
+            ),
+            const SizedBox(height: 16),
+            InkWell(
+              onTap: () async {
+                final now = DateTime.now();
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: _nextDueDate.isBefore(now) ? now : _nextDueDate,
+                  firstDate: DateTime(2020),
+                  lastDate: now.add(const Duration(days: 365 * 5)),
+                );
+                if (picked != null) {
+                  setState(() => _nextDueDate = picked);
+                }
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: 'Next Due Date',
+                  prefixIcon: Icon(Icons.calendar_today_rounded, size: 18),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${_nextDueDate.day}/${_nextDueDate.month}/${_nextDueDate.year}',
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 32),
             FilledButton(

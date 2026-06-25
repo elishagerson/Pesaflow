@@ -15,6 +15,7 @@ import '../categorization/auto_categorizer.dart';
 import 'deduplicator.dart';
 import 'provider_matcher.dart';
 import 'provider_config.dart';
+import 'sms_classifier.dart';
 
 final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final accountRepo = ref.watch(accountRepositoryProvider);
@@ -84,6 +85,19 @@ class SmsProcessor {
       bool usedGenericFallback = false;
       var smsParsed = parser.parse(body, timestamp);
       if (smsParsed == null) {
+        // Run the classifier before falling back — if the message is clearly
+        // promo/informational, skip the fallback parser entirely.
+        final classification = SmsClassifier.classify(body);
+        if (!classification.isTransaction) {
+          developer.log(
+            'SMS rejected by classifier as ${classification.label} '
+            '(confidence: ${classification.transactionConfidence.toStringAsFixed(2)}) '
+            'for provider $provider — reasons: ${classification.reasons.join("; ")}',
+            name: 'SmsProcessor',
+          );
+          return false;
+        }
+
         developer.log('SMS: primary parser returned null for $provider — trying generic fallback', name: 'SmsProcessor');
         final fallback = ProviderRegistry.fallbackFor(provider);
         smsParsed = fallback.parse(body, timestamp);
