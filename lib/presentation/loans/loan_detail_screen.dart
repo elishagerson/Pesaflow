@@ -1260,6 +1260,374 @@ class LoanDetailScreen extends ConsumerWidget {
     }
   }
 
+  void _showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
+    final amountController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final remainingCents = loan.remaining;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        int paymentAmount = 0;
+        bool isProcessing = false;
+
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final canSubmit = paymentAmount > 0 && !isProcessing;
+
+            return DraggableScrollableSheet(
+              initialChildSize: 0.5,
+              maxChildSize: 0.7,
+              minChildSize: 0.4,
+              expand: false,
+              builder: (ctx, scrollController) => ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: LiquidGlassOverlay(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? const Color(0xF01C1C1E)
+                            : const Color(0xF0F2F2F7),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 38,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.2)
+                                  : Colors.black.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: RawScrollbar(
+                              controller: scrollController,
+                              child: SingleChildScrollView(
+                                controller: scrollController,
+                                physics: const ClampingScrollPhysics(),
+                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.receipt_long_rounded, color: Color(0xFF609F8A), size: 22),
+                                        ),
+                                        const SizedBox(width: 14),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Record Offline Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              'No wallet account will be affected',
+                                              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 24),
+                                    const Text('AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? Colors.white.withValues(alpha: 0.08)
+                                              : Colors.black.withValues(alpha: 0.06),
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'TSh',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                              color: isDark ? Colors.white60 : Colors.black45,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: amountController,
+                                              keyboardType: TextInputType.number,
+                                              autofocus: true,
+                                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                              style: TextStyle(
+                                                fontSize: 28,
+                                                fontFamily: 'monospace',
+                                                fontWeight: FontWeight.bold,
+                                                color: isDark ? Colors.white : Colors.black,
+                                              ),
+                                              decoration: const InputDecoration(
+                                                hintText: '0',
+                                                border: InputBorder.none,
+                                                contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                              ),
+                                              onChanged: (val) {
+                                                setSheetState(() {
+                                                  paymentAmount = CurrencyFormatter.parseToCents(val);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          if (paymentAmount > 0)
+                                            GestureDetector(
+                                              onTap: () {
+                                                amountController.clear();
+                                                setSheetState(() => paymentAmount = 0);
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Row(
+                                      children: [
+                                        _QuickAmountChip(
+                                          label: '25%',
+                                          amount: (remainingCents * 0.25).round(),
+                                          isActive: paymentAmount == (remainingCents * 0.25).round(),
+                                          onTap: () {
+                                            amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
+                                            amountController.selection = TextSelection.fromPosition(
+                                              TextPosition(offset: amountController.text.length),
+                                            );
+                                            setSheetState(() => paymentAmount = (remainingCents * 0.25).round());
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        _QuickAmountChip(
+                                          label: '50%',
+                                          amount: (remainingCents * 0.5).round(),
+                                          isActive: paymentAmount == (remainingCents * 0.5).round(),
+                                          onTap: () {
+                                            amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
+                                            amountController.selection = TextSelection.fromPosition(
+                                              TextPosition(offset: amountController.text.length),
+                                            );
+                                            setSheetState(() => paymentAmount = (remainingCents * 0.5).round());
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        _QuickAmountChip(
+                                          label: '75%',
+                                          amount: (remainingCents * 0.75).round(),
+                                          isActive: paymentAmount == (remainingCents * 0.75).round(),
+                                          onTap: () {
+                                            amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
+                                            amountController.selection = TextSelection.fromPosition(
+                                              TextPosition(offset: amountController.text.length),
+                                            );
+                                            setSheetState(() => paymentAmount = (remainingCents * 0.75).round());
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        _QuickAmountChip(
+                                          label: '100%',
+                                          amount: remainingCents,
+                                          isActive: paymentAmount == remainingCents,
+                                          onTap: () {
+                                            amountController.text = (remainingCents / 100).toStringAsFixed(0);
+                                            amountController.selection = TextSelection.fromPosition(
+                                              TextPosition(offset: amountController.text.length),
+                                            );
+                                            setSheetState(() => paymentAmount = remainingCents);
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 24),
+                                    const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? Colors.white.withValues(alpha: 0.08)
+                                              : Colors.black.withValues(alpha: 0.06),
+                                        ),
+                                      ),
+                                      child: TextField(
+                                        controller: descriptionController,
+                                        textCapitalization: TextCapitalization.sentences,
+                                        style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
+                                        decoration: InputDecoration(
+                                          hintText: 'Add a note (optional)',
+                                          hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
+                                          prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                              color: isDark ? Colors.white38 : Colors.black26),
+                                          border: InputBorder.none,
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF609F8A).withValues(alpha: 0.08),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: const Color(0xFF609F8A).withValues(alpha: 0.15)),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.info_outline_rounded, size: 16, color: const Color(0xFF609F8A).withValues(alpha: 0.8)),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
+                                              style: TextStyle(fontSize: 11, color: const Color(0xFF609F8A).withValues(alpha: 0.8), height: 1.3),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 54,
+                                      child: ElevatedButton(
+                                        onPressed: canSubmit
+                                            ? () async {
+                                                setSheetState(() => isProcessing = true);
+                                                final desc = descriptionController.text.trim();
+                                                await _processOfflinePayment(
+                                                  context: sheetContext,
+                                                  ref: ref,
+                                                  loan: loan,
+                                                  amount: paymentAmount,
+                                                  description: desc.isNotEmpty ? desc : 'Offline loan payment',
+                                                );
+                                              }
+                                            : null,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFF609F8A),
+                                          foregroundColor: Colors.white,
+                                          disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                                          disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                        ),
+                                        child: isProcessing
+                                            ? const SizedBox(
+                                                width: 22,
+                                                height: 22,
+                                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                                              )
+                                            : Text(
+                                                paymentAmount <= 0
+                                                    ? 'Enter an amount'
+                                                    : 'Record ${CurrencyFormatter.formatCents(paymentAmount)}',
+                                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                              ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _processOfflinePayment({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Loan loan,
+    required int amount,
+    required String description,
+  }) async {
+    try {
+      final activeTrackerId = await ref.read(settingsRepositoryProvider).getSetting('active_tracker_id') ?? 'default_personal';
+      final categories = await ref.read(categoryRepositoryProvider).getAllCategories();
+      final expenseCat = categories.firstWhere(
+        (c) => c.type == 'expense',
+        orElse: () => categories.first,
+      );
+
+      final txn = Transaction(
+        id: const Uuid().v4(),
+        accountId: null,
+        categoryId: expenseCat.id,
+        trackerId: activeTrackerId,
+        loanId: loan.id,
+        amount: amount,
+        type: 'expense',
+        description: description,
+        source: 'manual',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await ref.read(transactionRepositoryNoAlertsProvider).createTransactionNoBalanceAdjustment(txn);
+      await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Offline payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
+            backgroundColor: const Color(0xFF609F8A),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
+        );
+      }
+    }
+  }
+
   Widget _buildTransactionTile(Transaction tx, ThemeData theme, bool isDark) {
     final isCredit = tx.type == 'income';
     final amountColor = isCredit ? const Color(0xFF609F8A) : const Color(0xFFE53935);
