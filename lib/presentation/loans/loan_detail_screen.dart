@@ -47,6 +47,10 @@ class LoanDetailScreen extends ConsumerWidget {
                 icon: const Icon(Icons.edit_rounded),
                 onPressed: () => context.push('/loans/${loan.id}/edit'),
               ),
+              IconButton(
+                icon: Icon(Icons.delete_rounded, color: theme.colorScheme.error),
+                onPressed: () => _confirmDelete(context, ref, loan),
+              ),
             ],
           ),
           body: ListView(
@@ -1749,6 +1753,53 @@ class LoanDetailScreen extends ConsumerWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  void _confirmDelete(BuildContext context, WidgetRef ref, Loan loan) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Loan?'),
+        content: Text(
+          loan.status == 'paid'
+              ? 'Remove "${loan.description ?? loan.provider ?? 'Loan'}" from your records? All linked payment transactions will also be deleted.'
+              : '"${loan.description ?? loan.provider ?? 'Loan'}" has an outstanding balance of ${CurrencyFormatter.formatCents(loan.remaining)}. Deleting it will also remove all linked payment transactions.',
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              try {
+                await ref.read(loanRepositoryProvider).deleteLoan(loan.id);
+                ref.invalidate(loansStreamProvider);
+                ref.invalidate(activeLoansStreamProvider);
+                ref.invalidate(paidLoansStreamProvider);
+                if (context.mounted) {
+                  Navigator.of(ctx, rootNavigator: true).pop();
+                  context.pop();
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  Navigator.of(ctx, rootNavigator: true).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red),
+                  );
+                }
+              }
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
