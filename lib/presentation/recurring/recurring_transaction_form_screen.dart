@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -106,14 +107,12 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
 
     setState(() => _isLoading = true);
 
-    final rawAmount = _amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
-    final amount = int.tryParse(rawAmount);
-    if (amount == null || amount <= 0) {
+    final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
+    if (amountCents <= 0) {
       setState(() => _isLoading = false);
       return;
     }
 
-    final amountCents = amount * 100;
     final interval = int.tryParse(_intervalController.text) ?? 1;
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 

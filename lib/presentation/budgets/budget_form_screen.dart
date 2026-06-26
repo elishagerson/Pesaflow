@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
@@ -86,10 +87,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(budgetRepositoryProvider);
-      final amountCents = (int.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0) * 100;
+      final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
       int? rolloverCap;
       if (_rollover && _rolloverType == 'capped' && _capController.text.isNotEmpty) {
-        rolloverCap = (int.tryParse(_capController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0) * 100;
+        rolloverCap = CurrencyFormatter.parseToCents(_capController.text);
       }
       if (widget.budgetId != null) {
         final existing = await repo.getBudgetById(widget.budgetId!);

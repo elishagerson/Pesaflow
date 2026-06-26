@@ -114,9 +114,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   double _getAmountCents() {
-    final clean = _amountStr.replaceAll(RegExp(r'[^0-9.]'), '');
-    final parsed = double.tryParse(clean) ?? 0.0;
-    return parsed * 100.0;
+    return CurrencyFormatter.parseToCents(_amountStr).toDouble();
   }
 
   Future<void> _saveTransaction() async {

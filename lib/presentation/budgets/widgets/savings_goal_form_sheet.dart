@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
@@ -83,7 +84,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     try {
       final repo = ref.read(savingsGoalRepositoryProvider);
       final trackerId = ref.read(activeTrackerIdProvider);
-      final targetVal = (int.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0) * 100;
+      final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
 
       if (widget.existingGoal != null) {
         final updated = widget.existingGoal!.copyWith(

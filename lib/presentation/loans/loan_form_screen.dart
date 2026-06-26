@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -82,11 +83,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final rawAmount = _amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
-    final amount = int.tryParse(rawAmount);
-    if (amount == null || amount <= 0) return;
-
-    final amountCents = amount * 100;
+    final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
+    if (amountCents <= 0) return;
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 
     if (_existingLoan != null) {

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
@@ -71,7 +72,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(subscriptionRepositoryProvider);
-      final amountCents = (double.parse(_amountController.text) * 100).round();
+      final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
       final now = DateTime.now();
 
       if (widget.subscriptionId != null) {

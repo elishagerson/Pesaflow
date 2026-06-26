@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
@@ -89,8 +90,7 @@ class _SavingsGoalFormScreenState
     try {
       final repo = ref.read(savingsGoalRepositoryProvider);
       final trackerId = ref.read(activeTrackerIdProvider);
-      final targetVal =
-          (int.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0) * 100;
+      final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
 
       if (widget.goalId != null) {
         final existing = await repo.getSavingsGoalById(widget.goalId!);

@@ -25,8 +25,8 @@ class CurrencyFormatter {
   /// Handles:
   ///   - Currency symbols (Tsh, TZS, $, etc.)
   ///   - Thousand separators (commas, spaces)
-  ///   - Decimal dots (last dot wins if ambiguous)
-  ///   - Negative amounts (leading "-" or "−")
+  ///   - Decimal dots (last dot wins when multiple present)
+  ///   - Negative amounts (leading "-" or "\u2212")
   ///   - Leading/trailing whitespace
   static int parseToCents(String text) {
     if (text.isEmpty) return 0;
@@ -40,19 +40,20 @@ class CurrencyFormatter {
       cleaned = cleaned.substring(1).trim();
     }
 
-    // Strip currency symbols, letters, and whitespace (keep digits, dots, commas, plus)
+    // Strip currency symbols, letters, and whitespace (keep digits, dots, commas)
     cleaned = cleaned.replaceAll(RegExp(r'[^\d.,]'), '').trim();
     if (cleaned.isEmpty) return 0;
 
     // Remove all commas (thousand separators)
     cleaned = cleaned.replaceAll(',', '');
 
-    // Handle dots — keep the last one as decimal, remove the rest (thousand separators)
-    final dotCount = ':'.allMatches(cleaned).length;
+    // Handle dots — keep the last as decimal, remove the rest (thousand separators)
+    final dotCount = '.'.allMatches(cleaned).length;
     if (dotCount > 1) {
       final lastDot = cleaned.lastIndexOf('.');
-      cleaned = cleaned.replaceAll('.', '');
-      cleaned = '${cleaned.substring(0, lastDot)}.${cleaned.substring(lastDot)}';
+      final before = cleaned.substring(0, lastDot).replaceAll('.', '');
+      final after = cleaned.substring(lastDot);
+      cleaned = '$before$after';
     }
 
     if (cleaned == '.' || cleaned.isEmpty) return 0;

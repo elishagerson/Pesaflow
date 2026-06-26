@@ -30,9 +30,34 @@ void main() {
       expect(CurrencyFormatter.parseToCents('  TZS  5,000 '), 500000);
     });
 
+    test('Handles whole TSh amounts (no decimals)', () {
+      expect(CurrencyFormatter.parseToCents('1500'), 150000);
+      expect(CurrencyFormatter.parseToCents('0'), 0);
+    });
+
+    test('Handles amounts with decimal point', () {
+      expect(CurrencyFormatter.parseToCents('15.50'), 1550);
+      expect(CurrencyFormatter.parseToCents('1000.75'), 100075);
+    });
+
+    test('Handles multiple dots (European-style thousand sep + decimal)', () {
+      expect(CurrencyFormatter.parseToCents('1.234.56'), 123456);
+      expect(CurrencyFormatter.parseToCents('12.345.67'), 1234567);
+    });
+
+    test('Handles negative amounts', () {
+      expect(CurrencyFormatter.parseToCents('-5000'), -500000);
+      expect(CurrencyFormatter.parseToCents('-\u22125000'), -500000);
+    });
+
+    test('Handles leading/trailing whitespace', () {
+      expect(CurrencyFormatter.parseToCents('  1500  '), 150000);
+    });
+
     test('Gracefully returns 0 for empty or invalid text', () {
       expect(CurrencyFormatter.parseToCents(''), 0);
       expect(CurrencyFormatter.parseToCents('abc'), 0);
+      expect(CurrencyFormatter.parseToCents('.'), 0);
     });
   });
 }
