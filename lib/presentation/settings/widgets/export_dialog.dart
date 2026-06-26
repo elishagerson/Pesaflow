@@ -157,7 +157,7 @@ Future<void> _generateAndShare(
 
     final transactions = await repo
         .watchFilteredTransactions(startDate: monthStart, endDate: monthEnd)
-        .firstWhere((_) => true, orElse: () => <Transaction>[]);
+        .firstWhere((_) => true, orElse: () => []);
 
     final accounts = ref.read(accountsStreamProvider).value ?? [];
 

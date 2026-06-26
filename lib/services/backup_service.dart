@@ -30,7 +30,7 @@ class BackupService {
       final transactions = await _ref
           .read(transactionRepositoryProvider)
           .watchFilteredTransactions()
-          .firstWhere((_) => true, orElse: () => <Transaction>[]);
+          .firstWhere((_) => true, orElse: () => []);
 
       final csvString = CsvHelper.convertToCsv(transactions);
 
