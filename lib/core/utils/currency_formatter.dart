@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 
 class CurrencyFormatter {
+  static const String currencyPrefix = 'Tsh ';
+
   static final NumberFormat _commaFormatter = NumberFormat('#,##0', 'en_US');
   static final NumberFormat _decimalFormatter = NumberFormat('#,##0.00', 'en_US');
 
@@ -13,9 +15,9 @@ class CurrencyFormatter {
     final bool hasCents = (amountInCents % 100) != 0;
     
     if (showDecimals || hasCents) {
-      return 'Tsh ${_decimalFormatter.format(value)}';
+      return '$currencyPrefix${_decimalFormatter.format(value)}';
     } else {
-      return 'Tsh ${_commaFormatter.format(value)}';
+      return '$currencyPrefix${_commaFormatter.format(value)}';
     }
   }
 
