@@ -30,7 +30,7 @@ class BackupService {
       final transactions = await _ref
           .read(transactionRepositoryProvider)
           .watchFilteredTransactions()
-          .first;
+          .firstWhere((_) => true, orElse: () => <Transaction>[]);
 
       final csvString = CsvHelper.convertToCsv(transactions);
 
@@ -98,7 +98,7 @@ class BackupService {
 
       // Premium check: Verify the picked file is a valid SQLite 3 database file
       final byteStream = pickedFile.openRead(0, 16);
-      final firstChunk = await byteStream.first;
+      final firstChunk = await byteStream.firstWhere((_) => true, orElse: () => []);
 
       final header = firstChunk.isNotEmpty
           ? String.fromCharCodes(firstChunk)

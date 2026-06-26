@@ -56,8 +56,8 @@ class _SavingsGoalFormScreenState
   @override
   void initState() {
     super.initState();
-    _selectedColor = _colors.first;
-    _selectedIcon = _icons.first['name'];
+    _selectedColor = _colors.isNotEmpty ? _colors.first : '#30D158';
+    _selectedIcon = _icons.isNotEmpty ? _icons.first['name'] : 'savings';
     _selectedDate = DateTime.now().add(const Duration(days: 90));
     if (widget.goalId != null) _loadGoal();
   }

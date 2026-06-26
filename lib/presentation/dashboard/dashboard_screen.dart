@@ -405,7 +405,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       borderRadius: AppTheme.radiusCard,
       margin: const EdgeInsets.only(right: 12),
       elevation: CardElevation.low,
-      accentColor: Color(int.parse(bp.category.color.replaceAll('#', '0xFF'))),
+      accentColor: hexToColor(bp.category.color),
       onTap: () => context.go('/budgets/${bp.budget.id}'),
       padding: EdgeInsets.zero,
       child: Container(
