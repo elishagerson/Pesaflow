@@ -40,19 +40,13 @@ class AutoCategorizer {
     final lowercaseText = '$description $senderOrRecipient'.toLowerCase();
 
     Category getCategoryByName(String name) {
-      try {
-        return categories.firstWhere(
-          (cat) => cat.name.toLowerCase() == name.toLowerCase(),
-        );
-      } catch (_) {
-        try {
-          return categories.firstWhere(
-            (cat) => cat.name.toLowerCase() == 'other',
-          );
-        } catch (_) {
-          return categories.first;
-        }
-      }
+      return categories.firstWhere(
+        (cat) => cat.name.toLowerCase() == name.toLowerCase(),
+        orElse: () => categories.firstWhere(
+          (cat) => cat.name.toLowerCase() == 'other',
+          orElse: () => categories.first,
+        ),
+      );
     }
 
     final otherCategory = getCategoryByName('Other');
@@ -76,7 +70,9 @@ class AutoCategorizer {
           return AutoCategorizerResult(category: matchedCategory, confidence: confidence);
         }
       }
-    } catch (_) {} // Fallback gracefully on query failure
+    } catch (e) {
+      developer.log('Auto-categorization query failed: $e', name: 'AutoCategorizer');
+    }
 
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {

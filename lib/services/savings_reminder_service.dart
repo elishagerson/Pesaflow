@@ -128,7 +128,8 @@ class SavingsReminderService {
     try {
       final goals = await _dao.getAllSavingsGoals(_trackerId);
       return goals.fold<int>(0, (sum, g) => sum + g.currentAmount);
-    } catch (_) {
+    } catch (e) {
+      developer.log('Failed to get total saved: $e', name: 'SavingsReminder');
       return 0;
     }
   }

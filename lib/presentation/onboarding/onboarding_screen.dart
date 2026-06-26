@@ -71,7 +71,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         final granted = statuses[Permission.sms]?.isGranted == true &&
                         statuses[Permission.phone]?.isGranted == true;
         if (mounted) setState(() => _smsPermissionGranted = granted);
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Permission request failed: $e', name: 'Onboarding');
+      }
     }
     if (_currentPage < 3) {
       _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);

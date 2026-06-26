@@ -356,7 +356,9 @@ class SmsProcessor {
               break;
             }
           }
-        } catch (_) {}
+        } catch (e) {
+          developer.log('Subscription match error: $e', name: 'SmsProcessor');
+        }
       }
 
       // Balance reconciliation is handled by [TransactionDao.writeTransactionWithBalanceAdjustment],
@@ -399,7 +401,9 @@ class SmsProcessor {
         try {
           await _loanRepo.deleteLoan(loanId);
           developer.log('Rolled back orphaned loan $loanId due to processing failure', name: 'SmsProcessor');
-        } catch (_) {}
+        } catch (e) {
+          developer.log('Loan rollback failed for $loanId: $e', name: 'SmsProcessor');
+        }
       }
       developer.log('SmsProcessor processing failure: $e', error: e, stackTrace: stack, name: 'SmsProcessor');
     }
