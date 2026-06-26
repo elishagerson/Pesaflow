@@ -63,7 +63,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
               sender: decoded['sender'] as String? ?? '',
               body: decoded['body'] as String? ?? '',
             );
-          } catch (_) {}
+          } catch (e) {
+            developer.log('Failed to decode SMS notification: $e', name: 'SmsNotification');
+          }
         }
       }
     });
@@ -108,12 +110,16 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       // Check budget thresholds and send alerts if needed
       try {
         await ref.read(budgetAlertServiceProvider).checkAllBudgets();
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Budget alert check failed: $e', name: 'AppLaunch');
+      }
 
       // Check savings reminder — alert if no saving activity in 7+ days
       try {
         await ref.read(savingsReminderServiceProvider).checkAndSendReminder();
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Savings reminder check failed: $e', name: 'AppLaunch');
+      }
 
       // Check for upcoming subscription renewals
       try {
@@ -126,7 +132,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
               .map((s) => (name: s.name, amountCents: s.amount, nextDueDate: s.nextDueDate))
               .toList(),
         );
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Subscription renewal check failed: $e', name: 'AppLaunch');
+      }
 
       // Check if Notification Access is enabled; if not, prompt once
       await _checkNotificationAccess();
@@ -160,7 +168,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
             sender: decoded['sender'] as String? ?? '',
             body: decoded['body'] as String? ?? '',
           );
-        } catch (_) {}
+        } catch (e) {
+          developer.log('Failed to process pending SMS: $e', name: 'SmsNotification');
+        }
       }
       await _notificationChannel.invokeMethod('clearPendingSms');
       developer.log('Cleared pending SMS queue', name: 'SmsNotification');

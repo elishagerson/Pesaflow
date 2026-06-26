@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
@@ -228,7 +229,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
-  debugLogDiagnostics: true,
+  debugLogDiagnostics: kDebugMode,
   routes: <RouteBase>[
     // Onboarding (full-screen, above bottom nav)
     GoRoute(
