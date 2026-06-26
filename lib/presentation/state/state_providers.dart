@@ -24,7 +24,7 @@ class ActiveTrackerIdNotifier extends Notifier<String> {
   @override
   String build() {
     _settingsRepo = ref.watch(settingsRepositoryProvider);
-    _init();
+    Future.microtask(_init);
     return 'default_personal';
   }
 
@@ -448,7 +448,7 @@ final upcomingRenewalsProvider = Provider<List<Subscription>>((ref) {
 class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
   ThemeMode build() {
-    _load();
+    Future.microtask(_load);
     return ThemeMode.system;
   }
 

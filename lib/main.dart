@@ -409,28 +409,37 @@ class _PendingReviewOverlay extends ConsumerStatefulWidget {
 }
 
 class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
-  bool _dialogOpen = false;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showReviewIfNeeded());
+  }
+
+  void _showReviewIfNeeded() {
+    final pendingItem = ref.read(pendingReviewProvider);
+    if (pendingItem != null && context.mounted) {
+      ModernDialog.showCustom(
+        context: context,
+        barrierDismissible: false,
+        child: SmsReviewDialog(item: pendingItem),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final pendingItem = ref.watch(pendingReviewProvider);
-
-    if (pendingItem != null && !_dialogOpen) {
-      _dialogOpen = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted) return;
-        ModernDialog.showCustom(
-          context: context,
-          barrierDismissible: false,
-          child: SmsReviewDialog(item: pendingItem),
-        ).then((_) {
-          _dialogOpen = false;
-        }).catchError((_) {
-          _dialogOpen = false;
+    ref.listen(pendingReviewProvider, (prev, next) {
+      if (next != null && prev != next) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!context.mounted) return;
+          ModernDialog.showCustom(
+            context: context,
+            barrierDismissible: false,
+            child: SmsReviewDialog(item: next),
+          );
         });
-      });
-    }
-
+      }
+    });
     return const SizedBox.shrink();
   }
 }
