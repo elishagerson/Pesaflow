@@ -633,6 +633,27 @@ class LoanDetailScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton.icon(
+                onPressed: () => _showOfflinePaymentSheet(context, ref, loan),
+                icon: Icon(Icons.receipt_long_rounded, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                label: Text(
+                  'Record Offline Payment',
+                  style: TextStyle(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 13,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
