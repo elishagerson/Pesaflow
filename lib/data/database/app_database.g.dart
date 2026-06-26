@@ -1190,9 +1190,9 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
     'account_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _destinationAccountIdMeta =
       const VerificationMeta('destinationAccountId');
@@ -1420,8 +1420,6 @@ class $TransactionsTable extends Transactions
         _accountIdMeta,
         accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_accountIdMeta);
     }
     if (data.containsKey('destination_account_id')) {
       context.handle(
@@ -1561,7 +1559,7 @@ class $TransactionsTable extends Transactions
       accountId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}account_id'],
-      )!,
+      ),
       destinationAccountId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}destination_account_id'],
@@ -1641,7 +1639,7 @@ class $TransactionsTable extends Transactions
 
 class Transaction extends DataClass implements Insertable<Transaction> {
   final String id;
-  final String accountId;
+  final String? accountId;
   final String? destinationAccountId;
   final String? loanId;
   final String categoryId;
@@ -1661,7 +1659,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final DateTime updatedAt;
   const Transaction({
     required this.id,
-    required this.accountId,
+    this.accountId,
     this.destinationAccountId,
     this.loanId,
     required this.categoryId,
@@ -1684,7 +1682,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['account_id'] = Variable<String>(accountId);
+    if (!nullToAbsent || accountId != null) {
+      map['account_id'] = Variable<String>(accountId);
+    }
     if (!nullToAbsent || destinationAccountId != null) {
       map['destination_account_id'] = Variable<String>(destinationAccountId);
     }
@@ -1728,7 +1728,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   TransactionsCompanion toCompanion(bool nullToAbsent) {
     return TransactionsCompanion(
       id: Value(id),
-      accountId: Value(accountId),
+      accountId: accountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountId),
       destinationAccountId: destinationAccountId == null && nullToAbsent
           ? const Value.absent()
           : Value(destinationAccountId),
@@ -1776,7 +1778,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Transaction(
       id: serializer.fromJson<String>(json['id']),
-      accountId: serializer.fromJson<String>(json['accountId']),
+      accountId: serializer.fromJson<String?>(json['accountId']),
       destinationAccountId: serializer.fromJson<String?>(
         json['destinationAccountId'],
       ),
@@ -1803,7 +1805,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'accountId': serializer.toJson<String>(accountId),
+      'accountId': serializer.toJson<String?>(accountId),
       'destinationAccountId': serializer.toJson<String?>(destinationAccountId),
       'loanId': serializer.toJson<String?>(loanId),
       'categoryId': serializer.toJson<String>(categoryId),
@@ -1826,7 +1828,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 
   Transaction copyWith({
     String? id,
-    String? accountId,
+    Value<String?> accountId = const Value.absent(),
     Value<String?> destinationAccountId = const Value.absent(),
     Value<String?> loanId = const Value.absent(),
     String? categoryId,
@@ -1846,7 +1848,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     DateTime? updatedAt,
   }) => Transaction(
     id: id ?? this.id,
-    accountId: accountId ?? this.accountId,
+    accountId: accountId.present ? accountId.value : this.accountId,
     destinationAccountId: destinationAccountId.present
         ? destinationAccountId.value
         : this.destinationAccountId,
@@ -1976,7 +1978,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 
 class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String> id;
-  final Value<String> accountId;
+  final Value<String?> accountId;
   final Value<String?> destinationAccountId;
   final Value<String?> loanId;
   final Value<String> categoryId;
@@ -2019,7 +2021,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   });
   TransactionsCompanion.insert({
     required String id,
-    required String accountId,
+    this.accountId = const Value.absent(),
     this.destinationAccountId = const Value.absent(),
     this.loanId = const Value.absent(),
     required String categoryId,
@@ -2039,7 +2041,6 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       accountId = Value(accountId),
        categoryId = Value(categoryId),
        amount = Value(amount),
        type = Value(type),
@@ -2093,7 +2094,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
 
   TransactionsCompanion copyWith({
     Value<String>? id,
-    Value<String>? accountId,
+    Value<String?>? accountId,
     Value<String?>? destinationAccountId,
     Value<String?>? loanId,
     Value<String>? categoryId,
@@ -9773,7 +9774,7 @@ typedef $$CategoriesTableProcessedTableManager =
 typedef $$TransactionsTableCreateCompanionBuilder =
     TransactionsCompanion Function({
       required String id,
-      required String accountId,
+      Value<String?> accountId,
       Value<String?> destinationAccountId,
       Value<String?> loanId,
       required String categoryId,
@@ -9796,7 +9797,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
 typedef $$TransactionsTableUpdateCompanionBuilder =
     TransactionsCompanion Function({
       Value<String> id,
-      Value<String> accountId,
+      Value<String?> accountId,
       Value<String?> destinationAccountId,
       Value<String?> loanId,
       Value<String> categoryId,
@@ -10136,7 +10137,7 @@ class $$TransactionsTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> accountId = const Value.absent(),
+                Value<String?> accountId = const Value.absent(),
                 Value<String?> destinationAccountId = const Value.absent(),
                 Value<String?> loanId = const Value.absent(),
                 Value<String> categoryId = const Value.absent(),
@@ -10180,7 +10181,7 @@ class $$TransactionsTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String accountId,
+                Value<String?> accountId = const Value.absent(),
                 Value<String?> destinationAccountId = const Value.absent(),
                 Value<String?> loanId = const Value.absent(),
                 required String categoryId,
