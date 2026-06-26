@@ -21,19 +21,46 @@ class CurrencyFormatter {
 
   /// Parses a user-input decimal string back into integer cents (e.g. "50,000.25" -> 5000025)
   /// Returns 0 if parsing fails.
+  ///
+  /// Handles:
+  ///   - Currency symbols (Tsh, TZS, $, etc.)
+  ///   - Thousand separators (commas, spaces)
+  ///   - Decimal dots (last dot wins if ambiguous)
+  ///   - Negative amounts (leading "-" or "−")
+  ///   - Leading/trailing whitespace
   static int parseToCents(String text) {
     if (text.isEmpty) return 0;
-    
-    // Strip TZS/Tsh symbols, commas, and trailing/leading spacing
-    String cleaned = text
-        .replaceAll(RegExp(r'[a-zA-Z\s,]+'), '')
-        .trim();
-        
+
+    String cleaned = text.trim();
+
+    // Detect and preserve negative sign
+    bool isNegative = false;
+    if (cleaned.startsWith('-') || cleaned.startsWith('\u2212')) {
+      isNegative = true;
+      cleaned = cleaned.substring(1).trim();
+    }
+
+    // Strip currency symbols, letters, and whitespace (keep digits, dots, commas, plus)
+    cleaned = cleaned.replaceAll(RegExp(r'[^\d.,]'), '').trim();
     if (cleaned.isEmpty) return 0;
-    
+
+    // Remove all commas (thousand separators)
+    cleaned = cleaned.replaceAll(',', '');
+
+    // Handle dots — keep the last one as decimal, remove the rest (thousand separators)
+    final dotCount = ':'.allMatches(cleaned).length;
+    if (dotCount > 1) {
+      final lastDot = cleaned.lastIndexOf('.');
+      cleaned = cleaned.replaceAll('.', '');
+      cleaned = '${cleaned.substring(0, lastDot)}.${cleaned.substring(lastDot)}';
+    }
+
+    if (cleaned == '.' || cleaned.isEmpty) return 0;
+
     try {
-      final double doubleValue = double.parse(cleaned);
-      return (doubleValue * 100).round();
+      final doubleValue = double.parse(cleaned);
+      final cents = (doubleValue * 100).round();
+      return isNegative ? -cents : cents;
     } catch (_) {
       return 0;
     }

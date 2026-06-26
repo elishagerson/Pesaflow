@@ -784,9 +784,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                         Expanded(
                                           child: TextField(
                                             controller: amountController,
-                                            keyboardType: TextInputType.number,
+                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                             autofocus: true,
-                                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
                                             style: TextStyle(
                                               fontSize: 28,
                                               fontFamily: 'monospace',
@@ -1376,9 +1376,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                           Expanded(
                                             child: TextField(
                                               controller: amountController,
-                                              keyboardType: TextInputType.number,
-                                              autofocus: true,
-                                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                            autofocus: true,
+                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
                                               style: TextStyle(
                                                 fontSize: 28,
                                                 fontFamily: 'monospace',
