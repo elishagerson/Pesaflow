@@ -33,7 +33,7 @@ class CsvHelper {
         trans.id,
         dateFormat.format(trans.createdAt),
         trans.type.toUpperCase(),
-        item.account.name,
+        item.account?.name ?? 'Offline',
         item.category.name,
         trans.description,
         amountFormatted,

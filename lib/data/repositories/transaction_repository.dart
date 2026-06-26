@@ -60,6 +60,14 @@ class TransactionRepository {
     _refreshAnalytics(transaction.createdAt);
   }
 
+  /// Creates a transaction record without adjusting any account balance.
+  /// Used for offline/record-only payments.
+  Future<void> createTransactionNoBalanceAdjustment(Transaction transaction) async {
+    await _transactionDao.insertTransactionWithoutBalanceAdjustment(transaction);
+    _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
+    _refreshAnalytics(transaction.createdAt);
+  }
+
   Future<void> deleteTransaction(String transactionId) {
     return _transactionDao.deleteTransactionWithBalanceAdjustment(transactionId);
   }

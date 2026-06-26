@@ -9,12 +9,12 @@ part 'transaction_dao.g.dart';
 class TransactionWithCategoryAndAccount {
   final Transaction transaction;
   final Category category;
-  final Account account;
+  final Account? account;
 
   TransactionWithCategoryAndAccount({
     required this.transaction,
     required this.category,
-    required this.account,
+    this.account,
   });
 }
 
@@ -36,7 +36,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+      leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ]);
 
     if (accountId != null) {
@@ -77,7 +77,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         return TransactionWithCategoryAndAccount(
           transaction: row.readTable(transactions),
           category: row.readTable(categories),
-          account: row.readTable(accounts),
+          account: row.readTableOrNull(accounts),
         );
       }).toList();
     });
@@ -87,7 +87,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit, {String? trackerId}) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+      leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ]);
 
     if (trackerId != null) {
@@ -102,7 +102,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         return TransactionWithCategoryAndAccount(
           transaction: row.readTable(transactions),
           category: row.readTable(categories),
-          account: row.readTable(accounts),
+          account: row.readTableOrNull(accounts),
         );
       }).toList();
     });
@@ -116,8 +116,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
 
-      // 2. Load the linked account
-      final accountQuery = select(accounts)..where((t) => t.id.equals(transaction.accountId));
+      // 2. Skip balance adjustment if no account is linked
+      final acctId = transaction.accountId;
+      if (acctId == null) return;
+
+      // 3. Load the linked account
+      final accountQuery = select(accounts)..where((t) => t.id.equals(acctId));
       final account = await accountQuery.getSingleOrNull();
       if (account == null) return;
 
@@ -161,6 +165,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     });
   }
 
+  /// Inserts a transaction without adjusting any account balance.
+  /// Used for offline/record-only payments where no wallet should be affected.
+  Future<void> insertTransactionWithoutBalanceAdjustment(Transaction transaction) async {
+    await into(transactions).insert(transaction);
+  }
+
   /// Deletes a transaction and reverses the linked account's balance adjustment inside a transaction.
   Future<void> deleteTransactionWithBalanceAdjustment(String transactionId) async {
     await attachedDatabase.transaction(() async {
@@ -170,8 +180,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
       if (transactionObj == null) return;
 
-      // 2. Load the linked account
-      final accountQuery = select(accounts)..where((t) => t.id.equals(transactionObj.accountId));
+      // 2. Skip balance reversal if no account was linked
+      final acctId = transactionObj.accountId;
+      if (acctId == null) return;
+
+      // 3. Load the linked account
+      final accountQuery = select(accounts)..where((t) => t.id.equals(acctId));
       final account = await accountQuery.getSingleOrNull();
 
       if (account != null) {
@@ -242,7 +256,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   Stream<List<TransactionWithCategoryAndAccount>> watchReviewQueueTransactions() {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+      leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ]);
 
     query.where(transactions.source.equals('sms_reviewed'));
@@ -253,7 +267,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
         return TransactionWithCategoryAndAccount(
           transaction: row.readTable(transactions),
           category: row.readTable(categories),
-          account: row.readTable(accounts),
+          account: row.readTableOrNull(accounts),
         );
       }).toList();
     });
@@ -308,7 +322,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   Future<TransactionWithCategoryAndAccount?> getTransactionWithDetailsById(String id) async {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+      leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ])
       ..where(transactions.id.equals(id));
 
@@ -317,7 +331,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     return TransactionWithCategoryAndAccount(
       transaction: row.readTable(transactions),
       category: row.readTable(categories),
-      account: row.readTable(accounts),
+      account: row.readTableOrNull(accounts),
     );
   }
 

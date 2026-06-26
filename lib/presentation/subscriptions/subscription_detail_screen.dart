@@ -472,7 +472,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            item.account.name,
+                            item.account?.name ?? 'Offline',
                             style: const TextStyle(fontSize: 10, color: Colors.grey),
                           ),
                           const SizedBox(width: 6),

@@ -3564,7 +3564,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            item.account.name,
+                                            item.account?.name ?? 'Offline',
                                             style: TextStyle(
                                               color: isDark ? Colors.grey[400] : Colors.grey[600],
                                               fontSize: 11,

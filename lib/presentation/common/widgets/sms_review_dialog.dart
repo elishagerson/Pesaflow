@@ -119,7 +119,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(widget.item.account.name,
+                      child: Text(widget.item.account!.name,
                         style: TextStyle(color: theme.colorScheme.primary, fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ],

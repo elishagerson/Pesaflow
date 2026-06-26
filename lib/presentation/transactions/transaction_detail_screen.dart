@@ -264,10 +264,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                             Expanded(
                               child: _gridItem(
                                 context,
-                                icon: getAccountIcon(acc.icon),
+                                icon: acc != null ? getAccountIcon(acc.icon) : Icons.link_off_rounded,
                                 iconColor: isDark ? Colors.white70 : Colors.black87,
                                 label: 'Account',
-                                value: acc.name,
+                                value: acc?.name ?? 'Offline',
                               ),
                             ),
                             _verticalDivider(isDark),

@@ -37,7 +37,9 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
 
       // 2. Reverse balance adjustments for each transaction
       for (final tx in txs) {
-        final account = await (db.select(db.accounts)..where((t) => t.id.equals(tx.accountId))).getSingleOrNull();
+        final txAccId = tx.accountId;
+        if (txAccId == null) continue;
+        final account = await (db.select(db.accounts)..where((t) => t.id.equals(txAccId))).getSingleOrNull();
         if (account != null) {
           int balanceDelta = 0;
           final type = tx.type.toLowerCase();

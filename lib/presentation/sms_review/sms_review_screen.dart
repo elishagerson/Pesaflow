@@ -348,8 +348,8 @@ class SmsReviewScreen extends ConsumerWidget {
                                                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
                                                   borderRadius: BorderRadius.circular(12),
                                                 ),
-                                                child: Text(
-                                                  item.account.name,
+                                                  child: Text(
+                                                    item.account!.name,
                                                   style: TextStyle(
                                                     color: theme.colorScheme.primary,
                                                     fontSize: 11,
