@@ -675,13 +675,14 @@ class LoanDetailScreen extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        int paymentAmount = 0;
         String? selectedAccountId;
         bool isProcessing = false;
 
+        int paymentAmount() => CurrencyFormatter.parseToCents(amountController.text);
+
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final canSubmit = paymentAmount > 0 && selectedAccountId != null && !isProcessing;
+            final canSubmit = paymentAmount() > 0 && selectedAccountId != null && !isProcessing;
 
             return DraggableScrollableSheet(
               initialChildSize: 0.7,
@@ -786,7 +787,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                             controller: amountController,
                                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                             autofocus: true,
-                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
+                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.,]'))],
                                             style: TextStyle(
                                               fontSize: 28,
                                               fontFamily: 'monospace',
@@ -794,22 +795,20 @@ class LoanDetailScreen extends ConsumerWidget {
                                               color: isDark ? Colors.white : Colors.black,
                                             ),
                                             decoration: const InputDecoration(
-                                              hintText: '0',
+                                              hintText: 'Enter amount',
                                               border: InputBorder.none,
                                               contentPadding: EdgeInsets.symmetric(vertical: 12),
                                             ),
                                             onChanged: (val) {
-                                              setSheetState(() {
-                                                paymentAmount = CurrencyFormatter.parseToCents(val);
-                                              });
+                                              setSheetState(() {});
                                             },
                                           ),
                                         ),
-                                        if (paymentAmount > 0)
+                                        if (paymentAmount() > 0)
                                           GestureDetector(
                                             onTap: () {
                                               amountController.clear();
-                                              setSheetState(() => paymentAmount = 0);
+                                              setSheetState(() {});
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(4),
@@ -831,13 +830,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                       _QuickAmountChip(
                                         label: '25%',
                                         amount: (remainingCents * 0.25).round(),
-                                        isActive: paymentAmount == (remainingCents * 0.25).round(),
+                                        isActive: paymentAmount() == (remainingCents * 0.25).round(),
                                         onTap: () {
                                           amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
                                           amountController.selection = TextSelection.fromPosition(
                                             TextPosition(offset: amountController.text.length),
                                           );
-                                          setSheetState(() => paymentAmount = (remainingCents * 0.25).round());
+                                          setSheetState(() {});
                                         },
                                         isDark: isDark,
                                       ),
@@ -845,13 +844,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                       _QuickAmountChip(
                                         label: '50%',
                                         amount: (remainingCents * 0.5).round(),
-                                        isActive: paymentAmount == (remainingCents * 0.5).round(),
+                                        isActive: paymentAmount() == (remainingCents * 0.5).round(),
                                         onTap: () {
                                           amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
                                           amountController.selection = TextSelection.fromPosition(
                                             TextPosition(offset: amountController.text.length),
                                           );
-                                          setSheetState(() => paymentAmount = (remainingCents * 0.5).round());
+                                          setSheetState(() {});
                                         },
                                         isDark: isDark,
                                       ),
@@ -859,13 +858,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                       _QuickAmountChip(
                                         label: '75%',
                                         amount: (remainingCents * 0.75).round(),
-                                        isActive: paymentAmount == (remainingCents * 0.75).round(),
+                                        isActive: paymentAmount() == (remainingCents * 0.75).round(),
                                         onTap: () {
                                           amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
                                           amountController.selection = TextSelection.fromPosition(
                                             TextPosition(offset: amountController.text.length),
                                           );
-                                          setSheetState(() => paymentAmount = (remainingCents * 0.75).round());
+                                          setSheetState(() {});
                                         },
                                         isDark: isDark,
                                       ),
@@ -873,13 +872,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                       _QuickAmountChip(
                                         label: '100%',
                                         amount: remainingCents,
-                                        isActive: paymentAmount == remainingCents,
+                                        isActive: paymentAmount() == remainingCents,
                                         onTap: () {
                                           amountController.text = (remainingCents / 100).toStringAsFixed(0);
                                           amountController.selection = TextSelection.fromPosition(
                                             TextPosition(offset: amountController.text.length),
                                           );
-                                          setSheetState(() => paymentAmount = remainingCents);
+                                          setSheetState(() {});
                                         },
                                         isDark: isDark,
                                       ),
@@ -955,7 +954,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         children: accounts.map((account) {
                                           final isSelected = account.id == selectedAccountId;
                                           final balanceCents = account.balance;
-                                          final hasFunds = balanceCents >= paymentAmount;
+                                          final hasFunds = balanceCents >= paymentAmount();
                                           return Padding(
                                             padding: const EdgeInsets.only(bottom: 8),
                                             child: GestureDetector(
@@ -1016,7 +1015,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                             children: [
                                                               Text('Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
                                                                   style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
-                                                              if (selectedAccountId != null && !hasFunds && paymentAmount > 0) ...[
+                                                              if (selectedAccountId != null && !hasFunds && paymentAmount() > 0) ...[
                                                                 const SizedBox(width: 8),
                                                                 Container(
                                                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -1080,7 +1079,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                   context: sheetContext,
                                                   ref: ref,
                                                   loan: loan,
-                                                  amount: paymentAmount,
+                                                  amount: paymentAmount(),
                                                   description: desc.isNotEmpty ? desc : 'Manual loan payment',
                                                   accountId: selectedAccountId!,
                                                 );
@@ -1104,15 +1103,15 @@ class LoanDetailScreen extends ConsumerWidget {
                                             : Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
-                                                  if (paymentAmount > 0 && selectedAccountId != null)
+                                                  if (paymentAmount() > 0 && selectedAccountId != null)
                                                     Icon(Icons.lock_rounded, size: 16, color: Colors.white.withValues(alpha: 0.8)),
-                                                  if (paymentAmount > 0 && selectedAccountId != null) const SizedBox(width: 8),
+                                                  if (paymentAmount() > 0 && selectedAccountId != null) const SizedBox(width: 8),
                                                   Text(
-                                                    paymentAmount <= 0
+                                                    paymentAmount() <= 0
                                                         ? 'Enter an amount'
                                                         : selectedAccountId == null
                                                             ? 'Select an account'
-                                                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount)}',
+                                                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
                                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                                   ),
                                                 ],
@@ -1275,12 +1274,13 @@ class LoanDetailScreen extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        int paymentAmount = 0;
         bool isProcessing = false;
+
+        int paymentAmount() => CurrencyFormatter.parseToCents(amountController.text);
 
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final canSubmit = paymentAmount > 0 && !isProcessing;
+            final canSubmit = paymentAmount() > 0 && !isProcessing;
 
             return DraggableScrollableSheet(
               initialChildSize: 0.5,
@@ -1378,7 +1378,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                               controller: amountController,
                                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                             autofocus: true,
-                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
+                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.,]'))],
                                               style: TextStyle(
                                                 fontSize: 28,
                                                 fontFamily: 'monospace',
@@ -1386,22 +1386,20 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 color: isDark ? Colors.white : Colors.black,
                                               ),
                                               decoration: const InputDecoration(
-                                                hintText: '0',
+                                                hintText: 'Enter amount',
                                                 border: InputBorder.none,
                                                 contentPadding: EdgeInsets.symmetric(vertical: 12),
                                               ),
                                               onChanged: (val) {
-                                                setSheetState(() {
-                                                  paymentAmount = CurrencyFormatter.parseToCents(val);
-                                                });
+                                                setSheetState(() {});
                                               },
                                             ),
                                           ),
-                                          if (paymentAmount > 0)
+                                          if (paymentAmount() > 0)
                                             GestureDetector(
                                               onTap: () {
                                                 amountController.clear();
-                                                setSheetState(() => paymentAmount = 0);
+                                                setSheetState(() {});
                                               },
                                               child: Container(
                                                 padding: const EdgeInsets.all(4),
@@ -1421,13 +1419,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                         _QuickAmountChip(
                                           label: '25%',
                                           amount: (remainingCents * 0.25).round(),
-                                          isActive: paymentAmount == (remainingCents * 0.25).round(),
+                                          isActive: paymentAmount() == (remainingCents * 0.25).round(),
                                           onTap: () {
                                             amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
                                             amountController.selection = TextSelection.fromPosition(
                                               TextPosition(offset: amountController.text.length),
                                             );
-                                            setSheetState(() => paymentAmount = (remainingCents * 0.25).round());
+                                            setSheetState(() {});
                                           },
                                           isDark: isDark,
                                         ),
@@ -1435,13 +1433,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                         _QuickAmountChip(
                                           label: '50%',
                                           amount: (remainingCents * 0.5).round(),
-                                          isActive: paymentAmount == (remainingCents * 0.5).round(),
+                                          isActive: paymentAmount() == (remainingCents * 0.5).round(),
                                           onTap: () {
                                             amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
                                             amountController.selection = TextSelection.fromPosition(
                                               TextPosition(offset: amountController.text.length),
                                             );
-                                            setSheetState(() => paymentAmount = (remainingCents * 0.5).round());
+                                            setSheetState(() {});
                                           },
                                           isDark: isDark,
                                         ),
@@ -1449,13 +1447,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                         _QuickAmountChip(
                                           label: '75%',
                                           amount: (remainingCents * 0.75).round(),
-                                          isActive: paymentAmount == (remainingCents * 0.75).round(),
+                                          isActive: paymentAmount() == (remainingCents * 0.75).round(),
                                           onTap: () {
                                             amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
                                             amountController.selection = TextSelection.fromPosition(
                                               TextPosition(offset: amountController.text.length),
                                             );
-                                            setSheetState(() => paymentAmount = (remainingCents * 0.75).round());
+                                            setSheetState(() {});
                                           },
                                           isDark: isDark,
                                         ),
@@ -1463,13 +1461,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                         _QuickAmountChip(
                                           label: '100%',
                                           amount: remainingCents,
-                                          isActive: paymentAmount == remainingCents,
+                                          isActive: paymentAmount() == remainingCents,
                                           onTap: () {
                                             amountController.text = (remainingCents / 100).toStringAsFixed(0);
                                             amountController.selection = TextSelection.fromPosition(
                                               TextPosition(offset: amountController.text.length),
                                             );
-                                            setSheetState(() => paymentAmount = remainingCents);
+                                            setSheetState(() {});
                                           },
                                           isDark: isDark,
                                         ),
@@ -1536,7 +1534,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                   context: sheetContext,
                                                   ref: ref,
                                                   loan: loan,
-                                                  amount: paymentAmount,
+                                                  amount: paymentAmount(),
                                                   description: desc.isNotEmpty ? desc : 'Offline loan payment',
                                                 );
                                               }
@@ -1557,9 +1555,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
                                               )
                                             : Text(
-                                                paymentAmount <= 0
+                                                paymentAmount() <= 0
                                                     ? 'Enter an amount'
-                                                    : 'Record ${CurrencyFormatter.formatCents(paymentAmount)}',
+                                                    : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
                                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                               ),
                                       ),

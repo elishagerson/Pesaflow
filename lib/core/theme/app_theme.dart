@@ -19,9 +19,9 @@ class AppTheme {
   static const Color onTertiaryLight = Color(0xFFFFFFFF);
 
   static const Color bgLight = Color(0xFFF2F2F7);
-  static const Color onBgLight = Color(0xFF1C1C1E);
-  static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color onSurfaceLight = Color(0xFF1C1C1E);
+  static const Color onBgLight = Color(0xFF3A3A3C);
+  static const Color surfaceLight = Color(0xFFF9F9FB);
+  static const Color onSurfaceLight = Color(0xFF3A3A3C);
 
   // Dark — true black background per iOS 26 Liquid Glass
   static const Color bgDark = Color(0xFF000000);
@@ -190,10 +190,10 @@ class AppTheme {
         titleTextStyle: TextStyle(
           fontSize: 22.0,
           fontWeight: FontWeight.bold,
-          color: isLight ? const Color(0xFF1C1C1E) : const Color(0xFFF5F5F7),
+          color: isLight ? onBgLight : const Color(0xFFF5F5F7),
         ),
         iconTheme: IconThemeData(
-          color: isLight ? const Color(0xFF1C1C1E) : const Color(0xFFF5F5F7),
+          color: isLight ? onBgLight : const Color(0xFFF5F5F7),
         ),
       ),
       cardTheme: CardThemeData(
@@ -295,7 +295,7 @@ class AppTheme {
         backgroundColor: isLight ? bgLight : surfaceHighDark,
         elevation: 0,
         headerBackgroundColor: isLight ? const Color(0xFFF2F2F7) : const Color(0xFF1C1C1E),
-        headerForegroundColor: isLight ? Colors.black : Colors.white,
+        headerForegroundColor: isLight ? onBgLight : Colors.white,
         headerHeadlineStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         dayStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         weekdayStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isLight ? Colors.grey[700] : Colors.grey[400]),
