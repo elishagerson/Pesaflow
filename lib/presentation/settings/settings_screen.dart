@@ -389,7 +389,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           onPressed: () async {
-            if (nameController.text.trim().isEmpty) return;
+            if (nameController.text.trim().isEmpty) {
+              return;
+            }
 
             String iconName = 'wallet';
             if (accountType == 'Mobile Money') {
@@ -420,8 +422,9 @@ class SettingsScreen extends ConsumerWidget {
               await ref.read(accountRepositoryProvider).updateAccount(updated);
               ref.invalidate(accountsStreamProvider);
               ref.invalidate(netWorthProvider);
-              if (context.mounted)
+              if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
+              }
             } catch (e) {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -582,8 +585,9 @@ class SettingsScreen extends ConsumerWidget {
                                 ref.invalidate(
                                   filteredTransactionsStreamProvider,
                                 );
-                                if (context.mounted)
+                                if (context.mounted) {
                                   Navigator.of(context).pop();
+                                }
                               } catch (e) {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -864,8 +868,9 @@ class SettingsScreen extends ConsumerWidget {
             }
             ref.invalidate(categoriesFutureProvider);
             ref.invalidate(filteredTransactionsStreamProvider);
-            if (context.mounted)
+            if (context.mounted) {
               Navigator.of(context, rootNavigator: true).pop();
+            }
           },
           child: Text(isEditing ? 'Save' : 'Create'),
         ),

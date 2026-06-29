@@ -275,8 +275,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                               setState(() => _selectedIndex = 0);
                             },
                             onSubmitted: (_) {
-                              if (results.isNotEmpty)
+                              if (results.isNotEmpty) {
                                 _select(results[_selectedIndex]);
+                              }
                             },
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.onSurface,

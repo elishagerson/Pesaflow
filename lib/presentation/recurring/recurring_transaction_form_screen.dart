@@ -337,8 +337,9 @@ class _RecurringTransactionFormScreenState
                     if (v == null || v.trim().isEmpty) return 'Enter amount';
                     final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
                     final parsed = int.tryParse(cleaned);
-                    if (parsed == null || parsed <= 0)
+                    if (parsed == null || parsed <= 0) {
                       return 'Enter a valid amount';
+                    }
                     return null;
                   },
                 ),

@@ -45,14 +45,20 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       setState(() {
         _existingLoan = loan;
         _amountController.text = (loan.amount ~/ 100).toString();
-        if (loan.description != null)
+        if (loan.description != null) {
           _descriptionController.text = loan.description!;
-        if (loan.sender != null) _senderController.text = loan.sender!;
-        if (loan.reference != null) _referenceController.text = loan.reference!;
+        }
+        if (loan.sender != null) {
+          _senderController.text = loan.sender!;
+        }
+        if (loan.reference != null) {
+          _referenceController.text = loan.reference!;
+        }
         _disbursedAt = loan.disbursedAt;
         _dueAt = loan.dueAt;
-        if (loan.interestRate != null)
+        if (loan.interestRate != null) {
           _interestRateController.text = loan.interestRate.toString();
+        }
       });
     }
   }
@@ -199,12 +205,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     ),
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty)
+                    if (v == null || v.trim().isEmpty) {
                       return 'Enter loan amount';
+                    }
                     final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
                     final parsed = int.tryParse(cleaned);
-                    if (parsed == null || parsed <= 0)
+                    if (parsed == null || parsed <= 0) {
                       return 'Enter a valid amount';
+                    }
                     return null;
                   },
                 ),

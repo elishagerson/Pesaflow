@@ -211,8 +211,9 @@ class SmsBackgroundService {
         // Only process messages newer than last scan (plus 1 min overlap)
         if (!timestamp.isAfter(
           _lastInboxScan.subtract(const Duration(minutes: 1)),
-        ))
+        )) {
           continue;
+        }
 
         final provider = ProviderMatcher.matchProvider(address, body: body);
         if (provider == null) continue;
