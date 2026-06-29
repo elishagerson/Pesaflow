@@ -153,31 +153,30 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     }
 
     final repo = ref.read(transactionRepositoryProvider);
-    setState(() => _isLoading = true);
+    final existingTransaction = _isEditMode ? _existingTransaction : null;
+    final trackerId = ref.read(activeTrackerIdProvider);
+
+    final newTransaction = Transaction(
+      id: existingTransaction?.id ?? const Uuid().v4(),
+      accountId: _selectedAccountId!,
+      destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
+      categoryId: _selectedCategoryId!,
+      trackerId: existingTransaction?.trackerId ?? trackerId,
+      amount: cents,
+      type: _transactionType.toLowerCase(),
+      description: _descriptionController.text.trim(),
+      reference: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
+      source: 'manual',
+      createdAt: _selectedDate,
+      updatedAt: DateTime.now(),
+    );
+
+    if (mounted) context.pop();
 
     try {
-      final existingTransaction = _isEditMode ? _existingTransaction : null;
       if (existingTransaction != null) {
         await repo.deleteTransaction(existingTransaction.id);
       }
-
-      final trackerId = ref.read(activeTrackerIdProvider);
-
-      final newTransaction = Transaction(
-        id: existingTransaction?.id ?? const Uuid().v4(),
-        accountId: _selectedAccountId!,
-        destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
-        categoryId: _selectedCategoryId!,
-        trackerId: existingTransaction?.trackerId ?? trackerId,
-        amount: cents,
-        type: _transactionType.toLowerCase(),
-        description: _descriptionController.text.trim(),
-        reference: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
-        source: 'manual',
-        createdAt: _selectedDate,
-        updatedAt: DateTime.now(),
-      );
-
       await repo.createTransaction(newTransaction);
 
       ref.invalidate(accountsStreamProvider);
@@ -186,18 +185,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(netWorthProvider);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save transaction: $e')),
       );
-      return;
-    }
-
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (mounted) {
-      context.pop();
     }
   }
 

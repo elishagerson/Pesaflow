@@ -23,6 +23,8 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/domain/analytics/insight_generator.dart';
+import 'package:pesaflow/presentation/common/widgets/insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -3338,14 +3340,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(height: kSpacing20),
 
-              // ── 3. Monthly Overview — "How your money moved" ──
+              // ── 3. Insights — contextual nudges ──
+              _InsightsCarousel(),
+              const SizedBox(height: kSpacing20),
+
+              // ── 4. Monthly Overview — "How your money moved" ──
+              // (StaggeredFadeSlide indices below are scoped per-column, not sequential)
               StaggeredFadeSlide(
                 index: 2,
                 child: _buildMonthlyOverview(theme),
               ),
               const SizedBox(height: kSpacing20),
 
-              // ── 4. Recent Activity — "The transactions behind it" ──
+              // ── 5. Recent Activity — "The transactions behind it" ──
               StaggeredFadeSlide(
                 index: 3,
                 child: Row(
@@ -3615,7 +3622,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Center(child: Text('Error loading activity: $err')),
               ),
 
-              // ── 5. Budget Progress — "Your Financial Targets" ──
+              // ── 6. Budget Progress — "Your Financial Targets" ──
               _buildBudgetRings(theme, context),
 
               if (showSavingsGoals) ...[
