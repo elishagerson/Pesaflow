@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class SubscriptionListScreen extends ConsumerWidget {
   const SubscriptionListScreen({super.key});
@@ -112,69 +113,58 @@ class SubscriptionListScreen extends ConsumerWidget {
 
     return Hero(
       tag: 'subscription-${sub.id}',
-      child: Container(
-      margin: const EdgeInsets.only(bottom: kSpacing8),
-      decoration: BoxDecoration(
-        color: isDark ? AppTheme.surfaceContainerDark : Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.3) : (isDark ? Colors.grey[800]! : Colors.grey[200]!)),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+      child: GlassCard(
+        margin: const EdgeInsets.only(bottom: kSpacing8),
+        padding: const EdgeInsets.all(kSpacing14),
         onTap: () => context.push('/subscriptions/${sub.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(kSpacing14),
-          child: Row(
-            children: [
-              Container(
-                                  padding: const EdgeInsets.all(kSpacing10),
-                decoration: BoxDecoration(
-                  color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(PesaFlowIcons.subscriptions, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
+        frosted: true,
+        accentColor: isDue ? const Color(0xFFFF6B35) : catColor,
+        accentWidth: 1.5,
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(kSpacing10),
+              decoration: BoxDecoration(
+                color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
+                shape: BoxShape.circle,
               ),
-              const SizedBox(width: kSpacing14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        if (catColor != null) ...[
-                          Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
-                          const SizedBox(width: kSpacing6),
-                        ],
-                        Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
-                      ],
-                    ),
-                    const SizedBox(height: kSpacing2),
-                    Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              child: Icon(PesaFlowIcons.subscriptions, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
+            ),
+            const SizedBox(width: kSpacing14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(CurrencyFormatter.formatCents(sub.amount),
-                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                  const SizedBox(height: kSpacing2),
-                  Text(
-                    sub.status == 'active' ? (isDue ? 'Due' : 'Active') : 'Paused',
-                    style: TextStyle(fontSize: 11, color: isDue ? const Color(0xFFFF6B35) : statusColor, fontWeight: FontWeight.w600),
+                  Row(
+                    children: [
+                      if (catColor != null) ...[
+                        Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
+                        const SizedBox(width: kSpacing6),
+                      ],
+                      Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
+                    ],
                   ),
+                  const SizedBox(height: kSpacing2),
+                  Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(CurrencyFormatter.formatCents(sub.amount),
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                const SizedBox(height: kSpacing2),
+                Text(
+                  sub.status == 'active' ? (isDue ? 'Due' : 'Active') : 'Paused',
+                  style: TextStyle(fontSize: 11, color: isDue ? const Color(0xFFFF6B35) : statusColor, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    ),
-  );
+    );
   }
 
 }
