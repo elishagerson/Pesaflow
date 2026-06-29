@@ -293,7 +293,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
             FilledButton(
               onPressed: _isLoading ? null : _save,
               child: _isLoading
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  ? const SizedBox(width: kSpacing20, height: kSpacing20, child: CircularProgressIndicator(strokeWidth: 2))
                   : Text(widget.subscriptionId != null ? 'Update' : 'Create'),
             ),
           ],
