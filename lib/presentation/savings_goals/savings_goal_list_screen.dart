@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -86,10 +87,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
         error: (err, _) =>
             Center(child: Text('Error loading savings goals: $err')),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/savings-goals/add'),
-        icon: const Icon(PesaFlowIcons.add, size: 20),
-        label: const Text('New Goal'),
+        label: 'New Goal',
       ),
     );
   }

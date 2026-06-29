@@ -1675,12 +1675,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         );
 
         final keypadButton = KeypadButton(
-          text: key,
-          onTap: () => _keypadPress(key),
-          height: context.isCompactView ? 52 : 64,
-          border: border,
-          textColor: textColor,
-        );
+           text: key,
+           onTap: () => _keypadPress(key),
+           height: context.isCompactView ? 60 : 78,
+           border: border,
+           textColor: textColor,
+         );
 
         return Expanded(
           child: key == '<'
@@ -1794,13 +1794,13 @@ class _KeypadButtonState extends State<KeypadButton>
                   ? Icon(
                       Icons.backspace_outlined,
                       color: widget.textColor,
-                      size: 20,
+                      size: widget.height * 0.35,
                     )
                   : Text(
                       widget.text,
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
+                        fontSize: widget.height * 0.42,
+                        fontWeight: FontWeight.w300,
                         color: widget.textColor,
                       ),
                     ),

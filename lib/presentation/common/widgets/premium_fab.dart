@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'tactile_spring_container.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 
 class PremiumFab extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -11,8 +10,9 @@ class PremiumFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = accentColor ?? AppTheme.transferColorDark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final color = accentColor ?? theme.colorScheme.primary;
 
     return TactileSpringContainer(
       onTap: onPressed,
@@ -68,8 +68,9 @@ class PremiumExtendedFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = accentColor ?? AppTheme.transferColorDark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final color = accentColor ?? theme.colorScheme.primary;
 
     return TactileSpringContainer(
       onTap: onPressed,
