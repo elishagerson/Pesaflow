@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
@@ -174,7 +175,7 @@ class _SavingsGoalFormScreenState
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -191,11 +192,11 @@ class _SavingsGoalFormScreenState
                   letterSpacing: 0.3,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
                 index: 0,
                 child: GlassCard(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(kSpacing16),
                   borderRadius: AppTheme.radiusCard,
                   child: Column(
                     children: [
@@ -211,7 +212,7 @@ class _SavingsGoalFormScreenState
                         validator: (v) =>
                             v == null || v.trim().isEmpty ? 'Title is required' : null,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
@@ -233,7 +234,7 @@ class _SavingsGoalFormScreenState
                           return null;
                         },
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       ModernDateSelector(
                         labelText: 'Target Date',
                         value: _selectedDate,
@@ -246,7 +247,7 @@ class _SavingsGoalFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               Text(
                 'THEME COLOR',
@@ -259,19 +260,19 @@ class _SavingsGoalFormScreenState
                   letterSpacing: 0.3,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
                 index: 1,
                 child: GlassCard(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
                   borderRadius: AppTheme.radiusCard,
                   child: SizedBox(
                     height: 44,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _colors.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 16),
+                      separatorBuilder: (_, _) => const SizedBox(width: kSpacing16),
                       itemBuilder: (context, index) {
                         final colorHex = _colors[index];
                         final colorVal = hexToColor(colorHex);
@@ -317,7 +318,7 @@ class _SavingsGoalFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
 
               Text(
                 'GOAL ICON',
@@ -330,19 +331,19 @@ class _SavingsGoalFormScreenState
                   letterSpacing: 0.3,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               StaggeredFadeSlide(
                 index: 2,
                 child: GlassCard(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
                   borderRadius: AppTheme.radiusCard,
                   child: SizedBox(
                     height: 48,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _icons.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 14),
+                      separatorBuilder: (_, _) => const SizedBox(width: kSpacing14),
                       itemBuilder: (context, index) {
                         final item = _icons[index];
                         final isSelected = _selectedIcon == item['name'];
@@ -387,13 +388,13 @@ class _SavingsGoalFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: kSpacing28),
 
               StaggeredFadeSlide(
                 index: 3,
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
+                  height: kSpacing48,
                   child: TactileSpringContainer(
                     onTap: _isLoading ? null : _save,
                     child: Container(
@@ -417,8 +418,8 @@ class _SavingsGoalFormScreenState
                       ),
                       child: _isLoading
                           ? const SizedBox(
-                              height: 20,
-                              width: 20,
+                              height: kSpacing20,
+                              width: kSpacing20,
                               child: CircularProgressIndicator(
                                   strokeWidth: 2, color: Colors.white))
                           : Text(
@@ -434,7 +435,7 @@ class _SavingsGoalFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: kSpacing24),
             ],
           ),
         ),

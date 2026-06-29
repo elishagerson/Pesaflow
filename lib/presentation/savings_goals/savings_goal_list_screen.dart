@@ -47,11 +47,11 @@ class SavingsGoalListScreen extends ConsumerWidget {
               ref.invalidate(savingsGoalsTotalSavedProvider);
             },
             child: ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(kSpacing16),
               children: [
                 _buildSummaryCard(
                     context, isDark, totalSaved, totalTarget, overallPct),
-                const SizedBox(height: 20),
+                const SizedBox(height: kSpacing20),
                 Text(
                   'ACTIVE GOALS',
                   style: TextStyle(
@@ -63,7 +63,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                     letterSpacing: 0.3,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: kSpacing12),
                 ...goals.asMap().entries.map((entry) =>
                     _buildGoalCard(context, ref, entry.value, entry.key, isDark, theme)),
               ],
@@ -86,12 +86,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
   Widget _buildEmptyState(BuildContext context, bool isDark) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(kSpacing32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(kSpacing24),
               decoration: BoxDecoration(
                 color: AppTheme.transferColorDark.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
@@ -102,12 +102,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 color: AppTheme.transferColorDark,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: kSpacing24),
             const Text(
               'No Savings Goals Yet',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
             Text(
               'Set a savings target and track your progress.\nEvery journey starts with a goal.',
               textAlign: TextAlign.center,
@@ -116,12 +116,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: kSpacing24),
             TactileSpringContainer(
               onTap: () => context.push('/savings-goals/add'),
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                    const EdgeInsets.symmetric(horizontal: kSpacing28, vertical: kSpacing14),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -150,7 +150,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
   Widget _buildSummaryCard(
       BuildContext context, bool isDark, int totalSaved, int totalTarget, double overallPct) {
     return GlassCard(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(kSpacing20),
       borderRadius: AppTheme.radiusCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +158,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: AppTheme.transferColorDark.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
@@ -166,7 +166,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 child: const Icon(Icons.trending_up_rounded,
                     color: AppTheme.transferColorDark, size: 20),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: kSpacing12),
               Text(
                 'TOTAL SAVED',
                 style: TextStyle(
@@ -178,7 +178,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: kSpacing16),
           Text(
             CurrencyFormatter.formatCents(totalSaved),
             style: TextStyle(
@@ -188,12 +188,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
               color: isDark ? Colors.white : Colors.black,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: kSpacing4),
           Text(
             'Combined target: ${CurrencyFormatter.formatCents(totalTarget)}',
             style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: kSpacing12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
@@ -203,7 +203,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               minHeight: 8,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: kSpacing6),
           Text(
             '${(overallPct * 100).round()}% of combined target achieved',
             style: const TextStyle(fontSize: 11, color: Colors.grey),
@@ -227,7 +227,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
       child: TactileSpringContainer(
         onTap: () => context.push('/savings-goals/${goal.id}'),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: const EdgeInsets.only(bottom: kSpacing12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             color: isDark
@@ -241,7 +241,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 Container(width: 4, color: goalColor),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(kSpacing16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -280,7 +280,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 14),
+                            const SizedBox(width: kSpacing14),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +294,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: kSpacing2),
                                   Text(
                                     'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
                                     style: theme.textTheme.bodySmall?.copyWith(
@@ -312,7 +312,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                 if (goal.isCompleted)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                        horizontal: kSpacing8, vertical: kSpacing4),
                                     decoration: BoxDecoration(
                                       color: AppTheme.transferColorDark
                                           .withValues(alpha: 0.12),
@@ -333,7 +333,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     style: const TextStyle(
                                         fontSize: 11, color: Colors.grey),
                                   ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: kSpacing4),
                                 GestureDetector(
                                   onTap: () => context.push(
                                       '/savings-goals/${goal.id}/edit'),
@@ -350,7 +350,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: kSpacing14),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -370,7 +370,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: kSpacing8),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: LinearProgressIndicator(
@@ -381,7 +381,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                             minHeight: 6,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: kSpacing4),
                         Text(
                           '${(goalPct * 100).round()}% completed',
                           style: const TextStyle(

@@ -8,6 +8,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
@@ -189,7 +190,7 @@ class _SavingsGoalDetailScreenState
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: kSpacing10),
                         Container(
                           width: 38,
                           height: 5,
@@ -200,21 +201,21 @@ class _SavingsGoalDetailScreenState
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: kSpacing16),
                         Expanded(
                           child: RawScrollbar(
                             controller: scrollController,
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                              padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(kSpacing10),
                                         decoration: BoxDecoration(
                                           color: accentColor
                                               .withValues(alpha: 0.12),
@@ -229,7 +230,7 @@ class _SavingsGoalDetailScreenState
                                           size: 22,
                                         ),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: kSpacing14),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -243,7 +244,7 @@ class _SavingsGoalDetailScreenState
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            const SizedBox(height: 2),
+                                            const SizedBox(height: kSpacing2),
                                             Text(
                                               isDeposit
                                                   ? 'Add money to your savings goal'
@@ -260,13 +261,13 @@ class _SavingsGoalDetailScreenState
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   const Text('AMOUNT',
                                       style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                           letterSpacing: 0.5)),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: isDark
@@ -282,7 +283,7 @@ class _SavingsGoalDetailScreenState
                                       ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 4),
+                                        horizontal: kSpacing16, vertical: kSpacing4),
                                     child: Row(
                                       children: [
                                         Text(
@@ -359,7 +360,7 @@ class _SavingsGoalDetailScreenState
                                               setModalState(() {});
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(4),
+                                              padding: const EdgeInsets.all(kSpacing4),
                                               decoration: BoxDecoration(
                                                 color: isDark
                                                     ? Colors.white
@@ -379,13 +380,13 @@ class _SavingsGoalDetailScreenState
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: kSpacing20),
                                   const Text('MEMO',
                                       style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                           letterSpacing: 0.5)),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   TextFormField(
                                     controller: _noteController,
                                     textCapitalization:
@@ -437,10 +438,10 @@ class _SavingsGoalDetailScreenState
                                       ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 14),
+                                              horizontal: kSpacing16, vertical: kSpacing14),
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: kSpacing20),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: isDark
@@ -459,7 +460,7 @@ class _SavingsGoalDetailScreenState
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 12),
+                                              horizontal: kSpacing16, vertical: kSpacing12),
                                           child: Row(
                                             children: [
                                               Expanded(
@@ -480,7 +481,7 @@ class _SavingsGoalDetailScreenState
                                                             : Colors.black87,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 2),
+                                                    const SizedBox(height: kSpacing2),
                                                     Text(
                                                       'Updates real balance & logs a transaction',
                                                       style: TextStyle(
@@ -517,7 +518,7 @@ class _SavingsGoalDetailScreenState
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
+                                                horizontal: kSpacing16, vertical: kSpacing8),
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -527,7 +528,7 @@ class _SavingsGoalDetailScreenState
                                                     color: isDark
                                                         ? Colors.white38
                                                         : Colors.black38),
-                                                const SizedBox(width: 10),
+                                                const SizedBox(width: kSpacing10),
                                                 const Expanded(
                                                   child: Text(
                                                       'Source Account',
@@ -577,10 +578,10 @@ class _SavingsGoalDetailScreenState
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 28),
+                                  const SizedBox(height: kSpacing28),
                                   SizedBox(
                                     width: double.infinity,
-                                    height: 54,
+                                    height: kSpacing56,
                                     child: AnimatedContainer(
                                       duration:
                                           const Duration(milliseconds: 250),
@@ -617,12 +618,12 @@ class _SavingsGoalDetailScreenState
                                               borderRadius:
                                                   BorderRadius.circular(16)),
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 14),
+                                              vertical: kSpacing14),
                                         ),
                                         child: _isOperationLoading
                                             ? const SizedBox(
-                                                width: 22,
-                                                height: 22,
+                                                width: kSpacing24,
+                                                height: kSpacing24,
                                                 child:
                                                     CircularProgressIndicator(
                                                         strokeWidth: 2.5,
@@ -641,7 +642,7 @@ class _SavingsGoalDetailScreenState
                                                       size: 18,
                                                       color: Colors.white
                                                           .withValues(alpha: 0.8)),
-                                                  const SizedBox(width: 8),
+                                                  const SizedBox(width: kSpacing8),
                                                   Text(
                                                     isDeposit
                                                         ? 'Confirm Deposit'
@@ -752,10 +753,10 @@ class _SavingsGoalDetailScreenState
           ),
           body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            padding: const EdgeInsets.fromLTRB(kSpacing16, 0, kSpacing16, kSpacing24),
             child: Column(
               children: [
-                const SizedBox(height: 8),
+                const SizedBox(height: kSpacing8),
                 // Goal header
                 Row(
                   children: [
@@ -775,7 +776,7 @@ class _SavingsGoalDetailScreenState
                         size: 26,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: kSpacing16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -787,7 +788,7 @@ class _SavingsGoalDetailScreenState
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: kSpacing4),
                           Text(
                             'Target deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year} ($remainingDays days remaining)',
                             style: TextStyle(
@@ -802,12 +803,12 @@ class _SavingsGoalDetailScreenState
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
 
                 // Progress Card
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   decoration: BoxDecoration(
                     color: isDark
                         ? const Color(0xFF1C1C1E)
@@ -823,8 +824,8 @@ class _SavingsGoalDetailScreenState
                   child: Row(
                     children: [
                       SizedBox(
-                        height: 80,
-                        width: 80,
+                        height: kSpacing64,
+                        width: kSpacing64,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
