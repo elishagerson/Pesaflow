@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
@@ -30,112 +29,6 @@ import 'route_params.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
-/// Spring-driven page transition that gives a continuous physical feel.
-///
-/// On push: the incoming page slides from 30% right with a spring bounce,
-/// while the outgoing page scales down and fades back for depth.
-/// On pop: reverses with the same physics — no abrupt curve cutoffs.
-class _SpringSlideTransition extends StatefulWidget {
-  final Animation<double> animation;
-  final Animation<double> secondaryAnimation;
-  final Widget child;
-
-  const _SpringSlideTransition({
-    required this.animation,
-    required this.secondaryAnimation,
-    required this.child,
-  });
-
-  @override
-  State<_SpringSlideTransition> createState() => _SpringSlideTransitionState();
-}
-
-class _SpringSlideTransitionState extends State<_SpringSlideTransition>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _springController;
-  late Animation<Offset> _slide;
-
-  late Animation<double> _outScale;
-  late Animation<double> _outFade;
-
-  AnimationStatus _lastStatus = AnimationStatus.dismissed;
-
-  static const _spring = SpringDescription(
-    mass: 1.0,
-    stiffness: 220.0,
-    damping: 21.0,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    _springController = AnimationController(vsync: this);
-    _slide = Tween<Offset>(
-      begin: const Offset(0.3, 0),
-      end: Offset.zero,
-    ).animate(_springController);
-
-    _outScale = Tween<double>(begin: 1.0, end: 0.93).animate(
-      CurvedAnimation(
-        parent: widget.secondaryAnimation,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-    _outFade = Tween<double>(begin: 1.0, end: 0.7).animate(
-      CurvedAnimation(
-        parent: widget.secondaryAnimation,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    _lastStatus = widget.animation.status;
-    if (_lastStatus == AnimationStatus.forward) {
-      _startSpring(0.0, 1.0);
-    } else if (_lastStatus == AnimationStatus.completed) {
-      _springController.value = 1.0;
-    }
-    widget.animation.addListener(_onAnimationChanged);
-  }
-
-  void _onAnimationChanged() {
-    final status = widget.animation.status;
-    if (status != _lastStatus) {
-      if (status == AnimationStatus.forward) {
-        _startSpring(0.0, 1.0);
-      } else if (status == AnimationStatus.reverse) {
-        _startSpring(1.0, 0.0);
-      }
-      _lastStatus = status;
-    }
-  }
-
-  void _startSpring(double from, double to) {
-    _springController.value = from;
-    _springController.animateWith(SpringSimulation(_spring, from, to, 0.0));
-  }
-
-  @override
-  void dispose() {
-    widget.animation.removeListener(_onAnimationChanged);
-    _springController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _outFade,
-      child: ScaleTransition(
-        scale: _outScale,
-        child: SlideTransition(
-          position: _slide,
-          child: widget.child,
-        ),
-      ),
-    );
-  }
-}
-
 Page<dynamic> _springSlidePage(Widget page) {
   return CustomTransitionPage(
     key: ValueKey(page.runtimeType),
@@ -148,32 +41,6 @@ Page<dynamic> _springSlidePage(Widget page) {
           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
       final fadeTween =
           Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: FadeTransition(
-          opacity: animation.drive(fadeTween),
-          child: child,
-        ),
-      );
-    },
-    reverseTransitionDuration: const Duration(milliseconds: 200),
-  );
-}
-
-/// Reversed variant for back-navigation — fades out with a slight downward slide
-/// using an ease-in curve so the exit feels distinct from the entrance.
-Page<dynamic> _springSlidePageReversed(Widget page) {
-  return CustomTransitionPage(
-    key: ValueKey(page.runtimeType),
-    child: page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset.zero;
-      const end = Offset(0.0, 0.04);
-      const curve = Curves.easeInCubic;
-      final tween =
-          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      final fadeTween =
-          Tween<double>(begin: 1.0, end: 0.0).chain(CurveTween(curve: curve));
       return SlideTransition(
         position: animation.drive(tween),
         child: FadeTransition(
