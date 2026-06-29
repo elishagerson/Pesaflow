@@ -280,21 +280,10 @@ class SmsReviewScreen extends ConsumerWidget {
                     );
                   }
                 },
-                child: Container(
+                child: GlassCard(
                   margin: const EdgeInsets.only(bottom: 10),
-                  clipBehavior: Clip.antiAlias, // Ensures the left accent border is clipped nicely
-                  decoration: BoxDecoration(
-                    color: theme.brightness == Brightness.dark
-                        ? AppTheme.surfaceContainerDark
-                        : AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: theme.brightness == Brightness.dark
-                          ? const Color(0x12FFFFFF)
-                          : const Color(0x1F000000),
-                      width: 0.5,
-                    ),
-                  ),
+                  padding: EdgeInsets.zero,
+                  frosted: true,
                   child: IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
