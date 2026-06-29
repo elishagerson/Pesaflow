@@ -30,6 +30,7 @@ import 'package:pesaflow/presentation/common/widgets/insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/state/palette_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -3027,8 +3028,31 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
           ),
-        ),
         actions: [
+          TactileSpringContainer(
+            onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
+            child: Container(
+              padding: const EdgeInsets.all(kSpacing10),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.06)
+                    : Colors.black.withValues(alpha: 0.03),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : Colors.black.withValues(alpha: 0.06),
+                  width: 0.8,
+                ),
+              ),
+              child: Icon(
+                Icons.search_rounded,
+                color: isDark ? Colors.white : Colors.black,
+                size: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: kSpacing8),
           TactileSpringContainer(
             onTap: () => context.go('/settings'),
             child: Container(
