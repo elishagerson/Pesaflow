@@ -14,6 +14,10 @@ class RecurringTransactions extends Table {
   DateTimeColumn get endDate => dateTime().nullable()();
   TextColumn get status => text().withDefault(const Constant('active'))(); // active/paused/cancelled
   TextColumn get trackerId => text().nullable()();
+  TextColumn get merchantKeywords => text().nullable()();
+  DateTimeColumn get lastPaidAt => dateTime().nullable()();
+  IntColumn get totalPaid => integer().withDefault(const Constant(0))();
+  IntColumn get paymentCount => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
