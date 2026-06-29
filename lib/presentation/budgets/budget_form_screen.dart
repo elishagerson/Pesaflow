@@ -41,7 +41,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.budgetId != null) _loadExistingBudget();
+    if (widget.budgetId != null) {
+      _loadExistingBudget();
+    }
   }
 
   Future<void> _loadExistingBudget() async {
@@ -58,8 +60,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         _rolloverType = budget.rolloverType;
         _threshold = budget.notificationThreshold;
         _startDate = budget.startDate;
-        if (budget.rolloverCap != null)
+        if (budget.rolloverCap != null) {
           _capController.text = (budget.rolloverCap! ~/ 100).toString();
+        }
       });
     }
   }
@@ -88,10 +91,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     if (_formKey.currentState == null ||
         !_formKey.currentState!.validate() ||
         _selectedCategoryId == null) {
-      if (_selectedCategoryId == null)
+      if (_selectedCategoryId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select a category')),
         );
+      }
       return;
     }
     setState(() => _isLoading = true);
@@ -138,10 +142,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       ref.invalidate(activeBudgetsStreamProvider);
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -385,8 +390,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               activeTrackColor: theme.colorScheme.primary,
                               onChanged: (v) => setState(() {
                                 _rollover = v;
-                                if (v && _rolloverType == 'none')
+                                if (v && _rolloverType == 'none') {
                                   _rolloverType = 'all';
+                                }
                               }),
                             ),
                           ),

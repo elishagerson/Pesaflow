@@ -65,8 +65,9 @@ class BudgetDetailScreen extends ConsumerWidget {
       body: SafeArea(
         child: detailAsync.when(
           data: (bp) {
-            if (bp == null)
+            if (bp == null) {
               return const Center(child: Text('Budget not found'));
+            }
             final status = BudgetEngine.computeStatus(
               allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
               spent: bp.spentInPeriod,
@@ -320,8 +321,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                         // Daily spend bar chart
                         dailyAsync.when(
                           data: (dailyData) {
-                            if (dailyData.isEmpty)
+                            if (dailyData.isEmpty) {
                               return const SizedBox.shrink();
+                            }
                             final maxAmount = dailyData
                                 .map((e) => e.value)
                                 .reduce((a, b) => a > b ? a : b);

@@ -1129,8 +1129,9 @@ class _TrendsTab extends StatelessWidget {
                                   interval: 1,
                                   getTitlesWidget: (val, _) {
                                     final idx = val.toInt();
-                                    if (idx < 0 || idx >= points.length)
+                                    if (idx < 0 || idx >= points.length) {
                                       return const SizedBox();
+                                    }
                                     return Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Text(
@@ -1317,7 +1318,7 @@ class _InsightsTab extends StatelessWidget {
     final insightsAsync = ref.watch(insightsProvider);
     return insightsAsync.when(
       data: (insights) {
-        if (insights.isEmpty)
+        if (insights.isEmpty) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(32),
@@ -1344,6 +1345,7 @@ class _InsightsTab extends StatelessWidget {
               ),
             ),
           );
+        }
         return ListView.builder(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(16),
