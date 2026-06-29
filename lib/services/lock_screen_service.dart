@@ -26,7 +26,6 @@ class LockScreenService {
     }
     await ensureInitialized();
 
-    final whole = (totalCents / 100).toStringAsFixed(0);
     final formatted = NumberFormat('#,###').format(totalCents ~/ 100);
 
     final androidDetails = AndroidNotificationDetails(
@@ -43,7 +42,7 @@ class LockScreenService {
     final details = NotificationDetails(android: androidDetails);
 
     try {
-      final plugin = _notifService._plugin;
+      final plugin = _notifService.plugin;
       await plugin.show(
         id: _notificationId,
         title: 'PesaFlow Balance',
@@ -60,7 +59,7 @@ class LockScreenService {
   Future<void> removeBalanceNotification() async {
     if (!_hasBalanceNotification) return;
     try {
-      final plugin = _notifService._plugin;
+      final plugin = _notifService.plugin;
       await plugin.cancel(_notificationId);
       _hasBalanceNotification = false;
       developer.log('Balance notification removed', name: 'LockScreenService');

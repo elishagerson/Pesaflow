@@ -306,6 +306,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
     final showLockOverlay = lockEnabled && !_isAuthenticated;
     final mode = ref.watch(themeModeProvider);
 
+    ref.listen(netWorthProvider, (prev, next) {
+      final enabled = ref.read(lockScreenBalanceEnabledProvider).value ?? false;
+      ref.read(lockScreenServiceProvider).showBalanceNotification(next, isEnabled: enabled);
+    });
+    ref.listen(lockScreenBalanceEnabledProvider, (prev, next) {
+      final balance = ref.read(netWorthProvider);
+      ref.read(lockScreenServiceProvider).showBalanceNotification(balance, isEnabled: next.value ?? false);
+    });
+
     return MaterialApp.router(
       title: 'PesaFlow',
       debugShowCheckedModeBanner: false,
