@@ -6,7 +6,7 @@ class PesaFlowIcons {
   PesaFlowIcons._();
 
   // Navigation
-  static const IconData dashboard = Icons.compass_dashboard_outlined;
+  static const IconData dashboard = Icons.dashboard_outlined;
   static const IconData transactions = Icons.receipt_long_outlined;
   static const IconData budgets = Icons.pie_chart_outline;
   static const IconData savings = Icons.savings_outlined;
