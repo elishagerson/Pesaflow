@@ -36,14 +36,13 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
   @override
   void initState() {
     super.initState();
-    
+
     // Ticker running at 60 FPS
-    _tickerController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    )..addListener(() {
-        _updateParticles();
-      });
+    _tickerController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4))
+          ..addListener(() {
+            _updateParticles();
+          });
 
     // Generate initial batch of particles
     _spawnParticles(120);
@@ -52,17 +51,21 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
 
   void _spawnParticles(int count) {
     for (int i = 0; i < count; i++) {
-      _particles.add(_ConfettiParticle(
-        x: _rand.nextDouble() * 400, // will be scaled to screen width in painter
-        y: -_rand.nextDouble() * 300 - 20, // start above viewport
-        size: _rand.nextDouble() * 10 + 6,
-        color: _colors[_rand.nextInt(_colors.length)],
-        vx: (_rand.nextDouble() - 0.5) * 4,
-        vy: _rand.nextDouble() * 5 + 3,
-        rotation: _rand.nextDouble() * 2 * pi,
-        rotationSpeed: (_rand.nextDouble() - 0.5) * 0.2,
-        isStreamer: _rand.nextBool(),
-      ));
+      _particles.add(
+        _ConfettiParticle(
+          x:
+              _rand.nextDouble() *
+              400, // will be scaled to screen width in painter
+          y: -_rand.nextDouble() * 300 - 20, // start above viewport
+          size: _rand.nextDouble() * 10 + 6,
+          color: _colors[_rand.nextInt(_colors.length)],
+          vx: (_rand.nextDouble() - 0.5) * 4,
+          vy: _rand.nextDouble() * 5 + 3,
+          rotation: _rand.nextDouble() * 2 * pi,
+          rotationSpeed: (_rand.nextDouble() - 0.5) * 0.2,
+          isStreamer: _rand.nextBool(),
+        ),
+      );
     }
   }
 
@@ -71,7 +74,9 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
     setState(() {
       for (final p in _particles) {
         p.y += p.vy;
-        p.x += p.vx + sin(_tickerController.value * 2 * pi + p.size) * 0.5; // wind sway
+        p.x +=
+            p.vx +
+            sin(_tickerController.value * 2 * pi + p.size) * 0.5; // wind sway
         p.rotation += p.rotationSpeed;
 
         // Reset particle to top if it goes off bottom
@@ -115,12 +120,14 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
               child: Container(
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: isDark 
-                      ? const Color(0xFF1C1C1E).withValues(alpha: 0.92) 
+                  color: isDark
+                      ? const Color(0xFF1C1C1E).withValues(alpha: 0.92)
                       : Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.08),
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.12)
+                        : Colors.black.withValues(alpha: 0.08),
                     width: 0.5,
                   ),
                   boxShadow: [
@@ -141,7 +148,10 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFCC00).withValues(alpha: 0.16),
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFFFFCC00).withValues(alpha: 0.3), width: 2),
+                        border: Border.all(
+                          color: const Color(0xFFFFCC00).withValues(alpha: 0.3),
+                          width: 2,
+                        ),
                       ),
                       child: const Icon(
                         Icons.emoji_events_rounded,
@@ -286,7 +296,11 @@ class _ConfettiPainter extends CustomPainter {
       if (p.isStreamer) {
         // Draw streamer (thin ribbon)
         canvas.drawRect(
-          Rect.fromCenter(center: Offset.zero, width: p.size * 0.3, height: p.size * 2),
+          Rect.fromCenter(
+            center: Offset.zero,
+            width: p.size * 0.3,
+            height: p.size * 2,
+          ),
           paint,
         );
       } else {

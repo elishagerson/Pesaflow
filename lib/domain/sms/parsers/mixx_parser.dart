@@ -13,15 +13,18 @@ class MixxParser implements SmsParser {
   }
 
   String _extractReference(String text) {
-    final swaRegex = RegExp(r'(?:Kumbukumbu\s+no\.?|Kumbukumbu|Rej|TxnID|TxnId):?\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final swaRegex = RegExp(
+      r'(?:Kumbukumbu\s+no\.?|Kumbukumbu|Rej|TxnID|TxnId):?\s*([A-Za-z0-9]+)',
+      caseSensitive: false,
+    );
     final match = swaRegex.firstMatch(text);
     return match?.group(1) ?? 'TIGO-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
     final swaRegex = RegExp(
-      r'(?:Salio jipya ni|Salio|New balance is|New balance|(?<!outstanding )Balance|\bBal\b)\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
-      caseSensitive: false
+      r'(?:Salio jipya ni|Salio|New balance is|New balance|(?<!outstanding )Balance|\bBal\b)\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
     );
     final match = swaRegex.firstMatch(text);
     if (match != null) {

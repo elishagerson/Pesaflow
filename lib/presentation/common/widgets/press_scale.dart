@@ -31,10 +31,7 @@ class _PressScaleState extends State<PressScale>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: widget.scale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override

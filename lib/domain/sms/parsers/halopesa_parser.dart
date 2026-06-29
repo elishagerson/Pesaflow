@@ -5,15 +5,18 @@ import 'sms_parser_interface.dart';
 
 class HalopesaParser implements SmsParser {
   String _extractReference(String text) {
-    final regex = RegExp(r'(?:Rej|Kumbukumbu|Ref|TxnID):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final regex = RegExp(
+      r'(?:Rej|Kumbukumbu|Ref|TxnID):\s*([A-Za-z0-9]+)',
+      caseSensitive: false,
+    );
     final match = regex.firstMatch(text);
     return match?.group(1) ?? 'HALO-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
     final regex = RegExp(
-      r'(?:Salio|Balance|Bal):\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
-      caseSensitive: false
+      r'(?:Salio|Balance|Bal):\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
     );
     final match = regex.firstMatch(text);
     if (match != null) {

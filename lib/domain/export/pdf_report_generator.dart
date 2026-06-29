@@ -83,13 +83,15 @@ Future<Uint8List> generateMonthlyPdf(
           child: pw.Text('Account Balances', style: pw.TextStyle(fontSize: 16)),
         ),
         pw.SizedBox(height: 8),
-        ...accounts.map((acc) => pw.Padding(
-          padding: const pw.EdgeInsets.symmetric(vertical: 2),
-          child: pw.Text(
-            '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
-            style: pw.TextStyle(fontSize: 11),
+        ...accounts.map(
+          (acc) => pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 2),
+            child: pw.Text(
+              '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
+              style: pw.TextStyle(fontSize: 11),
+            ),
           ),
-        )),
+        ),
         pw.SizedBox(height: 20),
         pw.Header(
           level: 1,
@@ -118,7 +120,9 @@ Future<Uint8List> generateMonthlyPdf(
             final prefix = trans.type == 'income' ? '+' : '-';
             return [
               dateFormat.format(trans.createdAt),
-              trans.description.isNotEmpty ? trans.description : t.category.name,
+              trans.description.isNotEmpty
+                  ? trans.description
+                  : t.category.name,
               t.category.name,
               '$prefix TSh ${(trans.amount / 100).toStringAsFixed(2)}',
             ];

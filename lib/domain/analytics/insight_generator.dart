@@ -33,85 +33,110 @@ class InsightGenerator {
       if (currentIncome > 0 || currentExpense > 0) {
         final netCashflow = currentIncome - currentExpense;
         final isPositive = netCashflow >= 0;
-        insights.add(Insight(
-          type: InsightType.netCashflow,
-          title: isPositive ? 'Positive Cash Flow' : 'Negative Cash Flow',
-          message: isPositive
-              ? 'You\'ve saved Tsh ${_formatAmount(netCashflow)} this month so far.'
-              : 'You\'ve spent Tsh ${_formatAmount(-netCashflow)} more than earned this month.',
-          severity: isPositive ? InsightSeverity.positive : InsightSeverity.warning,
-          icon: isPositive ? 'trending_up' : 'trending_down',
-        ));
+        insights.add(
+          Insight(
+            type: InsightType.netCashflow,
+            title: isPositive ? 'Positive Cash Flow' : 'Negative Cash Flow',
+            message: isPositive
+                ? 'You\'ve saved Tsh ${_formatAmount(netCashflow)} this month so far.'
+                : 'You\'ve spent Tsh ${_formatAmount(-netCashflow)} more than earned this month.',
+            severity: isPositive
+                ? InsightSeverity.positive
+                : InsightSeverity.warning,
+            icon: isPositive ? 'trending_up' : 'trending_down',
+          ),
+        );
       }
 
       // 2. Savings Rate
       if (currentIncome > 0) {
-        final savingsRate = ((currentIncome - currentExpense) / currentIncome * 100).round();
+        final savingsRate =
+            ((currentIncome - currentExpense) / currentIncome * 100).round();
         String message;
         InsightSeverity severity;
         if (savingsRate >= 20) {
           message = 'Savings rate: $savingsRate%. Excellent discipline!';
           severity = InsightSeverity.positive;
         } else if (savingsRate >= 10) {
-          message = 'Savings rate: $savingsRate%. Aim for 20% to build stronger reserves.';
+          message =
+              'Savings rate: $savingsRate%. Aim for 20% to build stronger reserves.';
           severity = InsightSeverity.neutral;
         } else {
-          message = 'Savings rate: $savingsRate%. Consider reducing discretionary spending.';
+          message =
+              'Savings rate: $savingsRate%. Consider reducing discretionary spending.';
           severity = InsightSeverity.warning;
         }
-        insights.add(Insight(
-          type: InsightType.savingsRate,
-          title: 'Savings Rate',
-          message: message,
-          severity: severity,
-          icon: 'savings',
-        ));
+        insights.add(
+          Insight(
+            type: InsightType.savingsRate,
+            title: 'Savings Rate',
+            message: message,
+            severity: severity,
+            icon: 'savings',
+          ),
+        );
       }
 
       // 3. Month-over-Month Spending Comparison
       if (prevExpense > 0 && currentExpense > 0) {
-        final changePercent = ((currentExpense - prevExpense) / prevExpense * 100).round();
+        final changePercent =
+            ((currentExpense - prevExpense) / prevExpense * 100).round();
         if (changePercent.abs() > 5) {
           final increased = changePercent > 0;
-          insights.add(Insight(
-            type: InsightType.spendingTrend,
-            title: increased ? 'Spending Up' : 'Spending Down',
-            message: increased
-                ? 'Spending is $changePercent% higher than last month.'
-                : 'Spending is ${-changePercent}% lower than last month. Great work!',
-            severity: increased ? InsightSeverity.warning : InsightSeverity.positive,
-            icon: increased ? 'arrow_upward' : 'arrow_downward',
-          ));
+          insights.add(
+            Insight(
+              type: InsightType.spendingTrend,
+              title: increased ? 'Spending Up' : 'Spending Down',
+              message: increased
+                  ? 'Spending is $changePercent% higher than last month.'
+                  : 'Spending is ${-changePercent}% lower than last month. Great work!',
+              severity: increased
+                  ? InsightSeverity.warning
+                  : InsightSeverity.positive,
+              icon: increased ? 'arrow_upward' : 'arrow_downward',
+            ),
+          );
         }
       }
 
       // 4. Income Consistency
       if (prevIncome > 0 && currentIncome > 0) {
-        final incomeChange = ((currentIncome - prevIncome) / prevIncome * 100).round();
+        final incomeChange = ((currentIncome - prevIncome) / prevIncome * 100)
+            .round();
         if (incomeChange.abs() > 10) {
-          insights.add(Insight(
-            type: InsightType.incomeConsistency,
-            title: incomeChange > 0 ? 'Income Increase' : 'Income Decrease',
-            message: incomeChange > 0
-                ? 'Income is $incomeChange% higher than last month.'
-                : 'Income dropped by ${-incomeChange}% compared to last month.',
-            severity: incomeChange > 0 ? InsightSeverity.positive : InsightSeverity.warning,
-            icon: 'account_balance_wallet',
-          ));
+          insights.add(
+            Insight(
+              type: InsightType.incomeConsistency,
+              title: incomeChange > 0 ? 'Income Increase' : 'Income Decrease',
+              message: incomeChange > 0
+                  ? 'Income is $incomeChange% higher than last month.'
+                  : 'Income dropped by ${-incomeChange}% compared to last month.',
+              severity: incomeChange > 0
+                  ? InsightSeverity.positive
+                  : InsightSeverity.warning,
+              icon: 'account_balance_wallet',
+            ),
+          );
         }
       }
 
       // 5. Top Spending Categories
-      final topCategories = await _analyticsRepository.getTopCategoriesForMonth(now, limit: 3);
+      final topCategories = await _analyticsRepository.getTopCategoriesForMonth(
+        now,
+        limit: 3,
+      );
       if (topCategories.isNotEmpty) {
         final top = topCategories.first;
-        insights.add(Insight(
-          type: InsightType.topCategory,
-          title: 'Top Spending: ${top.categoryName}',
-          message: 'Tsh ${_formatAmount(top.amount)} spent on ${top.categoryName} this month.',
-          severity: InsightSeverity.neutral,
-          icon: 'category',
-        ));
+        insights.add(
+          Insight(
+            type: InsightType.topCategory,
+            title: 'Top Spending: ${top.categoryName}',
+            message:
+                'Tsh ${_formatAmount(top.amount)} spent on ${top.categoryName} this month.',
+            severity: InsightSeverity.neutral,
+            icon: 'category',
+          ),
+        );
       }
     } catch (_) {
       // Silently handle errors — insights are non-critical
@@ -159,9 +184,4 @@ enum InsightType {
   budgetForecast,
 }
 
-enum InsightSeverity {
-  positive,
-  neutral,
-  warning,
-  critical,
-}
+enum InsightSeverity { positive, neutral, warning, critical }

@@ -37,23 +37,23 @@ class ModernDropdown<T> extends FormField<T> {
     super.onSaved,
     super.validator,
   }) : super(
-          initialValue: value,
-          builder: (FormFieldState<T> state) {
-            return _ModernDropdownFieldWidget<T>(
-              labelText: labelText,
-              items: items,
-              value: state.value,
-              onChanged: (newVal) {
-                state.didChange(newVal);
-                if (onChanged != null) {
-                  onChanged(newVal);
-                }
-              },
-              prefixIcon: prefixIcon,
-              errorText: state.errorText,
-            );
-          },
-        );
+         initialValue: value,
+         builder: (FormFieldState<T> state) {
+           return _ModernDropdownFieldWidget<T>(
+             labelText: labelText,
+             items: items,
+             value: state.value,
+             onChanged: (newVal) {
+               state.didChange(newVal);
+               if (onChanged != null) {
+                 onChanged(newVal);
+               }
+             },
+             prefixIcon: prefixIcon,
+             errorText: state.errorText,
+           );
+         },
+       );
 }
 
 class _ModernDropdownFieldWidget<T> extends StatelessWidget {
@@ -94,14 +94,21 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
           onTap: () => _showSelectionSheet(context),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 14.0,
+            ),
             decoration: BoxDecoration(
-              color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+              color: isDark
+                  ? AppTheme.surfaceContainerDark
+                  : AppTheme.surfaceLight,
               borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               border: Border.all(
                 color: errorText != null
                     ? theme.colorScheme.error
-                    : (isDark ? const Color(0x15FFFFFF) : const Color(0x1F000000)),
+                    : (isDark
+                          ? const Color(0x15FFFFFF)
+                          : const Color(0x1F000000)),
                 width: errorText != null ? 1.5 : 1.0,
               ),
               boxShadow: [
@@ -117,7 +124,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                 if (selectedItem.icon != null || prefixIcon != null) ...[
                   Icon(
                     selectedItem.icon ?? prefixIcon,
-                    color: selectedItem.color ?? (isDark ? Colors.white70 : Colors.black87),
+                    color:
+                        selectedItem.color ??
+                        (isDark ? Colors.white70 : Colors.black87),
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -160,10 +169,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12.0),
             child: Text(
               errorText!,
-              style: TextStyle(
-                color: theme.colorScheme.error,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
             ),
           ),
         ],
@@ -187,14 +193,23 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
             child: Container(
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xF2161618) : const Color(0xF2FFFFFF),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                color: isDark
+                    ? const Color(0xF2161618)
+                    : const Color(0xF2FFFFFF),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
                 border: Border.all(
-                  color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1A000000),
+                  color: isDark
+                      ? const Color(0x1AFFFFFF)
+                      : const Color(0x1A000000),
                   width: 0.5,
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -224,7 +239,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         icon: const Icon(PesaFlowIcons.close, size: 20),
                         onPressed: () => Navigator.pop(context),
                         style: IconButton.styleFrom(
-                          backgroundColor: isDark ? Colors.white10 : Colors.black12,
+                          backgroundColor: isDark
+                              ? Colors.white10
+                              : Colors.black12,
                           padding: const EdgeInsets.all(6),
                         ),
                       ),
@@ -238,7 +255,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: items.map((item) {
                           final isSelected = item.value == value;
-                          final itemColor = item.color ?? theme.colorScheme.primary;
+                          final itemColor =
+                              item.color ?? theme.colorScheme.primary;
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
@@ -250,14 +268,24 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                   onChanged(item.value);
                                   Navigator.pop(context);
                                 },
-                                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCard,
+                                ),
                                 child: Container(
                                   padding: const EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? itemColor.withValues(alpha: 0.08)
-                                        : (isDark ? Colors.white.withValues(alpha: 0.02) : Colors.black.withValues(alpha: 0.01)),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                        : (isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.02,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.01,
+                                                )),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusCard,
+                                    ),
                                     border: Border.all(
                                       color: isSelected
                                           ? itemColor.withValues(alpha: 0.3)
@@ -272,13 +300,21 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                           padding: const EdgeInsets.all(10.0),
                                           decoration: BoxDecoration(
                                             color: isSelected
-                                                ? itemColor.withValues(alpha: 0.15)
-                                                : (isDark ? Colors.white10 : Colors.black12),
+                                                ? itemColor.withValues(
+                                                    alpha: 0.15,
+                                                  )
+                                                : (isDark
+                                                      ? Colors.white10
+                                                      : Colors.black12),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             item.icon,
-                                            color: isSelected ? itemColor : (isDark ? Colors.white70 : Colors.black54),
+                                            color: isSelected
+                                                ? itemColor
+                                                : (isDark
+                                                      ? Colors.white70
+                                                      : Colors.black54),
                                             size: 20,
                                           ),
                                         ),
@@ -286,16 +322,23 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                       ],
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               item.label,
                                               style: TextStyle(
                                                 fontSize: 15,
-                                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
                                                 color: isSelected
-                                                    ? (isDark ? Colors.white : itemColor)
-                                                    : (isDark ? Colors.white70 : Colors.black87),
+                                                    ? (isDark
+                                                          ? Colors.white
+                                                          : itemColor)
+                                                    : (isDark
+                                                          ? Colors.white70
+                                                          : Colors.black87),
                                               ),
                                             ),
                                             if (item.subtitle != null) ...[
@@ -304,7 +347,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                                 item.subtitle!,
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                                  color: isDark
+                                                      ? Colors.grey[400]
+                                                      : Colors.grey[600],
                                                 ),
                                               ),
                                             ],

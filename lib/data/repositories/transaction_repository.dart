@@ -13,7 +13,9 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
   return TransactionRepository(dao, budgetAlertService, analyticsRepo);
 });
 
-final transactionRepositoryNoAlertsProvider = Provider<TransactionRepository>((ref) {
+final transactionRepositoryNoAlertsProvider = Provider<TransactionRepository>((
+  ref,
+) {
   final dao = ref.watch(transactionDaoProvider);
   final analyticsRepo = ref.watch(analyticsRepositoryProvider);
   return TransactionRepository(dao, null, analyticsRepo);
@@ -24,7 +26,11 @@ class TransactionRepository {
   final BudgetAlertService? _budgetAlertService;
   final AnalyticsRepository _analyticsRepo;
 
-  TransactionRepository(this._transactionDao, this._budgetAlertService, this._analyticsRepo);
+  TransactionRepository(
+    this._transactionDao,
+    this._budgetAlertService,
+    this._analyticsRepo,
+  );
 
   Stream<List<TransactionWithCategoryAndAccount>> watchFilteredTransactions({
     String? accountId,
@@ -50,7 +56,10 @@ class TransactionRepository {
     );
   }
 
-  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit, {String? trackerId}) {
+  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(
+    int limit, {
+    String? trackerId,
+  }) {
     return _transactionDao.watchRecentTransactions(limit, trackerId: trackerId);
   }
 
@@ -62,14 +71,20 @@ class TransactionRepository {
 
   /// Creates a transaction record without adjusting any account balance.
   /// Used for offline/record-only payments.
-  Future<void> createTransactionNoBalanceAdjustment(Transaction transaction) async {
-    await _transactionDao.insertTransactionWithoutBalanceAdjustment(transaction);
+  Future<void> createTransactionNoBalanceAdjustment(
+    Transaction transaction,
+  ) async {
+    await _transactionDao.insertTransactionWithoutBalanceAdjustment(
+      transaction,
+    );
     _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
     _refreshAnalytics(transaction.createdAt);
   }
 
   Future<void> deleteTransaction(String transactionId) {
-    return _transactionDao.deleteTransactionWithBalanceAdjustment(transactionId);
+    return _transactionDao.deleteTransactionWithBalanceAdjustment(
+      transactionId,
+    );
   }
 
   Future<bool> transactionExistsByReference(String reference) {
@@ -92,7 +107,8 @@ class TransactionRepository {
     );
   }
 
-  Stream<List<TransactionWithCategoryAndAccount>> watchReviewQueueTransactions() {
+  Stream<List<TransactionWithCategoryAndAccount>>
+  watchReviewQueueTransactions() {
     return _transactionDao.watchReviewQueueTransactions();
   }
 
@@ -100,8 +116,14 @@ class TransactionRepository {
     return _transactionDao.getTransactionWithDetailsById(id);
   }
 
-  Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
-    await _transactionDao.approveReviewedTransaction(transactionId, newCategoryId: newCategoryId);
+  Future<void> approveReviewedTransaction(
+    String transactionId, {
+    String? newCategoryId,
+  }) async {
+    await _transactionDao.approveReviewedTransaction(
+      transactionId,
+      newCategoryId: newCategoryId,
+    );
     final tx = await _transactionDao.getTransactionById(transactionId);
     if (tx != null) {
       _refreshAnalytics(tx.createdAt);
@@ -110,7 +132,10 @@ class TransactionRepository {
 
   void _refreshAnalytics(DateTime date) {
     _analyticsRepo.refreshAllSnapshots(date).catchError((e) {
-      developer.log('Analytics snapshot refresh failed (non-fatal): $e', name: 'TransactionRepo');
+      developer.log(
+        'Analytics snapshot refresh failed (non-fatal): $e',
+        name: 'TransactionRepo',
+      );
     });
   }
 

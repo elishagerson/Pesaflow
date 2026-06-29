@@ -19,7 +19,10 @@ class NmbBankParser implements SmsParser {
   }
 
   int? _extractBalance(String text) {
-    final regex = RegExp(r'Salio:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final regex = RegExp(
+      r'Salio:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
     final match = regex.firstMatch(text);
     if (match != null) {
       return parseAmount(match.group(1) ?? '');
@@ -196,7 +199,10 @@ class CrdbBankParser implements SmsParser {
   }
 
   int? _extractBalance(String text) {
-    final regex = RegExp(r'Available:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final regex = RegExp(
+      r'Available:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
     final match = regex.firstMatch(text);
     if (match != null) {
       return parseAmount(match.group(1) ?? '');

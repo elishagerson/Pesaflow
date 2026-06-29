@@ -20,7 +20,10 @@ class MpesaTzParser implements SmsParser {
 
   int? _extractBalance(String text) {
     // Swahili: Salio: Tsh XXX
-    final salioRegex = RegExp(r'Salio:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final salioRegex = RegExp(
+      r'Salio:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
     final match = salioRegex.firstMatch(text);
     if (match != null) {
       return parseAmount(match.group(1) ?? '');

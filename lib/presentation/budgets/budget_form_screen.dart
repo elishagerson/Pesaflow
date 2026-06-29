@@ -45,7 +45,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   }
 
   Future<void> _loadExistingBudget() async {
-    final budget = await ref.read(budgetRepositoryProvider).getBudgetById(widget.budgetId!);
+    final budget = await ref
+        .read(budgetRepositoryProvider)
+        .getBudgetById(widget.budgetId!);
     if (budget != null && mounted) {
       setState(() {
         _nameController.text = budget.name;
@@ -56,13 +58,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         _rolloverType = budget.rolloverType;
         _threshold = budget.notificationThreshold;
         _startDate = budget.startDate;
-        if (budget.rolloverCap != null) _capController.text = (budget.rolloverCap! ~/ 100).toString();
+        if (budget.rolloverCap != null)
+          _capController.text = (budget.rolloverCap! ~/ 100).toString();
       });
     }
   }
 
   @override
-  void dispose() { _nameController.dispose(); _amountController.dispose(); _capController.dispose(); super.dispose(); }
+  void dispose() {
+    _nameController.dispose();
+    _amountController.dispose();
+    _capController.dispose();
+    super.dispose();
+  }
 
   Widget _buildLeadingIcon(IconData icon, Color color) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -72,40 +80,68 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         color: color.withValues(alpha: isDark ? 0.15 : 0.1),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 20,
-      ),
+      child: Icon(icon, color: color, size: 20),
     );
   }
 
   Future<void> _save() async {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate() || _selectedCategoryId == null) {
-      if (_selectedCategoryId == null) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a category')));
+    if (_formKey.currentState == null ||
+        !_formKey.currentState!.validate() ||
+        _selectedCategoryId == null) {
+      if (_selectedCategoryId == null)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a category')),
+        );
       return;
     }
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(budgetRepositoryProvider);
-      final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
+      final amountCents = CurrencyFormatter.parseToCents(
+        _amountController.text,
+      );
       int? rolloverCap;
-      if (_rollover && _rolloverType == 'capped' && _capController.text.isNotEmpty) {
+      if (_rollover &&
+          _rolloverType == 'capped' &&
+          _capController.text.isNotEmpty) {
         rolloverCap = CurrencyFormatter.parseToCents(_capController.text);
       }
       if (widget.budgetId != null) {
         final existing = await repo.getBudgetById(widget.budgetId!);
         if (existing != null) {
-          await repo.updateBudgetWithPeriodAllocation(existing.copyWith(name: _nameController.text.trim(), categoryId: _selectedCategoryId!, period: _period, amount: amountCents, rollover: _rollover, rolloverType: _rolloverType, notificationThreshold: _threshold));
+          await repo.updateBudgetWithPeriodAllocation(
+            existing.copyWith(
+              name: _nameController.text.trim(),
+              categoryId: _selectedCategoryId!,
+              period: _period,
+              amount: amountCents,
+              rollover: _rollover,
+              rolloverType: _rolloverType,
+              notificationThreshold: _threshold,
+            ),
+          );
         }
       } else {
-        await repo.createBudget(name: _nameController.text.trim(), categoryId: _selectedCategoryId!, period: _period, amount: amountCents, rollover: _rollover, rolloverType: _rolloverType, rolloverCap: rolloverCap, startDate: _startDate, notificationThreshold: _threshold);
+        await repo.createBudget(
+          name: _nameController.text.trim(),
+          categoryId: _selectedCategoryId!,
+          period: _period,
+          amount: amountCents,
+          rollover: _rollover,
+          rolloverType: _rolloverType,
+          rolloverCap: rolloverCap,
+          startDate: _startDate,
+          notificationThreshold: _threshold,
+        );
       }
       ref.invalidate(budgetProgressProvider);
       ref.invalidate(activeBudgetsStreamProvider);
       if (mounted) context.pop();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -115,7 +151,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark ? const Color(0xFF1B1C22) : const Color(0xFFF2F2F7);
+    final inputFill = isDark
+        ? const Color(0xFF1B1C22)
+        : const Color(0xFFF2F2F7);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
     final isEditing = widget.budgetId != null;
 
@@ -127,7 +165,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.5)
+                : Colors.black.withValues(alpha: 0.4),
             letterSpacing: 0.3,
           ),
         ),
@@ -151,11 +191,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+          borderSide: BorderSide(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.06),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5), width: 1.5),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
       );
     }
@@ -193,9 +240,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 TextFormField(
                                   controller: _nameController,
                                   textCapitalization: TextCapitalization.words,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                  decoration: inputDeco(label: 'Budget Name', hint: 'e.g. Monthly Food', icon: Icons.label_rounded),
-                                  validator: (v) => v == null || v.trim().isEmpty ? 'Name required' : null,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  decoration: inputDeco(
+                                    label: 'Budget Name',
+                                    hint: 'e.g. Monthly Food',
+                                    icon: Icons.label_rounded,
+                                  ),
+                                  validator: (v) =>
+                                      v == null || v.trim().isEmpty
+                                      ? 'Name required'
+                                      : null,
                                 ),
                                 const SizedBox(height: 12),
                                 categoriesAsync.when(
@@ -205,26 +262,42 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     prefixIcon: Icons.category_rounded,
                                     items: cats
                                         .where((c) => c.type == 'expense')
-                                        .map((c) => ModernDropdownItem<String>(
-                                              value: c.id,
-                                              label: c.name,
-                                              icon: getCategoryIcon(c.icon),
-                                              color: hexToColor(c.color),
-                                              subtitle: 'Budget category for ${c.name}',
-                                            ))
+                                        .map(
+                                          (c) => ModernDropdownItem<String>(
+                                            value: c.id,
+                                            label: c.name,
+                                            icon: getCategoryIcon(c.icon),
+                                            color: hexToColor(c.color),
+                                            subtitle:
+                                                'Budget category for ${c.name}',
+                                          ),
+                                        )
                                         .toList(),
-                                    onChanged: (v) => setState(() => _selectedCategoryId = v),
+                                    onChanged: (v) =>
+                                        setState(() => _selectedCategoryId = v),
                                   ),
-                                  loading: () => const LinearProgressIndicator(),
+                                  loading: () =>
+                                      const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
                                 ),
                                 const SizedBox(height: 12),
                                 TextFormField(
                                   controller: _amountController,
                                   keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
-                                  decoration: inputDeco(label: 'Budget Amount (Tsh)', hint: 'e.g. 300000', icon: PesaFlowIcons.cash),
-                                  validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'monospace',
+                                  ),
+                                  decoration: inputDeco(
+                                    label: 'Budget Amount (Tsh)',
+                                    hint: 'e.g. 300000',
+                                    icon: PesaFlowIcons.cash,
+                                  ),
+                                  validator: (v) =>
+                                      v == null || v.trim().isEmpty
+                                      ? 'Amount required'
+                                      : null,
                                 ),
                               ],
                             ),
@@ -244,17 +317,32 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               style: SegmentedButton.styleFrom(
                                 side: BorderSide.none,
                                 backgroundColor: Colors.transparent,
-                                selectedBackgroundColor: theme.colorScheme.primary,
-                                selectedForegroundColor: theme.colorScheme.onPrimary,
+                                selectedBackgroundColor:
+                                    theme.colorScheme.primary,
+                                selectedForegroundColor:
+                                    theme.colorScheme.onPrimary,
                               ),
                               segments: const [
-                                ButtonSegment(value: 'weekly', label: Text('Week')),
-                                ButtonSegment(value: 'biweekly', label: Text('2 Wk')),
-                                ButtonSegment(value: 'monthly', label: Text('Month')),
-                                ButtonSegment(value: 'yearly', label: Text('Year')),
+                                ButtonSegment(
+                                  value: 'weekly',
+                                  label: Text('Week'),
+                                ),
+                                ButtonSegment(
+                                  value: 'biweekly',
+                                  label: Text('2 Wk'),
+                                ),
+                                ButtonSegment(
+                                  value: 'monthly',
+                                  label: Text('Month'),
+                                ),
+                                ButtonSegment(
+                                  value: 'yearly',
+                                  label: Text('Year'),
+                                ),
                               ],
                               selected: {_period},
-                              onSelectionChanged: (v) => setState(() => _period = v.first),
+                              onSelectionChanged: (v) =>
+                                  setState(() => _period = v.first),
                             ),
                           ),
                         ),
@@ -284,15 +372,21 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         header: 'ROLLOVER',
                         rows: [
                           IosListRow(
-                            leading: _buildLeadingIcon(Icons.replay_rounded, Colors.purple),
+                            leading: _buildLeadingIcon(
+                              Icons.replay_rounded,
+                              Colors.purple,
+                            ),
                             title: const Text('Enable Rollover'),
-                            subtitle: const Text('Unused budget carries to next period'),
+                            subtitle: const Text(
+                              'Unused budget carries to next period',
+                            ),
                             trailing: CupertinoSwitch(
                               value: _rollover,
                               activeTrackColor: theme.colorScheme.primary,
                               onChanged: (v) => setState(() {
                                 _rollover = v;
-                                if (v && _rolloverType == 'none') _rolloverType = 'all';
+                                if (v && _rolloverType == 'none')
+                                  _rolloverType = 'all';
                               }),
                             ),
                           ),
@@ -312,23 +406,40 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     style: SegmentedButton.styleFrom(
                                       side: BorderSide.none,
                                       backgroundColor: Colors.transparent,
-                                      selectedBackgroundColor: theme.colorScheme.primary,
-                                      selectedForegroundColor: theme.colorScheme.onPrimary,
+                                      selectedBackgroundColor:
+                                          theme.colorScheme.primary,
+                                      selectedForegroundColor:
+                                          theme.colorScheme.onPrimary,
                                     ),
                                     segments: const [
-                                      ButtonSegment(value: 'all', label: Text('All')),
-                                      ButtonSegment(value: 'capped', label: Text('Capped')),
+                                      ButtonSegment(
+                                        value: 'all',
+                                        label: Text('All'),
+                                      ),
+                                      ButtonSegment(
+                                        value: 'capped',
+                                        label: Text('Capped'),
+                                      ),
                                     ],
                                     selected: {_rolloverType},
-                                    onSelectionChanged: (v) => setState(() => _rolloverType = v.first),
+                                    onSelectionChanged: (v) =>
+                                        setState(() => _rolloverType = v.first),
                                   ),
                                   if (_rolloverType == 'capped') ...[
                                     const SizedBox(height: 10),
                                     TextFormField(
                                       controller: _capController,
                                       keyboardType: TextInputType.number,
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
-                                      decoration: inputDeco(label: 'Max Rollover (Tsh)', hint: 'e.g. 50000', icon: Icons.upcoming_rounded),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'monospace',
+                                      ),
+                                      decoration: inputDeco(
+                                        label: 'Max Rollover (Tsh)',
+                                        hint: 'e.g. 50000',
+                                        icon: Icons.upcoming_rounded,
+                                      ),
                                     ),
                                   ],
                                 ],
@@ -344,7 +455,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: GlassCard(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             borderRadius: AppTheme.radiusCard,
                             elevation: CardElevation.medium,
                             child: Column(
@@ -352,7 +466,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    _buildLeadingIcon(PesaFlowIcons.notification, Colors.amber),
+                                    _buildLeadingIcon(
+                                      PesaFlowIcons.notification,
+                                      Colors.amber,
+                                    ),
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
@@ -360,7 +477,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.7),
                                         ),
                                       ),
                                     ),
@@ -379,14 +497,27 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   data: SliderTheme.of(context).copyWith(
                                     trackHeight: 4,
                                     activeTrackColor: theme.colorScheme.primary,
-                                    inactiveTrackColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+                                    inactiveTrackColor: theme
+                                        .colorScheme
+                                        .primary
+                                        .withValues(alpha: 0.2),
                                     thumbColor: theme.colorScheme.primary,
-                                    overlayColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-                                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-                                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-                                    valueIndicatorShape: const RectangularSliderValueIndicatorShape(),
-                                    valueIndicatorColor: theme.colorScheme.primary,
-                                    valueIndicatorTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                    overlayColor: theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                    thumbShape: const RoundSliderThumbShape(
+                                      enabledThumbRadius: 8,
+                                    ),
+                                    overlayShape: const RoundSliderOverlayShape(
+                                      overlayRadius: 16,
+                                    ),
+                                    valueIndicatorShape:
+                                        const RectangularSliderValueIndicatorShape(),
+                                    valueIndicatorColor:
+                                        theme.colorScheme.primary,
+                                    valueIndicatorTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   child: Slider(
                                     value: _threshold,
@@ -394,7 +525,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     max: 1.0,
                                     divisions: 10,
                                     label: '${(_threshold * 100).round()}%',
-                                    onChanged: (v) => setState(() => _threshold = v),
+                                    onChanged: (v) =>
+                                        setState(() => _threshold = v),
                                   ),
                                 ),
                               ],
@@ -417,23 +549,40 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 gradient: LinearGradient(
                                   colors: [
                                     theme.colorScheme.primary,
-                                    theme.colorScheme.primary.withValues(alpha: 0.8),
+                                    theme.colorScheme.primary.withValues(
+                                      alpha: 0.8,
+                                    ),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(100),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                    color: theme.colorScheme.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
                                 ],
                               ),
                               child: _isLoading
-                                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
                                   : Text(
-                                      isEditing ? 'Update Budget' : 'Create Budget',
-                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                      isEditing
+                                          ? 'Update Budget'
+                                          : 'Create Budget',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
                             ),
                           ),
@@ -450,5 +599,4 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       ),
     );
   }
-
 }

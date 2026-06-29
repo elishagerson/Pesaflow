@@ -63,7 +63,9 @@ class BudgetEngine {
         return remaining; // Can be negative (deficit carry-forward)
       case 'capped':
         if (remaining > 0) {
-          return rolloverCap != null ? remaining.clamp(0, rolloverCap) : remaining;
+          return rolloverCap != null
+              ? remaining.clamp(0, rolloverCap)
+              : remaining;
         }
         return remaining; // Carry deficit even when capped
       case 'none':
@@ -93,7 +95,9 @@ class BudgetEngine {
   }
 
   /// Analyzes a list of budgets and returns categorized alert results.
-  static BudgetThresholdResult checkBudgetThresholds(List<BudgetWithProgress> budgets) {
+  static BudgetThresholdResult checkBudgetThresholds(
+    List<BudgetWithProgress> budgets,
+  ) {
     final crossedThreshold = <String>[];
     final exceeded = <String>[];
     final projectedToExceed = <String>[];
@@ -169,8 +173,8 @@ class BudgetStatus {
 }
 
 enum BudgetAlert {
-  halfway,   // 50%
-  warning,   // threshold (default 80%)
-  reached,   // 100%
-  exceeded,  // >100%
+  halfway, // 50%
+  warning, // threshold (default 80%)
+  reached, // 100%
+  exceeded, // >100%
 }

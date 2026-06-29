@@ -24,14 +24,12 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
     _OnboardingPageData(
       icon: PesaFlowIcons.wallet,
       title: 'Stay on Budget',
-      description:
-          'Set monthly budgets and track spending by category',
+      description: 'Set monthly budgets and track spending by category',
     ),
     _OnboardingPageData(
       icon: PesaFlowIcons.goal,
       title: 'Reach Your Goals',
-      description:
-          'Save towards what matters with savings goals',
+      description: 'Save towards what matters with savings goals',
     ),
   ];
 

@@ -23,24 +23,24 @@ class ModernDateSelector extends FormField<DateTime> {
     super.onSaved,
     super.validator,
   }) : super(
-          initialValue: value,
-          builder: (FormFieldState<DateTime> state) {
-            return _ModernDateSelectorWidget(
-              labelText: labelText,
-              value: state.value ?? value,
-              onChanged: (newVal) {
-                state.didChange(newVal);
-                if (onChanged != null) {
-                  onChanged(newVal);
-                }
-              },
-              prefixIcon: prefixIcon,
-              firstDate: firstDate,
-              lastDate: lastDate,
-              errorText: state.errorText,
-            );
-          },
-        );
+         initialValue: value,
+         builder: (FormFieldState<DateTime> state) {
+           return _ModernDateSelectorWidget(
+             labelText: labelText,
+             value: state.value ?? value,
+             onChanged: (newVal) {
+               state.didChange(newVal);
+               if (onChanged != null) {
+                 onChanged(newVal);
+               }
+             },
+             prefixIcon: prefixIcon,
+             firstDate: firstDate,
+             lastDate: lastDate,
+             errorText: state.errorText,
+           );
+         },
+       );
 }
 
 class _ModernDateSelectorWidget extends StatelessWidget {
@@ -77,7 +77,9 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             final picked = await showDatePicker(
               context: context,
               initialDate: value,
-              firstDate: firstDate ?? DateTime.now().subtract(const Duration(days: 365)),
+              firstDate:
+                  firstDate ??
+                  DateTime.now().subtract(const Duration(days: 365)),
               lastDate: lastDate ?? DateTime(2035),
             );
             if (picked != null) {
@@ -86,14 +88,21 @@ class _ModernDateSelectorWidget extends StatelessWidget {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 14.0,
+            ),
             decoration: BoxDecoration(
-              color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+              color: isDark
+                  ? AppTheme.surfaceContainerDark
+                  : AppTheme.surfaceLight,
               borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               border: Border.all(
                 color: errorText != null
                     ? theme.colorScheme.error
-                    : (isDark ? const Color(0x15FFFFFF) : const Color(0x1F000000)),
+                    : (isDark
+                          ? const Color(0x15FFFFFF)
+                          : const Color(0x1F000000)),
                 width: errorText != null ? 1.5 : 1.0,
               ),
               boxShadow: [
@@ -151,10 +160,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12.0),
             child: Text(
               errorText!,
-              style: TextStyle(
-                color: theme.colorScheme.error,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
             ),
           ),
         ],

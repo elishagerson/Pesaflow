@@ -37,7 +37,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
   }
 
   Future<void> _approve() async {
-    await ref.read(transactionRepositoryProvider).approveReviewedTransaction(
+    await ref
+        .read(transactionRepositoryProvider)
+        .approveReviewedTransaction(
           widget.item.transaction.id,
           newCategoryId: _selectedCategoryId,
         );
@@ -48,7 +50,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
   }
 
   Future<void> _reject() async {
-    await ref.read(transactionRepositoryProvider).deleteTransaction(widget.item.transaction.id);
+    await ref
+        .read(transactionRepositoryProvider)
+        .deleteTransaction(widget.item.transaction.id);
     ref.invalidate(reviewQueueStreamProvider);
     ref.invalidate(recentTransactionsStreamProvider);
     ref.invalidate(accountsStreamProvider);
@@ -67,12 +71,16 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     AmountType amountType = AmountType.neutral;
     if (trans.type == 'income') {
       amountType = AmountType.income;
-    } else if (trans.type == 'expense' || trans.type == 'airtime' || trans.type == 'fee') {
+    } else if (trans.type == 'expense' ||
+        trans.type == 'airtime' ||
+        trans.type == 'fee') {
       amountType = AmountType.expense;
     }
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusCard)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+      ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -83,9 +91,18 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.sms_rounded, color: theme.colorScheme.primary, size: 22),
+                  Icon(
+                    Icons.sms_rounded,
+                    color: theme.colorScheme.primary,
+                    size: 22,
+                  ),
                   const SizedBox(width: 8),
-                  Text('New Transaction', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(
+                    'New Transaction',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const Spacer(),
                   IconButton(
                     icon: Icon(PesaFlowIcons.close, size: 20),
@@ -102,32 +119,60 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   children: [
-                    AmountText(amountInCents: transactedCents, type: amountType,
-                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                    AmountText(
+                      amountInCents: transactedCents,
+                      type: amountType,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 6),
-                    Text(trans.description.isNotEmpty ? trans.description : '(no description)',
-                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                      textAlign: TextAlign.center),
+                    Text(
+                      trans.description.isNotEmpty
+                          ? trans.description
+                          : '(no description)',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(widget.item.account!.name,
-                        style: TextStyle(color: theme.colorScheme.primary, fontSize: 11, fontWeight: FontWeight.bold)),
+                      child: Text(
+                        widget.item.account!.name,
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Assign Category', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                'Assign Category',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _searchController,
@@ -144,16 +189,22 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         )
                       : null,
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                 ),
-                onChanged: (v) => setState(() => _searchQuery = v.toLowerCase()),
+                onChanged: (v) =>
+                    setState(() => _searchQuery = v.toLowerCase()),
               ),
               const SizedBox(height: 8),
               if (categories.isEmpty)
-                const Center(child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ))
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
               else
                 SizedBox(
                   height: 180,
@@ -171,27 +222,51 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       return ListTile(
                         dense: true,
                         selected: isSelected,
-                        selectedTileColor: theme.colorScheme.primary.withValues(alpha: 0.08),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        selectedTileColor: theme.colorScheme.primary.withValues(
+                          alpha: 0.08,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         leading: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: hexToColor(cat.color).withValues(alpha: 0.15),
+                            color: hexToColor(
+                              cat.color,
+                            ).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(getCategoryIcon(cat.icon),
-                            color: hexToColor(cat.color), size: 18),
+                          child: Icon(
+                            getCategoryIcon(cat.icon),
+                            color: hexToColor(cat.color),
+                            size: 18,
+                          ),
                         ),
-                        title: Text(cat.name, style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        )),
-                        subtitle: Text(cat.type.toUpperCase(),
-                          style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                        title: Text(
+                          cat.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                        subtitle: Text(
+                          cat.type.toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        ),
                         trailing: isSelected
-                            ? Icon(PesaFlowIcons.success, color: theme.colorScheme.primary, size: 20)
+                            ? Icon(
+                                PesaFlowIcons.success,
+                                color: theme.colorScheme.primary,
+                                size: 20,
+                              )
                             : null,
-                        onTap: () => setState(() => _selectedCategoryId = cat.id),
+                        onTap: () =>
+                            setState(() => _selectedCategoryId = cat.id),
                       );
                     },
                   ),
@@ -206,9 +281,13 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       label: const Text('Reject'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: theme.colorScheme.error,
-                        side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.4)),
+                        side: BorderSide(
+                          color: theme.colorScheme.error.withValues(alpha: 0.4),
+                        ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -220,7 +299,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       label: const Text('Approve'),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),

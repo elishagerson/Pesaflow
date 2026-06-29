@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/daos/transaction_dao.dart';
 
-class PendingReviewNotifier extends Notifier<TransactionWithCategoryAndAccount?> {
+class PendingReviewNotifier
+    extends Notifier<TransactionWithCategoryAndAccount?> {
   @override
   TransactionWithCategoryAndAccount? build() {
     return null;
@@ -16,6 +17,9 @@ class PendingReviewNotifier extends Notifier<TransactionWithCategoryAndAccount?>
   }
 }
 
-final pendingReviewProvider = NotifierProvider<PendingReviewNotifier, TransactionWithCategoryAndAccount?>(() {
-  return PendingReviewNotifier();
-});
+final pendingReviewProvider =
+    NotifierProvider<PendingReviewNotifier, TransactionWithCategoryAndAccount?>(
+      () {
+        return PendingReviewNotifier();
+      },
+    );

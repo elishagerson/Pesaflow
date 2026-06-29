@@ -4,15 +4,20 @@ import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
 class SelcomPesaParser implements SmsParser {
-
   String _extractReference(String text) {
     // English: word before "Accepted." or "Confirmed."
-    final engRegex = RegExp(r'(\w+)\s+(?:Accepted|Confirmed)\.\s*You have', caseSensitive: false);
+    final engRegex = RegExp(
+      r'(\w+)\s+(?:Accepted|Confirmed)\.\s*You have',
+      caseSensitive: false,
+    );
     final engMatch = engRegex.firstMatch(text);
     if (engMatch != null) return engMatch.group(1) ?? '';
 
     // Swahili: Ref/Txn/ID ya muamala: XXXXX
-    final swaRegex = RegExp(r'(?:Ref|Txn|ID|ID ya muamala):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final swaRegex = RegExp(
+      r'(?:Ref|Txn|ID|ID ya muamala):\s*([A-Za-z0-9]+)',
+      caseSensitive: false,
+    );
     final match = swaRegex.firstMatch(text);
     if (match != null) return match.group(1) ?? '';
 
@@ -31,7 +36,10 @@ class SelcomPesaParser implements SmsParser {
     }
 
     // English: "Updated balance is TZS XXX"
-    final engRegex = RegExp(r'Updated balance is TZS\s*([\d,]+(?:\.[\d]{2})?)', caseSensitive: false);
+    final engRegex = RegExp(
+      r'Updated balance is TZS\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
     final engMatch = engRegex.firstMatch(text);
     if (engMatch != null) {
       return parseAmount(engMatch.group(1) ?? '');
@@ -119,7 +127,13 @@ class SelcomPesaParser implements SmsParser {
 
       // 4. Determine transaction type (income / expense)
       String type = 'expense';
-      final incomeKeywords = ['receive', 'deposit', 'credit', 'umepokea', 'tumeongeza'];
+      final incomeKeywords = [
+        'receive',
+        'deposit',
+        'credit',
+        'umepokea',
+        'tumeongeza',
+      ];
       final lowercaseBody = text.toLowerCase();
       for (final kw in incomeKeywords) {
         if (lowercaseBody.contains(kw)) {
@@ -139,7 +153,9 @@ class SelcomPesaParser implements SmsParser {
         caseSensitive: false,
       );
 
-      final partyMatch = type == 'income' ? fromRegex.firstMatch(text) : toRegex.firstMatch(text);
+      final partyMatch = type == 'income'
+          ? fromRegex.firstMatch(text)
+          : toRegex.firstMatch(text);
       if (partyMatch != null) {
         senderOrRecipient = (partyMatch.group(1) ?? '').trim();
       }

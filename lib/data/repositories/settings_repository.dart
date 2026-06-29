@@ -33,5 +33,6 @@ class SettingsRepository {
 
   Future<String?> getSetting(String key) => _settingsDao.getSetting(key);
 
-  Future<void> setSetting(String key, String value) => _settingsDao.setSetting(key, value);
+  Future<void> setSetting(String key, String value) =>
+      _settingsDao.setSetting(key, value);
 }

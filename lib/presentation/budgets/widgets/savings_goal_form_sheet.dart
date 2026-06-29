@@ -15,20 +15,20 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
-
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
   const SavingsGoalFormSheet({this.existingGoal, super.key});
 
   @override
-  ConsumerState<SavingsGoalFormSheet> createState() => _SavingsGoalFormSheetState();
+  ConsumerState<SavingsGoalFormSheet> createState() =>
+      _SavingsGoalFormSheetState();
 }
 
 class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
-  
+
   late String _selectedColor;
   late String _selectedIcon;
   late DateTime _selectedDate;
@@ -60,14 +60,17 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     super.initState();
     if (widget.existingGoal != null) {
       _nameController.text = widget.existingGoal!.name;
-      _amountController.text = (widget.existingGoal!.targetAmount ~/ 100).toString();
+      _amountController.text = (widget.existingGoal!.targetAmount ~/ 100)
+          .toString();
       _selectedColor = widget.existingGoal!.color;
       _selectedIcon = widget.existingGoal!.icon;
       _selectedDate = widget.existingGoal!.targetDate;
     } else {
       _selectedColor = _colors.isNotEmpty ? _colors.first : '#30D158';
       _selectedIcon = _icons.isNotEmpty ? _icons.first['name'] : 'savings';
-      _selectedDate = DateTime.now().add(const Duration(days: 90)); // 3 months default
+      _selectedDate = DateTime.now().add(
+        const Duration(days: 90),
+      ); // 3 months default
     }
   }
 
@@ -79,7 +82,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   }
 
   Future<void> _save() async {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate()) return;
+    if (_formKey.currentState == null || !_formKey.currentState!.validate())
+      return;
 
     setState(() => _isLoading = true);
     try {
@@ -113,9 +117,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -126,7 +130,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark ? const Color(0xFF1B1C22) : const Color(0xFFF2F2F7);
+    final inputFill = isDark
+        ? const Color(0xFF1B1C22)
+        : const Color(0xFFF2F2F7);
 
     InputDecoration inputDeco({
       required String label,
@@ -145,11 +151,18 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+          borderSide: BorderSide(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.06),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5), width: 1.5),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
       );
     }
@@ -162,7 +175,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
           child: Container(
             decoration: BoxDecoration(
               color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
             ),
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 24,
@@ -184,7 +199,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         height: 5,
                         margin: const EdgeInsets.only(bottom: 16, top: 4),
                         decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.15),
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.2)
+                              : Colors.black.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -195,18 +212,29 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.existingGoal != null ? 'Edit Savings Goal' : 'New Savings Goal',
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          widget.existingGoal != null
+                              ? 'Edit Savings Goal'
+                              : 'New Savings Goal',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
                           child: Container(
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.1)
+                                  : Colors.black.withValues(alpha: 0.05),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(PesaFlowIcons.close, size: 20, color: isDark ? Colors.white60 : Colors.black45),
+                            child: Icon(
+                              PesaFlowIcons.close,
+                              size: 20,
+                              color: isDark ? Colors.white60 : Colors.black45,
+                            ),
                           ),
                         ),
                       ],
@@ -219,7 +247,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.4),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -234,19 +264,39 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                              decoration: inputDeco(label: 'Goal Title', hint: 'e.g. Vacation to Zanzibar', icon: Icons.title_rounded),
-                              validator: (v) => v == null || v.trim().isEmpty ? 'Title is required' : null,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              decoration: inputDeco(
+                                label: 'Goal Title',
+                                hint: 'e.g. Vacation to Zanzibar',
+                                icon: Icons.title_rounded,
+                              ),
+                              validator: (v) => v == null || v.trim().isEmpty
+                                  ? 'Title is required'
+                                  : null,
                             ),
                             const SizedBox(height: 12),
                             TextFormField(
                               controller: _amountController,
                               keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              style: const TextStyle(fontFamily: 'monospace', fontSize: 16, fontWeight: FontWeight.w500),
-                              decoration: inputDeco(label: 'Target Amount (Tsh)', hint: 'e.g. 1500000', icon: PesaFlowIcons.cash),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              style: const TextStyle(
+                                fontFamily: 'monospace',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              decoration: inputDeco(
+                                label: 'Target Amount (Tsh)',
+                                hint: 'e.g. 1500000',
+                                icon: PesaFlowIcons.cash,
+                              ),
                               validator: (v) {
-                                if (v == null || v.trim().isEmpty) return 'Target is required';
+                                if (v == null || v.trim().isEmpty)
+                                  return 'Target is required';
                                 final val = int.tryParse(v) ?? 0;
                                 if (val <= 0) return 'Must be greater than 0';
                                 return null;
@@ -257,9 +307,12 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               labelText: 'Target Date',
                               value: _selectedDate,
                               prefixIcon: PesaFlowIcons.calendar,
-                              firstDate: DateTime.now().subtract(const Duration(days: 1)),
+                              firstDate: DateTime.now().subtract(
+                                const Duration(days: 1),
+                              ),
                               lastDate: DateTime(2035),
-                              onChanged: (d) => setState(() => _selectedDate = d),
+                              onChanged: (d) =>
+                                  setState(() => _selectedDate = d),
                             ),
                           ],
                         ),
@@ -273,7 +326,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.4),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -281,14 +336,18 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     StaggeredFadeSlide(
                       index: 1,
                       child: GlassCard(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         borderRadius: AppTheme.radiusCard,
                         child: SizedBox(
                           height: 44,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: _colors.length,
-                            separatorBuilder: (_, _) => const SizedBox(width: 16),
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 16),
                             itemBuilder: (context, index) {
                               final colorHex = _colors[index];
                               final colorVal = hexToColor(colorHex);
@@ -307,10 +366,28 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     color: colorVal,
                                     shape: BoxShape.circle,
                                     border: isSelected
-                                        ? Border.all(color: isDark ? Colors.white : Colors.black, width: 3)
-                                        : Border.all(color: colorVal.withValues(alpha: 0.3), width: 1),
+                                        ? Border.all(
+                                            color: isDark
+                                                ? Colors.white
+                                                : Colors.black,
+                                            width: 3,
+                                          )
+                                        : Border.all(
+                                            color: colorVal.withValues(
+                                              alpha: 0.3,
+                                            ),
+                                            width: 1,
+                                          ),
                                     boxShadow: isSelected
-                                        ? [BoxShadow(color: colorVal.withValues(alpha: 0.5), blurRadius: 10, spreadRadius: 1)]
+                                        ? [
+                                            BoxShadow(
+                                              color: colorVal.withValues(
+                                                alpha: 0.5,
+                                              ),
+                                              blurRadius: 10,
+                                              spreadRadius: 1,
+                                            ),
+                                          ]
                                         : [],
                                   ),
                                 ),
@@ -328,7 +405,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.4),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.4),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -336,14 +415,18 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     StaggeredFadeSlide(
                       index: 2,
                       child: GlassCard(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         borderRadius: AppTheme.radiusCard,
                         child: SizedBox(
                           height: 48,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: _icons.length,
-                            separatorBuilder: (_, _) => const SizedBox(width: 14),
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 14),
                             itemBuilder: (context, index) {
                               final item = _icons[index];
                               final isSelected = _selectedIcon == item['name'];
@@ -361,16 +444,24 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? themeCol.withValues(alpha: 0.15)
-                                        : (isDark ? const Color(0xFF1C1C1E) : Colors.grey[100]),
+                                        : (isDark
+                                              ? const Color(0xFF1C1C1E)
+                                              : Colors.grey[100]),
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
-                                      color: isSelected ? themeCol : Colors.transparent,
+                                      color: isSelected
+                                          ? themeCol
+                                          : Colors.transparent,
                                       width: 2,
                                     ),
                                   ),
                                   child: Icon(
                                     item['icon'],
-                                    color: isSelected ? themeCol : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                                    color: isSelected
+                                        ? themeCol
+                                        : (isDark
+                                              ? Colors.grey[400]
+                                              : Colors.grey[600]),
                                     size: 22,
                                   ),
                                 ),
@@ -395,23 +486,40 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             gradient: LinearGradient(
                               colors: [
                                 hexToColor(_selectedColor),
-                                hexToColor(_selectedColor).withValues(alpha: 0.8),
+                                hexToColor(
+                                  _selectedColor,
+                                ).withValues(alpha: 0.8),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(100),
                             boxShadow: [
                               BoxShadow(
-                                color: hexToColor(_selectedColor).withValues(alpha: 0.3),
+                                color: hexToColor(
+                                  _selectedColor,
+                                ).withValues(alpha: 0.3),
                                 blurRadius: 12,
                                 offset: const Offset(0, 4),
                               ),
                             ],
                           ),
                           child: _isLoading
-                              ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
                               : Text(
-                                  widget.existingGoal != null ? 'Update Goal' : 'Create Savings Goal',
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                  widget.existingGoal != null
+                                      ? 'Update Goal'
+                                      : 'Create Savings Goal',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
                         ),
                       ),

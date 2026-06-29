@@ -41,17 +41,17 @@ class AmountText extends ConsumerWidget {
       }
     }
 
-    final TextStyle baseStyle = style ?? theme.textTheme.bodyMedium ?? const TextStyle();
+    final TextStyle baseStyle =
+        style ?? theme.textTheme.bodyMedium ?? const TextStyle();
     final TextStyle customStyle = useMonospace
-        ? AppTheme.getMonospaceStyle(baseStyle).copyWith(
-            color: resolveColor(),
-          )
+        ? AppTheme.getMonospaceStyle(baseStyle).copyWith(color: resolveColor())
         : baseStyle.copyWith(
             color: resolveColor(),
             fontWeight: baseStyle.fontWeight ?? FontWeight.w900,
           );
 
-    final globalShowDecimals = ref.watch(currencyShowDecimalsProvider).value ?? false;
+    final globalShowDecimals =
+        ref.watch(currencyShowDecimalsProvider).value ?? false;
     final finalShowDecimals = showDecimals || globalShowDecimals;
 
     // Build the string representation: Prepend +/- signs for visually dynamic grids

@@ -97,19 +97,21 @@ class IosListRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: 14),
-          ],
+          if (leading != null) ...[leading!, const SizedBox(width: 14)],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultTextStyle(
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17,
-                  ) ?? const TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                  style:
+                      theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17,
+                      ) ??
+                      const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                      ),
                   child: title,
                 ),
                 if (subtitle != null) ...[
@@ -132,9 +134,7 @@ class IosListRow extends StatelessWidget {
             Icon(
               Icons.chevron_right_rounded,
               size: 20,
-              color: isDark(context)
-                  ? Colors.grey[500]
-                  : Colors.grey[400],
+              color: isDark(context) ? Colors.grey[500] : Colors.grey[400],
             ),
         ],
       ),
@@ -237,7 +237,8 @@ class IosMetricCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final c = color ?? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor);
+    final c =
+        color ?? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),

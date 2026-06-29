@@ -19,9 +19,12 @@ class TrackerRepository {
 
   Future<Tracker?> getTrackerById(String id) => _trackerDao.getTrackerById(id);
 
-  Future<int> createTracker(Tracker tracker) => _trackerDao.insertTracker(tracker);
+  Future<int> createTracker(Tracker tracker) =>
+      _trackerDao.insertTracker(tracker);
 
-  Future<bool> updateTracker(Tracker tracker) => _trackerDao.updateTracker(tracker);
+  Future<bool> updateTracker(Tracker tracker) =>
+      _trackerDao.updateTracker(tracker);
 
-  Future<void> deleteTracker(String id) => _trackerDao.deleteTrackerWithCascade(id);
+  Future<void> deleteTracker(String id) =>
+      _trackerDao.deleteTrackerWithCascade(id);
 }

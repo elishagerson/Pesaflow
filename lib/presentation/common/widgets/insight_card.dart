@@ -27,39 +27,45 @@ class InsightCard extends StatelessWidget {
             color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
             borderRadius: BorderRadius.circular(16),
           ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(kSpacing6),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing6),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(data.icon, size: 18, color: color),
                   ),
-                  child: Icon(data.icon, size: 18, color: color),
-                ),
-                const SizedBox(width: kSpacing8),
-                Expanded(
-                  child: Text(data.title,
-                    style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  const SizedBox(width: kSpacing8),
+                  Expanded(
+                    child: Text(
+                      data.title,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: kSpacing8),
+              Text(
+                data.subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
-              ],
-            ),
-            const SizedBox(height: kSpacing8),
-            Text(data.subtitle,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -53,11 +53,13 @@ class SavingsGoalRepository {
   Future<void> deleteSavingsGoal(String id) =>
       _savingsGoalsDao.deleteSavingsGoal(id);
 
-  Stream<List<SavingsGoalContribution>> watchContributions(String savingsGoalId) =>
-      _savingsGoalsDao.watchContributionsForGoal(savingsGoalId);
+  Stream<List<SavingsGoalContribution>> watchContributions(
+    String savingsGoalId,
+  ) => _savingsGoalsDao.watchContributionsForGoal(savingsGoalId);
 
-  Future<List<SavingsGoalContribution>> getContributions(String savingsGoalId) =>
-      _savingsGoalsDao.getContributionsForGoal(savingsGoalId);
+  Future<List<SavingsGoalContribution>> getContributions(
+    String savingsGoalId,
+  ) => _savingsGoalsDao.getContributionsForGoal(savingsGoalId);
 
   Future<void> addContribution({
     required String savingsGoalId,

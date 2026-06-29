@@ -5,7 +5,10 @@ import 'sms_parser_interface.dart';
 
 class AirtelTzParser implements SmsParser {
   String _extractReference(String text) {
-    final regex = RegExp(r'(?:Rej|Ref|TxnID|TID):\s*([A-Za-z0-9.]+)', caseSensitive: false);
+    final regex = RegExp(
+      r'(?:Rej|Ref|TxnID|TID):\s*([A-Za-z0-9.]+)',
+      caseSensitive: false,
+    );
     final match = regex.firstMatch(text);
     if (match != null) {
       var ref = match.group(1) ?? 'AIRTEL-REF-UNKNOWN';
@@ -19,8 +22,8 @@ class AirtelTzParser implements SmsParser {
 
   int? _extractBalance(String text) {
     final regex = RegExp(
-      r'(?:Salio|Balance|Bal):?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
-      caseSensitive: false
+      r'(?:Salio|Balance|Bal):?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
     );
     final match = regex.firstMatch(text);
     if (match != null) {

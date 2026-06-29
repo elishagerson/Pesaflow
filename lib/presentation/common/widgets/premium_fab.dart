@@ -7,11 +7,7 @@ class PremiumFab extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? accentColor;
 
-  const PremiumFab({
-    super.key,
-    this.onPressed,
-    this.accentColor,
-  });
+  const PremiumFab({super.key, this.onPressed, this.accentColor});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +23,7 @@ class PremiumFab extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
-            colors: [
-              color,
-              color.withValues(alpha: 0.85),
-            ],
+            colors: [color, color.withValues(alpha: 0.85)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -86,10 +79,7 @@ class PremiumExtendedFab extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
           gradient: LinearGradient(
-            colors: [
-              color,
-              color.withValues(alpha: 0.85),
-            ],
+            colors: [color, color.withValues(alpha: 0.85)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -111,11 +101,7 @@ class PremiumExtendedFab extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: isDark ? Colors.black : Colors.white,
-              size: 20,
-            ),
+            Icon(icon, color: isDark ? Colors.black : Colors.white, size: 20),
             const SizedBox(width: 8),
             Text(
               label,

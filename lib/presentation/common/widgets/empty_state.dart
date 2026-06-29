@@ -32,10 +32,14 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             illustration ??
-            Semantics(
-              excludeSemantics: true,
-              child: Icon(icon, size: iconSize, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
-            ),
+                Semantics(
+                  excludeSemantics: true,
+                  child: Icon(
+                    icon,
+                    size: iconSize,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                  ),
+                ),
             SizedBox(height: context.isCompactView ? 16 : 24),
             Semantics(
               header: true,
@@ -87,14 +91,19 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: context.spacing, vertical: 8),
+      padding:
+          padding ??
+          EdgeInsets.symmetric(horizontal: context.spacing, vertical: 8),
       child: Row(
         children: [
           Semantics(
             header: true,
             child: Text(
               title,
-              style: context.titleMedium.copyWith(fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface),
+              style: context.titleMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
           ),
           const Spacer(),

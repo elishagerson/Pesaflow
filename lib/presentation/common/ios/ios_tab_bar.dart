@@ -58,7 +58,6 @@ class IosTabBar extends StatelessWidget {
       ),
     ];
 
-
     return Container(
       height: height + bottomPadding + (minimized ? 8 : 16),
       alignment: Alignment.bottomCenter,
@@ -123,10 +122,12 @@ class IosTabBar extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: isSelected
-                                ? theme.colorScheme.primary.withValues(alpha: 0.20)
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: 0.20,
+                                  )
                                 : (isDark
-                                    ? Colors.white.withValues(alpha: 0.06)
-                                    : Colors.black.withValues(alpha: 0.04)),
+                                      ? Colors.white.withValues(alpha: 0.06)
+                                      : Colors.black.withValues(alpha: 0.04)),
                           ),
                           child: Center(
                             child: Icon(
@@ -134,8 +135,8 @@ class IosTabBar extends StatelessWidget {
                               color: isSelected
                                   ? theme.colorScheme.primary
                                   : (isDark
-                                      ? Colors.white.withValues(alpha: 0.5)
-                                      : Colors.black.withValues(alpha: 0.3)),
+                                        ? Colors.white.withValues(alpha: 0.5)
+                                        : Colors.black.withValues(alpha: 0.3)),
                               size: minimized ? 18 : 26,
                             ),
                           ),
@@ -157,7 +158,10 @@ class IosTabBar extends StatelessWidget {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 250),
                           curve: Curves.easeInOut,
-                          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 4,
+                          ),
                           padding: EdgeInsets.symmetric(
                             vertical: minimized ? 8 : 6,
                             horizontal: minimized ? 8 : 10,
@@ -197,8 +201,12 @@ class IosTabBar extends StatelessWidget {
                                   color: isSelected
                                       ? theme.colorScheme.primary
                                       : (isDark
-                                          ? Colors.white.withValues(alpha: 0.45)
-                                          : Colors.black.withValues(alpha: 0.35)),
+                                            ? Colors.white.withValues(
+                                                alpha: 0.45,
+                                              )
+                                            : Colors.black.withValues(
+                                                alpha: 0.35,
+                                              )),
                                 ),
                               ),
                               if (!minimized) ...[
@@ -214,8 +222,12 @@ class IosTabBar extends StatelessWidget {
                                     color: isSelected
                                         ? theme.colorScheme.primary
                                         : (isDark
-                                            ? Colors.white.withValues(alpha: 0.45)
-                                            : Colors.black.withValues(alpha: 0.35)),
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.45,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.35,
+                                                )),
                                   ),
                                 ),
                               ],
@@ -279,61 +291,50 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
 
     final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
 
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-        child: Container(
-          padding: EdgeInsets.only(top: top),
-          decoration: BoxDecoration(
+    return Container(
+      padding: EdgeInsets.only(top: top),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        border: Border(
+          bottom: BorderSide(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.25)
-                : Colors.white.withValues(alpha: 0.25),
-            border: Border(
-              bottom: BorderSide(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : Colors.black.withValues(alpha: 0.05),
-                width: 0.5,
-              ),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: hasRow ? 12.0 : 16.0),
-              if (hasRow)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SizedBox(
-                    height: 44,
-                    child: Row(
-                      children: [
-                        ?leading,
-                        const Spacer(),
-                        ...?actions,
-                      ],
-                    ),
-                  ),
-                ),
-              if (largeTitle)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    top: 8.0,
-                    bottom: 8.0,
-                  ),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-            ],
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.05),
+            width: 0.5,
           ),
         ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: hasRow ? 12.0 : 16.0),
+          if (hasRow)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SizedBox(
+                height: 44,
+                child: Row(
+                  children: [
+                    leading ?? const SizedBox(),
+                    const Spacer(),
+                    ...?actions,
+                  ],
+                ),
+              ),
+            ),
+          if (largeTitle)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 8.0, bottom: 8.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

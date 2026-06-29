@@ -29,13 +29,19 @@ class GenericFallbackParser implements SmsParser {
 
       final amount = _extractFirstAmount(text);
       if (amount == 0) {
-        developer.log('GenericFallbackParser: could not extract amount from "$text"', name: 'Parser');
+        developer.log(
+          'GenericFallbackParser: could not extract amount from "$text"',
+          name: 'Parser',
+        );
         return null;
       }
 
       final type = _determineType(text);
       if (type == null) {
-        developer.log('GenericFallbackParser: no transaction keywords in "$text"', name: 'Parser');
+        developer.log(
+          'GenericFallbackParser: no transaction keywords in "$text"',
+          name: 'Parser',
+        );
         return null;
       }
 
@@ -44,7 +50,10 @@ class GenericFallbackParser implements SmsParser {
       // a transaction receipt — reject it to prevent promo false positives.
       final ref = _extractAnyReference(text);
       if (ref == null) {
-        developer.log('GenericFallbackParser: no transaction reference found — rejecting "$text"', name: 'Parser');
+        developer.log(
+          'GenericFallbackParser: no transaction reference found — rejecting "$text"',
+          name: 'Parser',
+        );
         return null;
       }
 
@@ -66,8 +75,6 @@ class GenericFallbackParser implements SmsParser {
     }
   }
 
-
-
   static int _extractFirstAmount(String text) {
     // Require a currency prefix (Tsh, TZS, /=) to avoid matching dates/phone numbers
     final regex = RegExp(
@@ -88,20 +95,30 @@ class GenericFallbackParser implements SmsParser {
 
   static String? _determineType(String text) {
     final lower = text.toLowerCase();
-    const loanWords = [
-      'loan', 'mkopo', 'kopeshwa', 'kopa', 'borrowed',
-    ];
+    const loanWords = ['loan', 'mkopo', 'kopeshwa', 'kopa', 'borrowed'];
     // Removed 'credit' and 'deposit' — too generic, match promo text.
     const incomeWords = [
-      'umepokea', 'umepewa', 'zimewekwa', 'received',
-      'tumeongeza', 'payment from',
-      'cash-in', 'cash in',
+      'umepokea',
+      'umepewa',
+      'zimewekwa',
+      'received',
+      'tumeongeza',
+      'payment from',
+      'cash-in',
+      'cash in',
     ];
     // Removed 'fee', 'charges', 'bought' — too generic, match promo text.
     const expenseWords = [
-      'umetuma', 'sent', 'paid', 'payment to', 'deducted',
-      'purchase', 'withdrawal', 'withdraw',
-      'airtime', 'tumekutoa',
+      'umetuma',
+      'sent',
+      'paid',
+      'payment to',
+      'deducted',
+      'purchase',
+      'withdrawal',
+      'withdraw',
+      'airtime',
+      'tumekutoa',
     ];
 
     // Check loan first — most specific, prevents "received a loan" from being income.

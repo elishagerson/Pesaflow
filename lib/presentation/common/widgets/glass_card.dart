@@ -53,9 +53,10 @@ class _GlassCardState extends State<GlassCard>
       vsync: this,
       duration: const Duration(milliseconds: 80),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -77,40 +78,40 @@ class _GlassCardState extends State<GlassCard>
     } else {
       glassColor = isDark
           ? (widget.accentColor != null
-              ? widget.accentColor!.withValues(alpha: 0.12)
-              : Colors.white.withValues(alpha: 0.08))
+                ? widget.accentColor!.withValues(alpha: 0.12)
+                : Colors.white.withValues(alpha: 0.08))
           : (widget.accentColor != null
-              ? widget.accentColor!.withValues(alpha: 0.06)
-              : Colors.white.withValues(alpha: 0.65));
+                ? widget.accentColor!.withValues(alpha: 0.06)
+                : Colors.white.withValues(alpha: 0.65));
     }
 
     final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
       CardElevation.medium => [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.06),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
       CardElevation.high => [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.10 : 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: isDark ? 0.10 : 0.03),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
       CardElevation.none => [],
     };
 
@@ -125,7 +126,9 @@ class _GlassCardState extends State<GlassCard>
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(
-                color: widget.accentColor!.withValues(alpha: isDark ? 0.20 : 0.12),
+                color: widget.accentColor!.withValues(
+                  alpha: isDark ? 0.20 : 0.12,
+                ),
                 width: 0.5,
               ),
             )
@@ -152,7 +155,9 @@ class _GlassCardState extends State<GlassCard>
                 child: Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: widget.accentColor!.withValues(alpha: isDark ? 0.5 : 0.4),
+                    color: widget.accentColor!.withValues(
+                      alpha: isDark ? 0.5 : 0.4,
+                    ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(widget.borderRadius),
                       topRight: Radius.circular(widget.borderRadius),
@@ -193,10 +198,6 @@ class _GlassCardState extends State<GlassCard>
         ),
       );
     }
-    return Semantics(
-      container: true,
-      label: 'Card',
-      child: body,
-    );
+    return Semantics(container: true, label: 'Card', child: body);
   }
 }

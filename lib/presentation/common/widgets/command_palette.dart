@@ -28,23 +28,106 @@ class _PaletteAction {
 }
 
 const _actions = <_PaletteAction>[
-  _PaletteAction(icon: PesaFlowIcons.dashboard, label: 'Go to Dashboard', route: '/'),
-  _PaletteAction(icon: PesaFlowIcons.transactions, label: 'Record Expense', route: '/transactions/add', keywords: ['spend', 'pay', 'out', 'buy']),
-  _PaletteAction(icon: Icons.arrow_downward_rounded, label: 'Record Income', route: '/transactions/add', keywords: ['salary', 'deposit', 'earn', 'receive']),
-  _PaletteAction(icon: PesaFlowIcons.transfer, label: 'Transfer Money', route: '/transactions/add', keywords: ['move', 'send', 'shift']),
-  _PaletteAction(icon: Icons.receipt_rounded, label: 'View Transactions', route: '/transactions', keywords: ['list', 'history']),
-  _PaletteAction(icon: PesaFlowIcons.wallet, label: 'View Accounts', route: '/'),
-  _PaletteAction(icon: PesaFlowIcons.budgets, label: 'View Budgets', route: '/budgets', keywords: ['spending', 'limit']),
-  _PaletteAction(icon: PesaFlowIcons.analytics, label: 'View Analytics', route: '/analytics', keywords: ['stats', 'charts', 'report']),
-  _PaletteAction(icon: PesaFlowIcons.target, label: 'View Savings Goals', route: '/savings-goals', keywords: ['target', 'save']),
-  _PaletteAction(icon: Icons.credit_score_rounded, label: 'View Loans', route: '/loans', keywords: ['debt', 'borrow']),
-  _PaletteAction(icon: PesaFlowIcons.subscriptions, label: 'View Recurring & Bills', route: '/recurring', keywords: ['recurring', 'bills', 'renewal', 'subscriptions']),
-  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Budget', route: '/budgets/add', keywords: ['create budget limit']),
-  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Loan', route: '/loans/add', keywords: ['create borrow debt']),
-  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Recurring Bill', route: '/recurring/add', keywords: ['create recurring bill', 'subscription']),
-  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Savings Goal', route: '/savings-goals/add', keywords: ['create target save']),
-  _PaletteAction(icon: PesaFlowIcons.settings, label: 'Settings', route: '/settings', keywords: ['preferences', 'config']),
-  _PaletteAction(icon: Icons.message_rounded, label: 'SMS Review', route: '/sms-review', keywords: ['pending', 'unreviewed']),
+  _PaletteAction(
+    icon: PesaFlowIcons.dashboard,
+    label: 'Go to Dashboard',
+    route: '/',
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.transactions,
+    label: 'Record Expense',
+    route: '/transactions/add',
+    keywords: ['spend', 'pay', 'out', 'buy'],
+  ),
+  _PaletteAction(
+    icon: Icons.arrow_downward_rounded,
+    label: 'Record Income',
+    route: '/transactions/add',
+    keywords: ['salary', 'deposit', 'earn', 'receive'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.transfer,
+    label: 'Transfer Money',
+    route: '/transactions/add',
+    keywords: ['move', 'send', 'shift'],
+  ),
+  _PaletteAction(
+    icon: Icons.receipt_rounded,
+    label: 'View Transactions',
+    route: '/transactions',
+    keywords: ['list', 'history'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.wallet,
+    label: 'View Accounts',
+    route: '/',
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.budgets,
+    label: 'View Budgets',
+    route: '/budgets',
+    keywords: ['spending', 'limit'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.analytics,
+    label: 'View Analytics',
+    route: '/analytics',
+    keywords: ['stats', 'charts', 'report'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.target,
+    label: 'View Savings Goals',
+    route: '/savings-goals',
+    keywords: ['target', 'save'],
+  ),
+  _PaletteAction(
+    icon: Icons.credit_score_rounded,
+    label: 'View Loans',
+    route: '/loans',
+    keywords: ['debt', 'borrow'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.subscriptions,
+    label: 'View Recurring & Bills',
+    route: '/recurring',
+    keywords: ['recurring', 'bills', 'renewal', 'subscriptions'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.add,
+    label: 'Add Budget',
+    route: '/budgets/add',
+    keywords: ['create budget limit'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.add,
+    label: 'Add Loan',
+    route: '/loans/add',
+    keywords: ['create borrow debt'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.add,
+    label: 'Add Recurring Bill',
+    route: '/recurring/add',
+    keywords: ['create recurring bill', 'subscription'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.add,
+    label: 'Add Savings Goal',
+    route: '/savings-goals/add',
+    keywords: ['create target save'],
+  ),
+  _PaletteAction(
+    icon: PesaFlowIcons.settings,
+    label: 'Settings',
+    route: '/settings',
+    keywords: ['preferences', 'config'],
+  ),
+  _PaletteAction(
+    icon: Icons.message_rounded,
+    label: 'SMS Review',
+    route: '/sms-review',
+    keywords: ['pending', 'unreviewed'],
+  ),
 ];
 
 class CommandPalette extends ConsumerStatefulWidget {
@@ -54,7 +137,8 @@ class CommandPalette extends ConsumerStatefulWidget {
   ConsumerState<CommandPalette> createState() => _CommandPaletteState();
 }
 
-class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTickerProviderStateMixin {
+class _CommandPaletteState extends ConsumerState<CommandPalette>
+    with SingleTickerProviderStateMixin {
   final _searchController = TextEditingController();
   final _focusNode = FocusNode();
   late AnimationController _animController;
@@ -65,9 +149,18 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
-    _fadeAnimation = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, -0.05), end: Offset.zero).animate(_fadeAnimation);
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeOut,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.05),
+      end: Offset.zero,
+    ).animate(_fadeAnimation);
     _animController.forward();
     _focusNode.requestFocus();
   }
@@ -116,14 +209,19 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
               child: GestureDetector(
                 onTap: () {},
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 480, maxHeight: 560),
+                  constraints: const BoxConstraints(
+                    maxWidth: 480,
+                    maxHeight: 560,
+                  ),
                   margin: const EdgeInsets.all(kSpacing24),
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
+                        color: Colors.black.withValues(
+                          alpha: isDark ? 0.4 : 0.1,
+                        ),
                         blurRadius: 40,
                         offset: const Offset(0, 12),
                       ),
@@ -133,7 +231,12 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing16, kSpacing16, kSpacing12),
+                        padding: const EdgeInsets.fromLTRB(
+                          kSpacing16,
+                          kSpacing16,
+                          kSpacing16,
+                          kSpacing12,
+                        ),
                         child: Semantics(
                           label: 'Search actions',
                           child: TextField(
@@ -145,19 +248,37 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                               setState(() => _selectedIndex = 0);
                             },
                             onSubmitted: (_) {
-                              if (results.isNotEmpty) _select(results[_selectedIndex]);
+                              if (results.isNotEmpty)
+                                _select(results[_selectedIndex]);
                             },
-                            style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
                             decoration: InputDecoration(
                               hintText: 'Search actions...',
-                              prefixIcon: Icon(PesaFlowIcons.search, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                              prefixIcon: Icon(
+                                PesaFlowIcons.search,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
                               suffixIcon: GestureDetector(
                                 onTap: _dismiss,
-                                child: Icon(PesaFlowIcons.close, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                                child: Icon(
+                                  PesaFlowIcons.close,
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
                               filled: true,
-                              fillColor: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                              fillColor: isDark
+                                  ? const Color(0xFF2C2C2E)
+                                  : const Color(0xFFF2F2F7),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
                         ),
@@ -165,13 +286,25 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                       if (results.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(kSpacing24),
-                          child: Text('No matching actions', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+                          child: Text(
+                            'No matching actions',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
+                            ),
+                          ),
                         )
                       else
                         Flexible(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            padding: const EdgeInsets.fromLTRB(kSpacing8, 0, kSpacing8, kSpacing8),
+                            padding: const EdgeInsets.fromLTRB(
+                              kSpacing8,
+                              0,
+                              kSpacing8,
+                              kSpacing8,
+                            ),
                             itemCount: results.length,
                             itemBuilder: (_, i) {
                               final action = results[i];
@@ -182,30 +315,64 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                  borderRadius: BorderRadius.circular(12),
-                                  onTap: () => _select(action),
-                                  onHover: (_) => setState(() => _selectedIndex = i),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing10),
-                                    decoration: BoxDecoration(
-                                      color: selected
-                                          ? theme.colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(action.icon, size: 20, color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-                                        const SizedBox(width: kSpacing12),
-                                        Expanded(
-                                          child: Text(action.label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
-                                        ),
-                                        Text('/>', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), fontFamily: 'monospace')),
-                                      ],
+                                    borderRadius: BorderRadius.circular(12),
+                                    onTap: () => _select(action),
+                                    onHover: (_) =>
+                                        setState(() => _selectedIndex = i),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing12,
+                                        vertical: kSpacing10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: selected
+                                            ? theme.colorScheme.primary
+                                                  .withValues(
+                                                    alpha: isDark ? 0.2 : 0.1,
+                                                  )
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            action.icon,
+                                            size: 20,
+                                            color: selected
+                                                ? theme.colorScheme.primary
+                                                : theme.colorScheme.onSurface
+                                                      .withValues(alpha: 0.6),
+                                          ),
+                                          const SizedBox(width: kSpacing12),
+                                          Expanded(
+                                            child: Text(
+                                              action.label,
+                                              style: theme.textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurface,
+                                                  ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '/>',
+                                            style: theme.textTheme.bodySmall
+                                                ?.copyWith(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.3),
+                                                  fontFamily: 'monospace',
+                                                ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ));
+                              );
                             },
                           ),
                         ),

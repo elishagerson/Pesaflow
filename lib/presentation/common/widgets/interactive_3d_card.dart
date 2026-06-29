@@ -62,8 +62,10 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
         final height = constraints.maxHeight;
 
         return Listener(
-          onPointerDown: (event) => _updateTilt(event.localPosition, width, height),
-          onPointerMove: (event) => _updateTilt(event.localPosition, width, height),
+          onPointerDown: (event) =>
+              _updateTilt(event.localPosition, width, height),
+          onPointerMove: (event) =>
+              _updateTilt(event.localPosition, width, height),
           onPointerUp: (_) => _resetTilt(),
           onPointerCancel: (_) => _resetTilt(),
           child: GestureDetector(
@@ -80,8 +82,12 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
                 // Perspective transformation matrix
                 final matrix = Matrix4.identity()
                   ..setEntry(3, 2, 0.0012) // Depth perspective
-                  ..rotateX(-tilt.dy * widget.maxTiltY) // Rotation around X axis
-                  ..rotateY(tilt.dx * widget.maxTiltX); // Rotation around Y axis
+                  ..rotateX(
+                    -tilt.dy * widget.maxTiltY,
+                  ) // Rotation around X axis
+                  ..rotateY(
+                    tilt.dx * widget.maxTiltX,
+                  ); // Rotation around Y axis
 
                 if (_isPressed) {
                   matrix.scaleByDouble(1.02, 1.02, 1.02, 1.0); // Lift effect
@@ -98,7 +104,10 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
 
                 // Reflective glare intensity based on current tilt magnitude
                 final magnitude = tilt.distance.clamp(0.0, 1.5);
-                final glareAlpha = (magnitude * widget.glareOpacity).clamp(0.0, 1.0);
+                final glareAlpha = (magnitude * widget.glareOpacity).clamp(
+                  0.0,
+                  1.0,
+                );
 
                 return Transform(
                   transform: matrix,
@@ -108,7 +117,9 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       boxShadow: [
                         BoxShadow(
-                          color: widget.shadowColor.withValues(alpha: shadowAlpha),
+                          color: widget.shadowColor.withValues(
+                            alpha: shadowAlpha,
+                          ),
                           blurRadius: shadowBlur,
                           spreadRadius: shadowSpread,
                           offset: shadowOffset,
@@ -126,14 +137,26 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
                             child: IgnorePointer(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    widget.borderRadius,
+                                  ),
                                   gradient: LinearGradient(
-                                    begin: Alignment(tilt.dx - 1.5, tilt.dy - 1.5),
-                                    end: Alignment(tilt.dx + 1.5, tilt.dy + 1.5),
+                                    begin: Alignment(
+                                      tilt.dx - 1.5,
+                                      tilt.dy - 1.5,
+                                    ),
+                                    end: Alignment(
+                                      tilt.dx + 1.5,
+                                      tilt.dy + 1.5,
+                                    ),
                                     colors: [
-                                      Colors.white.withValues(alpha: glareAlpha * 1.3),
+                                      Colors.white.withValues(
+                                        alpha: glareAlpha * 1.3,
+                                      ),
                                       Colors.white.withValues(alpha: 0.0),
-                                      Colors.white.withValues(alpha: glareAlpha * 0.4),
+                                      Colors.white.withValues(
+                                        alpha: glareAlpha * 0.4,
+                                      ),
                                     ],
                                     stops: const [0.0, 0.5, 1.0],
                                   ),

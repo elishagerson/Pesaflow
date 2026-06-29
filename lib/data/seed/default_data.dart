@@ -15,16 +15,18 @@ class DefaultSeeder {
     if (accounts.isNotEmpty) return;
 
     const uuid = Uuid();
-    await accountDao.insertAccount(Account(
-      id: uuid.v4(),
-      name: 'Cash',
-      type: 'cash',
-      balance: 0,
-      icon: 'wallet',
-      sortOrder: 0,
-      isArchived: false,
-      createdAt: DateTime.now(),
-    ));
+    await accountDao.insertAccount(
+      Account(
+        id: uuid.v4(),
+        name: 'Cash',
+        type: 'cash',
+        balance: 0,
+        icon: 'wallet',
+        sortOrder: 0,
+        isArchived: false,
+        createdAt: DateTime.now(),
+      ),
+    );
 
     final categories = await categoryDao.getAllCategories();
     if (categories.isNotEmpty) return;
@@ -41,16 +43,18 @@ class DefaultSeeder {
     ];
 
     for (final (name, icon, order, type) in defaultCategories) {
-      await categoryDao.insertCategory(Category(
-        id: uuid.v4(),
-        name: name,
-        icon: icon,
-        color: '#6B7280',
-        type: type,
-        sortOrder: order,
-        isSystem: true,
-        createdAt: DateTime.now(),
-      ));
+      await categoryDao.insertCategory(
+        Category(
+          id: uuid.v4(),
+          name: name,
+          icon: icon,
+          color: '#6B7280',
+          type: type,
+          sortOrder: order,
+          isSystem: true,
+          createdAt: DateTime.now(),
+        ),
+      );
     }
   }
 }

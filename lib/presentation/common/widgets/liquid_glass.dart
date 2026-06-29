@@ -5,11 +5,7 @@ class LiquidGlassOverlay extends StatefulWidget {
   final Widget child;
   final Color? accentColor;
 
-  const LiquidGlassOverlay({
-    super.key,
-    required this.child,
-    this.accentColor,
-  });
+  const LiquidGlassOverlay({super.key, required this.child, this.accentColor});
 
   @override
   State<LiquidGlassOverlay> createState() => _LiquidGlassOverlayState();
@@ -78,8 +74,11 @@ class _LiquidGlassPainter extends CustomPainter {
     final baseColor = accentColor ?? (isDark ? Colors.white : Colors.black);
 
     // -- Highlight 1: drifting radial pool --
-    final hx = size.width * (0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15)));
-    final hy = size.height * (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.11 + 1.8)));
+    final hx =
+        size.width * (0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15)));
+    final hy =
+        size.height *
+        (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.11 + 1.8)));
 
     final poolPaint = Paint()
       ..shader = RadialGradient(
@@ -97,8 +96,12 @@ class _LiquidGlassPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint);
 
     // -- Highlight 2: smaller secondary drift (opposite phase) --
-    final hx2 = size.width * (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.09 + 3.2)));
-    final hy2 = size.height * (0.3 + 0.6 * (0.5 + 0.5 * cos(time * 2 * pi * 0.13 + 0.7)));
+    final hx2 =
+        size.width *
+        (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.09 + 3.2)));
+    final hy2 =
+        size.height *
+        (0.3 + 0.6 * (0.5 + 0.5 * cos(time * 2 * pi * 0.13 + 0.7)));
 
     final poolPaint2 = Paint()
       ..shader = RadialGradient(
@@ -119,24 +122,27 @@ class _LiquidGlassPainter extends CustomPainter {
     final dx = size.width * (0.5 + 0.6 * sin(sheenT - pi / 2));
 
     final sheenPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.transparent,
-          Colors.transparent,
-          baseColor.withValues(alpha: 0.015),
-          Colors.transparent,
-          Colors.transparent,
-        ],
-        stops: [0.0, 0.35, 0.5, 0.65, 1.0],
-        transform: GradientRotation(0.3),
-      ).createShader(Rect.fromLTWH(
-        dx - size.width * 0.4,
-        0,
-        size.width * 0.8,
-        size.height,
-      ));
+      ..shader =
+          LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.transparent,
+              Colors.transparent,
+              baseColor.withValues(alpha: 0.015),
+              Colors.transparent,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.35, 0.5, 0.65, 1.0],
+            transform: GradientRotation(0.3),
+          ).createShader(
+            Rect.fromLTWH(
+              dx - size.width * 0.4,
+              0,
+              size.width * 0.8,
+              size.height,
+            ),
+          );
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), sheenPaint);
   }
 

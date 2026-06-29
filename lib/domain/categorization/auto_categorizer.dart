@@ -56,24 +56,33 @@ class AutoCategorizer {
     // 1.5 Dynamic categorization learning from transaction history
     // Requires 2+ consistent matches before applying high confidence.
     try {
-      final recentCategoryIds = await _transactionDao.findRecentCategoriesForDescription(description, senderOrRecipient);
+      final recentCategoryIds = await _transactionDao
+          .findRecentCategoriesForDescription(description, senderOrRecipient);
       if (recentCategoryIds.isNotEmpty) {
         final freq = <String, int>{};
         for (final id in recentCategoryIds) {
           freq[id] = (freq[id] ?? 0) + 1;
         }
-        final mostCommon = freq.entries.reduce((a, b) => a.value >= b.value ? a : b);
+        final mostCommon = freq.entries.reduce(
+          (a, b) => a.value >= b.value ? a : b,
+        );
         final matchedCategory = categories.firstWhere(
           (cat) => cat.id == mostCommon.key,
           orElse: () => otherCategory,
         );
         if (matchedCategory.id != otherCategory.id) {
           final confidence = mostCommon.value >= 2 ? 0.99 : 0.85;
-          return AutoCategorizerResult(category: matchedCategory, confidence: confidence);
+          return AutoCategorizerResult(
+            category: matchedCategory,
+            confidence: confidence,
+          );
         }
       }
     } catch (e) {
-      developer.log('Auto-categorization query failed: $e', name: 'AutoCategorizer');
+      developer.log(
+        'Auto-categorization query failed: $e',
+        name: 'AutoCategorizer',
+      );
     }
 
     // 2. Exact match rules based on parsed types
@@ -83,7 +92,9 @@ class AutoCategorizer {
     }
 
     if (type == 'fee') {
-      final feeCat = getCategoryByName('Taxes'); // Map telco fees to system taxes/fees
+      final feeCat = getCategoryByName(
+        'Taxes',
+      ); // Map telco fees to system taxes/fees
       return AutoCategorizerResult(category: feeCat, confidence: 1.0);
     }
 

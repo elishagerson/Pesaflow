@@ -38,7 +38,8 @@ class ProviderRegistry {
       GenericFallbackParser(provider: provider);
 
   /// Metadata used when auto-creating an account for this provider.
-  static ProviderAccountMeta? accountMetaFor(String provider) => _accountMeta[provider];
+  static ProviderAccountMeta? accountMetaFor(String provider) =>
+      _accountMeta[provider];
 
   static const _parsers = <String, SmsParser Function()>{
     'M-Pesa_TZ': MpesaTzParser.new,
@@ -52,13 +53,28 @@ class ProviderRegistry {
   };
 
   static const _accountMeta = <String, ProviderAccountMeta>{
-    'M-Pesa_TZ': ProviderAccountMeta(friendlyName: 'M-Pesa', type: 'mobile_money'),
-    'AirtelMoney_TZ': ProviderAccountMeta(friendlyName: 'Airtel Money', type: 'mobile_money'),
-    'TigoPesa_TZ': ProviderAccountMeta(friendlyName: 'Tigo Pesa', type: 'mobile_money'),
-    'Halopesa_TZ': ProviderAccountMeta(friendlyName: 'Halopesa', type: 'mobile_money'),
+    'M-Pesa_TZ': ProviderAccountMeta(
+      friendlyName: 'M-Pesa',
+      type: 'mobile_money',
+    ),
+    'AirtelMoney_TZ': ProviderAccountMeta(
+      friendlyName: 'Airtel Money',
+      type: 'mobile_money',
+    ),
+    'TigoPesa_TZ': ProviderAccountMeta(
+      friendlyName: 'Tigo Pesa',
+      type: 'mobile_money',
+    ),
+    'Halopesa_TZ': ProviderAccountMeta(
+      friendlyName: 'Halopesa',
+      type: 'mobile_money',
+    ),
     'NMB_Bank': ProviderAccountMeta(friendlyName: 'NMB Bank', type: 'bank'),
     'CRDB_Bank': ProviderAccountMeta(friendlyName: 'CRDB Bank', type: 'bank'),
     'NBC_Bank': ProviderAccountMeta(friendlyName: 'NBC Bank', type: 'bank'),
-    'SelcomPesa_TZ': ProviderAccountMeta(friendlyName: 'Selcom Pesa', type: 'mobile_money'),
+    'SelcomPesa_TZ': ProviderAccountMeta(
+      friendlyName: 'Selcom Pesa',
+      type: 'mobile_money',
+    ),
   };
 }
