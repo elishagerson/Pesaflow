@@ -1682,7 +1682,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      '${ratio > 0.5 ? '⚠' : ''} ${(ratio * 100).round()}% unpaid',
+                                      '${(ratio * 100).round()}% unpaid',
                                       style: theme.textTheme.labelSmall
                                           ?.copyWith(
                                             fontSize: 10,

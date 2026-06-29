@@ -1026,7 +1026,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      'Usually ${CurrencyFormatter.formatCents(pattern.averageAmountCents)} at this time →',
+                                      'Usually ${CurrencyFormatter.formatCents(pattern.averageAmountCents)} at this time',
                                       style: const TextStyle(
                                         fontSize: 13,
                                         color: Color(0xFF0F4C5C),

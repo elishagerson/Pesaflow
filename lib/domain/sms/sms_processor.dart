@@ -371,7 +371,7 @@ class SmsProcessor {
       final isCredit = sms.type == 'income' || sms.type == 'loan';
       final alertTitle = isAutoApproved ? 'Transaction Auto-Logged' : 'Review Required';
       final alertBody = isAutoApproved
-          ? '$amountFormatted ${isCredit ? 'received' : 'sent'} (${catResult.category.name}) ✓'
+          ? '$amountFormatted ${isCredit ? 'received' : 'sent'} (${catResult.category.name})'
           : '$amountFormatted ${isCredit ? 'received' : 'sent'} — tap to review category';
 
       try {
