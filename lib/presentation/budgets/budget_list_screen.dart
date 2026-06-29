@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,7 +54,7 @@ class BudgetListScreen extends ConsumerWidget {
         largeTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, size: 28),
+            icon: const Icon(PesaFlowIcons.add, size: 28),
             onPressed: () {
               HapticFeedback.lightImpact();
               if (activeTab == 0) {
@@ -181,7 +182,7 @@ class BudgetListScreen extends ConsumerWidget {
   Widget _buildCategoryBudgets(BuildContext context, WidgetRef ref, List<BudgetWithProgress> budgets, ThemeData theme) {
     if (budgets.isEmpty) {
       return EmptyState(
-        icon: Icons.pie_chart_outline_rounded,
+        icon: PesaFlowIcons.budgets,
         title: 'No Budgets Yet',
         subtitle: 'Create envelope budgets to track spending limits on categories like Food, Transport, or Entertainment.',
         illustration: PesaFlowIllustration.emptyBudgets(),
@@ -206,7 +207,7 @@ class BudgetListScreen extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.add_rounded, color: theme.colorScheme.onPrimary, size: 20),
+                Icon(PesaFlowIcons.add, color: theme.colorScheme.onPrimary, size: 20),
                 const SizedBox(width: 6),
                 Text(
                   'Create First Budget',
@@ -512,7 +513,7 @@ class BudgetListScreen extends ConsumerWidget {
       data: (goals) {
         if (goals.isEmpty) {
           return EmptyState(
-            icon: Icons.savings_rounded,
+            icon: PesaFlowIcons.savings,
             title: 'Emergency Reserves & Goals',
             subtitle: 'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
             illustration: PesaFlowIllustration.emptyGoals(),
@@ -542,7 +543,7 @@ class BudgetListScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add_rounded, color: theme.colorScheme.onPrimary, size: 20),
+                    Icon(PesaFlowIcons.add, color: theme.colorScheme.onPrimary, size: 20),
                     const SizedBox(width: 6),
                     Text(
                       'Set First Savings Goal',

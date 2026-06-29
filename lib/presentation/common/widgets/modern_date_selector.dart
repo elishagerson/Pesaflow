@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -106,7 +107,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  prefixIcon ?? Icons.calendar_month_rounded,
+                  prefixIcon ?? PesaFlowIcons.calendar,
                   color: theme.colorScheme.primary,
                   size: 20,
                 ),
@@ -136,7 +137,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.calendar_today_rounded,
+                  PesaFlowIcons.calendar,
                   color: isDark ? Colors.grey[500] : Colors.grey[600],
                   size: 18,
                 ),

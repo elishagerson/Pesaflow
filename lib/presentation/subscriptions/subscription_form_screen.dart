@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -154,12 +155,12 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 return ModernDropdown<String>(
                   labelText: 'Account',
                   value: _selectedAccountId,
-                  prefixIcon: Icons.account_balance_rounded,
+                  prefixIcon: PesaFlowIcons.loans,
                   items: accounts.map((a) => ModernDropdownItem<String>(
                     value: a.id,
                     label: a.name,
                     subtitle: a.type.toUpperCase().replaceAll('_', ' '),
-                    icon: Icons.account_balance_wallet_rounded,
+                    icon: PesaFlowIcons.wallet,
                   )).toList(),
                   onChanged: (v) => setState(() => _selectedAccountId = v),
                   validator: (v) => v == null || v.isEmpty ? 'Required' : null,
@@ -274,7 +275,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               child: InputDecorator(
                 decoration: const InputDecoration(
                   labelText: 'Next Due Date',
-                  prefixIcon: Icon(Icons.calendar_today_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.calendar, size: 18),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

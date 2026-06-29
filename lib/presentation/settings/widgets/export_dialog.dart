@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
@@ -34,7 +35,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               initialValue: selectedMonth,
               decoration: InputDecoration(
                 labelText: 'Month',
-                prefixIcon: const Icon(Icons.calendar_month_rounded, size: 20),
+                prefixIcon: const Icon(PesaFlowIcons.calendar, size: 20),
                 filled: true,
                 fillColor: Colors.transparent,
                 border: OutlineInputBorder(

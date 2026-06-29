@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -38,7 +39,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.edit_rounded, size: 18, color: isDark ? Colors.white : Colors.black),
+              child: Icon(PesaFlowIcons.edit, size: 18, color: isDark ? Colors.white : Colors.black),
             ),
           ),
           const SizedBox(width: 8),
@@ -50,7 +51,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 color: const Color(0xFFFF453A).withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.delete_rounded, size: 18, color: Color(0xFFFF453A)),
+              child: const Icon(PesaFlowIcons.delete, size: 18, color: Color(0xFFFF453A)),
             ),
           ),
         ],
@@ -274,7 +275,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             Expanded(
                               child: _gridItem(
                                 context,
-                                icon: Icons.calendar_today_rounded,
+                                icon: PesaFlowIcons.calendar,
                                 iconColor: Colors.blueAccent,
                                 label: 'Date',
                                 value: '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}',
@@ -329,7 +330,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               const SizedBox(height: 12),
                             _detailRow(
                               theme,
-                              Icons.account_balance_rounded,
+                              PesaFlowIcons.loans,
                               'Balance After',
                               CurrencyFormatter.formatCents(t.balanceAfter!),
                               valueColor: isDark ? Colors.white : Colors.black87,
@@ -365,7 +366,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.edit_rounded, size: 16, color: isDark ? Colors.white : Colors.black87),
+                            Icon(PesaFlowIcons.edit, size: 16, color: isDark ? Colors.white : Colors.black87),
                             const SizedBox(width: 8),
                             Text(
                               'Edit Details',
@@ -389,7 +390,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.delete_rounded, size: 16, color: Color(0xFFFF453A)),
+                            Icon(PesaFlowIcons.delete, size: 16, color: Color(0xFFFF453A)),
                             SizedBox(width: 8),
                             Text(
                               'Delete',
@@ -622,7 +623,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     ModernDialog.show(
       context: context,
       title: const Text('Delete Transaction'),
-      titleIcon: Icons.delete_rounded,
+      titleIcon: PesaFlowIcons.delete,
       iconColor: Colors.red,
       content: const Text('Are you sure you want to delete this transaction? This cannot be undone.'),
       actions: [

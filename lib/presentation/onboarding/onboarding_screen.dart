@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -53,12 +54,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   };
 
   final Map<String, IconData> _icons = {
-    'M-Pesa': Icons.phone_android_rounded,
-    'Airtel Money': Icons.phone_android_rounded,
-    'Tigo Pesa': Icons.phone_android_rounded,
-    'NMB Bank': Icons.account_balance_rounded,
-    'CRDB Bank': Icons.account_balance_rounded,
-    'Cash Wallet': Icons.account_balance_wallet_rounded,
+    'M-Pesa': PesaFlowIcons.cash,
+    'Airtel Money': PesaFlowIcons.cash,
+    'Tigo Pesa': PesaFlowIcons.cash,
+    'NMB Bank': PesaFlowIcons.loans,
+    'CRDB Bank': PesaFlowIcons.loans,
+    'Cash Wallet': PesaFlowIcons.wallet,
   };
 
   void _nextPage() async {
@@ -218,7 +219,7 @@ class _WelcomePage extends StatelessWidget {
               gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.account_balance_wallet_rounded, size: 64, color: Colors.white),
+            child: const Icon(PesaFlowIcons.wallet, size: 64, color: Colors.white),
           ),
           const SizedBox(height: 32),
           Text('Welcome to PesaFlow', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
@@ -269,7 +270,7 @@ class _SmsPermissionPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3))),
             child: Row(children: [
-              Icon(Icons.lock_rounded, color: theme.colorScheme.primary, size: 20),
+              Icon(PesaFlowIcons.lock, color: theme.colorScheme.primary, size: 20),
               const SizedBox(width: 12),
               Expanded(child: Text('SMS data is processed locally and never sent anywhere.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant))),
             ]),
@@ -279,7 +280,7 @@ class _SmsPermissionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                permissionGranted ? Icons.check_circle_rounded : Icons.info_outline_rounded,
+                permissionGranted ? PesaFlowIcons.success : PesaFlowIcons.info,
                 size: 14,
                 color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
               ),
@@ -453,7 +454,7 @@ class _CompletePage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.incomeColor)),
+          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(PesaFlowIcons.success, size: 64, color: AppTheme.incomeColor)),
           const SizedBox(height: 32),
           Text('You\'re All Set!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
           const SizedBox(height: 16),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -235,7 +236,7 @@ class _OverviewTab extends StatelessWidget {
                                       )),
                                       Icon(
                                         goal.icon == 'savings' 
-                                            ? Icons.savings_rounded 
+                                            ? PesaFlowIcons.savings 
                                             : goal.icon == 'laptop' 
                                                 ? Icons.laptop_chromebook_rounded 
                                                 : goal.icon == 'flight' 
@@ -248,7 +249,7 @@ class _OverviewTab extends StatelessWidget {
                                                                 ? Icons.school_rounded 
                                                                 : goal.icon == 'heart' 
                                                                     ? Icons.favorite_rounded 
-                                                                    : Icons.savings_rounded,
+                                                                    : PesaFlowIcons.savings,
                                         color: goalColor,
                                         size: 18,
                                       ),
@@ -327,7 +328,7 @@ class _OverviewTab extends StatelessWidget {
                               color: AppTheme.transferColorDark.withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.savings_rounded, color: AppTheme.transferColorDark, size: 20),
+                            child: const Icon(PesaFlowIcons.savings, color: AppTheme.transferColorDark, size: 20),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -367,7 +368,7 @@ class _OverviewTab extends StatelessWidget {
                               builder: (context) => const SavingsGoalFormSheet(),
                             );
                           },
-                          icon: const Icon(Icons.add_rounded, size: 16),
+                          icon: const Icon(PesaFlowIcons.add, size: 16),
                           label: const FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -802,12 +803,12 @@ class _InsightsTab extends StatelessWidget {
 
   IconData _getInsightIcon(String iconName) {
     switch (iconName) {
-      case 'trending_up': return Icons.trending_up_rounded;
-      case 'trending_down': return Icons.trending_down_rounded;
-      case 'savings': return Icons.savings_rounded;
+      case 'trending_up': return PesaFlowIcons.income;
+      case 'trending_down': return PesaFlowIcons.expense;
+      case 'savings': return PesaFlowIcons.savings;
       case 'arrow_upward': return Icons.arrow_upward_rounded;
       case 'arrow_downward': return Icons.arrow_downward_rounded;
-      case 'account_balance_wallet': return Icons.account_balance_wallet_rounded;
+      case 'account_balance_wallet': return PesaFlowIcons.wallet;
       case 'category': return Icons.category_rounded;
       default: return Icons.lightbulb_rounded;
     }

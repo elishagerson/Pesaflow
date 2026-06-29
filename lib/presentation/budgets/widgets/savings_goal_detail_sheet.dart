@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -222,7 +223,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
-                                          isDeposit ? Icons.savings_rounded : Icons.account_balance_wallet_rounded,
+                                          isDeposit ? PesaFlowIcons.savings : PesaFlowIcons.wallet,
                                           color: accentColor,
                                           size: 22,
                                         ),
@@ -318,7 +319,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                                 color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                              child: Icon(PesaFlowIcons.close, size: 18, color: isDark ? Colors.white54 : Colors.black45),
                                             ),
                                           ),
                                       ],
@@ -336,7 +337,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                     decoration: InputDecoration(
                                       hintText: 'Add an optional note (e.g. Salary bonus)',
                                       hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                      prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                      prefixIcon: Icon(PesaFlowIcons.edit, size: 20,
                                           color: isDark ? Colors.white38 : Colors.black26),
                                       filled: true,
                                       fillColor: isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
@@ -421,7 +422,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                             child: Row(
                                               children: [
-                                                Icon(Icons.account_balance_wallet_rounded, size: 18,
+                                                Icon(PesaFlowIcons.wallet, size: 18,
                                                     color: isDark ? Colors.white38 : Colors.black38),
                                                 const SizedBox(width: 10),
                                                 const Expanded(
@@ -499,7 +500,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Icon(
-                                                      isDeposit ? Icons.add_circle_outline_rounded : Icons.remove_circle_outline_rounded,
+                                                      isDeposit ? PesaFlowIcons.add : Icons.remove_circle_outline_rounded,
                                                       size: 18,
                                                       color: Colors.white.withValues(alpha: 0.8)),
                                                   const SizedBox(width: 8),
@@ -725,7 +726,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.add_rounded, color: AppTheme.transferColorDark, size: 18),
+                                const Icon(PesaFlowIcons.add, color: AppTheme.transferColorDark, size: 18),
                                 const SizedBox(width: 6),
                                 Text(
                                   'Add Money',
@@ -872,7 +873,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                           final confirm = await ModernDialog.show<bool>(
                                             context: context,
                                             title: const Text('Delete Contribution?'),
-                                            titleIcon: Icons.warning_amber_rounded,
+                                            titleIcon: PesaFlowIcons.warning,
                                             content: const Text('This will undo this deposit/withdrawal from this visual savings goal balance.'),
                                             actions: [
                                               TextButton(
@@ -893,7 +894,7 @@ class _SavingsGoalDetailSheetState extends ConsumerState<SavingsGoalDetailSheet>
                                           }
                                         },
                                         child: Icon(
-                                          Icons.delete_outline_rounded,
+                                          PesaFlowIcons.delete,
                                           size: 16,
                                           color: Colors.red.withValues(alpha: 0.7),
                                         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -254,7 +255,7 @@ class LoanListScreen extends ConsumerWidget {
                   color: severityColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.warning_rounded, color: severityColor, size: 22),
+                child: Icon(PesaFlowIcons.warning, color: severityColor, size: 22),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -307,7 +308,7 @@ class LoanListScreen extends ConsumerWidget {
 
   Widget _buildEmptyState(ThemeData theme, bool isDark) {
     return EmptyState(
-      icon: Icons.account_balance_rounded,
+      icon: PesaFlowIcons.loans,
       title: 'No Loans Yet',
       subtitle: 'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
       illustration: PesaFlowIllustration.emptyLoans(),
@@ -340,7 +341,7 @@ class LoanListScreen extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.trending_up_rounded,
+                    PesaFlowIcons.income,
                     color: progressColor,
                     size: 18,
                   ),
@@ -439,7 +440,7 @@ class LoanListScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.check_circle_rounded,
+                PesaFlowIcons.success,
                 color: Color(0xFF609F8A),
                 size: 18,
               ),

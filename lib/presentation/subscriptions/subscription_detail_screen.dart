@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -136,7 +137,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
             centerTitle: true,
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit_rounded),
+                icon: const Icon(PesaFlowIcons.edit),
                 onPressed: () => context.push('/subscriptions/${sub.id}/edit'),
               ),
             ],
@@ -163,7 +164,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                             color: statusColor.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.subscriptions_rounded, color: statusColor, size: 28),
+                          child: Icon(PesaFlowIcons.subscriptions, color: statusColor, size: 28),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -214,7 +215,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow('Account', account?.name ?? 'Not set', Icons.account_balance_rounded, isDark),
+                      _buildInfoRow('Account', account?.name ?? 'Not set', PesaFlowIcons.loans, isDark),
                       const Divider(height: 24),
                       _buildInfoRow(
                         'Category',
@@ -227,11 +228,11 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                       _buildInfoRow(
                         'Next Due Date',
                         '${sub.nextDueDate.day}/${sub.nextDueDate.month}/${sub.nextDueDate.year}',
-                        Icons.calendar_today_rounded,
+                        PesaFlowIcons.calendar,
                         isDark,
                       ),
                       const Divider(height: 24),
-                      _buildInfoRow('Total Paid', CurrencyFormatter.formatCents(sub.totalPaid), Icons.payments_rounded, isDark),
+                      _buildInfoRow('Total Paid', CurrencyFormatter.formatCents(sub.totalPaid), PesaFlowIcons.cash, isDark),
                       const Divider(height: 24),
                       _buildInfoRow('Payments Logged', '${sub.paymentCount} payments', Icons.history_toggle_off_rounded, isDark),
                       const Divider(height: 24),
@@ -326,7 +327,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              const Icon(Icons.delete_outline_rounded, color: Colors.red, size: 24),
+                              const Icon(PesaFlowIcons.delete, color: Colors.red, size: 24),
                               const SizedBox(width: 14),
                               Expanded(
                                 child: Column(

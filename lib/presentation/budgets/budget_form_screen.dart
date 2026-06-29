@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -222,7 +223,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   controller: _amountController,
                                   keyboardType: TextInputType.number,
                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'monospace'),
-                                  decoration: inputDeco(label: 'Budget Amount (Tsh)', hint: 'e.g. 300000', icon: Icons.payments_rounded),
+                                  decoration: inputDeco(label: 'Budget Amount (Tsh)', hint: 'e.g. 300000', icon: PesaFlowIcons.cash),
                                   validator: (v) => v == null || v.trim().isEmpty ? 'Amount required' : null,
                                 ),
                               ],
@@ -270,7 +271,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             child: ModernDateSelector(
                               labelText: 'Start Date',
                               value: _startDate,
-                              prefixIcon: Icons.calendar_today_rounded,
+                              prefixIcon: PesaFlowIcons.calendar,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2030),
                               onChanged: (d) => setState(() => _startDate = d),
@@ -351,7 +352,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    _buildLeadingIcon(Icons.notifications_active_rounded, Colors.amber),
+                                    _buildLeadingIcon(PesaFlowIcons.notification, Colors.amber),
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(

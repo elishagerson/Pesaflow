@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -77,7 +78,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/savings-goals/add'),
-        icon: const Icon(Icons.add_rounded, size: 20),
+        icon: const Icon(PesaFlowIcons.add, size: 20),
         label: const Text('New Goal'),
       ),
     );
@@ -97,7 +98,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.savings_rounded,
+                PesaFlowIcons.savings,
                 size: 48,
                 color: AppTheme.transferColorDark,
               ),
@@ -163,7 +164,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                   color: AppTheme.transferColorDark.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.trending_up_rounded,
+                child: const Icon(PesaFlowIcons.income,
                     color: AppTheme.transferColorDark, size: 20),
               ),
               const SizedBox(width: kSpacing12),

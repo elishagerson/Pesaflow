@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -65,7 +66,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.check_circle_rounded,
+            PesaFlowIcons.success,
             size: 10,
             color: const Color(0xFF609F8A),
           ),
@@ -93,7 +94,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     ModernDialog.show(
       context: context,
       title: const Text('Add Account'),
-      titleIcon: Icons.account_balance_wallet_rounded,
+      titleIcon: PesaFlowIcons.wallet,
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -104,7 +105,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 decoration: InputDecoration(
                   labelText: 'Account Name',
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
-                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0xFF1C1C1E)
@@ -142,21 +143,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ModernDropdownItem(
                     value: 'Cash',
                     label: 'Cash Wallet',
-                    icon: Icons.account_balance_wallet_rounded,
+                    icon: PesaFlowIcons.wallet,
                     color: AppTheme.transferColorDark,
                     subtitle: 'Physical cash and local wallets',
                   ),
                   ModernDropdownItem(
                     value: 'Mobile Money',
                     label: 'Mobile Money',
-                    icon: Icons.phone_android_rounded,
+                    icon: PesaFlowIcons.cash,
                     color: Color(0xFF609F8A),
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(
                     value: 'Bank',
                     label: 'Bank Account',
-                    icon: Icons.account_balance_rounded,
+                    icon: PesaFlowIcons.loans,
                     color: Color(0xFFFF9F0A),
                     subtitle: 'NMB, CRDB, NBC, and other banks',
                   ),
@@ -181,33 +182,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ModernDropdown<String>(
                   labelText: 'Carrier Provider',
                   value: provider ?? 'M-Pesa_TZ',
-                  prefixIcon: Icons.phone_iphone_rounded,
+                  prefixIcon: PesaFlowIcons.cash,
                   items: const [
                     ModernDropdownItem(
                       value: 'M-Pesa_TZ',
                       label: 'Vodacom M-Pesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.redAccent,
                       subtitle: 'Vodacom Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'TigoPesa_TZ',
                       label: 'Tigo Pesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.blueAccent,
                       subtitle: 'Tigo Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'AirtelMoney_TZ',
                       label: 'Airtel Money',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.red,
                       subtitle: 'Airtel Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'Halopesa_TZ',
                       label: 'HaloPesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.orangeAccent,
                       subtitle: 'Halotel Mobile Money service',
                     ),
@@ -261,26 +262,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ModernDropdown<String>(
                   labelText: 'Bank Brand',
                   value: provider ?? 'NMB',
-                  prefixIcon: Icons.account_balance_rounded,
+                  prefixIcon: PesaFlowIcons.loans,
                   items: const [
                     ModernDropdownItem(
                       value: 'NMB',
                       label: 'NMB Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.blue,
                       subtitle: 'National Microfinance Bank',
                     ),
                     ModernDropdownItem(
                       value: 'CRDB',
                       label: 'CRDB Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.green,
                       subtitle: 'CRDB Bank Plc',
                     ),
                     ModernDropdownItem(
                       value: 'NBC',
                       label: 'NBC Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.cyan,
                       subtitle: 'National Bank of Commerce',
                     ),
@@ -301,7 +302,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 decoration: InputDecoration(
                   labelText: 'Initial Balance (Tsh)',
                   hintText: 'e.g. 150,000',
-                  prefixIcon: Icon(Icons.payments_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0xFF1C1C1E)
@@ -530,7 +531,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.analytics_outlined,
+                    PesaFlowIcons.analytics,
                     color: theme.colorScheme.primary,
                     size: 32,
                   ),
@@ -1006,7 +1007,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   TextButton.icon(
                     onPressed: () => context.go('/budgets/add'),
-                    icon: const Icon(Icons.add_rounded, size: 16),
+                    icon: const Icon(PesaFlowIcons.add, size: 16),
                     label: const Text('Add Budget'),
                   ),
                 ],
@@ -1146,18 +1147,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
         final (icon, message, color) = days >= 14
             ? (
-                Icons.warning_rounded,
+                PesaFlowIcons.warning,
                 'It\'s been $days days since you saved — set aside some money today!',
                 Colors.orange,
               )
             : days >= 7
             ? (
-                Icons.savings_rounded,
+                PesaFlowIcons.savings,
                 'It\'s been $days days since your last deposit — consider saving today.',
                 AppTheme.transferColorDark,
               )
             : (
-                Icons.check_circle_rounded,
+                PesaFlowIcons.success,
                 'Last saved $days days ago.',
                 AppTheme.transferColorDark,
               );
@@ -1306,7 +1307,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                           Icon(
                             goal.icon == 'savings'
-                                ? Icons.savings_rounded
+                                ? PesaFlowIcons.savings
                                 : goal.icon == 'laptop'
                                 ? Icons.laptop_chromebook_rounded
                                 : goal.icon == 'flight'
@@ -1319,7 +1320,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ? Icons.school_rounded
                                 : goal.icon == 'heart'
                                 ? Icons.favorite_rounded
-                                : Icons.savings_rounded,
+                                : PesaFlowIcons.savings,
                             color: goalColor,
                             size: 16,
                           ),
@@ -1487,7 +1488,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
-                              Icons.check_circle_rounded,
+                              PesaFlowIcons.success,
                               color: Color(0xFF609F8A),
                               size: 22,
                             ),
@@ -1627,8 +1628,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             child: Icon(
                               debtRatio > 0.5
-                                  ? Icons.warning_rounded
-                                  : Icons.trending_up_rounded,
+                                  ? PesaFlowIcons.warning
+                                  : PesaFlowIcons.income,
                               color: severityColor,
                               size: 22,
                             ),
@@ -2012,7 +2013,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           onPressed: () {
                             _showAddTrackerDialog(context);
                           },
-                          icon: const Icon(Icons.add_rounded, size: 18),
+                          icon: const Icon(PesaFlowIcons.add, size: 18),
                           label: const Text('New'),
                         ),
                       ],
@@ -2091,7 +2092,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                     IconButton(
                                       icon: const Icon(
-                                        Icons.edit_rounded,
+                                        PesaFlowIcons.edit,
                                         size: 18,
                                       ),
                                       color: isSelected
@@ -2110,7 +2111,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     if (isSelected) ...[
                                       const SizedBox(width: kSpacing8),
                                       Icon(
-                                        Icons.check_circle_rounded,
+                                        PesaFlowIcons.success,
                                         color: itemColor,
                                         size: 20,
                                       ),
@@ -2185,7 +2186,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 decoration: InputDecoration(
                   labelText: 'Workspace Name',
                   hintText: 'e.g. Side Gig, Paris Trip',
-                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0xFF1C1C1E)
@@ -2376,7 +2377,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     ModernDialog.show(
       context: context,
       title: const Text('Edit Workspace'),
-      titleIcon: Icons.edit_rounded,
+      titleIcon: PesaFlowIcons.edit,
       content: StatefulBuilder(
         builder: (context, setState) {
           final theme = Theme.of(context);
@@ -2389,7 +2390,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 decoration: InputDecoration(
                   labelText: 'Workspace Name',
                   hintText: 'e.g. Side Gig, Paris Trip',
-                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0xFF1C1C1E)
@@ -2567,7 +2568,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     ModernDialog.show(
       context: context,
       title: const Text('Delete Workspace?'),
-      titleIcon: Icons.warning_amber_rounded,
+      titleIcon: PesaFlowIcons.warning,
       content: Text(
         'Are you sure you want to delete "${tracker.name}"? This will permanently delete all transactions and savings goals in this workspace.',
         style: theme.textTheme.bodyMedium,
@@ -2674,7 +2675,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          Icons.subscriptions_rounded,
+                          PesaFlowIcons.subscriptions,
                           color: theme.colorScheme.primary,
                           size: 24,
                         ),
@@ -2844,7 +2845,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.event_rounded,
+                      PesaFlowIcons.calendar,
                       size: 14,
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
                     ),
@@ -2949,7 +2950,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
-                              Icons.subscriptions_rounded,
+                              PesaFlowIcons.subscriptions,
                               size: 14,
                               color:
                                   catColor(sub.categoryId) ??
@@ -3760,7 +3761,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.add_rounded,
+                                  PesaFlowIcons.add,
                                   color: isDark ? trackerColor : Colors.white,
                                   size: 20,
                                 ),
@@ -3803,7 +3804,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.account_balance_wallet_rounded,
+                                  PesaFlowIcons.wallet,
                                   color: isDark ? Colors.white : Colors.black,
                                   size: 18,
                                 ),
@@ -3841,7 +3842,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   index: 2,
                   child: _CollapsibleSection(
                     title: 'Monthly Overview',
-                    icon: Icons.trending_up_rounded,
+                    icon: PesaFlowIcons.income,
                     child: _buildMonthlyOverview(theme),
                   ),
                 ),
@@ -3964,7 +3965,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.receipt_long_outlined,
+                                    PesaFlowIcons.transactions,
                                     size: 40,
                                     color: theme.colorScheme.onSurfaceVariant
                                         .withValues(alpha: 0.4),
@@ -4026,7 +4027,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       ),
                                     ),
                                     child: const Icon(
-                                      Icons.delete_rounded,
+                                      PesaFlowIcons.delete,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -4220,7 +4221,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 // ── 6. Budget Progress — "Your Financial Targets" ──
                 _CollapsibleSection(
                   title: 'Budget Progress',
-                  icon: Icons.pie_chart_rounded,
+                  icon: PesaFlowIcons.budgets,
                   child: _buildBudgetRings(theme, context),
                 ),
 
@@ -4230,7 +4231,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     index: 4,
                     child: _CollapsibleSection(
                       title: 'Savings Goals',
-                      icon: Icons.track_changes_rounded,
+                      icon: PesaFlowIcons.target,
                       child: _buildSavingsGoalsDashboard(theme, context),
                     ),
                   ),
@@ -4251,7 +4252,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   index: 6,
                   child: _CollapsibleSection(
                     title: 'Upcoming',
-                    icon: Icons.event_rounded,
+                    icon: PesaFlowIcons.calendar,
                     child: _buildSubscriptionsDashboard(theme, context),
                   ),
                 ),
@@ -4259,7 +4260,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 // ── 7. Upcoming Payments — "Recurring" ──
                 _CollapsibleSection(
                   title: 'Upcoming',
-                  icon: Icons.event_rounded,
+                  icon: PesaFlowIcons.calendar,
                   child: _buildUpcomingRecurring(theme, context),
                 ),
 

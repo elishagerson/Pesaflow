@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -29,7 +30,7 @@ class SubscriptionListScreen extends ConsumerWidget {
         largeTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_rounded, size: 28),
+            icon: const Icon(PesaFlowIcons.add, size: 28),
             onPressed: () => context.push('/subscriptions/add'),
           ),
         ],
@@ -72,7 +73,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
+                                  const Icon(PesaFlowIcons.warning, color: Color(0xFFFF6B35), size: 20),
                                   const SizedBox(width: kSpacing10),
                                   Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
                                       style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
@@ -134,7 +135,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                   color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.subscriptions_rounded, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
+                child: Icon(PesaFlowIcons.subscriptions, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
               ),
               const SizedBox(width: kSpacing14),
               Expanded(

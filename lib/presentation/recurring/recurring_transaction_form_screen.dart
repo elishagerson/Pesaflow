@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -201,7 +202,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                     initialValue: _selectedAccountId,
                     decoration: InputDecoration(
                       labelText: 'Account',
-                      prefixIcon: const Icon(Icons.account_balance_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.loans, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -302,7 +303,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   decoration: InputDecoration(
                     labelText: 'Description (optional)',
                     hintText: 'e.g. Monthly rent',
-                    prefixIcon: const Icon(Icons.edit_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -320,7 +321,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   initialValue: _frequency,
                   decoration: InputDecoration(
                     labelText: 'Frequency',
-                    prefixIcon: const Icon(Icons.repeat_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.subscriptions, size: 18),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -400,7 +401,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Next Date',
-                      prefixIcon: const Icon(Icons.calendar_today_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -431,7 +432,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'End Date (optional)',
-                      prefixIcon: const Icon(Icons.event_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -455,7 +456,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                         if (_endDate != null)
                           GestureDetector(
                             onTap: () => setState(() => _endDate = null),
-                            child: Icon(Icons.close_rounded, size: 18, color: Colors.grey[500]),
+                            child: Icon(PesaFlowIcons.close, size: 18, color: Colors.grey[500]),
                           ),
                       ],
                     ),

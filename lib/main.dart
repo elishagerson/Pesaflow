@@ -26,6 +26,9 @@ import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 import 'package:pesaflow/services/notification_service.dart';
 import 'package:pesaflow/services/lock_screen_service.dart';
+import 'package:pesaflow/data/seed/default_data.dart';
+import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -48,6 +51,7 @@ class PesaFlowApp extends ConsumerStatefulWidget {
 class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingObserver {
   static const _notificationChannel = MethodChannel('pesaflow/notification_listener');
   bool _isAuthenticated = false;
+  bool _showOnboarding = false;
 
   @override
   void initState() {
@@ -80,15 +84,38 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
         // Silently handle — budgets may not exist yet
       }
 
-      // Check onboarding status
+      // Seed default data so new users see a non-empty dashboard
       try {
-        final completed = await ref.read(settingsRepositoryProvider).isOnboardingComplete();
-        if (!completed) {
-          appRouter.go('/onboarding');
-          return;
+        final db = ref.read(databaseProvider);
+        await DefaultSeeder(db).seedIfNeeded();
+      } catch (e) {
+        developer.log('Default seeding failed: $e', name: 'AppLaunch');
+      }
+
+      // Show quick-start walkthrough on very first launch
+      bool overlaySeen = false;
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        overlaySeen = prefs.getBool('onboarding_shown') ?? false;
+        if (!overlaySeen && mounted) {
+          await prefs.setBool('onboarding_shown', true);
+          setState(() => _showOnboarding = true);
         }
       } catch (e) {
-        developer.log('Onboarding check failed: $e', name: 'AppLaunch');
+        developer.log('Onboarding overlay check failed: $e', name: 'AppLaunch');
+      }
+
+      if (!overlaySeen) {
+        // Check DB-based onboarding status only if overlay wasn't shown
+        try {
+          final completed = await ref.read(settingsRepositoryProvider).isOnboardingComplete();
+          if (!completed) {
+            appRouter.go('/onboarding');
+            return;
+          }
+        } catch (e) {
+          developer.log('Onboarding check failed: $e', name: 'AppLaunch');
+        }
       }
 
       // Request POST_NOTIFICATIONS permission (Android 13+)
@@ -145,6 +172,11 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       // Trigger app lock if enabled
       await _triggerBiometricAuthIfNeeded();
     });
+  }
+
+  void _onOnboardingComplete() {
+    setState(() => _showOnboarding = false);
+    ref.read(settingsRepositoryProvider).markOnboardingComplete();
   }
 
   Future<void> _handleSmsNotification({required String sender, required String body}) async {
@@ -449,6 +481,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
                     ),
                   if (ref.watch(paletteVisibilityProvider))
                     const CommandPalette(),
+                  if (_showOnboarding)
+                    OnboardingOverlay(onComplete: _onOnboardingComplete),
                  ],
                ),
              ),

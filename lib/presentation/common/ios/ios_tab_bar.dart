@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 
 class IosTabBar extends StatelessWidget {
@@ -28,32 +29,32 @@ class IosTabBar extends StatelessWidget {
       _TabConfig(
         routeIndex: 0,
         label: 'Dashboard',
-        icon: Icons.space_dashboard_outlined,
-        activeIcon: Icons.space_dashboard_rounded,
+        icon: PesaFlowIcons.dashboard,
+        activeIcon: PesaFlowIcons.dashboard,
       ),
       _TabConfig(
         routeIndex: 1,
         label: 'Transactions',
-        icon: Icons.receipt_long_outlined,
-        activeIcon: Icons.receipt_long_rounded,
+        icon: PesaFlowIcons.transactions,
+        activeIcon: PesaFlowIcons.transactions,
       ),
       _TabConfig(
         routeIndex: 2,
         label: 'Budgets',
-        icon: Icons.pie_chart_outline_rounded,
-        activeIcon: Icons.pie_chart_rounded,
+        icon: PesaFlowIcons.budgets,
+        activeIcon: PesaFlowIcons.budgets,
       ),
       _TabConfig(
         routeIndex: 3,
         label: 'Analytics',
-        icon: Icons.analytics_outlined,
-        activeIcon: Icons.analytics_rounded,
+        icon: PesaFlowIcons.analytics,
+        activeIcon: PesaFlowIcons.analytics,
       ),
       _TabConfig(
         routeIndex: 4,
         label: 'Settings',
-        icon: Icons.settings_outlined,
-        activeIcon: Icons.settings_rounded,
+        icon: PesaFlowIcons.settings,
+        activeIcon: PesaFlowIcons.settings,
       ),
     ];
 

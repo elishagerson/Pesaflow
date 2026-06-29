@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -71,9 +72,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                   onPressed: () => context.pop(),
                 ),
                 actions: [
-                  IconButton(icon: const Icon(Icons.edit_rounded), onPressed: () => context.go('/budgets/$budgetId/edit')),
+                  IconButton(icon: const Icon(PesaFlowIcons.edit), onPressed: () => context.go('/budgets/$budgetId/edit')),
                   IconButton(
-                    icon: const Icon(Icons.delete_rounded),
+                    icon: const Icon(PesaFlowIcons.delete),
                     onPressed: () async {
                       final confirm = await ModernDialog.show<bool>(
                         context: context,
@@ -161,7 +162,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                     frosted: false,
                     child: Row(children: [
                       Icon(
-                        status.isOnTrack ? Icons.check_circle_rounded : Icons.warning_rounded,
+                        status.isOnTrack ? PesaFlowIcons.success : PesaFlowIcons.warning,
                         color: status.isOnTrack ? theme.colorScheme.primary : Colors.orange,
                         size: 28,
                       ),
@@ -295,7 +296,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                           borderRadius: 8,
                           frosted: false,
                           child: Row(children: [
-                            Icon(p.isClosed ? Icons.lock_rounded : Icons.lock_open_rounded, size: 16, color: Colors.grey),
+                            Icon(p.isClosed ? PesaFlowIcons.lock : Icons.lock_open_rounded, size: 16, color: Colors.grey),
                             const SizedBox(width: 8),
                             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                               Text('${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
@@ -349,7 +350,7 @@ error: (e, _) => Center(child: Text('Error: $e')),
           child: Row(
             children: [
               Icon(
-                diff > 0 ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                diff > 0 ? PesaFlowIcons.income : PesaFlowIcons.expense,
                 size: 14,
                 color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
               ),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -247,7 +248,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               color: theme.colorScheme.primary.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.account_balance_wallet_rounded, size: 18, color: theme.colorScheme.primary),
+                            child: Icon(PesaFlowIcons.wallet, size: 18, color: theme.colorScheme.primary),
                           ),
                           const SizedBox(width: 12),
                           Text('Select Source Account',
@@ -300,7 +301,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
-                                          isSelected ? Icons.check_circle_rounded : Icons.account_balance_wallet_rounded,
+                                          isSelected ? PesaFlowIcons.success : PesaFlowIcons.wallet,
                                           size: 20,
                                           color: isSelected ? theme.colorScheme.primary : (isDark ? Colors.white54 : Colors.black45),
                                         ),
@@ -458,7 +459,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         ),
                                         child: Icon(
                                           isDisabled ? Icons.block_rounded :
-                                          isSelected ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
+                                          isSelected ? PesaFlowIcons.success : Icons.arrow_forward_rounded,
                                           size: 20,
                                           color: isDisabled ? Colors.grey :
                                               isSelected ? theme.colorScheme.primary : (isDark ? Colors.white54 : Colors.black45),
@@ -734,7 +735,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: ModernDateSelector(
                       labelText: 'Transaction Date',
                       value: _selectedDate,
-                      prefixIcon: Icons.calendar_today_rounded,
+                      prefixIcon: PesaFlowIcons.calendar,
                       firstDate: DateTime(2020),
                       lastDate: DateTime(2101),
                       onChanged: (picked) {
@@ -827,7 +828,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           ? const Center(child: CircularProgressIndicator())
           : accounts.isEmpty
               ? EmptyState(
-                  icon: Icons.warning_amber_rounded,
+                  icon: PesaFlowIcons.warning,
                   title: 'No Accounts Available',
                   subtitle: 'You must create at least one Account before recording manual transactions.',
                   illustration: PesaFlowIllustration.emptyTransactions(),

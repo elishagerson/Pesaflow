@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
@@ -220,7 +221,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close_rounded, size: 20),
+                        icon: const Icon(PesaFlowIcons.close, size: 20),
                         onPressed: () => Navigator.pop(context),
                         style: IconButton.styleFrom(
                           backgroundColor: isDark ? Colors.white10 : Colors.black12,
@@ -312,7 +313,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                       ),
                                       if (isSelected)
                                         Icon(
-                                          Icons.check_circle_rounded,
+                                          PesaFlowIcons.success,
                                           color: itemColor,
                                           size: 22,
                                         ),

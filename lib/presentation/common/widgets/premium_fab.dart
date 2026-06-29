@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'tactile_spring_container.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
@@ -49,7 +50,7 @@ class PremiumFab extends StatelessWidget {
           ],
         ),
         child: Icon(
-          Icons.add_rounded,
+          PesaFlowIcons.add,
           color: isDark ? Colors.black : Colors.white,
           size: 28,
         ),
@@ -68,7 +69,7 @@ class PremiumExtendedFab extends StatelessWidget {
     super.key,
     this.onPressed,
     required this.label,
-    this.icon = Icons.add_rounded,
+    this.icon = PesaFlowIcons.add,
     this.accentColor,
   });
 

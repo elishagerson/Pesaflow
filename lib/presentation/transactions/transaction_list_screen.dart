@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -222,7 +223,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               color: theme.colorScheme.error,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Icon(Icons.delete_rounded, color: Colors.white),
+                            child: const Icon(PesaFlowIcons.delete, color: Colors.white),
                           ),
                           confirmDismiss: (_) async {
                             await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
@@ -481,7 +482,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           decoration: InputDecoration(
                             hintText: 'Search transactions...',
                             prefixIcon: Icon(
-                              Icons.search_rounded,
+                              PesaFlowIcons.search,
                               size: 20,
                             ),
                             suffixIcon: searchQuery.isNotEmpty

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -60,12 +61,12 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(width: kSpacing4),
                   GestureDetector(
                     onTap: () => _showEditAccountDialog(context, ref, acc),
-                    child: Icon(Icons.edit_rounded, size: 18, color: theme.colorScheme.primary),
+                    child: Icon(PesaFlowIcons.edit, size: 18, color: theme.colorScheme.primary),
                   ),
                   const SizedBox(width: kSpacing4),
                   GestureDetector(
                     onTap: () => _confirmDeleteAccount(context, ref, acc),
-                    child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
+                    child: const Icon(PesaFlowIcons.delete, size: 20, color: Colors.red),
                   ),
                 ],
               ),
@@ -96,7 +97,7 @@ class SettingsScreen extends ConsumerWidget {
     ModernDialog.show(
       context: context,
       title: const Text('Edit Account'),
-      titleIcon: Icons.edit_rounded,
+      titleIcon: PesaFlowIcons.edit,
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -107,7 +108,7 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: InputDecoration(
                   labelText: 'Account Name',
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
-                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
@@ -141,21 +142,21 @@ class SettingsScreen extends ConsumerWidget {
                   ModernDropdownItem(
                     value: 'Cash',
                     label: 'Cash Wallet',
-                    icon: Icons.account_balance_wallet_rounded,
+                    icon: PesaFlowIcons.wallet,
                     color: AppTheme.transferColorDark,
                     subtitle: 'Physical cash and local wallets',
                   ),
                   ModernDropdownItem(
                     value: 'Mobile Money',
                     label: 'Mobile Money',
-                    icon: Icons.phone_android_rounded,
+                    icon: PesaFlowIcons.cash,
                     color: Color(0xFF609F8A),
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(
                     value: 'Bank',
                     label: 'Bank Account',
-                    icon: Icons.account_balance_rounded,
+                    icon: PesaFlowIcons.loans,
                     color: Color(0xFFFF9F0A),
                     subtitle: 'NMB, CRDB, NBC, and other banks',
                   ),
@@ -180,33 +181,33 @@ class SettingsScreen extends ConsumerWidget {
                 ModernDropdown<String>(
                   labelText: 'Carrier Provider',
                   value: provider ?? 'M-Pesa_TZ',
-                  prefixIcon: Icons.phone_iphone_rounded,
+                  prefixIcon: PesaFlowIcons.cash,
                   items: const [
                     ModernDropdownItem(
                       value: 'M-Pesa_TZ',
                       label: 'Vodacom M-Pesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.redAccent,
                       subtitle: 'Vodacom Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'TigoPesa_TZ',
                       label: 'Tigo Pesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.blueAccent,
                       subtitle: 'Tigo Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'AirtelMoney_TZ',
                       label: 'Airtel Money',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.red,
                       subtitle: 'Airtel Mobile Money service',
                     ),
                     ModernDropdownItem(
                       value: 'Halopesa_TZ',
                       label: 'HaloPesa',
-                      icon: Icons.offline_bolt_rounded,
+                      icon: PesaFlowIcons.offline,
                       color: Colors.orangeAccent,
                       subtitle: 'Halotel Mobile Money service',
                     ),
@@ -257,26 +258,26 @@ class SettingsScreen extends ConsumerWidget {
                 ModernDropdown<String>(
                   labelText: 'Bank Brand',
                   value: provider ?? 'NMB',
-                  prefixIcon: Icons.account_balance_rounded,
+                  prefixIcon: PesaFlowIcons.loans,
                   items: const [
                     ModernDropdownItem(
                       value: 'NMB',
                       label: 'NMB Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.blue,
                       subtitle: 'National Microfinance Bank',
                     ),
                     ModernDropdownItem(
                       value: 'CRDB',
                       label: 'CRDB Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.green,
                       subtitle: 'CRDB Bank Plc',
                     ),
                     ModernDropdownItem(
                       value: 'NBC',
                       label: 'NBC Bank',
-                      icon: Icons.account_balance_rounded,
+                      icon: PesaFlowIcons.loans,
                       color: Colors.cyan,
                       subtitle: 'National Bank of Commerce',
                     ),
@@ -295,7 +296,7 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: InputDecoration(
                   labelText: 'Balance (Tsh)',
                   hintText: 'e.g. 150,000',
-                  prefixIcon: Icon(Icons.payments_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
@@ -382,7 +383,7 @@ class SettingsScreen extends ConsumerWidget {
     ModernDialog.show(
       context: context,
       title: const Text('Delete Account'),
-      titleIcon: Icons.delete_rounded,
+      titleIcon: PesaFlowIcons.delete,
       iconColor: Colors.red,
       content: Text('Delete "${acc.name}" and all its transactions? This cannot be undone.'),
       actions: [
@@ -434,7 +435,7 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 const Text('Manage Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 TextButton.icon(
-                  icon: const Icon(Icons.add_rounded),
+                  icon: const Icon(PesaFlowIcons.add),
                   label: const Text('Add Custom'),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -475,7 +476,7 @@ class SettingsScreen extends ConsumerWidget {
                              Navigator.of(context).pop();
                              _showAddCategoryDialog(context, ref, existing: cat);
                            },
-                           child: const Icon(Icons.edit_rounded, size: 20, color: Colors.blue),
+                           child: const Icon(PesaFlowIcons.edit, size: 20, color: Colors.blue),
                          ),
                           const SizedBox(width: kSpacing12),
                           GestureDetector(
@@ -493,7 +494,7 @@ class SettingsScreen extends ConsumerWidget {
                                }
                              }
                            },
-                           child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
+                           child: const Icon(PesaFlowIcons.delete, size: 20, color: Colors.red),
                          ),
                        ],
                      ),
@@ -530,7 +531,7 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: InputDecoration(
                   labelText: 'Category Name',
                   hintText: 'e.g. Subscriptions, Laundry',
-                  prefixIcon: Icon(Icons.edit_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
@@ -564,14 +565,14 @@ class SettingsScreen extends ConsumerWidget {
                   ModernDropdownItem(
                     value: 'Expense',
                     label: 'Expense',
-                    icon: Icons.trending_down_rounded,
+                    icon: PesaFlowIcons.expense,
                     color: Color(0xFFFF453A),
                     subtitle: 'Money going out',
                   ),
                   ModernDropdownItem(
                     value: 'Income',
                     label: 'Income',
-                    icon: Icons.trending_up_rounded,
+                    icon: PesaFlowIcons.income,
                     color: AppTheme.transferColorDark,
                     subtitle: 'Money coming in',
                   ),
@@ -728,7 +729,7 @@ class SettingsScreen extends ConsumerWidget {
         context: context,
         barrierDismissible: false,
         title: const Text('Profile Restored'),
-        titleIcon: Icons.check_circle_rounded,
+        titleIcon: PesaFlowIcons.success,
         iconColor: AppTheme.incomeColor,
         content: const Text(
           'Your offline database backup has been successfully restored.\n\n'
@@ -852,7 +853,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               if (isSelected)
-                Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary, size: 22),
+                Icon(PesaFlowIcons.success, color: theme.colorScheme.primary, size: 22),
             ],
           ),
         ),
@@ -977,7 +978,7 @@ class SettingsScreen extends ConsumerWidget {
                   TactileSpringContainer(
                     onTap: () => _showAccountsManager(context, ref),
                     child: IosListRow(
-                    leading: Icon(Icons.account_balance_wallet_rounded, color: theme.colorScheme.primary, size: 24),
+                    leading: Icon(PesaFlowIcons.wallet, color: theme.colorScheme.primary, size: 24),
                     title: const Text('Accounts Manager'),
                     subtitle: const Text('Manage bank, mobile money & cash wallets'),
                     onTap: () => _showAccountsManager(context, ref),
@@ -993,7 +994,7 @@ class SettingsScreen extends ConsumerWidget {
                   TactileSpringContainer(
                     onTap: () => context.push('/subscriptions'),
                     child: IosListRow(
-                    leading: Icon(Icons.subscriptions_rounded, color: theme.colorScheme.primary, size: 24),
+                    leading: Icon(PesaFlowIcons.subscriptions, color: theme.colorScheme.primary, size: 24),
                     title: const Text('Subscriptions Manager'),
                     subtitle: const Text('Manage your recurring service subscriptions'),
                     onTap: () => context.push('/subscriptions'),
@@ -1004,7 +1005,7 @@ class SettingsScreen extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: IosMetricCard(
-                            icon: Icons.account_balance_rounded,
+                            icon: PesaFlowIcons.loans,
                             label: 'Accounts',
                             value: '${accounts.length}',
                           ),
@@ -1020,7 +1021,7 @@ class SettingsScreen extends ConsumerWidget {
                         const SizedBox(width: kSpacing8),
                         Expanded(
                           child: IosMetricCard(
-                            icon: Icons.receipt_long_rounded,
+                            icon: PesaFlowIcons.transactions,
                             label: 'Transactions',
                             value: '${recentTransactions.length}',
                           ),

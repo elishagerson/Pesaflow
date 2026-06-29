@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -223,7 +224,7 @@ class _SavingsGoalDetailScreenState
                                         ),
                                         child: Icon(
                                           isDeposit
-                                              ? Icons.savings_rounded
+                                              ? PesaFlowIcons.savings
                                               : Icons
                                                   .account_balance_wallet_rounded,
                                           color: accentColor,
@@ -370,7 +371,7 @@ class _SavingsGoalDetailScreenState
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
-                                                  Icons.close_rounded,
+                                                  PesaFlowIcons.close,
                                                   size: 18,
                                                   color: isDark
                                                       ? Colors.white54
@@ -403,7 +404,7 @@ class _SavingsGoalDetailScreenState
                                               ? Colors.white30
                                               : Colors.black26),
                                       prefixIcon: Icon(
-                                          Icons.edit_note_rounded,
+                                          PesaFlowIcons.edit,
                                           size: 20,
                                           color: isDark
                                               ? Colors.white38
@@ -678,7 +679,7 @@ class _SavingsGoalDetailScreenState
     final confirm = await ModernDialog.show<bool>(
       context: context,
       title: const Text('Delete Savings Goal?'),
-      titleIcon: Icons.warning_amber_rounded,
+      titleIcon: PesaFlowIcons.warning,
       content: const Text(
         'This will permanently delete this goal and all its contribution history.',
       ),
@@ -741,11 +742,11 @@ class _SavingsGoalDetailScreenState
             centerTitle: true,
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit_outlined, size: 20),
+                icon: const Icon(PesaFlowIcons.edit, size: 20),
                 onPressed: () => context.push('/savings-goals/${goal.id}/edit'),
               ),
               IconButton(
-                icon: Icon(Icons.delete_outline_rounded,
+                icon: Icon(PesaFlowIcons.delete,
                     size: 20, color: Colors.red.withValues(alpha: 0.7)),
                 onPressed: () => _deleteGoal(goal.id),
               ),
@@ -921,7 +922,7 @@ class _SavingsGoalDetailScreenState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.add_rounded,
+                              const Icon(PesaFlowIcons.add,
                                   color: AppTheme.transferColorDark,
                                   size: 18),
                               const SizedBox(width: kSpacing6),
@@ -1097,7 +1098,7 @@ class _SavingsGoalDetailScreenState
                                           title: const Text(
                                               'Delete Contribution?'),
                                           titleIcon:
-                                              Icons.warning_amber_rounded,
+                                              PesaFlowIcons.warning,
                                           content: const Text(
                                             'This will undo this deposit/withdrawal from this visual savings goal balance.',
                                           ),
@@ -1131,7 +1132,7 @@ class _SavingsGoalDetailScreenState
                                         }
                                       },
                                       child: Icon(
-                                        Icons.delete_outline_rounded,
+                                        PesaFlowIcons.delete,
                                         size: 16,
                                         color: Colors.red
                                             .withValues(alpha: 0.7),

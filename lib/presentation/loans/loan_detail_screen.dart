@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,11 +46,11 @@ class LoanDetailScreen extends ConsumerWidget {
             centerTitle: true,
             actions: [
               IconButton(
-                icon: const Icon(Icons.edit_rounded),
+                icon: const Icon(PesaFlowIcons.edit),
                 onPressed: () => context.push('/loans/${loan.id}/edit'),
               ),
               IconButton(
-                icon: Icon(Icons.delete_rounded, color: theme.colorScheme.error),
+                icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.error),
                 onPressed: () => _confirmDelete(context, ref, loan),
               ),
             ],
@@ -163,7 +164,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                isPaid ? Icons.check_circle_rounded : Icons.account_balance_rounded,
+                isPaid ? PesaFlowIcons.success : PesaFlowIcons.loans,
                 color: statusColor,
                 size: 32,
               ),
@@ -537,7 +538,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   color: const Color(0xFFFF9F0A).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.event_rounded, size: 20, color: Color(0xFFFF9F0A)),
+                child: const Icon(PesaFlowIcons.calendar, size: 20, color: Color(0xFFFF9F0A)),
               ),
               const SizedBox(width: kSpacing14),
               Expanded(
@@ -596,7 +597,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.payments_rounded, size: 20, color: Color(0xFF609F8A)),
+                  child: const Icon(PesaFlowIcons.cash, size: 20, color: Color(0xFF609F8A)),
                 ),
                 const SizedBox(width: kSpacing12),
                 Expanded(
@@ -646,7 +647,7 @@ class LoanDetailScreen extends ConsumerWidget {
               width: double.infinity,
               child: TextButton.icon(
                 onPressed: () => _showOfflinePaymentSheet(context, ref, loan),
-                icon: Icon(Icons.receipt_long_rounded, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                icon: Icon(PesaFlowIcons.transactions, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
                 label: Text(
                   'Record Offline Payment',
                   style: TextStyle(
@@ -739,7 +740,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(Icons.payments_rounded, color: Color(0xFF609F8A), size: 22),
+                                        child: const Icon(PesaFlowIcons.cash, color: Color(0xFF609F8A), size: 22),
                                       ),
                                       const SizedBox(width: kSpacing14),
                                       Column(
@@ -820,7 +821,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                              child: Icon(PesaFlowIcons.close, size: 18, color: isDark ? Colors.white54 : Colors.black45),
                                             ),
                                           ),
                                       ],
@@ -910,7 +911,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                        prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                        prefixIcon: Icon(PesaFlowIcons.edit, size: 20,
                                             color: isDark ? Colors.white38 : Colors.black26),
                                         border: InputBorder.none,
                                         contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
@@ -946,7 +947,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           ),
                                           child: Row(
                                             children: [
-                                              const Icon(Icons.warning_rounded, size: 18, color: Color(0xFFE53935)),
+                                              const Icon(PesaFlowIcons.warning, size: 18, color: Color(0xFFE53935)),
                                               const SizedBox(width: kSpacing10),
                                               Text('No accounts available. Create one first.',
                                                   style: TextStyle(fontSize: 13, color: const Color(0xFFE53935).withValues(alpha: 0.9))),
@@ -994,7 +995,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
-                                                        isSelected ? Icons.check_circle_rounded : Icons.account_balance_wallet_rounded,
+                                                        isSelected ? PesaFlowIcons.success : PesaFlowIcons.wallet,
                                                         size: 20,
                                                         color: isSelected
                                                             ? const Color(0xFF609F8A)
@@ -1108,7 +1109,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   if (paymentAmount() > 0 && selectedAccountId != null)
-                                                    Icon(Icons.lock_rounded, size: 16, color: Colors.white.withValues(alpha: 0.8)),
+                                                    Icon(PesaFlowIcons.lock, size: 16, color: Colors.white.withValues(alpha: 0.8)),
                                                   if (paymentAmount() > 0 && selectedAccountId != null) const SizedBox(width: kSpacing8),
                                                   Text(
                                                     paymentAmount() <= 0
@@ -1338,7 +1339,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                             color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.receipt_long_rounded, color: Color(0xFF609F8A), size: 22),
+                                          child: const Icon(PesaFlowIcons.transactions, color: Color(0xFF609F8A), size: 22),
                                         ),
                                         const SizedBox(width: kSpacing14),
                                         Column(
@@ -1413,7 +1414,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                   color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                                   shape: BoxShape.circle,
                                                 ),
-                                                child: Icon(Icons.close_rounded, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                                child: Icon(PesaFlowIcons.close, size: 18, color: isDark ? Colors.white54 : Colors.black45),
                                               ),
                                             ),
                                         ],
@@ -1499,7 +1500,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         decoration: InputDecoration(
                                           hintText: 'Add a note (optional)',
                                           hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                          prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
+                                          prefixIcon: Icon(PesaFlowIcons.edit, size: 20,
                                               color: isDark ? Colors.white38 : Colors.black26),
                                           border: InputBorder.none,
                                           contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
@@ -1516,7 +1517,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                       ),
                                       child: Row(
                                         children: [
-                                          Icon(Icons.info_outline_rounded, size: 16, color: const Color(0xFF609F8A).withValues(alpha: 0.8)),
+                                          Icon(PesaFlowIcons.info, size: 16, color: const Color(0xFF609F8A).withValues(alpha: 0.8)),
                                           const SizedBox(width: kSpacing8),
                                           Expanded(
                                             child: Text(

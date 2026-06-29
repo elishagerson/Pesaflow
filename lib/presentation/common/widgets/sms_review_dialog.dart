@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
@@ -87,7 +88,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   Text('New Transaction', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   const Spacer(),
                   IconButton(
-                    icon: Icon(Icons.close_rounded, size: 20),
+                    icon: Icon(PesaFlowIcons.close, size: 20),
                     onPressed: () {
                       ref.read(pendingReviewProvider.notifier).clear();
                       Navigator.of(context).pop();
@@ -132,7 +133,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search categories...',
-                  prefixIcon: const Icon(Icons.search_rounded, size: 18),
+                  prefixIcon: const Icon(PesaFlowIcons.search, size: 18),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear_rounded, size: 16),
@@ -188,7 +189,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         subtitle: Text(cat.type.toUpperCase(),
                           style: const TextStyle(fontSize: 10, color: Colors.grey)),
                         trailing: isSelected
-                            ? Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary, size: 20)
+                            ? Icon(PesaFlowIcons.success, color: theme.colorScheme.primary, size: 20)
                             : null,
                         onTap: () => setState(() => _selectedCategoryId = cat.id),
                       );
@@ -201,7 +202,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _reject,
-                      icon: const Icon(Icons.close_rounded, size: 18),
+                      icon: const Icon(PesaFlowIcons.close, size: 18),
                       label: const Text('Reject'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: theme.colorScheme.error,

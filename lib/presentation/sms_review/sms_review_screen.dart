@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
@@ -89,7 +90,7 @@ class SmsReviewScreen extends ConsumerWidget {
                           style: const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                         trailing: isSelected
-                            ? Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary)
+                            ? Icon(PesaFlowIcons.success, color: theme.colorScheme.primary)
                             : null,
                         onTap: () => Navigator.of(context).pop(cat.id),
                       );
@@ -144,7 +145,7 @@ class SmsReviewScreen extends ConsumerWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        Icons.check_circle_outline_rounded,
+                        PesaFlowIcons.success,
                         size: 56,
                         color: theme.colorScheme.primary,
                       ),

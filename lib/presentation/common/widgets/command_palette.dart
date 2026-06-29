@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -27,22 +28,22 @@ class _PaletteAction {
 }
 
 const _actions = <_PaletteAction>[
-  _PaletteAction(icon: Icons.dashboard_rounded, label: 'Go to Dashboard', route: '/'),
-  _PaletteAction(icon: Icons.receipt_long_rounded, label: 'Record Expense', route: '/transactions/add', keywords: ['spend', 'pay', 'out', 'buy']),
+  _PaletteAction(icon: PesaFlowIcons.dashboard, label: 'Go to Dashboard', route: '/'),
+  _PaletteAction(icon: PesaFlowIcons.transactions, label: 'Record Expense', route: '/transactions/add', keywords: ['spend', 'pay', 'out', 'buy']),
   _PaletteAction(icon: Icons.arrow_downward_rounded, label: 'Record Income', route: '/transactions/add', keywords: ['salary', 'deposit', 'earn', 'receive']),
-  _PaletteAction(icon: Icons.swap_horiz_rounded, label: 'Transfer Money', route: '/transactions/add', keywords: ['move', 'send', 'shift']),
+  _PaletteAction(icon: PesaFlowIcons.transfer, label: 'Transfer Money', route: '/transactions/add', keywords: ['move', 'send', 'shift']),
   _PaletteAction(icon: Icons.receipt_rounded, label: 'View Transactions', route: '/transactions', keywords: ['list', 'history']),
-  _PaletteAction(icon: Icons.account_balance_wallet_rounded, label: 'View Accounts', route: '/'),
-  _PaletteAction(icon: Icons.pie_chart_rounded, label: 'View Budgets', route: '/budgets', keywords: ['spending', 'limit']),
-  _PaletteAction(icon: Icons.analytics_rounded, label: 'View Analytics', route: '/analytics', keywords: ['stats', 'charts', 'report']),
-  _PaletteAction(icon: Icons.track_changes_rounded, label: 'View Savings Goals', route: '/savings-goals', keywords: ['target', 'save']),
+  _PaletteAction(icon: PesaFlowIcons.wallet, label: 'View Accounts', route: '/'),
+  _PaletteAction(icon: PesaFlowIcons.budgets, label: 'View Budgets', route: '/budgets', keywords: ['spending', 'limit']),
+  _PaletteAction(icon: PesaFlowIcons.analytics, label: 'View Analytics', route: '/analytics', keywords: ['stats', 'charts', 'report']),
+  _PaletteAction(icon: PesaFlowIcons.target, label: 'View Savings Goals', route: '/savings-goals', keywords: ['target', 'save']),
   _PaletteAction(icon: Icons.credit_score_rounded, label: 'View Loans', route: '/loans', keywords: ['debt', 'borrow']),
-  _PaletteAction(icon: Icons.subscriptions_rounded, label: 'View Subscriptions', route: '/subscriptions', keywords: ['recurring', 'bills', 'renewal']),
-  _PaletteAction(icon: Icons.add_circle_rounded, label: 'Add Budget', route: '/budgets/add', keywords: ['create budget limit']),
-  _PaletteAction(icon: Icons.add_circle_rounded, label: 'Add Loan', route: '/loans/add', keywords: ['create borrow debt']),
-  _PaletteAction(icon: Icons.add_circle_rounded, label: 'Add Subscription', route: '/subscriptions/add', keywords: ['create recurring bill']),
-  _PaletteAction(icon: Icons.add_circle_rounded, label: 'Add Savings Goal', route: '/savings-goals/add', keywords: ['create target save']),
-  _PaletteAction(icon: Icons.settings_rounded, label: 'Settings', route: '/settings', keywords: ['preferences', 'config']),
+  _PaletteAction(icon: PesaFlowIcons.subscriptions, label: 'View Subscriptions', route: '/subscriptions', keywords: ['recurring', 'bills', 'renewal']),
+  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Budget', route: '/budgets/add', keywords: ['create budget limit']),
+  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Loan', route: '/loans/add', keywords: ['create borrow debt']),
+  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Subscription', route: '/subscriptions/add', keywords: ['create recurring bill']),
+  _PaletteAction(icon: PesaFlowIcons.add, label: 'Add Savings Goal', route: '/savings-goals/add', keywords: ['create target save']),
+  _PaletteAction(icon: PesaFlowIcons.settings, label: 'Settings', route: '/settings', keywords: ['preferences', 'config']),
   _PaletteAction(icon: Icons.message_rounded, label: 'SMS Review', route: '/sms-review', keywords: ['pending', 'unreviewed']),
 ];
 
@@ -149,10 +150,10 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                             style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
                             decoration: InputDecoration(
                               hintText: 'Search actions...',
-                              prefixIcon: Icon(Icons.search_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                              prefixIcon: Icon(PesaFlowIcons.search, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                               suffixIcon: GestureDetector(
                                 onTap: _dismiss,
-                                child: Icon(Icons.close_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                                child: Icon(PesaFlowIcons.close, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                               ),
                               filled: true,
                               fillColor: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),

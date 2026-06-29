@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
 import 'state_providers.dart';
@@ -40,7 +41,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: increased
             ? 'Spending is $changePct% higher than last month'
             : 'Spending is ${-changePct}% lower than last month',
-        icon: increased ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+        icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
         color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
       ));
     }
@@ -54,7 +55,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: increased
             ? 'Spending is $changePct% higher than last month'
             : 'Spending is ${-changePct}% lower than last month',
-        icon: increased ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+        icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
         color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
       ));
     }
@@ -82,7 +83,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
       subtitle: overBudget
           ? '${pct - 100}% over the ${worst.budget.period} limit'
           : '${100 - pct}% remaining in the ${worst.budget.period} budget',
-      icon: overBudget ? Icons.warning_rounded : Icons.check_circle_rounded,
+      icon: overBudget ? PesaFlowIcons.warning : PesaFlowIcons.success,
       color: overBudget ? const Color(0xFFFF453A) : const Color(0xFF34C759),
     ));
   }
@@ -122,7 +123,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle: pctDisplay >= 100
             ? 'Goal completed! Tsh ${(bestGoal.currentAmount ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} saved'
             : '$pctDisplay% complete — Tsh ${((bestGoal.targetAmount - bestGoal.currentAmount) ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} to go',
-        icon: Icons.savings_rounded,
+        icon: PesaFlowIcons.savings,
         color: bestPct >= 1.0 ? const Color(0xFF34C759) : const Color(0xFFFF9F0A),
       ));
     }

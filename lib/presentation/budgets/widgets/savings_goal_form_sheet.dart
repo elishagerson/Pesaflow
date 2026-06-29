@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -44,7 +45,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   ];
 
   final List<Map<String, dynamic>> _icons = [
-    {'name': 'savings', 'icon': Icons.savings_rounded},
+    {'name': 'savings', 'icon': PesaFlowIcons.savings},
     {'name': 'laptop', 'icon': Icons.laptop_chromebook_rounded},
     {'name': 'flight', 'icon': Icons.flight_takeoff_rounded},
     {'name': 'home', 'icon': Icons.home_rounded},
@@ -205,7 +206,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.close_rounded, size: 20, color: isDark ? Colors.white60 : Colors.black45),
+                            child: Icon(PesaFlowIcons.close, size: 20, color: isDark ? Colors.white60 : Colors.black45),
                           ),
                         ),
                       ],
@@ -243,7 +244,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               keyboardType: TextInputType.number,
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               style: const TextStyle(fontFamily: 'monospace', fontSize: 16, fontWeight: FontWeight.w500),
-                              decoration: inputDeco(label: 'Target Amount (Tsh)', hint: 'e.g. 1500000', icon: Icons.payments_rounded),
+                              decoration: inputDeco(label: 'Target Amount (Tsh)', hint: 'e.g. 1500000', icon: PesaFlowIcons.cash),
                               validator: (v) {
                                 if (v == null || v.trim().isEmpty) return 'Target is required';
                                 final val = int.tryParse(v) ?? 0;
@@ -255,7 +256,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             ModernDateSelector(
                               labelText: 'Target Date',
                               value: _selectedDate,
-                              prefixIcon: Icons.calendar_month_rounded,
+                              prefixIcon: PesaFlowIcons.calendar,
                               firstDate: DateTime.now().subtract(const Duration(days: 1)),
                               lastDate: DateTime(2035),
                               onChanged: (d) => setState(() => _selectedDate = d),

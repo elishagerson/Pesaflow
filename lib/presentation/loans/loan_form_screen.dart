@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -199,7 +200,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   decoration: InputDecoration(
                     labelText: 'Description (optional)',
                     hintText: 'e.g. M-Pesa Loan, Bank Loan',
-                    prefixIcon: const Icon(Icons.edit_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -256,7 +257,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Disbursement Date',
-                      prefixIcon: const Icon(Icons.calendar_today_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -301,7 +302,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Due Date (optional)',
-                      prefixIcon: const Icon(Icons.event_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -325,7 +326,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                         if (_dueAt != null)
                           GestureDetector(
                             onTap: () => setState(() => _dueAt = null),
-                            child: Icon(Icons.close_rounded, size: 18, color: Colors.grey[500]),
+                            child: Icon(PesaFlowIcons.close, size: 18, color: Colors.grey[500]),
                           ),
                       ],
                     ),

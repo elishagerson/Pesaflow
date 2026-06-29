@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -44,7 +45,7 @@ class _SavingsGoalFormScreenState
   ];
 
   final List<Map<String, dynamic>> _icons = [
-    {'name': 'savings', 'icon': Icons.savings_rounded},
+    {'name': 'savings', 'icon': PesaFlowIcons.savings},
     {'name': 'laptop', 'icon': Icons.laptop_chromebook_rounded},
     {'name': 'flight', 'icon': Icons.flight_takeoff_rounded},
     {'name': 'home', 'icon': Icons.home_rounded},
@@ -224,7 +225,7 @@ class _SavingsGoalFormScreenState
                         decoration: inputDeco(
                             label: 'Target Amount (Tsh)',
                             hint: 'e.g. 1500000',
-                            icon: Icons.payments_rounded),
+                            icon: PesaFlowIcons.cash),
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {
                             return 'Target is required';
@@ -238,7 +239,7 @@ class _SavingsGoalFormScreenState
                       ModernDateSelector(
                         labelText: 'Target Date',
                         value: _selectedDate,
-                        prefixIcon: Icons.calendar_month_rounded,
+                        prefixIcon: PesaFlowIcons.calendar,
                         firstDate: DateTime.now().subtract(const Duration(days: 1)),
                         lastDate: DateTime(2035),
                         onChanged: (d) => setState(() => _selectedDate = d),

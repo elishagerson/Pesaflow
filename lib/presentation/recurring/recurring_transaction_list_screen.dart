@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -71,7 +72,7 @@ class RecurringTransactionListScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.repeat_rounded,
+                PesaFlowIcons.subscriptions,
                 color: theme.colorScheme.primary,
                 size: 40,
               ),
@@ -122,7 +123,7 @@ class RecurringTransactionListScreen extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.repeat_rounded,
+                    PesaFlowIcons.subscriptions,
                     color: statusColor,
                     size: 18,
                   ),
@@ -165,7 +166,7 @@ class RecurringTransactionListScreen extends ConsumerWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.calendar_today_rounded, size: 12, color: isDark ? Colors.grey[500] : Colors.grey[400]),
+                Icon(PesaFlowIcons.calendar, size: 12, color: isDark ? Colors.grey[500] : Colors.grey[400]),
                 const SizedBox(width: 4),
                 Text(
                   'Next: ${recurring.nextDate.day}/${recurring.nextDate.month}/${recurring.nextDate.year}',
