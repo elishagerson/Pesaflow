@@ -4122,16 +4122,13 @@ class _InsightsCarousel extends ConsumerWidget {
         }
         return SizedBox(
           height: 138,
-          child: ScrollConfiguration(
-            behavior: const AppScrollBehavior(),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              clipBehavior: Clip.none,
-              itemCount: insights.length,
-              separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-              itemBuilder: (_, i) => InsightCard(data: insights[i]),
-            ),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            clipBehavior: Clip.none,
+            itemCount: insights.length,
+            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+            itemBuilder: (_, i) => InsightCard(data: insights[i]),
           ),
         );
       },
