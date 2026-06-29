@@ -2763,101 +2763,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return raw.startsWith('Tsh ') ? raw.substring(4) : raw;
   }
 
-  Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
-    final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
-
-    return recurringAsync.when(
-      data: (recurring) {
-        if (recurring.isEmpty) return const SizedBox.shrink();
-
-        final limited = recurring.take(3).toList();
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...limited.map(
-              (r) => Padding(
-                padding: const EdgeInsets.only(bottom: kSpacing8),
-                child: GlassCard(
-                  borderRadius: AppTheme.radiusCard,
-                  elevation: CardElevation.low,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing14,
-                    vertical: kSpacing12,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(kSpacing8),
-                        decoration: BoxDecoration(
-                          color:
-                              (r.type == 'income'
-                                      ? const Color(0xFF609F8A)
-                                      : const Color(0xFFE53935))
-                                  .withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          r.type == 'income'
-                              ? Icons.arrow_downward_rounded
-                              : Icons.arrow_upward_rounded,
-                          size: 14,
-                          color: r.type == 'income'
-                              ? const Color(0xFF609F8A)
-                              : const Color(0xFFE53935),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              r.description ?? r.frequency,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: kSpacing2),
-                            Text(
-                              '${r.frequency} · ${r.nextDate.day}/${r.nextDate.month}',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontSize: 10,
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.6,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      AmountText(
-                        amountInCents: r.amount,
-                        type: r.type == 'income'
-                            ? AmountType.income
-                            : AmountType.expense,
-                        useMonospace: true,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, _) => const SizedBox.shrink(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final netWorth = ref.watch(netWorthProvider);
@@ -4034,11 +3939,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                 const SizedBox(height: kSpacing20),
 
-                // ── 6. Upcoming Payments — "Bills & Subscriptions" ──
+                // ── 6. Recurring Flows ──
                 StaggeredFadeSlide(
                   index: 6,
                   child: _CollapsibleSection(
-                    title: 'Bills & Subscriptions',
+                    title: 'Recurring Flows',
                     icon: PesaFlowIcons.calendar,
                     subtitle: activeCount > 0 ? '$activeCount active' : 'track recurring bills',
                     action: subscriptionsAction,
