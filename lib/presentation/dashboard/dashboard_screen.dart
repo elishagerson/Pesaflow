@@ -2957,9 +2957,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         : const Color(0x33FFFFFF);
 
     final paidLoansCountAsync = ref.watch(paidLoansCountProvider);
-    final subsAsync = ref.watch(subscriptionsStreamProvider);
-    final dueAsync = ref.watch(dueSubscriptionsProvider);
-    final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
+    final recsAsync = ref.watch(recurringTransactionsStreamProvider);
+    final dueAsync = ref.watch(dueRecurringTransactionsProvider);
 
     // Dynamic Action Buttons for Collapsible Sections
     final budgetAction = budgetsAsync.maybeWhen(
@@ -2989,19 +2988,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       orElse: () => null,
     );
 
-    final subscriptionsAction = subsAsync.maybeWhen(
-      data: (subscriptions) {
-        if (subscriptions.isEmpty) {
+    final subscriptionsAction = recsAsync.maybeWhen(
+      data: (recs) {
+        final expenses = recs.where((r) => r.type == 'expense' && r.status == 'active').toList();
+        if (expenses.isEmpty) {
           return TextButton(
-            onPressed: () => context.push('/subscriptions'),
+            onPressed: () => context.push('/recurring'),
             child: const Text('Manage'),
           );
         }
         final due = dueAsync.asData?.value ?? [];
+        final dueExpensesCount = due.where((d) => d.type == 'expense').length;
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (due.isNotEmpty)
+            if (dueExpensesCount > 0)
               Container(
                 margin: const EdgeInsets.only(right: kSpacing8),
                 padding: const EdgeInsets.symmetric(
@@ -3013,7 +3014,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
-                  '${due.length} due',
+                  '$dueExpensesCount due',
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontSize: 9,
                     fontWeight: FontWeight.w900,
@@ -3022,22 +3023,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
             TextButton(
-              onPressed: () => context.push('/subscriptions'),
+              onPressed: () => context.push('/recurring'),
               child: const Text('Manage'),
             ),
           ],
         );
       },
       orElse: () => TextButton(
-        onPressed: () => context.push('/subscriptions'),
+        onPressed: () => context.push('/recurring'),
         child: const Text('Manage'),
       ),
     );
 
-    final recurringAction = recurringAsync.maybeWhen(
+    final recurringAction = dueAsync.maybeWhen(
       data: (rec) => rec.isNotEmpty
           ? TextButton(
-              onPressed: () => context.go('/recurring'),
+              onPressed: () => context.push('/recurring'),
               child: const Text('Manage'),
             )
           : null,
@@ -3069,8 +3070,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ],
     );
 
-    final activeCount = subsAsync.maybeWhen(
-      data: (subs) => subs.where((s) => s.status == 'active').length,
+    final activeCount = recsAsync.maybeWhen(
+      data: (recs) => recs.where((r) => r.type == 'expense' && r.status == 'active').length,
       orElse: () => 0,
     );
 
@@ -4040,15 +4041,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                 const SizedBox(height: kSpacing20),
 
-                // ── 6. Upcoming Payments — "Subscriptions" ──
+                // ── 6. Upcoming Payments — "Bills & Subscriptions" ──
                 StaggeredFadeSlide(
                   index: 6,
                   child: _CollapsibleSection(
-                    title: 'Subscriptions',
+                    title: 'Bills & Subscriptions',
                     icon: PesaFlowIcons.subscriptions,
-                    subtitle: activeCount > 0 ? '$activeCount active' : 'track recurring services',
+                    subtitle: activeCount > 0 ? '$activeCount active' : 'track recurring bills',
                     action: subscriptionsAction,
-                    child: _buildSubscriptionsDashboard(theme, context),
+                    child: _buildRecurringExpensesDashboard(theme, context),
                   ),
                 ),
 

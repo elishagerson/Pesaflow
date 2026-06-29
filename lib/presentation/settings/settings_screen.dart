@@ -993,12 +993,12 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () => _showCategoriesManager(context, ref),
                   ),),
                   TactileSpringContainer(
-                    onTap: () => context.push('/subscriptions'),
+                    onTap: () => context.push('/recurring'),
                     child: IosListRow(
                     leading: Icon(PesaFlowIcons.subscriptions, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Subscriptions Manager'),
-                    subtitle: const Text('Manage your recurring service subscriptions'),
-                    onTap: () => context.push('/subscriptions'),
+                    title: const Text('Recurring & Bills'),
+                    subtitle: const Text('Manage your recurring payments and bills'),
+                    onTap: () => context.push('/recurring'),
                   ),),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

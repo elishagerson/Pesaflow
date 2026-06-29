@@ -21,7 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/command_palette.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/data/repositories/subscription_repository.dart';
+import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
 import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
@@ -152,19 +152,19 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
         developer.log('Savings reminder check failed: $e', name: 'AppLaunch');
       }
 
-      // Check for upcoming subscription renewals
+      // Check for upcoming recurring bill renewals
       try {
-        final subRepo = ref.read(subscriptionRepositoryProvider);
+        final recRepo = ref.read(recurringTransactionRepositoryProvider);
         final notif = ref.read(notificationServiceProvider);
-        final subs = await subRepo.getAll();
+        final recs = await recRepo.getAll();
         await notif.checkSubscriptionRenewals(
-          subs: subs
-              .where((s) => s.status == 'active')
-              .map((s) => (name: s.name, amountCents: s.amount, nextDueDate: s.nextDueDate))
+          subs: recs
+              .where((r) => r.status == 'active' && r.type == 'expense')
+              .map((r) => (name: r.description ?? 'Recurring Bill', amountCents: r.amount, nextDueDate: r.nextDate))
               .toList(),
         );
       } catch (e) {
-        developer.log('Subscription renewal check failed: $e', name: 'AppLaunch');
+        developer.log('Recurring renewal check failed: $e', name: 'AppLaunch');
       }
 
       // Check if Notification Access is enabled; if not, prompt once
