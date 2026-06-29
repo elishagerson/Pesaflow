@@ -10,6 +10,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -183,6 +184,7 @@ class BudgetListScreen extends ConsumerWidget {
         icon: Icons.pie_chart_outline_rounded,
         title: 'No Budgets Yet',
         subtitle: 'Create envelope budgets to track spending limits on categories like Food, Transport, or Entertainment.',
+        illustration: PesaFlowIllustration.emptyBudgets(),
         action: TactileSpringContainer(
           onTap: () {
             HapticFeedback.lightImpact();
@@ -347,7 +349,9 @@ class BudgetListScreen extends ConsumerWidget {
 
             final catColor = hexToColor(bp.category.color);
 
-            final cardContent = Container(
+            final cardContent = Hero(
+              tag: 'budget-${bp.budget.id}',
+              child: Container(
               margin: const EdgeInsets.only(bottom: 14),
               child: GlassCard(
                 borderRadius: 20,
@@ -483,6 +487,7 @@ class BudgetListScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+            ),
             );
             return StaggeredFadeSlide(
               index: index,
@@ -510,6 +515,7 @@ class BudgetListScreen extends ConsumerWidget {
             icon: Icons.savings_rounded,
             title: 'Emergency Reserves & Goals',
             subtitle: 'Set visual targets for big purchases, safety vaults, or long-term dreams. Log progress with optional account wallet deductions.',
+            illustration: PesaFlowIllustration.emptyGoals(),
             action: TactileSpringContainer(
               onTap: () {
                 HapticFeedback.lightImpact();

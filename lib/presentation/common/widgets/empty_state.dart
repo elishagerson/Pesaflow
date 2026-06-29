@@ -7,6 +7,7 @@ class EmptyState extends StatelessWidget {
   final String? subtitle;
   final Widget? action;
   final double iconSize;
+  final Widget? illustration;
 
   const EmptyState({
     super.key,
@@ -15,6 +16,7 @@ class EmptyState extends StatelessWidget {
     this.subtitle,
     this.action,
     this.iconSize = 64,
+    this.illustration,
   });
 
   @override
@@ -29,6 +31,7 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            illustration ??
             Semantics(
               excludeSemantics: true,
               child: Icon(icon, size: iconSize, color: theme.colorScheme.primary.withValues(alpha: 0.4)),

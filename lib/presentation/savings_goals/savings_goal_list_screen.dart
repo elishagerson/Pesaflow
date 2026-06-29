@@ -226,7 +226,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
       index: index,
       child: TactileSpringContainer(
         onTap: () => context.push('/savings-goals/${goal.id}'),
-        child: Container(
+        child: Hero(
+          tag: 'goal-${goal.id}',
+          child: Container(
           margin: const EdgeInsets.only(bottom: kSpacing12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -396,6 +398,8 @@ class SavingsGoalListScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
+}
+

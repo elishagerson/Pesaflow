@@ -15,8 +15,11 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/state/spending_pattern_provider.dart';
+import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
@@ -744,7 +747,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
                     StaggeredFadeSlide(
                       index: 4,
-                      child: TactileSpringContainer(
+                      child: PressScale(
                         onTap: () {
                           Navigator.pop(context);
                           _saveTransaction();
@@ -792,6 +795,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
 
+    final spendingPatternAsync = ref.watch(currentSpendingPatternProvider);
+
     if (_selectedAccountId == null && accounts.isNotEmpty) {
       _selectedAccountId = accounts.first.id;
     }
@@ -825,6 +830,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   icon: Icons.warning_amber_rounded,
                   title: 'No Accounts Available',
                   subtitle: 'You must create at least one Account before recording manual transactions.',
+                  illustration: PesaFlowIllustration.emptyTransactions(),
                   action: TactileSpringContainer(
                     onTap: () => context.go('/'),
                     child: Container(
@@ -995,6 +1001,40 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                               ),
                             ),
+                            if (spendingPatternAsync.asData?.value case final pattern?
+                                when _amountStr == '0')
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      final formatted = CurrencyFormatter
+                                          .formatCents(pattern.averageAmountCents)
+                                          .replaceAll('Tsh ', '');
+                                      _amountStr = formatted;
+                                      _selectedCategoryId = pattern.categoryId;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF0F4C5C).withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      'Usually ${CurrencyFormatter.formatCents(pattern.averageAmountCents)} at this time →',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Color(0xFF0F4C5C),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             const SizedBox(height: 14),
                           ],
                         ),
@@ -1096,7 +1136,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         index: 4,
                         child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: context.spacing, vertical: 12.0),
-                        child: TactileSpringContainer(
+                        child: PressScale(
                           onTap: () => _showSecondaryDetailsSheet(context, categories),
                           child: Container(
                             width: double.infinity,

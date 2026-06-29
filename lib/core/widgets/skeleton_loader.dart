@@ -32,7 +32,7 @@ class SkeletonCard extends StatelessWidget {
   Widget _buildContent() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final barHeight = (constraints.maxHeight - 24) / 5;
+        final barHeight = (constraints.maxHeight - 16) / 6.5;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(

@@ -147,7 +147,9 @@ class SubscriptionDetailScreen extends ConsumerWidget {
               // 1. Hero Card
               StaggeredFadeSlide(
                 index: 0,
-                child: GlassCard(
+                child: Hero(
+                  tag: 'subscription-${sub.id}',
+                  child: GlassCard(
                   borderRadius: AppTheme.radiusCard,
                   elevation: CardElevation.medium,
                   accentColor: statusColor,
@@ -197,6 +199,7 @@ class SubscriptionDetailScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
+                ),
                 ),
               ),
               const SizedBox(height: 16),

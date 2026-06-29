@@ -111,26 +111,29 @@ class BudgetDetailScreen extends ConsumerWidget {
                 // Radial ring chart
                 StaggeredFadeSlide(
                   index: 0,
-                  child: Center(
-                    child: SizedBox(
-                      height: 200, width: 200,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          PieChart(PieChartData(
-                            startDegreeOffset: -90,
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 70,
-                            sections: [
-                              PieChartSectionData(value: status.percentage.clamp(0.0, 1.0) * 100, color: status.isOverBudget ? theme.colorScheme.error : catColor, radius: 20, showTitle: false),
-                              PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withValues(alpha: 0.15), radius: 20, showTitle: false),
-                            ],
-                          )),
-                          Column(mainAxisSize: MainAxisSize.min, children: [
-                            Text('${(status.percentage * 100).round()}%', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
-                            Text('used', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
-                          ]),
-                        ],
+                  child: Hero(
+                    tag: 'budget-$budgetId',
+                    child: Center(
+                      child: SizedBox(
+                        height: 200, width: 200,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            PieChart(PieChartData(
+                              startDegreeOffset: -90,
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 70,
+                              sections: [
+                                PieChartSectionData(value: status.percentage.clamp(0.0, 1.0) * 100, color: status.isOverBudget ? theme.colorScheme.error : catColor, radius: 20, showTitle: false),
+                                PieChartSectionData(value: (1.0 - status.percentage.clamp(0.0, 1.0)) * 100, color: catColor.withValues(alpha: 0.15), radius: 20, showTitle: false),
+                              ],
+                            )),
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                              Text('${(status.percentage * 100).round()}%', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                              Text('used', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+                            ]),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -1,12 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 enum CardElevation { none, low, medium, high }
 
-class GlassCard extends StatelessWidget {
+class GlassCard extends StatefulWidget {
   final Widget child;
   final double borderRadius;
   final Color? backgroundColor;
@@ -39,26 +38,53 @@ class GlassCard extends StatelessWidget {
   });
 
   @override
+  State<GlassCard> createState() => _GlassCardState();
+}
+
+class _GlassCardState extends State<GlassCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 80),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     final Color glassColor;
-    if (backgroundColor != null) {
-      glassColor = backgroundColor!;
-    } else if (backgroundGradient != null) {
+    if (widget.backgroundColor != null) {
+      glassColor = widget.backgroundColor!;
+    } else if (widget.backgroundGradient != null) {
       glassColor = Colors.transparent;
     } else {
       glassColor = isDark
-          ? (accentColor != null
-              ? accentColor!.withValues(alpha: 0.12)
+          ? (widget.accentColor != null
+              ? widget.accentColor!.withValues(alpha: 0.12)
               : Colors.white.withValues(alpha: 0.08))
-          : (accentColor != null
-              ? accentColor!.withValues(alpha: 0.06)
+          : (widget.accentColor != null
+              ? widget.accentColor!.withValues(alpha: 0.06)
               : Colors.white.withValues(alpha: 0.65));
     }
 
-    final List<BoxShadow> shadows = switch (elevation) {
+    final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.04),
@@ -91,34 +117,34 @@ class GlassCard extends StatelessWidget {
     Widget body = Container(
       decoration: BoxDecoration(
         color: glassColor,
-        gradient: backgroundGradient,
-        borderRadius: BorderRadius.circular(borderRadius),
+        gradient: widget.backgroundGradient,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         boxShadow: shadows.isEmpty ? null : shadows,
       ),
-      foregroundDecoration: accentColor != null
+      foregroundDecoration: widget.accentColor != null
           ? BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(
-                color: accentColor!.withValues(alpha: isDark ? 0.20 : 0.12),
+                color: widget.accentColor!.withValues(alpha: isDark ? 0.20 : 0.12),
                 width: 0.5,
               ),
             )
           : null,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         child: Stack(
           children: [
-            if (frosted)
+            if (widget.frosted)
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
-                    sigmaX: blurSigma,
-                    sigmaY: blurSigma,
+                    sigmaX: widget.blurSigma,
+                    sigmaY: widget.blurSigma,
                   ),
                   child: Container(color: Colors.transparent),
                 ),
               ),
-            if (accentColor != null)
+            if (widget.accentColor != null)
               Positioned(
                 top: 0,
                 left: 0,
@@ -126,21 +152,21 @@ class GlassCard extends StatelessWidget {
                 child: Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: accentColor!.withValues(alpha: isDark ? 0.5 : 0.4),
+                    color: widget.accentColor!.withValues(alpha: isDark ? 0.5 : 0.4),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(borderRadius),
-                      topRight: Radius.circular(borderRadius),
+                      topLeft: Radius.circular(widget.borderRadius),
+                      topRight: Radius.circular(widget.borderRadius),
                     ),
                   ),
                 ),
               ),
             Padding(
-              padding: (padding ?? EdgeInsets.zero).add(
-                accentColor != null
+              padding: (widget.padding ?? EdgeInsets.zero).add(
+                widget.accentColor != null
                     ? const EdgeInsets.only(top: 3 + 2)
                     : EdgeInsets.zero,
               ),
-              child: child,
+              child: widget.child,
             ),
           ],
         ),
@@ -149,16 +175,22 @@ class GlassCard extends StatelessWidget {
 
     body = LiquidGlassOverlay(child: body);
 
-    if (margin != null) {
-      body = Padding(padding: margin!, child: body);
+    if (widget.margin != null) {
+      body = Padding(padding: widget.margin!, child: body);
     }
 
-    if (onTap != null) {
+    if (widget.onTap != null) {
       return Semantics(
         container: true,
         label: 'Card',
         button: true,
-        child: TactileSpringContainer(onTap: onTap, child: body),
+        child: GestureDetector(
+          onTapDown: (_) => _controller.forward(),
+          onTapUp: (_) => _controller.reverse(),
+          onTapCancel: () => _controller.reverse(),
+          onTap: widget.onTap,
+          child: ScaleTransition(scale: _scaleAnimation, child: body),
+        ),
       );
     }
     return Semantics(

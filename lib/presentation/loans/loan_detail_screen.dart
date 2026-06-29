@@ -146,7 +146,9 @@ class LoanDetailScreen extends ConsumerWidget {
         ? (ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A))
         : const Color(0xFF609F8A);
 
-    return GlassCard(
+    return Hero(
+      tag: 'loan-${loan.id}',
+      child: GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.medium,
       accentColor: statusColor,
@@ -207,7 +209,8 @@ class LoanDetailScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildLoanInfo(BuildContext context, Loan loan, ThemeData theme, bool isDark) {

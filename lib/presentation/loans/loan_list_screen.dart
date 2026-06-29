@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
@@ -309,6 +310,7 @@ class LoanListScreen extends ConsumerWidget {
       icon: Icons.account_balance_rounded,
       title: 'No Loans Yet',
       subtitle: 'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
+      illustration: PesaFlowIllustration.emptyLoans(),
     );
   }
 
@@ -316,7 +318,9 @@ class LoanListScreen extends ConsumerWidget {
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A);
 
-    return GlassCard(
+    return Hero(
+      tag: 'loan-${loan.id}',
+      child: GlassCard(
       margin: const EdgeInsets.only(bottom: 10),
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
@@ -411,11 +415,14 @@ class LoanListScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildPaidLoanTile(BuildContext context, Loan loan, ThemeData theme, bool isDark) {
-    return GlassCard(
+    return Hero(
+      tag: 'loan-${loan.id}',
+      child: GlassCard(
       margin: const EdgeInsets.only(bottom: 10),
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
@@ -466,6 +473,7 @@ class LoanListScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }

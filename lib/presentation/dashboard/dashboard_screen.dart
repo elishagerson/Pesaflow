@@ -16,8 +16,10 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
@@ -3407,6 +3409,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       body: SafeArea(
         top: false,
         child: RefreshIndicator(
+          color: const Color(0xFF0F4C5C),
+          backgroundColor: const Color(0xFFF5F6F8),
           onRefresh: () async {
             ref.invalidate(monthlyTotalsProvider);
             ref.invalidate(netWorthProvider);
@@ -3721,7 +3725,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TactileSpringContainer(
+                        child: PressScale(
                           onTap: () => context.go('/transactions/add'),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -4370,7 +4374,7 @@ class _InsightsCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final insightsAsync = ref.watch(insightsProvider);
+    final insightsAsync = ref.watch(dynamicInsightsProvider);
 
     return insightsAsync.when(
       data: (insights) {
@@ -4395,7 +4399,7 @@ class _InsightsCarousel extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                 itemCount: insights.length,
                 separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-                itemBuilder: (_, i) => InsightCard(insight: insights[i]),
+                itemBuilder: (_, i) => InsightCard(data: insights[i]),
               ),
             ),
           ],

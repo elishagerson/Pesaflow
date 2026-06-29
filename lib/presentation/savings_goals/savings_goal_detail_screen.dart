@@ -806,7 +806,9 @@ class _SavingsGoalDetailScreenState
                 const SizedBox(height: kSpacing16),
 
                 // Progress Card
-                Container(
+                Hero(
+                  tag: 'goal-${goal.id}',
+                  child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(kSpacing20),
                   decoration: BoxDecoration(
@@ -895,6 +897,7 @@ class _SavingsGoalDetailScreenState
                       ),
                     ],
                   ),
+                ),
                 ),
                 const SizedBox(height: kSpacing16),
 

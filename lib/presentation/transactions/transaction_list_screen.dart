@@ -13,6 +13,7 @@ import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -103,6 +104,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     icon: Icons.search_off_rounded,
                     title: 'No Transactions Found',
                     subtitle: 'Try adjusting your filters or typing a different query.',
+                    illustration: PesaFlowIllustration.emptyTransactions(),
                   ),
                 );
               }

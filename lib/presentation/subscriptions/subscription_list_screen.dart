@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
@@ -47,6 +48,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                     child: EmptyState(
                       icon: Icons.subscriptions_outlined,
                       title: 'No subscriptions yet',
+                      illustration: PesaFlowIllustration.emptySubscriptions(),
                       action: TextButton(
                         onPressed: () => context.push('/subscriptions/add'),
                         child: const Text('Add a subscription'),
@@ -107,7 +109,9 @@ class SubscriptionListScreen extends ConsumerWidget {
             .firstOrNull)
         : null;
 
-    return Container(
+    return Hero(
+      tag: 'subscription-${sub.id}',
+      child: Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
       decoration: BoxDecoration(
         color: isDark ? AppTheme.surfaceContainerDark : Colors.white,
@@ -168,7 +172,8 @@ class SubscriptionListScreen extends ConsumerWidget {
         ),
         ),
       ),
-    );
+    ),
+  );
   }
 
 }
