@@ -1,18 +1,18 @@
 import 'dart:developer' as developer;
-import '../../../data/models/sms_parsed.dart';
+import '../../models/sms_parsed.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
 class AirtelTzParser implements SmsParser {
   String _extractReference(String text) {
-    final regex = RegExp(r'(?:Rej|Ref|TxnID):\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final regex = RegExp(r'(?:Rej|Ref|TxnID|TID):\s*([A-Za-z0-9.]+)', caseSensitive: false);
     final match = regex.firstMatch(text);
     return match?.group(1) ?? 'AIRTEL-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {
     final regex = RegExp(
-      r'(?:Salio|Balance|Bal):\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
+      r'(?:Salio|Balance|Bal):?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)', 
       caseSensitive: false
     );
     final match = regex.firstMatch(text);
@@ -102,7 +102,33 @@ class AirtelTzParser implements SmsParser {
         );
       }
 
-      // 4. English Sent Money (Expense)
+      // 4. Swahili Paid via Lipa (Expense) — real Airtel Money Tanzania format
+      // Example: "Umelipa TZS6,000 kwenda 0763485704 FLORA EDSON MWAKIBULAGHA.Makato Tsh 180.00( Ada Tsh 180.00 + Tozo Tsh 0.00). Salio Tsh1,417.96. TID:MP260616.1437.U76387"
+      // Also: "Umelipa 500.00 Tsh kwenda YATOSHA BUNDLE. Makato Tsh 0.00. Salio 17.96 Tsh TID:MP260617.1328.R77204"
+      final swPayLipaRegex = RegExp(
+        r'Umelipa\s+(?:(?:Tsh|TZS|TSh)\s*)?([\d,]+(?:\.[\d]{2})?)(?:\s*(?:Tsh|TZS|TSh))?\s+kwenda\s+(.+?)(?:\.|\s+Makato|\s+Salio|\s+TID|$)',
+        caseSensitive: false,
+      );
+      match = swPayLipaRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 6. English Sent Money (Expense)
       // Example: "You have sent TZS 20,000.00 to 0765432198. TxnID: AT654321. Balance: TZS 280,000.00"
       final engSentRegex = RegExp(
         r'You have sent\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)(?:\.|\s+TxnID|\s+Balance|\s+on|$)',
@@ -127,7 +153,206 @@ class AirtelTzParser implements SmsParser {
         );
       }
 
-      // 5. Swahili Agent Deposit (Income)
+      // 7. Swahili Airtime Purchase (Expense / Airtime)
+      // Example: "Umenunua airtime Tsh 5,000.00 kwa 0712345678. Rej: AT99999. Salio: Tsh 200,000.00"
+      final swAirtimeRegex = RegExp(
+        r'Umenunua\s+airtime\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = swAirtimeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Airtel Airtime',
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 8. Swahili Bundle/Data Purchase (Expense / Airtime)
+      // Example: "Umenunua kifurushi Tsh 3,000.00. Rej: AT88888. Salio: Tsh 197,000.00"
+      // Also: "Ununuzi wa kifurushi Tsh 3,000.00. Rej: AT88888. Salio: Tsh 197,000.00"
+      final swBundleRegex = RegExp(
+        r'(?:Umenunua|Ununuzi wa)\s+kifurushi\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = swBundleRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Airtel Bundle',
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 9. Swahili Payment Completed (Expense)
+      // Example: "Malipo ya Tsh 50,000.00 kwa MERCHANT NAME yamekamilika. Rej: AT77777. Salio: Tsh 150,000.00"
+      // Also: "Malipo yamekamilika kwa MERCHANT NAME, Kiasi Tsh 50,000.00. Rej: AT77777. Salio: Tsh 150,000.00"
+      final swPaymentRegex = RegExp(
+        r'Malipo\s+(?:ya|yamekamilika)\s+(?:(?:\w+\s+)*)?(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwa|kwenda)\s+(.+?)(?:\.|\s+yamekamilika|\s+Rej|\s+Salio|\s+tarehe|$)',
+        caseSensitive: false,
+      );
+      match = swPaymentRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 10. Swahili Withdrawal (Expense)
+      // Example: "Umetoa Tsh 50,000.00 kwenye ATM/Wakala. Rej: AT66666. Salio: Tsh 150,000.00"
+      final swWithdrawalRegex = RegExp(
+        r'Umetoa\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:kwenye|kwa|katika)\s+(.+?)(?:\.|\s+Rej|\s+Salio|\s+tarehe|$)',
+        caseSensitive: false,
+      );
+      match = swWithdrawalRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final location = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: location,
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 11. English Airtime Purchase (Expense / Airtime)
+      // Example: "You have bought airtime of TZS 5,000.00. TxnID: AT99999. Balance: TZS 200,000.00"
+      final engAirtimeRegex = RegExp(
+        r'You have (?:bought|purchased)\s+airtime\s+(?:of\s+)?(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = engAirtimeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Airtel Airtime',
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 12. English Paid (Expense)
+      // Example: "You have paid TZS 100,000.00 to MERCHANT NAME. TxnID: AT55555. Balance: TZS 200,000.00"
+      final engPaidRegex = RegExp(
+        r'You have paid\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)(?:\.|\s+TxnID|\s+Balance|\s+on|$)',
+        caseSensitive: false,
+      );
+      match = engPaidRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final payee = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: payee,
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 13. English Withdrawal (Expense)
+      // Example: "Withdrawal of TZS 50,000.00 at ATM/Agent. TxnID: AT44444. Balance: TZS 250,000.00"
+      // Also: "You have withdrawn TZS 50,000.00 at ATM/Agent. TxnID: AT44444. Balance: TZS 250,000.00"
+      final engWithdrawalRegex = RegExp(
+        r'(?:Withdrawal of|You have withdrawn)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:at|from)\s+(.+?)(?:\.|\s+TxnID|\s+Balance|\s+on|$)',
+        caseSensitive: false,
+      );
+      match = engWithdrawalRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final location = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: location,
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 14. English Bundle/Data Purchase (Expense / Airtime)
+      // Example: "You have purchased a bundle of TZS 3,000.00. TxnID: AT33333. Balance: TZS 197,000.00"
+      final engBundleRegex = RegExp(
+        r'You have purchased\s+(?:a\s+)?bundle\s+(?:of\s+)?(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = engBundleRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Airtel Bundle',
+          reference: ref,
+          provider: 'AirtelMoney_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 15. Swahili Agent Deposit (Income)
       // Example: "Umeweka Tsh 100,000.00 kwenye Airtel Money. Salio: Tsh 380,000.00"
       final swDepositRegex = RegExp(
         r'Umeweka\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+kwenye\s+Airtel\s+Money',
@@ -151,7 +376,7 @@ class AirtelTzParser implements SmsParser {
         );
       }
 
-      // 6. English Agent Deposit (Income)
+      // 16. English Agent Deposit (Income)
       // Example: "You have deposited TZS 100,000.00 to Airtel Money. Balance: TZS 380,000.00"
       final engDepositRegex = RegExp(
         r'You have deposited\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:to|into)\s+Airtel\s+Money',

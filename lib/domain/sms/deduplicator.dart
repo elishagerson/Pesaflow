@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/models/sms_parsed.dart';
+import '../models/sms_parsed.dart';
 import '../../../data/repositories/transaction_repository.dart';
 
 final deduplicatorProvider = Provider<Deduplicator>((ref) {

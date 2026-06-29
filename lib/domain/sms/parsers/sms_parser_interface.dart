@@ -1,4 +1,4 @@
-import '../../../data/models/sms_parsed.dart';
+import '../../models/sms_parsed.dart';
 
 abstract class SmsParser {
   /// Parses the raw SMS string body and returns an [SmsParsed] object.

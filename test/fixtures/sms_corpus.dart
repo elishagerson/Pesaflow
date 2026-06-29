@@ -387,6 +387,157 @@ final List<SmsCorpusEntry> smsCorpus = [
   ),
 
   // =========================================================================
+  // Airtel Money Tanzania — expense variants
+  // =========================================================================
+  SmsCorpusEntry(
+    label: 'airtel_airtime_sw',
+    sender: 'AIRTEL',
+    body: 'Umenunua airtime Tsh 5,000.00 kwa 0712345678. Rej: AT99999. Salio: Tsh 200,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 500000,
+      type: 'airtime',
+      senderOrRecipient: 'Airtel Airtime',
+      reference: 'AT99999',
+      balanceAfter: 20000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_bundle_sw',
+    sender: 'AIRTEL',
+    body: 'Umenunua kifurushi Tsh 3,000.00. Rej: AT88888. Salio: Tsh 197,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 300000,
+      type: 'airtime',
+      senderOrRecipient: 'Airtel Bundle',
+      reference: 'AT88888',
+      balanceAfter: 19700000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_payment_sw',
+    sender: 'AIRTEL',
+    body: 'Malipo ya Tsh 50,000.00 kwa MERCHANT NAME yamekamilika. Rej: AT77777. Salio: Tsh 150,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 5000000,
+      type: 'expense',
+      senderOrRecipient: 'MERCHANT NAME',
+      reference: 'AT77777',
+      balanceAfter: 15000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_withdrawal_sw',
+    sender: 'AIRTEL',
+    body: 'Umetoa Tsh 50,000.00 kwenye ATM. Rej: AT66666. Salio: Tsh 150,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 5000000,
+      type: 'expense',
+      senderOrRecipient: 'ATM',
+      reference: 'AT66666',
+      balanceAfter: 15000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_airtime_en',
+    sender: 'AIRTEL',
+    body: 'You have bought airtime of TZS 5,000.00. TxnID: AT99999. Balance: TZS 200,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 500000,
+      type: 'airtime',
+      senderOrRecipient: 'Airtel Airtime',
+      reference: 'AT99999',
+      balanceAfter: 20000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_paid_en',
+    sender: 'AIRTEL',
+    body: 'You have paid TZS 100,000.00 to ZESA BILLS. TxnID: AT55555. Balance: TZS 200,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 10000000,
+      type: 'expense',
+      senderOrRecipient: 'ZESA BILLS',
+      reference: 'AT55555',
+      balanceAfter: 20000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_withdrawal_en',
+    sender: 'AIRTEL',
+    body: 'Withdrawal of TZS 50,000.00 at ATM. TxnID: AT44444. Balance: TZS 250,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 5000000,
+      type: 'expense',
+      senderOrRecipient: 'ATM',
+      reference: 'AT44444',
+      balanceAfter: 25000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_bundle_en',
+    sender: 'AIRTEL',
+    body: 'You have purchased a bundle of TZS 3,000.00. TxnID: AT33333. Balance: TZS 197,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 300000,
+      type: 'airtime',
+      senderOrRecipient: 'Airtel Bundle',
+      reference: 'AT33333',
+      balanceAfter: 19700000,
+    ),
+  ),
+
+  // =========================================================================
+  // Airtel Money Tanzania — real user-supplied messages
+  // =========================================================================
+  SmsCorpusEntry(
+    label: 'airtel_received_real',
+    sender: 'AIRTEL MONEY',
+    body: 'Umepokea Tsh 100.00 kutoka Mixx By Yas - ELISHA NDUNDULU - 675259341.Salio Tsh 117.96. TID:CI260617.2358.N31144',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 10000,
+      type: 'income',
+      senderOrRecipient: 'Mixx By Yas - ELISHA NDUNDULU - 675259341',
+      reference: 'CI260617.2358.N31144',
+      balanceAfter: 11796,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_paid_via_lipa_real',
+    sender: 'AIRTEL MONEY',
+    body: 'Umelipa TZS6,000 kwenda 0763485704 FLORA EDSON MWAKIBULAGHA.Makato Tsh 180.00( Ada Tsh 180.00 + Tozo Tsh 0.00). Salio Tsh1,417.96. TID:MP260616.1437.U76387',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 600000,
+      type: 'expense',
+      senderOrRecipient: '0763485704 FLORA EDSON MWAKIBULAGHA',
+      reference: 'MP260616.1437.U76387',
+      balanceAfter: 141796,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'airtel_paid_bundle_real',
+    sender: 'AIRTEL MONEY',
+    body: 'Umelipa 500.00 Tsh kwenda YATOSHA BUNDLE. Makato Tsh 0.00. Salio 17.96 Tsh TID:MP260617.1328.R77204',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 50000,
+      type: 'expense',
+      senderOrRecipient: 'YATOSHA BUNDLE',
+      reference: 'MP260617.1328.R77204',
+      balanceAfter: 1796,
+    ),
+  ),
+
+  // =========================================================================
   // Tigo Pesa / Mixx by Yas — Swahili
   // =========================================================================
   SmsCorpusEntry(

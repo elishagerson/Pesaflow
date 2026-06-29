@@ -1,5 +1,5 @@
 import 'dart:developer' as developer;
-import '../../../data/models/sms_parsed.dart';
+import '../../models/sms_parsed.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
