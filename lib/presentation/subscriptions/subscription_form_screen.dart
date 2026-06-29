@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -140,7 +141,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(kSpacing16),
           children: [
             TextFormField(
               controller: _nameController,

@@ -2484,7 +2484,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.medium,
                 padding: const EdgeInsets.all(kSpacing16),
-                margin: const EdgeInsets.only(bottom: 12),
+                margin: const EdgeInsets.only(bottom: kSpacing12),
                 child: Column(
                   children: [
                     Text(
@@ -2530,7 +2530,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               ...upcoming.take(3).map((sub) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.only(bottom: kSpacing6),
                 child: GlassCard(
                   borderRadius: AppTheme.radiusCard,
                   elevation: CardElevation.low,
@@ -3370,7 +3370,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // Clear account filter chip row if _selectedAccountId is active
               if (_selectedAccountId != null) ...[
                 Padding(
-                  padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
+                  padding: const EdgeInsets.only(top: kSpacing4, bottom: kSpacing12),
                   child: Row(
                     children: [
                       InputChip(
@@ -3489,7 +3489,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           direction: DismissDirection.endToStart,
                           background: Container(
                             alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20.0),
+                            padding: const EdgeInsets.only(right: kSpacing20),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.error,
                               borderRadius: BorderRadius.circular(
