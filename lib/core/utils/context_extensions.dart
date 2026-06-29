@@ -113,7 +113,7 @@ class FormScaffold extends StatelessWidget {
         bottom: false,
         child: SingleChildScrollView(
           padding: padding ?? context.horizontalPadding,
-          keyboardDismissBehavior: KeyboardDismissBehavior.onDrag,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: child,
         ),
       ),
