@@ -66,7 +66,7 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
           ..where((r) =>
               r.status.equals('active') &
               r.merchantKeywords.isNotNull() &
-              r.merchantKeywords.isNotEqualTo('')))
+              r.merchantKeywords.equals('').not()))
         .get();
   }
 

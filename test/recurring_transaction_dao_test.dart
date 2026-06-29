@@ -37,6 +37,8 @@ void main() {
       nextDate: nextDate ?? DateTime.now(),
       status: status,
       trackerId: 'default_personal',
+      totalPaid: 0,
+      paymentCount: 0,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );

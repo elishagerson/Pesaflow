@@ -164,6 +164,8 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
         trackerId: activeTrackerId,
         merchantKeywords: _keywordsController.text.trim().isEmpty
             ? null : _keywordsController.text.trim(),
+        totalPaid: 0,
+        paymentCount: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
