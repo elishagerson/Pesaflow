@@ -1774,8 +1774,9 @@ class _KeypadButtonState extends State<KeypadButton>
             AnimatedBuilder(
               animation: _animController,
               builder: (context, child) {
-                if (_animController.value == 0.0)
+                if (_animController.value == 0.0) {
                   return const SizedBox.shrink();
+                }
                 return Container(
                   width: widget.height * 0.9 * _scaleAnimation.value,
                   height: widget.height * 0.9 * _scaleAnimation.value,

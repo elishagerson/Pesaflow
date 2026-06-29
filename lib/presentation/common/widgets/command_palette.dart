@@ -168,7 +168,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
       if (event is KeyDownEvent) {
         final query = ref.read(paletteQueryProvider);
         final results = _filtered(query);
-        if (results.isEmpty) return KeyEventResult.ignored;
+        if (results.isEmpty) {
+          return KeyEventResult.ignored;
+        }
 
         if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
           setState(() {
