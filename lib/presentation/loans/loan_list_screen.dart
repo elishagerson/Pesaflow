@@ -40,7 +40,7 @@ class LoanListScreen extends ConsumerWidget {
           ref.refresh(paidLoansStreamProvider.future),
         ]),
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
           children: [
             // Outstanding header
             totalOutstandingAsync.when(

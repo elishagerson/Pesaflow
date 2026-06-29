@@ -57,7 +57,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                     ),
                   )
                 : ListView(
-                    padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing64),
+                    padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing16, kSpacing16, kSpacing64),
                     children: [
                       if (due.isNotEmpty)
                         StaggeredFadeSlide(

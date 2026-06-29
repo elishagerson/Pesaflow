@@ -387,11 +387,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? const Color(0xCC000000)
-                        : const Color(0xCCF2F2F7),
+                        ? Colors.black.withValues(alpha: 0.25)
+                        : Colors.white.withValues(alpha: 0.25),
                     border: Border(
                       bottom: BorderSide(
-                        color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.05),
                         width: 0.5,
                       ),
                     ),
@@ -447,16 +449,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04),
-                                    border: Border.all(
-                                      color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1F000000),
-                                      width: 0.8,
-                                    ),
-                                  ),
+                                   width: 36,
+                                   height: 36,
+                                   decoration: BoxDecoration(
+                                     shape: BoxShape.circle,
+                                     color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03),
+                                     border: Border.all(
+                                       color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06),
+                                       width: 0.8,
+                                     ),
+                                   ),
                                   child: Icon(
                                     Icons.person_outline_rounded,
                                     size: 18,
@@ -514,12 +516,18 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   duration: const Duration(milliseconds: 200),
                                   curve: Curves.easeOutCubic,
                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
+                                   decoration: BoxDecoration(
+                                     color: isSelected
+                                         ? theme.colorScheme.primary
+                                         : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03)),
+                                     borderRadius: BorderRadius.circular(100),
+                                     border: Border.all(
+                                       color: isSelected
+                                           ? theme.colorScheme.primary
+                                           : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
+                                       width: 0.8,
+                                     ),
+                                   ),
                                   child: Text(
                                     type,
                                     style: TextStyle(
@@ -732,8 +740,14 @@ class _FilterButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive
             ? theme.colorScheme.primary.withValues(alpha: 0.12)
-            : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
+            : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03)),
         shape: BoxShape.circle,
+        border: Border.all(
+          color: isActive
+              ? theme.colorScheme.primary.withValues(alpha: 0.20)
+              : (isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06)),
+          width: 0.8,
+        ),
       ),
       child: Stack(
         clipBehavior: Clip.none,

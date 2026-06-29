@@ -67,125 +67,166 @@ class IosTabBar extends StatelessWidget {
         left: minimized ? 24 : 16,
         right: minimized ? 24 : 16,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            height: height,
-            padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: isDark
-                  ? const Color(0xCC000000)
-                  : const Color(0xCCE5E5EA),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: visualTabs.map((tab) {
-                final isSelected = tab.routeIndex == selectedIndex;
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: height,
+              padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.45)
+                    : Colors.white.withValues(alpha: 0.45),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : Colors.black.withValues(alpha: 0.08),
+                  width: 0.8,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: visualTabs.map((tab) {
+                  final isSelected = tab.routeIndex == selectedIndex;
 
-                if (tab.isCenter) {
-                  return Semantics(
-                    label: tab.label,
-                    button: true,
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.mediumImpact();
-                        onDestinationSelected(tab.routeIndex);
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutBack,
-                      width: minimized ? 36 : 54,
-                      height: minimized ? 36 : 54,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSelected
-                            ? theme.colorScheme.primary.withValues(alpha: 0.20)
-                            : (isDark
-                                ? Colors.white.withValues(alpha: 0.06)
-                                : Colors.black.withValues(alpha: 0.04)),
-                      ),
-                        child: Center(
-                        child: Icon(
-                          tab.icon,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : (isDark
-                                  ? Colors.white.withValues(alpha: 0.5)
-                                  : Colors.black.withValues(alpha: 0.3)),
-                          size: minimized ? 18 : 26,
-                        ),
-                      ),
-                    ),
-                  ),
-                  );
-                }
-
-                return Expanded(
-                  child: Semantics(
-                    label: tab.label,
-                    button: true,
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        onDestinationSelected(tab.routeIndex);
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          transitionBuilder: (child, animation) {
-                            return ScaleTransition(
-                              scale: animation,
-                              child: child,
-                            );
-                          },
-                          child: Icon(
-                            isSelected ? tab.activeIcon : tab.icon,
-                            key: ValueKey(isSelected),
-                            size: minimized ? 20 : 24,
+                  if (tab.isCenter) {
+                    return Semantics(
+                      label: tab.label,
+                      button: true,
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          onDestinationSelected(tab.routeIndex);
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutBack,
+                          width: minimized ? 36 : 54,
+                          height: minimized ? 36 : 54,
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                             color: isSelected
-                                ? (isDark
-                                    ? Colors.white
-                                    : theme.colorScheme.primary)
+                                ? theme.colorScheme.primary.withValues(alpha: 0.20)
                                 : (isDark
-                                    ? Colors.white.withValues(alpha: 0.35)
-                                    : Colors.black.withValues(alpha: 0.3)),
+                                    ? Colors.white.withValues(alpha: 0.06)
+                                    : Colors.black.withValues(alpha: 0.04)),
                           ),
-                        ),
-                        if (!minimized) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            tab.label,
-                            style: TextStyle(
-                              fontSize: 9,
-                              letterSpacing: 0.3,
-                              fontWeight:
-                                  isSelected ? FontWeight.w700 : FontWeight.w500,
+                          child: Center(
+                            child: Icon(
+                              tab.icon,
                               color: isSelected
-                                  ? (isDark
-                                      ? Colors.white
-                                      : theme.colorScheme.primary)
+                                  ? theme.colorScheme.primary
                                   : (isDark
-                                      ? Colors.white.withValues(alpha: 0.35)
+                                      ? Colors.white.withValues(alpha: 0.5)
                                       : Colors.black.withValues(alpha: 0.3)),
+                              size: minimized ? 18 : 26,
                             ),
                           ),
-                        ],
-                      ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Semantics(
+                      label: tab.label,
+                      button: true,
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          onDestinationSelected(tab.routeIndex);
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                          padding: EdgeInsets.symmetric(
+                            vertical: minimized ? 8 : 6,
+                            horizontal: minimized ? 8 : 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: isDark ? 0.15 : 0.10,
+                                  )
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: isSelected
+                                  ? theme.colorScheme.primary.withValues(
+                                      alpha: isDark ? 0.20 : 0.15,
+                                    )
+                                  : Colors.transparent,
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 200),
+                                transitionBuilder: (child, animation) {
+                                  return ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: Icon(
+                                  isSelected ? tab.activeIcon : tab.icon,
+                                  key: ValueKey(isSelected),
+                                  size: minimized ? 20 : 22,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : (isDark
+                                          ? Colors.white.withValues(alpha: 0.45)
+                                          : Colors.black.withValues(alpha: 0.35)),
+                                ),
+                              ),
+                              if (!minimized) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  tab.label,
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    letterSpacing: 0.3,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w700
+                                        : FontWeight.w500,
+                                    color: isSelected
+                                        ? theme.colorScheme.primary
+                                        : (isDark
+                                            ? Colors.white.withValues(alpha: 0.45)
+                                            : Colors.black.withValues(alpha: 0.35)),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  ));
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
@@ -245,8 +286,16 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xB8000000)
-                : const Color(0xB8F2F2F7),
+                ? Colors.black.withValues(alpha: 0.25)
+                : Colors.white.withValues(alpha: 0.25),
+            border: Border(
+              bottom: BorderSide(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.05),
+                width: 0.5,
+              ),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

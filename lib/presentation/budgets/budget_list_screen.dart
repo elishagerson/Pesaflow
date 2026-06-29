@@ -97,7 +97,7 @@ class BudgetListScreen extends ConsumerWidget {
     final activeTab = ref.watch(budgetActiveTabProvider);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: isDark

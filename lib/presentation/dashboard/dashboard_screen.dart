@@ -954,152 +954,74 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return budgetsAsync.when(
       data: (budgets) {
         if (budgets.isEmpty) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Budget Progress',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'LIMITS & SPENDING',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
-                      ),
-                    ],
+          return GlassCard(
+            padding: const EdgeInsets.all(kSpacing24),
+            borderRadius: AppTheme.radiusCard,
+            elevation: CardElevation.low,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(kSpacing14),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(
+                      alpha: 0.08,
+                    ),
+                    shape: BoxShape.circle,
                   ),
-                  TextButton.icon(
-                    onPressed: () => context.go('/budgets/add'),
-                    icon: const Icon(PesaFlowIcons.add, size: 16),
-                    label: const Text('Add Budget'),
+                  child: Icon(
+                    Icons.donut_large_rounded,
+                    color: theme.colorScheme.primary,
+                    size: 28,
                   ),
-                ],
-              ),
-              const SizedBox(height: kSpacing8),
-              GlassCard(
-                padding: const EdgeInsets.all(kSpacing24),
-                borderRadius: AppTheme.radiusCard,
-                elevation: CardElevation.low,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(kSpacing14),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(
-                          alpha: 0.08,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.donut_large_rounded,
-                        color: theme.colorScheme.primary,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing16),
-                    Text(
-                      'No Active Budgets',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing8),
-                    Text(
-                      'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.7,
-                        ),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: kSpacing16),
+                Text(
+                  'No Active Budgets',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: kSpacing8),
+                Text(
+                  'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.7,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           );
         }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            StaggeredFadeSlide(
-              index: 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Budget Progress',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'LIMITS & SPENDING',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () => context.go('/budgets'),
-                    child: const Text('See All'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: kSpacing12),
-            SizedBox(
-              height: 132,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                itemCount: budgets.length,
-                itemBuilder: (_, i) {
-                  final bp = budgets[i];
-                  final pct = bp.percentage.clamp(0.0, 1.0);
-                  final catColor = hexToColor(bp.category.color);
-                  final catIcon = getCategoryIcon(bp.category.icon);
+        return SizedBox(
+          height: 132,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: budgets.length,
+            itemBuilder: (_, i) {
+              final bp = budgets[i];
+              final pct = bp.percentage.clamp(0.0, 1.0);
+              final catColor = hexToColor(bp.category.color);
+              final catIcon = getCategoryIcon(bp.category.icon);
 
-                  return StaggeredFadeSlide(
-                    index: i,
-                    child: _buildSingleBudgetRing(
-                      context: context,
-                      bp: bp,
-                      catColor: catColor,
-                      catIcon: catIcon,
-                      pct: pct,
-                      theme: theme,
-                      isDark: isDark,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+              return StaggeredFadeSlide(
+                index: i,
+                child: _buildSingleBudgetRing(
+                  context: context,
+                  bp: bp,
+                  catColor: catColor,
+                  catIcon: catIcon,
+                  pct: pct,
+                  theme: theme,
+                  isDark: isDark,
+                ),
+              );
+            },
+          ),
         );
       },
       loading: () => const Padding(
@@ -1195,45 +1117,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             : 0.0;
         final percentInt = (pct * 100).round();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Savings Target',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'ACTIVE EMERGENCY VAULT',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    context.push('/savings-goals');
-                  },
-                  child: const Text('See All'),
-                ),
-              ],
-            ),
-            const SizedBox(height: kSpacing12),
-            GestureDetector(
+        return GestureDetector(
               onTap: () {
                 HapticFeedback.mediumImpact();
                 context.push('/savings-goals/${goal.id}');
@@ -1351,9 +1235,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
-            ),
-          ],
-        );
+            );
       },
       loading: () => const Padding(
         padding: EdgeInsets.symmetric(horizontal: kSpacing16),
@@ -1373,61 +1255,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
     final paidLoansCountAsync = ref.watch(paidLoansCountProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Loans',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'DEBT OVERVIEW',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                paidLoansCountAsync.when(
-                  data: (count) => count > 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(right: kSpacing8),
-                          child: Text(
-                            '$count paid',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: const Color(0xFF609F8A),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, _) => const SizedBox.shrink(),
-                ),
-                TextButton(
-                  onPressed: () => context.go('/loans'),
-                  child: const Text('See All'),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: kSpacing12),
-        activeLoansAsync.when(
+    return activeLoansAsync.when(
           data: (activeLoans) {
             if (activeLoans.isEmpty) {
               return Column(
@@ -1925,9 +1753,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           },
           loading: () => const SizedBox.shrink(),
           error: (_, _) => const SizedBox.shrink(),
-        ),
-      ],
-    );
+        );
   }
 
   void _showWorkspaceSelectorSheet(BuildContext context) {
@@ -2600,94 +2426,57 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return subsAsync.when(
       data: (subscriptions) {
         if (subscriptions.isEmpty) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return GestureDetector(
+            onTap: () => context.push('/subscriptions'),
+            child: GlassCard(
+              borderRadius: AppTheme.radiusCard,
+              elevation: CardElevation.low,
+              padding: const EdgeInsets.all(kSpacing20),
+              child: Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Subscriptions',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(
+                        alpha: 0.1,
                       ),
-                      Text(
-                        'TRACK RECURRING SERVICES',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.subscriptions,
+                      color: theme.colorScheme.primary,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Track your subscriptions',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? Colors.white
+                                : theme.colorScheme.onSurface,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () => context.push('/subscriptions'),
-                    child: const Text('Manage'),
+                        const SizedBox(height: kSpacing4),
+                        Text(
+                          'Log recurring payments like streaming, utility bills, or gym memberships to get ahead of renewals.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: kSpacing8),
-              GestureDetector(
-                onTap: () => context.push('/subscriptions'),
-                child: GlassCard(
-                  borderRadius: AppTheme.radiusCard,
-                  elevation: CardElevation.low,
-                  padding: const EdgeInsets.all(kSpacing20),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(kSpacing12),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.1,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          PesaFlowIcons.subscriptions,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Track your subscriptions',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? Colors.white
-                                    : theme.colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing4),
-                            Text(
-                              'Log recurring payments like streaming, utility bills, or gym memberships to get ahead of renewals.',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.6,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           );
         }
         final due = dueAsync.asData?.value ?? [];
@@ -2712,65 +2501,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header row ──
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Subscriptions',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '${active.length} ACTIVE',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (due.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing10,
-                          vertical: kSpacing4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(
-                            0xFFFF6B35,
-                          ).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Text(
-                          '${due.length} due',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w900,
-                            color: const Color(0xFFFF6B35),
-                          ),
-                        ),
-                      ),
-                    TextButton(
-                      onPressed: () => context.push('/subscriptions'),
-                      child: const Text('Manage'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: kSpacing8),
 
             // ── Hero total card ──
             if (totals.monthly > 0)
@@ -3049,38 +2779,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Upcoming Payments',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'RECURRING',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () => context.go('/recurring'),
-                  child: const Text('Manage'),
-                ),
-              ],
-            ),
-            const SizedBox(height: kSpacing8),
             ...limited.map(
               (r) => Padding(
                 padding: const EdgeInsets.only(bottom: kSpacing8),
@@ -3265,6 +2963,124 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ? const Color(0x1AFFFFFF)
         : const Color(0x33FFFFFF);
 
+    final paidLoansCountAsync = ref.watch(paidLoansCountProvider);
+    final subsAsync = ref.watch(subscriptionsStreamProvider);
+    final dueAsync = ref.watch(dueSubscriptionsProvider);
+    final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
+
+    // Dynamic Action Buttons for Collapsible Sections
+    final budgetAction = budgetsAsync.maybeWhen(
+      data: (budgets) => budgets.isEmpty
+          ? TextButton.icon(
+              onPressed: () => context.go('/budgets/add'),
+              icon: const Icon(PesaFlowIcons.add, size: 16),
+              label: const Text('Add Budget'),
+            )
+          : TextButton(
+              onPressed: () => context.go('/budgets'),
+              child: const Text('See All'),
+            ),
+      orElse: () => const SizedBox.shrink(),
+    );
+
+    final savingsAction = savingsGoalsAsync.maybeWhen(
+      data: (goals) => goals.isNotEmpty
+          ? TextButton(
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                context.push('/savings-goals');
+              },
+              child: const Text('See All'),
+            )
+          : null,
+      orElse: () => null,
+    );
+
+    final subscriptionsAction = subsAsync.maybeWhen(
+      data: (subscriptions) {
+        if (subscriptions.isEmpty) {
+          return TextButton(
+            onPressed: () => context.push('/subscriptions'),
+            child: const Text('Manage'),
+          );
+        }
+        final due = dueAsync.asData?.value ?? [];
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (due.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(right: kSpacing8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing10,
+                  vertical: kSpacing4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  '${due.length} due',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFFFF6B35),
+                  ),
+                ),
+              ),
+            TextButton(
+              onPressed: () => context.push('/subscriptions'),
+              child: const Text('Manage'),
+            ),
+          ],
+        );
+      },
+      orElse: () => TextButton(
+        onPressed: () => context.push('/subscriptions'),
+        child: const Text('Manage'),
+      ),
+    );
+
+    final recurringAction = recurringAsync.maybeWhen(
+      data: (rec) => rec.isNotEmpty
+          ? TextButton(
+              onPressed: () => context.go('/recurring'),
+              child: const Text('Manage'),
+            )
+          : null,
+      orElse: () => null,
+    );
+
+    final loansAction = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        paidLoansCountAsync.maybeWhen(
+          data: (count) => count > 0
+              ? Padding(
+                  padding: const EdgeInsets.only(right: kSpacing8),
+                  child: Text(
+                    '$count paid',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: const Color(0xFF609F8A),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+          orElse: () => const SizedBox.shrink(),
+        ),
+        TextButton(
+          onPressed: () => context.go('/loans'),
+          child: const Text('See All'),
+        ),
+      ],
+    );
+
+    final activeCount = subsAsync.maybeWhen(
+      data: (subs) => subs.where((s) => s.status == 'active').length,
+      orElse: () => 0,
+    );
+
     return Scaffold(
       appBar: IosNavBar(
         title: _getGreeting(),
@@ -3278,9 +3094,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : Colors.black.withValues(alpha: 0.04),
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.03),
               borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.10)
+                    : Colors.black.withValues(alpha: 0.05),
+                width: 0.8,
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -3321,9 +3143,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : Colors.black.withValues(alpha: 0.04),
+                    ? Colors.white.withValues(alpha: 0.06)
+                    : Colors.black.withValues(alpha: 0.03),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : Colors.black.withValues(alpha: 0.06),
+                  width: 0.8,
+                ),
               ),
               child: Icon(
                 Icons.person_outline_rounded,
@@ -3342,9 +3170,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.04),
+                        ? Colors.white.withValues(alpha: 0.06)
+                        : Colors.black.withValues(alpha: 0.03),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.12)
+                          : Colors.black.withValues(alpha: 0.06),
+                      width: 0.8,
+                    ),
                   ),
                   child: Icon(
                     Icons.notifications_none_rounded,
@@ -4184,6 +4018,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 _CollapsibleSection(
                   title: 'Budget Progress',
                   icon: PesaFlowIcons.budgets,
+                  subtitle: 'LIMITS & SPENDING',
+                  action: budgetAction,
                   child: _buildBudgetRings(theme, context),
                 ),
 
@@ -4194,6 +4030,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     child: _CollapsibleSection(
                       title: 'Savings Goals',
                       icon: PesaFlowIcons.target,
+                      subtitle: 'ACTIVE EMERGENCY VAULT',
+                      action: savingsAction,
                       child: _buildSavingsGoalsDashboard(theme, context),
                     ),
                   ),
@@ -4213,16 +4051,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 StaggeredFadeSlide(
                   index: 6,
                   child: _CollapsibleSection(
-                    title: 'Upcoming',
-                    icon: PesaFlowIcons.calendar,
+                    title: 'Subscriptions',
+                    icon: PesaFlowIcons.subscriptions,
+                    subtitle: activeCount > 0 ? '$activeCount active' : 'track recurring services',
+                    action: subscriptionsAction,
                     child: _buildSubscriptionsDashboard(theme, context),
                   ),
                 ),
 
                 // ── 7. Upcoming Payments — "Recurring" ──
                 _CollapsibleSection(
-                  title: 'Upcoming',
+                  title: 'Recurring Payments',
                   icon: PesaFlowIcons.calendar,
+                  subtitle: 'RECURRING',
+                  action: recurringAction,
                   child: _buildUpcomingRecurring(theme, context),
                 ),
 
@@ -4234,6 +4076,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: _CollapsibleSection(
                     title: 'Loans',
                     icon: Icons.credit_score_rounded,
+                    subtitle: 'DEBT OVERVIEW',
+                    action: loansAction,
                     child: _buildLoanOverview(theme, context),
                   ),
                 ),
@@ -4370,7 +4214,6 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
 class _InsightsCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final insightsAsync = ref.watch(dynamicInsightsProvider);
 
     return insightsAsync.when(
