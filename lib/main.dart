@@ -409,6 +409,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
       darkTheme: AppTheme.fromColorScheme(darkCs, Brightness.dark),
       themeMode: mode,
       routerConfig: appRouter,
+      scrollBehavior: const AppScrollBehavior(),
       builder: (context, child) {
         final isLight =
             mode == ThemeMode.light ||
