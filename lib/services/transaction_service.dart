@@ -43,7 +43,10 @@ class TransactionService {
     );
   }
 
-  Stream<List<dynamic>> watchRecentTransactions(int limit, {String? trackerId}) {
+  Stream<List<dynamic>> watchRecentTransactions(
+    int limit, {
+    String? trackerId,
+  }) {
     return _repo.watchRecentTransactions(limit, trackerId: trackerId);
   }
 
@@ -89,8 +92,14 @@ class TransactionService {
     return _repo.getTransactionById(id);
   }
 
-  Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
-    await _repo.approveReviewedTransaction(transactionId, newCategoryId: newCategoryId);
+  Future<void> approveReviewedTransaction(
+    String transactionId, {
+    String? newCategoryId,
+  }) async {
+    await _repo.approveReviewedTransaction(
+      transactionId,
+      newCategoryId: newCategoryId,
+    );
   }
 
   Future<dynamic> findFuzzyTransferMatch({

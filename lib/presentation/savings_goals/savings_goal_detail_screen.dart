@@ -105,7 +105,8 @@ class _SavingsGoalDetailScreenState
       ref.invalidate(savingsGoalsTotalSavedProvider);
 
       final updatedGoal = await repo.getSavingsGoalById(goal.id);
-      final reachedMilestone = isDeposit &&
+      final reachedMilestone =
+          isDeposit &&
           updatedGoal != null &&
           updatedGoal.currentAmount >= updatedGoal.targetAmount &&
           goal.currentAmount < goal.targetAmount;
@@ -119,8 +120,9 @@ class _SavingsGoalDetailScreenState
                   ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!'
                   : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
             ),
-            backgroundColor:
-                isDeposit ? AppTheme.transferColorDark : const Color(0xFFFF453A),
+            backgroundColor: isDeposit
+                ? AppTheme.transferColorDark
+                : const Color(0xFFFF453A),
           ),
         );
 
@@ -141,16 +143,20 @@ class _SavingsGoalDetailScreenState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) setState(() => _isOperationLoading = false);
     }
   }
 
-  void _showAddMoneySheet(BuildContext context, SavingsGoal goal, bool isDeposit) {
+  void _showAddMoneySheet(
+    BuildContext context,
+    SavingsGoal goal,
+    bool isDeposit,
+  ) {
     _amountController.clear();
     _noteController.clear();
     _deductFromWallet = false;
@@ -168,8 +174,9 @@ class _SavingsGoalDetailScreenState
       builder: (ctx) {
         final theme = Theme.of(ctx);
         final isDark = theme.brightness == Brightness.dark;
-        final accentColor =
-            isDeposit ? const Color(0xFF609F8A) : const Color(0xFFFF453A);
+        final accentColor = isDeposit
+            ? const Color(0xFF609F8A)
+            : const Color(0xFFFF453A);
 
         return DraggableScrollableSheet(
           initialChildSize: 0.65,
@@ -178,13 +185,17 @@ class _SavingsGoalDetailScreenState
           expand: false,
           builder: (context, scrollController) {
             return ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(24)),
+                  color: isDark
+                      ? const Color(0xF01C1C1E)
+                      : const Color(0xF0F2F2F7),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                 ),
                 child: StatefulBuilder(
                   builder: (context, setModalState) {
@@ -209,24 +220,32 @@ class _SavingsGoalDetailScreenState
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
+                              padding: const EdgeInsets.fromLTRB(
+                                kSpacing20,
+                                0,
+                                kSpacing20,
+                                kSpacing24,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(kSpacing10),
+                                        padding: const EdgeInsets.all(
+                                          kSpacing10,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: accentColor
-                                              .withValues(alpha: 0.12),
+                                          color: accentColor.withValues(
+                                            alpha: 0.12,
+                                          ),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
                                           isDeposit
                                               ? PesaFlowIcons.savings
                                               : Icons
-                                                  .account_balance_wallet_rounded,
+                                                    .account_balance_wallet_rounded,
                                           color: accentColor,
                                           size: 22,
                                         ),
@@ -242,8 +261,9 @@ class _SavingsGoalDetailScreenState
                                                   ? 'Deposit Savings'
                                                   : 'Withdraw Savings',
                                               style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
@@ -263,11 +283,14 @@ class _SavingsGoalDetailScreenState
                                     ],
                                   ),
                                   const SizedBox(height: kSpacing24),
-                                  const Text('AMOUNT',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.5)),
+                                  const Text(
+                                    'AMOUNT',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
@@ -277,14 +300,18 @@ class _SavingsGoalDetailScreenState
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
                                         color: isDark
-                                            ? Colors.white
-                                                .withValues(alpha: 0.08)
-                                            : Colors.black
-                                                .withValues(alpha: 0.06),
+                                            ? Colors.white.withValues(
+                                                alpha: 0.08,
+                                              )
+                                            : Colors.black.withValues(
+                                                alpha: 0.06,
+                                              ),
                                       ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing16, vertical: kSpacing4),
+                                      horizontal: kSpacing16,
+                                      vertical: kSpacing4,
+                                    ),
                                     child: Row(
                                       children: [
                                         Text(
@@ -316,9 +343,10 @@ class _SavingsGoalDetailScreenState
                                             decoration: InputDecoration(
                                               hintText: '0',
                                               hintStyle: TextStyle(
-                                                  color: isDark
-                                                      ? Colors.white30
-                                                      : Colors.black26),
+                                                color: isDark
+                                                    ? Colors.white30
+                                                    : Colors.black26,
+                                              ),
                                               filled: true,
                                               fillColor: isDark
                                                   ? const Color(0xFF1C1C1E)
@@ -332,25 +360,31 @@ class _SavingsGoalDetailScreenState
                                                 borderRadius:
                                                     BorderRadius.circular(14),
                                                 borderSide: BorderSide(
-                                                    color: isDark
-                                                        ? Colors.white
-                                                            .withValues(alpha: 0.08)
-                                                        : Colors.black
-                                                            .withValues(alpha: 0.06)),
+                                                  color: isDark
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.08,
+                                                        )
+                                                      : Colors.black.withValues(
+                                                          alpha: 0.06,
+                                                        ),
+                                                ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(14),
                                                 borderSide: BorderSide(
-                                                    color: theme
-                                                        .colorScheme.primary
-                                                        .withValues(alpha: 0.5),
-                                                    width: 1.5),
+                                                  color: theme
+                                                      .colorScheme
+                                                      .primary
+                                                      .withValues(alpha: 0.5),
+                                                  width: 1.5,
+                                                ),
                                               ),
                                               contentPadding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 12),
+                                                    horizontal: 16,
+                                                    vertical: 12,
+                                                  ),
                                             ),
                                           ),
                                         ),
@@ -361,85 +395,98 @@ class _SavingsGoalDetailScreenState
                                               setModalState(() {});
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(kSpacing4),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing4,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: isDark
-                                                    ? Colors.white
-                                                        .withValues(alpha: 0.1)
-                                                    : Colors.black
-                                                        .withValues(alpha: 0.05),
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.1,
+                                                      )
+                                                    : Colors.black.withValues(
+                                                        alpha: 0.05,
+                                                      ),
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
-                                                  PesaFlowIcons.close,
-                                                  size: 18,
-                                                  color: isDark
-                                                      ? Colors.white54
-                                                      : Colors.black45),
+                                                PesaFlowIcons.close,
+                                                size: 18,
+                                                color: isDark
+                                                    ? Colors.white54
+                                                    : Colors.black45,
+                                              ),
                                             ),
                                           ),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing20),
-                                  const Text('MEMO',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.5)),
+                                  const Text(
+                                    'MEMO',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
                                   const SizedBox(height: kSpacing8),
                                   TextFormField(
                                     controller: _noteController,
                                     textCapitalization:
                                         TextCapitalization.sentences,
                                     style: TextStyle(
-                                        fontSize: 15,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black),
+                                      fontSize: 15,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                     decoration: InputDecoration(
                                       hintText: 'Add an optional note',
                                       hintStyle: TextStyle(
-                                          color: isDark
-                                              ? Colors.white30
-                                              : Colors.black26),
+                                        color: isDark
+                                            ? Colors.white30
+                                            : Colors.black26,
+                                      ),
                                       prefixIcon: Icon(
-                                          PesaFlowIcons.edit,
-                                          size: 20,
-                                          color: isDark
-                                              ? Colors.white38
-                                              : Colors.black26),
+                                        PesaFlowIcons.edit,
+                                        size: 20,
+                                        color: isDark
+                                            ? Colors.white38
+                                            : Colors.black26,
+                                      ),
                                       filled: true,
                                       fillColor: isDark
                                           ? const Color(0xFF1C1C1E)
                                           : const Color(0xFFF2F2F7),
                                       border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(14),
+                                        borderRadius: BorderRadius.circular(14),
                                         borderSide: BorderSide.none,
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(14),
+                                        borderRadius: BorderRadius.circular(14),
                                         borderSide: BorderSide(
-                                            color: isDark
-                                                ? Colors.white
-                                                    .withValues(alpha: 0.08)
-                                                : Colors.black
-                                                    .withValues(alpha: 0.06)),
+                                          color: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.08,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
+                                        ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(14),
+                                        borderRadius: BorderRadius.circular(14),
                                         borderSide: BorderSide(
-                                            color: theme
-                                                .colorScheme.primary
-                                                .withValues(alpha: 0.5),
-                                            width: 1.5),
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.5),
+                                          width: 1.5,
+                                        ),
                                       ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
-                                              horizontal: kSpacing16, vertical: kSpacing14),
+                                            horizontal: kSpacing16,
+                                            vertical: kSpacing14,
+                                          ),
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing20),
@@ -451,17 +498,21 @@ class _SavingsGoalDetailScreenState
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
                                         color: isDark
-                                            ? Colors.white
-                                                .withValues(alpha: 0.08)
-                                            : Colors.black
-                                                .withValues(alpha: 0.06),
+                                            ? Colors.white.withValues(
+                                                alpha: 0.08,
+                                              )
+                                            : Colors.black.withValues(
+                                                alpha: 0.06,
+                                              ),
                                       ),
                                     ),
                                     child: Column(
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing16, vertical: kSpacing12),
+                                            horizontal: kSpacing16,
+                                            vertical: kSpacing12,
+                                          ),
                                           child: Row(
                                             children: [
                                               Expanded(
@@ -482,7 +533,9 @@ class _SavingsGoalDetailScreenState
                                                             : Colors.black87,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: kSpacing2),
+                                                    const SizedBox(
+                                                      height: kSpacing2,
+                                                    ),
                                                     Text(
                                                       'Updates real balance & logs a transaction',
                                                       style: TextStyle(
@@ -512,31 +565,40 @@ class _SavingsGoalDetailScreenState
                                             height: 0.5,
                                             thickness: 0.5,
                                             color: isDark
-                                                ? Colors.white
-                                                    .withValues(alpha: 0.08)
-                                                : Colors.black
-                                                    .withValues(alpha: 0.06),
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.08,
+                                                  )
+                                                : Colors.black.withValues(
+                                                    alpha: 0.06,
+                                                  ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: kSpacing16, vertical: kSpacing8),
+                                              horizontal: kSpacing16,
+                                              vertical: kSpacing8,
+                                            ),
                                             child: Row(
                                               children: [
                                                 Icon(
-                                                    Icons
-                                                        .account_balance_wallet_rounded,
-                                                    size: 18,
-                                                    color: isDark
-                                                        ? Colors.white38
-                                                        : Colors.black38),
-                                                const SizedBox(width: kSpacing10),
+                                                  Icons
+                                                      .account_balance_wallet_rounded,
+                                                  size: 18,
+                                                  color: isDark
+                                                      ? Colors.white38
+                                                      : Colors.black38,
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing10,
+                                                ),
                                                 const Expanded(
                                                   child: Text(
-                                                      'Source Account',
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w500)),
+                                                    'Source Account',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
                                                 ),
                                                 DropdownButton<String>(
                                                   value: _selectedAccountId,
@@ -545,12 +607,13 @@ class _SavingsGoalDetailScreenState
                                                       : Colors.white,
                                                   underline: const SizedBox(),
                                                   icon: Icon(
-                                                      Icons
-                                                          .keyboard_arrow_down_rounded,
-                                                      size: 20,
-                                                      color: isDark
-                                                          ? Colors.white54
-                                                          : Colors.black45),
+                                                    Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                    size: 20,
+                                                    color: isDark
+                                                        ? Colors.white54
+                                                        : Colors.black45,
+                                                  ),
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
@@ -560,10 +623,12 @@ class _SavingsGoalDetailScreenState
                                                   ),
                                                   items: accounts.map((acc) {
                                                     return DropdownMenuItem<
-                                                        String>(
+                                                      String
+                                                    >(
                                                       value: acc.id,
                                                       child: Text(
-                                                          '${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})'),
+                                                        '${acc.name} (${CurrencyFormatter.formatCents(acc.balance)})',
+                                                      ),
                                                     );
                                                   }).toList(),
                                                   onChanged: (v) {
@@ -584,17 +649,18 @@ class _SavingsGoalDetailScreenState
                                     width: double.infinity,
                                     height: kSpacing56,
                                     child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 250),
+                                      duration: const Duration(
+                                        milliseconds: 250,
+                                      ),
                                       curve: Curves.easeOutCubic,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(16),
                                         boxShadow: !_isOperationLoading
                                             ? [
                                                 BoxShadow(
-                                                  color: accentColor
-                                                      .withValues(alpha: 0.3),
+                                                  color: accentColor.withValues(
+                                                    alpha: 0.3,
+                                                  ),
                                                   blurRadius: 12,
                                                   offset: const Offset(0, 4),
                                                 ),
@@ -605,21 +671,28 @@ class _SavingsGoalDetailScreenState
                                         onPressed: _isOperationLoading
                                             ? null
                                             : () => _handleContribution(
-                                                goal, isDeposit),
+                                                goal,
+                                                isDeposit,
+                                              ),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: accentColor,
                                           foregroundColor: Colors.white,
                                           disabledBackgroundColor: isDark
-                                              ? Colors.white
-                                                  .withValues(alpha: 0.05)
-                                              : Colors.black
-                                                  .withValues(alpha: 0.05),
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.05,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.05,
+                                                ),
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(16)),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: kSpacing14),
+                                            vertical: kSpacing14,
+                                          ),
                                         ),
                                         child: _isOperationLoading
                                             ? const SizedBox(
@@ -627,31 +700,36 @@ class _SavingsGoalDetailScreenState
                                                 height: kSpacing24,
                                                 child:
                                                     CircularProgressIndicator(
-                                                        strokeWidth: 2.5,
-                                                        color: Colors.white),
+                                                      strokeWidth: 2.5,
+                                                      color: Colors.white,
+                                                    ),
                                               )
                                             : Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Icon(
-                                                      isDeposit
-                                                          ? Icons
+                                                    isDeposit
+                                                        ? Icons
                                                               .add_circle_outline_rounded
-                                                          : Icons
+                                                        : Icons
                                                               .remove_circle_outline_rounded,
-                                                      size: 18,
-                                                      color: Colors.white
-                                                          .withValues(alpha: 0.8)),
-                                                  const SizedBox(width: kSpacing8),
+                                                    size: 18,
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.8),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: kSpacing8,
+                                                  ),
                                                   Text(
                                                     isDeposit
                                                         ? 'Confirm Deposit'
                                                         : 'Confirm Withdrawal',
                                                     style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -727,8 +805,9 @@ class _SavingsGoalDetailScreenState
         }
 
         final goalColor = hexToColor(goal.color);
-        final contributionsAsync = ref
-            .watch(savingsGoalContributionsStreamProvider(goal.id));
+        final contributionsAsync = ref.watch(
+          savingsGoalContributionsStreamProvider(goal.id),
+        );
 
         final remainingDays = _calculateDaysRemaining(goal.targetDate);
         final pct = goal.targetAmount > 0
@@ -746,15 +825,23 @@ class _SavingsGoalDetailScreenState
                 onPressed: () => context.push('/savings-goals/${goal.id}/edit'),
               ),
               IconButton(
-                icon: Icon(PesaFlowIcons.delete,
-                    size: 20, color: Colors.red.withValues(alpha: 0.7)),
+                icon: Icon(
+                  PesaFlowIcons.delete,
+                  size: 20,
+                  color: Colors.red.withValues(alpha: 0.7),
+                ),
                 onPressed: () => _deleteGoal(goal.id),
               ),
             ],
           ),
           body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(kSpacing16, 0, kSpacing16, kSpacing24),
+            padding: const EdgeInsets.fromLTRB(
+              kSpacing16,
+              0,
+              kSpacing16,
+              kSpacing24,
+            ),
             child: Column(
               children: [
                 const SizedBox(height: kSpacing8),
@@ -768,8 +855,9 @@ class _SavingsGoalDetailScreenState
                         color: goalColor.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: goalColor.withValues(alpha: 0.3),
-                            width: 1.5),
+                          color: goalColor.withValues(alpha: 0.3),
+                          width: 1.5,
+                        ),
                       ),
                       child: Icon(
                         getGoalIcon(goal.icon),
@@ -785,7 +873,9 @@ class _SavingsGoalDetailScreenState
                           Text(
                             goal.name,
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -810,95 +900,99 @@ class _SavingsGoalDetailScreenState
                 Hero(
                   tag: 'goal-${goal.id}',
                   child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(kSpacing20),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF1C1C1E)
-                        : AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(kSpacing20),
+                    decoration: BoxDecoration(
                       color: isDark
-                          ? const Color(0x1AFFFFFF)
-                          : const Color(0x0F000000),
-                      width: 0.5,
+                          ? const Color(0xFF1C1C1E)
+                          : AppTheme.surfaceLight,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0x1AFFFFFF)
+                            : const Color(0x0F000000),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: kSpacing64,
+                          width: kSpacing64,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              PieChart(
+                                PieChartData(
+                                  startDegreeOffset: -90,
+                                  sectionsSpace: 0,
+                                  centerSpaceRadius: 28,
+                                  sections: [
+                                    PieChartSectionData(
+                                      value: pct * 100,
+                                      color: goalColor,
+                                      radius: 6,
+                                      showTitle: false,
+                                    ),
+                                    PieChartSectionData(
+                                      value: (1.0 - pct) * 100,
+                                      color: goalColor.withValues(alpha: 0.12),
+                                      radius: 6,
+                                      showTitle: false,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                '$percentInt%',
+                                style: TextStyle(
+                                  color: goalColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'TOTAL SAVED',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.1,
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing4),
+                              Text(
+                                CurrencyFormatter.formatCents(
+                                  goal.currentAmount,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontFamily: 'monospace',
+                                  fontWeight: FontWeight.w900,
+                                  color: isDark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing4),
+                              Text(
+                                'Goal target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: kSpacing64,
-                        width: kSpacing64,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            PieChart(PieChartData(
-                              startDegreeOffset: -90,
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 28,
-                              sections: [
-                                PieChartSectionData(
-                                  value: pct * 100,
-                                  color: goalColor,
-                                  radius: 6,
-                                  showTitle: false,
-                                ),
-                                PieChartSectionData(
-                                  value: (1.0 - pct) * 100,
-                                  color: goalColor.withValues(alpha: 0.12),
-                                  radius: 6,
-                                  showTitle: false,
-                                ),
-                              ],
-                            )),
-                            Text(
-                              '$percentInt%',
-                              style: TextStyle(
-                                color: goalColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'TOTAL SAVED',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: Colors.grey[500],
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing4),
-                            Text(
-                              CurrencyFormatter.formatCents(
-                                  goal.currentAmount),
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontFamily: 'monospace',
-                                fontWeight: FontWeight.w900,
-                                color:
-                                    isDark ? Colors.white : Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing4),
-                            Text(
-                              'Goal target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                              style: const TextStyle(
-                                  color: Colors.grey, fontSize: 11),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 ),
                 const SizedBox(height: kSpacing16),
 
@@ -914,17 +1008,20 @@ class _SavingsGoalDetailScreenState
                         child: Container(
                           height: kSpacing48,
                           decoration: BoxDecoration(
-                            color: AppTheme.transferColorDark
-                                .withValues(alpha: 0.15),
+                            color: AppTheme.transferColorDark.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(PesaFlowIcons.add,
-                                  color: AppTheme.transferColorDark,
-                                  size: 18),
+                              const Icon(
+                                PesaFlowIcons.add,
+                                color: AppTheme.transferColorDark,
+                                size: 18,
+                              ),
                               const SizedBox(width: kSpacing6),
                               Text(
                                 'Add Money',
@@ -951,16 +1048,20 @@ class _SavingsGoalDetailScreenState
                         child: Container(
                           height: kSpacing48,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFF453A)
-                                .withValues(alpha: 0.15),
+                            color: const Color(
+                              0xFFFF453A,
+                            ).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.remove_rounded,
-                                  color: Color(0xFFFF453A), size: 18),
+                              const Icon(
+                                Icons.remove_rounded,
+                                color: Color(0xFFFF453A),
+                                size: 18,
+                              ),
                               const SizedBox(width: kSpacing6),
                               Text(
                                 'Withdraw',
@@ -999,12 +1100,16 @@ class _SavingsGoalDetailScreenState
                   data: (logs) {
                     if (logs.isEmpty) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(vertical: kSpacing32),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kSpacing32,
+                        ),
                         alignment: Alignment.center,
                         child: Text(
                           'No deposits or withdrawals logged yet.',
                           style: TextStyle(
-                              color: Colors.grey[500], fontSize: 13),
+                            color: Colors.grey[500],
+                            fontSize: 13,
+                          ),
                         ),
                       );
                     }
@@ -1026,8 +1131,9 @@ class _SavingsGoalDetailScreenState
                         return StaggeredFadeSlide(
                           index: idx,
                           child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: kSpacing12),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing12,
+                            ),
                             child: Row(
                               children: [
                                 Container(
@@ -1051,24 +1157,27 @@ class _SavingsGoalDetailScreenState
                                             ? 'Savings Deposit'
                                             : 'Savings Withdrawal',
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                       if (log.notes != null) ...[
                                         const SizedBox(height: kSpacing4),
                                         Text(
                                           log.notes!,
                                           style: TextStyle(
-                                              color: Colors.grey[500],
-                                              fontSize: 11),
+                                            color: Colors.grey[500],
+                                            fontSize: 11,
+                                          ),
                                         ),
                                       ],
                                       const SizedBox(height: kSpacing2),
                                       Text(
                                         '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
                                         style: TextStyle(
-                                            color: Colors.grey[500],
-                                            fontSize: 9),
+                                          color: Colors.grey[500],
+                                          fontSize: 9,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1079,7 +1188,8 @@ class _SavingsGoalDetailScreenState
                                     Text(
                                       (isPos ? '+' : '-') +
                                           CurrencyFormatter.formatCents(
-                                              log.amount.abs()),
+                                            log.amount.abs(),
+                                          ),
                                       style: TextStyle(
                                         fontFamily: 'monospace',
                                         fontWeight: FontWeight.bold,
@@ -1094,48 +1204,55 @@ class _SavingsGoalDetailScreenState
                                       onTap: () async {
                                         final confirm =
                                             await ModernDialog.show<bool>(
-                                          context: context,
-                                          title: const Text(
-                                              'Delete Contribution?'),
-                                          titleIcon:
-                                              PesaFlowIcons.warning,
-                                          content: const Text(
-                                            'This will undo this deposit/withdrawal from this visual savings goal balance.',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(false),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              child: const Text('Delete',
-                                                  style: TextStyle(
-                                                      color: Colors.red)),
-                                            ),
-                                          ],
-                                        );
+                                              context: context,
+                                              title: const Text(
+                                                'Delete Contribution?',
+                                              ),
+                                              titleIcon: PesaFlowIcons.warning,
+                                              content: const Text(
+                                                'This will undo this deposit/withdrawal from this visual savings goal balance.',
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(
+                                                    context,
+                                                  ).pop(false),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(
+                                                    context,
+                                                  ).pop(true),
+                                                  child: const Text(
+                                                    'Delete',
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
 
                                         if (confirm == true) {
                                           await ref
                                               .read(
-                                                  savingsGoalRepositoryProvider)
+                                                savingsGoalRepositoryProvider,
+                                              )
                                               .deleteContribution(log.id);
                                           ref.invalidate(
-                                              savingsGoalsStreamProvider);
+                                            savingsGoalsStreamProvider,
+                                          );
                                           ref.invalidate(
-                                              savingsGoalsTotalSavedProvider);
+                                            savingsGoalsTotalSavedProvider,
+                                          );
                                         }
                                       },
                                       child: Icon(
                                         PesaFlowIcons.delete,
                                         size: 16,
-                                        color: Colors.red
-                                            .withValues(alpha: 0.7),
+                                        color: Colors.red.withValues(
+                                          alpha: 0.7,
+                                        ),
                                       ),
                                     ),
                                   ],

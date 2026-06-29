@@ -41,9 +41,10 @@ class ActiveTrackerIdNotifier extends Notifier<String> {
   }
 }
 
-final activeTrackerIdProvider = NotifierProvider<ActiveTrackerIdNotifier, String>(() {
-  return ActiveTrackerIdNotifier();
-});
+final activeTrackerIdProvider =
+    NotifierProvider<ActiveTrackerIdNotifier, String>(() {
+      return ActiveTrackerIdNotifier();
+    });
 
 final allTrackersStreamProvider = StreamProvider<List<Tracker>>((ref) {
   final repo = ref.watch(trackerRepositoryProvider);
@@ -66,11 +67,12 @@ final categoriesFutureProvider = FutureProvider<List<Category>>((ref) {
   return repo.getAllCategories();
 });
 
-final recentTransactionsStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  final trackerId = ref.watch(activeTrackerIdProvider);
-  return repo.watchRecentTransactions(5, trackerId: trackerId);
-});
+final recentTransactionsStreamProvider =
+    StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      final trackerId = ref.watch(activeTrackerIdProvider);
+      return repo.watchRecentTransactions(5, trackerId: trackerId);
+    });
 
 final netWorthProvider = Provider<int>((ref) {
   final accountsAsync = ref.watch(accountsStreamProvider);
@@ -89,9 +91,11 @@ class TransactionTypeFilterNotifier extends Notifier<String> {
   @override
   set state(String value) => super.state = value;
 }
-final transactionTypeFilterProvider = NotifierProvider<TransactionTypeFilterNotifier, String>(() {
-  return TransactionTypeFilterNotifier();
-});
+
+final transactionTypeFilterProvider =
+    NotifierProvider<TransactionTypeFilterNotifier, String>(() {
+      return TransactionTypeFilterNotifier();
+    });
 
 class TransactionAccountFilterNotifier extends Notifier<String?> {
   @override
@@ -100,9 +104,11 @@ class TransactionAccountFilterNotifier extends Notifier<String?> {
   @override
   set state(String? value) => super.state = value;
 }
-final transactionAccountFilterProvider = NotifierProvider<TransactionAccountFilterNotifier, String?>(() {
-  return TransactionAccountFilterNotifier();
-});
+
+final transactionAccountFilterProvider =
+    NotifierProvider<TransactionAccountFilterNotifier, String?>(() {
+      return TransactionAccountFilterNotifier();
+    });
 
 class TransactionCategoryFilterNotifier extends Notifier<String?> {
   @override
@@ -111,9 +117,11 @@ class TransactionCategoryFilterNotifier extends Notifier<String?> {
   @override
   set state(String? value) => super.state = value;
 }
-final transactionCategoryFilterProvider = NotifierProvider<TransactionCategoryFilterNotifier, String?>(() {
-  return TransactionCategoryFilterNotifier();
-});
+
+final transactionCategoryFilterProvider =
+    NotifierProvider<TransactionCategoryFilterNotifier, String?>(() {
+      return TransactionCategoryFilterNotifier();
+    });
 
 class TransactionSearchQueryNotifier extends Notifier<String> {
   @override
@@ -122,9 +130,11 @@ class TransactionSearchQueryNotifier extends Notifier<String> {
   @override
   set state(String value) => super.state = value;
 }
-final transactionSearchQueryProvider = NotifierProvider<TransactionSearchQueryNotifier, String>(() {
-  return TransactionSearchQueryNotifier();
-});
+
+final transactionSearchQueryProvider =
+    NotifierProvider<TransactionSearchQueryNotifier, String>(() {
+      return TransactionSearchQueryNotifier();
+    });
 
 class TransactionAmountMinNotifier extends Notifier<int?> {
   @override
@@ -133,9 +143,11 @@ class TransactionAmountMinNotifier extends Notifier<int?> {
   @override
   set state(int? value) => super.state = value;
 }
-final transactionAmountMinProvider = NotifierProvider<TransactionAmountMinNotifier, int?>(() {
-  return TransactionAmountMinNotifier();
-});
+
+final transactionAmountMinProvider =
+    NotifierProvider<TransactionAmountMinNotifier, int?>(() {
+      return TransactionAmountMinNotifier();
+    });
 
 class TransactionAmountMaxNotifier extends Notifier<int?> {
   @override
@@ -144,9 +156,11 @@ class TransactionAmountMaxNotifier extends Notifier<int?> {
   @override
   set state(int? value) => super.state = value;
 }
-final transactionAmountMaxProvider = NotifierProvider<TransactionAmountMaxNotifier, int?>(() {
-  return TransactionAmountMaxNotifier();
-});
+
+final transactionAmountMaxProvider =
+    NotifierProvider<TransactionAmountMaxNotifier, int?>(() {
+      return TransactionAmountMaxNotifier();
+    });
 
 class TransactionDateFromNotifier extends Notifier<DateTime?> {
   @override
@@ -155,9 +169,11 @@ class TransactionDateFromNotifier extends Notifier<DateTime?> {
   @override
   set state(DateTime? value) => super.state = value;
 }
-final transactionDateFromProvider = NotifierProvider<TransactionDateFromNotifier, DateTime?>(() {
-  return TransactionDateFromNotifier();
-});
+
+final transactionDateFromProvider =
+    NotifierProvider<TransactionDateFromNotifier, DateTime?>(() {
+      return TransactionDateFromNotifier();
+    });
 
 class TransactionDateToNotifier extends Notifier<DateTime?> {
   @override
@@ -166,39 +182,43 @@ class TransactionDateToNotifier extends Notifier<DateTime?> {
   @override
   set state(DateTime? value) => super.state = value;
 }
-final transactionDateToProvider = NotifierProvider<TransactionDateToNotifier, DateTime?>(() {
-  return TransactionDateToNotifier();
-});
 
-final filteredTransactionsStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  final type = ref.watch(transactionTypeFilterProvider);
-  final accountId = ref.watch(transactionAccountFilterProvider);
-  final categoryId = ref.watch(transactionCategoryFilterProvider);
-  final search = ref.watch(transactionSearchQueryProvider);
-  final amountMin = ref.watch(transactionAmountMinProvider);
-  final amountMax = ref.watch(transactionAmountMaxProvider);
-  final dateFrom = ref.watch(transactionDateFromProvider);
-  final dateTo = ref.watch(transactionDateToProvider);
-  final trackerId = ref.watch(activeTrackerIdProvider);
+final transactionDateToProvider =
+    NotifierProvider<TransactionDateToNotifier, DateTime?>(() {
+      return TransactionDateToNotifier();
+    });
 
-  return repo.watchFilteredTransactions(
-    accountId: accountId,
-    categoryId: categoryId,
-    type: type,
-    searchQuery: search,
-    amountMin: amountMin,
-    amountMax: amountMax,
-    startDate: dateFrom,
-    endDate: dateTo,
-    trackerId: trackerId,
-  );
-});
+final filteredTransactionsStreamProvider =
+    StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      final type = ref.watch(transactionTypeFilterProvider);
+      final accountId = ref.watch(transactionAccountFilterProvider);
+      final categoryId = ref.watch(transactionCategoryFilterProvider);
+      final search = ref.watch(transactionSearchQueryProvider);
+      final amountMin = ref.watch(transactionAmountMinProvider);
+      final amountMax = ref.watch(transactionAmountMaxProvider);
+      final dateFrom = ref.watch(transactionDateFromProvider);
+      final dateTo = ref.watch(transactionDateToProvider);
+      final trackerId = ref.watch(activeTrackerIdProvider);
 
-final reviewQueueStreamProvider = StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  return repo.watchReviewQueueTransactions();
-});
+      return repo.watchFilteredTransactions(
+        accountId: accountId,
+        categoryId: categoryId,
+        type: type,
+        searchQuery: search,
+        amountMin: amountMin,
+        amountMax: amountMax,
+        startDate: dateFrom,
+        endDate: dateTo,
+        trackerId: trackerId,
+      );
+    });
+
+final reviewQueueStreamProvider =
+    StreamProvider<List<TransactionWithCategoryAndAccount>>((ref) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      return repo.watchReviewQueueTransactions();
+    });
 
 // ═══════════════════════════════════════════════════════
 // Budget Providers
@@ -255,15 +275,17 @@ final savingsGoalsStreamProvider = StreamProvider<List<SavingsGoal>>((ref) {
   return repo.watchAllSavingsGoals(trackerId);
 });
 
-final savingsGoalContributionsStreamProvider = StreamProvider.family<List<SavingsGoalContribution>, String>((ref, goalId) {
-  final repo = ref.watch(savingsGoalRepositoryProvider);
-  return repo.watchContributions(goalId);
-});
+final savingsGoalContributionsStreamProvider =
+    StreamProvider.family<List<SavingsGoalContribution>, String>((ref, goalId) {
+      final repo = ref.watch(savingsGoalRepositoryProvider);
+      return repo.watchContributions(goalId);
+    });
 
 final savingsGoalsTotalSavedProvider = Provider<int>((ref) {
   final goalsAsync = ref.watch(savingsGoalsStreamProvider);
   return goalsAsync.when(
-    data: (goals) => goals.fold<int>(0, (sum, goal) => sum + goal.currentAmount),
+    data: (goals) =>
+        goals.fold<int>(0, (sum, goal) => sum + goal.currentAmount),
     loading: () => 0,
     error: (_, _) => 0,
   );
@@ -290,7 +312,9 @@ final daysSinceLastSaveProvider = FutureProvider<int>((ref) async {
 
 final currencyShowDecimalsProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting('currency_show_decimals').map((val) => val == 'true');
+  return repo
+      .watchSetting('currency_show_decimals')
+      .map((val) => val == 'true');
 });
 
 final appLockEnabledProvider = StreamProvider<bool>((ref) {
@@ -300,12 +324,16 @@ final appLockEnabledProvider = StreamProvider<bool>((ref) {
 
 final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting('sms_auto_deduplication').map((val) => val == 'true');
+  return repo
+      .watchSetting('sms_auto_deduplication')
+      .map((val) => val == 'true');
 });
 
 final lockScreenBalanceEnabledProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting(SettingsKey.lockScreenBalance).map((val) => val == 'true');
+  return repo
+      .watchSetting(SettingsKey.lockScreenBalance)
+      .map((val) => val == 'true');
 });
 
 // ═══════════════════════════════════════════════════════
@@ -332,7 +360,11 @@ final paidLoansStreamProvider = StreamProvider<List<Loan>>((ref) {
 
 final paidLoansCountProvider = FutureProvider<int>((ref) {
   final paidAsync = ref.watch(paidLoansStreamProvider);
-  return paidAsync.when(data: (l) => l.length, loading: () => 0, error: (_, _) => 0);
+  return paidAsync.when(
+    data: (l) => l.length,
+    loading: () => 0,
+    error: (_, _) => 0,
+  );
 });
 
 final recentLoanActivityProvider = FutureProvider<int>((ref) {
@@ -341,10 +373,11 @@ final recentLoanActivityProvider = FutureProvider<int>((ref) {
   return repo.getActiveLoanCountPastMonths(3, trackerId: trackerId);
 });
 
-final loanTransactionsStreamProvider = StreamProvider.family<List<Transaction>, String>((ref, loanId) {
-  final repo = ref.watch(loanRepositoryProvider);
-  return repo.watchLoanTransactions(loanId);
-});
+final loanTransactionsStreamProvider =
+    StreamProvider.family<List<Transaction>, String>((ref, loanId) {
+      final repo = ref.watch(loanRepositoryProvider);
+      return repo.watchLoanTransactions(loanId);
+    });
 
 final totalOutstandingLoanProvider = FutureProvider<int>((ref) {
   final repo = ref.watch(loanRepositoryProvider);
@@ -356,16 +389,18 @@ final totalOutstandingLoanProvider = FutureProvider<int>((ref) {
 // Recurring Transaction Providers
 // ═══════════════════════════════════════════════════════
 
-final recurringTransactionsStreamProvider = StreamProvider<List<RecurringTransaction>>((ref) {
-  final repo = ref.watch(recurringTransactionRepositoryProvider);
-  final trackerId = ref.watch(activeTrackerIdProvider);
-  return repo.watchAll(trackerId: trackerId);
-});
+final recurringTransactionsStreamProvider =
+    StreamProvider<List<RecurringTransaction>>((ref) {
+      final repo = ref.watch(recurringTransactionRepositoryProvider);
+      final trackerId = ref.watch(activeTrackerIdProvider);
+      return repo.watchAll(trackerId: trackerId);
+    });
 
-final dueRecurringTransactionsProvider = FutureProvider<List<RecurringTransaction>>((ref) {
-  final repo = ref.watch(recurringTransactionRepositoryProvider);
-  return repo.getDueTransactions(DateTime.now());
-});
+final dueRecurringTransactionsProvider =
+    FutureProvider<List<RecurringTransaction>>((ref) {
+      final repo = ref.watch(recurringTransactionRepositoryProvider);
+      return repo.getDueTransactions(DateTime.now());
+    });
 
 // ── Recurring Expense Providers ───────────────────────────────────────
 
@@ -380,23 +415,20 @@ class RecurringTotals {
     required this.daily,
     required this.yearly,
   });
-  const RecurringTotals.zero()
-      : monthly = 0,
-        weekly = 0,
-        daily = 0,
-        yearly = 0;
+  const RecurringTotals.zero() : monthly = 0, weekly = 0, daily = 0, yearly = 0;
 }
 
 int _paymentsPerYear(String frequency, int interval) {
   final interval_ = interval < 1 ? 1 : interval;
   return switch (frequency) {
-    'weekly' => 52,
-    'biweekly' => 26,
-    'monthly' => 12,
-    'quarterly' => 4,
-    'yearly' => 1,
-    _ => 12,
-  } ~/ interval_;
+        'weekly' => 52,
+        'biweekly' => 26,
+        'monthly' => 12,
+        'quarterly' => 4,
+        'yearly' => 1,
+        _ => 12,
+      } ~/
+      interval_;
 }
 
 int _monthlyCost(int amountCents, String frequency, int interval) {
@@ -407,7 +439,9 @@ final recurringTotalsProvider = Provider<RecurringTotals>((ref) {
   final recAsync = ref.watch(recurringTransactionsStreamProvider);
   return recAsync.when(
     data: (recs) {
-      final activeExpenses = recs.where((r) => r.status == 'active' && r.type == 'expense');
+      final activeExpenses = recs.where(
+        (r) => r.status == 'active' && r.type == 'expense',
+      );
       int monthly = 0, yearly = 0;
       for (final r in activeExpenses) {
         monthly += _monthlyCost(r.amount, r.frequency, r.intervalValue);
@@ -425,11 +459,15 @@ final recurringTotalsProvider = Provider<RecurringTotals>((ref) {
   );
 });
 
-final upcomingRecurringExpensesProvider = Provider<List<RecurringTransaction>>((ref) {
+final upcomingRecurringExpensesProvider = Provider<List<RecurringTransaction>>((
+  ref,
+) {
   final recAsync = ref.watch(recurringTransactionsStreamProvider);
   return recAsync.when(
     data: (recs) {
-      final activeExpenses = recs.where((r) => r.status == 'active' && r.type == 'expense').toList();
+      final activeExpenses = recs
+          .where((r) => r.status == 'active' && r.type == 'expense')
+          .toList();
       activeExpenses.sort((a, b) => a.nextDate.compareTo(b.nextDate));
       return activeExpenses.take(5).toList();
     },
@@ -470,8 +508,11 @@ final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(() {
   return ThemeModeNotifier();
 });
 
-final transactionDetailProvider = FutureProvider.family<TransactionWithCategoryAndAccount?, String>((ref, id) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  return repo.getTransactionById(id);
-});
-
+final transactionDetailProvider =
+    FutureProvider.family<TransactionWithCategoryAndAccount?, String>((
+      ref,
+      id,
+    ) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      return repo.getTransactionById(id);
+    });

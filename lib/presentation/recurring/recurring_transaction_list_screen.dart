@@ -177,14 +177,15 @@ class _RecurringTransactionListScreenState
                             itemCount: filtered.length,
                             itemBuilder: (_, i) {
                               // Sort: due items first, then by nextDate
-                              final sorted = List<RecurringTransaction>.from(
-                                filtered,
-                              )..sort((a, b) {
-                                  final aDue = dueIds.contains(a.id) ? 0 : 1;
-                                  final bDue = dueIds.contains(b.id) ? 0 : 1;
-                                  if (aDue != bDue) return aDue - bDue;
-                                  return a.nextDate.compareTo(b.nextDate);
-                                });
+                              final sorted =
+                                  List<RecurringTransaction>.from(
+                                    filtered,
+                                  )..sort((a, b) {
+                                    final aDue = dueIds.contains(a.id) ? 0 : 1;
+                                    final bDue = dueIds.contains(b.id) ? 0 : 1;
+                                    if (aDue != bDue) return aDue - bDue;
+                                    return a.nextDate.compareTo(b.nextDate);
+                                  });
                               return StaggeredFadeSlide(
                                 index: i + 2,
                                 child: _buildRecurringTile(
@@ -217,10 +218,12 @@ class _RecurringTransactionListScreenState
     List<RecurringTransaction> allRecurring,
     Set<String> dueIds,
   ) {
-    final activeExpenses =
-        allRecurring.where((r) => r.type == 'expense' && r.status == 'active');
-    final activeIncome =
-        allRecurring.where((r) => r.type == 'income' && r.status == 'active');
+    final activeExpenses = allRecurring.where(
+      (r) => r.type == 'expense' && r.status == 'active',
+    );
+    final activeIncome = allRecurring.where(
+      (r) => r.type == 'income' && r.status == 'active',
+    );
     final paused = allRecurring.where((r) => r.status == 'paused');
 
     return Padding(
@@ -395,10 +398,8 @@ class _RecurringTransactionListScreenState
     List<RecurringTransaction> allRecurring,
   ) {
     final allCount = allRecurring.length;
-    final expenseCount =
-        allRecurring.where((r) => r.type == 'expense').length;
-    final incomeCount =
-        allRecurring.where((r) => r.type == 'income').length;
+    final expenseCount = allRecurring.where((r) => r.type == 'expense').length;
+    final incomeCount = allRecurring.where((r) => r.type == 'income').length;
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -455,15 +456,15 @@ class _RecurringTransactionListScreenState
           padding: const EdgeInsets.symmetric(vertical: kSpacing8),
           decoration: BoxDecoration(
             color: isActive
-                ? (isDark
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : Colors.white)
+                ? (isDark ? Colors.white.withValues(alpha: 0.12) : Colors.white)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(100),
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+                      color: Colors.black.withValues(
+                        alpha: isDark ? 0.2 : 0.06,
+                      ),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
@@ -517,9 +518,7 @@ class _RecurringTransactionListScreenState
   // ── Empty State ─────────────────────────────────────────────────────────
   Widget _buildEmptyState(BuildContext context, ThemeData theme, bool isDark) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.15,
-      ),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
       child: EmptyState(
         icon: PesaFlowIcons.calendar,
         title: 'No Recurring Flows',
@@ -547,26 +546,22 @@ class _RecurringTransactionListScreenState
     final accentColor = isDue
         ? const Color(0xFFFF6B35)
         : recurring.status == 'paused'
-            ? const Color(0xFFFF9F0A)
-            : recurring.status != 'active'
-                ? Colors.grey
-                : categoryColor ??
-                    (isExpense
-                        ? (isDark
-                            ? AppTheme.expenseColorDark
-                            : AppTheme.expenseColor)
-                        : (isDark
-                            ? AppTheme.incomeColorDark
-                            : AppTheme.incomeColor));
+        ? const Color(0xFFFF9F0A)
+        : recurring.status != 'active'
+        ? Colors.grey
+        : categoryColor ??
+              (isExpense
+                  ? (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor)
+                  : (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor));
 
     final daysUntil = recurring.nextDate.difference(DateTime.now()).inDays;
     final nextDateLabel = daysUntil == 0
         ? 'Today'
         : daysUntil == 1
-            ? 'Tomorrow'
-            : daysUntil < 0
-                ? '${daysUntil.abs()}d overdue'
-                : 'in $daysUntil days';
+        ? 'Tomorrow'
+        : daysUntil < 0
+        ? '${daysUntil.abs()}d overdue'
+        : 'in $daysUntil days';
 
     return GlassCard(
       margin: const EdgeInsets.only(bottom: kSpacing10),
@@ -630,8 +625,9 @@ class _RecurringTransactionListScreenState
                             ),
                             style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 11,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                           Container(
@@ -641,8 +637,9 @@ class _RecurringTransactionListScreenState
                               horizontal: kSpacing6,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.2),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.2,
+                              ),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -651,20 +648,23 @@ class _RecurringTransactionListScreenState
                             size: 11,
                             color: isDue
                                 ? const Color(0xFFFF6B35)
-                                : theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.4),
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.4,
+                                  ),
                           ),
                           const SizedBox(width: 3),
                           Text(
                             nextDateLabel,
                             style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 11,
-                              fontWeight:
-                                  isDue ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isDue
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: isDue
                                   ? const Color(0xFFFF6B35)
-                                  : theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.5),
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.5,
+                                    ),
                             ),
                           ),
                         ],
@@ -676,8 +676,7 @@ class _RecurringTransactionListScreenState
                 // Amount
                 AmountText(
                   amountInCents: recurring.amount,
-                  type:
-                      isExpense ? AmountType.expense : AmountType.income,
+                  type: isExpense ? AmountType.expense : AmountType.income,
                   useMonospace: true,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -701,8 +700,7 @@ class _RecurringTransactionListScreenState
                   Icon(
                     PesaFlowIcons.analytics,
                     size: 12,
-                    color:
-                        theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                   ),
                   const SizedBox(width: kSpacing6),
                   Text(
@@ -710,19 +708,15 @@ class _RecurringTransactionListScreenState
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                   Container(
                     width: 3,
                     height: 3,
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: kSpacing6,
-                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: kSpacing6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.2),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -730,8 +724,7 @@ class _RecurringTransactionListScreenState
                     '${recurring.paymentCount} payment${recurring.paymentCount > 1 ? 's' : ''}',
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontSize: 11,
-                      color: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.5),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                   const Spacer(),
@@ -740,8 +733,9 @@ class _RecurringTransactionListScreenState
                       'Last: ${recurring.lastPaidAt!.day}/${recurring.lastPaidAt!.month}',
                       style: theme.textTheme.labelSmall?.copyWith(
                         fontSize: 10,
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.4),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.4,
+                        ),
                       ),
                     ),
                 ],

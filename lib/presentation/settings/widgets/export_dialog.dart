@@ -40,18 +40,32 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 fillColor: Colors.transparent,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
-              items: List.generate(12, (i) => DropdownMenuItem(
-                value: i + 1,
-                child: Text(DateFormat('MMMM').format(DateTime(2000, i + 1))),
-              )),
+              items: List.generate(
+                12,
+                (i) => DropdownMenuItem(
+                  value: i + 1,
+                  child: Text(DateFormat('MMMM').format(DateTime(2000, i + 1))),
+                ),
+              ),
               onChanged: (val) {
                 if (val != null) setState(() => selectedMonth = val);
               },
@@ -66,13 +80,24 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 fillColor: Colors.transparent,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
               items: List.generate(10, (i) {
                 final year = DateTime.now().year - 5 + i;
@@ -92,17 +117,34 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 fillColor: Colors.transparent,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
               items: const [
-                DropdownMenuItem(value: ExportFormat.pdf, child: Text('PDF - Professional report')),
-                DropdownMenuItem(value: ExportFormat.csv, child: Text('CSV - Spreadsheet data')),
+                DropdownMenuItem(
+                  value: ExportFormat.pdf,
+                  child: Text('PDF - Professional report'),
+                ),
+                DropdownMenuItem(
+                  value: ExportFormat.csv,
+                  child: Text('CSV - Spreadsheet data'),
+                ),
               ],
               onChanged: (val) {
                 if (val != null) setState(() => format = val);
@@ -119,21 +161,32 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           foregroundColor: Colors.grey[600],
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         ),
-        child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.w600)),
+        child: const Text(
+          'Cancel',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
       ),
       ElevatedButton.icon(
         icon: const Icon(Icons.file_download_rounded, size: 18),
         label: const Text('Export'),
         onPressed: () async {
           Navigator.of(context).pop();
-          await _generateAndShare(context, ref, selectedYear, selectedMonth, format);
+          await _generateAndShare(
+            context,
+            ref,
+            selectedYear,
+            selectedMonth,
+            format,
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF609F8A),
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     ],
@@ -148,9 +201,9 @@ Future<void> _generateAndShare(
   ExportFormat format,
 ) async {
   try {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Generating export...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Generating export...')));
 
     final monthStart = DateTime(year, month, 1);
     final monthEnd = DateTime(year, month + 1, 0, 23, 59, 59);
@@ -179,7 +232,13 @@ Future<void> _generateAndShare(
       subject = 'PesaFlow CSV Export - $monthName';
       text = 'Transaction data exported from PesaFlow.';
     } else {
-      final pdfBytes = await generateMonthlyPdf(year, month, transactions, accounts, totals);
+      final pdfBytes = await generateMonthlyPdf(
+        year,
+        month,
+        transactions,
+        accounts,
+        totals,
+      );
       filePath = p.join(tempDir.path, 'pesaflow_${monthName}_$timestamp.pdf');
       await File(filePath).writeAsBytes(pdfBytes);
       subject = 'PesaFlow Monthly Statement - $monthName';
@@ -187,16 +246,15 @@ Future<void> _generateAndShare(
     }
 
     await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(filePath)],
-        subject: subject,
-        text: text,
-      ),
+      ShareParams(files: [XFile(filePath)], subject: subject, text: text),
     );
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Export failed: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Export failed: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }

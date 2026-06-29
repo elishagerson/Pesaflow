@@ -19,7 +19,10 @@ class LockScreenService {
 
   Future<void> ensureInitialized() => _notifService.ensureInitialized();
 
-  Future<void> showBalanceNotification(int totalCents, {required bool isEnabled}) async {
+  Future<void> showBalanceNotification(
+    int totalCents, {
+    required bool isEnabled,
+  }) async {
     if (!isEnabled) {
       await removeBalanceNotification();
       return;
@@ -50,9 +53,15 @@ class LockScreenService {
         notificationDetails: details,
       );
       _hasBalanceNotification = true;
-      developer.log('Balance notification shown: Tsh $formatted', name: 'LockScreenService');
+      developer.log(
+        'Balance notification shown: Tsh $formatted',
+        name: 'LockScreenService',
+      );
     } catch (e) {
-      developer.log('Failed to show balance notification: $e', name: 'LockScreenService');
+      developer.log(
+        'Failed to show balance notification: $e',
+        name: 'LockScreenService',
+      );
     }
   }
 
@@ -64,7 +73,10 @@ class LockScreenService {
       _hasBalanceNotification = false;
       developer.log('Balance notification removed', name: 'LockScreenService');
     } catch (e) {
-      developer.log('Failed to remove balance notification: $e', name: 'LockScreenService');
+      developer.log(
+        'Failed to remove balance notification: $e',
+        name: 'LockScreenService',
+      );
     }
   }
 }

@@ -25,6 +25,7 @@ class ActiveTrackerIdNotifier extends Notifier<String> {
   }
 }
 
-final activeTrackerIdProvider = NotifierProvider<ActiveTrackerIdNotifier, String>(() {
-  return ActiveTrackerIdNotifier();
-});
+final activeTrackerIdProvider =
+    NotifierProvider<ActiveTrackerIdNotifier, String>(() {
+      return ActiveTrackerIdNotifier();
+    });

@@ -18,7 +18,9 @@ class SpendingPattern {
   });
 }
 
-final currentSpendingPatternProvider = FutureProvider<SpendingPattern?>((ref) async {
+final currentSpendingPatternProvider = FutureProvider<SpendingPattern?>((
+  ref,
+) async {
   final db = ref.read(databaseProvider);
   final catDao = ref.read(categoryDaoProvider);
 
@@ -29,9 +31,13 @@ final currentSpendingPatternProvider = FutureProvider<SpendingPattern?>((ref) as
   final hourMin = (currentHour - 2).clamp(0, 23);
   final hourMax = (currentHour + 2).clamp(0, 23);
 
-  final allTransactions = await (db.select(db.transactions)
-    ..where((t) => t.createdAt.isBiggerOrEqual(Constant(thirtyDaysAgo)) & t.createdAt.isSmallerOrEqual(Constant(now))))
-    .get();
+  final allTransactions =
+      await (db.select(db.transactions)..where(
+            (t) =>
+                t.createdAt.isBiggerOrEqual(Constant(thirtyDaysAgo)) &
+                t.createdAt.isSmallerOrEqual(Constant(now)),
+          ))
+          .get();
 
   final relevant = allTransactions.where((t) {
     final txHour = t.createdAt.hour;
@@ -46,10 +52,14 @@ final currentSpendingPatternProvider = FutureProvider<SpendingPattern?>((ref) as
     byCategory.putIfAbsent(catId, () => []).add(tx.amount);
   }
 
-  final best = byCategory.entries.reduce((a, b) => a.value.length > b.value.length ? a : b);
+  final best = byCategory.entries.reduce(
+    (a, b) => a.value.length > b.value.length ? a : b,
+  );
 
-  final avg = best.value.fold<int>(0, (s, amount) => s + amount) ~/ best.value.length;
-  final catName = (await catDao.getCategoryById(best.key))?.name ?? 'Uncategorized';
+  final avg =
+      best.value.fold<int>(0, (s, amount) => s + amount) ~/ best.value.length;
+  final catName =
+      (await catDao.getCategoryById(best.key))?.name ?? 'Uncategorized';
 
   return SpendingPattern(
     categoryId: best.key,

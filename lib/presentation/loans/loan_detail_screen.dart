@@ -50,7 +50,10 @@ class LoanDetailScreen extends ConsumerWidget {
                 onPressed: () => context.push('/loans/${loan.id}/edit'),
               ),
               IconButton(
-                icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.error),
+                icon: Icon(
+                  PesaFlowIcons.delete,
+                  color: theme.colorScheme.error,
+                ),
                 onPressed: () => _confirmDelete(context, ref, loan),
               ),
             ],
@@ -95,7 +98,9 @@ class LoanDetailScreen extends ConsumerWidget {
                 index: loan.status == 'active' ? 6 : 5,
                 child: Text(
                   'Payment History',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: kSpacing8),
@@ -110,7 +115,11 @@ class LoanDetailScreen extends ConsumerWidget {
                         child: Center(
                           child: Text(
                             'No payment transactions recorded',
-                            style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                            style: TextStyle(
+                              color: isDark
+                                  ? Colors.grey[400]
+                                  : Colors.grey[600],
+                            ),
                           ),
                         ),
                       ),
@@ -134,7 +143,8 @@ class LoanDetailScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(body: Center(child: Text('Error: $e'))),
     );
   }
@@ -150,71 +160,82 @@ class LoanDetailScreen extends ConsumerWidget {
     return Hero(
       tag: 'loan-${loan.id}',
       child: GlassCard(
-      borderRadius: AppTheme.radiusCard,
-      elevation: CardElevation.medium,
-      accentColor: statusColor,
-      child: Padding(
-        padding: const EdgeInsets.all(kSpacing20),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(kSpacing16),
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+        borderRadius: AppTheme.radiusCard,
+        elevation: CardElevation.medium,
+        accentColor: statusColor,
+        child: Padding(
+          padding: const EdgeInsets.all(kSpacing20),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(kSpacing16),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isPaid ? PesaFlowIcons.success : PesaFlowIcons.loans,
+                  color: statusColor,
+                  size: 32,
+                ),
               ),
-              child: Icon(
-                isPaid ? PesaFlowIcons.success : PesaFlowIcons.loans,
-                color: statusColor,
-                size: 32,
-              ),
-            ),
-            const SizedBox(height: kSpacing16),
-            Text(
-              CurrencyFormatter.formatCents(isActive ? loan.remaining : loan.amount),
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-            ),
-            const SizedBox(height: kSpacing4),
-            Text(
-              isActive ? 'Remaining Balance' : isPaid ? 'Fully Paid' : 'Defaulted',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: statusColor,
-              ),
-            ),
-            if (isActive) ...[
               const SizedBox(height: kSpacing16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: LinearProgressIndicator(
-                  value: ratio.clamp(0.0, 1.0),
-                  backgroundColor: statusColor.withValues(alpha: 0.12),
-                  valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                  minHeight: 6,
-                ),
-              ),
-              const SizedBox(height: kSpacing8),
               Text(
-                '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
+                CurrencyFormatter.formatCents(
+                  isActive ? loan.remaining : loan.amount,
+                ),
                 style: TextStyle(
-                  fontSize: 11,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
+              const SizedBox(height: kSpacing4),
+              Text(
+                isActive
+                    ? 'Remaining Balance'
+                    : isPaid
+                    ? 'Fully Paid'
+                    : 'Defaulted',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: statusColor,
+                ),
+              ),
+              if (isActive) ...[
+                const SizedBox(height: kSpacing16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: LinearProgressIndicator(
+                    value: ratio.clamp(0.0, 1.0),
+                    backgroundColor: statusColor.withValues(alpha: 0.12),
+                    valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                    minHeight: 6,
+                  ),
+                ),
+                const SizedBox(height: kSpacing8),
+                Text(
+                  '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 
-  Widget _buildLoanInfo(BuildContext context, Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildLoanInfo(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
@@ -227,19 +248,43 @@ class LoanDetailScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(kSpacing4),
               child: Text(
                 'Loan Information',
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: kSpacing12),
-            _copyableInfoRow(context, 'Provider', loan.provider ?? 'N/A', isDark),
+            _copyableInfoRow(
+              context,
+              'Provider',
+              loan.provider ?? 'N/A',
+              isDark,
+            ),
             if (loan.interestRate != null)
-              _infoRow('APR', '${loan.interestRate!.toStringAsFixed(1)}%', isDark),
-            _copyableInfoRow(context, 'Reference', loan.reference ?? 'N/A', isDark),
+              _infoRow(
+                'APR',
+                '${loan.interestRate!.toStringAsFixed(1)}%',
+                isDark,
+              ),
+            _copyableInfoRow(
+              context,
+              'Reference',
+              loan.reference ?? 'N/A',
+              isDark,
+            ),
             _copyableInfoRow(context, 'Sender', loan.sender ?? 'N/A', isDark),
             _infoRow('Disbursed', _formatDate(loan.disbursedAt), isDark),
             if (loan.dueAt != null)
               _infoRow('Due Date', _formatDate(loan.dueAt!), isDark),
-            _infoRow('Status', loan.status == 'paid' ? 'Paid' : loan.status == 'active' ? 'Active' : 'Defaulted', isDark),
+            _infoRow(
+              'Status',
+              loan.status == 'paid'
+                  ? 'Paid'
+                  : loan.status == 'active'
+                  ? 'Active'
+                  : 'Defaulted',
+              isDark,
+            ),
           ],
         ),
       ),
@@ -256,31 +301,38 @@ class LoanDetailScreen extends ConsumerWidget {
       ),
     ];
     if (loan.dueAt != null) {
-      final isOverdue = loan.dueAt!.isBefore(DateTime.now()) && loan.status == 'active';
-      events.add(_TimelineEvent(
-        title: isOverdue ? 'Due Date (Overdue)' : 'Due Date',
-        subtitle: isOverdue ? 'PAYMENT OVERDUE' : 'Scheduled repayment',
-        date: loan.dueAt!,
-        isCompleted: loan.status == 'paid',
-        isWarning: isOverdue,
-      ));
+      final isOverdue =
+          loan.dueAt!.isBefore(DateTime.now()) && loan.status == 'active';
+      events.add(
+        _TimelineEvent(
+          title: isOverdue ? 'Due Date (Overdue)' : 'Due Date',
+          subtitle: isOverdue ? 'PAYMENT OVERDUE' : 'Scheduled repayment',
+          date: loan.dueAt!,
+          isCompleted: loan.status == 'paid',
+          isWarning: isOverdue,
+        ),
+      );
     }
     if (loan.status == 'paid' && loan.paidAt != null) {
-      events.add(_TimelineEvent(
-        title: 'Loan Paid',
-        subtitle: CurrencyFormatter.formatCents(loan.amount),
-        date: loan.paidAt!,
-        isCompleted: true,
-        isLast: true,
-      ));
+      events.add(
+        _TimelineEvent(
+          title: 'Loan Paid',
+          subtitle: CurrencyFormatter.formatCents(loan.amount),
+          date: loan.paidAt!,
+          isCompleted: true,
+          isLast: true,
+        ),
+      );
     } else {
-      events.add(_TimelineEvent(
-        title: 'Repayment',
-        subtitle: 'In progress',
-        date: null,
-        isCompleted: false,
-        isLast: true,
-      ));
+      events.add(
+        _TimelineEvent(
+          title: 'Repayment',
+          subtitle: 'In progress',
+          date: null,
+          isCompleted: false,
+          isLast: true,
+        ),
+      );
     }
 
     return GlassCard(
@@ -293,7 +345,9 @@ class LoanDetailScreen extends ConsumerWidget {
           children: [
             Text(
               'Status Timeline',
-              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: kSpacing16),
             ...events.map((e) => _buildTimelineRow(e, theme, isDark)),
@@ -312,21 +366,25 @@ class LoanDetailScreen extends ConsumerWidget {
             width: 24,
             child: Column(
               children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: event.isWarning
-                          ? const Color(0xFFE53935)
-                          : event.isCompleted ? const Color(0xFF609F8A) : Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: event.isWarning
+                        ? const Color(0xFFE53935)
+                        : event.isCompleted
+                        ? const Color(0xFF609F8A)
+                        : Colors.grey,
+                    shape: BoxShape.circle,
                   ),
+                ),
                 if (!event.isLast)
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: event.isCompleted ? const Color(0xFF609F8A).withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3),
+                      color: event.isCompleted
+                          ? const Color(0xFF609F8A).withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.3),
                     ),
                   ),
               ],
@@ -390,7 +448,9 @@ class LoanDetailScreen extends ConsumerWidget {
           children: [
             Text(
               'Payment Schedule',
-              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: kSpacing12),
             Row(
@@ -411,8 +471,11 @@ class LoanDetailScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
                           value: ratio.clamp(0.0, 1.0),
-                          backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF609F8A),
+                          backgroundColor: isDark
+                              ? Colors.grey[800]
+                              : Colors.grey[200],
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Color(0xFF609F8A),
                           ),
                           minHeight: 6,
                         ),
@@ -426,7 +489,11 @@ class LoanDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
-                    color: Color.lerp(const Color(0xFFE53935), const Color(0xFF609F8A), ratio),
+                    color: Color.lerp(
+                      const Color(0xFFE53935),
+                      const Color(0xFF609F8A),
+                      ratio,
+                    ),
                   ),
                 ),
               ],
@@ -476,7 +543,10 @@ class LoanDetailScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: kSpacing8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing8,
+                        vertical: kSpacing2,
+                      ),
                       decoration: BoxDecoration(
                         color: isPaid
                             ? const Color(0xFF609F8A).withValues(alpha: 0.12)
@@ -488,7 +558,9 @@ class LoanDetailScreen extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: isPaid ? const Color(0xFF609F8A) : const Color(0xFFFF9F0A),
+                          color: isPaid
+                              ? const Color(0xFF609F8A)
+                              : const Color(0xFFFF9F0A),
                         ),
                       ),
                     ),
@@ -509,7 +581,8 @@ class LoanDetailScreen extends ConsumerWidget {
     String description;
 
     if (loan.installmentAmount != null && (loan.totalInstallments ?? 0) > 0) {
-      final remaining = (loan.totalInstallments! - (loan.paidInstallments ?? 0)).clamp(0, loan.totalInstallments!);
+      final remaining = (loan.totalInstallments! - (loan.paidInstallments ?? 0))
+          .clamp(0, loan.totalInstallments!);
       final freqDays = loan.frequencyInDays ?? 30;
       estimatedDate = DateTime.now().add(Duration(days: remaining * freqDays));
       description = remaining > 0
@@ -538,7 +611,11 @@ class LoanDetailScreen extends ConsumerWidget {
                   color: const Color(0xFFFF9F0A).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(PesaFlowIcons.calendar, size: 20, color: Color(0xFFFF9F0A)),
+                child: const Icon(
+                  PesaFlowIcons.calendar,
+                  size: 20,
+                  color: Color(0xFFFF9F0A),
+                ),
               ),
               const SizedBox(width: kSpacing14),
               Expanded(
@@ -579,7 +656,13 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaymentButton(BuildContext context, Loan loan, ThemeData theme, bool isDark, WidgetRef ref) {
+  Widget _buildPaymentButton(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    bool isDark,
+    WidgetRef ref,
+  ) {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
@@ -597,7 +680,11 @@ class LoanDetailScreen extends ConsumerWidget {
                     color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(PesaFlowIcons.cash, size: 20, color: Color(0xFF609F8A)),
+                  child: const Icon(
+                    PesaFlowIcons.cash,
+                    size: 20,
+                    color: Color(0xFF609F8A),
+                  ),
                 ),
                 const SizedBox(width: kSpacing12),
                 Expanded(
@@ -647,7 +734,11 @@ class LoanDetailScreen extends ConsumerWidget {
               width: double.infinity,
               child: TextButton.icon(
                 onPressed: () => _showOfflinePaymentSheet(context, ref, loan),
-                icon: Icon(PesaFlowIcons.transactions, size: 18, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                icon: Icon(
+                  PesaFlowIcons.transactions,
+                  size: 18,
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                ),
                 label: Text(
                   'Record Offline Payment',
                   style: TextStyle(
@@ -683,11 +774,15 @@ class LoanDetailScreen extends ConsumerWidget {
         String? selectedAccountId;
         bool isProcessing = false;
 
-        int paymentAmount() => CurrencyFormatter.parseToCents(amountController.text);
+        int paymentAmount() =>
+            CurrencyFormatter.parseToCents(amountController.text);
 
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final canSubmit = paymentAmount() > 0 && selectedAccountId != null && !isProcessing;
+            final canSubmit =
+                paymentAmount() > 0 &&
+                selectedAccountId != null &&
+                !isProcessing;
 
             return DraggableScrollableSheet(
               initialChildSize: 0.7,
@@ -695,7 +790,9 @@ class LoanDetailScreen extends ConsumerWidget {
               minChildSize: 0.5,
               expand: false,
               builder: (ctx, scrollController) => ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                   child: LiquidGlassOverlay(
@@ -704,7 +801,9 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: isDark
                             ? const Color(0xF01C1C1E)
                             : const Color(0xF0F2F2F7),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -727,415 +826,803 @@ class LoanDetailScreen extends ConsumerWidget {
                               child: SingleChildScrollView(
                                 controller: scrollController,
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
+                                padding: const EdgeInsets.fromLTRB(
+                                  kSpacing20,
+                                  0,
+                                  kSpacing20,
+                                  kSpacing24,
+                                ),
                                 child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // ── Header ──
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(kSpacing10),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFF609F8A).withValues(alpha: 0.12),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(PesaFlowIcons.cash, color: Color(0xFF609F8A), size: 22),
-                                      ),
-                                      const SizedBox(width: kSpacing14),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Make a Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                          const SizedBox(height: kSpacing2),
-                                          Text(
-                                            'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                            style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // ── Header ──
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(
+                                            kSpacing10,
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kSpacing24),
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF609F8A,
+                                            ).withValues(alpha: 0.12),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            PesaFlowIcons.cash,
+                                            color: Color(0xFF609F8A),
+                                            size: 22,
+                                          ),
+                                        ),
+                                        const SizedBox(width: kSpacing14),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              'Make a Payment',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: kSpacing2),
+                                            Text(
+                                              'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: isDark
+                                                    ? Colors.grey[400]
+                                                    : Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: kSpacing24),
 
-                                  // ── Loan Progress Ring ──
-                                  _buildLoanProgressRing(loan, remainingCents, isDark),
-                                  const SizedBox(height: kSpacing24),
+                                    // ── Loan Progress Ring ──
+                                    _buildLoanProgressRing(
+                                      loan,
+                                      remainingCents,
+                                      isDark,
+                                    ),
+                                    const SizedBox(height: kSpacing24),
 
-                                  // ── Amount Input ──
-                                  const Text('PAYMENT AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                  const SizedBox(height: kSpacing8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(alpha: 0.08)
-                                            : Colors.black.withValues(alpha: 0.06),
+                                    // ── Amount Input ──
+                                    const Text(
+                                      'PAYMENT AMOUNT',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
                                       ),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'TSh',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900,
-                                            color: isDark ? Colors.white60 : Colors.black45,
-                                          ),
+                                    const SizedBox(height: kSpacing8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? const Color(0xFF1C1C1E)
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.08,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
                                         ),
-                                        const SizedBox(width: kSpacing12),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: amountController,
-                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                            autofocus: true,
-                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.,]'))],
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing16,
+                                        vertical: kSpacing4,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'TSh',
                                             style: TextStyle(
-                                              fontSize: 28,
-                                              fontFamily: 'monospace',
-                                              fontWeight: FontWeight.bold,
-                                              color: isDark ? Colors.white : Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                              color: isDark
+                                                  ? Colors.white60
+                                                  : Colors.black45,
                                             ),
-                                            decoration: const InputDecoration(
-                                              hintText: 'Enter amount',
-                                              border: InputBorder.none,
-                                              contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
+                                          ),
+                                          const SizedBox(width: kSpacing12),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: amountController,
+                                              keyboardType:
+                                                  const TextInputType.numberWithOptions(
+                                                    decimal: true,
+                                                  ),
+                                              autofocus: true,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.allow(
+                                                  RegExp(r'[\d.,]'),
+                                                ),
+                                              ],
+                                              style: TextStyle(
+                                                fontSize: 28,
+                                                fontFamily: 'monospace',
+                                                fontWeight: FontWeight.bold,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                              decoration: const InputDecoration(
+                                                hintText: 'Enter amount',
+                                                border: InputBorder.none,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      vertical: kSpacing12,
+                                                    ),
+                                              ),
+                                              onChanged: (val) {
+                                                setSheetState(() {});
+                                              },
                                             ),
-                                            onChanged: (val) {
-                                              setSheetState(() {});
-                                            },
+                                          ),
+                                          if (paymentAmount() > 0)
+                                            GestureDetector(
+                                              onTap: () {
+                                                amountController.clear();
+                                                setSheetState(() {});
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.all(
+                                                  kSpacing4,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: isDark
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.1,
+                                                        )
+                                                      : Colors.black.withValues(
+                                                          alpha: 0.05,
+                                                        ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  PesaFlowIcons.close,
+                                                  size: 18,
+                                                  color: isDark
+                                                      ? Colors.white54
+                                                      : Colors.black45,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing16),
+
+                                    // ── Quick Amount Suggestions ──
+                                    Row(
+                                      children: [
+                                        _QuickAmountChip(
+                                          label: '25%',
+                                          amount: (remainingCents * 0.25)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.25).round(),
+                                          onTap: () {
+                                            amountController.text =
+                                                ((remainingCents * 0.25)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
+                                            setSheetState(() {});
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: kSpacing8),
+                                        _QuickAmountChip(
+                                          label: '50%',
+                                          amount: (remainingCents * 0.5)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.5).round(),
+                                          onTap: () {
+                                            amountController.text =
+                                                ((remainingCents * 0.5)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
+                                            setSheetState(() {});
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: kSpacing8),
+                                        _QuickAmountChip(
+                                          label: '75%',
+                                          amount: (remainingCents * 0.75)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.75).round(),
+                                          onTap: () {
+                                            amountController.text =
+                                                ((remainingCents * 0.75)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
+                                            setSheetState(() {});
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                        const SizedBox(width: kSpacing8),
+                                        _QuickAmountChip(
+                                          label: '100%',
+                                          amount: remainingCents,
+                                          isActive:
+                                              paymentAmount() == remainingCents,
+                                          onTap: () {
+                                            amountController.text =
+                                                (remainingCents / 100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
+                                            setSheetState(() {});
+                                          },
+                                          isDark: isDark,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: kSpacing24),
+
+                                    // ── Description Field ──
+                                    const Text(
+                                      'MEMO',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? const Color(0xFF1C1C1E)
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.08,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
+                                        ),
+                                      ),
+                                      child: TextField(
+                                        controller: descriptionController,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: 'Add a note (optional)',
+                                          hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white30
+                                                : Colors.black26,
+                                          ),
+                                          prefixIcon: Icon(
+                                            PesaFlowIcons.edit,
+                                            size: 20,
+                                            color: isDark
+                                                ? Colors.white38
+                                                : Colors.black26,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: kSpacing16,
+                                                vertical: kSpacing14,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing24),
+
+                                    // ── Account Selection ──
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'FROM ACCOUNT',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: 0.5,
                                           ),
                                         ),
-                                        if (paymentAmount() > 0)
+                                        if (selectedAccountId != null)
                                           GestureDetector(
-                                            onTap: () {
-                                              amountController.clear();
-                                              setSheetState(() {});
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(kSpacing4),
-                                              decoration: BoxDecoration(
-                                                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
-                                                shape: BoxShape.circle,
+                                            onTap: () => setSheetState(
+                                              () => selectedAccountId = null,
+                                            ),
+                                            child: Text(
+                                              'Clear',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: const Color(
+                                                  0xFFE53935,
+                                                ).withValues(alpha: 0.8),
                                               ),
-                                              child: Icon(PesaFlowIcons.close, size: 18, color: isDark ? Colors.white54 : Colors.black45),
                                             ),
                                           ),
                                       ],
                                     ),
-                                  ),
-                                  const SizedBox(height: kSpacing16),
-
-                                  // ── Quick Amount Suggestions ──
-                                  Row(
-                                    children: [
-                                      _QuickAmountChip(
-                                        label: '25%',
-                                        amount: (remainingCents * 0.25).round(),
-                                        isActive: paymentAmount() == (remainingCents * 0.25).round(),
-                                        onTap: () {
-                                          amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
-                                          amountController.selection = TextSelection.fromPosition(
-                                            TextPosition(offset: amountController.text.length),
-                                          );
-                                          setSheetState(() {});
-                                        },
-                                        isDark: isDark,
-                                      ),
-                                      const SizedBox(width: kSpacing8),
-                                      _QuickAmountChip(
-                                        label: '50%',
-                                        amount: (remainingCents * 0.5).round(),
-                                        isActive: paymentAmount() == (remainingCents * 0.5).round(),
-                                        onTap: () {
-                                          amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
-                                          amountController.selection = TextSelection.fromPosition(
-                                            TextPosition(offset: amountController.text.length),
-                                          );
-                                          setSheetState(() {});
-                                        },
-                                        isDark: isDark,
-                                      ),
-                                      const SizedBox(width: kSpacing8),
-                                      _QuickAmountChip(
-                                        label: '75%',
-                                        amount: (remainingCents * 0.75).round(),
-                                        isActive: paymentAmount() == (remainingCents * 0.75).round(),
-                                        onTap: () {
-                                          amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
-                                          amountController.selection = TextSelection.fromPosition(
-                                            TextPosition(offset: amountController.text.length),
-                                          );
-                                          setSheetState(() {});
-                                        },
-                                        isDark: isDark,
-                                      ),
-                                      const SizedBox(width: kSpacing8),
-                                      _QuickAmountChip(
-                                        label: '100%',
-                                        amount: remainingCents,
-                                        isActive: paymentAmount() == remainingCents,
-                                        onTap: () {
-                                          amountController.text = (remainingCents / 100).toStringAsFixed(0);
-                                          amountController.selection = TextSelection.fromPosition(
-                                            TextPosition(offset: amountController.text.length),
-                                          );
-                                          setSheetState(() {});
-                                        },
-                                        isDark: isDark,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kSpacing24),
-
-                                  // ── Description Field ──
-                                  const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                  const SizedBox(height: kSpacing8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(alpha: 0.08)
-                                            : Colors.black.withValues(alpha: 0.06),
-                                      ),
-                                    ),
-                                    child: TextField(
-                                      controller: descriptionController,
-                                      textCapitalization: TextCapitalization.sentences,
-                                      style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
-                                      decoration: InputDecoration(
-                                        hintText: 'Add a note (optional)',
-                                        hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                        prefixIcon: Icon(PesaFlowIcons.edit, size: 20,
-                                            color: isDark ? Colors.white38 : Colors.black26),
-                                        border: InputBorder.none,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: kSpacing24),
-
-                                  // ── Account Selection ──
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('FROM ACCOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                      if (selectedAccountId != null)
-                                        GestureDetector(
-                                          onTap: () => setSheetState(() => selectedAccountId = null),
-                                          child: Text('Clear', style: TextStyle(fontSize: 12, color: const Color(0xFFE53935).withValues(alpha: 0.8))),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kSpacing8),
-                                  FutureBuilder<List<Account>>(
-                                    future: ref.read(accountRepositoryProvider).getAllAccounts(),
-                                    builder: (context, snapshot) {
-                                      final accounts = snapshot.data ?? [];
-                                      if (accounts.isEmpty) {
-                                        return Container(
-                                          padding: const EdgeInsets.all(kSpacing16),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFE53935).withValues(alpha: 0.08),
-                                            borderRadius: BorderRadius.circular(14),
-                                            border: Border.all(color: const Color(0xFFE53935).withValues(alpha: 0.2)),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              const Icon(PesaFlowIcons.warning, size: 18, color: Color(0xFFE53935)),
-                                              const SizedBox(width: kSpacing10),
-                                              Text('No accounts available. Create one first.',
-                                                  style: TextStyle(fontSize: 13, color: const Color(0xFFE53935).withValues(alpha: 0.9))),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      return Column(
-                                        children: accounts.map((account) {
-                                          final isSelected = account.id == selectedAccountId;
-                                          final balanceCents = account.balance;
-                                          final hasFunds = balanceCents >= paymentAmount();
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: kSpacing8),
-                                            child: GestureDetector(
-                                              onTap: () => setSheetState(() => selectedAccountId = account.id),
-                                              child: AnimatedContainer(
-                                                duration: const Duration(milliseconds: 200),
-                                                curve: Curves.easeOutCubic,
-                                                padding: const EdgeInsets.all(kSpacing14),
-                                                decoration: BoxDecoration(
-                                                  color: isSelected
-                                                      ? const Color(0xFF609F8A).withValues(alpha: isDark ? 0.15 : 0.08)
-                                                      : isDark
-                                                          ? const Color(0xFF1C1C1E)
-                                                          : Colors.white,
-                                                  borderRadius: BorderRadius.circular(14),
-                                                  border: Border.all(
-                                                    color: isSelected
-                                                        ? const Color(0xFF609F8A).withValues(alpha: 0.5)
-                                                        : isDark
-                                                            ? Colors.white.withValues(alpha: 0.08)
-                                                            : Colors.black.withValues(alpha: 0.06),
-                                                    width: isSelected ? 1.5 : 1,
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets.all(kSpacing8),
-                                                      decoration: BoxDecoration(
-                                                        color: isSelected
-                                                            ? const Color(0xFF609F8A).withValues(alpha: 0.2)
-                                                            : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04)),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Icon(
-                                                        isSelected ? PesaFlowIcons.success : PesaFlowIcons.wallet,
-                                                        size: 20,
-                                                        color: isSelected
-                                                            ? const Color(0xFF609F8A)
-                                                            : (isDark ? Colors.white54 : Colors.black45),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: kSpacing12),
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(account.name,
-                                                              style: TextStyle(
-                                                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                                                fontSize: 15,
-                                                                color: isSelected
-                                                                    ? (isDark ? Colors.white : const Color(0xFF609F8A))
-                                                                    : (isDark ? Colors.white : Colors.black87),
-                                                              )),
-                                                          const SizedBox(height: kSpacing2),
-                                                          Row(
-                                                            children: [
-                                                              Text('Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
-                                                                  style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
-                                                              if (selectedAccountId != null && !hasFunds && paymentAmount() > 0) ...[
-                                                                const SizedBox(width: kSpacing8),
-                                                                Container(
-                                                                  padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
-                                                                  decoration: BoxDecoration(
-                                                                    color: const Color(0xFFE53935).withValues(alpha: 0.12),
-                                                                    borderRadius: BorderRadius.circular(4),
-                                                                  ),
-                                                                  child: const Text('Insufficient', style: TextStyle(fontSize: 10, color: Color(0xFFE53935), fontWeight: FontWeight.w600)),
-                                                                ),
-                                                              ],
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    if (isSelected)
-                                                      Container(
-                                                        padding: const EdgeInsets.all(kSpacing4),
-                                                        decoration: BoxDecoration(
-                                                          color: const Color(0xFF609F8A).withValues(alpha: 0.15),
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                        child: const Icon(Icons.check_rounded, size: 16, color: Color(0xFF609F8A)),
-                                                      ),
-                                                  ],
-                                                ),
+                                    const SizedBox(height: kSpacing8),
+                                    FutureBuilder<List<Account>>(
+                                      future: ref
+                                          .read(accountRepositoryProvider)
+                                          .getAllAccounts(),
+                                      builder: (context, snapshot) {
+                                        final accounts = snapshot.data ?? [];
+                                        if (accounts.isEmpty) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(
+                                              kSpacing16,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFFE53935,
+                                              ).withValues(alpha: 0.08),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              border: Border.all(
+                                                color: const Color(
+                                                  0xFFE53935,
+                                                ).withValues(alpha: 0.2),
                                               ),
                                             ),
-                                          );
-                                        }).toList(),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: kSpacing24),
-
-                                  // ── Pay Button ──
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 54,
-                                    child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 250),
-                                      curve: Curves.easeOutCubic,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: canSubmit
-                                            ? [
-                                                BoxShadow(
-                                                  color: const Color(0xFF609F8A).withValues(alpha: 0.3),
-                                                  blurRadius: 12,
-                                                  offset: const Offset(0, 4),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  PesaFlowIcons.warning,
+                                                  size: 18,
+                                                  color: Color(0xFFE53935),
                                                 ),
-                                              ]
-                                            : [],
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: canSubmit
-                                            ? () async {
-                                                setSheetState(() => isProcessing = true);
-                                                final desc = descriptionController.text.trim();
-                                                await _processPayment(
-                                                  context: sheetContext,
-                                                  ref: ref,
-                                                  loan: loan,
-                                                  amount: paymentAmount(),
-                                                  description: desc.isNotEmpty ? desc : 'Manual loan payment',
-                                                  accountId: selectedAccountId!,
-                                                );
-                                              }
-                                            : null,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF609F8A),
-                                          foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
-                                          disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                          padding: const EdgeInsets.symmetric(vertical: kSpacing14),
-                                        ),
-                                        child: isProcessing
-                                            ? const SizedBox(
-                                                width: 22,
-                                                height: 22,
-                                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
-                                              )
-                                            : Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  if (paymentAmount() > 0 && selectedAccountId != null)
-                                                    Icon(PesaFlowIcons.lock, size: 16, color: Colors.white.withValues(alpha: 0.8)),
-                                                  if (paymentAmount() > 0 && selectedAccountId != null) const SizedBox(width: kSpacing8),
-                                                  Text(
-                                                    paymentAmount() <= 0
-                                                        ? 'Enter an amount'
-                                                        : selectedAccountId == null
-                                                            ? 'Select an account'
-                                                            : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                const SizedBox(
+                                                  width: kSpacing10,
+                                                ),
+                                                Text(
+                                                  'No accounts available. Create one first.',
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: const Color(
+                                                      0xFFE53935,
+                                                    ).withValues(alpha: 0.9),
                                                   ),
-                                                ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                        return Column(
+                                          children: accounts.map((account) {
+                                            final isSelected =
+                                                account.id == selectedAccountId;
+                                            final balanceCents =
+                                                account.balance;
+                                            final hasFunds =
+                                                balanceCents >= paymentAmount();
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                bottom: kSpacing8,
                                               ),
+                                              child: GestureDetector(
+                                                onTap: () => setSheetState(
+                                                  () => selectedAccountId =
+                                                      account.id,
+                                                ),
+                                                child: AnimatedContainer(
+                                                  duration: const Duration(
+                                                    milliseconds: 200,
+                                                  ),
+                                                  curve: Curves.easeOutCubic,
+                                                  padding: const EdgeInsets.all(
+                                                    kSpacing14,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: isSelected
+                                                        ? const Color(
+                                                            0xFF609F8A,
+                                                          ).withValues(
+                                                            alpha: isDark
+                                                                ? 0.15
+                                                                : 0.08,
+                                                          )
+                                                        : isDark
+                                                        ? const Color(
+                                                            0xFF1C1C1E,
+                                                          )
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          14,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: isSelected
+                                                          ? const Color(
+                                                              0xFF609F8A,
+                                                            ).withValues(
+                                                              alpha: 0.5,
+                                                            )
+                                                          : isDark
+                                                          ? Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.08,
+                                                                )
+                                                          : Colors.black
+                                                                .withValues(
+                                                                  alpha: 0.06,
+                                                                ),
+                                                      width: isSelected
+                                                          ? 1.5
+                                                          : 1,
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              kSpacing8,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: isSelected
+                                                              ? const Color(
+                                                                  0xFF609F8A,
+                                                                ).withValues(
+                                                                  alpha: 0.2,
+                                                                )
+                                                              : (isDark
+                                                                    ? Colors
+                                                                          .white
+                                                                          .withValues(
+                                                                            alpha:
+                                                                                0.06,
+                                                                          )
+                                                                    : Colors
+                                                                          .black
+                                                                          .withValues(
+                                                                            alpha:
+                                                                                0.04,
+                                                                          )),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          isSelected
+                                                              ? PesaFlowIcons
+                                                                    .success
+                                                              : PesaFlowIcons
+                                                                    .wallet,
+                                                          size: 20,
+                                                          color: isSelected
+                                                              ? const Color(
+                                                                  0xFF609F8A,
+                                                                )
+                                                              : (isDark
+                                                                    ? Colors
+                                                                          .white54
+                                                                    : Colors
+                                                                          .black45),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing12,
+                                                      ),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              account.name,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    isSelected
+                                                                    ? FontWeight
+                                                                          .w700
+                                                                    : FontWeight
+                                                                          .w500,
+                                                                fontSize: 15,
+                                                                color:
+                                                                    isSelected
+                                                                    ? (isDark
+                                                                          ? Colors.white
+                                                                          : const Color(
+                                                                              0xFF609F8A,
+                                                                            ))
+                                                                    : (isDark
+                                                                          ? Colors.white
+                                                                          : Colors.black87),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: kSpacing2,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
+                                                                  style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color:
+                                                                        isDark
+                                                                        ? Colors
+                                                                              .white38
+                                                                        : Colors
+                                                                              .black38,
+                                                                  ),
+                                                                ),
+                                                                if (selectedAccountId !=
+                                                                        null &&
+                                                                    !hasFunds &&
+                                                                    paymentAmount() >
+                                                                        0) ...[
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing8,
+                                                                  ),
+                                                                  Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          kSpacing6,
+                                                                      vertical:
+                                                                          kSpacing2,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          const Color(
+                                                                            0xFFE53935,
+                                                                          ).withValues(
+                                                                            alpha:
+                                                                                0.12,
+                                                                          ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            4,
+                                                                          ),
+                                                                    ),
+                                                                    child: const Text(
+                                                                      'Insufficient',
+                                                                      style: TextStyle(
+                                                                        fontSize:
+                                                                            10,
+                                                                        color: Color(
+                                                                          0xFFE53935,
+                                                                        ),
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      if (isSelected)
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                kSpacing4,
+                                                              ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                color:
+                                                                    const Color(
+                                                                      0xFF609F8A,
+                                                                    ).withValues(
+                                                                      alpha:
+                                                                          0.15,
+                                                                    ),
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                          child: const Icon(
+                                                            Icons.check_rounded,
+                                                            size: 16,
+                                                            color: Color(
+                                                              0xFF609F8A,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: kSpacing24),
+
+                                    // ── Pay Button ──
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 54,
+                                      child: AnimatedContainer(
+                                        duration: const Duration(
+                                          milliseconds: 250,
+                                        ),
+                                        curve: Curves.easeOutCubic,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          boxShadow: canSubmit
+                                              ? [
+                                                  BoxShadow(
+                                                    color: const Color(
+                                                      0xFF609F8A,
+                                                    ).withValues(alpha: 0.3),
+                                                    blurRadius: 12,
+                                                    offset: const Offset(0, 4),
+                                                  ),
+                                                ]
+                                              : [],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: canSubmit
+                                              ? () async {
+                                                  setSheetState(
+                                                    () => isProcessing = true,
+                                                  );
+                                                  final desc =
+                                                      descriptionController.text
+                                                          .trim();
+                                                  await _processPayment(
+                                                    context: sheetContext,
+                                                    ref: ref,
+                                                    loan: loan,
+                                                    amount: paymentAmount(),
+                                                    description: desc.isNotEmpty
+                                                        ? desc
+                                                        : 'Manual loan payment',
+                                                    accountId:
+                                                        selectedAccountId!,
+                                                  );
+                                                }
+                                              : null,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(
+                                              0xFF609F8A,
+                                            ),
+                                            foregroundColor: Colors.white,
+                                            disabledBackgroundColor: isDark
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.05,
+                                                  )
+                                                : Colors.black.withValues(
+                                                    alpha: 0.05,
+                                                  ),
+                                            disabledForegroundColor: isDark
+                                                ? Colors.white24
+                                                : Colors.black26,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: kSpacing14,
+                                            ),
+                                          ),
+                                          child: isProcessing
+                                              ? const SizedBox(
+                                                  width: 22,
+                                                  height: 22,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2.5,
+                                                        color: Colors.white,
+                                                      ),
+                                                )
+                                              : Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    if (paymentAmount() > 0 &&
+                                                        selectedAccountId !=
+                                                            null)
+                                                      Icon(
+                                                        PesaFlowIcons.lock,
+                                                        size: 16,
+                                                        color: Colors.white
+                                                            .withValues(
+                                                              alpha: 0.8,
+                                                            ),
+                                                      ),
+                                                    if (paymentAmount() > 0 &&
+                                                        selectedAccountId !=
+                                                            null)
+                                                      const SizedBox(
+                                                        width: kSpacing8,
+                                                      ),
+                                                    Text(
+                                                      paymentAmount() <= 0
+                                                          ? 'Enter an amount'
+                                                          : selectedAccountId ==
+                                                                null
+                                                          ? 'Select an account'
+                                                          : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
+            );
           },
         );
       },
@@ -1166,13 +1653,20 @@ class LoanDetailScreen extends ConsumerWidget {
                 child: CircularProgressIndicator(
                   value: paidFraction,
                   strokeWidth: 5,
-                  backgroundColor: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF609F8A)),
+                  backgroundColor: isDark
+                      ? Colors.white.withValues(alpha: 0.08)
+                      : Colors.black.withValues(alpha: 0.06),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    Color(0xFF609F8A),
+                  ),
                 ),
               ),
               Text(
                 '${(paidFraction * 100).round()}%',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ],
           ),
@@ -1185,18 +1679,42 @@ class LoanDetailScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Paid', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-                  Text(CurrencyFormatter.formatCents(paidAmount),
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF609F8A))),
+                  Text(
+                    'Paid',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    CurrencyFormatter.formatCents(paidAmount),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF609F8A),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: kSpacing4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Remaining', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-                  Text(CurrencyFormatter.formatCents(remainingCents),
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFE53935))),
+                  Text(
+                    'Remaining',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    CurrencyFormatter.formatCents(remainingCents),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE53935),
+                    ),
+                  ),
                 ],
               ),
               if (totalInstallments > 0) ...[
@@ -1204,9 +1722,20 @@ class LoanDetailScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Installments', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-                    Text('$paidInstallments/$totalInstallments',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Installments',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
+                    ),
+                    Text(
+                      '$paidInstallments/$totalInstallments',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -1226,8 +1755,14 @@ class LoanDetailScreen extends ConsumerWidget {
     required String accountId,
   }) async {
     try {
-      final activeTrackerId = await ref.read(settingsRepositoryProvider).getSetting('active_tracker_id') ?? 'default_personal';
-      final categories = await ref.read(categoryRepositoryProvider).getAllCategories();
+      final activeTrackerId =
+          await ref
+              .read(settingsRepositoryProvider)
+              .getSetting('active_tracker_id') ??
+          'default_personal';
+      final categories = await ref
+          .read(categoryRepositoryProvider)
+          .getAllCategories();
       final expenseCat = categories.firstWhere(
         (c) => c.type == 'expense',
         orElse: () => categories.first,
@@ -1247,7 +1782,9 @@ class LoanDetailScreen extends ConsumerWidget {
         updatedAt: DateTime.now(),
       );
 
-      await ref.read(transactionRepositoryNoAlertsProvider).createTransaction(txn);
+      await ref
+          .read(transactionRepositoryNoAlertsProvider)
+          .createTransaction(txn);
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
       if (context.mounted) {
@@ -1255,7 +1792,9 @@ class LoanDetailScreen extends ConsumerWidget {
         HapticFeedback.mediumImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
+            content: Text(
+              'Payment of ${CurrencyFormatter.formatCents(amount)} recorded',
+            ),
             backgroundColor: const Color(0xFF609F8A),
           ),
         );
@@ -1264,13 +1803,20 @@ class LoanDetailScreen extends ConsumerWidget {
       HapticFeedback.heavyImpact();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
+          SnackBar(
+            content: Text('Payment failed: $e'),
+            backgroundColor: const Color(0xFFE53935),
+          ),
         );
       }
     }
   }
 
-  void _showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
+  void _showOfflinePaymentSheet(
+    BuildContext context,
+    WidgetRef ref,
+    Loan loan,
+  ) {
     final amountController = TextEditingController();
     final descriptionController = TextEditingController();
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1283,7 +1829,8 @@ class LoanDetailScreen extends ConsumerWidget {
       builder: (sheetContext) {
         bool isProcessing = false;
 
-        int paymentAmount() => CurrencyFormatter.parseToCents(amountController.text);
+        int paymentAmount() =>
+            CurrencyFormatter.parseToCents(amountController.text);
 
         return StatefulBuilder(
           builder: (context, setSheetState) {
@@ -1295,7 +1842,9 @@ class LoanDetailScreen extends ConsumerWidget {
               minChildSize: 0.4,
               expand: false,
               builder: (ctx, scrollController) => ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
                   child: LiquidGlassOverlay(
@@ -1304,7 +1853,9 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: isDark
                             ? const Color(0xF01C1C1E)
                             : const Color(0xF0F2F2F7),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(24),
+                        ),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -1327,48 +1878,89 @@ class LoanDetailScreen extends ConsumerWidget {
                               child: SingleChildScrollView(
                                 controller: scrollController,
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
+                                padding: const EdgeInsets.fromLTRB(
+                                  kSpacing20,
+                                  0,
+                                  kSpacing20,
+                                  kSpacing24,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(kSpacing10),
+                                          padding: const EdgeInsets.all(
+                                            kSpacing10,
+                                          ),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                                            color: const Color(
+                                              0xFF609F8A,
+                                            ).withValues(alpha: 0.12),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(PesaFlowIcons.transactions, color: Color(0xFF609F8A), size: 22),
+                                          child: const Icon(
+                                            PesaFlowIcons.transactions,
+                                            color: Color(0xFF609F8A),
+                                            size: 22,
+                                          ),
                                         ),
                                         const SizedBox(width: kSpacing14),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            const Text('Record Offline Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                            const Text(
+                                              'Record Offline Payment',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
                                               'No wallet account will be affected',
-                                              style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: isDark
+                                                    ? Colors.grey[500]
+                                                    : Colors.grey[500],
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: kSpacing24),
-                                    const Text('AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                    const Text(
+                                      'AMOUNT',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
                                     const SizedBox(height: kSpacing8),
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                        color: isDark
+                                            ? const Color(0xFF1C1C1E)
+                                            : Colors.white,
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: isDark
-                                              ? Colors.white.withValues(alpha: 0.08)
-                                              : Colors.black.withValues(alpha: 0.06),
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.08,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
                                         ),
                                       ),
-                                      padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing16,
+                                        vertical: kSpacing4,
+                                      ),
                                       child: Row(
                                         children: [
                                           Text(
@@ -1376,26 +1968,40 @@ class LoanDetailScreen extends ConsumerWidget {
                                             style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w900,
-                                              color: isDark ? Colors.white60 : Colors.black45,
+                                              color: isDark
+                                                  ? Colors.white60
+                                                  : Colors.black45,
                                             ),
                                           ),
                                           const SizedBox(width: kSpacing12),
                                           Expanded(
                                             child: TextField(
                                               controller: amountController,
-                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                            autofocus: true,
-                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.,]'))],
+                                              keyboardType:
+                                                  const TextInputType.numberWithOptions(
+                                                    decimal: true,
+                                                  ),
+                                              autofocus: true,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.allow(
+                                                  RegExp(r'[\d.,]'),
+                                                ),
+                                              ],
                                               style: TextStyle(
                                                 fontSize: 28,
                                                 fontFamily: 'monospace',
                                                 fontWeight: FontWeight.bold,
-                                                color: isDark ? Colors.white : Colors.black,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black,
                                               ),
                                               decoration: const InputDecoration(
                                                 hintText: 'Enter amount',
                                                 border: InputBorder.none,
-                                                contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      vertical: kSpacing12,
+                                                    ),
                                               ),
                                               onChanged: (val) {
                                                 setSheetState(() {});
@@ -1409,12 +2015,26 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 setSheetState(() {});
                                               },
                                               child: Container(
-                                                padding: const EdgeInsets.all(kSpacing4),
+                                                padding: const EdgeInsets.all(
+                                                  kSpacing4,
+                                                ),
                                                 decoration: BoxDecoration(
-                                                  color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                                                  color: isDark
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.1,
+                                                        )
+                                                      : Colors.black.withValues(
+                                                          alpha: 0.05,
+                                                        ),
                                                   shape: BoxShape.circle,
                                                 ),
-                                                child: Icon(PesaFlowIcons.close, size: 18, color: isDark ? Colors.white54 : Colors.black45),
+                                                child: Icon(
+                                                  PesaFlowIcons.close,
+                                                  size: 18,
+                                                  color: isDark
+                                                      ? Colors.white54
+                                                      : Colors.black45,
+                                                ),
                                               ),
                                             ),
                                         ],
@@ -1425,13 +2045,25 @@ class LoanDetailScreen extends ConsumerWidget {
                                       children: [
                                         _QuickAmountChip(
                                           label: '25%',
-                                          amount: (remainingCents * 0.25).round(),
-                                          isActive: paymentAmount() == (remainingCents * 0.25).round(),
+                                          amount: (remainingCents * 0.25)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.25).round(),
                                           onTap: () {
-                                            amountController.text = ((remainingCents * 0.25).round() / 100).toStringAsFixed(0);
-                                            amountController.selection = TextSelection.fromPosition(
-                                              TextPosition(offset: amountController.text.length),
-                                            );
+                                            amountController.text =
+                                                ((remainingCents * 0.25)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
                                             setSheetState(() {});
                                           },
                                           isDark: isDark,
@@ -1439,13 +2071,25 @@ class LoanDetailScreen extends ConsumerWidget {
                                         const SizedBox(width: kSpacing8),
                                         _QuickAmountChip(
                                           label: '50%',
-                                          amount: (remainingCents * 0.5).round(),
-                                          isActive: paymentAmount() == (remainingCents * 0.5).round(),
+                                          amount: (remainingCents * 0.5)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.5).round(),
                                           onTap: () {
-                                            amountController.text = ((remainingCents * 0.5).round() / 100).toStringAsFixed(0);
-                                            amountController.selection = TextSelection.fromPosition(
-                                              TextPosition(offset: amountController.text.length),
-                                            );
+                                            amountController.text =
+                                                ((remainingCents * 0.5)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
                                             setSheetState(() {});
                                           },
                                           isDark: isDark,
@@ -1453,13 +2097,25 @@ class LoanDetailScreen extends ConsumerWidget {
                                         const SizedBox(width: kSpacing8),
                                         _QuickAmountChip(
                                           label: '75%',
-                                          amount: (remainingCents * 0.75).round(),
-                                          isActive: paymentAmount() == (remainingCents * 0.75).round(),
+                                          amount: (remainingCents * 0.75)
+                                              .round(),
+                                          isActive:
+                                              paymentAmount() ==
+                                              (remainingCents * 0.75).round(),
                                           onTap: () {
-                                            amountController.text = ((remainingCents * 0.75).round() / 100).toStringAsFixed(0);
-                                            amountController.selection = TextSelection.fromPosition(
-                                              TextPosition(offset: amountController.text.length),
-                                            );
+                                            amountController.text =
+                                                ((remainingCents * 0.75)
+                                                            .round() /
+                                                        100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
                                             setSheetState(() {});
                                           },
                                           isDark: isDark,
@@ -1468,12 +2124,20 @@ class LoanDetailScreen extends ConsumerWidget {
                                         _QuickAmountChip(
                                           label: '100%',
                                           amount: remainingCents,
-                                          isActive: paymentAmount() == remainingCents,
+                                          isActive:
+                                              paymentAmount() == remainingCents,
                                           onTap: () {
-                                            amountController.text = (remainingCents / 100).toStringAsFixed(0);
-                                            amountController.selection = TextSelection.fromPosition(
-                                              TextPosition(offset: amountController.text.length),
-                                            );
+                                            amountController.text =
+                                                (remainingCents / 100)
+                                                    .toStringAsFixed(0);
+                                            amountController.selection =
+                                                TextSelection.fromPosition(
+                                                  TextPosition(
+                                                    offset: amountController
+                                                        .text
+                                                        .length,
+                                                  ),
+                                                );
                                             setSheetState(() {});
                                           },
                                           isDark: isDark,
@@ -1481,29 +2145,61 @@ class LoanDetailScreen extends ConsumerWidget {
                                       ],
                                     ),
                                     const SizedBox(height: kSpacing24),
-                                    const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+                                    const Text(
+                                      'MEMO',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
                                     const SizedBox(height: kSpacing8),
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                        color: isDark
+                                            ? const Color(0xFF1C1C1E)
+                                            : Colors.white,
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
                                           color: isDark
-                                              ? Colors.white.withValues(alpha: 0.08)
-                                              : Colors.black.withValues(alpha: 0.06),
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.08,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
                                         ),
                                       ),
                                       child: TextField(
                                         controller: descriptionController,
-                                        textCapitalization: TextCapitalization.sentences,
-                                        style: TextStyle(fontSize: 15, color: isDark ? Colors.white : Colors.black),
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
                                         decoration: InputDecoration(
                                           hintText: 'Add a note (optional)',
-                                          hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.black26),
-                                          prefixIcon: Icon(PesaFlowIcons.edit, size: 20,
-                                              color: isDark ? Colors.white38 : Colors.black26),
+                                          hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white30
+                                                : Colors.black26,
+                                          ),
+                                          prefixIcon: Icon(
+                                            PesaFlowIcons.edit,
+                                            size: 20,
+                                            color: isDark
+                                                ? Colors.white38
+                                                : Colors.black26,
+                                          ),
                                           border: InputBorder.none,
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: kSpacing16,
+                                                vertical: kSpacing14,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -1511,18 +2207,36 @@ class LoanDetailScreen extends ConsumerWidget {
                                     Container(
                                       padding: const EdgeInsets.all(kSpacing12),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF609F8A).withValues(alpha: 0.08),
+                                        color: const Color(
+                                          0xFF609F8A,
+                                        ).withValues(alpha: 0.08),
                                         borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(color: const Color(0xFF609F8A).withValues(alpha: 0.15)),
+                                        border: Border.all(
+                                          color: const Color(
+                                            0xFF609F8A,
+                                          ).withValues(alpha: 0.15),
+                                        ),
                                       ),
                                       child: Row(
                                         children: [
-                                          Icon(PesaFlowIcons.info, size: 16, color: const Color(0xFF609F8A).withValues(alpha: 0.8)),
+                                          Icon(
+                                            PesaFlowIcons.info,
+                                            size: 16,
+                                            color: const Color(
+                                              0xFF609F8A,
+                                            ).withValues(alpha: 0.8),
+                                          ),
                                           const SizedBox(width: kSpacing8),
                                           Expanded(
                                             child: Text(
                                               'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                              style: TextStyle(fontSize: 11, color: const Color(0xFF609F8A).withValues(alpha: 0.8), height: 1.3),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: const Color(
+                                                  0xFF609F8A,
+                                                ).withValues(alpha: 0.8),
+                                                height: 1.3,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1535,37 +2249,66 @@ class LoanDetailScreen extends ConsumerWidget {
                                       child: ElevatedButton(
                                         onPressed: canSubmit
                                             ? () async {
-                                                setSheetState(() => isProcessing = true);
-                                                final desc = descriptionController.text.trim();
+                                                setSheetState(
+                                                  () => isProcessing = true,
+                                                );
+                                                final desc =
+                                                    descriptionController.text
+                                                        .trim();
                                                 await _processOfflinePayment(
                                                   context: sheetContext,
                                                   ref: ref,
                                                   loan: loan,
                                                   amount: paymentAmount(),
-                                                  description: desc.isNotEmpty ? desc : 'Offline loan payment',
+                                                  description: desc.isNotEmpty
+                                                      ? desc
+                                                      : 'Offline loan payment',
                                                 );
                                               }
                                             : null,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF609F8A),
+                                          backgroundColor: const Color(
+                                            0xFF609F8A,
+                                          ),
                                           foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
-                                          disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
+                                          disabledBackgroundColor: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.05,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.05,
+                                                ),
+                                          disabledForegroundColor: isDark
+                                              ? Colors.white24
+                                              : Colors.black26,
                                           elevation: 0,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                          padding: const EdgeInsets.symmetric(vertical: kSpacing14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: kSpacing14,
+                                          ),
                                         ),
                                         child: isProcessing
                                             ? const SizedBox(
                                                 width: 22,
                                                 height: 22,
-                                                child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2.5,
+                                                      color: Colors.white,
+                                                    ),
                                               )
                                             : Text(
                                                 paymentAmount() <= 0
                                                     ? 'Enter an amount'
                                                     : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                       ),
                                     ),
@@ -1595,8 +2338,14 @@ class LoanDetailScreen extends ConsumerWidget {
     required String description,
   }) async {
     try {
-      final activeTrackerId = await ref.read(settingsRepositoryProvider).getSetting('active_tracker_id') ?? 'default_personal';
-      final categories = await ref.read(categoryRepositoryProvider).getAllCategories();
+      final activeTrackerId =
+          await ref
+              .read(settingsRepositoryProvider)
+              .getSetting('active_tracker_id') ??
+          'default_personal';
+      final categories = await ref
+          .read(categoryRepositoryProvider)
+          .getAllCategories();
       final expenseCat = categories.firstWhere(
         (c) => c.type == 'expense',
         orElse: () => categories.first,
@@ -1616,7 +2365,9 @@ class LoanDetailScreen extends ConsumerWidget {
         updatedAt: DateTime.now(),
       );
 
-      await ref.read(transactionRepositoryNoAlertsProvider).createTransactionNoBalanceAdjustment(txn);
+      await ref
+          .read(transactionRepositoryNoAlertsProvider)
+          .createTransactionNoBalanceAdjustment(txn);
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
       if (context.mounted) {
@@ -1624,7 +2375,9 @@ class LoanDetailScreen extends ConsumerWidget {
         HapticFeedback.mediumImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Offline payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
+            content: Text(
+              'Offline payment of ${CurrencyFormatter.formatCents(amount)} recorded',
+            ),
             backgroundColor: const Color(0xFF609F8A),
           ),
         );
@@ -1633,7 +2386,10 @@ class LoanDetailScreen extends ConsumerWidget {
       HapticFeedback.heavyImpact();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
+          SnackBar(
+            content: Text('Payment failed: $e'),
+            backgroundColor: const Color(0xFFE53935),
+          ),
         );
       }
     }
@@ -1641,7 +2397,9 @@ class LoanDetailScreen extends ConsumerWidget {
 
   Widget _buildTransactionTile(Transaction tx, ThemeData theme, bool isDark) {
     final isCredit = tx.type == 'income';
-    final amountColor = isCredit ? const Color(0xFF609F8A) : const Color(0xFFE53935);
+    final amountColor = isCredit
+        ? const Color(0xFF609F8A)
+        : const Color(0xFFE53935);
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
       padding: const EdgeInsets.all(kSpacing12),
@@ -1662,7 +2420,9 @@ class LoanDetailScreen extends ConsumerWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isCredit ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+              isCredit
+                  ? Icons.arrow_downward_rounded
+                  : Icons.arrow_upward_rounded,
               color: amountColor,
               size: 16,
             ),
@@ -1676,8 +2436,15 @@ class LoanDetailScreen extends ConsumerWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        tx.description.isNotEmpty ? tx.description : (tx.type == 'income' ? 'Payment Received' : 'Payment Sent'),
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        tx.description.isNotEmpty
+                            ? tx.description
+                            : (tx.type == 'income'
+                                  ? 'Payment Received'
+                                  : 'Payment Sent'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1685,12 +2452,22 @@ class LoanDetailScreen extends ConsumerWidget {
                     if (tx.accountId == null) ...[
                       const SizedBox(width: kSpacing6),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing6,
+                          vertical: kSpacing2,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: Text('Offline', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                        child: Text(
+                          'Offline',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ),
                       ),
                     ],
                   ],
@@ -1698,7 +2475,10 @@ class LoanDetailScreen extends ConsumerWidget {
                 const SizedBox(height: kSpacing2),
                 Text(
                   _formatDate(tx.createdAt),
-                  style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[500] : Colors.grey[500]),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark ? Colors.grey[500] : Colors.grey[500],
+                  ),
                 ),
               ],
             ),
@@ -1718,18 +2498,35 @@ class LoanDetailScreen extends ConsumerWidget {
 
   Widget _infoRow(String label, String value, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: kSpacing4, horizontal: kSpacing4),
+      padding: const EdgeInsets.symmetric(
+        vertical: kSpacing4,
+        horizontal: kSpacing4,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
-          Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
   }
 
-  Widget _copyableInfoRow(BuildContext context, String label, String value, bool isDark) {
+  Widget _copyableInfoRow(
+    BuildContext context,
+    String label,
+    String value,
+    bool isDark,
+  ) {
     if (value == 'N/A' || value.isEmpty) {
       return _infoRow(label, value, isDark);
     }
@@ -1742,24 +2539,38 @@ class LoanDetailScreen extends ConsumerWidget {
             content: Text('Copied $label to clipboard'),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 2),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
             width: 250,
           ),
         );
       },
       borderRadius: BorderRadius.circular(4),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: kSpacing4, horizontal: kSpacing4),
+        padding: const EdgeInsets.symmetric(
+          vertical: kSpacing4,
+          horizontal: kSpacing4,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
+            ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   value,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(width: kSpacing4),
                 Icon(
@@ -1814,7 +2625,10 @@ class LoanDetailScreen extends ConsumerWidget {
                 if (context.mounted) {
                   Navigator.of(ctx, rootNavigator: true).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red),
+                    SnackBar(
+                      content: Text('Failed: $e'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
                 }
               }
@@ -1855,15 +2669,15 @@ class _QuickAmountChip extends StatelessWidget {
             color: isActive
                 ? const Color(0xFF609F8A).withValues(alpha: 0.15)
                 : isDark
-                    ? Colors.white.withValues(alpha: 0.06)
-                    : Colors.black.withValues(alpha: 0.04),
+                ? Colors.white.withValues(alpha: 0.06)
+                : Colors.black.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isActive
                   ? const Color(0xFF609F8A).withValues(alpha: 0.5)
                   : isDark
-                      ? Colors.white.withValues(alpha: 0.08)
-                      : Colors.black.withValues(alpha: 0.06),
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : Colors.black.withValues(alpha: 0.06),
             ),
           ),
           child: Column(

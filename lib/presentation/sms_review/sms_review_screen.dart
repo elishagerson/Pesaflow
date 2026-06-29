@@ -71,7 +71,9 @@ class SmsReviewScreen extends ConsumerWidget {
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: hexToColor(cat.color).withValues(alpha: 0.15),
+                            color: hexToColor(
+                              cat.color,
+                            ).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -83,15 +85,23 @@ class SmsReviewScreen extends ConsumerWidget {
                         title: Text(
                           cat.name,
                           style: TextStyle(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                         subtitle: Text(
                           cat.type.toUpperCase(),
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
                         ),
                         trailing: isSelected
-                            ? Icon(PesaFlowIcons.success, color: theme.colorScheme.primary)
+                            ? Icon(
+                                PesaFlowIcons.success,
+                                color: theme.colorScheme.primary,
+                              )
                             : null,
                         onTap: () => Navigator.of(context).pop(cat.id),
                       );
@@ -107,7 +117,9 @@ class SmsReviewScreen extends ConsumerWidget {
 
     if (selectedCategoryId != null) {
       if (!context.mounted) return;
-      await ref.read(transactionRepositoryProvider).approveReviewedTransaction(
+      await ref
+          .read(transactionRepositoryProvider)
+          .approveReviewedTransaction(
             item.transaction.id,
             newCategoryId: selectedCategoryId,
           );
@@ -123,358 +135,497 @@ class SmsReviewScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: Column(
           children: [
-            IosNavBar(
-              title: 'SMS Review',
-              largeTitle: true,
-            ),
+            IosNavBar(title: 'SMS Review', largeTitle: true),
             Expanded(
               child: reviewAsync.when(
-        data: (items) {
-          if (items.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        PesaFlowIcons.success,
-                        size: 56,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'All Clear!',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            itemCount: items.length + 1, // +1 for header
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                // Header
-                return StaggeredFadeSlide(
-                  index: 0,
-                  child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.tertiary.withValues(alpha: 0.15),
-                          theme.colorScheme.tertiary.withValues(alpha: 0.05),
-                        ],
-                      ),
-                      border: Border.all(
-                        color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.sms_rounded,
-                          color: theme.colorScheme.tertiary,
-                          size: 28,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${items.length} transaction${items.length == 1 ? '' : 's'} to review',
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                data: (items) {
+                  if (items.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.1,
                                 ),
+                                shape: BoxShape.circle,
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Swipe right to approve, left to reject',
-                                style: TextStyle(
-                                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                                  fontSize: 12,
-                                ),
+                              child: Icon(
+                                PesaFlowIcons.success,
+                                size: 56,
+                                color: theme.colorScheme.primary,
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'All Clear!',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: theme.colorScheme.onSurfaceVariant
+                                    .withValues(alpha: 0.6),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                );
-              }
-
-              final item = items[index - 1];
-              final trans = item.transaction;
-
-              AmountType amtType = AmountType.neutral;
-              if (trans.type.toLowerCase() == 'income') {
-                amtType = AmountType.income;
-              } else if (trans.type.toLowerCase() == 'expense' ||
-                  trans.type.toLowerCase() == 'airtime' ||
-                  trans.type.toLowerCase() == 'fee') {
-                amtType = AmountType.expense;
-              }
-
-              return StaggeredFadeSlide(
-                index: index,
-                child: SwipeableCard(
-                onSwipeLeft: () async {
-                  // Reject: delete the transaction
-                  await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                  ref.invalidate(reviewQueueStreamProvider);
-                  ref.invalidate(recentTransactionsStreamProvider);
-                  ref.invalidate(accountsStreamProvider);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Transaction rejected: ${trans.description}'),
-                        backgroundColor: theme.colorScheme.error,
-                        behavior: SnackBarBehavior.floating,
                       ),
                     );
                   }
-                },
-                onSwipeRight: () async {
-                  // Approve: mark as sms_auto
-                  await ref.read(transactionRepositoryProvider).approveReviewedTransaction(trans.id);
-                  ref.invalidate(reviewQueueStreamProvider);
-                  ref.invalidate(recentTransactionsStreamProvider);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Transaction approved: ${trans.description}'),
-                        backgroundColor: theme.colorScheme.primary,
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  }
-                },
-                child: GlassCard(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: EdgeInsets.zero,
-                  frosted: true,
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Left Accent Border strip (dynamic category colored)
-                        Container(
-                          width: 5,
-                          color: hexToColor(item.category.color),
-                        ),
-                        // Main content
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Top section: provider badge + amount
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: hexToColor(item.category.color).withValues(alpha: 0.15),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        getCategoryIcon(item.category.icon),
-                                        color: hexToColor(item.category.color),
-                                        size: 22,
-                                      ),
+
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    itemCount: items.length + 1, // +1 for header
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        // Header
+                        return StaggeredFadeSlide(
+                          index: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  AppTheme.radiusCard,
+                                ),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    theme.colorScheme.tertiary.withValues(
+                                      alpha: 0.15,
                                     ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            trans.description.isNotEmpty
-                                                ? trans.description
-                                                : item.category.name,
-                                            style: theme.textTheme.titleSmall?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                    theme.colorScheme.tertiary.withValues(
+                                      alpha: 0.05,
+                                    ),
+                                  ],
+                                ),
+                                border: Border.all(
+                                  color: theme.colorScheme.tertiary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.sms_rounded,
+                                    color: theme.colorScheme.tertiary,
+                                    size: 28,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${items.length} transaction${items.length == 1 ? '' : 's'} to review',
+                                          style: theme.textTheme.titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Swipe right to approve, left to reject',
+                                          style: TextStyle(
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant
+                                                .withValues(alpha: 0.6),
+                                            fontSize: 12,
                                           ),
-                                          const SizedBox(height: 4),
-                                          Row(
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      final item = items[index - 1];
+                      final trans = item.transaction;
+
+                      AmountType amtType = AmountType.neutral;
+                      if (trans.type.toLowerCase() == 'income') {
+                        amtType = AmountType.income;
+                      } else if (trans.type.toLowerCase() == 'expense' ||
+                          trans.type.toLowerCase() == 'airtime' ||
+                          trans.type.toLowerCase() == 'fee') {
+                        amtType = AmountType.expense;
+                      }
+
+                      return StaggeredFadeSlide(
+                        index: index,
+                        child: SwipeableCard(
+                          onSwipeLeft: () async {
+                            // Reject: delete the transaction
+                            await ref
+                                .read(transactionRepositoryProvider)
+                                .deleteTransaction(trans.id);
+                            ref.invalidate(reviewQueueStreamProvider);
+                            ref.invalidate(recentTransactionsStreamProvider);
+                            ref.invalidate(accountsStreamProvider);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Transaction rejected: ${trans.description}',
+                                  ),
+                                  backgroundColor: theme.colorScheme.error,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                          onSwipeRight: () async {
+                            // Approve: mark as sms_auto
+                            await ref
+                                .read(transactionRepositoryProvider)
+                                .approveReviewedTransaction(trans.id);
+                            ref.invalidate(reviewQueueStreamProvider);
+                            ref.invalidate(recentTransactionsStreamProvider);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Transaction approved: ${trans.description}',
+                                  ),
+                                  backgroundColor: theme.colorScheme.primary,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                          child: GlassCard(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.zero,
+                            frosted: true,
+                            child: IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  // Left Accent Border strip (dynamic category colored)
+                                  Container(
+                                    width: 5,
+                                    color: hexToColor(item.category.color),
+                                  ),
+                                  // Main content
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Top section: provider badge + amount
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            16,
+                                            14,
+                                            16,
+                                            8,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 8, vertical: 2),
-                                                decoration: BoxDecoration(
-                                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                                                  borderRadius: BorderRadius.circular(12),
+                                                padding: const EdgeInsets.all(
+                                                  10,
                                                 ),
-                                                  child: Text(
-                                                    item.account!.name,
-                                                  style: TextStyle(
-                                                    color: theme.colorScheme.primary,
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
+                                                decoration: BoxDecoration(
+                                                  color: hexToColor(
+                                                    item.category.color,
+                                                  ).withValues(alpha: 0.15),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  getCategoryIcon(
+                                                    item.category.icon,
                                                   ),
+                                                  color: hexToColor(
+                                                    item.category.color,
+                                                  ),
+                                                  size: 22,
                                                 ),
                                               ),
-                                              const SizedBox(width: 8),
-                                              // High-fidelity confidence score badge
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 8, vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: AppTheme.transferColorDark.withValues(alpha: 0.08),
-                                                  borderRadius: BorderRadius.circular(100),
-                                                  border: Border.all(
-                                                    color: AppTheme.transferColorDark.withValues(alpha: 0.2),
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    ConfidenceRing(
-                                                      score: 0.94,
-                                                      color: AppTheme.transferColorDark,
-                                                      size: 12,
-                                                    ),
-                                                    const SizedBox(width: 6),
                                                     Text(
-                                                      '94% MATCH',
-                                                      style: TextStyle(
-                                                        color: theme.brightness == Brightness.dark
-                                                            ? AppTheme.transferColorDark
-                                                            : const Color(0xFF2E7D32),
-                                                        fontSize: 9,
-                                                        fontWeight: FontWeight.w900,
-                                                        letterSpacing: 0.5,
-                                                      ),
+                                                      trans
+                                                              .description
+                                                              .isNotEmpty
+                                                          ? trans.description
+                                                          : item.category.name,
+                                                      style: theme
+                                                          .textTheme
+                                                          .titleSmall
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 8,
+                                                                vertical: 2,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .primary
+                                                                .withValues(
+                                                                  alpha: 0.1,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                          ),
+                                                          child: Text(
+                                                            item.account!.name,
+                                                            style: TextStyle(
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .primary,
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 8,
+                                                        ),
+                                                        // High-fidelity confidence score badge
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 8,
+                                                                vertical: 4,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: AppTheme
+                                                                .transferColorDark
+                                                                .withValues(
+                                                                  alpha: 0.08,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  100,
+                                                                ),
+                                                            border: Border.all(
+                                                              color: AppTheme
+                                                                  .transferColorDark
+                                                                  .withValues(
+                                                                    alpha: 0.2,
+                                                                  ),
+                                                              width: 1,
+                                                            ),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              ConfidenceRing(
+                                                                score: 0.94,
+                                                                color: AppTheme
+                                                                    .transferColorDark,
+                                                                size: 12,
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 6,
+                                                              ),
+                                                              Text(
+                                                                '94% MATCH',
+                                                                style: TextStyle(
+                                                                  color:
+                                                                      theme.brightness ==
+                                                                          Brightness
+                                                                              .dark
+                                                                      ? AppTheme
+                                                                            .transferColorDark
+                                                                      : const Color(
+                                                                          0xFF2E7D32,
+                                                                        ),
+                                                                  fontSize: 9,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                  letterSpacing:
+                                                                      0.5,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
+                                              AmountText(
+                                                amountInCents: trans.amount,
+                                                type: amtType,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    AmountText(
-                                      amountInCents: trans.amount,
-                                      type: amtType,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                        ),
 
-                              // Raw SMS preview
-                              if (trans.rawSms != null && trans.rawSms!.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.03),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      trans.rawSms!,
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: 'monospace',
-                                        color: theme.colorScheme.onSurfaceVariant
-                                            .withValues(alpha: 0.7),
-                                      ),
+                                        // Raw SMS preview
+                                        if (trans.rawSms != null &&
+                                            trans.rawSms!.isNotEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                              16,
+                                              0,
+                                              16,
+                                              8,
+                                            ),
+                                            child: Container(
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.03,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                trans.rawSms!,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily: 'monospace',
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant
+                                                      .withValues(alpha: 0.7),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                        // Action buttons
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            8,
+                                            0,
+                                            8,
+                                            8,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              TextButton.icon(
+                                                onPressed: () =>
+                                                    _showCategoryPicker(
+                                                      context,
+                                                      ref,
+                                                      item,
+                                                    ),
+                                                icon: const Icon(
+                                                  Icons.category_rounded,
+                                                  size: 16,
+                                                ),
+                                                label: const Text(
+                                                  'Change Category',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              TextButton.icon(
+                                                onPressed: () async {
+                                                  await ref
+                                                      .read(
+                                                        transactionRepositoryProvider,
+                                                      )
+                                                      .approveReviewedTransaction(
+                                                        trans.id,
+                                                      );
+                                                  ref.invalidate(
+                                                    reviewQueueStreamProvider,
+                                                  );
+                                                  ref.invalidate(
+                                                    recentTransactionsStreamProvider,
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  Icons.check_rounded,
+                                                  size: 16,
+                                                  color:
+                                                      theme.colorScheme.primary,
+                                                ),
+                                                label: Text(
+                                                  'Approve',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-
-                              // Action buttons
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                child: Row(
-                                  children: [
-                                    TextButton.icon(
-                                      onPressed: () => _showCategoryPicker(context, ref, item),
-                                      icon: const Icon(Icons.category_rounded, size: 16),
-                                      label: const Text('Change Category',
-                                          style: TextStyle(fontSize: 12)),
-                                    ),
-                                    const Spacer(),
-                                    TextButton.icon(
-                                      onPressed: () async {
-                                        await ref
-                                            .read(transactionRepositoryProvider)
-                                            .approveReviewedTransaction(trans.id);
-                                        ref.invalidate(reviewQueueStreamProvider);
-                                        ref.invalidate(recentTransactionsStreamProvider);
-                                      },
-                                      icon: Icon(Icons.check_rounded,
-                                          size: 16, color: theme.colorScheme.primary),
-                                      label: Text('Approve',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: theme.colorScheme.primary)),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, _) =>
+                    Center(child: Text('Error loading review queue: $err')),
               ),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error loading review queue: $err')),
+            ),
+          ],
+        ),
       ),
-          ),
-        ],
-      ),
-    ));
+    );
   }
 }
 
@@ -499,10 +650,7 @@ class ConfidenceRing extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _ConfidenceRingPainter(
-          score: score,
-          color: color,
-        ),
+        painter: _ConfidenceRingPainter(score: score, color: color),
       ),
     );
   }
@@ -523,7 +671,7 @@ class _ConfidenceRingPainter extends CustomPainter {
       ..color = color.withValues(alpha: 0.18)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
-    
+
     canvas.drawCircle(center, radius, bgPaint);
 
     final activePaint = Paint()
@@ -566,7 +714,8 @@ class SwipeableCard extends StatefulWidget {
   State<SwipeableCard> createState() => _SwipeableCardState();
 }
 
-class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProviderStateMixin {
+class _SwipeableCardState extends State<SwipeableCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Offset _dragOffset = Offset.zero;
   double _angle = 0.0;
@@ -607,11 +756,12 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
   void _swipeOut(Offset targetOffset, VoidCallback onComplete) {
     final startOffset = _dragOffset;
     final startAngle = _angle;
-    
+
     _controller.duration = const Duration(milliseconds: 200);
-    final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    final animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     animation.addListener(() {
       setState(() {
@@ -630,9 +780,10 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
     final startAngle = _angle;
 
     _controller.duration = const Duration(milliseconds: 300);
-    final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    final animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     animation.addListener(() {
       setState(() {
@@ -668,20 +819,30 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(color: AppTheme.transferColorDark, width: 3),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: AppTheme.transferColorDark,
+                          width: 3,
+                        ),
                       ),
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.transferColorDark,
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.transferColorDark.withValues(alpha: 0.4),
+                                color: AppTheme.transferColorDark.withValues(
+                                  alpha: 0.4,
+                                ),
                                 blurRadius: 15,
-                              )
+                              ),
                             ],
                           ),
                           child: const Text(
@@ -705,20 +866,30 @@ class _SwipeableCardState extends State<SwipeableCard> with SingleTickerProvider
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.red.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                        border: Border.all(color: const Color(0xFFFF453A), width: 3),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFFFF453A),
+                          width: 3,
+                        ),
                       ),
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFF453A),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFF453A).withValues(alpha: 0.4),
+                                color: const Color(
+                                  0xFFFF453A,
+                                ).withValues(alpha: 0.4),
                                 blurRadius: 15,
-                              )
+                              ),
                             ],
                           ),
                           child: const Text(

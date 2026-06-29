@@ -8,7 +8,8 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 });
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
   FlutterLocalNotificationsPlugin get plugin => _plugin;
   Completer<void>? _initCompleter;
 
@@ -19,7 +20,9 @@ class NotificationService {
     if (_initCompleter != null) return _initCompleter!.future;
     _initCompleter = Completer<void>();
     try {
-      const androidInit = AndroidInitializationSettings('@drawable/ic_notification_pesaflow');
+      const androidInit = AndroidInitializationSettings(
+        '@drawable/ic_notification_pesaflow',
+      );
       const iOSInit = DarwinInitializationSettings();
       const macOSInit = DarwinInitializationSettings();
       const linuxInit = LinuxInitializationSettings(defaultActionName: 'Open');
@@ -31,9 +34,15 @@ class NotificationService {
       );
       await _plugin.initialize(settings: initSettings);
       _initCompleter!.complete();
-      developer.log('Notification plugin initialized', name: 'NotificationService');
+      developer.log(
+        'Notification plugin initialized',
+        name: 'NotificationService',
+      );
     } catch (e) {
-      developer.log('Notification plugin init failed: $e', name: 'NotificationService');
+      developer.log(
+        'Notification plugin init failed: $e',
+        name: 'NotificationService',
+      );
       _initCompleter!.completeError(e);
       _initCompleter = null; // allow retry on next call
       rethrow;
@@ -79,7 +88,11 @@ class NotificationService {
 
     final now = DateTime.now();
     final cutoff = now.add(Duration(days: daysAhead));
-    final due = subs.where((s) => s.nextDueDate.isAfter(now) && s.nextDueDate.isBefore(cutoff)).toList();
+    final due = subs
+        .where(
+          (s) => s.nextDueDate.isAfter(now) && s.nextDueDate.isBefore(cutoff),
+        )
+        .toList();
     if (due.isEmpty) return;
 
     final channel = AndroidNotificationDetails(
@@ -95,14 +108,19 @@ class NotificationService {
     for (final sub in due) {
       final amountStr = (sub.amountCents / 100).toStringAsFixed(0);
       // Use a stable ID based on name + day to avoid collisions
-      final notifId = sub.name.hashCode ^ sub.nextDueDate.day ^ sub.nextDueDate.month;
+      final notifId =
+          sub.name.hashCode ^ sub.nextDueDate.day ^ sub.nextDueDate.month;
       await _plugin.show(
         id: notifId,
         title: '${sub.name} renewing soon',
-        body: '${sub.name} (Tsh $amountStr) — ${sub.nextDueDate.day}/${sub.nextDueDate.month}',
+        body:
+            '${sub.name} (Tsh $amountStr) — ${sub.nextDueDate.day}/${sub.nextDueDate.month}',
         notificationDetails: details,
       );
-      developer.log('Renewal reminder shown for ${sub.name}', name: 'NotificationService');
+      developer.log(
+        'Renewal reminder shown for ${sub.name}',
+        name: 'NotificationService',
+      );
     }
   }
 }

@@ -27,7 +27,8 @@ class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
 
   @override
-  ConsumerState<TransactionListScreen> createState() => _TransactionListScreenState();
+  ConsumerState<TransactionListScreen> createState() =>
+      _TransactionListScreenState();
 }
 
 class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
@@ -97,553 +98,834 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           ref.invalidate(accountsStreamProvider);
         },
         child: Stack(
-        children: [
-          // ── TRANSACTIONS LIST LAYER ──
-          transactionsAsync.when(
-            data: (transactionsList) {
-              if (transactionsList.isEmpty) {
-                final isFiltered = activeAccount != null ||
-                    activeCategory != null ||
-                    searchQuery.isNotEmpty ||
-                    activeType != 'All' ||
-                    amountMin != null ||
-                    amountMax != null ||
-                    dateFrom != null ||
-                    dateTo != null;
+          children: [
+            // ── TRANSACTIONS LIST LAYER ──
+            transactionsAsync.when(
+              data: (transactionsList) {
+                if (transactionsList.isEmpty) {
+                  final isFiltered =
+                      activeAccount != null ||
+                      activeCategory != null ||
+                      searchQuery.isNotEmpty ||
+                      activeType != 'All' ||
+                      amountMin != null ||
+                      amountMax != null ||
+                      dateFrom != null ||
+                      dateTo != null;
 
-                return StaggeredFadeSlide(
-                  index: 0,
-                  child: EmptyState(
-                    icon: isFiltered ? Icons.search_off_rounded : PesaFlowIcons.transactions,
-                    title: isFiltered ? 'No Transactions Found' : 'No Transactions Recorded',
-                    subtitle: isFiltered
-                        ? 'Try adjusting your filters or typing a different query.'
-                        : 'Start logging your offline financial transactions to track your spending habits.',
-                    illustration: PesaFlowIllustration.emptyTransactions(),
-                    action: TactileSpringContainer(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        if (isFiltered) {
-                          ref.read(transactionTypeFilterProvider.notifier).state = 'All';
-                          ref.read(transactionAccountFilterProvider.notifier).state = null;
-                          ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                          ref.read(transactionSearchQueryProvider.notifier).state = '';
-                          ref.read(transactionAmountMinProvider.notifier).state = null;
-                          ref.read(transactionAmountMaxProvider.notifier).state = null;
-                          ref.read(transactionDateFromProvider.notifier).state = null;
-                          ref.read(transactionDateToProvider.notifier).state = null;
-                        } else {
-                          context.go('/transactions/add');
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              isFiltered ? Icons.clear_all_rounded : PesaFlowIcons.add,
-                              color: theme.colorScheme.onPrimary,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              isFiltered ? 'Clear Filters' : 'Add First Transaction',
-                              style: TextStyle(
-                                color: theme.colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                  return StaggeredFadeSlide(
+                    index: 0,
+                    child: EmptyState(
+                      icon: isFiltered
+                          ? Icons.search_off_rounded
+                          : PesaFlowIcons.transactions,
+                      title: isFiltered
+                          ? 'No Transactions Found'
+                          : 'No Transactions Recorded',
+                      subtitle: isFiltered
+                          ? 'Try adjusting your filters or typing a different query.'
+                          : 'Start logging your offline financial transactions to track your spending habits.',
+                      illustration: PesaFlowIllustration.emptyTransactions(),
+                      action: TactileSpringContainer(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          if (isFiltered) {
+                            ref
+                                    .read(
+                                      transactionTypeFilterProvider.notifier,
+                                    )
+                                    .state =
+                                'All';
+                            ref
+                                    .read(
+                                      transactionAccountFilterProvider.notifier,
+                                    )
+                                    .state =
+                                null;
+                            ref
+                                    .read(
+                                      transactionCategoryFilterProvider
+                                          .notifier,
+                                    )
+                                    .state =
+                                null;
+                            ref
+                                    .read(
+                                      transactionSearchQueryProvider.notifier,
+                                    )
+                                    .state =
+                                '';
+                            ref
+                                    .read(transactionAmountMinProvider.notifier)
+                                    .state =
+                                null;
+                            ref
+                                    .read(transactionAmountMaxProvider.notifier)
+                                    .state =
+                                null;
+                            ref
+                                    .read(transactionDateFromProvider.notifier)
+                                    .state =
+                                null;
+                            ref.read(transactionDateToProvider.notifier).state =
+                                null;
+                          } else {
+                            context.go('/transactions/add');
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 14,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              // Group items by calendar day
-              final Map<String, List<TransactionWithCategoryAndAccount>> grouped = {};
-              for (final item in transactionsList) {
-                final dayStr = DateFormat('yyyy-MM-dd').format(item.transaction.createdAt);
-                if (grouped[dayStr] == null) {
-                  grouped[dayStr] = [];
-                }
-                grouped[dayStr]!.add(item);
-              }
-
-              final sortedDays = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
-
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 195.0,
-                  bottom: 110.0,
-                ),
-                itemCount: sortedDays.length + 1,
-                itemBuilder: (context, dayIndex) {
-                  // Append insights card at the end of the transactions list
-                  if (dayIndex == sortedDays.length) {
-                    return StaggeredFadeSlide(
-                      index: sortedDays.length,
-                      child: _buildInsightsCard(context, ref, isDark),
-                    );
-                  }
-
-                  final dayStr = sortedDays[dayIndex];
-                  final dayItems = grouped[dayStr]!;
-                  final firstItemDate = dayItems.first.transaction.createdAt;
-
-                  // Calculate daily net balance change (income - expense)
-                  int dailyNetChange = 0;
-                  for (final item in dayItems) {
-                    final type = item.transaction.type.toLowerCase();
-                    if (type == 'income') {
-                      dailyNetChange += item.transaction.amount;
-                    } else if (type == 'expense' || type == 'airtime' || type == 'fee') {
-                      dailyNetChange -= item.transaction.amount;
-                    }
-                  }
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Group Date Header
-                      StaggeredFadeSlide(
-                        index: dayIndex,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 12.0),
+                            ],
+                          ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
+                              Icon(
+                                isFiltered
+                                    ? Icons.clear_all_rounded
+                                    : PesaFlowIcons.add,
+                                color: theme.colorScheme.onPrimary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 6),
                               Text(
-                                _formatHeaderDate(firstItemDate).toUpperCase(),
+                                isFiltered
+                                    ? 'Clear Filters'
+                                    : 'Add First Transaction',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.2,
-                                  color: isDark ? Colors.white30 : Colors.black38,
+                                  color: theme.colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
                                 ),
                               ),
-                              // Monospace Net Change Indicator
-                              AmountText(
-                                amountInCents: dailyNetChange.abs(),
-                                type: dailyNetChange > 0
-                                    ? AmountType.income
-                                    : (dailyNetChange < 0 ? AmountType.expense : AmountType.neutral),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  color: dailyNetChange > 0
-                                      ? AppTheme.transferColorDark
-                                      : (dailyNetChange < 0 ? const Color(0xFFFF453A) : Colors.grey),
-                                ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-
-                      // Transaction Items as Individual GlassCards
-                      ...dayItems.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final item = entry.value;
-                        final trans = item.transaction;
-
-                        AmountType amtType = AmountType.neutral;
-                        if (trans.type.toLowerCase() == 'income') {
-                          amtType = AmountType.income;
-                        } else if (trans.type.toLowerCase() == 'expense' ||
-                                   trans.type.toLowerCase() == 'airtime' ||
-                                   trans.type.toLowerCase() == 'fee') {
-                          amtType = AmountType.expense;
-                        }
-
-                        final categoryColor = hexToColor(item.category.color);
-                        final formattedTime = DateFormat('HH:mm').format(trans.createdAt);
-
-                        return StaggeredFadeSlide(
-                          index: index,
-                          child: Dismissible(
-                          key: Key(trans.id),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
-                            padding: const EdgeInsets.only(right: 20.0),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.error,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Icon(PesaFlowIcons.delete, color: Colors.white),
-                          ),
-                          confirmDismiss: (_) async {
-                            await ref.read(transactionRepositoryProvider).deleteTransaction(trans.id);
-                            ref.invalidate(filteredTransactionsStreamProvider);
-                            ref.invalidate(accountsStreamProvider);
-                            ref.invalidate(netWorthProvider);
-                            return true;
-                          },
-                          child: TactileSpringContainer(
-                            onTap: () => context.go('/transactions/edit/${trans.id}'),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: isDark ? const Color(0x10FFFFFF) : const Color(0x0F000000),
-                                  width: 0.5,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  // Category Icon Container (Squircle Style)
-                                  Container(
-                                    width: 46,
-                                    height: 46,
-                                    decoration: BoxDecoration(
-                                      color: categoryColor.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        getCategoryIcon(item.category.icon),
-                                        color: categoryColor,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 14),
-                                  // Content
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          trans.description.isNotEmpty ? trans.description : item.category.name,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 15,
-                                            color: isDark ? Colors.white : Colors.black,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 3),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              item.account?.name ?? 'Offline',
-                                              style: TextStyle(
-                                                color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            if (trans.reference != null && trans.reference!.isNotEmpty) ...[
-                                              const SizedBox(width: 6),
-                                              Text(
-                                                '•',
-                                                style: TextStyle(
-                                                  color: isDark ? Colors.white10 : Colors.black12,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 6),
-                                              Flexible(
-                                                child: Text(
-                                                  trans.reference!,
-                                                  style: TextStyle(
-                                                    color: isDark ? Colors.white30 : Colors.black38,
-                                                    fontSize: 11,
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  // Amount & Time
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      AmountText(
-                                        amountInCents: trans.amount,
-                                        type: amtType,
-                                        showDecimals: true,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 16,
-                                          color: amtType == AmountType.income
-                                              ? AppTheme.transferColorDark
-                                              : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        formattedTime,
-                                        style: TextStyle(
-                                          color: isDark ? Colors.white24 : Colors.black26,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                      }),
-                    ],
                   );
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, _) => Center(child: Text('Error loading transactions: $err')),
-          ),
+                }
 
-          // ── GLASS HEADER ──
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: StaggeredFadeSlide(
-              index: 0,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                child: Container(
+                // Group items by calendar day
+                final Map<String, List<TransactionWithCategoryAndAccount>>
+                grouped = {};
+                for (final item in transactionsList) {
+                  final dayStr = DateFormat(
+                    'yyyy-MM-dd',
+                  ).format(item.transaction.createdAt);
+                  if (grouped[dayStr] == null) {
+                    grouped[dayStr] = [];
+                  }
+                  grouped[dayStr]!.add(item);
+                }
+
+                final sortedDays = grouped.keys.toList()
+                  ..sort((a, b) => b.compareTo(a));
+
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 16,
-                    bottom: 12,
+                    top: MediaQuery.of(context).padding.top + 195.0,
+                    bottom: 110.0,
                   ),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.black.withValues(alpha: 0.25)
-                        : Colors.white.withValues(alpha: 0.25),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.08)
-                            : Colors.black.withValues(alpha: 0.05),
-                        width: 0.5,
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Transactions',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.8,
-                                color: isDark ? Colors.white : Colors.black,
-                              ),
+                  itemCount: sortedDays.length + 1,
+                  itemBuilder: (context, dayIndex) {
+                    // Append insights card at the end of the transactions list
+                    if (dayIndex == sortedDays.length) {
+                      return StaggeredFadeSlide(
+                        index: sortedDays.length,
+                        child: _buildInsightsCard(context, ref, isDark),
+                      );
+                    }
+
+                    final dayStr = sortedDays[dayIndex];
+                    final dayItems = grouped[dayStr]!;
+                    final firstItemDate = dayItems.first.transaction.createdAt;
+
+                    // Calculate daily net balance change (income - expense)
+                    int dailyNetChange = 0;
+                    for (final item in dayItems) {
+                      final type = item.transaction.type.toLowerCase();
+                      if (type == 'income') {
+                        dailyNetChange += item.transaction.amount;
+                      } else if (type == 'expense' ||
+                          type == 'airtime' ||
+                          type == 'fee') {
+                        dailyNetChange -= item.transaction.amount;
+                      }
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Group Date Header
+                        StaggeredFadeSlide(
+                          index: dayIndex,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              20.0,
+                              24.0,
+                              20.0,
+                              12.0,
                             ),
-                            Row(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                if (activeAccount != null || activeCategory != null || searchQuery.isNotEmpty || activeType != 'All' || amountMin != null || amountMax != null || dateFrom != null || dateTo != null)
-                                  IconButton(
-                                    icon: const Icon(Icons.clear_all_rounded, color: Colors.redAccent, size: 20),
-                                    tooltip: 'Clear Filters',
-                                    onPressed: () {
-                                      ref.read(transactionTypeFilterProvider.notifier).state = 'All';
-                                      ref.read(transactionAccountFilterProvider.notifier).state = null;
-                                      ref.read(transactionCategoryFilterProvider.notifier).state = null;
-                                      ref.read(transactionSearchQueryProvider.notifier).state = '';
-                                      ref.read(transactionAmountMinProvider.notifier).state = null;
-                                      ref.read(transactionAmountMaxProvider.notifier).state = null;
-                                      ref.read(transactionDateFromProvider.notifier).state = null;
-                                      ref.read(transactionDateToProvider.notifier).state = null;
-                                    },
-                                  ),
-                                _FilterButton(
-                                  isActive: activeAccount != null || activeCategory != null ||
-                                      amountMin != null || amountMax != null ||
-                                      dateFrom != null || dateTo != null ||
-                                      searchQuery.isNotEmpty || activeType != 'All',
-                                  activeCount: [
-                                    if (activeType != 'All') 1,
-                                    if (activeAccount != null) 1,
-                                    if (activeCategory != null) 1,
-                                    if (searchQuery.isNotEmpty) 1,
-                                    if (amountMin != null || amountMax != null) 1,
-                                    if (dateFrom != null || dateTo != null) 1,
-                                  ].length,
-                                  onPressed: () => showTransactionFilterSheet(context, ref),
-                                ),
-                                const SizedBox(width: 8),
-                                TactileSpringContainer(
-                                  onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
-                                  child: Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03),
-                                      border: Border.all(
-                                        color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06),
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.search_rounded,
-                                      size: 18,
-                                      color: isDark ? Colors.white70 : Colors.black54,
-                                    ),
+                                Text(
+                                  _formatHeaderDate(
+                                    firstItemDate,
+                                  ).toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.2,
+                                    color: isDark
+                                        ? Colors.white30
+                                        : Colors.black38,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                Container(
-                                   width: 36,
-                                   height: 36,
-                                   decoration: BoxDecoration(
-                                     shape: BoxShape.circle,
-                                     color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03),
-                                     border: Border.all(
-                                       color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06),
-                                       width: 0.8,
-                                     ),
-                                   ),
-                                  child: Icon(
-                                    Icons.person_outline_rounded,
-                                    size: 18,
-                                    color: isDark ? Colors.white70 : Colors.black54,
+                                // Monospace Net Change Indicator
+                                AmountText(
+                                  amountInCents: dailyNetChange.abs(),
+                                  type: dailyNetChange > 0
+                                      ? AmountType.income
+                                      : (dailyNetChange < 0
+                                            ? AmountType.expense
+                                            : AmountType.neutral),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    color: dailyNetChange > 0
+                                        ? AppTheme.transferColorDark
+                                        : (dailyNetChange < 0
+                                              ? const Color(0xFFFF453A)
+                                              : Colors.grey),
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: (val) {
-                            _searchDebounce?.cancel();
-                            _searchDebounce = Timer(const Duration(milliseconds: 300), () {
-                              ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Search transactions...',
-                            prefixIcon: Icon(
-                              PesaFlowIcons.search,
-                              size: 20,
-                            ),
-                            suffixIcon: searchQuery.isNotEmpty
-                                ? IconButton(
-                                    icon: Icon(Icons.clear_rounded, size: 16, color: isDark ? Colors.white54 : Colors.black54),
-                                    onPressed: () {
-                                      ref.read(transactionSearchQueryProvider.notifier).state = '';
-                                    },
-                                  )
-                                : null,
-                            isDense: true,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 34,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: ['All', 'Income', 'Expense', 'Transfer'].map((type) {
-                            final isSelected = activeType == type;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  ref.read(transactionTypeFilterProvider.notifier).state = type;
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeOutCubic,
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                                   decoration: BoxDecoration(
-                                     color: isSelected
-                                         ? theme.colorScheme.primary
-                                         : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03)),
-                                     borderRadius: BorderRadius.circular(100),
-                                     border: Border.all(
-                                       color: isSelected
-                                           ? theme.colorScheme.primary
-                                           : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04)),
-                                       width: 0.8,
-                                     ),
-                                   ),
-                                  child: Text(
-                                    type,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? theme.colorScheme.onPrimary
-                                          : (isDark ? Colors.white60 : Colors.black45),
-                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                      fontSize: 13,
+
+                        // Transaction Items as Individual GlassCards
+                        ...dayItems.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final item = entry.value;
+                          final trans = item.transaction;
+
+                          AmountType amtType = AmountType.neutral;
+                          if (trans.type.toLowerCase() == 'income') {
+                            amtType = AmountType.income;
+                          } else if (trans.type.toLowerCase() == 'expense' ||
+                              trans.type.toLowerCase() == 'airtime' ||
+                              trans.type.toLowerCase() == 'fee') {
+                            amtType = AmountType.expense;
+                          }
+
+                          final categoryColor = hexToColor(item.category.color);
+                          final formattedTime = DateFormat(
+                            'HH:mm',
+                          ).format(trans.createdAt);
+
+                          return StaggeredFadeSlide(
+                            index: index,
+                            child: Dismissible(
+                              key: Key(trans.id),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20.0,
+                                  vertical: 6.0,
+                                ),
+                                padding: const EdgeInsets.only(right: 20.0),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.error,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Icon(
+                                  PesaFlowIcons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              confirmDismiss: (_) async {
+                                await ref
+                                    .read(transactionRepositoryProvider)
+                                    .deleteTransaction(trans.id);
+                                ref.invalidate(
+                                  filteredTransactionsStreamProvider,
+                                );
+                                ref.invalidate(accountsStreamProvider);
+                                ref.invalidate(netWorthProvider);
+                                return true;
+                              },
+                              child: TactileSpringContainer(
+                                onTap: () => context.go(
+                                  '/transactions/edit/${trans.id}',
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                    vertical: 6.0,
+                                  ),
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? const Color(
+                                            0xFF1B1C22,
+                                          ).withValues(alpha: 0.65)
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: isDark
+                                          ? const Color(0x10FFFFFF)
+                                          : const Color(0x0F000000),
+                                      width: 0.5,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: isDark ? 0.2 : 0.03,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // Category Icon Container (Squircle Style)
+                                      Container(
+                                        width: 46,
+                                        height: 46,
+                                        decoration: BoxDecoration(
+                                          color: categoryColor.withValues(
+                                            alpha: 0.15,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            getCategoryIcon(item.category.icon),
+                                            color: categoryColor,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      // Content
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              trans.description.isNotEmpty
+                                                  ? trans.description
+                                                  : item.category.name,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 15,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 3),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  item.account?.name ??
+                                                      'Offline',
+                                                  style: TextStyle(
+                                                    color: isDark
+                                                        ? Colors.grey[400]
+                                                        : Colors.grey[600],
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                if (trans.reference != null &&
+                                                    trans
+                                                        .reference!
+                                                        .isNotEmpty) ...[
+                                                  const SizedBox(width: 6),
+                                                  Text(
+                                                    '•',
+                                                    style: TextStyle(
+                                                      color: isDark
+                                                          ? Colors.white10
+                                                          : Colors.black12,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 6),
+                                                  Flexible(
+                                                    child: Text(
+                                                      trans.reference!,
+                                                      style: TextStyle(
+                                                        color: isDark
+                                                            ? Colors.white30
+                                                            : Colors.black38,
+                                                        fontSize: 11,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      // Amount & Time
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          AmountText(
+                                            amountInCents: trans.amount,
+                                            type: amtType,
+                                            showDecimals: true,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 16,
+                                              color:
+                                                  amtType == AmountType.income
+                                                  ? AppTheme.transferColorDark
+                                                  : (amtType ==
+                                                            AmountType.expense
+                                                        ? const Color(
+                                                            0xFFFF453A,
+                                                          )
+                                                        : Colors.grey),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            formattedTime,
+                                            style: TextStyle(
+                                              color: isDark
+                                                  ? Colors.white24
+                                                  : Colors.black26,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          }).toList(),
+                            ),
+                          );
+                        }),
+                      ],
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, _) =>
+                  Center(child: Text('Error loading transactions: $err')),
+            ),
+
+            // ── GLASS HEADER ──
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: StaggeredFadeSlide(
+                index: 0,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top + 16,
+                        bottom: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.25)
+                            : Colors.white.withValues(alpha: 0.25),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.08)
+                                : Colors.black.withValues(alpha: 0.05),
+                            width: 0.5,
+                          ),
                         ),
                       ),
-                    ],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Transactions',
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: -0.8,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                ),
+                                Row(
+                                  children: [
+                                    if (activeAccount != null ||
+                                        activeCategory != null ||
+                                        searchQuery.isNotEmpty ||
+                                        activeType != 'All' ||
+                                        amountMin != null ||
+                                        amountMax != null ||
+                                        dateFrom != null ||
+                                        dateTo != null)
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.clear_all_rounded,
+                                          color: Colors.redAccent,
+                                          size: 20,
+                                        ),
+                                        tooltip: 'Clear Filters',
+                                        onPressed: () {
+                                          ref
+                                                  .read(
+                                                    transactionTypeFilterProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              'All';
+                                          ref
+                                                  .read(
+                                                    transactionAccountFilterProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                          ref
+                                                  .read(
+                                                    transactionCategoryFilterProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                          ref
+                                                  .read(
+                                                    transactionSearchQueryProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              '';
+                                          ref
+                                                  .read(
+                                                    transactionAmountMinProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                          ref
+                                                  .read(
+                                                    transactionAmountMaxProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                          ref
+                                                  .read(
+                                                    transactionDateFromProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                          ref
+                                                  .read(
+                                                    transactionDateToProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              null;
+                                        },
+                                      ),
+                                    _FilterButton(
+                                      isActive:
+                                          activeAccount != null ||
+                                          activeCategory != null ||
+                                          amountMin != null ||
+                                          amountMax != null ||
+                                          dateFrom != null ||
+                                          dateTo != null ||
+                                          searchQuery.isNotEmpty ||
+                                          activeType != 'All',
+                                      activeCount: [
+                                        if (activeType != 'All') 1,
+                                        if (activeAccount != null) 1,
+                                        if (activeCategory != null) 1,
+                                        if (searchQuery.isNotEmpty) 1,
+                                        if (amountMin != null ||
+                                            amountMax != null)
+                                          1,
+                                        if (dateFrom != null || dateTo != null)
+                                          1,
+                                      ].length,
+                                      onPressed: () =>
+                                          showTransactionFilterSheet(
+                                            context,
+                                            ref,
+                                          ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    TactileSpringContainer(
+                                      onTap: () => ref
+                                          .read(
+                                            paletteVisibilityProvider.notifier,
+                                          )
+                                          .toggle(),
+                                      child: Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.06,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.03,
+                                                ),
+                                          border: Border.all(
+                                            color: isDark
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.12,
+                                                  )
+                                                : Colors.black.withValues(
+                                                    alpha: 0.06,
+                                                  ),
+                                            width: 0.8,
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.search_rounded,
+                                          size: 18,
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isDark
+                                            ? Colors.white.withValues(
+                                                alpha: 0.06,
+                                              )
+                                            : Colors.black.withValues(
+                                                alpha: 0.03,
+                                              ),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.12,
+                                                )
+                                              : Colors.black.withValues(
+                                                  alpha: 0.06,
+                                                ),
+                                          width: 0.8,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.person_outline_rounded,
+                                        size: 18,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (val) {
+                                _searchDebounce?.cancel();
+                                _searchDebounce = Timer(
+                                  const Duration(milliseconds: 300),
+                                  () {
+                                    ref
+                                        .read(
+                                          transactionSearchQueryProvider
+                                              .notifier,
+                                        )
+                                        .state = val
+                                        .trim();
+                                  },
+                                );
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Search transactions...',
+                                prefixIcon: Icon(
+                                  PesaFlowIcons.search,
+                                  size: 20,
+                                ),
+                                suffixIcon: searchQuery.isNotEmpty
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.clear_rounded,
+                                          size: 16,
+                                          color: isDark
+                                              ? Colors.white54
+                                              : Colors.black54,
+                                        ),
+                                        onPressed: () {
+                                          ref
+                                                  .read(
+                                                    transactionSearchQueryProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              '';
+                                        },
+                                      )
+                                    : null,
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 34,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: ['All', 'Income', 'Expense', 'Transfer']
+                                  .map((type) {
+                                    final isSelected = activeType == type;
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ref
+                                                  .read(
+                                                    transactionTypeFilterProvider
+                                                        .notifier,
+                                                  )
+                                                  .state =
+                                              type;
+                                        },
+                                        child: AnimatedContainer(
+                                          duration: const Duration(
+                                            milliseconds: 200,
+                                          ),
+                                          curve: Curves.easeOutCubic,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 6,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
+                                                : (isDark
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.06,
+                                                        )
+                                                      : Colors.black.withValues(
+                                                          alpha: 0.03,
+                                                        )),
+                                            borderRadius: BorderRadius.circular(
+                                              100,
+                                            ),
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                  : (isDark
+                                                        ? Colors.white
+                                                              .withValues(
+                                                                alpha: 0.08,
+                                                              )
+                                                        : Colors.black
+                                                              .withValues(
+                                                                alpha: 0.04,
+                                                              )),
+                                              width: 0.8,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            type,
+                                            style: TextStyle(
+                                              color: isSelected
+                                                  ? theme.colorScheme.onPrimary
+                                                  : (isDark
+                                                        ? Colors.white60
+                                                        : Colors.black45),
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 80),
-        child: PremiumFab(
-          onPressed: () => context.go('/transactions/add'),
-        ),
+        child: PremiumFab(onPressed: () => context.go('/transactions/add')),
       ),
     );
   }
@@ -665,7 +947,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           severity = insights.first.severity;
         } else {
           title = "Spend analysis complete.";
-          message = "You saved 12% more than last month in the 'Dining' category.";
+          message =
+              "You saved 12% more than last month in the 'Dining' category.";
           severity = InsightSeverity.positive;
         }
 
@@ -693,114 +976,114 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(23),
                 child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF0C1911),
-                    Color(0xFF070B08),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'INSIGHTS',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.5,
-                            color: accentColor,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.6,
-                            color: Colors.white,
-                            height: 1.15,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          message,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            height: 1.25,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF0C1911), Color(0xFF070B08)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: monthlyTotalsAsync.when(
-                      data: (totals) {
-                        final income = (totals['income'] ?? 0) / 100.0;
-                        final expense = (totals['expense'] ?? 0) / 100.0;
-                        final maxVal = [income, expense, 1.0].reduce((a, b) => a > b ? a : b);
-                        return Column(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _MiniBar(
-                              label: 'Income',
-                              value: income,
-                              maxValue: maxVal,
-                              color: const Color(0xFF609F8A),
-                              formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                            Text(
+                              'INSIGHTS',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.5,
+                                color: accentColor,
+                              ),
                             ),
-                            const SizedBox(height: 10),
-                            _MiniBar(
-                              label: 'Expense',
-                              value: expense,
-                              maxValue: maxVal,
-                              color: accentColor,
-                              formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                            const SizedBox(height: 8),
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.6,
+                                color: Colors.white,
+                                height: 1.15,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              message,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white.withValues(alpha: 0.7),
+                                height: 1.25,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
-                        );
-                      },
-                      loading: () => const SizedBox.shrink(),
-                      error: (_, _) => const SizedBox.shrink(),
-                    ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 2,
+                        child: monthlyTotalsAsync.when(
+                          data: (totals) {
+                            final income = (totals['income'] ?? 0) / 100.0;
+                            final expense = (totals['expense'] ?? 0) / 100.0;
+                            final maxVal = [
+                              income,
+                              expense,
+                              1.0,
+                            ].reduce((a, b) => a > b ? a : b);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _MiniBar(
+                                  label: 'Income',
+                                  value: income,
+                                  maxValue: maxVal,
+                                  color: const Color(0xFF609F8A),
+                                  formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                                ),
+                                const SizedBox(height: 10),
+                                _MiniBar(
+                                  label: 'Expense',
+                                  value: expense,
+                                  maxValue: maxVal,
+                                  color: accentColor,
+                                  formatValue: (v) => 'TSh ${_formatKsh(v)}',
+                                ),
+                              ],
+                            );
+                          },
+                          loading: () => const SizedBox.shrink(),
+                          error: (_, _) => const SizedBox.shrink(),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
     );
-  },
-  orElse: () => const SizedBox.shrink(),
-);
-}
+  }
 
   String _formatKsh(double val) {
     if (val >= 1_000_000) return '${(val / 1_000_000).toStringAsFixed(1)}M';
     if (val >= 1_000) return '${(val / 1_000).toStringAsFixed(1)}K';
     return val.toStringAsFixed(0);
   }
-
 }
 
 class _FilterButton extends StatelessWidget {
@@ -823,12 +1106,16 @@ class _FilterButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive
             ? theme.colorScheme.primary.withValues(alpha: 0.12)
-            : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03)),
+            : (isDark
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.03)),
         shape: BoxShape.circle,
         border: Border.all(
           color: isActive
               ? theme.colorScheme.primary.withValues(alpha: 0.20)
-              : (isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06)),
+              : (isDark
+                    ? Colors.white.withValues(alpha: 0.12)
+                    : Colors.black.withValues(alpha: 0.06)),
           width: 0.8,
         ),
       ),

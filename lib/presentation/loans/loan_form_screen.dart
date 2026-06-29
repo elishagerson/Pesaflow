@@ -38,17 +38,21 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   }
 
   Future<void> _loadExistingLoan() async {
-    final loan = await ref.read(loanRepositoryProvider).getLoanById(widget.loanId!);
+    final loan = await ref
+        .read(loanRepositoryProvider)
+        .getLoanById(widget.loanId!);
     if (loan != null && mounted) {
       setState(() {
         _existingLoan = loan;
         _amountController.text = (loan.amount ~/ 100).toString();
-        if (loan.description != null) _descriptionController.text = loan.description!;
+        if (loan.description != null)
+          _descriptionController.text = loan.description!;
         if (loan.sender != null) _senderController.text = loan.sender!;
         if (loan.reference != null) _referenceController.text = loan.reference!;
         _disbursedAt = loan.disbursedAt;
         _dueAt = loan.dueAt;
-        if (loan.interestRate != null) _interestRateController.text = loan.interestRate.toString();
+        if (loan.interestRate != null)
+          _interestRateController.text = loan.interestRate.toString();
       });
     }
   }
@@ -67,7 +71,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
-      initialDate: dueDate ? (_dueAt ?? now.add(const Duration(days: 30))) : _disbursedAt,
+      initialDate: dueDate
+          ? (_dueAt ?? now.add(const Duration(days: 30)))
+          : _disbursedAt,
       firstDate: dueDate ? _disbursedAt : DateTime(2020),
       lastDate: dueDate ? now.add(const Duration(days: 365 * 5)) : now,
     );
@@ -95,15 +101,19 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         amount: amountCents,
         remaining: updatedRemaining,
         description: _descriptionController.text.trim().isEmpty
-            ? const Value(null) : Value(_descriptionController.text.trim()),
+            ? const Value(null)
+            : Value(_descriptionController.text.trim()),
         sender: _senderController.text.trim().isEmpty
-            ? const Value(null) : Value(_senderController.text.trim()),
+            ? const Value(null)
+            : Value(_senderController.text.trim()),
         reference: _referenceController.text.trim().isEmpty
-            ? const Value(null) : Value(_referenceController.text.trim()),
+            ? const Value(null)
+            : Value(_referenceController.text.trim()),
         disbursedAt: _disbursedAt,
         dueAt: _dueAt != null ? Value(_dueAt) : const Value(null),
         interestRate: double.tryParse(_interestRateController.text) != null
-            ? Value(double.tryParse(_interestRateController.text)) : const Value(null),
+            ? Value(double.tryParse(_interestRateController.text))
+            : const Value(null),
         updatedAt: DateTime.now(),
       );
       try {
@@ -112,9 +122,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update loan: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to update loan: $e')));
       }
     } else {
       final loanId = const Uuid().v4();
@@ -124,11 +134,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         remaining: amountCents,
         status: 'active',
         description: _descriptionController.text.trim().isEmpty
-            ? null : _descriptionController.text.trim(),
+            ? null
+            : _descriptionController.text.trim(),
         sender: _senderController.text.trim().isEmpty
-            ? null : _senderController.text.trim(),
+            ? null
+            : _senderController.text.trim(),
         reference: _referenceController.text.trim().isEmpty
-            ? null : _referenceController.text.trim(),
+            ? null
+            : _referenceController.text.trim(),
         disbursedAt: _disbursedAt,
         dueAt: _dueAt,
         interestRate: double.tryParse(_interestRateController.text),
@@ -142,9 +155,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create loan: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to create loan: $e')));
       }
     }
   }
@@ -153,7 +166,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark ? const Color(0xFF1B1C22) : const Color(0xFFF2F2F7);
+    final inputFill = isDark
+        ? const Color(0xFF1B1C22)
+        : const Color(0xFFF2F2F7);
 
     return Scaffold(
       appBar: AppBar(
@@ -184,10 +199,12 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     ),
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Enter loan amount';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Enter loan amount';
                     final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
                     final parsed = int.tryParse(cleaned);
-                    if (parsed == null || parsed <= 0) return 'Enter a valid amount';
+                    if (parsed == null || parsed <= 0)
+                      return 'Enter a valid amount';
                     return null;
                   },
                 ),
@@ -279,7 +296,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 index: 5,
                 child: TextField(
                   controller: _interestRateController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Interest Rate (optional)',
                     hintText: 'e.g. 18.5',
@@ -320,13 +339,19 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           style: TextStyle(
                             color: _dueAt != null
                                 ? (isDark ? Colors.white : Colors.black)
-                                : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                                : (isDark
+                                      ? Colors.grey[500]
+                                      : Colors.grey[400]),
                           ),
                         ),
                         if (_dueAt != null)
                           GestureDetector(
                             onTap: () => setState(() => _dueAt = null),
-                            child: Icon(PesaFlowIcons.close, size: 18, color: Colors.grey[500]),
+                            child: Icon(
+                              PesaFlowIcons.close,
+                              size: 18,
+                              color: Colors.grey[500],
+                            ),
                           ),
                       ],
                     ),

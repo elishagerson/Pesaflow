@@ -36,7 +36,9 @@ class BackupService {
 
       final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final tempFile = File(p.join(tempDir.path, 'pesaflow_export_$timestamp.csv'));
+      final tempFile = File(
+        p.join(tempDir.path, 'pesaflow_export_$timestamp.csv'),
+      );
 
       await tempFile.writeAsString(csvString);
 
@@ -63,7 +65,9 @@ class BackupService {
 
       final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final backupFile = File(p.join(tempDir.path, 'pesaflow_backup_$timestamp.db'));
+      final backupFile = File(
+        p.join(tempDir.path, 'pesaflow_backup_$timestamp.db'),
+      );
 
       await dbFile.copy(backupFile.path);
 
@@ -84,9 +88,7 @@ class BackupService {
   /// Returns [true] if restore succeeded and app needs restart.
   Future<bool> restoreDatabase() async {
     try {
-      final result = await FilePicker.pickFiles(
-        type: FileType.any,
-      );
+      final result = await FilePicker.pickFiles(type: FileType.any);
 
       if (result == null || result.files.isEmpty) {
         return false; // User cancelled
@@ -98,13 +100,18 @@ class BackupService {
 
       // Premium check: Verify the picked file is a valid SQLite 3 database file
       final byteStream = pickedFile.openRead(0, 16);
-      final firstChunk = await byteStream.firstWhere((_) => true, orElse: () => []);
+      final firstChunk = await byteStream.firstWhere(
+        (_) => true,
+        orElse: () => [],
+      );
 
       final header = firstChunk.isNotEmpty
           ? String.fromCharCodes(firstChunk)
           : '';
       if (!header.startsWith('SQLite format 3')) {
-        throw const FormatException('Selected file is not a valid SQLite database backup.');
+        throw const FormatException(
+          'Selected file is not a valid SQLite database backup.',
+        );
       }
 
       final dbFile = await _getDatabaseFile();

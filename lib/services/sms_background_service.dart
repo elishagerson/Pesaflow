@@ -12,8 +12,11 @@ import '../domain/sms/provider_matcher.dart';
 /// Intercepts incoming carrier transaction alerts when the app is backgrounded or closed.
 @pragma('vm:entry-point')
 void backgroundMessageHandler(SmsMessage message) async {
-  developer.log('Background SMS received: ${message.body} from ${message.address}', name: 'SmsBackground');
-  
+  developer.log(
+    'Background SMS received: ${message.body} from ${message.address}',
+    name: 'SmsBackground',
+  );
+
   final body = message.body;
   final sender = message.address;
   if (body == null || sender == null) return;
@@ -27,7 +30,10 @@ void backgroundMessageHandler(SmsMessage message) async {
     final processor = container.read(smsProcessorProvider);
     await processor.processSms(sender, body, timestamp);
   } catch (e) {
-    developer.log('Background SMS processing failure: $e', name: 'SmsBackground');
+    developer.log(
+      'Background SMS processing failure: $e',
+      name: 'SmsBackground',
+    );
   } finally {
     container.dispose();
   }
@@ -74,7 +80,10 @@ class SmsBackgroundService {
       // 1. Listen dynamically when the app is active (Foreground)
       _telephony.listenIncomingSms(
         onNewMessage: (SmsMessage message) async {
-          developer.log('Foreground SMS received: ${message.body} from ${message.address}', name: 'SmsBackground');
+          developer.log(
+            'Foreground SMS received: ${message.body} from ${message.address}',
+            name: 'SmsBackground',
+          );
           final body = message.body;
           final sender = message.address;
           if (body != null && sender != null) {
@@ -88,9 +97,15 @@ class SmsBackgroundService {
         onBackgroundMessage: backgroundMessageHandler,
         listenInBackground: true,
       );
-      developer.log('SMS Broadcast Listeners registered successfully', name: 'SmsBackground');
+      developer.log(
+        'SMS Broadcast Listeners registered successfully',
+        name: 'SmsBackground',
+      );
     } catch (e) {
-      developer.log('SMS Listener initialization failure: $e', name: 'SmsBackground');
+      developer.log(
+        'SMS Listener initialization failure: $e',
+        name: 'SmsBackground',
+      );
     }
   }
 
@@ -113,7 +128,10 @@ class SmsBackgroundService {
     final now = DateTime.now();
     try {
       if (!await _ensurePermissions()) {
-        developer.log('Inbox scan skipped: permissions not granted', name: 'SmsBackground');
+        developer.log(
+          'Inbox scan skipped: permissions not granted',
+          name: 'SmsBackground',
+        );
         return;
       }
 
@@ -139,9 +157,15 @@ class SmsBackgroundService {
       }
 
       _lastInboxScan = now;
-      developer.log('Inbox startup scan: $processed financial SMS processed', name: 'SmsBackground');
+      developer.log(
+        'Inbox startup scan: $processed financial SMS processed',
+        name: 'SmsBackground',
+      );
     } on MissingPluginException {
-      developer.log('Telephony plugin not available — inbox scan failed', name: 'SmsBackground');
+      developer.log(
+        'Telephony plugin not available — inbox scan failed',
+        name: 'SmsBackground',
+      );
     } catch (e) {
       developer.log('Inbox startup scan failed: $e', name: 'SmsBackground');
     }
@@ -156,9 +180,15 @@ class SmsBackgroundService {
         const Duration(minutes: 5),
         (_) => _scanRecentInbox(),
       );
-      developer.log('Periodic inbox scan timer started (every 5 min)', name: 'SmsBackground');
+      developer.log(
+        'Periodic inbox scan timer started (every 5 min)',
+        name: 'SmsBackground',
+      );
     } catch (e) {
-      developer.log('Periodic inbox scan timer creation failed: $e', name: 'SmsBackground');
+      developer.log(
+        'Periodic inbox scan timer creation failed: $e',
+        name: 'SmsBackground',
+      );
     }
   }
 
@@ -179,7 +209,10 @@ class SmsBackgroundService {
 
         final timestamp = DateTime.fromMillisecondsSinceEpoch(msg.date ?? 0);
         // Only process messages newer than last scan (plus 1 min overlap)
-        if (!timestamp.isAfter(_lastInboxScan.subtract(const Duration(minutes: 1)))) continue;
+        if (!timestamp.isAfter(
+          _lastInboxScan.subtract(const Duration(minutes: 1)),
+        ))
+          continue;
 
         final provider = ProviderMatcher.matchProvider(address, body: body);
         if (provider == null) continue;
@@ -190,10 +223,16 @@ class SmsBackgroundService {
 
       _lastInboxScan = now;
       if (processed > 0) {
-        developer.log('Periodic inbox scan: $processed new financial SMS processed', name: 'SmsBackground');
+        developer.log(
+          'Periodic inbox scan: $processed new financial SMS processed',
+          name: 'SmsBackground',
+        );
       }
     } on MissingPluginException {
-      developer.log('Telephony plugin not available — periodic inbox scan failed', name: 'SmsBackground');
+      developer.log(
+        'Telephony plugin not available — periodic inbox scan failed',
+        name: 'SmsBackground',
+      );
     } catch (e) {
       developer.log('Periodic inbox scan failed: $e', name: 'SmsBackground');
     }

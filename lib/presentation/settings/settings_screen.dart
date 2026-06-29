@@ -41,43 +41,74 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: kSpacing16),
-            child: Text('Manage Accounts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Manage Accounts',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           if (accounts.isEmpty)
-            const Center(child: Padding(padding: EdgeInsets.all(kSpacing32), child: Text('No active accounts.')))
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(kSpacing32),
+                child: Text('No active accounts.'),
+              ),
+            )
           else
-            ...accounts.map((acc) => IosListRow(
-              leading: Icon(getAccountIcon(acc.icon), color: theme.colorScheme.primary),
-              title: Text(acc.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(
-                acc.type.toUpperCase().replaceAll('_', ' ') +
-                    (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
-                style: const TextStyle(fontSize: 12),
+            ...accounts.map(
+              (acc) => IosListRow(
+                leading: Icon(
+                  getAccountIcon(acc.icon),
+                  color: theme.colorScheme.primary,
+                ),
+                title: Text(
+                  acc.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  acc.type.toUpperCase().replaceAll('_', ' ') +
+                      (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AmountText(
+                      amountInCents: acc.balance,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: kSpacing4),
+                    GestureDetector(
+                      onTap: () => _showEditAccountDialog(context, ref, acc),
+                      child: Icon(
+                        PesaFlowIcons.edit,
+                        size: 18,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing4),
+                    GestureDetector(
+                      onTap: () => _confirmDeleteAccount(context, ref, acc),
+                      child: const Icon(
+                        PesaFlowIcons.delete,
+                        size: 20,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AmountText(amountInCents: acc.balance, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: kSpacing4),
-                  GestureDetector(
-                    onTap: () => _showEditAccountDialog(context, ref, acc),
-                    child: Icon(PesaFlowIcons.edit, size: 18, color: theme.colorScheme.primary),
-                  ),
-                  const SizedBox(width: kSpacing4),
-                  GestureDetector(
-                    onTap: () => _confirmDeleteAccount(context, ref, acc),
-                    child: const Icon(PesaFlowIcons.delete, size: 20, color: Colors.red),
-                  ),
-                ],
-              ),
-            )),
+            ),
           const SizedBox(height: kSpacing24),
         ],
       ),
     );
   }
 
-  void _showEditAccountDialog(BuildContext context, WidgetRef ref, Account acc) {
+  void _showEditAccountDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Account acc,
+  ) {
     final nameController = TextEditingController(text: acc.name);
     String accountType;
     switch (acc.type) {
@@ -92,7 +123,9 @@ class SettingsScreen extends ConsumerWidget {
     }
     String? phoneNumber = acc.phoneNumber;
     String? provider = acc.provider;
-    final balanceController = TextEditingController(text: (acc.balance / 100).toStringAsFixed(0));
+    final balanceController = TextEditingController(
+      text: (acc.balance / 100).toStringAsFixed(0),
+    );
 
     ModernDialog.show(
       context: context,
@@ -110,7 +143,9 @@ class SettingsScreen extends ConsumerWidget {
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                   prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1C1C1E)
+                      : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -126,7 +161,9 @@ class SettingsScreen extends ConsumerWidget {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.5),
                       width: 1.5,
                     ),
                   ),
@@ -226,7 +263,9 @@ class SettingsScreen extends ConsumerWidget {
                     hintText: 'e.g. 076XXXXXXX',
                     prefixIcon: Icon(Icons.phone_rounded, size: 18),
                     filled: true,
-                    fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF1C1C1E)
+                        : const Color(0xFFF2F2F7),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -242,7 +281,9 @@ class SettingsScreen extends ConsumerWidget {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.5),
                         width: 1.5,
                       ),
                     ),
@@ -292,13 +333,17 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing16),
               TextField(
                 controller: balanceController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Balance (Tsh)',
                   hintText: 'e.g. 150,000',
                   prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1C1C1E)
+                      : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -314,7 +359,9 @@ class SettingsScreen extends ConsumerWidget {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.5),
                       width: 1.5,
                     ),
                   ),
@@ -333,8 +380,13 @@ class SettingsScreen extends ConsumerWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing20,
+              vertical: kSpacing12,
+            ),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -349,7 +401,8 @@ class SettingsScreen extends ConsumerWidget {
             final type = accountType.toLowerCase().replaceAll(' ', '_');
             final rawAmount = balanceController.text;
             final cleanAmount = rawAmount.replaceAll(RegExp(r'[^0-9.]'), '');
-            final parsedDouble = double.tryParse(cleanAmount) ?? (acc.balance / 100);
+            final parsedDouble =
+                double.tryParse(cleanAmount) ?? (acc.balance / 100);
             final newBalance = (parsedDouble * 100).round();
 
             final updated = acc.copyWith(
@@ -358,14 +411,17 @@ class SettingsScreen extends ConsumerWidget {
               icon: iconName,
               balance: newBalance,
               provider: Value<String?>(provider),
-              phoneNumber: Value<String?>(accountType == 'Mobile Money' ? phoneNumber : null),
+              phoneNumber: Value<String?>(
+                accountType == 'Mobile Money' ? phoneNumber : null,
+              ),
             );
 
             try {
               await ref.read(accountRepositoryProvider).updateAccount(updated);
               ref.invalidate(accountsStreamProvider);
               ref.invalidate(netWorthProvider);
-              if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
+              if (context.mounted)
+                Navigator.of(context, rootNavigator: true).pop();
             } catch (e) {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -385,14 +441,19 @@ class SettingsScreen extends ConsumerWidget {
       title: const Text('Delete Account'),
       titleIcon: PesaFlowIcons.delete,
       iconColor: Colors.red,
-      content: Text('Delete "${acc.name}" and all its transactions? This cannot be undone.'),
+      content: Text(
+        'Delete "${acc.name}" and all its transactions? This cannot be undone.',
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+          ),
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
             try {
@@ -433,7 +494,10 @@ class SettingsScreen extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Manage Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Manage Categories',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
                 TextButton.icon(
                   icon: const Icon(PesaFlowIcons.add),
                   label: const Text('Add Custom'),
@@ -446,74 +510,148 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           if (categories.isEmpty)
-            const Center(child: Padding(padding: EdgeInsets.all(kSpacing32), child: Text('No categories seeded.')))
-          else
-            ...categories.map((cat) => IosListRow(
-              leading: Container(
-                padding: const EdgeInsets.all(kSpacing8),
-                decoration: BoxDecoration(
-                  color: hexToColor(cat.color).withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(getCategoryIcon(cat.icon), color: hexToColor(cat.color)),
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(kSpacing32),
+                child: Text('No categories seeded.'),
               ),
-              title: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(cat.type.toUpperCase(), style: const TextStyle(fontSize: 11, color: Colors.grey)),
-              trailing: cat.isSystem
-                  ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing2),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: const Text('System', style: TextStyle(fontSize: 10, color: Colors.grey)),
-                    )
-                   : Row(
-                       mainAxisSize: MainAxisSize.min,
-                       children: [
-                         GestureDetector(
-                           onTap: () {
-                             Navigator.of(context).pop();
-                             _showAddCategoryDialog(context, ref, existing: cat);
-                           },
-                           child: const Icon(PesaFlowIcons.edit, size: 20, color: Colors.blue),
-                         ),
+            )
+          else
+            ...categories.map(
+              (cat) => IosListRow(
+                leading: Container(
+                  padding: const EdgeInsets.all(kSpacing8),
+                  decoration: BoxDecoration(
+                    color: hexToColor(cat.color).withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    getCategoryIcon(cat.icon),
+                    color: hexToColor(cat.color),
+                  ),
+                ),
+                title: Text(
+                  cat.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  cat.type.toUpperCase(),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
+                trailing: cat.isSystem
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing8,
+                          vertical: kSpacing2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: const Text(
+                          'System',
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              _showAddCategoryDialog(
+                                context,
+                                ref,
+                                existing: cat,
+                              );
+                            },
+                            child: const Icon(
+                              PesaFlowIcons.edit,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                          ),
                           const SizedBox(width: kSpacing12),
                           GestureDetector(
                             onTap: () async {
                               try {
-                                await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
-                               ref.invalidate(categoriesFutureProvider);
-                               ref.invalidate(filteredTransactionsStreamProvider);
-                               if (context.mounted) Navigator.of(context).pop();
-                             } catch (e) {
-                               if (context.mounted) {
-                                 ScaffoldMessenger.of(context).showSnackBar(
-                                   SnackBar(content: Text('Failed to delete category: $e')),
-                                 );
-                               }
-                             }
-                           },
-                           child: const Icon(PesaFlowIcons.delete, size: 20, color: Colors.red),
-                         ),
-                       ],
-                     ),
-            )),
+                                await ref
+                                    .read(categoryRepositoryProvider)
+                                    .deleteCategory(cat.id);
+                                ref.invalidate(categoriesFutureProvider);
+                                ref.invalidate(
+                                  filteredTransactionsStreamProvider,
+                                );
+                                if (context.mounted)
+                                  Navigator.of(context).pop();
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to delete category: $e',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: const Icon(
+                              PesaFlowIcons.delete,
+                              size: 20,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
           const SizedBox(height: kSpacing24),
         ],
       ),
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context, WidgetRef ref, {Category? existing}) {
+  void _showAddCategoryDialog(
+    BuildContext context,
+    WidgetRef ref, {
+    Category? existing,
+  }) {
     final isEditing = existing != null;
     final nameController = TextEditingController(text: existing?.name ?? '');
     String categoryType = existing?.type == 'income' ? 'Income' : 'Expense';
     String selectedHexColor = existing?.color ?? '#FF9800';
     String selectedIcon = existing?.icon ?? 'cart';
 
-    final hexColors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#2196F3', '#00BCD4', '#009688', '#4CAF50', '#FFC107', '#FF9800', '#795548', '#607D8B'];
-    final icons = ['cart', 'briefcase', 'store', 'bus', 'home', 'zap', 'phone', 'heart', 'book', 'film', 'coffee', 'send', 'piggy-bank'];
+    final hexColors = [
+      '#F44336',
+      '#E91E63',
+      '#9C27B0',
+      '#673AB7',
+      '#2196F3',
+      '#00BCD4',
+      '#009688',
+      '#4CAF50',
+      '#FFC107',
+      '#FF9800',
+      '#795548',
+      '#607D8B',
+    ];
+    final icons = [
+      'cart',
+      'briefcase',
+      'store',
+      'bus',
+      'home',
+      'zap',
+      'phone',
+      'heart',
+      'book',
+      'film',
+      'coffee',
+      'send',
+      'piggy-bank',
+    ];
 
     ModernDialog.show(
       context: context,
@@ -533,7 +671,9 @@ class SettingsScreen extends ConsumerWidget {
                   hintText: 'e.g. Subscriptions, Laundry',
                   prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : const Color(0xFFF2F2F7),
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1C1C1E)
+                      : const Color(0xFFF2F2F7),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -549,7 +689,9 @@ class SettingsScreen extends ConsumerWidget {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.5),
                       width: 1.5,
                     ),
                   ),
@@ -586,7 +728,14 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: kSpacing20),
-              const Text('Select Theme Color', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const Text(
+                'Select Theme Color',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
               const SizedBox(height: kSpacing10),
               Wrap(
                 spacing: 8.0,
@@ -606,7 +755,12 @@ class SettingsScreen extends ConsumerWidget {
                         color: hexToColor(hex),
                         shape: BoxShape.circle,
                         border: isSelected
-                            ? Border.all(color: theme.brightness == Brightness.dark ? Colors.white : Colors.black, width: 2)
+                            ? Border.all(
+                                color: theme.brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                width: 2,
+                              )
                             : null,
                       ),
                     ),
@@ -614,7 +768,14 @@ class SettingsScreen extends ConsumerWidget {
                 }).toList(),
               ),
               const SizedBox(height: kSpacing20),
-              const Text('Select Icon', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const Text(
+                'Select Icon',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
               const SizedBox(height: kSpacing10),
               Wrap(
                 spacing: 8.0,
@@ -630,11 +791,24 @@ class SettingsScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
-                        color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.15) : Colors.transparent,
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(8.0),
-                        border: isSelected ? Border.all(color: theme.colorScheme.primary, width: 1.5) : null,
+                        border: isSelected
+                            ? Border.all(
+                                color: theme.colorScheme.primary,
+                                width: 1.5,
+                              )
+                            : null,
                       ),
-                      child: Icon(getCategoryIcon(icName), size: 24, color: isSelected ? theme.colorScheme.primary : Colors.grey),
+                      child: Icon(
+                        getCategoryIcon(icName),
+                        size: 24,
+                        color: isSelected
+                            ? theme.colorScheme.primary
+                            : Colors.grey,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -652,8 +826,13 @@ class SettingsScreen extends ConsumerWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing20,
+              vertical: kSpacing12,
+            ),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -665,7 +844,9 @@ class SettingsScreen extends ConsumerWidget {
                 color: selectedHexColor,
                 type: categoryType.toLowerCase(),
               );
-              await ref.read(categoryRepositoryProvider).updateCategory(updated);
+              await ref
+                  .read(categoryRepositoryProvider)
+                  .updateCategory(updated);
             } else {
               final newCategory = Category(
                 id: const Uuid().v4(),
@@ -677,11 +858,14 @@ class SettingsScreen extends ConsumerWidget {
                 sortOrder: 100,
                 createdAt: DateTime.now(),
               );
-              await ref.read(categoryRepositoryProvider).createCategory(newCategory);
+              await ref
+                  .read(categoryRepositoryProvider)
+                  .createCategory(newCategory);
             }
             ref.invalidate(categoriesFutureProvider);
             ref.invalidate(filteredTransactionsStreamProvider);
-            if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
+            if (context.mounted)
+              Navigator.of(context, rootNavigator: true).pop();
           },
           child: Text(isEditing ? 'Save' : 'Create'),
         ),
@@ -691,14 +875,17 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleExportCsv(BuildContext context, WidgetRef ref) async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Generating CSV export...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Generating CSV export...')));
       await ref.read(backupServiceProvider).exportTransactionsToCsv();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to export CSV: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Failed to export CSV: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -706,14 +893,17 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleBackupDb(BuildContext context, WidgetRef ref) async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Creating local backup...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Creating local backup...')));
       await ref.read(backupServiceProvider).backupDatabase();
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Backup failed: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Backup failed: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -773,10 +963,14 @@ class SettingsScreen extends ConsumerWidget {
       builder: (ctx) => ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: kSpacing24, horizontal: kSpacing20),
+          padding: const EdgeInsets.symmetric(
+            vertical: kSpacing24,
+            horizontal: kSpacing20,
+          ),
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
+                ? const Color(0xF01C1C1E)
+                : const Color(0xF0F2F2F7),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -784,19 +978,49 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               Center(
                 child: Container(
-                  width: 36, height: 4,
+                  width: 36,
+                  height: 4,
                   margin: const EdgeInsets.only(bottom: kSpacing20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
               ),
-              const Text('App Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                'App Theme',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: kSpacing16),
-              _themeOption(ctx, ref, ThemeMode.system, current, 'System default', Icons.settings_brightness_rounded, 'Follow your device settings'),
-              _themeOption(ctx, ref, ThemeMode.light, current, 'Light', Icons.light_mode_rounded, 'Always use light mode'),
-              _themeOption(ctx, ref, ThemeMode.dark, current, 'Dark', Icons.dark_mode_rounded, 'Always use dark mode'),
+              _themeOption(
+                ctx,
+                ref,
+                ThemeMode.system,
+                current,
+                'System default',
+                Icons.settings_brightness_rounded,
+                'Follow your device settings',
+              ),
+              _themeOption(
+                ctx,
+                ref,
+                ThemeMode.light,
+                current,
+                'Light',
+                Icons.light_mode_rounded,
+                'Always use light mode',
+              ),
+              _themeOption(
+                ctx,
+                ref,
+                ThemeMode.dark,
+                current,
+                'Dark',
+                Icons.dark_mode_rounded,
+                'Always use dark mode',
+              ),
               const SizedBox(height: kSpacing12),
             ],
           ),
@@ -805,7 +1029,15 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _themeOption(BuildContext ctx, WidgetRef ref, ThemeMode mode, ThemeMode current, String label, IconData icon, String subtitle) {
+  Widget _themeOption(
+    BuildContext ctx,
+    WidgetRef ref,
+    ThemeMode mode,
+    ThemeMode current,
+    String label,
+    IconData icon,
+    String subtitle,
+  ) {
     final isSelected = mode == current;
     final theme = Theme.of(ctx);
     return Padding(
@@ -821,13 +1053,15 @@ class SettingsScreen extends ConsumerWidget {
             color: isSelected
                 ? theme.colorScheme.primary.withValues(alpha: 0.08)
                 : (theme.brightness == Brightness.dark
-                    ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight),
+                      ? AppTheme.surfaceContainerDark
+                      : AppTheme.surfaceLight),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
               color: isSelected
                   ? theme.colorScheme.primary.withValues(alpha: 0.3)
                   : (theme.brightness == Brightness.dark
-                      ? const Color(0x1FFFFFFF) : const Color(0x1F000000)),
+                        ? const Color(0x1FFFFFFF)
+                        : const Color(0x1F000000)),
             ),
           ),
           child: Row(
@@ -840,20 +1074,43 @@ class SettingsScreen extends ConsumerWidget {
                       : Colors.grey.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: isSelected ? theme.colorScheme.primary : Colors.grey, size: 20),
+                child: Icon(
+                  icon,
+                  color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: kSpacing14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: isSelected ? theme.colorScheme.primary : null)),
-                    Text(subtitle, style: TextStyle(fontSize: 11, color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.7) : Colors.grey)),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: isSelected ? theme.colorScheme.primary : null,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                            : Colors.grey,
+                      ),
+                    ),
                   ],
                 ),
               ),
               if (isSelected)
-                Icon(PesaFlowIcons.success, color: theme.colorScheme.primary, size: 22),
+                Icon(
+                  PesaFlowIcons.success,
+                  color: theme.colorScheme.primary,
+                  size: 22,
+                ),
             ],
           ),
         ),
@@ -866,11 +1123,14 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
-    final recentTransactions = ref.watch(recentTransactionsStreamProvider).value ?? [];
+    final recentTransactions =
+        ref.watch(recentTransactionsStreamProvider).value ?? [];
 
     return Scaffold(
       appBar: const IosNavBar(title: 'Settings', largeTitle: true),
-      body: SafeArea(top: false, child: SingleChildScrollView(
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -881,197 +1141,295 @@ class SettingsScreen extends ConsumerWidget {
               StaggeredFadeSlide(
                 index: 0,
                 child: IosListSection(
-                rows: [
-                  IosListRow(
-                    leading: Container(
-                      padding: const EdgeInsets.all(kSpacing8),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                  rows: [
+                    IosListRow(
+                      leading: Container(
+                        padding: const EdgeInsets.all(kSpacing8),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.12,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.shield_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 22,
+                        ),
                       ),
-                      child: Icon(Icons.shield_rounded, color: theme.colorScheme.primary, size: 22),
+                      title: const Text('Offline Privacy'),
+                      subtitle: const Text(
+                        'All data stored locally. Zero cloud transfers.',
+                      ),
+                      indent: 48,
                     ),
-                    title: const Text('Offline Privacy'),
-                    subtitle: const Text('All data stored locally. Zero cloud transfers.'),
-                    indent: 48,
-                  ),
-                ],
-              ),
+                  ],
+                ),
               ),
 
               // Security
               StaggeredFadeSlide(
                 index: 1,
                 child: IosListSection(
-                header: 'Security',
-                rows: [
-                  IosToggleRow(
-                    leading: Icon(Icons.fingerprint_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Biometric App Lock'),
-                    subtitle: const Text('Require biometrics to open PesaFlow'),
-                    value: ref.watch(appLockEnabledProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('app_lock_enabled', val.toString());
-                    },
-                  ),
-                  IosToggleRow(
-                    leading: Icon(Icons.lock_open_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Lock Screen Balance'),
-                    subtitle: const Text('Show current balance in notification shade'),
-                    value: ref.watch(lockScreenBalanceEnabledProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('lock_screen_balance', val.toString());
-                    },
-                  ),
-                ],
-              ),
+                  header: 'Security',
+                  rows: [
+                    IosToggleRow(
+                      leading: Icon(
+                        Icons.fingerprint_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Biometric App Lock'),
+                      subtitle: const Text(
+                        'Require biometrics to open PesaFlow',
+                      ),
+                      value: ref.watch(appLockEnabledProvider).value ?? false,
+                      onChanged: (val) {
+                        HapticFeedback.lightImpact();
+                        ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting('app_lock_enabled', val.toString());
+                      },
+                    ),
+                    IosToggleRow(
+                      leading: Icon(
+                        Icons.lock_open_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Lock Screen Balance'),
+                      subtitle: const Text(
+                        'Show current balance in notification shade',
+                      ),
+                      value:
+                          ref.watch(lockScreenBalanceEnabledProvider).value ??
+                          false,
+                      onChanged: (val) {
+                        HapticFeedback.lightImpact();
+                        ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting('lock_screen_balance', val.toString());
+                      },
+                    ),
+                  ],
+                ),
               ),
 
               // Preferences
               StaggeredFadeSlide(
                 index: 2,
                 child: IosListSection(
-                header: 'Preferences',
-                rows: [
-                  IosToggleRow(
-                    leading: Icon(Icons.pin_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Show Decimals'),
-                    subtitle: const Text('Format currency with cents (.00) globally'),
-                    value: ref.watch(currencyShowDecimalsProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('currency_show_decimals', val.toString());
-                    },
-                  ),
-                  IosToggleRow(
-                    leading: Icon(Icons.sms_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('SMS Auto-Deduplication'),
-                    subtitle: const Text('Automatically deduplicate incoming telco messages'),
-                    value: ref.watch(smsAutoDeduplicationProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('sms_auto_deduplication', val.toString());
-                    },
-                  ),
-                  IosListRow(
-                    leading: Icon(Icons.brightness_6_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('App Theme'),
-                    subtitle: Text(switch (ref.watch(themeModeProvider)) {
-                      ThemeMode.light => 'Light',
-                      ThemeMode.dark => 'Dark',
-                      _ => 'System default',
-                    }),
-                    trailing: const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
-                    onTap: () => _showThemePicker(context, ref),
-                  ),
-                ],
-              ),
+                  header: 'Preferences',
+                  rows: [
+                    IosToggleRow(
+                      leading: Icon(
+                        Icons.pin_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Show Decimals'),
+                      subtitle: const Text(
+                        'Format currency with cents (.00) globally',
+                      ),
+                      value:
+                          ref.watch(currencyShowDecimalsProvider).value ??
+                          false,
+                      onChanged: (val) {
+                        HapticFeedback.lightImpact();
+                        ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting(
+                              'currency_show_decimals',
+                              val.toString(),
+                            );
+                      },
+                    ),
+                    IosToggleRow(
+                      leading: Icon(
+                        Icons.sms_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('SMS Auto-Deduplication'),
+                      subtitle: const Text(
+                        'Automatically deduplicate incoming telco messages',
+                      ),
+                      value:
+                          ref.watch(smsAutoDeduplicationProvider).value ??
+                          false,
+                      onChanged: (val) {
+                        HapticFeedback.lightImpact();
+                        ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting(
+                              'sms_auto_deduplication',
+                              val.toString(),
+                            );
+                      },
+                    ),
+                    IosListRow(
+                      leading: Icon(
+                        Icons.brightness_6_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('App Theme'),
+                      subtitle: Text(switch (ref.watch(themeModeProvider)) {
+                        ThemeMode.light => 'Light',
+                        ThemeMode.dark => 'Dark',
+                        _ => 'System default',
+                      }),
+                      trailing: const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 18,
+                        color: Colors.grey,
+                      ),
+                      onTap: () => _showThemePicker(context, ref),
+                    ),
+                  ],
+                ),
               ),
 
               // Data
               StaggeredFadeSlide(
                 index: 3,
                 child: IosListSection(
-                header: 'Data',
-                rows: [
-                  TactileSpringContainer(
-                    onTap: () => _showAccountsManager(context, ref),
-                    child: IosListRow(
-                    leading: Icon(PesaFlowIcons.wallet, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Accounts Manager'),
-                    subtitle: const Text('Manage bank, mobile money & cash wallets'),
-                    onTap: () => _showAccountsManager(context, ref),
-                  ),),
-                  TactileSpringContainer(
-                    onTap: () => _showCategoriesManager(context, ref),
-                    child: IosListRow(
-                    leading: Icon(Icons.category_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Categories Manager'),
-                    subtitle: const Text('Add custom financial categories'),
-                    onTap: () => _showCategoriesManager(context, ref),
-                  ),),
-                  TactileSpringContainer(
-                    onTap: () => context.push('/recurring'),
-                    child: IosListRow(
-                    leading: Icon(PesaFlowIcons.subscriptions, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Recurring & Bills'),
-                    subtitle: const Text('Manage your recurring payments and bills'),
-                    onTap: () => context.push('/recurring'),
-                  ),),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IosMetricCard(
-                            icon: PesaFlowIcons.loans,
-                            label: 'Accounts',
-                            value: '${accounts.length}',
-                          ),
+                  header: 'Data',
+                  rows: [
+                    TactileSpringContainer(
+                      onTap: () => _showAccountsManager(context, ref),
+                      child: IosListRow(
+                        leading: Icon(
+                          PesaFlowIcons.wallet,
+                          color: theme.colorScheme.primary,
+                          size: 24,
                         ),
-                        const SizedBox(width: kSpacing8),
-                        Expanded(
-                          child: IosMetricCard(
-                            icon: Icons.category_rounded,
-                            label: 'Categories',
-                            value: '${categories.length}',
-                          ),
+                        title: const Text('Accounts Manager'),
+                        subtitle: const Text(
+                          'Manage bank, mobile money & cash wallets',
                         ),
-                        const SizedBox(width: kSpacing8),
-                        Expanded(
-                          child: IosMetricCard(
-                            icon: PesaFlowIcons.transactions,
-                            label: 'Transactions',
-                            value: '${recentTransactions.length}',
-                          ),
+                        onTap: () => _showAccountsManager(context, ref),
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () => _showCategoriesManager(context, ref),
+                      child: IosListRow(
+                        leading: Icon(
+                          Icons.category_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 24,
                         ),
-                      ],
+                        title: const Text('Categories Manager'),
+                        subtitle: const Text('Add custom financial categories'),
+                        onTap: () => _showCategoriesManager(context, ref),
+                      ),
                     ),
-                  ),
-                  TactileSpringContainer(
-                    onTap: () => showExportDialog(context, ref),
-                    child: IosListRow(
-                    leading: Icon(
-                      Icons.insert_drive_file_rounded,
-                      color: theme.colorScheme.primary,
-                      size: 24,
+                    TactileSpringContainer(
+                      onTap: () => context.push('/recurring'),
+                      child: IosListRow(
+                        leading: Icon(
+                          PesaFlowIcons.subscriptions,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                        title: const Text('Recurring & Bills'),
+                        subtitle: const Text(
+                          'Manage your recurring payments and bills',
+                        ),
+                        onTap: () => context.push('/recurring'),
+                      ),
                     ),
-                    title: const Text('Export Monthly Statement'),
-                    subtitle: const Text('Download as PDF or CSV'),
-                    onTap: () => showExportDialog(context, ref),
-                  ),),
-                  TactileSpringContainer(
-                    onTap: () => _handleExportCsv(context, ref),
-                    child: IosListRow(
-                    leading: Icon(
-                      Icons.file_download_rounded,
-                      color: theme.colorScheme.primary,
-                      size: 24,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: IosMetricCard(
+                              icon: PesaFlowIcons.loans,
+                              label: 'Accounts',
+                              value: '${accounts.length}',
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          Expanded(
+                            child: IosMetricCard(
+                              icon: Icons.category_rounded,
+                              label: 'Categories',
+                              value: '${categories.length}',
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          Expanded(
+                            child: IosMetricCard(
+                              icon: PesaFlowIcons.transactions,
+                              label: 'Transactions',
+                              value: '${recentTransactions.length}',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    title: const Text('Export to CSV'),
-                    subtitle: const Text('Download transactions as CSV file'),
-                    onTap: () => _handleExportCsv(context, ref),
-                  ),),
-                  TactileSpringContainer(
-                    onTap: () => _handleBackupDb(context, ref),
-                    child: IosListRow(
-                    leading: const Icon(Icons.backup_rounded, color: Colors.blue, size: 24),
-                    title: const Text('Backup Database'),
-                    subtitle: const Text('Save an offline backup of your data'),
-                    onTap: () => _handleBackupDb(context, ref),
-                  ),),
-                  TactileSpringContainer(
-                    onTap: () => _handleRestoreDb(context, ref),
-                    child: IosListRow(
-                    leading: const Icon(Icons.restore_rounded, color: Colors.orange, size: 24),
-                    title: const Text('Restore Database'),
-                    subtitle: const Text('Restore from a previous backup'),
-                    onTap: () => _handleRestoreDb(context, ref),
-                  ),),
-                ],
-              ),
+                    TactileSpringContainer(
+                      onTap: () => showExportDialog(context, ref),
+                      child: IosListRow(
+                        leading: Icon(
+                          Icons.insert_drive_file_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                        title: const Text('Export Monthly Statement'),
+                        subtitle: const Text('Download as PDF or CSV'),
+                        onTap: () => showExportDialog(context, ref),
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () => _handleExportCsv(context, ref),
+                      child: IosListRow(
+                        leading: Icon(
+                          Icons.file_download_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                        title: const Text('Export to CSV'),
+                        subtitle: const Text(
+                          'Download transactions as CSV file',
+                        ),
+                        onTap: () => _handleExportCsv(context, ref),
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () => _handleBackupDb(context, ref),
+                      child: IosListRow(
+                        leading: const Icon(
+                          Icons.backup_rounded,
+                          color: Colors.blue,
+                          size: 24,
+                        ),
+                        title: const Text('Backup Database'),
+                        subtitle: const Text(
+                          'Save an offline backup of your data',
+                        ),
+                        onTap: () => _handleBackupDb(context, ref),
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () => _handleRestoreDb(context, ref),
+                      child: IosListRow(
+                        leading: const Icon(
+                          Icons.restore_rounded,
+                          color: Colors.orange,
+                          size: 24,
+                        ),
+                        title: const Text('Restore Database'),
+                        subtitle: const Text('Restore from a previous backup'),
+                        onTap: () => _handleRestoreDb(context, ref),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
               // Footer
@@ -1081,24 +1439,32 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'PesaFlow v1.0.0',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark ? Colors.grey[500] : Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: theme.brightness == Brightness.dark
+                            ? Colors.grey[500]
+                            : Colors.grey[600],
+                      ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
-                      style: TextStyle(fontSize: 11, color: theme.brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[400]),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: theme.brightness == Brightness.dark
+                            ? Colors.grey[600]
+                            : Colors.grey[400],
+                      ),
                     ),
                   ],
                 ),
               ),
-          const SizedBox(height: kSpacing24),
-        ],
+              const SizedBox(height: kSpacing24),
+            ],
           ),
         ),
       ),
     );
   }
 }
-
-
-

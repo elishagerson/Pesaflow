@@ -34,42 +34,54 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
     final prevSnapshot = monthlySnapshots[monthlySnapshots.length - 2];
     final prevExpense = prevSnapshot.totalExpense;
     if (prevExpense > 0 && currentExpense > 0) {
-      final changePct = ((currentExpense - prevExpense) / prevExpense * 100).round();
+      final changePct = ((currentExpense - prevExpense) / prevExpense * 100)
+          .round();
       final increased = changePct > 0;
-      insights.add(InsightData(
-        title: increased ? 'Spending Up' : 'Spending Down',
-        subtitle: increased
-            ? 'Spending is $changePct% higher than last month'
-            : 'Spending is ${-changePct}% lower than last month',
-        icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
-        color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
-      ));
+      insights.add(
+        InsightData(
+          title: increased ? 'Spending Up' : 'Spending Down',
+          subtitle: increased
+              ? 'Spending is $changePct% higher than last month'
+              : 'Spending is ${-changePct}% lower than last month',
+          icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
+          color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
+        ),
+      );
     }
   } else if (currentExpense > 0 && monthlySnapshots.length == 1) {
     final prevSnapshot = monthlySnapshots[0];
     if (prevSnapshot.totalExpense > 0) {
-      final changePct = ((currentExpense - prevSnapshot.totalExpense) / prevSnapshot.totalExpense * 100).round();
+      final changePct =
+          ((currentExpense - prevSnapshot.totalExpense) /
+                  prevSnapshot.totalExpense *
+                  100)
+              .round();
       final increased = changePct > 0;
-      insights.add(InsightData(
-        title: increased ? 'Spending Up' : 'Spending Down',
-        subtitle: increased
-            ? 'Spending is $changePct% higher than last month'
-            : 'Spending is ${-changePct}% lower than last month',
-        icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
-        color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
-      ));
+      insights.add(
+        InsightData(
+          title: increased ? 'Spending Up' : 'Spending Down',
+          subtitle: increased
+              ? 'Spending is $changePct% higher than last month'
+              : 'Spending is ${-changePct}% lower than last month',
+          icon: increased ? PesaFlowIcons.income : PesaFlowIcons.expense,
+          color: increased ? const Color(0xFFFF453A) : const Color(0xFF34C759),
+        ),
+      );
     }
   }
 
   // 2. Category breakdown: highest category this month
   if (topCategories.isNotEmpty) {
     final top = topCategories.first;
-    insights.add(InsightData(
-      title: 'Top Category: ${top.categoryName}',
-      subtitle: 'Tsh ${(top.amount ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} spent this month',
-      icon: Icons.category_rounded,
-      color: const Color(0xFF0F4C5C),
-    ));
+    insights.add(
+      InsightData(
+        title: 'Top Category: ${top.categoryName}',
+        subtitle:
+            'Tsh ${(top.amount ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} spent this month',
+        icon: Icons.category_rounded,
+        color: const Color(0xFF0F4C5C),
+      ),
+    );
   }
 
   // 3. Budget status: most over / under
@@ -78,14 +90,16 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
     final worst = budgets.last;
     final pct = (worst.percentage * 100).round();
     final overBudget = pct > 100;
-    insights.add(InsightData(
-      title: '${overBudget ? 'Over' : 'Under'} Budget: ${worst.budget.name}',
-      subtitle: overBudget
-          ? '${pct - 100}% over the ${worst.budget.period} limit'
-          : '${100 - pct}% remaining in the ${worst.budget.period} budget',
-      icon: overBudget ? PesaFlowIcons.warning : PesaFlowIcons.success,
-      color: overBudget ? const Color(0xFFFF453A) : const Color(0xFF34C759),
-    ));
+    insights.add(
+      InsightData(
+        title: '${overBudget ? 'Over' : 'Under'} Budget: ${worst.budget.name}',
+        subtitle: overBudget
+            ? '${pct - 100}% over the ${worst.budget.period} limit'
+            : '${100 - pct}% remaining in the ${worst.budget.period} budget',
+        icon: overBudget ? PesaFlowIcons.warning : PesaFlowIcons.success,
+        color: overBudget ? const Color(0xFFFF453A) : const Color(0xFF34C759),
+      ),
+    );
   }
 
   // 4. Weekly average: average daily spending
@@ -95,12 +109,15 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
     final effectiveDays = dayOfMonth.clamp(1, daysInMonth);
     final dailyAvg = currentExpense ~/ effectiveDays;
     final weeklyAvg = dailyAvg * 7;
-    insights.add(InsightData(
-      title: 'Weekly Average',
-      subtitle: 'Spending about Tsh ${(weeklyAvg ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} per week',
-      icon: Icons.calendar_view_week_rounded,
-      color: const Color(0xFF0F4C5C),
-    ));
+    insights.add(
+      InsightData(
+        title: 'Weekly Average',
+        subtitle:
+            'Spending about Tsh ${(weeklyAvg ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} per week',
+        icon: Icons.calendar_view_week_rounded,
+        color: const Color(0xFF0F4C5C),
+      ),
+    );
   }
 
   // 5. Savings progress: goal with highest completion
@@ -118,14 +135,18 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
     }
     if (bestGoal != null) {
       final pctDisplay = (bestPct * 100).round();
-      insights.add(InsightData(
-        title: 'Savings: ${bestGoal.name}',
-        subtitle: pctDisplay >= 100
-            ? 'Goal completed! Tsh ${(bestGoal.currentAmount ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} saved'
-            : '$pctDisplay% complete — Tsh ${((bestGoal.targetAmount - bestGoal.currentAmount) ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} to go',
-        icon: PesaFlowIcons.savings,
-        color: bestPct >= 1.0 ? const Color(0xFF34C759) : const Color(0xFFFF9F0A),
-      ));
+      insights.add(
+        InsightData(
+          title: 'Savings: ${bestGoal.name}',
+          subtitle: pctDisplay >= 100
+              ? 'Goal completed! Tsh ${(bestGoal.currentAmount ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} saved'
+              : '$pctDisplay% complete — Tsh ${((bestGoal.targetAmount - bestGoal.currentAmount) ~/ 100).toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} to go',
+          icon: PesaFlowIcons.savings,
+          color: bestPct >= 1.0
+              ? const Color(0xFF34C759)
+              : const Color(0xFFFF9F0A),
+        ),
+      );
     }
   }
 

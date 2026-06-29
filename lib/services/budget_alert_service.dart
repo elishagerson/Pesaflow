@@ -31,7 +31,10 @@ class BudgetAlertService {
         await _checkSingleBudget(budget);
       }
     } catch (e) {
-      developer.log('Budget alert check failed: $e', name: 'BudgetAlertService');
+      developer.log(
+        'Budget alert check failed: $e',
+        name: 'BudgetAlertService',
+      );
     }
   }
 
@@ -42,7 +45,10 @@ class BudgetAlertService {
         await _checkSingleBudget(budget);
       }
     } catch (e) {
-      developer.log('Budget alert check all failed: $e', name: 'BudgetAlertService');
+      developer.log(
+        'Budget alert check all failed: $e',
+        name: 'BudgetAlertService',
+      );
     }
   }
 

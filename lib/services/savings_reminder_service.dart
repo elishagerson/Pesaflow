@@ -25,7 +25,7 @@ class SavingsReminderService {
     required this._dao,
     required this._notificationService,
     required String trackerIdProvider,
-  })  : _trackerId = trackerIdProvider;
+  }) : _trackerId = trackerIdProvider;
 
   Future<DateTime?> getLastContributionDate() async {
     try {
@@ -45,12 +45,17 @@ class SavingsReminderService {
 
       return lastDate;
     } catch (e) {
-      developer.log('Failed to get last contribution date: $e', name: 'SavingsReminder');
+      developer.log(
+        'Failed to get last contribution date: $e',
+        name: 'SavingsReminder',
+      );
       return null;
     }
   }
 
-  Future<bool> hasSavedRecently({int withinDays = _reminderIntervalDays}) async {
+  Future<bool> hasSavedRecently({
+    int withinDays = _reminderIntervalDays,
+  }) async {
     final lastDate = await getLastContributionDate();
     if (lastDate == null) return false;
     return DateTime.now().difference(lastDate).inDays < withinDays;
@@ -66,17 +71,21 @@ class SavingsReminderService {
         final lastDeposit = contributions
             .where((c) => c.amount > 0)
             .fold<DateTime?>(null, (prev, c) {
-          if (prev == null || c.createdAt.isAfter(prev)) return c.createdAt;
-          return prev;
-        });
+              if (prev == null || c.createdAt.isAfter(prev)) return c.createdAt;
+              return prev;
+            });
 
         if (lastDeposit == null ||
-            DateTime.now().difference(lastDeposit).inDays >= _reminderIntervalDays) {
+            DateTime.now().difference(lastDeposit).inDays >=
+                _reminderIntervalDays) {
           needingAttention.add(goal.name);
         }
       }
     } catch (e) {
-      developer.log('Failed to check goals needing attention: $e', name: 'SavingsReminder');
+      developer.log(
+        'Failed to check goals needing attention: $e',
+        name: 'SavingsReminder',
+      );
     }
     return needingAttention;
   }
@@ -120,7 +129,10 @@ class SavingsReminderService {
 
       developer.log('Savings reminder sent: $title', name: 'SavingsReminder');
     } catch (e) {
-      developer.log('Failed to send savings reminder: $e', name: 'SavingsReminder');
+      developer.log(
+        'Failed to send savings reminder: $e',
+        name: 'SavingsReminder',
+      );
     }
   }
 

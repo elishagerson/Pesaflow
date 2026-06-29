@@ -17,10 +17,12 @@ class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   const RecurringTransactionFormScreen({super.key, this.recurringId});
 
   @override
-  ConsumerState<RecurringTransactionFormScreen> createState() => _RecurringTransactionFormScreenState();
+  ConsumerState<RecurringTransactionFormScreen> createState() =>
+      _RecurringTransactionFormScreenState();
 }
 
-class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransactionFormScreen> {
+class _RecurringTransactionFormScreenState
+    extends ConsumerState<RecurringTransactionFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
@@ -81,7 +83,9 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
           ? (_endDate ?? now.add(const Duration(days: 365)))
           : (_nextDate.isBefore(now) ? now : _nextDate),
       firstDate: endDate ? _nextDate : DateTime(2020),
-      lastDate: endDate ? now.add(const Duration(days: 365 * 10)) : now.add(const Duration(days: 365 * 5)),
+      lastDate: endDate
+          ? now.add(const Duration(days: 365 * 10))
+          : now.add(const Duration(days: 365 * 5)),
     );
     if (picked != null) {
       setState(() {
@@ -97,15 +101,15 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccountId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an account')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select an account')));
       return;
     }
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -121,23 +125,35 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 
     if (_isEditing) {
-      final existing = await ref.read(recurringTransactionRepositoryProvider).getById(widget.recurringId!);
+      final existing = await ref
+          .read(recurringTransactionRepositoryProvider)
+          .getById(widget.recurringId!);
       if (existing == null) return;
       final updated = existing.copyWith(
         accountId: _selectedAccountId,
         categoryId: Value(_selectedCategoryId),
         amount: amountCents,
         type: _type,
-        description: Value(_descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim()),
+        description: Value(
+          _descriptionController.text.trim().isEmpty
+              ? null
+              : _descriptionController.text.trim(),
+        ),
         frequency: _frequency,
         intervalValue: interval,
         nextDate: _nextDate,
         endDate: Value(_endDate),
-        merchantKeywords: Value(_keywordsController.text.trim().isEmpty ? null : _keywordsController.text.trim()),
+        merchantKeywords: Value(
+          _keywordsController.text.trim().isEmpty
+              ? null
+              : _keywordsController.text.trim(),
+        ),
         updatedAt: DateTime.now(),
       );
       try {
-        await ref.read(recurringTransactionRepositoryProvider).updateRecurringTransaction(updated);
+        await ref
+            .read(recurringTransactionRepositoryProvider)
+            .updateRecurringTransaction(updated);
         if (!mounted) return;
         context.pop();
       } catch (e) {
@@ -155,7 +171,8 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
         amount: amountCents,
         type: _type,
         description: _descriptionController.text.trim().isEmpty
-            ? null : _descriptionController.text.trim(),
+            ? null
+            : _descriptionController.text.trim(),
         frequency: _frequency,
         intervalValue: interval,
         nextDate: _nextDate,
@@ -163,14 +180,17 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
         status: 'active',
         trackerId: activeTrackerId,
         merchantKeywords: _keywordsController.text.trim().isEmpty
-            ? null : _keywordsController.text.trim(),
+            ? null
+            : _keywordsController.text.trim(),
         totalPaid: 0,
         paymentCount: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
       try {
-        await ref.read(recurringTransactionRepositoryProvider).createRecurringTransaction(recurring);
+        await ref
+            .read(recurringTransactionRepositoryProvider)
+            .createRecurringTransaction(recurring);
         if (!mounted) return;
         context.pop();
       } catch (e) {
@@ -187,7 +207,9 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark ? const Color(0xFF1B1C22) : const Color(0xFFF2F2F7);
+    final inputFill = isDark
+        ? const Color(0xFF1B1C22)
+        : const Color(0xFFF2F2F7);
     final accountsAsync = ref.watch(accountsStreamProvider);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
 
@@ -218,15 +240,30 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    items: accounts.map((a) => DropdownMenuItem(
-                      value: a.id,
-                      child: Text(a.name, overflow: TextOverflow.ellipsis),
-                    )).toList(),
+                    items: accounts
+                        .map(
+                          (a) => DropdownMenuItem(
+                            value: a.id,
+                            child: Text(
+                              a.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (v) => setState(() => _selectedAccountId = v),
                     validator: (v) => v == null ? 'Select an account' : null,
                   ),
-                  loading: () => const SizedBox(height: 56, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
-                  error: (e, _) => Text('Error: $e', style: TextStyle(color: theme.colorScheme.error)),
+                  loading: () => const SizedBox(
+                    height: 56,
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  error: (e, _) => Text(
+                    'Error: $e',
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -234,12 +271,17 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                 index: 1,
                 child: categoriesAsync.when(
                   data: (categories) {
-                    final filtered = categories.where((c) => c.type == _type).toList();
+                    final filtered = categories
+                        .where((c) => c.type == _type)
+                        .toList();
                     return DropdownButtonFormField<String>(
                       initialValue: _selectedCategoryId,
                       decoration: InputDecoration(
                         labelText: 'Category',
-                        prefixIcon: const Icon(Icons.category_rounded, size: 18),
+                        prefixIcon: const Icon(
+                          Icons.category_rounded,
+                          size: 18,
+                        ),
                         filled: true,
                         fillColor: inputFill,
                         border: OutlineInputBorder(
@@ -247,16 +289,31 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      items: filtered.map((c) => DropdownMenuItem(
-                        value: c.id,
-                        child: Text(c.name, overflow: TextOverflow.ellipsis),
-                      )).toList(),
+                      items: filtered
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c.id,
+                              child: Text(
+                                c.name,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                          .toList(),
                       onChanged: (v) => setState(() => _selectedCategoryId = v),
                       validator: (v) => v == null ? 'Select a category' : null,
                     );
                   },
-                  loading: () => const SizedBox(height: 56, child: Center(child: CircularProgressIndicator(strokeWidth: 2))),
-                  error: (e, _) => Text('Error: $e', style: TextStyle(color: theme.colorScheme.error)),
+                  loading: () => const SizedBox(
+                    height: 56,
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  error: (e, _) => Text(
+                    'Error: $e',
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -280,7 +337,8 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                     if (v == null || v.trim().isEmpty) return 'Enter amount';
                     final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
                     final parsed = int.tryParse(cleaned);
-                    if (parsed == null || parsed <= 0) return 'Enter a valid amount';
+                    if (parsed == null || parsed <= 0)
+                      return 'Enter a valid amount';
                     return null;
                   },
                 ),
@@ -290,9 +348,18 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                 index: 3,
                 child: SegmentedButton<String>(
                   segments: const [
-                    ButtonSegment(value: 'income', label: Text('Income', style: TextStyle(fontSize: 12))),
-                    ButtonSegment(value: 'expense', label: Text('Expense', style: TextStyle(fontSize: 12))),
-                    ButtonSegment(value: 'transfer', label: Text('Transfer', style: TextStyle(fontSize: 12))),
+                    ButtonSegment(
+                      value: 'income',
+                      label: Text('Income', style: TextStyle(fontSize: 12)),
+                    ),
+                    ButtonSegment(
+                      value: 'expense',
+                      label: Text('Expense', style: TextStyle(fontSize: 12)),
+                    ),
+                    ButtonSegment(
+                      value: 'transfer',
+                      label: Text('Transfer', style: TextStyle(fontSize: 12)),
+                    ),
                   ],
                   selected: {_type},
                   onSelectionChanged: (v) {
@@ -349,7 +416,10 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   initialValue: _frequency,
                   decoration: InputDecoration(
                     labelText: 'Frequency',
-                    prefixIcon: const Icon(PesaFlowIcons.subscriptions, size: 18),
+                    prefixIcon: const Icon(
+                      PesaFlowIcons.subscriptions,
+                      size: 18,
+                    ),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -359,9 +429,15 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   ),
                   items: const [
                     DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
-                    DropdownMenuItem(value: 'biweekly', child: Text('Biweekly')),
+                    DropdownMenuItem(
+                      value: 'biweekly',
+                      child: Text('Biweekly'),
+                    ),
                     DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
-                    DropdownMenuItem(value: 'quarterly', child: Text('Quarterly')),
+                    DropdownMenuItem(
+                      value: 'quarterly',
+                      child: Text('Quarterly'),
+                    ),
                     DropdownMenuItem(value: 'yearly', child: Text('Yearly')),
                   ],
                   onChanged: (v) {
@@ -400,17 +476,24 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                     const SizedBox(width: 12),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 14,
+                        ),
                         decoration: BoxDecoration(
                           color: inputFill,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          _frequency == 'weekly' ? 'week(s)' :
-                          _frequency == 'biweekly' ? 'two weeks' :
-                          _frequency == 'monthly' ? 'month(s)' :
-                          _frequency == 'quarterly' ? 'quarter(s)' :
-                          'year(s)',
+                          _frequency == 'weekly'
+                              ? 'week(s)'
+                              : _frequency == 'biweekly'
+                              ? 'two weeks'
+                              : _frequency == 'monthly'
+                              ? 'month(s)'
+                              : _frequency == 'quarterly'
+                              ? 'quarter(s)'
+                              : 'year(s)',
                           style: TextStyle(
                             color: isDark ? Colors.grey[400] : Colors.grey[600],
                           ),
@@ -478,13 +561,19 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                           style: TextStyle(
                             color: _endDate != null
                                 ? (isDark ? Colors.white : Colors.black)
-                                : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                                : (isDark
+                                      ? Colors.grey[500]
+                                      : Colors.grey[400]),
                           ),
                         ),
                         if (_endDate != null)
                           GestureDetector(
                             onTap: () => setState(() => _endDate = null),
-                            child: Icon(PesaFlowIcons.close, size: 18, color: Colors.grey[500]),
+                            child: Icon(
+                              PesaFlowIcons.close,
+                              size: 18,
+                              color: Colors.grey[500],
+                            ),
                           ),
                       ],
                     ),
@@ -506,7 +595,16 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: _isLoading
-                        ? const Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)))
+                        ? const Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
                         : Text(
                             _isEditing ? 'Update Recurring' : 'Add Recurring',
                             textAlign: TextAlign.center,

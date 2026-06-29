@@ -26,10 +26,7 @@ class LoanListScreen extends ConsumerWidget {
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
 
     return Scaffold(
-      appBar: const IosNavBar(
-        title: 'Loans',
-        largeTitle: true,
-      ),
+      appBar: const IosNavBar(title: 'Loans', largeTitle: true),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/loans/add'),
         label: 'Add Loan',
@@ -45,7 +42,15 @@ class LoanListScreen extends ConsumerWidget {
             // Outstanding header
             totalOutstandingAsync.when(
               data: (total) => total > 0
-                  ? StaggeredFadeSlide(index: 0, child: _buildOutstandingHeader(context, total, isDark, ref))
+                  ? StaggeredFadeSlide(
+                      index: 0,
+                      child: _buildOutstandingHeader(
+                        context,
+                        total,
+                        isDark,
+                        ref,
+                      ),
+                    )
                   : const SizedBox.shrink(),
               loading: () => const SizedBox.shrink(),
               error: (_, _) => const SizedBox.shrink(),
@@ -67,8 +72,12 @@ class LoanListScreen extends ConsumerWidget {
             activeLoansAsync.when(
               data: (activeLoans) {
                 final paidData = paidLoansAsync.asData?.value;
-                if (activeLoans.isEmpty && (paidData == null || paidData.isEmpty)) {
-                  return StaggeredFadeSlide(index: 1, child: _buildEmptyState(theme, isDark));
+                if (activeLoans.isEmpty &&
+                    (paidData == null || paidData.isEmpty)) {
+                  return StaggeredFadeSlide(
+                    index: 1,
+                    child: _buildEmptyState(theme, isDark),
+                  );
                 }
                 if (activeLoans.isEmpty) return const SizedBox.shrink();
                 return Column(
@@ -84,10 +93,12 @@ class LoanListScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    ...activeLoans.asMap().entries.map((e) => StaggeredFadeSlide(
-                      index: e.key + 3,
-                      child: _buildLoanTile(context, e.value, theme, isDark),
-                    )),
+                    ...activeLoans.asMap().entries.map(
+                      (e) => StaggeredFadeSlide(
+                        index: e.key + 3,
+                        child: _buildLoanTile(context, e.value, theme, isDark),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                   ],
                 );
@@ -113,10 +124,17 @@ class LoanListScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    ...paidLoans.asMap().entries.map((e) => StaggeredFadeSlide(
-                      index: 100 + e.key,
-                      child: _buildPaidLoanTile(context, e.value, theme, isDark),
-                    )),
+                    ...paidLoans.asMap().entries.map(
+                      (e) => StaggeredFadeSlide(
+                        index: 100 + e.key,
+                        child: _buildPaidLoanTile(
+                          context,
+                          e.value,
+                          theme,
+                          isDark,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                   ],
                 );
@@ -130,7 +148,12 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, String subtitle, Color accent) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    String subtitle,
+    Color accent,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8, top: 4),
       child: Row(
@@ -151,7 +174,11 @@ class LoanListScreen extends ConsumerWidget {
           const SizedBox(width: 8),
           Text(
             subtitle,
-            style: TextStyle(fontSize: 11, color: accent, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 11,
+              color: accent,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -186,7 +213,11 @@ class LoanListScreen extends ConsumerWidget {
               color: const Color(0xFFFF6B35).withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.speed_rounded, color: Color(0xFFFF6B35), size: 20),
+            child: const Icon(
+              Icons.speed_rounded,
+              color: Color(0xFFFF6B35),
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -217,14 +248,19 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildOutstandingHeader(BuildContext context, int total, bool isDark, WidgetRef ref) {
+  Widget _buildOutstandingHeader(
+    BuildContext context,
+    int total,
+    bool isDark,
+    WidgetRef ref,
+  ) {
     final netWorth = ref.watch(netWorthProvider);
     final debtRatio = netWorth > 0 ? total / netWorth : 999.0;
     final severityColor = debtRatio > 1.0
         ? const Color(0xFFE53935)
         : debtRatio > 0.5
-            ? const Color(0xFFFF6B35)
-            : const Color(0xFFFF9F0A);
+        ? const Color(0xFFFF6B35)
+        : const Color(0xFFFF9F0A);
 
     return Container(
       width: double.infinity,
@@ -255,7 +291,11 @@ class LoanListScreen extends ConsumerWidget {
                   color: severityColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(PesaFlowIcons.warning, color: severityColor, size: 22),
+                child: Icon(
+                  PesaFlowIcons.warning,
+                  color: severityColor,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -310,90 +350,177 @@ class LoanListScreen extends ConsumerWidget {
     return EmptyState(
       icon: PesaFlowIcons.loans,
       title: 'No Loans Yet',
-      subtitle: 'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
+      subtitle:
+          'Add a loan manually or wait for loan\ndisbursements from M-Pesa to appear.',
       illustration: PesaFlowIllustration.emptyLoans(),
     );
   }
 
-  Widget _buildLoanTile(BuildContext context, Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildLoanTile(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    bool isDark,
+  ) {
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
-    final progressColor = ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A);
+    final progressColor = ratio > 0.5
+        ? const Color(0xFFE53935)
+        : const Color(0xFFFF9F0A);
 
     return Hero(
       tag: 'loan-${loan.id}',
       child: GlassCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      borderRadius: AppTheme.radiusCard,
-      elevation: CardElevation.low,
-      accentColor: progressColor,
-      onTap: () => context.push('/loans/${loan.id}'),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: progressColor.withValues(alpha: 0.12),
-                    shape: BoxShape.circle,
+        margin: const EdgeInsets.only(bottom: 10),
+        borderRadius: AppTheme.radiusCard,
+        elevation: CardElevation.low,
+        accentColor: progressColor,
+        onTap: () => context.push('/loans/${loan.id}'),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: progressColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.income,
+                      color: progressColor,
+                      size: 18,
+                    ),
                   ),
-                  child: Icon(
-                    PesaFlowIcons.income,
-                    color: progressColor,
-                    size: 18,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          loan.description ?? loan.sender ?? 'Loan',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Active',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: progressColor,
+                          ),
+                        ),
+                        if (loan.dueAt != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            loan.dueAt!.isBefore(DateTime.now())
+                                ? 'OVERDUE'
+                                : 'Due ${loan.dueAt!.day}/${loan.dueAt!.month}/${loan.dueAt!.year}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: loan.dueAt!.isBefore(DateTime.now())
+                                  ? const Color(0xFFE53935)
+                                  : Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        loan.description ?? loan.sender ?? 'Loan',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        CurrencyFormatter.formatCents(loan.amount),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Active',
+                        '${CurrencyFormatter.formatCents(loan.remaining)} left',
                         style: TextStyle(
                           fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: progressColor,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
-                      if (loan.dueAt != null) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          loan.dueAt!.isBefore(DateTime.now())
-                              ? 'OVERDUE'
-                              : 'Due ${loan.dueAt!.day}/${loan.dueAt!.month}/${loan.dueAt!.year}',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            color: loan.dueAt!.isBefore(DateTime.now())
-                                ? const Color(0xFFE53935)
-                                : Colors.grey[500],
-                          ),
-                        ),
-                      ],
                     ],
                   ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: ratio.clamp(0.0, 1.0),
+                  backgroundColor: progressColor.withValues(alpha: 0.12),
+                  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                  minHeight: 4,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaidLoanTile(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    bool isDark,
+  ) {
+    return Hero(
+      tag: 'loan-${loan.id}',
+      child: GlassCard(
+        margin: const EdgeInsets.only(bottom: 10),
+        borderRadius: AppTheme.radiusCard,
+        elevation: CardElevation.low,
+        accentColor: const Color(0xFF609F8A),
+        onTap: () => context.push('/loans/${loan.id}'),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  PesaFlowIcons.success,
+                  color: Color(0xFF609F8A),
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      CurrencyFormatter.formatCents(loan.amount),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      loan.description ?? loan.sender ?? 'Loan',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${CurrencyFormatter.formatCents(loan.remaining)} left',
+                      'Paid ${loan.paidAt != null ? 'on ${loan.paidAt!.day}/${loan.paidAt!.month}/${loan.paidAt!.year}' : ''}',
                       style: TextStyle(
                         fontSize: 11,
                         color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -401,80 +528,18 @@ class LoanListScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: ratio.clamp(0.0, 1.0),
-                backgroundColor: progressColor.withValues(alpha: 0.12),
-                valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                minHeight: 4,
               ),
-            ),
-          ],
+              Text(
+                CurrencyFormatter.formatCents(loan.amount),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-  }
-
-  Widget _buildPaidLoanTile(BuildContext context, Loan loan, ThemeData theme, bool isDark) {
-    return Hero(
-      tag: 'loan-${loan.id}',
-      child: GlassCard(
-      margin: const EdgeInsets.only(bottom: 10),
-      borderRadius: AppTheme.radiusCard,
-      elevation: CardElevation.low,
-      accentColor: const Color(0xFF609F8A),
-      onTap: () => context.push('/loans/${loan.id}'),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF609F8A).withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                PesaFlowIcons.success,
-                color: Color(0xFF609F8A),
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loan.description ?? loan.sender ?? 'Loan',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Paid ${loan.paidAt != null ? 'on ${loan.paidAt!.day}/${loan.paidAt!.month}/${loan.paidAt!.year}' : ''}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              CurrencyFormatter.formatCents(loan.amount),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
+    );
   }
 }

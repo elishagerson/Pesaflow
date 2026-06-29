@@ -65,19 +65,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _nextPage() async {
     if (_currentPage == 1) {
       try {
-        final statuses = await [
-          Permission.sms,
-          Permission.phone,
-        ].request();
-        final granted = statuses[Permission.sms]?.isGranted == true &&
-                        statuses[Permission.phone]?.isGranted == true;
+        final statuses = await [Permission.sms, Permission.phone].request();
+        final granted =
+            statuses[Permission.sms]?.isGranted == true &&
+            statuses[Permission.phone]?.isGranted == true;
         if (mounted) setState(() => _smsPermissionGranted = granted);
       } catch (e) {
         developer.log('Permission request failed: $e', name: 'Onboarding');
       }
     }
     if (_currentPage < 3) {
-      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -88,26 +89,49 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       for (final entry in _accounts.entries) {
         if (entry.value) {
           final accType = _types[entry.key] ?? 'mobile_money';
-          final iconStr = accType == 'mobile_money' ? 'phone-android' : accType == 'bank' ? 'account-balance' : 'wallet';
+          final iconStr = accType == 'mobile_money'
+              ? 'phone-android'
+              : accType == 'bank'
+              ? 'account-balance'
+              : 'wallet';
           final provider = _providers[entry.key];
-          await accountRepo.createAccount(Account(
-            id: uuid.v4(), name: entry.key, type: accType,
-            balance: 0, provider: (provider != null && provider.isNotEmpty) ? provider : null,
-            icon: iconStr, sortOrder: 0, isArchived: false, createdAt: DateTime.now(),
-          ));
+          await accountRepo.createAccount(
+            Account(
+              id: uuid.v4(),
+              name: entry.key,
+              type: accType,
+              balance: 0,
+              provider: (provider != null && provider.isNotEmpty)
+                  ? provider
+                  : null,
+              icon: iconStr,
+              sortOrder: 0,
+              isArchived: false,
+              createdAt: DateTime.now(),
+            ),
+          );
         }
       }
       await ref.read(settingsRepositoryProvider).markOnboardingComplete();
       ref.invalidate(accountsStreamProvider);
       try {
         await ref.read(smsBackgroundServiceProvider).initialize();
-        developer.log('Background SMS service initialized successfully from onboarding', name: 'Onboarding');
+        developer.log(
+          'Background SMS service initialized successfully from onboarding',
+          name: 'Onboarding',
+        );
       } catch (e) {
-        developer.log('Failed to initialize SMS background service: $e', name: 'Onboarding');
+        developer.log(
+          'Failed to initialize SMS background service: $e',
+          name: 'Onboarding',
+        );
       }
       if (mounted) context.go('/');
     } catch (e) {
-      developer.log('Onboarding account creation failed: $e', name: 'Onboarding');
+      developer.log(
+        'Onboarding account creation failed: $e',
+        name: 'Onboarding',
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create accounts: $e')),
@@ -117,87 +141,150 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   @override
-  void dispose() { _pageController.dispose(); super.dispose(); }
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          // Progress dots
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(4, (i) => AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: i == _currentPage ? 24 : 8, height: 8,
-              decoration: BoxDecoration(color: i == _currentPage ? theme.colorScheme.primary : theme.colorScheme.outlineVariant, borderRadius: BorderRadius.circular(4)),
-            ))),
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (i) => setState(() => _currentPage = i),
-              children: [
-                _WelcomePage(theme: theme),
-                _SmsPermissionPage(theme: theme, permissionGranted: _smsPermissionGranted),
-                _AccountsPage(theme: theme, accounts: _accounts, icons: _icons, onToggle: (name, val) => setState(() => _accounts[name] = val)),
-                _CompletePage(theme: theme),
-              ],
-            ),
-          ),
-          // Bottom buttons
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(children: [
-              if (_currentPage > 0 && _currentPage < 3) TextButton(onPressed: () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut), child: const Text('Back')),
-              const Spacer(),
-              if (_currentPage < 3)
-                TactileSpringContainer(
-                  onTap: _nextPage,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+        child: Column(
+          children: [
+            // Progress dots
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  4,
+                  (i) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: i == _currentPage ? 24 : 8,
+                    height: 8,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
+                      color: i == _currentPage
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outlineVariant,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Text('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                )
-              else
-                TactileSpringContainer(
-                  onTap: _finish,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: const Text('Start Tracking', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
-            ]),
-          ),
-        ]),
+              ),
+            ),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (i) => setState(() => _currentPage = i),
+                children: [
+                  _WelcomePage(theme: theme),
+                  _SmsPermissionPage(
+                    theme: theme,
+                    permissionGranted: _smsPermissionGranted,
+                  ),
+                  _AccountsPage(
+                    theme: theme,
+                    accounts: _accounts,
+                    icons: _icons,
+                    onToggle: (name, val) =>
+                        setState(() => _accounts[name] = val),
+                  ),
+                  _CompletePage(theme: theme),
+                ],
+              ),
+            ),
+            // Bottom buttons
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  if (_currentPage > 0 && _currentPage < 3)
+                    TextButton(
+                      onPressed: () => _pageController.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      ),
+                      child: const Text('Back'),
+                    ),
+                  const Spacer(),
+                  if (_currentPage < 3)
+                    TactileSpringContainer(
+                      onTap: _nextPage,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.primary,
+                              theme.colorScheme.primary.withValues(alpha: 0.8),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'Continue',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    TactileSpringContainer(
+                      onTap: _finish,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              theme.colorScheme.primary,
+                              theme.colorScheme.primary.withValues(alpha: 0.8),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'Start Tracking',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -212,20 +299,45 @@ class _WelcomePage extends StatelessWidget {
       index: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-            padding: const EdgeInsets.all(28),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]),
-              shape: BoxShape.circle,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(28),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary,
+                    theme.colorScheme.primary.withValues(alpha: 0.7),
+                  ],
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                PesaFlowIcons.wallet,
+                size: 64,
+                color: Colors.white,
+              ),
             ),
-            child: const Icon(PesaFlowIcons.wallet, size: 64, color: Colors.white),
-          ),
-          const SizedBox(height: 32),
-          Text('Welcome to PesaFlow', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          Text('Track your finances offline.\n100% private — data never leaves your device.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
-        ]),
+            const SizedBox(height: 32),
+            Text(
+              'Welcome to PesaFlow',
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Track your finances offline.\n100% private — data never leaves your device.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -234,67 +346,132 @@ class _WelcomePage extends StatelessWidget {
 class _SmsPermissionPage extends StatelessWidget {
   final ThemeData theme;
   final bool permissionGranted;
-  const _SmsPermissionPage({required this.theme, this.permissionGranted = false});
+  const _SmsPermissionPage({
+    required this.theme,
+    this.permissionGranted = false,
+  });
   @override
   Widget build(BuildContext context) {
     return StaggeredFadeSlide(
       index: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Stack(
-            children: [
-              Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: theme.colorScheme.primary.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.sms_rounded, size: 56, color: theme.colorScheme.primary)),
-              if (permissionGranted)
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: AppTheme.incomeColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: theme.scaffoldBackgroundColor, width: 2),
-                    ),
-                    child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.sms_rounded,
+                    size: 56,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 32),
-          Text('SMS Auto-Tracking', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          Text('PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.', textAlign: TextAlign.center, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: theme.brightness == Brightness.dark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight, borderRadius: BorderRadius.circular(12), border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3))),
-            child: Row(children: [
-              Icon(PesaFlowIcons.lock, color: theme.colorScheme.primary, size: 20),
-              const SizedBox(width: 12),
-              Expanded(child: Text('SMS data is processed locally and never sent anywhere.', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant))),
-            ]),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                permissionGranted ? PesaFlowIcons.success : PesaFlowIcons.info,
-                size: 14,
-                color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+                if (permissionGranted)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.incomeColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: theme.scaffoldBackgroundColor,
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'SMS Auto-Tracking',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(width: 6),
-              Text(
-                permissionGranted ? 'SMS Permission Granted' : 'You can skip this and add transactions manually.',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.brightness == Brightness.dark
+                    ? AppTheme.surfaceContainerDark
+                    : AppTheme.surfaceLight,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
-            ],
+              child: Row(
+                children: [
+                  Icon(
+                    PesaFlowIcons.lock,
+                    color: theme.colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'SMS data is processed locally and never sent anywhere.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  permissionGranted
+                      ? PesaFlowIcons.success
+                      : PesaFlowIcons.info,
+                  size: 14,
+                  color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  permissionGranted
+                      ? 'SMS Permission Granted'
+                      : 'You can skip this and add transactions manually.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: permissionGranted
+                        ? AppTheme.incomeColor
+                        : Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ]),
-    ),
+      ),
     );
   }
 }
@@ -354,88 +531,108 @@ class _AccountsPage extends StatelessWidget {
                 return StaggeredFadeSlide(
                   index: 2 + i,
                   child: TactileSpringContainer(
-                  onTap: () => onToggle(e.key, !isSelected),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.colorScheme.primary.withValues(alpha: 0.08)
-                          : (theme.brightness == Brightness.dark
-                              ? AppTheme.surfaceContainerDark
-                              : AppTheme.surfaceLight),
-                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                      border: Border.all(
+                    onTap: () => onToggle(e.key, !isSelected),
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: isSelected
-                            ? theme.colorScheme.primary
+                            ? theme.colorScheme.primary.withValues(alpha: 0.08)
                             : (theme.brightness == Brightness.dark
-                                ? const Color(0x1DFFFFFF)
-                                : const Color(0x15000000)),
-                        width: isSelected ? 1.5 : 0.8,
+                                  ? AppTheme.surfaceContainerDark
+                                  : AppTheme.surfaceLight),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : (theme.brightness == Brightness.dark
+                                    ? const Color(0x1DFFFFFF)
+                                    : const Color(0x15000000)),
+                          width: isSelected ? 1.5 : 0.8,
+                        ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.06,
+                                  ),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ]
+                            : null,
                       ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: theme.colorScheme.primary.withValues(alpha: 0.06),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                                : (theme.brightness == Brightness.dark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.black.withValues(alpha: 0.05)),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            icons[e.key],
-                            color: isSelected ? theme.colorScheme.primary : Colors.grey,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          e.key,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: isSelected
-                                ? (theme.brightness == Brightness.dark ? Colors.white : theme.colorScheme.primary)
-                                : (theme.brightness == Brightness.dark ? Colors.grey[300] : Colors.grey[700]),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        // Mini check bubble
-                        Container(
-                          width: 18,
-                          height: 18,
-                          decoration: BoxDecoration(
-                            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected ? theme.colorScheme.primary : Colors.grey,
-                              width: 1.5,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary.withValues(
+                                      alpha: 0.12,
+                                    )
+                                  : (theme.brightness == Brightness.dark
+                                        ? Colors.white.withValues(alpha: 0.05)
+                                        : Colors.black.withValues(alpha: 0.05)),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              icons[e.key],
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : Colors.grey,
+                              size: 24,
                             ),
                           ),
-                          child: isSelected
-                              ? const Icon(Icons.check, size: 10, color: Colors.white)
-                              : null,
-                        ),
-                      ],
-                    ),
+                          const SizedBox(height: 12),
+                          Text(
+                            e.key,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: isSelected
+                                  ? (theme.brightness == Brightness.dark
+                                        ? Colors.white
+                                        : theme.colorScheme.primary)
+                                  : (theme.brightness == Brightness.dark
+                                        ? Colors.grey[300]
+                                        : Colors.grey[700]),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          // Mini check bubble
+                          Container(
+                            width: 18,
+                            height: 18,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : Colors.transparent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : Colors.grey,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: isSelected
+                                ? const Icon(
+                                    Icons.check,
+                                    size: 10,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  );
-                }).toList(),
+                );
+              }).toList(),
             ),
           ),
         ],
@@ -453,15 +650,41 @@ class _CompletePage extends StatelessWidget {
       index: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: AppTheme.incomeColor.withValues(alpha: 0.15), shape: BoxShape.circle), child: const Icon(PesaFlowIcons.success, size: 64, color: AppTheme.incomeColor)),
-          const SizedBox(height: 32),
-          Text('You\'re All Set!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          Text('Your offline finance tracker is ready.\nStart recording transactions and take control of your money.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5)),
-        ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: AppTheme.incomeColor.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                PesaFlowIcons.success,
+                size: 64,
+                color: AppTheme.incomeColor,
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'You\'re All Set!',
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Your offline finance tracker is ready.\nStart recording transactions and take control of your money.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-

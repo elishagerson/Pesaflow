@@ -9,7 +9,9 @@ class PaletteVisibility extends Notifier<bool> {
   void hide() => state = false;
 }
 
-final paletteVisibilityProvider = NotifierProvider<PaletteVisibility, bool>(PaletteVisibility.new);
+final paletteVisibilityProvider = NotifierProvider<PaletteVisibility, bool>(
+  PaletteVisibility.new,
+);
 
 class PaletteQuery extends Notifier<String> {
   @override
@@ -19,4 +21,6 @@ class PaletteQuery extends Notifier<String> {
   void clear() => state = '';
 }
 
-final paletteQueryProvider = NotifierProvider<PaletteQuery, String>(PaletteQuery.new);
+final paletteQueryProvider = NotifierProvider<PaletteQuery, String>(
+  PaletteQuery.new,
+);

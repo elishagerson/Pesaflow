@@ -23,8 +23,7 @@ class SavingsGoalFormScreen extends ConsumerStatefulWidget {
       _SavingsGoalFormScreenState();
 }
 
-class _SavingsGoalFormScreenState
-    extends ConsumerState<SavingsGoalFormScreen> {
+class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
@@ -123,9 +122,9 @@ class _SavingsGoalFormScreenState
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -136,8 +135,9 @@ class _SavingsGoalFormScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final inputFill =
-        isDark ? const Color(0xFF1B1C22) : const Color(0xFFF2F2F7);
+    final inputFill = isDark
+        ? const Color(0xFF1B1C22)
+        : const Color(0xFFF2F2F7);
 
     InputDecoration inputDeco({
       required String label,
@@ -157,15 +157,17 @@ class _SavingsGoalFormScreenState
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : Colors.black.withValues(alpha: 0.06)),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.06),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-              color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              width: 1.5),
+            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
         ),
       );
     }
@@ -205,27 +207,35 @@ class _SavingsGoalFormScreenState
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: inputDeco(
-                            label: 'Goal Title',
-                            hint: 'e.g. Vacation to Zanzibar',
-                            icon: Icons.title_rounded),
-                        validator: (v) =>
-                            v == null || v.trim().isEmpty ? 'Title is required' : null,
+                          label: 'Goal Title',
+                          hint: 'e.g. Vacation to Zanzibar',
+                          icon: Icons.title_rounded,
+                        ),
+                        validator: (v) => v == null || v.trim().isEmpty
+                            ? 'Title is required'
+                            : null,
                       ),
                       const SizedBox(height: kSpacing12),
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         style: const TextStyle(
-                            fontFamily: 'monospace',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
+                          fontFamily: 'monospace',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: inputDeco(
-                            label: 'Target Amount (Tsh)',
-                            hint: 'e.g. 1500000',
-                            icon: PesaFlowIcons.cash),
+                          label: 'Target Amount (Tsh)',
+                          hint: 'e.g. 1500000',
+                          icon: PesaFlowIcons.cash,
+                        ),
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {
                             return 'Target is required';
@@ -240,7 +250,9 @@ class _SavingsGoalFormScreenState
                         labelText: 'Target Date',
                         value: _selectedDate,
                         prefixIcon: PesaFlowIcons.calendar,
-                        firstDate: DateTime.now().subtract(const Duration(days: 1)),
+                        firstDate: DateTime.now().subtract(
+                          const Duration(days: 1),
+                        ),
                         lastDate: DateTime(2035),
                         onChanged: (d) => setState(() => _selectedDate = d),
                       ),
@@ -265,15 +277,18 @@ class _SavingsGoalFormScreenState
               StaggeredFadeSlide(
                 index: 1,
                 child: GlassCard(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing16,
+                    vertical: kSpacing14,
+                  ),
                   borderRadius: AppTheme.radiusCard,
                   child: SizedBox(
                     height: 44,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _colors.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: kSpacing16),
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: kSpacing16),
                       itemBuilder: (context, index) {
                         final colorHex = _colors[index];
                         final colorVal = hexToColor(colorHex);
@@ -296,19 +311,19 @@ class _SavingsGoalFormScreenState
                                       color: isDark
                                           ? Colors.white
                                           : Colors.black,
-                                      width: 3)
+                                      width: 3,
+                                    )
                                   : Border.all(
-                                      color:
-                                          colorVal.withValues(alpha: 0.3),
-                                      width: 1),
+                                      color: colorVal.withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: colorVal
-                                            .withValues(alpha: 0.5),
+                                        color: colorVal.withValues(alpha: 0.5),
                                         blurRadius: 10,
                                         spreadRadius: 1,
-                                      )
+                                      ),
                                     ]
                                   : [],
                             ),
@@ -336,15 +351,18 @@ class _SavingsGoalFormScreenState
               StaggeredFadeSlide(
                 index: 2,
                 child: GlassCard(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing16,
+                    vertical: kSpacing14,
+                  ),
                   borderRadius: AppTheme.radiusCard,
                   child: SizedBox(
                     height: 48,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: _icons.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: kSpacing14),
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: kSpacing14),
                       itemBuilder: (context, index) {
                         final item = _icons[index];
                         final isSelected = _selectedIcon == item['name'];
@@ -363,8 +381,8 @@ class _SavingsGoalFormScreenState
                               color: isSelected
                                   ? themeCol.withValues(alpha: 0.15)
                                   : (isDark
-                                      ? const Color(0xFF1C1C1E)
-                                      : Colors.grey[100]),
+                                        ? const Color(0xFF1C1C1E)
+                                        : Colors.grey[100]),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: isSelected
@@ -378,8 +396,8 @@ class _SavingsGoalFormScreenState
                               color: isSelected
                                   ? themeCol
                                   : (isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600]),
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600]),
                               size: 22,
                             ),
                           ),
@@ -410,8 +428,9 @@ class _SavingsGoalFormScreenState
                         borderRadius: BorderRadius.circular(100),
                         boxShadow: [
                           BoxShadow(
-                            color: hexToColor(_selectedColor)
-                                .withValues(alpha: 0.3),
+                            color: hexToColor(
+                              _selectedColor,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -422,15 +441,19 @@ class _SavingsGoalFormScreenState
                               height: kSpacing20,
                               width: kSpacing20,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
                           : Text(
                               widget.goalId != null
                                   ? 'Update Goal'
                                   : 'Create Savings Goal',
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                     ),
                   ),
