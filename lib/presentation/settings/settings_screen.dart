@@ -8,6 +8,7 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
@@ -38,11 +39,11 @@ class SettingsScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: kSpacing16),
             child: Text('Manage Accounts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
           if (accounts.isEmpty)
-            const Center(child: Padding(padding: EdgeInsets.all(32), child: Text('No active accounts.')))
+            const Center(child: Padding(padding: EdgeInsets.all(kSpacing32), child: Text('No active accounts.')))
           else
             ...accounts.map((acc) => IosListRow(
               leading: Icon(getAccountIcon(acc.icon), color: theme.colorScheme.primary),
@@ -56,12 +57,12 @@ class SettingsScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AmountText(amountInCents: acc.balance, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: kSpacing4),
                   GestureDetector(
                     onTap: () => _showEditAccountDialog(context, ref, acc),
                     child: Icon(Icons.edit_rounded, size: 18, color: theme.colorScheme.primary),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: kSpacing4),
                   GestureDetector(
                     onTap: () => _confirmDeleteAccount(context, ref, acc),
                     child: const Icon(Icons.delete_rounded, size: 20, color: Colors.red),
@@ -131,7 +132,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               ModernDropdown<String>(
                 labelText: 'Account Type',
                 value: accountType,
@@ -175,7 +176,7 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               if (accountType == 'Mobile Money') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 ModernDropdown<String>(
                   labelText: 'Carrier Provider',
                   value: provider ?? 'M-Pesa_TZ',
@@ -1109,8 +1110,8 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-            ],
+          const SizedBox(height: kSpacing24),
+        ],
           ),
         ),
       ),

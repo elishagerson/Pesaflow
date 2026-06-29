@@ -859,7 +859,7 @@ class _SavingsGoalDetailScreenState
                           ],
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: kSpacing20),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -872,7 +872,7 @@ class _SavingsGoalDetailScreenState
                                 letterSpacing: 1.1,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: kSpacing4),
                             Text(
                               CurrencyFormatter.formatCents(
                                   goal.currentAmount),
@@ -884,7 +884,7 @@ class _SavingsGoalDetailScreenState
                                     isDark ? Colors.white : Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: kSpacing4),
                             Text(
                               'Goal target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
                               style: const TextStyle(
@@ -896,7 +896,7 @@ class _SavingsGoalDetailScreenState
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
 
                 // Deposit / Withdraw buttons
                 Row(
@@ -908,7 +908,7 @@ class _SavingsGoalDetailScreenState
                           _showAddMoneySheet(context, goal, true);
                         },
                         child: Container(
-                          height: 44,
+                          height: kSpacing48,
                           decoration: BoxDecoration(
                             color: AppTheme.transferColorDark
                                 .withValues(alpha: 0.15),
@@ -921,7 +921,7 @@ class _SavingsGoalDetailScreenState
                               const Icon(Icons.add_rounded,
                                   color: AppTheme.transferColorDark,
                                   size: 18),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: kSpacing6),
                               Text(
                                 'Add Money',
                                 style: TextStyle(
@@ -937,7 +937,7 @@ class _SavingsGoalDetailScreenState
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: kSpacing12),
                     Expanded(
                       child: TactileSpringContainer(
                         onTap: () {
@@ -945,7 +945,7 @@ class _SavingsGoalDetailScreenState
                           _showAddMoneySheet(context, goal, false);
                         },
                         child: Container(
-                          height: 44,
+                          height: kSpacing48,
                           decoration: BoxDecoration(
                             color: const Color(0xFFFF453A)
                                 .withValues(alpha: 0.15),
@@ -957,7 +957,7 @@ class _SavingsGoalDetailScreenState
                             children: [
                               const Icon(Icons.remove_rounded,
                                   color: Color(0xFFFF453A), size: 18),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: kSpacing6),
                               Text(
                                 'Withdraw',
                                 style: TextStyle(
@@ -975,7 +975,7 @@ class _SavingsGoalDetailScreenState
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: kSpacing24),
 
                 // Contribution Ledger
                 Align(
@@ -989,13 +989,13 @@ class _SavingsGoalDetailScreenState
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: kSpacing8),
 
                 contributionsAsync.when(
                   data: (logs) {
                     if (logs.isEmpty) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing32),
                         alignment: Alignment.center,
                         child: Text(
                           'No deposits or withdrawals logged yet.',
@@ -1023,7 +1023,7 @@ class _SavingsGoalDetailScreenState
                           index: idx,
                           child: Padding(
                             padding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                                const EdgeInsets.symmetric(vertical: kSpacing12),
                             child: Row(
                               children: [
                                 Container(
@@ -1036,7 +1036,7 @@ class _SavingsGoalDetailScreenState
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                const SizedBox(width: 14),
+                                const SizedBox(width: kSpacing14),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -1051,7 +1051,7 @@ class _SavingsGoalDetailScreenState
                                             fontSize: 13),
                                       ),
                                       if (log.notes != null) ...[
-                                        const SizedBox(height: 3),
+                                        const SizedBox(height: kSpacing4),
                                         Text(
                                           log.notes!,
                                           style: TextStyle(
@@ -1059,7 +1059,7 @@ class _SavingsGoalDetailScreenState
                                               fontSize: 11),
                                         ),
                                       ],
-                                      const SizedBox(height: 2),
+                                      const SizedBox(height: kSpacing2),
                                       Text(
                                         '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
                                         style: TextStyle(
@@ -1085,7 +1085,7 @@ class _SavingsGoalDetailScreenState
                                             : const Color(0xFFFF453A),
                                       ),
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: kSpacing2),
                                     GestureDetector(
                                       onTap: () async {
                                         final confirm =
