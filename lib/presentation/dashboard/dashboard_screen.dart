@@ -23,7 +23,6 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
-import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
@@ -3673,6 +3672,42 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
       ),
       ),
+    );
+  }
+}
+
+class _InsightsCarousel extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final insightsAsync = ref.watch(insightsProvider);
+
+    return insightsAsync.when(
+      data: (insights) {
+        if (insights.isEmpty) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+              child: Text('Insights', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            ),
+            const SizedBox(height: kSpacing10),
+            SizedBox(
+              height: 120,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                itemCount: insights.length,
+                separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+                itemBuilder: (_, i) => InsightCard(insight: insights[i]),
+              ),
+            ),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 }
