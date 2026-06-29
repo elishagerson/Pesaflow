@@ -250,37 +250,41 @@ class SavingsGoalListScreen extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            SizedBox(
-                              height: 48,
-                              width: 48,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  PieChart(PieChartData(
-                                    startDegreeOffset: -90,
-                                    sectionsSpace: 0,
-                                    centerSpaceRadius: 16,
-                                    sections: [
-                                      PieChartSectionData(
-                                        value: goalPct * 100,
-                                        color: goalColor,
-                                        radius: 4,
-                                        showTitle: false,
-                                      ),
-                                      PieChartSectionData(
-                                        value: (1.0 - goalPct) * 100,
-                                        color: goalColor.withValues(alpha: 0.12),
-                                        radius: 4,
-                                        showTitle: false,
-                                      ),
-                                    ],
-                                  )),
-                                  Icon(
-                                    getGoalIcon(goal.icon),
-                                    color: goalColor,
-                                    size: 16,
-                                  ),
-                                ],
+                            Semantics(
+                              label: 'Savings goal progress: ${(goalPct * 100).round()}% completed.',
+                              excludeSemantics: true,
+                              child: SizedBox(
+                                height: 48,
+                                width: 48,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    PieChart(PieChartData(
+                                      startDegreeOffset: -90,
+                                      sectionsSpace: 0,
+                                      centerSpaceRadius: 16,
+                                      sections: [
+                                        PieChartSectionData(
+                                          value: goalPct * 100,
+                                          color: goalColor,
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                        PieChartSectionData(
+                                          value: (1.0 - goalPct) * 100,
+                                          color: goalColor.withValues(alpha: 0.12),
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                      ],
+                                    )),
+                                    Icon(
+                                      getGoalIcon(goal.icon),
+                                      color: goalColor,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(width: kSpacing14),

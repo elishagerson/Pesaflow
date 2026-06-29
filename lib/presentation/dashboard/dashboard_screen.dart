@@ -3036,6 +3036,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
           ),
+        ),
         actions: [
           TactileSpringContainer(
             onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
