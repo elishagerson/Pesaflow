@@ -4,10 +4,18 @@ enum ScreenSize { smallPhone, phone, smallTablet, largeTablet, desktop }
 
 ScreenSize getScreenSize(BuildContext context) {
   final w = MediaQuery.sizeOf(context).width;
-  if (w < 360) return ScreenSize.smallPhone;
-  if (w < 600) return ScreenSize.phone;
-  if (w < 840) return ScreenSize.smallTablet;
-  if (w < 1200) return ScreenSize.largeTablet;
+  if (w < 360) {
+    return ScreenSize.smallPhone;
+  }
+  if (w < 600) {
+    return ScreenSize.phone;
+  }
+  if (w < 840) {
+    return ScreenSize.smallTablet;
+  }
+  if (w < 1200) {
+    return ScreenSize.largeTablet;
+  }
   return ScreenSize.desktop;
 }
 
@@ -21,8 +29,9 @@ bool isTablet(BuildContext context) {
   return s == ScreenSize.smallTablet || s == ScreenSize.largeTablet;
 }
 
-bool isDesktop(BuildContext context) =>
-    getScreenSize(context) == ScreenSize.desktop;
+bool isDesktop(BuildContext context) {
+  return getScreenSize(context) == ScreenSize.desktop;
+}
 
 double responsiveValue(
   BuildContext context, {
@@ -31,42 +40,69 @@ double responsiveValue(
   double? desktop,
 }) {
   final s = getScreenSize(context);
-  if (desktop != null && s == ScreenSize.desktop) return desktop;
+  if (desktop != null && s == ScreenSize.desktop) {
+    return desktop;
+  }
   if (tablet != null &&
-      (s == ScreenSize.smallTablet || s == ScreenSize.largeTablet))
+      (s == ScreenSize.smallTablet || s == ScreenSize.largeTablet)) {
     return tablet;
+  }
   return compact;
 }
 
 double responsiveSpacing(BuildContext context) {
   final w = MediaQuery.sizeOf(context).width;
-  if (w < 360) return 12;
-  if (w < 600) return 16;
-  if (w < 840) return 20;
-  if (w < 1200) return 24;
+  if (w < 360) {
+    return 12;
+  }
+  if (w < 600) {
+    return 16;
+  }
+  if (w < 840) {
+    return 20;
+  }
+  if (w < 1200) {
+    return 24;
+  }
   return 32;
 }
 
 double responsiveCardPadding(BuildContext context) {
   final w = MediaQuery.sizeOf(context).width;
-  if (w < 360) return 12;
-  if (w < 600) return 16;
+  if (w < 360) {
+    return 12;
+  }
+  if (w < 600) {
+    return 16;
+  }
   return 20;
 }
 
 double responsiveGridColumns(BuildContext context) {
   final w = MediaQuery.sizeOf(context).width;
-  if (w < 600) return 1;
-  if (w < 840) return 2;
-  if (w < 1200) return 3;
+  if (w < 600) {
+    return 1;
+  }
+  if (w < 840) {
+    return 2;
+  }
+  if (w < 1200) {
+    return 3;
+  }
   return 4;
 }
 
 int responsiveAccountColumns(BuildContext context) {
   final w = MediaQuery.sizeOf(context).width;
-  if (w < 400) return 1;
-  if (w < 600) return 2;
-  if (w < 900) return 3;
+  if (w < 400) {
+    return 1;
+  }
+  if (w < 600) {
+    return 2;
+  }
+  if (w < 900) {
+    return 3;
+  }
   return 4;
 }
 
@@ -97,9 +133,15 @@ EdgeInsets responsiveHorizontalPadding(BuildContext context) {
 
 double responsiveMaxContentWidth(BuildContext context) {
   final s = getScreenSize(context);
-  if (s == ScreenSize.desktop) return 900;
-  if (s == ScreenSize.largeTablet) return 720;
-  if (s == ScreenSize.smallTablet) return 600;
+  if (s == ScreenSize.desktop) {
+    return 900;
+  }
+  if (s == ScreenSize.largeTablet) {
+    return 720;
+  }
+  if (s == ScreenSize.smallTablet) {
+    return 600;
+  }
   return double.infinity;
 }
 
@@ -111,7 +153,9 @@ class ResponsiveCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mw = maxWidth ?? responsiveMaxContentWidth(context);
-    if (mw >= MediaQuery.sizeOf(context).width) return child;
+    if (mw >= MediaQuery.sizeOf(context).width) {
+      return child;
+    }
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: mw),
@@ -137,7 +181,9 @@ class ResponsiveRow extends StatelessWidget {
     if (isCompact(context)) {
       return Column(children: children);
     }
-    if (children.isEmpty) return const SizedBox.shrink();
+    if (children.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children.map((c) {
