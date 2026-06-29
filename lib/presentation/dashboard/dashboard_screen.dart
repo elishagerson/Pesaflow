@@ -3660,6 +3660,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 index: 8,
                 child: _buildSmsReviewCard(theme, isDark, pendingReviewCount),
               ),
+              const SizedBox(height: kSpacing24),
             ],
           ),
         ),
