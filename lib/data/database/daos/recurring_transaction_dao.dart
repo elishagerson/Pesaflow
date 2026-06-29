@@ -59,4 +59,46 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
       updatedAt: DateTime.now(),
     ));
   }
+
+  /// Returns all active recurring transactions with non-empty merchantKeywords.
+  Future<List<RecurringTransaction>> getActiveWithKeywords() {
+    return (select(recurringTransactions)
+          ..where((r) =>
+              r.status.equals('active') &
+              r.merchantKeywords.isNotNull() &
+              r.merchantKeywords.isNotEqualTo('')))
+        .get();
+  }
+
+  /// Records an automated SMS-logged payment for the recurring transaction, increments stats, and advances nextDate.
+  Future<void> recordPayment(String id, int amount, DateTime paidAt) async {
+    final tx = await getById(id);
+    if (tx == null) return;
+
+    final nextDue = _advanceDate(tx.nextDate, tx.frequency, tx.intervalValue);
+    await update(recurringTransactions).replace(tx.copyWith(
+      lastPaidAt: Value(paidAt),
+      totalPaid: tx.totalPaid + amount,
+      paymentCount: tx.paymentCount + 1,
+      nextDate: nextDue,
+      updatedAt: DateTime.now(),
+    ));
+  }
+
+  DateTime _advanceDate(DateTime from, String frequency, int interval) {
+    switch (frequency) {
+      case 'weekly':
+        return DateTime(from.year, from.month, from.day + 7 * interval);
+      case 'biweekly':
+        return DateTime(from.year, from.month, from.day + 14 * interval);
+      case 'monthly':
+        return DateTime(from.year, from.month + interval, from.day);
+      case 'quarterly':
+        return DateTime(from.year, from.month + 3 * interval, from.day);
+      case 'yearly':
+        return DateTime(from.year + interval, from.month, from.day);
+      default:
+        return DateTime(from.year, from.month + interval, from.day);
+    }
+  }
 }

@@ -18,7 +18,6 @@ import 'tables/savings_goals_table.dart';
 import 'tables/savings_goal_contributions_table.dart';
 import 'tables/loans_table.dart';
 import 'tables/recurring_transactions_table.dart';
-import 'tables/subscriptions_table.dart';
 
 part 'app_database.g.dart';
 
@@ -36,13 +35,12 @@ part 'app_database.g.dart';
   SavingsGoalContributions,
   Loans,
   RecurringTransactions,
-  Subscriptions,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration {
@@ -188,14 +186,74 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(loans, loans.frequencyInDays);
         }
 
-        // Migration from schema version 7 → 8: add subscriptions table
+        // Migration from schema version 7 → 8: add subscriptions table (raw SQL since table class is removed)
         if (from < 8) {
-          await m.createTable(subscriptions);
+          await m.database.customStatement('''
+            CREATE TABLE IF NOT EXISTS subscriptions (
+              id TEXT NOT NULL PRIMARY KEY,
+              account_id TEXT NOT NULL,
+              category_id TEXT,
+              amount INTEGER NOT NULL,
+              name TEXT NOT NULL,
+              merchant_keywords TEXT NOT NULL,
+              frequency TEXT NOT NULL,
+              interval_value INTEGER NOT NULL DEFAULT 1,
+              next_due_date DATETIME NOT NULL,
+              last_paid_date DATETIME,
+              total_paid INTEGER NOT NULL DEFAULT 0,
+              payment_count INTEGER NOT NULL DEFAULT 0,
+              status TEXT NOT NULL DEFAULT 'active',
+              tracker_id TEXT,
+              created_at DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now')),
+              updated_at DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now'))
+            );
+          ''');
         }
 
         // Migration from schema version 8 → 9: make accountId nullable in transactions
         if (from < 9) {
           await m.alterTable(TableMigration(transactions));
+        }
+
+        // Migration from schema version 9 → 10: consolidate subscriptions into recurring transactions
+        if (from < 10) {
+          // 1. Add columns to recurring_transactions table
+          await m.addColumn(recurringTransactions, recurringTransactions.merchantKeywords);
+          await m.addColumn(recurringTransactions, recurringTransactions.lastPaidAt);
+          await m.addColumn(recurringTransactions, recurringTransactions.totalPaid);
+          await m.addColumn(recurringTransactions, recurringTransactions.paymentCount);
+
+          // 2. Query existing subscriptions and insert into recurring transactions
+          try {
+            final rows = await m.database.customSelect('SELECT * FROM subscriptions').get();
+            for (final row in rows) {
+              await m.database.into(recurringTransactions).insert(RecurringTransactionsCompanion(
+                id: Value(row.read<String>('id')),
+                accountId: Value(row.read<String>('account_id')),
+                categoryId: Value(row.read<String?>('category_id')),
+                amount: Value(row.read<int>('amount')),
+                type: const Value('expense'),
+                description: Value(row.read<String>('name')),
+                frequency: Value(row.read<String>('frequency')),
+                intervalValue: Value(row.read<int>('interval_value')),
+                nextDate: Value(row.read<DateTime>('next_due_date')),
+                endDate: const Value.absent(),
+                status: Value(row.read<String>('status')),
+                trackerId: Value(row.read<String?>('tracker_id')),
+                merchantKeywords: Value(row.read<String>('merchant_keywords')),
+                lastPaidAt: Value(row.read<DateTime?>('last_paid_date')),
+                totalPaid: Value(row.read<int>('total_paid')),
+                paymentCount: Value(row.read<int>('payment_count')),
+                createdAt: Value(row.read<DateTime>('created_at')),
+                updatedAt: Value(row.read<DateTime>('updated_at')),
+              ));
+            }
+          } catch (e) {
+            developer.log('Subscription migration skipped or failed: $e', name: 'AppDatabase');
+          }
+
+          // 3. Drop legacy subscriptions table
+          await m.database.customStatement('DROP TABLE IF EXISTS subscriptions;');
         }
       },
     );
