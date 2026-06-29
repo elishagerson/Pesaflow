@@ -7,14 +7,12 @@ import 'package:pesaflow/presentation/state/palette_provider.dart';
 class _PaletteAction {
   final IconData icon;
   final String label;
-  final String? subtitle;
   final String route;
   final List<String> keywords;
 
   const _PaletteAction({
     required this.icon,
     required this.label,
-    this.subtitle,
     required this.route,
     this.keywords = const [],
   });
@@ -81,20 +79,19 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
     super.dispose();
   }
 
-  List<_PaletteAction> _filtered() {
-    final q = ref.read(paletteQueryProvider);
-    return _actions.where((a) => a.matches(q)).toList();
+  List<_PaletteAction> _filtered(String query) {
+    return _actions.where((a) => a.matches(query)).toList();
   }
 
   void _select(_PaletteAction action) {
-    ref.read(paletteVisibilityProvider.notifier).state = false;
-    ref.read(paletteQueryProvider.notifier).state = '';
+    ref.read(paletteVisibilityProvider.notifier).hide();
+    ref.read(paletteQueryProvider.notifier).clear();
     context.go(action.route);
   }
 
   void _dismiss() {
-    ref.read(paletteVisibilityProvider.notifier).state = false;
-    ref.read(paletteQueryProvider.notifier).state = '';
+    ref.read(paletteVisibilityProvider.notifier).hide();
+    ref.read(paletteQueryProvider.notifier).clear();
   }
 
   @override
@@ -102,7 +99,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final query = ref.watch(paletteQueryProvider);
-    final results = _filtered();
+    final results = _filtered(query);
 
     _selectedIndex = _selectedIndex.clamp(0, results.length - 1);
 
@@ -141,7 +138,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                           focusNode: _focusNode,
                           autofocus: true,
                           onChanged: (v) {
-                            ref.read(paletteQueryProvider.notifier).state = v;
+                            ref.read(paletteQueryProvider.notifier).update(v);
                             setState(() => _selectedIndex = 0);
                           },
                           onSubmitted: (_) {
@@ -194,14 +191,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                                         Icon(action.icon, size: 20, color: selected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                                         const SizedBox(width: kSpacing12),
                                         Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(action.label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
-                                              if (action.subtitle != null)
-                                                Text(action.subtitle!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
-                                            ],
-                                          ),
+                                          child: Text(action.label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
                                         ),
                                         Text('/>', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), fontFamily: 'monospace')),
                                       ],

@@ -333,11 +333,11 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
                     HardwareKeyboard.instance.isMetaPressed;
                 final paletteOpen = ref.read(paletteVisibilityProvider);
                 if (ctrl && event.logicalKey == LogicalKeyboardKey.keyK) {
-                  ref.read(paletteVisibilityProvider.notifier).state = !paletteOpen;
+                  ref.read(paletteVisibilityProvider.notifier).toggle();
                   return KeyEventResult.handled;
                 }
                 if (paletteOpen && event.logicalKey == LogicalKeyboardKey.escape) {
-                  ref.read(paletteVisibilityProvider.notifier).state = false;
+                  ref.read(paletteVisibilityProvider.notifier).hide();
                   return KeyEventResult.handled;
                 }
               }
