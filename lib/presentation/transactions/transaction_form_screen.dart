@@ -41,6 +41,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   final _descriptionController = TextEditingController();
   final _referenceController = TextEditingController();
 
+  static final Map<String, String?> _lastCategoryByType = {};
+
   bool _isEditMode = false;
   bool _isLoading = false;
   Transaction? _existingTransaction;
@@ -182,11 +184,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       }
       await repo.createTransaction(newTransaction);
 
+      HapticFeedback.mediumImpact();
+
       ref.invalidate(accountsStreamProvider);
       ref.invalidate(recentTransactionsStreamProvider);
       ref.invalidate(filteredTransactionsStreamProvider);
       ref.invalidate(netWorthProvider);
     } catch (e) {
+      HapticFeedback.heavyImpact();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save transaction: $e')),
@@ -595,6 +600,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
                               return TactileSpringContainer(
                                 onTap: () {
+                                  _lastCategoryByType[_transactionType] = cat.id;
                                   setSheetState(() => _selectedCategoryId = cat.id);
                                   setState(() => _selectedCategoryId = cat.id);
                                 },
@@ -869,7 +875,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               child: GestureDetector(
                                 onTap: () => setState(() {
                                   _transactionType = 'Expense';
-                                  _selectedCategoryId = null;
+                                  _selectedCategoryId = _lastCategoryByType['Expense'];
                                 }),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -900,7 +906,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               child: GestureDetector(
                                 onTap: () => setState(() {
                                   _transactionType = 'Income';
-                                  _selectedCategoryId = null;
+                                  _selectedCategoryId = _lastCategoryByType['Income'];
                                 }),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -931,7 +937,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               child: GestureDetector(
                                 onTap: () => setState(() {
                                   _transactionType = 'Transfer';
-                                  _selectedCategoryId = null;
+                                  _selectedCategoryId = _lastCategoryByType['Transfer'];
                                 }),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 10.0),

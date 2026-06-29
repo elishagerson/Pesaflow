@@ -133,28 +133,31 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing16, kSpacing16, kSpacing12),
-                        child: TextField(
-                          controller: _searchController,
-                          focusNode: _focusNode,
-                          autofocus: true,
-                          onChanged: (v) {
-                            ref.read(paletteQueryProvider.notifier).update(v);
-                            setState(() => _selectedIndex = 0);
-                          },
-                          onSubmitted: (_) {
-                            if (results.isNotEmpty) _select(results[_selectedIndex]);
-                          },
-                          style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
-                          decoration: InputDecoration(
-                            hintText: 'Search actions...',
-                            prefixIcon: Icon(Icons.search_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-                            suffixIcon: GestureDetector(
-                              onTap: _dismiss,
-                              child: Icon(Icons.close_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                        child: Semantics(
+                          label: 'Search actions',
+                          child: TextField(
+                            controller: _searchController,
+                            focusNode: _focusNode,
+                            autofocus: true,
+                            onChanged: (v) {
+                              ref.read(paletteQueryProvider.notifier).update(v);
+                              setState(() => _selectedIndex = 0);
+                            },
+                            onSubmitted: (_) {
+                              if (results.isNotEmpty) _select(results[_selectedIndex]);
+                            },
+                            style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              hintText: 'Search actions...',
+                              prefixIcon: Icon(Icons.search_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                              suffixIcon: GestureDetector(
+                                onTap: _dismiss,
+                                child: Icon(Icons.close_rounded, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                              ),
+                              filled: true,
+                              fillColor: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                             ),
-                            filled: true,
-                            fillColor: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                           ),
                         ),
                       ),
@@ -172,9 +175,12 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                             itemBuilder: (_, i) {
                               final action = results[i];
                               final selected = i == _selectedIndex;
-                              return Material(
-                                color: Colors.transparent,
-                                child: InkWell(
+                              return Semantics(
+                                button: true,
+                                label: action.label,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
                                   borderRadius: BorderRadius.circular(12),
                                   onTap: () => _select(action),
                                   onHover: (_) => setState(() => _selectedIndex = i),
@@ -198,7 +204,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> with SingleTick
                                     ),
                                   ),
                                 ),
-                              );
+                              ));
                             },
                           ),
                         ),

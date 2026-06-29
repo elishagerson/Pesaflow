@@ -87,13 +87,16 @@ class IosTabBar extends StatelessWidget {
                 final isSelected = tab.routeIndex == selectedIndex;
 
                 if (tab.isCenter) {
-                  return GestureDetector(
-                    onTap: () {
-                      HapticFeedback.mediumImpact();
-                      onDestinationSelected(tab.routeIndex);
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: AnimatedContainer(
+                  return Semantics(
+                    label: tab.label,
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        onDestinationSelected(tab.routeIndex);
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeOutBack,
                       width: minimized ? 36 : 54,
@@ -107,7 +110,7 @@ class IosTabBar extends StatelessWidget {
                                 ? Colors.white.withValues(alpha: 0.06)
                                 : Colors.black.withValues(alpha: 0.04)),
                       ),
-                      child: Center(
+                        child: Center(
                         child: Icon(
                           tab.icon,
                           color: isSelected
@@ -119,17 +122,21 @@ class IosTabBar extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
                   );
                 }
 
                 return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      onDestinationSelected(tab.routeIndex);
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: Column(
+                  child: Semantics(
+                    label: tab.label,
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onDestinationSelected(tab.routeIndex);
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -176,7 +183,7 @@ class IosTabBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                );
+                  ));
               }).toList(),
             ),
           ),

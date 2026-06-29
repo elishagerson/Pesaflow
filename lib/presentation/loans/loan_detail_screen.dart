@@ -1248,6 +1248,7 @@ class LoanDetailScreen extends ConsumerWidget {
 
       if (context.mounted) {
         Navigator.of(context).pop();
+        HapticFeedback.mediumImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
@@ -1256,6 +1257,7 @@ class LoanDetailScreen extends ConsumerWidget {
         );
       }
     } catch (e) {
+      HapticFeedback.heavyImpact();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
@@ -1615,6 +1617,7 @@ class LoanDetailScreen extends ConsumerWidget {
 
       if (context.mounted) {
         Navigator.of(context).pop();
+        HapticFeedback.mediumImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Offline payment of ${CurrencyFormatter.formatCents(amount)} recorded'),
@@ -1623,6 +1626,7 @@ class LoanDetailScreen extends ConsumerWidget {
         );
       }
     } catch (e) {
+      HapticFeedback.heavyImpact();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Payment failed: $e'), backgroundColor: const Color(0xFFE53935)),
@@ -1664,11 +1668,28 @@ class LoanDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  tx.description.isNotEmpty ? tx.description : (tx.type == 'income' ? 'Payment Received' : 'Payment Sent'),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        tx.description.isNotEmpty ? tx.description : (tx.type == 'income' ? 'Payment Received' : 'Payment Sent'),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (tx.accountId == null) ...[
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text('Offline', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: isDark ? Colors.grey[400] : Colors.grey[600])),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(

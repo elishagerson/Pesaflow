@@ -30,17 +30,20 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Semantics(
-              label: title,
+              excludeSemantics: true,
               child: Icon(icon, size: iconSize, color: theme.colorScheme.primary.withValues(alpha: 0.4)),
             ),
             SizedBox(height: context.isCompactView ? 16 : 24),
-            Text(
-              title,
-              style: context.titleMedium.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: context.titleMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
               SizedBox(height: context.isCompactView ? 8 : 12),

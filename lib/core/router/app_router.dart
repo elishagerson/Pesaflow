@@ -136,18 +136,53 @@ class _SpringSlideTransitionState extends State<_SpringSlideTransition>
   }
 }
 
-/// Page-level transition using a `SpringSimulation` for continuous physics.
-/// Incoming page slides from 30% right; outgoing page scales+fades for depth.
-Page<dynamic> _springSlidePage(Widget child) {
+Page<dynamic> _springSlidePage(Widget page) {
   return CustomTransitionPage(
-    child: child,
+    key: ValueKey(page.runtimeType),
+    child: page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return _SpringSlideTransition(
-        animation: animation,
-        secondaryAnimation: secondaryAnimation,
-        child: child,
+      const begin = Offset(0.0, 0.05);
+      const end = Offset.zero;
+      const curve = Curves.easeOutCubic;
+      final tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      final fadeTween =
+          Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: FadeTransition(
+          opacity: animation.drive(fadeTween),
+          child: child,
+        ),
       );
     },
+    reverseTransitionDuration: const Duration(milliseconds: 200),
+  );
+}
+
+/// Reversed variant for back-navigation — fades out with a slight downward slide
+/// using an ease-in curve so the exit feels distinct from the entrance.
+Page<dynamic> _springSlidePageReversed(Widget page) {
+  return CustomTransitionPage(
+    key: ValueKey(page.runtimeType),
+    child: page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset.zero;
+      const end = Offset(0.0, 0.04);
+      const curve = Curves.easeInCubic;
+      final tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      final fadeTween =
+          Tween<double>(begin: 1.0, end: 0.0).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: FadeTransition(
+          opacity: animation.drive(fadeTween),
+          child: child,
+        ),
+      );
+    },
+    reverseTransitionDuration: const Duration(milliseconds: 200),
   );
 }
 

@@ -154,8 +154,17 @@ class GlassCard extends StatelessWidget {
     }
 
     if (onTap != null) {
-      return TactileSpringContainer(onTap: onTap, child: body);
+      return Semantics(
+        container: true,
+        label: 'Card',
+        button: true,
+        child: TactileSpringContainer(onTap: onTap, child: body),
+      );
     }
-    return body;
+    return Semantics(
+      container: true,
+      label: 'Card',
+      child: body,
+    );
   }
 }
