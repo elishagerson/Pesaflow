@@ -431,7 +431,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         width: 105,
         padding: const EdgeInsets.symmetric(
           horizontal: kSpacing8,
-          vertical: kSpacing12,
+          vertical: kSpacing8,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -997,7 +997,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           );
         }
         return SizedBox(
-          height: 132,
+          height: 140,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
