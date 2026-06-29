@@ -622,32 +622,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Row(
                 children: [
                   // Donut Pie Chart (Income vs Expense)
-                  SizedBox(
-                    height: 84,
-                    width: 84,
-                    child: PieChart(
-                      PieChartData(
-                        startDegreeOffset: -90,
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 26,
-                        sections: [
-                          PieChartSectionData(
-                            value: incomePct,
-                            color: isDark
-                                ? AppTheme.incomeColorDark
-                                : AppTheme.incomeColor,
-                            radius: 10,
-                            showTitle: false,
-                          ),
-                          PieChartSectionData(
-                            value: expensePct,
-                            color: isDark
-                                ? AppTheme.expenseColorDark
-                                : AppTheme.expenseColor,
-                            radius: 10,
-                            showTitle: false,
-                          ),
-                        ],
+                  Semantics(
+                    label: 'Monthly cashflow ratio: ${(incomePct).round()}% income vs ${(expensePct).round()}% expense.',
+                    excludeSemantics: true,
+                    child: SizedBox(
+                      height: 84,
+                      width: 84,
+                      child: PieChart(
+                        PieChartData(
+                          startDegreeOffset: -90,
+                          sectionsSpace: 2,
+                          centerSpaceRadius: 26,
+                          sections: [
+                            PieChartSectionData(
+                              value: incomePct,
+                              color: isDark
+                                  ? AppTheme.incomeColorDark
+                                  : AppTheme.incomeColor,
+                              radius: 10,
+                              showTitle: false,
+                            ),
+                            PieChartSectionData(
+                              value: expensePct,
+                              color: isDark
+                                  ? AppTheme.expenseColorDark
+                                  : AppTheme.expenseColor,
+                              radius: 10,
+                              showTitle: false,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -1140,53 +1144,57 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 child: Row(
                   children: [
-                    SizedBox(
-                      height: 52,
-                      width: 52,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          PieChart(
-                            PieChartData(
-                              startDegreeOffset: -90,
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 18,
-                              sections: [
-                                PieChartSectionData(
-                                  value: pct * 100,
-                                  color: goalColor,
-                                  radius: 4,
-                                  showTitle: false,
-                                ),
-                                PieChartSectionData(
-                                  value: (1.0 - pct) * 100,
-                                  color: goalColor.withValues(alpha: 0.12),
-                                  radius: 4,
-                                  showTitle: false,
-                                ),
-                              ],
+                    Semantics(
+                      label: 'Savings goal progress: ${(pct * 100).round()}% completed.',
+                      excludeSemantics: true,
+                      child: SizedBox(
+                        height: 52,
+                        width: 52,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            PieChart(
+                              PieChartData(
+                                startDegreeOffset: -90,
+                                sectionsSpace: 0,
+                                centerSpaceRadius: 18,
+                                sections: [
+                                  PieChartSectionData(
+                                    value: pct * 100,
+                                    color: goalColor,
+                                    radius: 4,
+                                    showTitle: false,
+                                  ),
+                                  PieChartSectionData(
+                                    value: (1.0 - pct) * 100,
+                                    color: goalColor.withValues(alpha: 0.12),
+                                    radius: 4,
+                                    showTitle: false,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Icon(
-                            goal.icon == 'savings'
-                                ? PesaFlowIcons.savings
-                                : goal.icon == 'laptop'
-                                ? Icons.laptop_chromebook_rounded
-                                : goal.icon == 'flight'
-                                ? Icons.flight_takeoff_rounded
-                                : goal.icon == 'home'
-                                ? Icons.home_rounded
-                                : goal.icon == 'car'
-                                ? Icons.directions_car_rounded
-                                : goal.icon == 'school'
-                                ? Icons.school_rounded
-                                : goal.icon == 'heart'
-                                ? Icons.favorite_rounded
-                                : PesaFlowIcons.savings,
-                            color: goalColor,
-                            size: 16,
-                          ),
-                        ],
+                            Icon(
+                              goal.icon == 'savings'
+                                  ? PesaFlowIcons.savings
+                                  : goal.icon == 'laptop'
+                                  ? Icons.laptop_chromebook_rounded
+                                  : goal.icon == 'flight'
+                                  ? Icons.flight_takeoff_rounded
+                                  : goal.icon == 'home'
+                                  ? Icons.home_rounded
+                                  : goal.icon == 'car'
+                                  ? Icons.directions_car_rounded
+                                  : goal.icon == 'school'
+                                  ? Icons.school_rounded
+                                  : goal.icon == 'heart'
+                                  ? Icons.favorite_rounded
+                                  : PesaFlowIcons.savings,
+                              color: goalColor,
+                              size: 16,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(width: kSpacing16),

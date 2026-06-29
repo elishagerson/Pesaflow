@@ -19,6 +19,7 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
