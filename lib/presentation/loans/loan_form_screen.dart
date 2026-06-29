@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -159,7 +160,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -190,7 +191,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 1,
                 child: TextField(
@@ -209,7 +210,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 2,
                 child: TextField(
@@ -228,7 +229,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   textCapitalization: TextCapitalization.words,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 3,
                 child: TextField(
@@ -246,7 +247,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 4,
                 child: InkWell(
@@ -272,7 +273,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 5,
                 child: TextField(
@@ -291,7 +292,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 6,
                 child: InkWell(
@@ -331,14 +332,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: kSpacing32),
               StaggeredFadeSlide(
                 index: 7,
                 child: TactileSpringContainer(
                   onTap: _submit,
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),

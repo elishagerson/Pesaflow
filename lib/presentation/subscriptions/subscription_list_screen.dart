@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -47,9 +48,9 @@ class SubscriptionListScreen extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.subscriptions_outlined, size: 64, color: isDark ? Colors.grey[600] : Colors.grey[300]),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Text('No subscriptions yet', style: TextStyle(fontSize: 17, color: isDark ? Colors.grey[400] : Colors.grey[500])),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: kSpacing8),
                           TextButton(
                             onPressed: () => context.push('/subscriptions/add'),
                             child: const Text('Add a subscription'),
@@ -59,15 +60,15 @@ class SubscriptionListScreen extends ConsumerWidget {
                     ),
                   )
                 : ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                    padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing64),
                     children: [
                       if (due.isNotEmpty)
                         StaggeredFadeSlide(
                           index: 0,
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.only(bottom: kSpacing12),
                             child: Container(
-                              padding: const EdgeInsets.all(14),
+                              padding: const EdgeInsets.all(kSpacing14),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFF6B35).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -76,7 +77,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                               child: Row(
                                 children: [
                                   const Icon(Icons.warning_rounded, color: Color(0xFFFF6B35), size: 20),
-                                  const SizedBox(width: 10),
+                                  const SizedBox(width: kSpacing10),
                                   Text('${due.length} subscription${due.length == 1 ? '' : 's'} due',
                                       style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                                 ],
@@ -113,7 +114,7 @@ class SubscriptionListScreen extends ConsumerWidget {
         : null;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: kSpacing8),
       decoration: BoxDecoration(
         color: isDark ? AppTheme.surfaceContainerDark : Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -126,18 +127,18 @@ class SubscriptionListScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         onTap: () => context.push('/subscriptions/${sub.id}'),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(kSpacing14),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: catColor != null ? catColor.withValues(alpha: 0.15) : (isDue ? const Color(0xFFFF6B35).withValues(alpha: 0.15) : statusColor.withValues(alpha: 0.15)),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.subscriptions_rounded, color: catColor ?? (isDue ? const Color(0xFFFF6B35) : statusColor), size: 20),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: kSpacing14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,12 +147,12 @@ class SubscriptionListScreen extends ConsumerWidget {
                       children: [
                         if (catColor != null) ...[
                           Container(width: 8, height: 8, decoration: BoxDecoration(color: catColor, shape: BoxShape.circle)),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: kSpacing6),
                         ],
                         Expanded(child: Text(sub.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(freqLabel, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[400] : Colors.grey[600])),
                   ],
                 ),
@@ -161,7 +162,7 @@ class SubscriptionListScreen extends ConsumerWidget {
                 children: [
                   Text(CurrencyFormatter.formatCents(sub.amount),
                       style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: kSpacing2),
                   Text(
                     sub.status == 'active' ? (isDue ? 'Due' : 'Active') : 'Paused',
                     style: TextStyle(fontSize: 11, color: isDue ? const Color(0xFFFF6B35) : statusColor, fontWeight: FontWeight.w600),

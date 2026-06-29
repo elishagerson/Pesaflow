@@ -46,7 +46,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildActiveParserBadge(ThemeData theme, bool isDark, String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
       decoration: BoxDecoration(
         color: isDark ? const Color(0x0AFFFFFF) : const Color(0x0A000000),
         borderRadius: BorderRadius.circular(6),
@@ -63,7 +63,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             size: 10,
             color: const Color(0xFF609F8A),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: kSpacing4),
           Text(
             label,
             style: theme.textTheme.labelSmall?.copyWith(
@@ -123,7 +123,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               ModernDropdown<String>(
                 labelText: 'Account Type',
                 value: accountType,
@@ -167,7 +167,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
               ),
               if (accountType == 'Mobile Money') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 ModernDropdown<String>(
                   labelText: 'Carrier Provider',
                   value: provider ?? 'M-Pesa_TZ',
@@ -208,7 +208,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 TextField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
@@ -243,7 +243,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ],
               if (accountType == 'Bank') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 ModernDropdown<String>(
                   labelText: 'Bank Brand',
                   value: provider ?? 'NMB',
@@ -278,7 +278,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   },
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               TextField(
                 controller: balanceController,
                 keyboardType: const TextInputType.numberWithOptions(
@@ -404,14 +404,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
-      margin: const EdgeInsets.only(right: 12),
+      margin: const EdgeInsets.only(right: kSpacing12),
       elevation: CardElevation.low,
       accentColor: hexToColor(bp.category.color),
       onTap: () => context.go('/budgets/${bp.budget.id}'),
       padding: EdgeInsets.zero,
       child: Container(
         width: 105,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -456,7 +456,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: kSpacing10),
               Text(
                 bp.budget.name,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -467,7 +467,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: kSpacing4),
               Text(
                 remainingText,
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -496,13 +496,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         
         if (income == 0 && expense == 0) {
           return GlassCard(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(kSpacing20),
             borderRadius: AppTheme.radiusCard,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(kSpacing16),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
@@ -513,7 +513,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     size: 32,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 Text(
                   'No transactions yet this month',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -521,7 +521,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: kSpacing8),
                 Text(
                   'Start automatic SMS synchronization or log transactions manually to view your financial charts here.',
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -543,7 +543,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final savingsPct = income > 0 ? (netSavings / income * 100).round() : 0;
 
         return GlassCard(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(kSpacing18),
           borderRadius: AppTheme.radiusCard,
           elevation: CardElevation.medium,
           accentColor: theme.colorScheme.primary,
@@ -577,7 +577,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   // Compact Net Savings indicator badge
                   if (income > 0)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
                       decoration: BoxDecoration(
                         color: netSavings >= 0
                             ? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor).withValues(alpha: 0.12)
@@ -598,7 +598,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: kSpacing18),
               Row(
                 children: [
                   // Donut Pie Chart (Income vs Expense)
@@ -627,7 +627,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                   // Metrics
                   Expanded(
                     child: Column(
@@ -647,7 +647,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: kSpacing8),
                                 Text(
                                   'Income',
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -668,7 +668,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: kSpacing8),
                         // Expense row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -683,7 +683,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: kSpacing8),
                                 Text(
                                   'Expense',
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -704,13 +704,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: kSpacing8),
                         Divider(
                           height: 0.5,
                           thickness: 0.5,
                           color: isDark ? const Color(0x1AFFFFFF) : const Color(0x1A000000),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: kSpacing8),
                         // Net Balance row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -727,7 +727,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: kSpacing8),
                                 Text(
                                   netSavings >= 0 ? 'Saved' : 'Deficit',
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -759,11 +759,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 120),
       ),
       error: (_, _) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 120),
       ),
     );
@@ -772,7 +772,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget _buildSmsReviewCard(ThemeData theme, bool isDark, int pendingReviewCount) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(kSpacing16),
       decoration: BoxDecoration(
         color: isDark ? AppTheme.surfaceHighDark : AppTheme.bgLight,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -790,7 +790,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Row(
                 children: [
                   Icon(Icons.message_rounded, size: 14, color: const Color(0xFF609F8A)),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: kSpacing6),
                   Text('SMS AUTO-TRACKING', style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -798,7 +798,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
                 decoration: BoxDecoration(
                   color: pendingReviewCount > 0
                       ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
@@ -814,7 +814,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: kSpacing10),
           Text(
             'Review parsed mobile money & bank transactions from your SMS.',
             style: theme.textTheme.labelSmall?.copyWith(fontSize: 11, height: 1.3,
@@ -822,9 +822,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: kSpacing14),
           Divider(height: 0.5, thickness: 0.5, color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000)),
-          const SizedBox(height: 10),
+          const SizedBox(height: kSpacing10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -839,11 +839,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: kSpacing8),
               TactileSpringContainer(
                 onTap: () => context.push('/sms-review'),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing6),
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE5E5EA),
                     borderRadius: BorderRadius.circular(100),
@@ -855,7 +855,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: isDark ? Colors.white : theme.colorScheme.onSurface,
                         fontWeight: FontWeight.bold, fontSize: 11,
                       )),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: kSpacing2),
                       Icon(Icons.chevron_right_rounded, size: 12,
                         color: isDark ? Colors.white : Colors.black),
                     ],
@@ -909,16 +909,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               GlassCard(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(kSpacing24),
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.low,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(kSpacing14),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.08),
                         shape: BoxShape.circle,
@@ -929,14 +929,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         size: 28,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: kSpacing16),
                     Text(
                       'No Active Budgets',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     Text(
                       'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -985,7 +985,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             SizedBox(
               height: 132,
               child: ListView.builder(
@@ -1017,11 +1017,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 140),
       ),
       error: (_, _) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 140),
       ),
     );
@@ -1043,7 +1043,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 : (Icons.check_circle_rounded, 'Last saved $days days ago.', AppTheme.transferColorDark);
 
         return Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(kSpacing14),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1052,7 +1052,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Row(
             children: [
               Icon(icon, color: color, size: 20),
-              const SizedBox(width: 12),
+              const SizedBox(width: kSpacing12),
               Expanded(
                 child: Text(
                   message,
@@ -1067,11 +1067,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 80),
       ),
       error: (_, _) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 80),
       ),
     );
@@ -1127,7 +1127,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: kSpacing12),
               GestureDetector(
                 onTap: () {
                   HapticFeedback.mediumImpact();
@@ -1135,7 +1135,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(kSpacing16),
                   decoration: BoxDecoration(
                     color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1193,7 +1193,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: kSpacing16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1202,7 +1202,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               goal.name,
                               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: kSpacing4),
                             Text(
                               'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
                               style: theme.textTheme.labelSmall?.copyWith(
@@ -1223,7 +1223,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           Text(
                             'Completed',
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -1241,11 +1241,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 100),
       ),
       error: (_, _) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 100),
       ),
     );
@@ -1288,7 +1288,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 paidLoansCountAsync.when(
                   data: (count) => count > 0
                       ? Padding(
-                          padding: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.only(right: kSpacing8),
                           child: Text(
                             '$count paid',
                             style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF609F8A), fontWeight: FontWeight.w600),
@@ -1306,7 +1306,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: kSpacing12),
         activeLoansAsync.when(
           data: (activeLoans) {
             if (activeLoans.isEmpty) {
@@ -1316,7 +1316,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     onTap: () => context.go('/loans'),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(kSpacing20),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -1335,14 +1335,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(kSpacing10),
                             decoration: BoxDecoration(
                               color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.check_circle_rounded, color: Color(0xFF609F8A), size: 22),
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: kSpacing14),
                           Expanded(
                             child: Text(
                               'No active debt. Keep it that way.',
@@ -1362,12 +1362,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   paidLoansCountAsync.when(
                     data: (paidCount) => paidCount > 0
                         ? Padding(
-                            padding: const EdgeInsets.only(top: 8),
+                            padding: const EdgeInsets.only(top: kSpacing8),
                             child: GestureDetector(
                               onTap: () => context.go('/loans'),
                               child: Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.all(12),
+                                padding: const EdgeInsets.all(kSpacing12),
                                 decoration: BoxDecoration(
                                   color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
                                   borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1379,7 +1379,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 child: Row(
                                   children: [
                                     Icon(Icons.history_rounded, size: 16, color: const Color(0xFF609F8A)),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: kSpacing8),
                                     Text(
                                       '$paidCount loan${paidCount == 1 ? '' : 's'} paid off',
                                       style: theme.textTheme.bodySmall?.copyWith(
@@ -1422,7 +1422,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(kSpacing16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -1443,7 +1443,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(kSpacing10),
                             decoration: BoxDecoration(
                               color: severityColor.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
@@ -1454,7 +1454,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               size: 22,
                             ),
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: kSpacing14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1467,7 +1467,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     letterSpacing: -0.5,
                                   ),
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: kSpacing2),
                                 Text(
                                   '$severityLevel DEBT BURDEN',
                                   style: theme.textTheme.labelSmall?.copyWith(
@@ -1480,7 +1480,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing4),
                             decoration: BoxDecoration(
                               color: severityColor.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(100),
@@ -1495,7 +1495,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 14),
+                      const SizedBox(height: kSpacing14),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: SizedBox(
@@ -1529,7 +1529,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1555,15 +1555,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: kSpacing8),
                 // Loan burden warning
                 recentLoanCountAsync.when(
                   data: (count) => count >= 3
                       ? Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.only(bottom: kSpacing8),
                           child: Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(kSpacing12),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -1582,14 +1582,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(6),
+                                  padding: const EdgeInsets.all(kSpacing6),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFFF6B35).withValues(alpha: 0.15),
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(Icons.speed_rounded, color: Color(0xFFFF6B35), size: 16),
                                 ),
-                                const SizedBox(width: 10),
+                                const SizedBox(width: kSpacing10),
                                 Expanded(
                                   child: Text(
                                     '$count active loans in 3 months — consider reducing new borrowing',
@@ -1610,8 +1610,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   return GestureDetector(
                     onTap: () => context.go('/loans/${loan.id}'),
                     child: Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(14),
+                      margin: const EdgeInsets.only(bottom: kSpacing8),
+                      padding: const EdgeInsets.all(kSpacing14),
                       decoration: BoxDecoration(
                         color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
                         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1626,7 +1626,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(6),
+                                padding: const EdgeInsets.all(kSpacing6),
                                 decoration: BoxDecoration(
                                   color: loanSeverity.withValues(alpha: 0.15),
                                   shape: BoxShape.circle,
@@ -1637,7 +1637,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   size: 14,
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: kSpacing10),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1672,7 +1672,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: SizedBox(
@@ -1743,7 +1743,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               top: Radius.circular(24.0),
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1754,7 +1754,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Container(
                   width: 36,
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 20.0),
+                  margin: const EdgeInsets.only(bottom: kSpacing20),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
@@ -1779,7 +1779,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               trackersAsync.when(
                 data: (trackersList) {
                   return ListView.builder(
@@ -1799,8 +1799,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          margin: const EdgeInsets.only(bottom: 8.0),
-                          padding: const EdgeInsets.all(16.0),
+                          margin: const EdgeInsets.only(bottom: kSpacing8),
+                          padding: const EdgeInsets.all(kSpacing16),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? itemColor.withValues(alpha: 0.08)
@@ -1821,7 +1821,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
                                   color: itemColor.withValues(alpha: 0.12),
                                   shape: BoxShape.circle,
@@ -1832,7 +1832,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   size: 20,
                                 ),
                               ),
-                              const SizedBox(width: 14),
+                              const SizedBox(width: kSpacing14),
                               Expanded(
                                 child: Text(
                                   item.name,
@@ -1852,7 +1852,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 },
                               ),
                               if (isSelected) ...[
-                                const SizedBox(width: 8),
+                                const SizedBox(width: kSpacing8),
                                 Icon(
                                   Icons.check_circle_rounded,
                                   color: itemColor,
@@ -1869,7 +1869,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, _) => Text('Error loading workspaces: $err'),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
             ],
           ),
               ),
@@ -1943,7 +1943,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               Text(
                 'Select Icon',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -1951,7 +1951,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   fontSize: 13,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: iconsList.map((ico) {
@@ -1959,7 +1959,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   return GestureDetector(
                     onTap: () => setState(() => selectedIcon = ico),
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: isSel
                             ? theme.colorScheme.primary.withValues(alpha: 0.12)
@@ -1983,7 +1983,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               Text(
                 'Select Color',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -1991,7 +1991,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   fontSize: 13,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: colorsList.map((col) {
@@ -2030,7 +2030,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -2140,7 +2140,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               Text(
                 'Select Icon',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -2148,7 +2148,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   fontSize: 13,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: iconsList.map((ico) {
@@ -2156,7 +2156,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   return GestureDetector(
                     onTap: () => setState(() => selectedIcon = ico),
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: isSel
                             ? theme.colorScheme.primary.withValues(alpha: 0.12)
@@ -2180,7 +2180,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               Text(
                 'Select Color',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -2188,7 +2188,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   fontSize: 13,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: colorsList.map((col) {
@@ -2238,7 +2238,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -2364,24 +2364,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               GestureDetector(
                 onTap: () => context.push('/subscriptions'),
                 child: GlassCard(
                   borderRadius: AppTheme.radiusCard,
                   elevation: CardElevation.low,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(kSpacing12),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(Icons.subscriptions_rounded, color: theme.colorScheme.primary, size: 24),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: kSpacing16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2393,7 +2393,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 color: isDark ? Colors.white : theme.colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: kSpacing4),
                             Text(
                               'Log recurring payments like streaming, utility bills, or gym memberships to get ahead of renewals.',
                               style: theme.textTheme.bodySmall?.copyWith(
@@ -2454,7 +2454,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     if (due.isNotEmpty)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing4),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(100),
@@ -2476,14 +2476,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
 
             // ── Hero total card ──
             if (totals.monthly > 0)
               GlassCard(
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.medium,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(kSpacing16),
                 margin: const EdgeInsets.only(bottom: 12),
                 child: Column(
                   children: [
@@ -2494,14 +2494,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _cycleChip(theme, '${_fmtShort(totals.daily)}/day', isDark),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: kSpacing8),
                         _cycleChip(theme, '${_fmtShort(totals.weekly)}/wk', isDark),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: kSpacing8),
                         _cycleChip(theme, '${_fmtShort(totals.yearly)}/yr', isDark),
                       ],
                     ),
@@ -2512,11 +2512,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             // ── Upcoming renewals ──
             if (upcoming.isNotEmpty) ...[
               Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: kSpacing8),
                 child: Row(
                   children: [
                     Icon(Icons.event_rounded, size: 14, color: isDark ? Colors.grey[400] : Colors.grey[600]),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: kSpacing6),
                     Text(
                       'UPCOMING RENEWALS',
                       style: theme.textTheme.labelSmall?.copyWith(
@@ -2534,7 +2534,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: GlassCard(
                   borderRadius: AppTheme.radiusCard,
                   elevation: CardElevation.low,
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing10),
                   child: Row(
                     children: [
                       Container(
@@ -2545,7 +2545,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: kSpacing10),
                       Expanded(
                         child: Text(
                           sub.name,
@@ -2558,7 +2558,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         _formatDate(sub.nextDueDate),
                         style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: kSpacing8),
                       AmountText(
                         amountInCents: sub.amount,
                         type: AmountType.expense,
@@ -2568,20 +2568,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
               )),
-              const SizedBox(height: 4),
+              const SizedBox(height: kSpacing4),
             ],
 
             // ── Remaining subscription tiles (excluding those in upcoming) ──
             ...remaining.take(3).map((sub) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: kSpacing8),
               child: GlassCard(
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.low,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing12),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: (catColor(sub.categoryId) ?? const Color(0xFF609F8A)).withValues(alpha: 0.12),
                         shape: BoxShape.circle,
@@ -2592,7 +2592,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: catColor(sub.categoryId) ?? const Color(0xFF609F8A),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: kSpacing12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2601,7 +2601,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             children: [
                               if (catColor(sub.categoryId) != null) ...[
                                 Container(width: 6, height: 6, decoration: BoxDecoration(color: catColor(sub.categoryId), shape: BoxShape.circle)),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: kSpacing6),
                               ],
                               Expanded(
                                 child: Text(
@@ -2616,7 +2616,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           Text(
                             frequencyLabel(sub.frequency, sub.intervalValue),
                             style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
@@ -2647,7 +2647,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _cycleChip(ThemeData theme, String text, bool isDark) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
       decoration: BoxDecoration(
         color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(100),
@@ -2713,17 +2713,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
             ...limited.map((r) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: kSpacing8),
               child: GlassCard(
                 borderRadius: AppTheme.radiusCard,
                 elevation: CardElevation.low,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing12),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: (r.type == 'income' ? const Color(0xFF609F8A) : const Color(0xFFE53935)).withValues(alpha: 0.12),
                         shape: BoxShape.circle,
@@ -2734,7 +2734,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: r.type == 'income' ? const Color(0xFF609F8A) : const Color(0xFFE53935),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: kSpacing12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2748,7 +2748,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           Text(
                             '${r.frequency} · ${r.nextDate.day}/${r.nextDate.month}',
                             style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
@@ -2882,7 +2882,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         leading: TactileSpringContainer(
           onTap: () => _showWorkspaceSelectorSheet(context),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing8),
             decoration: BoxDecoration(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.08)
@@ -2900,7 +2900,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: kSpacing8),
                 Text(
                   trackerName,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -2909,7 +2909,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: kSpacing4),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 14,
@@ -2925,7 +2925,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           TactileSpringContainer(
             onTap: () => context.go('/settings'),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.08)
@@ -2939,14 +2939,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: kSpacing8),
           TactileSpringContainer(
             onTap: () => context.push('/sms-review'),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
                     color: isDark
                         ? Colors.white.withValues(alpha: 0.08)
@@ -2964,7 +2964,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     right: -2,
                     top: -2,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing4, vertical: kSpacing2),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFF453A),
                         borderRadius: BorderRadius.circular(100),
@@ -3015,7 +3015,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 index: 0,
                 child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(kSpacing24),
                 decoration: BoxDecoration(
                   gradient: isDark
                       ? LinearGradient(
@@ -3071,7 +3071,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         // Dynamic Spent Progress Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing4),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(100),
@@ -3092,7 +3092,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: kSpacing6),
                               Text(
                                 '${(overallPct * 100).round()}% SPENT',
                                 style: theme.textTheme.labelSmall?.copyWith(
@@ -3107,7 +3107,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: kSpacing24),
                     // Title Label & Main Value
                     Row(
                       children: [
@@ -3119,7 +3119,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: kSpacing6),
                         Text(
                           _selectedAccountId != null
                               ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
@@ -3133,7 +3133,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     AmountText(
                       amountInCents: _selectedAccountId != null
                           ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
@@ -3146,7 +3146,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         letterSpacing: -1.0,
                       ),
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: kSpacing24),
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
@@ -3155,7 +3155,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     
                     // Dynamic scrolling Account Pills in the Balance Hero Card
                     if (accounts.isNotEmpty) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: kSpacing18),
                       SizedBox(
                         height: 36,
                         child: ListView.builder(
@@ -3183,8 +3183,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 6,
+                                    horizontal: kSpacing14,
+                                    vertical: kSpacing6,
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
@@ -3208,7 +3208,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             ? (isDark ? Colors.white : trackerColor)
                                             : heroTextColor,
                                       ),
-                                      const SizedBox(width: 6),
+                                      const SizedBox(width: kSpacing6),
                                       Text(
                                         account.name,
                                         style: theme.textTheme.bodySmall?.copyWith(
@@ -3218,7 +3218,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               : heroTextColor,
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       Text(
                                         _formatCompact(account.balance),
                                         style: theme.textTheme.labelSmall?.copyWith(
@@ -3238,7 +3238,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ),
                     ] else ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: kSpacing18),
                       Center(
                         child: Text(
                           'No active accounts. Tap Add Account below to start.',
@@ -3250,7 +3250,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
 
               // ── 3. High-Contrast Action Buttons ──
               StaggeredFadeSlide(
@@ -3261,7 +3261,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     child: TactileSpringContainer(
                       onTap: () => context.go('/transactions/add'),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                         decoration: BoxDecoration(
                           color: isDark ? const Color(0xFF1B1C22).withValues(alpha: 0.8) : Colors.black,
                           borderRadius: BorderRadius.circular(100),
@@ -3285,7 +3285,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               color: isDark ? trackerColor : Colors.white,
                               size: 20,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: kSpacing6),
                             Text(
                               'Add transaction',
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -3298,12 +3298,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                   Expanded(
                     child: TactileSpringContainer(
                       onTap: () => _showAddAccountDialog(context),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                         decoration: BoxDecoration(
                           color: isDark ? const Color(0xFF1B1C22).withValues(alpha: 0.8) : const Color(0xFFE5E5EA),
                           borderRadius: BorderRadius.circular(100),
@@ -3320,7 +3320,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               color: isDark ? Colors.white : Colors.black,
                               size: 18,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: kSpacing6),
                             Text(
                               'Add account',
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -3336,14 +3336,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ],
               ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // ── 3. Monthly Overview — "How your money moved" ──
               StaggeredFadeSlide(
                 index: 2,
                 child: _buildMonthlyOverview(theme),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // ── 4. Recent Activity — "The transactions behind it" ──
               StaggeredFadeSlide(
@@ -3406,7 +3406,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
               ] else ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: kSpacing12),
               ],
 
               recentTransAsync.when(
@@ -3421,7 +3421,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   if (filteredTransactions.isEmpty) {
                     return Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 36.0),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing40),
                       decoration: BoxDecoration(
                         color: theme.brightness == Brightness.dark
                             ? AppTheme.surfaceContainerDark
@@ -3443,7 +3443,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             color: theme.colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.4),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: kSpacing12),
                           Text(
                             'No transactions found.',
                             style: theme.textTheme.titleSmall?.copyWith(
@@ -3451,7 +3451,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: kSpacing4),
                           Text(
                             _selectedAccountId == null
                                 ? 'Your offline financial logs will display here.'
@@ -3513,8 +3513,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: TactileSpringContainer(
                             onTap: () => context.push('/transactions/${trans.id}'),
                             child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 6.0),
-                            padding: const EdgeInsets.all(16.0),
+                              margin: const EdgeInsets.symmetric(vertical: kSpacing6),
+                            padding: const EdgeInsets.all(kSpacing16),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
@@ -3550,7 +3550,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 14),
+                                const SizedBox(width: kSpacing14),
                                 // Content
                                 Expanded(
                                   child: Column(
@@ -3565,7 +3565,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      const SizedBox(height: 3),
+                                      const SizedBox(height: kSpacing4),
                                       Row(
                                         children: [
                                           Text(
@@ -3575,7 +3575,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                          const SizedBox(width: 8),
+                                          const SizedBox(width: kSpacing8),
                                           Text(
                                             trans.createdAt.toString().substring(0, 10),
                                             style: theme.textTheme.labelSmall?.copyWith(
@@ -3587,7 +3587,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: kSpacing12),
                                 // Amount
                                 AmountText(
                                   amountInCents: trans.amount,
@@ -3619,7 +3619,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _buildBudgetRings(theme, context),
 
               if (showSavingsGoals) ...[
-                const SizedBox(height: 20),
+                const SizedBox(height: kSpacing20),
                 StaggeredFadeSlide(
                   index: 4,
                   child: _buildSavingsGoalsDashboard(theme, context),
@@ -3627,14 +3627,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
 
               if (showReminder) ...[
-                const SizedBox(height: 20),
+                const SizedBox(height: kSpacing20),
                 StaggeredFadeSlide(
                   index: 5,
                   child: _buildSavingsReminder(theme),
                 ),
               ],
 
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // ── 6. Upcoming Payments — "Subscriptions" ──
               StaggeredFadeSlide(
@@ -3645,7 +3645,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // ── 7. Upcoming Payments — "Recurring" ──
               _buildUpcomingRecurring(theme, context),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // ── 8. Loan / Debt Overview ──
               StaggeredFadeSlide(
@@ -3653,7 +3653,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: _buildLoanOverview(theme, context),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // ── 9. SMS Auto-Tracking — "How it works" ──
               StaggeredFadeSlide(
