@@ -2413,7 +2413,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: const Text('Delete'),
         ),
       ],
-      Widget _buildRecurringExpensesDashboard(ThemeData theme, BuildContext context) {
+    );
+  }
+
+  Widget _buildRecurringExpensesDashboard(ThemeData theme, BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
