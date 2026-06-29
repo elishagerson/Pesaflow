@@ -9,6 +9,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class SubscriptionListScreen extends ConsumerWidget {
@@ -43,19 +44,12 @@ class SubscriptionListScreen extends ConsumerWidget {
             child: subscriptions.isEmpty
                 ? SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.subscriptions_outlined, size: 64, color: isDark ? Colors.grey[600] : Colors.grey[300]),
-                          const SizedBox(height: kSpacing16),
-                          Text('No subscriptions yet', style: TextStyle(fontSize: 17, color: isDark ? Colors.grey[400] : Colors.grey[500])),
-                          const SizedBox(height: kSpacing8),
-                          TextButton(
-                            onPressed: () => context.push('/subscriptions/add'),
-                            child: const Text('Add a subscription'),
-                          ),
-                        ],
+                    child: EmptyState(
+                      icon: Icons.subscriptions_outlined,
+                      title: 'No subscriptions yet',
+                      action: TextButton(
+                        onPressed: () => context.push('/subscriptions/add'),
+                        child: const Text('Add a subscription'),
                       ),
                     ),
                   )

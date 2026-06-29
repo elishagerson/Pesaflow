@@ -13,6 +13,7 @@ import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
@@ -98,28 +99,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               if (transactionsList.isEmpty) {
                 return StaggeredFadeSlide(
                   index: 0,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 120),
-                        Icon(
-                          Icons.search_off_rounded,
-                          size: 64,
-                          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'No Transactions Found',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Try adjusting your filters or typing a different query.',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                  child: EmptyState(
+                    icon: Icons.search_off_rounded,
+                    title: 'No Transactions Found',
+                    subtitle: 'Try adjusting your filters or typing a different query.',
                   ),
                 );
               }

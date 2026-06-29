@@ -897,11 +897,82 @@ class SettingsScreen extends ConsumerWidget {
               ),
               ),
 
-              // System Management
+              // Security
               StaggeredFadeSlide(
-                index: 5,
+                index: 1,
                 child: IosListSection(
-                header: 'System Management',
+                header: 'Security',
+                rows: [
+                  IosToggleRow(
+                    leading: Icon(Icons.fingerprint_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Biometric App Lock'),
+                    subtitle: const Text('Require biometrics to open PesaFlow'),
+                    value: ref.watch(appLockEnabledProvider).value ?? false,
+                    onChanged: (val) {
+                      HapticFeedback.lightImpact();
+                      ref.read(settingsRepositoryProvider).setSetting('app_lock_enabled', val.toString());
+                    },
+                  ),
+                  IosToggleRow(
+                    leading: Icon(Icons.lock_open_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Lock Screen Balance'),
+                    subtitle: const Text('Show current balance in notification shade'),
+                    value: ref.watch(lockScreenBalanceEnabledProvider).value ?? false,
+                    onChanged: (val) {
+                      HapticFeedback.lightImpact();
+                      ref.read(settingsRepositoryProvider).setSetting('lock_screen_balance', val.toString());
+                    },
+                  ),
+                ],
+              ),
+              ),
+
+              // Preferences
+              StaggeredFadeSlide(
+                index: 2,
+                child: IosListSection(
+                header: 'Preferences',
+                rows: [
+                  IosToggleRow(
+                    leading: Icon(Icons.pin_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('Show Decimals'),
+                    subtitle: const Text('Format currency with cents (.00) globally'),
+                    value: ref.watch(currencyShowDecimalsProvider).value ?? false,
+                    onChanged: (val) {
+                      HapticFeedback.lightImpact();
+                      ref.read(settingsRepositoryProvider).setSetting('currency_show_decimals', val.toString());
+                    },
+                  ),
+                  IosToggleRow(
+                    leading: Icon(Icons.sms_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('SMS Auto-Deduplication'),
+                    subtitle: const Text('Automatically deduplicate incoming telco messages'),
+                    value: ref.watch(smsAutoDeduplicationProvider).value ?? false,
+                    onChanged: (val) {
+                      HapticFeedback.lightImpact();
+                      ref.read(settingsRepositoryProvider).setSetting('sms_auto_deduplication', val.toString());
+                    },
+                  ),
+                  IosListRow(
+                    leading: Icon(Icons.brightness_6_rounded, color: theme.colorScheme.primary, size: 24),
+                    title: const Text('App Theme'),
+                    subtitle: Text(switch (ref.watch(themeModeProvider)) {
+                      ThemeMode.light => 'Light',
+                      ThemeMode.dark => 'Dark',
+                      _ => 'System default',
+                    }),
+                    trailing: const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
+                    onTap: () => _showThemePicker(context, ref),
+                  ),
+                ],
+              ),
+              ),
+
+              // Data
+              StaggeredFadeSlide(
+                index: 3,
+                child: IosListSection(
+                header: 'Data',
                 rows: [
                   TactileSpringContainer(
                     onTap: () => _showAccountsManager(context, ref),
@@ -927,16 +998,36 @@ class SettingsScreen extends ConsumerWidget {
                     subtitle: const Text('Manage your recurring service subscriptions'),
                     onTap: () => context.push('/subscriptions'),
                   ),),
-                ],
-              ),
-              ),
-
-              // Data Export
-              StaggeredFadeSlide(
-                index: 8,
-                child: IosListSection(
-                header: 'Data Export',
-                rows: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: IosMetricCard(
+                            icon: Icons.account_balance_rounded,
+                            label: 'Accounts',
+                            value: '${accounts.length}',
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing8),
+                        Expanded(
+                          child: IosMetricCard(
+                            icon: Icons.category_rounded,
+                            label: 'Categories',
+                            value: '${categories.length}',
+                          ),
+                        ),
+                        const SizedBox(width: kSpacing8),
+                        Expanded(
+                          child: IosMetricCard(
+                            icon: Icons.receipt_long_rounded,
+                            label: 'Transactions',
+                            value: '${recentTransactions.length}',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   TactileSpringContainer(
                     onTap: () => showExportDialog(context, ref),
                     child: IosListRow(
@@ -949,16 +1040,6 @@ class SettingsScreen extends ConsumerWidget {
                     subtitle: const Text('Download as PDF or CSV'),
                     onTap: () => showExportDialog(context, ref),
                   ),),
-                ],
-              ),
-              ),
-
-              // Data Management
-              StaggeredFadeSlide(
-                index: 10,
-                child: IosListSection(
-                header: 'Data Management',
-                rows: [
                   TactileSpringContainer(
                     onTap: () => _handleExportCsv(context, ref),
                     child: IosListRow(
@@ -989,108 +1070,6 @@ class SettingsScreen extends ConsumerWidget {
                   ),),
                 ],
               ),
-              ),
-
-              // Preferences & Design Theme
-              StaggeredFadeSlide(
-                index: 15,
-                child: IosListSection(
-                header: 'Preferences & Theme',
-                rows: [
-                  IosToggleRow(
-                    leading: Icon(Icons.pin_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Show Decimals'),
-                    subtitle: const Text('Format currency with cents (.00) globally'),
-                    value: ref.watch(currencyShowDecimalsProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('currency_show_decimals', val.toString());
-                    },
-                  ),
-                  IosToggleRow(
-                    leading: Icon(Icons.fingerprint_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('Biometric App Lock'),
-                    subtitle: const Text('Require biometrics to open PesaFlow'),
-                    value: ref.watch(appLockEnabledProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('app_lock_enabled', val.toString());
-                    },
-                  ),
-                  IosToggleRow(
-                    leading: Icon(Icons.sms_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('SMS Auto-Deduplication'),
-                    subtitle: const Text('Automatically deduplicate incoming telco messages'),
-                    value: ref.watch(smsAutoDeduplicationProvider).value ?? false,
-                    onChanged: (val) {
-                      HapticFeedback.lightImpact();
-                      ref.read(settingsRepositoryProvider).setSetting('sms_auto_deduplication', val.toString());
-                    },
-                  ),
-                  IosListRow(
-                    leading: Icon(Icons.brightness_6_rounded, color: theme.colorScheme.primary, size: 24),
-                    title: const Text('App Theme'),
-                    subtitle: Text(switch (ref.watch(themeModeProvider)) {
-                      ThemeMode.light => 'Light',
-                      ThemeMode.dark => 'Dark',
-                      _ => 'System default',
-                    }),
-                    trailing: const Icon(Icons.chevron_right_rounded, size: 18, color: Colors.grey),
-                    onTap: () => _showThemePicker(context, ref),
-                  ),
-                ],
-              ),
-              ),
-
-              // Database Health
-              StaggeredFadeSlide(
-                index: 20,
-                child: Column(
-                  children: [
-                Padding(
-                padding: const EdgeInsets.only(left: kSpacing16, bottom: kSpacing6, top: kSpacing24),
-                child: Text(
-                  'DATABASE HEALTH'.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: theme.brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600],
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: IosMetricCard(
-                        icon: Icons.account_balance_rounded,
-                        label: 'Accounts',
-                        value: '${accounts.length}',
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Expanded(
-                      child: IosMetricCard(
-                        icon: Icons.category_rounded,
-                        label: 'Categories',
-                        value: '${categories.length}',
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Expanded(
-                      child: IosMetricCard(
-                        icon: Icons.receipt_long_rounded,
-                        label: 'Transactions',
-                        value: '${recentTransactions.length}',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-                  ],
-                ),
               ),
 
               // Footer

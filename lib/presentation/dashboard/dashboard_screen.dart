@@ -1867,7 +1867,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: kSpacing16),
+                  child: Column(
+                    children: [
+                      SkeletonCard(height: 80),
+                      SizedBox(height: kSpacing8),
+                      SkeletonCard(height: 80),
+                      SizedBox(height: kSpacing8),
+                      SkeletonCard(height: 80),
+                    ],
+                  ),
+                ),
                 error: (err, _) => Text('Error loading workspaces: $err'),
               ),
               const SizedBox(height: kSpacing20),
@@ -3340,21 +3351,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: kSpacing20),
 
               // ── 3. Insights — contextual nudges ──
-              _InsightsCarousel(),
+              _CollapsibleSection(
+                title: 'Insights',
+                icon: Icons.lightbulb_outline_rounded,
+                child: _InsightsCarousel(),
+              ),
               const SizedBox(height: kSpacing20),
 
               // ── 4. Monthly Overview — "How your money moved" ──
               // (StaggeredFadeSlide indices below are scoped per-column, not sequential)
               StaggeredFadeSlide(
                 index: 2,
-                child: _buildMonthlyOverview(theme),
+                child: _CollapsibleSection(
+                  title: 'Monthly Overview',
+                  icon: Icons.trending_up_rounded,
+                  child: _buildMonthlyOverview(theme),
+                ),
               ),
               const SizedBox(height: kSpacing20),
 
               // ── 5. Recent Activity — "The transactions behind it" ──
-              StaggeredFadeSlide(
-                index: 3,
-                child: Row(
+              _CollapsibleSection(
+                title: 'Recent Activity',
+                icon: Icons.history_rounded,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StaggeredFadeSlide(
+                      index: 3,
+                      child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -3616,19 +3641,36 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => Column(
+                  children: const [
+                    SkeletonCard(height: 80),
+                    SizedBox(height: kSpacing8),
+                    SkeletonCard(height: 80),
+                  ],
+                ),
                 error: (err, _) =>
                     Center(child: Text('Error loading activity: $err')),
               ),
+              ],
+            ),
+          ),
 
               // ── 6. Budget Progress — "Your Financial Targets" ──
-              _buildBudgetRings(theme, context),
+              _CollapsibleSection(
+                title: 'Budget Progress',
+                icon: Icons.pie_chart_rounded,
+                child: _buildBudgetRings(theme, context),
+              ),
 
               if (showSavingsGoals) ...[
                 const SizedBox(height: kSpacing20),
                 StaggeredFadeSlide(
                   index: 4,
-                  child: _buildSavingsGoalsDashboard(theme, context),
+                  child: _CollapsibleSection(
+                    title: 'Savings Goals',
+                    icon: Icons.track_changes_rounded,
+                    child: _buildSavingsGoalsDashboard(theme, context),
+                  ),
                 ),
               ],
 
@@ -3645,18 +3687,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // ── 6. Upcoming Payments — "Subscriptions" ──
               StaggeredFadeSlide(
                 index: 6,
-                child: _buildSubscriptionsDashboard(theme, context),
+                child: _CollapsibleSection(
+                  title: 'Upcoming',
+                  icon: Icons.event_rounded,
+                  child: _buildSubscriptionsDashboard(theme, context),
+                ),
               ),
 
               // ── 7. Upcoming Payments — "Recurring" ──
-              _buildUpcomingRecurring(theme, context),
+              _CollapsibleSection(
+                title: 'Upcoming',
+                icon: Icons.event_rounded,
+                child: _buildUpcomingRecurring(theme, context),
+              ),
 
               const SizedBox(height: kSpacing20),
 
               // ── 8. Loan / Debt Overview ──
               StaggeredFadeSlide(
                 index: 7,
-                child: _buildLoanOverview(theme, context),
+                child: _CollapsibleSection(
+                  title: 'Loans',
+                  icon: Icons.credit_score_rounded,
+                  child: _buildLoanOverview(theme, context),
+                ),
               ),
 
               const SizedBox(height: kSpacing20),
@@ -3664,7 +3718,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               // ── 9. SMS Auto-Tracking — "How it works" ──
               StaggeredFadeSlide(
                 index: 8,
-                child: _buildSmsReviewCard(theme, isDark, pendingReviewCount),
+                child: _CollapsibleSection(
+                  title: 'SMS Tracking',
+                  icon: Icons.message_rounded,
+                  child: _buildSmsReviewCard(theme, isDark, pendingReviewCount),
+                ),
               ),
               const SizedBox(height: kSpacing24),
             ],
@@ -3672,6 +3730,84 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
       ),
       ),
+    );
+  }
+}
+
+class _CollapsibleSection extends StatefulWidget {
+  final String title;
+  final IconData icon;
+  final Widget child;
+  final bool initiallyExpanded;
+
+  const _CollapsibleSection({
+    required this.title,
+    required this.icon,
+    required this.child,
+    this.initiallyExpanded = true,
+  });
+
+  @override
+  State<_CollapsibleSection> createState() => _CollapsibleSectionState();
+}
+
+class _CollapsibleSectionState extends State<_CollapsibleSection>
+    with SingleTickerProviderStateMixin {
+  late bool _isExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.initiallyExpanded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _isExpanded = !_isExpanded),
+          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: kSpacing4),
+            child: Row(
+              children: [
+                Icon(widget.icon, size: 18, color: theme.colorScheme.primary),
+                const SizedBox(width: kSpacing8),
+                Text(
+                  widget.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                AnimatedRotation(
+                  turns: _isExpanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    Icons.chevron_down_rounded,
+                    size: 20,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          firstChild: widget.child,
+          secondChild: const SizedBox.shrink(),
+          crossFadeState: _isExpanded
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 200),
+          sizeCurve: Curves.easeInOut,
+        ),
+      ],
     );
   }
 }

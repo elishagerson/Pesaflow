@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -89,6 +91,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   void _keypadPress(String value) {
+    HapticFeedback.lightImpact();
     setState(() {
       if (value == '<') {
         // Backspace
@@ -812,45 +815,28 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : accounts.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: context.spacing, right: context.spacing, top: 32, bottom: 32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.warning_amber_rounded, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.6)),
-                        const SizedBox(height: 16),
-                        Text('No Accounts Available',
-                          style: context.titleMedium.copyWith(fontWeight: FontWeight.bold),
+              ? EmptyState(
+                  icon: Icons.warning_amber_rounded,
+                  title: 'No Accounts Available',
+                  subtitle: 'You must create at least one Account before recording manual transactions.',
+                  action: TactileSpringContainer(
+                    onTap: () => context.go('/'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'You must create at least one Account before recording manual transactions.',
-                          textAlign: TextAlign.center,
-                          style: context.bodySmall.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-                        ),
-                        const SizedBox(height: 20),
-                        TactileSpringContainer(
-                          onTap: () => context.go('/'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
-                              ),
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Text('Go to Dashboard', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                        borderRadius: BorderRadius.circular(100),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      child: Text('Go to Dashboard', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 )
@@ -1145,33 +1131,40 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       children: keys.asMap().entries.map((entry) {
         final index = entry.key;
         final key = entry.value;
-        return Expanded(
-          child: TactileSpringContainer(
-            onTap: () => _keypadPress(key),
-            child: Container(
-              height: context.isCompactView ? 52 : 64,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: dividerColor, width: 0.5),
-                  right: index < 2
-                      ? BorderSide(color: dividerColor, width: 0.5)
-                      : BorderSide.none,
-                ),
-              ),
-              child: Center(
-                child: key == '<'
-                    ? Icon(Icons.backspace_outlined, color: textColor, size: 20)
-                    : Text(
-                        key,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                          color: textColor,
-                        ),
-                      ),
+        final keypadButton = TactileSpringContainer(
+          onTap: () => _keypadPress(key),
+          child: Container(
+            height: context.isCompactView ? 52 : 64,
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: dividerColor, width: 0.5),
+                right: index < 2
+                    ? BorderSide(color: dividerColor, width: 0.5)
+                    : BorderSide.none,
               ),
             ),
+            child: Center(
+              child: key == '<'
+                  ? Icon(Icons.backspace_outlined, color: textColor, size: 20)
+                  : Text(
+                      key,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: textColor,
+                      ),
+                    ),
+            ),
           ),
+        );
+
+        return Expanded(
+          child: key == '<'
+              ? GestureDetector(
+                  onLongPress: () => setState(() => _amountStr = '0'),
+                  child: keypadButton,
+                )
+              : keypadButton,
         );
       }).toList(),
     );
