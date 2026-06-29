@@ -9,6 +9,7 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin get plugin => _plugin;
   Completer<void>? _initCompleter;
 
   /// Lazily initializes the notification plugin exactly once.
