@@ -256,7 +256,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 Text(_frequencyLabel(_frequency), style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[300] : Colors.grey[700])),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             InkWell(
               onTap: () async {
                 final now = DateTime.now();
@@ -289,7 +289,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: kSpacing32),
             FilledButton(
               onPressed: _isLoading ? null : _save,
               child: _isLoading
