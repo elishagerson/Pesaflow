@@ -30,18 +30,23 @@ class SkeletonCard extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _pulseBar(width: 120, height: 14),
-          const SizedBox(height: 12),
-          _pulseBar(width: double.infinity, height: 10),
-          const SizedBox(height: 8),
-          _pulseBar(width: 180, height: 10),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final barHeight = (constraints.maxHeight - 24) / 5;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _pulseBar(width: 120, height: barHeight * 1.5),
+              SizedBox(height: barHeight),
+              _pulseBar(width: double.infinity, height: barHeight),
+              SizedBox(height: barHeight),
+              _pulseBar(width: 180, height: barHeight),
+            ],
+          ),
+        );
+      },
     );
   }
 
