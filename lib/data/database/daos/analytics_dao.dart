@@ -25,38 +25,54 @@ class CategorySpending {
   });
 }
 
-@DriftAccessor(tables: [Transactions, Categories, DailySnapshots, MonthlySnapshots])
-class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixin {
+@DriftAccessor(
+  tables: [Transactions, Categories, DailySnapshots, MonthlySnapshots],
+)
+class AnalyticsDao extends DatabaseAccessor<AppDatabase>
+    with _$AnalyticsDaoMixin {
   AnalyticsDao(super.db);
 
   /// Computes and upserts a daily snapshot for the given date string (e.g. "2026-05-15").
-  Future<void> upsertDailySnapshot(String dateStr, DateTime dayStart, DateTime dayEnd) async {
+  Future<void> upsertDailySnapshot(
+    String dateStr,
+    DateTime dayStart,
+    DateTime dayEnd,
+  ) async {
     // Sum income (exclude loan disbursements)
     final incomeQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where(transactions.type.equals('income') &
-          transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)));
+      ..where(
+        transactions.type.equals('income') &
+            transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)),
+      );
     final incomeResult = await incomeQuery.getSingle();
     final totalIncome = incomeResult.read(transactions.amount.sum()) ?? 0;
 
     // Sum expenses (loan repayments ARE expenses, but loan disbursements are not income)
     final expenseQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where((transactions.type.equals('expense') |
-              transactions.type.equals('airtime') |
-              transactions.type.equals('fee')) &
-          transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)));
+      ..where(
+        (transactions.type.equals('expense') |
+                transactions.type.equals('airtime') |
+                transactions.type.equals('fee')) &
+            transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)),
+      );
     final expenseResult = await expenseQuery.getSingle();
     final totalExpense = expenseResult.read(transactions.amount.sum()) ?? 0;
 
     // Category breakdown
-    final catQuery = select(transactions).join([
-      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-    ])
-      ..where(transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)));
+    final catQuery =
+        select(transactions).join([
+          innerJoin(
+            categories,
+            categories.id.equalsExp(transactions.categoryId),
+          ),
+        ])..where(
+          transactions.createdAt.isBiggerOrEqual(Constant(dayStart)) &
+              transactions.createdAt.isSmallerOrEqual(Constant(dayEnd)),
+        );
     final catRows = await catQuery.get();
 
     final Map<String, int> byCat = {};
@@ -69,46 +85,61 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
     final dow = dayStart.weekday; // 1=Mon, 7=Sun
     final weekend = dow == 6 || dow == 7;
 
-    await into(dailySnapshots).insertOnConflictUpdate(DailySnapshot(
-      date: dateStr,
-      totalIncome: totalIncome,
-      totalExpense: totalExpense,
-      netCashflow: totalIncome - totalExpense,
-      byCategory: jsonEncode(byCat),
-      dayOfWeek: dow,
-      isWeekend: weekend,
-      createdAt: DateTime.now(),
-    ));
+    await into(dailySnapshots).insertOnConflictUpdate(
+      DailySnapshot(
+        date: dateStr,
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        netCashflow: totalIncome - totalExpense,
+        byCategory: jsonEncode(byCat),
+        dayOfWeek: dow,
+        isWeekend: weekend,
+        createdAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Computes and upserts a monthly snapshot for the given year-month (e.g. "2026-05").
-  Future<void> upsertMonthlySnapshot(String yearMonth, DateTime monthStart, DateTime monthEnd) async {
+  Future<void> upsertMonthlySnapshot(
+    String yearMonth,
+    DateTime monthStart,
+    DateTime monthEnd,
+  ) async {
     // Sum income (exclude loan disbursements)
     final incomeQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where(transactions.type.equals('income') &
-          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)));
+      ..where(
+        transactions.type.equals('income') &
+            transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+      );
     final incomeResult = await incomeQuery.getSingle();
     final totalIncome = incomeResult.read(transactions.amount.sum()) ?? 0;
 
     // Sum expenses
     final expenseQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where((transactions.type.equals('expense') |
-              transactions.type.equals('airtime') |
-              transactions.type.equals('fee')) &
-          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)));
+      ..where(
+        (transactions.type.equals('expense') |
+                transactions.type.equals('airtime') |
+                transactions.type.equals('fee')) &
+            transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+      );
     final expenseResult = await expenseQuery.getSingle();
     final totalExpense = expenseResult.read(transactions.amount.sum()) ?? 0;
 
     // Category breakdown
-    final catQuery = select(transactions).join([
-      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-    ])
-      ..where(transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)));
+    final catQuery =
+        select(transactions).join([
+          innerJoin(
+            categories,
+            categories.id.equalsExp(transactions.categoryId),
+          ),
+        ])..where(
+          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+              transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+        );
     final catRows = await catQuery.get();
 
     final Map<String, int> byCat = {};
@@ -138,24 +169,32 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
     final daysInMonth = monthEnd.difference(monthStart).inDays + 1;
     final avgDaily = daysInMonth > 0 ? totalExpense / daysInMonth : 0.0;
 
-    await into(monthlySnapshots).insertOnConflictUpdate(MonthlySnapshot(
-      yearMonth: yearMonth,
-      totalIncome: totalIncome,
-      totalExpense: totalExpense,
-      netSavings: totalIncome - totalExpense,
-      byCategory: jsonEncode(byCat),
-      byDay: jsonEncode(byDay),
-      avgDailySpend: avgDaily,
-      topMerchants: jsonEncode(topMerchants),
-      createdAt: DateTime.now(),
-    ));
+    await into(monthlySnapshots).insertOnConflictUpdate(
+      MonthlySnapshot(
+        yearMonth: yearMonth,
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        netSavings: totalIncome - totalExpense,
+        byCategory: jsonEncode(byCat),
+        byDay: jsonEncode(byDay),
+        avgDailySpend: avgDaily,
+        topMerchants: jsonEncode(topMerchants),
+        createdAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Fetches daily snapshots for a date range.
-  Future<List<DailySnapshot>> getDailySnapshots(String startDate, String endDate) {
+  Future<List<DailySnapshot>> getDailySnapshots(
+    String startDate,
+    String endDate,
+  ) {
     return (select(dailySnapshots)
-          ..where((d) => d.date.isBiggerOrEqualValue(startDate) &
-              d.date.isSmallerOrEqualValue(endDate))
+          ..where(
+            (d) =>
+                d.date.isBiggerOrEqualValue(startDate) &
+                d.date.isSmallerOrEqualValue(endDate),
+          )
           ..orderBy([(d) => OrderingTerm.asc(d.date)]))
         .get();
   }
@@ -175,15 +214,14 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
     int limit,
   ) async {
     final query = selectOnly(transactions)
-      ..addColumns([
-        transactions.categoryId,
-        transactions.amount.sum(),
-      ])
-      ..where((transactions.type.equals('expense') |
-              transactions.type.equals('airtime') |
-              transactions.type.equals('fee')) &
-          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)))
+      ..addColumns([transactions.categoryId, transactions.amount.sum()])
+      ..where(
+        (transactions.type.equals('expense') |
+                transactions.type.equals('airtime') |
+                transactions.type.equals('fee')) &
+            transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+      )
       ..groupBy([transactions.categoryId])
       ..orderBy([OrderingTerm.desc(transactions.amount.sum())])
       ..limit(limit);
@@ -195,37 +233,48 @@ class AnalyticsDao extends DatabaseAccessor<AppDatabase> with _$AnalyticsDaoMixi
       final catId = row.read(transactions.categoryId);
       if (catId == null) continue;
       final amount = row.read(transactions.amount.sum()) ?? 0;
-      final cat = await (select(categories)..where((c) => c.id.equals(catId))).getSingleOrNull();
+      final cat = await (select(
+        categories,
+      )..where((c) => c.id.equals(catId))).getSingleOrNull();
       if (cat != null) {
-        spending.add(CategorySpending(
-          categoryId: catId,
-          categoryName: cat.name,
-          categoryColor: cat.color,
-          categoryIcon: cat.icon,
-          amount: amount,
-        ));
+        spending.add(
+          CategorySpending(
+            categoryId: catId,
+            categoryName: cat.name,
+            categoryColor: cat.color,
+            categoryIcon: cat.icon,
+            amount: amount,
+          ),
+        );
       }
     }
     return spending;
   }
 
   /// Gets total income and expense for a specific month range.
-  Future<Map<String, int>> getMonthTotals(DateTime monthStart, DateTime monthEnd) async {
+  Future<Map<String, int>> getMonthTotals(
+    DateTime monthStart,
+    DateTime monthEnd,
+  ) async {
     final incomeQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where(transactions.type.equals('income') &
-          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)));
+      ..where(
+        transactions.type.equals('income') &
+            transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+      );
     final incomeResult = await incomeQuery.getSingle();
     final totalIncome = incomeResult.read(transactions.amount.sum()) ?? 0;
 
     final expenseQuery = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where((transactions.type.equals('expense') |
-              transactions.type.equals('airtime') |
-              transactions.type.equals('fee')) &
-          transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)));
+      ..where(
+        (transactions.type.equals('expense') |
+                transactions.type.equals('airtime') |
+                transactions.type.equals('fee')) &
+            transactions.createdAt.isBiggerOrEqual(Constant(monthStart)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(monthEnd)),
+      );
     final expenseResult = await expenseQuery.getSingle();
     final totalExpense = expenseResult.read(transactions.amount.sum()) ?? 0;
 

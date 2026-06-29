@@ -22,21 +22,23 @@ import 'tables/recurring_transactions_table.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [
-  Accounts,
-  Categories,
-  Transactions,
-  Budgets,
-  BudgetPeriods,
-  DailySnapshots,
-  MonthlySnapshots,
-  AppSettings,
-  Trackers,
-  SavingsGoals,
-  SavingsGoalContributions,
-  Loans,
-  RecurringTransactions,
-])
+@DriftDatabase(
+  tables: [
+    Accounts,
+    Categories,
+    Transactions,
+    Budgets,
+    BudgetPeriods,
+    DailySnapshots,
+    MonthlySnapshots,
+    AppSettings,
+    Trackers,
+    SavingsGoals,
+    SavingsGoalContributions,
+    Loans,
+    RecurringTransactions,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
@@ -48,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
     return MigrationStrategy(
       onCreate: (m) async {
         await m.createAll();
-        
+
         // Seed default system categories (strictly in English)
         final uuid = const Uuid();
 
@@ -56,27 +58,123 @@ class AppDatabase extends _$AppDatabase {
           // Income categories
           _cat(uuid.v4(), 'Salary', 'briefcase', '#2E7D32', 'income', 1, true),
           _cat(uuid.v4(), 'Business', 'store', '#008080', 'income', 2, true),
-          _cat(uuid.v4(), 'Other Income', 'plus-circle', '#808080', 'income', 3, true),
+          _cat(
+            uuid.v4(),
+            'Other Income',
+            'plus-circle',
+            '#808080',
+            'income',
+            3,
+            true,
+          ),
 
           // Expense categories
-          _cat(uuid.v4(), 'Food & Groceries', 'cart', '#FF9800', 'expense', 1, true),
+          _cat(
+            uuid.v4(),
+            'Food & Groceries',
+            'cart',
+            '#FF9800',
+            'expense',
+            1,
+            true,
+          ),
           _cat(uuid.v4(), 'Transport', 'bus', '#FFC107', 'expense', 2, true),
           _cat(uuid.v4(), 'Rent', 'home', '#F44336', 'expense', 3, true),
           _cat(uuid.v4(), 'Utilities', 'zap', '#E91E63', 'expense', 4, true),
-          _cat(uuid.v4(), 'Airtime & Data', 'phone', '#9C27B0', 'expense', 5, true),
+          _cat(
+            uuid.v4(),
+            'Airtime & Data',
+            'phone',
+            '#9C27B0',
+            'expense',
+            5,
+            true,
+          ),
           _cat(uuid.v4(), 'Health', 'heart', '#E91E63', 'expense', 6, true),
           _cat(uuid.v4(), 'Education', 'book', '#2196F3', 'expense', 7, true),
-          _cat(uuid.v4(), 'Entertainment', 'film', '#673AB7', 'expense', 8, true),
-          _cat(uuid.v4(), 'Shopping', 'shopping-bag', '#00BCD4', 'expense', 9, true),
-          _cat(uuid.v4(), 'Eating Out', 'coffee', '#795548', 'expense', 10, true),
-          _cat(uuid.v4(), 'Mobile Money Transfer', 'send', '#607D8B', 'expense', 11, true),
-          _cat(uuid.v4(), 'Bank Fees', 'credit-card', '#D32F2F', 'expense', 12, true),
-          _cat(uuid.v4(), 'ATM Withdrawal', 'banknote', '#4CAF50', 'expense', 13, true),
-          _cat(uuid.v4(), 'Savings', 'piggy-bank', '#4CAF50', 'expense', 14, true),
-          _cat(uuid.v4(), 'Other', 'more-horizontal', '#9E9E9E', 'expense', 15, true),
-          
+          _cat(
+            uuid.v4(),
+            'Entertainment',
+            'film',
+            '#673AB7',
+            'expense',
+            8,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Shopping',
+            'shopping-bag',
+            '#00BCD4',
+            'expense',
+            9,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Eating Out',
+            'coffee',
+            '#795548',
+            'expense',
+            10,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Mobile Money Transfer',
+            'send',
+            '#607D8B',
+            'expense',
+            11,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Bank Fees',
+            'credit-card',
+            '#D32F2F',
+            'expense',
+            12,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'ATM Withdrawal',
+            'banknote',
+            '#4CAF50',
+            'expense',
+            13,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Savings',
+            'piggy-bank',
+            '#4CAF50',
+            'expense',
+            14,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
+            'Other',
+            'more-horizontal',
+            '#9E9E9E',
+            'expense',
+            15,
+            true,
+          ),
+
           // Transfer categories
-          _cat(uuid.v4(), 'Between Accounts', 'arrow-left-right', '#9E9E9E', 'transfer', 1, true),
+          _cat(
+            uuid.v4(),
+            'Between Accounts',
+            'arrow-left-right',
+            '#9E9E9E',
+            'transfer',
+            1,
+            true,
+          ),
         ];
 
         for (final category in defaultCategories) {
@@ -84,31 +182,35 @@ class AppDatabase extends _$AppDatabase {
         }
 
         // Seed default tracker
-        await into(trackers).insert(Tracker(
-          id: 'default_personal',
-          name: 'Personal',
-          icon: 'person',
-          color: '#0A84FF',
-          isArchived: false,
-          createdAt: DateTime.now(),
-        ));
+        await into(trackers).insert(
+          Tracker(
+            id: 'default_personal',
+            name: 'Personal',
+            icon: 'person',
+            color: '#0A84FF',
+            isArchived: false,
+            createdAt: DateTime.now(),
+          ),
+        );
 
         // Seed default app settings
-        await into(appSettings).insert(AppSetting(
-          key: 'onboarding_complete',
-          value: 'false',
-          updatedAt: DateTime.now(),
-        ));
-        await into(appSettings).insert(AppSetting(
-          key: 'theme',
-          value: 'system',
-          updatedAt: DateTime.now(),
-        ));
-        await into(appSettings).insert(AppSetting(
-          key: 'active_tracker_id',
-          value: 'default_personal',
-          updatedAt: DateTime.now(),
-        ));
+        await into(appSettings).insert(
+          AppSetting(
+            key: 'onboarding_complete',
+            value: 'false',
+            updatedAt: DateTime.now(),
+          ),
+        );
+        await into(appSettings).insert(
+          AppSetting(key: 'theme', value: 'system', updatedAt: DateTime.now()),
+        );
+        await into(appSettings).insert(
+          AppSetting(
+            key: 'active_tracker_id',
+            value: 'default_personal',
+            updatedAt: DateTime.now(),
+          ),
+        );
       },
       onUpgrade: (m, from, to) async {
         // Migration from schema version 1 → 2: add Phase 3 tables
@@ -120,16 +222,20 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(appSettings);
 
           // Seed default app settings for existing users
-          await into(appSettings).insert(AppSetting(
-            key: 'onboarding_complete',
-            value: 'true', // Existing users skip onboarding
-            updatedAt: DateTime.now(),
-          ));
-          await into(appSettings).insert(AppSetting(
-            key: 'theme',
-            value: 'system',
-            updatedAt: DateTime.now(),
-          ));
+          await into(appSettings).insert(
+            AppSetting(
+              key: 'onboarding_complete',
+              value: 'true', // Existing users skip onboarding
+              updatedAt: DateTime.now(),
+            ),
+          );
+          await into(appSettings).insert(
+            AppSetting(
+              key: 'theme',
+              value: 'system',
+              updatedAt: DateTime.now(),
+            ),
+          );
         }
 
         // Migration from schema version 2 → 3: add trackers table & trackerId to transactions
@@ -138,26 +244,32 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(transactions, transactions.trackerId);
 
           // Seed default tracker for existing users
-          await into(trackers).insert(Tracker(
-            id: 'default_personal',
-            name: 'Personal',
-            icon: 'person',
-            color: '#0A84FF',
-            isArchived: false,
-            createdAt: DateTime.now(),
-          ));
+          await into(trackers).insert(
+            Tracker(
+              id: 'default_personal',
+              name: 'Personal',
+              icon: 'person',
+              color: '#0A84FF',
+              isArchived: false,
+              createdAt: DateTime.now(),
+            ),
+          );
 
           // Set existing transactions to the default tracker
-          await (update(transactions)..where((t) => t.trackerId.isNull())).write(
+          await (update(
+            transactions,
+          )..where((t) => t.trackerId.isNull())).write(
             TransactionsCompanion(trackerId: const Value('default_personal')),
           );
 
           // Seed active tracker setting
-          await into(appSettings).insert(AppSetting(
-            key: 'active_tracker_id',
-            value: 'default_personal',
-            updatedAt: DateTime.now(),
-          ));
+          await into(appSettings).insert(
+            AppSetting(
+              key: 'active_tracker_id',
+              value: 'default_personal',
+              updatedAt: DateTime.now(),
+            ),
+          );
         }
 
         // Migration from schema version 3 → 4: add savingsGoals and savingsGoalContributions tables
@@ -219,48 +331,81 @@ class AppDatabase extends _$AppDatabase {
         // Migration from schema version 9 → 10: consolidate subscriptions into recurring transactions
         if (from < 10) {
           // 1. Add columns to recurring_transactions table
-          await m.addColumn(recurringTransactions, recurringTransactions.merchantKeywords);
-          await m.addColumn(recurringTransactions, recurringTransactions.lastPaidAt);
-          await m.addColumn(recurringTransactions, recurringTransactions.totalPaid);
-          await m.addColumn(recurringTransactions, recurringTransactions.paymentCount);
+          await m.addColumn(
+            recurringTransactions,
+            recurringTransactions.merchantKeywords,
+          );
+          await m.addColumn(
+            recurringTransactions,
+            recurringTransactions.lastPaidAt,
+          );
+          await m.addColumn(
+            recurringTransactions,
+            recurringTransactions.totalPaid,
+          );
+          await m.addColumn(
+            recurringTransactions,
+            recurringTransactions.paymentCount,
+          );
 
           // 2. Query existing subscriptions and insert into recurring transactions
           try {
-            final rows = await m.database.customSelect('SELECT * FROM subscriptions').get();
+            final rows = await m.database
+                .customSelect('SELECT * FROM subscriptions')
+                .get();
             for (final row in rows) {
-              await m.database.into(recurringTransactions).insert(RecurringTransactionsCompanion(
-                id: Value(row.read<String>('id')),
-                accountId: Value(row.read<String>('account_id')),
-                categoryId: Value(row.read<String?>('category_id')),
-                amount: Value(row.read<int>('amount')),
-                type: const Value('expense'),
-                description: Value(row.read<String>('name')),
-                frequency: Value(row.read<String>('frequency')),
-                intervalValue: Value(row.read<int>('interval_value')),
-                nextDate: Value(row.read<DateTime>('next_due_date')),
-                endDate: const Value.absent(),
-                status: Value(row.read<String>('status')),
-                trackerId: Value(row.read<String?>('tracker_id')),
-                merchantKeywords: Value(row.read<String>('merchant_keywords')),
-                lastPaidAt: Value(row.read<DateTime?>('last_paid_date')),
-                totalPaid: Value(row.read<int>('total_paid')),
-                paymentCount: Value(row.read<int>('payment_count')),
-                createdAt: Value(row.read<DateTime>('created_at')),
-                updatedAt: Value(row.read<DateTime>('updated_at')),
-              ));
+              await m.database
+                  .into(recurringTransactions)
+                  .insert(
+                    RecurringTransactionsCompanion(
+                      id: Value(row.read<String>('id')),
+                      accountId: Value(row.read<String>('account_id')),
+                      categoryId: Value(row.read<String?>('category_id')),
+                      amount: Value(row.read<int>('amount')),
+                      type: const Value('expense'),
+                      description: Value(row.read<String>('name')),
+                      frequency: Value(row.read<String>('frequency')),
+                      intervalValue: Value(row.read<int>('interval_value')),
+                      nextDate: Value(row.read<DateTime>('next_due_date')),
+                      endDate: const Value.absent(),
+                      status: Value(row.read<String>('status')),
+                      trackerId: Value(row.read<String?>('tracker_id')),
+                      merchantKeywords: Value(
+                        row.read<String>('merchant_keywords'),
+                      ),
+                      lastPaidAt: Value(row.read<DateTime?>('last_paid_date')),
+                      totalPaid: Value(row.read<int>('total_paid')),
+                      paymentCount: Value(row.read<int>('payment_count')),
+                      createdAt: Value(row.read<DateTime>('created_at')),
+                      updatedAt: Value(row.read<DateTime>('updated_at')),
+                    ),
+                  );
             }
           } catch (e) {
-            developer.log('Subscription migration skipped or failed: $e', name: 'AppDatabase');
+            developer.log(
+              'Subscription migration skipped or failed: $e',
+              name: 'AppDatabase',
+            );
           }
 
           // 3. Drop legacy subscriptions table
-          await m.database.customStatement('DROP TABLE IF EXISTS subscriptions;');
+          await m.database.customStatement(
+            'DROP TABLE IF EXISTS subscriptions;',
+          );
         }
       },
     );
   }
 
-  Category _cat(String id, String name, String icon, String color, String type, int sortOrder, bool isSystem) {
+  Category _cat(
+    String id,
+    String name,
+    String icon,
+    String color,
+    String type,
+    int sortOrder,
+    bool isSystem,
+  ) {
     return Category(
       id: id,
       name: name,

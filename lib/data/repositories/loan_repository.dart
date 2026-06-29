@@ -13,22 +13,29 @@ class LoanRepository {
 
   LoanRepository(this._loanDao);
 
-  Stream<List<Loan>> watchAllLoans({String? trackerId}) => _loanDao.watchAllLoans(trackerId: trackerId);
+  Stream<List<Loan>> watchAllLoans({String? trackerId}) =>
+      _loanDao.watchAllLoans(trackerId: trackerId);
 
-  Future<List<Loan>> getAllLoans({String? trackerId}) => _loanDao.getAllLoans(trackerId: trackerId);
+  Future<List<Loan>> getAllLoans({String? trackerId}) =>
+      _loanDao.getAllLoans(trackerId: trackerId);
 
-  Stream<List<Loan>> watchActiveLoans({String? trackerId}) => _loanDao.watchActiveLoans(trackerId: trackerId);
+  Stream<List<Loan>> watchActiveLoans({String? trackerId}) =>
+      _loanDao.watchActiveLoans(trackerId: trackerId);
 
-  Future<List<Loan>> getActiveLoans({String? trackerId}) => _loanDao.getActiveLoans(trackerId: trackerId);
+  Future<List<Loan>> getActiveLoans({String? trackerId}) =>
+      _loanDao.getActiveLoans(trackerId: trackerId);
 
-  Stream<List<Loan>> watchPaidLoans({String? trackerId}) => _loanDao.watchPaidLoans(trackerId: trackerId);
+  Stream<List<Loan>> watchPaidLoans({String? trackerId}) =>
+      _loanDao.watchPaidLoans(trackerId: trackerId);
 
-  Future<List<Loan>> getPaidLoans({String? trackerId}) => _loanDao.getPaidLoans(trackerId: trackerId);
+  Future<List<Loan>> getPaidLoans({String? trackerId}) =>
+      _loanDao.getPaidLoans(trackerId: trackerId);
 
   Future<int> getActiveLoanCountPastMonths(int months, {String? trackerId}) =>
       _loanDao.getActiveLoanCountPastMonths(months, trackerId: trackerId);
 
-  Future<int> getTotalPaid({String? trackerId}) => _loanDao.getTotalPaid(trackerId: trackerId);
+  Future<int> getTotalPaid({String? trackerId}) =>
+      _loanDao.getTotalPaid(trackerId: trackerId);
 
   Future<Loan?> getLoanById(String id) => _loanDao.getLoanById(id);
 
@@ -38,13 +45,17 @@ class LoanRepository {
 
   Future<void> deleteLoan(String id) => _loanDao.deleteLoan(id);
 
-  Stream<List<Transaction>> watchLoanTransactions(String loanId) => _loanDao.watchLoanTransactions(loanId);
+  Stream<List<Transaction>> watchLoanTransactions(String loanId) =>
+      _loanDao.watchLoanTransactions(loanId);
 
-  Future<List<Transaction>> getLoanTransactions(String loanId) => _loanDao.getLoanTransactions(loanId);
+  Future<List<Transaction>> getLoanTransactions(String loanId) =>
+      _loanDao.getLoanTransactions(loanId);
 
-  Future<int> getTotalOutstanding({String? trackerId}) => _loanDao.getTotalOutstanding(trackerId: trackerId);
+  Future<int> getTotalOutstanding({String? trackerId}) =>
+      _loanDao.getTotalOutstanding(trackerId: trackerId);
 
   Future<void> markLoanAsPaid(String loanId) => _loanDao.markLoanAsPaid(loanId);
 
-  Future<void> applyPayment(String loanId, int paymentAmount) => _loanDao.applyPayment(loanId, paymentAmount);
+  Future<void> applyPayment(String loanId, int paymentAmount) =>
+      _loanDao.applyPayment(loanId, paymentAmount);
 }

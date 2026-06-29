@@ -10,10 +10,7 @@ class LoanWithTransactions {
   final Loan loan;
   final List<Transaction> transactions;
 
-  LoanWithTransactions({
-    required this.loan,
-    required this.transactions,
-  });
+  LoanWithTransactions({required this.loan, required this.transactions});
 }
 
 @DriftAccessor(tables: [Loans, Transactions])
@@ -111,10 +108,17 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
   }
 
   /// Count how many active loans were taken in the last N months
-  Future<int> getActiveLoanCountPastMonths(int months, {String? trackerId}) async {
+  Future<int> getActiveLoanCountPastMonths(
+    int months, {
+    String? trackerId,
+  }) async {
     final cutoff = DateTime.now().subtract(Duration(days: 30 * months));
     final query = select(loans)
-      ..where((l) => l.status.equals('active') & l.disbursedAt.isBiggerOrEqual(Constant(cutoff)));
+      ..where(
+        (l) =>
+            l.status.equals('active') &
+            l.disbursedAt.isBiggerOrEqual(Constant(cutoff)),
+      );
     if (trackerId != null) {
       query.where((l) => l.trackerId.equals(trackerId));
     }
@@ -149,12 +153,14 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
   Future<void> markLoanAsPaid(String loanId) async {
     final loan = await getLoanById(loanId);
     if (loan == null) return;
-    await update(loans).replace(loan.copyWith(
-      status: 'paid',
-      remaining: 0,
-      paidAt: Value(DateTime.now()),
-      updatedAt: DateTime.now(),
-    ));
+    await update(loans).replace(
+      loan.copyWith(
+        status: 'paid',
+        remaining: 0,
+        paidAt: Value(DateTime.now()),
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   /// Calculate a simple amortization schedule for a loan.
@@ -191,11 +197,13 @@ class LoanDao extends DatabaseAccessor<AppDatabase> with _$LoanDaoMixin {
     if (loan == null) return;
     final newRemaining = (loan.remaining - paymentAmount).clamp(0, loan.amount);
     final isPaid = newRemaining == 0;
-    await update(loans).replace(loan.copyWith(
-      remaining: newRemaining,
-      status: isPaid ? 'paid' : loan.status,
-      paidAt: isPaid ? Value(DateTime.now()) : Value(loan.paidAt),
-      updatedAt: DateTime.now(),
-    ));
+    await update(loans).replace(
+      loan.copyWith(
+        remaining: newRemaining,
+        status: isPaid ? 'paid' : loan.status,
+        paidAt: isPaid ? Value(DateTime.now()) : Value(loan.paidAt),
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 }

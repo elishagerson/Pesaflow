@@ -21,12 +21,20 @@ bool isTablet(BuildContext context) {
   return s == ScreenSize.smallTablet || s == ScreenSize.largeTablet;
 }
 
-bool isDesktop(BuildContext context) => getScreenSize(context) == ScreenSize.desktop;
+bool isDesktop(BuildContext context) =>
+    getScreenSize(context) == ScreenSize.desktop;
 
-double responsiveValue(BuildContext context, {required double compact, double? tablet, double? desktop}) {
+double responsiveValue(
+  BuildContext context, {
+  required double compact,
+  double? tablet,
+  double? desktop,
+}) {
   final s = getScreenSize(context);
   if (desktop != null && s == ScreenSize.desktop) return desktop;
-  if (tablet != null && (s == ScreenSize.smallTablet || s == ScreenSize.largeTablet)) return tablet;
+  if (tablet != null &&
+      (s == ScreenSize.smallTablet || s == ScreenSize.largeTablet))
+    return tablet;
   return compact;
 }
 
@@ -81,7 +89,9 @@ EdgeInsets responsiveHorizontalPadding(BuildContext context) {
     case ScreenSize.largeTablet:
       return const EdgeInsets.symmetric(horizontal: 32);
     case ScreenSize.desktop:
-      return EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.15);
+      return EdgeInsets.symmetric(
+        horizontal: MediaQuery.sizeOf(context).width * 0.15,
+      );
   }
 }
 
@@ -102,7 +112,12 @@ class ResponsiveCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     final mw = maxWidth ?? responsiveMaxContentWidth(context);
     if (mw >= MediaQuery.sizeOf(context).width) return child;
-    return Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: mw), child: child));
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: mw),
+        child: child,
+      ),
+    );
   }
 }
 
@@ -110,7 +125,12 @@ class ResponsiveRow extends StatelessWidget {
   final List<Widget> children;
   final double spacing;
   final double? childFlex;
-  const ResponsiveRow({super.key, required this.children, this.spacing = 16, this.childFlex});
+  const ResponsiveRow({
+    super.key,
+    required this.children,
+    this.spacing = 16,
+    this.childFlex,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +142,13 @@ class ResponsiveRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children.map((c) {
         final flex = childFlex ?? (1.0 / children.length);
-        return Expanded(flex: (flex * 100).round(), child: Padding(padding: EdgeInsets.only(left: spacing / 2, right: spacing / 2), child: c));
+        return Expanded(
+          flex: (flex * 100).round(),
+          child: Padding(
+            padding: EdgeInsets.only(left: spacing / 2, right: spacing / 2),
+            child: c,
+          ),
+        );
       }).toList(),
     );
   }

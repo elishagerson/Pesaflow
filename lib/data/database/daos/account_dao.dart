@@ -28,12 +28,17 @@ class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
 
   Future<int> insertAccount(Account account) => into(accounts).insert(account);
 
-  Future<bool> updateAccount(Account account) => update(accounts).replace(account);
+  Future<bool> updateAccount(Account account) =>
+      update(accounts).replace(account);
 
   Future<void> deleteAccount(String id) async {
     await db.transaction(() async {
-      await (db.delete(db.transactions)..where((t) => t.accountId.equals(id))).go();
-      await (db.delete(db.transactions)..where((t) => t.destinationAccountId.equals(id))).go();
+      await (db.delete(
+        db.transactions,
+      )..where((t) => t.accountId.equals(id))).go();
+      await (db.delete(
+        db.transactions,
+      )..where((t) => t.destinationAccountId.equals(id))).go();
       await (delete(accounts)..where((t) => t.id.equals(id))).go();
     });
   }

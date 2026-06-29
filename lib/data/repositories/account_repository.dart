@@ -19,9 +19,11 @@ class AccountRepository {
 
   Future<Account?> getAccountById(String id) => _accountDao.getAccountById(id);
 
-  Future<int> createAccount(Account account) => _accountDao.insertAccount(account);
+  Future<int> createAccount(Account account) =>
+      _accountDao.insertAccount(account);
 
-  Future<bool> updateAccount(Account account) => _accountDao.updateAccount(account);
+  Future<bool> updateAccount(Account account) =>
+      _accountDao.updateAccount(account);
 
   Future<void> deleteAccount(String id) => _accountDao.deleteAccount(id);
 }

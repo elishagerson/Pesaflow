@@ -7,7 +7,8 @@ class Loans extends Table {
   IntColumn get remaining => integer()(); // in TZS cents
   TextColumn get status => text()(); // active, paid, defaulted
   TextColumn get provider => text().nullable()();
-  TextColumn get description => text().withLength(min: 0, max: 255).nullable()();
+  TextColumn get description =>
+      text().withLength(min: 0, max: 255).nullable()();
   TextColumn get sender => text().nullable()();
   TextColumn get reference => text().nullable()();
   DateTimeColumn get disbursedAt => dateTime()();

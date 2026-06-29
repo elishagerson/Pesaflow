@@ -15,11 +15,11 @@ class CsvHelper {
       'Reference',
       'Sender',
       'Recipient',
-      'Source'
+      'Source',
     ];
 
     final buffer = StringBuffer();
-    
+
     // Write CSV Headers
     buffer.writeln(headers.map(_escapeField).join(','));
 
@@ -28,7 +28,7 @@ class CsvHelper {
     for (final item in items) {
       final trans = item.transaction;
       final amountFormatted = (trans.amount / 100.0).toStringAsFixed(2);
-      
+
       final row = [
         trans.id,
         dateFormat.format(trans.createdAt),
@@ -50,7 +50,10 @@ class CsvHelper {
   }
 
   static String _escapeField(String field) {
-    if (field.contains(',') || field.contains('"') || field.contains('\n') || field.contains('\r')) {
+    if (field.contains(',') ||
+        field.contains('"') ||
+        field.contains('\n') ||
+        field.contains('\r')) {
       final escaped = field.replaceAll('"', '""');
       return '"$escaped"';
     }

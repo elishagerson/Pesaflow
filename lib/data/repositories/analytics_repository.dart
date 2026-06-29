@@ -16,7 +16,8 @@ class AnalyticsRepository {
 
   /// Refreshes the daily snapshot for a given date.
   Future<void> refreshSnapshotsForDate(DateTime date) async {
-    final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    final dateStr =
+        '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
     final dayStart = DateTime(date.year, date.month, date.day);
     final dayEnd = DateTime(date.year, date.month, date.day, 23, 59, 59);
     await _analyticsDao.upsertDailySnapshot(dateStr, dayStart, dayEnd);
@@ -35,18 +36,26 @@ class AnalyticsRepository {
   Future<void> refreshAllSnapshots(DateTime date) async {
     await Future.wait([
       refreshSnapshotsForDate(date).catchError((e) {
-        developer.log('Daily snapshot refresh failed: $e', name: 'AnalyticsRepo');
+        developer.log(
+          'Daily snapshot refresh failed: $e',
+          name: 'AnalyticsRepo',
+        );
       }),
       refreshSnapshotsForMonth(date).catchError((e) {
-        developer.log('Monthly snapshot refresh failed: $e', name: 'AnalyticsRepo');
+        developer.log(
+          'Monthly snapshot refresh failed: $e',
+          name: 'AnalyticsRepo',
+        );
       }),
     ]);
   }
 
   /// Gets daily snapshots for a date range.
   Future<List<DailySnapshot>> getDailySnapshots(DateTime start, DateTime end) {
-    final startStr = '${start.year}-${start.month.toString().padLeft(2, '0')}-${start.day.toString().padLeft(2, '0')}';
-    final endStr = '${end.year}-${end.month.toString().padLeft(2, '0')}-${end.day.toString().padLeft(2, '0')}';
+    final startStr =
+        '${start.year}-${start.month.toString().padLeft(2, '0')}-${start.day.toString().padLeft(2, '0')}';
+    final endStr =
+        '${end.year}-${end.month.toString().padLeft(2, '0')}-${end.day.toString().padLeft(2, '0')}';
     return _analyticsDao.getDailySnapshots(startStr, endStr);
   }
 
@@ -56,7 +65,10 @@ class AnalyticsRepository {
   }
 
   /// Gets top spending categories for current month.
-  Future<List<CategorySpending>> getTopCategoriesForMonth(DateTime date, {int limit = 5}) {
+  Future<List<CategorySpending>> getTopCategoriesForMonth(
+    DateTime date, {
+    int limit = 5,
+  }) {
     final monthStart = DateTime(date.year, date.month, 1);
     final monthEnd = DateTime(date.year, date.month + 1, 0, 23, 59, 59);
     return _analyticsDao.getTopCategoriesForMonth(monthStart, monthEnd, limit);

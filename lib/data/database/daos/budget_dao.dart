@@ -40,8 +40,7 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
 
   /// Streams all active budgets.
   Stream<List<Budget>> watchAllActiveBudgets() {
-    return (select(budgets)..where((b) => b.isActive.equals(true)))
-        .watch();
+    return (select(budgets)..where((b) => b.isActive.equals(true))).watch();
   }
 
   /// Gets all active budgets as a future.
@@ -51,14 +50,16 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
 
   /// Gets a single budget by ID.
   Future<Budget?> getBudgetById(String budgetId) {
-    return (select(budgets)..where((b) => b.id.equals(budgetId)))
-        .getSingleOrNull();
+    return (select(
+      budgets,
+    )..where((b) => b.id.equals(budgetId))).getSingleOrNull();
   }
 
   /// Gets the category for a budget.
   Future<Category?> getCategoryForBudget(String categoryId) {
-    return (select(categories)..where((c) => c.id.equals(categoryId)))
-        .getSingleOrNull();
+    return (select(
+      categories,
+    )..where((c) => c.id.equals(categoryId))).getSingleOrNull();
   }
 
   /// Gets the current (non-closed) period for a budget.
@@ -94,19 +95,24 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   ) async {
     final query = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
-      ..where(transactions.categoryId.equals(categoryId) &
-          transactions.createdAt.isBiggerOrEqual(Constant(start)) &
-          transactions.createdAt.isSmallerOrEqual(Constant(end)) &
-          (transactions.type.equals('expense') |
-           transactions.type.equals('airtime') |
-           transactions.type.equals('fee')));
+      ..where(
+        transactions.categoryId.equals(categoryId) &
+            transactions.createdAt.isBiggerOrEqual(Constant(start)) &
+            transactions.createdAt.isSmallerOrEqual(Constant(end)) &
+            (transactions.type.equals('expense') |
+                transactions.type.equals('airtime') |
+                transactions.type.equals('fee')),
+      );
 
     final result = await query.getSingle();
     return result.read(transactions.amount.sum()) ?? 0;
   }
 
   /// Inserts a new budget and auto-creates the first period.
-  Future<void> insertBudgetWithPeriod(Budget budget, BudgetPeriod firstPeriod) async {
+  Future<void> insertBudgetWithPeriod(
+    Budget budget,
+    BudgetPeriod firstPeriod,
+  ) async {
     await attachedDatabase.transaction(() async {
       await into(budgets).insert(budget);
       await into(budgetPeriods).insert(firstPeriod);
@@ -121,7 +127,9 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   /// Deletes a budget and all its periods.
   Future<void> deleteBudget(String budgetId) async {
     await attachedDatabase.transaction(() async {
-      await (delete(budgetPeriods)..where((p) => p.budgetId.equals(budgetId))).go();
+      await (delete(
+        budgetPeriods,
+      )..where((p) => p.budgetId.equals(budgetId))).go();
       await (delete(budgets)..where((b) => b.id.equals(budgetId))).go();
     });
   }
@@ -137,105 +145,122 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     });
   }
 
-   /// Updates a period's spent amount.
-   Future<void> updatePeriodSpent(String periodId, int newSpent) async {
-     final period = await (select(budgetPeriods)..where((p) => p.id.equals(periodId))).getSingleOrNull();
-     if (period != null) {
-       await update(budgetPeriods).replace(period.copyWith(spent: newSpent));
-     }
-   }
+  /// Updates a period's spent amount.
+  Future<void> updatePeriodSpent(String periodId, int newSpent) async {
+    final period = await (select(
+      budgetPeriods,
+    )..where((p) => p.id.equals(periodId))).getSingleOrNull();
+    if (period != null) {
+      await update(budgetPeriods).replace(period.copyWith(spent: newSpent));
+    }
+  }
 
-   /// Updates the current period's allocated amount for a budget.
-   Future<void> updateCurrentPeriodAllocated(String budgetId, int newAllocated) async {
-     final period = await getCurrentPeriod(budgetId);
-     if (period != null) {
-       await update(budgetPeriods).replace(period.copyWith(allocated: newAllocated));
-     }
-   }
+  /// Updates the current period's allocated amount for a budget.
+  Future<void> updateCurrentPeriodAllocated(
+    String budgetId,
+    int newAllocated,
+  ) async {
+    final period = await getCurrentPeriod(budgetId);
+    if (period != null) {
+      await update(
+        budgetPeriods,
+      ).replace(period.copyWith(allocated: newAllocated));
+    }
+  }
 
   /// Watches for changes to the transactions table.
   /// Fires on every insert, update, or delete of any transaction.
   Stream<int> watchTransactionChanges() {
-    return select(transactions).watch().map((_) => DateTime.now().microsecondsSinceEpoch);
+    return select(
+      transactions,
+    ).watch().map((_) => DateTime.now().microsecondsSinceEpoch);
   }
 
-   /// Gets all active budgets with their category, current period, and spent amount in a single query.
-   /// This avoids the N+1 query problem in getActiveBudgetsWithProgress().
-   Future<List<BudgetWithProgress>> getActiveBudgetsWithProgressOptimized() async {
-     // First, get all active budgets
-     final activeBudgets = await getAllActiveBudgets();
-     
-     if (activeBudgets.isEmpty) {
-       return [];
-     }
-     
-     // Get all category IDs for these budgets
-     final categoryIds = activeBudgets.map((b) => b.categoryId).toSet().toList();
-     
-     // Fetch all categories for these budgets in one query
-     final categoriesMap = <String, Category>{};
-     if (categoryIds.isNotEmpty) {
-        final categoryRows = await (select(categories)..where((c) => c.id.isIn(categoryIds))).get();
-        for (final category in categoryRows) {
-          categoriesMap[category.id] = category;
-        }
-     }
-     
-     // Get all budget IDs
-     final budgetIds = activeBudgets.map((b) => b.id).toList();
-     
-     // Fetch current periods for all budgets in one query
-     final periodsMap = <String, BudgetPeriod>{};
-     if (budgetIds.isNotEmpty) {
-       // We need to get the most recent non-closed period for each budget
-       final periods = await (select(budgetPeriods)
-             ..where((p) => p.budgetId.isIn(budgetIds) & p.isClosed.equals(false))
-             ..orderBy([(p) => OrderingTerm.desc(p.periodStart)]))
-           .get();
-           
-       // Group by budgetId and take the first (most recent) for each
-       final processedBudgetIds = <String>{};
-       for (final period in periods) {
-         if (!processedBudgetIds.contains(period.budgetId)) {
-           periodsMap[period.budgetId] = period;
-           processedBudgetIds.add(period.budgetId);
-         }
-       }
-     }
-     
-      // For each budget, get the spent amount for its current period (concurrently)
-      final spentFutures = <Future<void>>[];
-      final spentResults = <String, int>{};
-      for (final budget in activeBudgets) {
-        final currentPeriod = periodsMap[budget.id];
-        if (currentPeriod != null) {
-          spentFutures.add(() async {
-            final spent = await getSpentForCategoryInPeriod(
-              budget.categoryId,
-              currentPeriod.periodStart,
-              currentPeriod.periodEnd,
-            );
-            spentResults[budget.id] = spent;
-          }());
+  /// Gets all active budgets with their category, current period, and spent amount in a single query.
+  /// This avoids the N+1 query problem in getActiveBudgetsWithProgress().
+  Future<List<BudgetWithProgress>>
+  getActiveBudgetsWithProgressOptimized() async {
+    // First, get all active budgets
+    final activeBudgets = await getAllActiveBudgets();
+
+    if (activeBudgets.isEmpty) {
+      return [];
+    }
+
+    // Get all category IDs for these budgets
+    final categoryIds = activeBudgets.map((b) => b.categoryId).toSet().toList();
+
+    // Fetch all categories for these budgets in one query
+    final categoriesMap = <String, Category>{};
+    if (categoryIds.isNotEmpty) {
+      final categoryRows = await (select(
+        categories,
+      )..where((c) => c.id.isIn(categoryIds))).get();
+      for (final category in categoryRows) {
+        categoriesMap[category.id] = category;
+      }
+    }
+
+    // Get all budget IDs
+    final budgetIds = activeBudgets.map((b) => b.id).toList();
+
+    // Fetch current periods for all budgets in one query
+    final periodsMap = <String, BudgetPeriod>{};
+    if (budgetIds.isNotEmpty) {
+      // We need to get the most recent non-closed period for each budget
+      final periods =
+          await (select(budgetPeriods)
+                ..where(
+                  (p) => p.budgetId.isIn(budgetIds) & p.isClosed.equals(false),
+                )
+                ..orderBy([(p) => OrderingTerm.desc(p.periodStart)]))
+              .get();
+
+      // Group by budgetId and take the first (most recent) for each
+      final processedBudgetIds = <String>{};
+      for (final period in periods) {
+        if (!processedBudgetIds.contains(period.budgetId)) {
+          periodsMap[period.budgetId] = period;
+          processedBudgetIds.add(period.budgetId);
         }
       }
-      await Future.wait(spentFutures);
+    }
 
-      final result = <BudgetWithProgress>[];
-      for (final budget in activeBudgets) {
-        final category = categoriesMap[budget.categoryId];
-        if (category == null) continue;
-        
-        result.add(BudgetWithProgress(
+    // For each budget, get the spent amount for its current period (concurrently)
+    final spentFutures = <Future<void>>[];
+    final spentResults = <String, int>{};
+    for (final budget in activeBudgets) {
+      final currentPeriod = periodsMap[budget.id];
+      if (currentPeriod != null) {
+        spentFutures.add(() async {
+          final spent = await getSpentForCategoryInPeriod(
+            budget.categoryId,
+            currentPeriod.periodStart,
+            currentPeriod.periodEnd,
+          );
+          spentResults[budget.id] = spent;
+        }());
+      }
+    }
+    await Future.wait(spentFutures);
+
+    final result = <BudgetWithProgress>[];
+    for (final budget in activeBudgets) {
+      final category = categoriesMap[budget.categoryId];
+      if (category == null) continue;
+
+      result.add(
+        BudgetWithProgress(
           budget: budget,
           category: category,
           currentPeriod: periodsMap[budget.id],
           spentInPeriod: spentResults[budget.id] ?? 0,
-        ));
-      }
-     
-      return result;
-     }
+        ),
+      );
+    }
+
+    return result;
+  }
 
   /// Gets daily spending amounts for a budget's category within a date range.
   Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(
@@ -246,20 +271,27 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     final budget = await getBudgetById(budgetId);
     if (budget == null) return [];
 
-    final txns = await (select(transactions)
-          ..where((t) =>
-              t.categoryId.equals(budget.categoryId) &
-              t.createdAt.isBiggerOrEqual(Constant(periodStart)) &
-              t.createdAt.isSmallerOrEqual(Constant(periodEnd)) &
-              (t.type.equals('expense') |
-               t.type.equals('airtime') |
-               t.type.equals('fee')))
-          ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
-        .get();
+    final txns =
+        await (select(transactions)
+              ..where(
+                (t) =>
+                    t.categoryId.equals(budget.categoryId) &
+                    t.createdAt.isBiggerOrEqual(Constant(periodStart)) &
+                    t.createdAt.isSmallerOrEqual(Constant(periodEnd)) &
+                    (t.type.equals('expense') |
+                        t.type.equals('airtime') |
+                        t.type.equals('fee')),
+              )
+              ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+            .get();
 
     final dailyMap = <DateTime, int>{};
     for (final t in txns) {
-      final day = DateTime(t.createdAt.year, t.createdAt.month, t.createdAt.day);
+      final day = DateTime(
+        t.createdAt.year,
+        t.createdAt.month,
+        t.createdAt.day,
+      );
       dailyMap[day] = (dailyMap[day] ?? 0) + t.amount;
     }
 
@@ -269,7 +301,11 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   }
 
   /// Gets total spent for a budget's category within an arbitrary date range.
-  Future<int> getSpentForBudgetInRange(String budgetId, DateTime start, DateTime end) async {
+  Future<int> getSpentForBudgetInRange(
+    String budgetId,
+    DateTime start,
+    DateTime end,
+  ) async {
     final budget = await getBudgetById(budgetId);
     if (budget == null) return 0;
     return getSpentForCategoryInPeriod(budget.categoryId, start, end);

@@ -22,7 +22,12 @@ extension PesaFlowContext on BuildContext {
 
   EdgeInsets get cardEdgePadding => EdgeInsets.all(responsiveCardPadding(this));
 
-  double gridColumns({double narrow = 1, double medium = 2, double wide = 3, double xwide = 4}) {
+  double gridColumns({
+    double narrow = 1,
+    double medium = 2,
+    double wide = 3,
+    double xwide = 4,
+  }) {
     final w = MediaQuery.sizeOf(this).width;
     if (w < 600) return narrow;
     if (w < 840) return medium;
@@ -35,18 +40,30 @@ extension PesaFlowContext on BuildContext {
     return style.copyWith(fontSize: (style.fontSize ?? 14) * scale);
   }
 
-  TextStyle get displayLarge => responsiveText(Theme.of(this).textTheme.displayLarge!);
-  TextStyle get displayMedium => responsiveText(Theme.of(this).textTheme.displayMedium!);
-  TextStyle get displaySmall => responsiveText(Theme.of(this).textTheme.displaySmall!);
-  TextStyle get headlineLarge => responsiveText(Theme.of(this).textTheme.headlineLarge!);
-  TextStyle get headlineMedium => responsiveText(Theme.of(this).textTheme.headlineMedium!);
-  TextStyle get headlineSmall => responsiveText(Theme.of(this).textTheme.headlineSmall!);
-  TextStyle get titleLarge => responsiveText(Theme.of(this).textTheme.titleLarge!);
-  TextStyle get titleMedium => responsiveText(Theme.of(this).textTheme.titleMedium!);
-  TextStyle get titleSmall => responsiveText(Theme.of(this).textTheme.titleSmall!);
-  TextStyle get bodyLarge => responsiveText(Theme.of(this).textTheme.bodyLarge!);
-  TextStyle get bodyMedium => responsiveText(Theme.of(this).textTheme.bodyMedium!);
-  TextStyle get bodySmall => responsiveText(Theme.of(this).textTheme.bodySmall!);
+  TextStyle get displayLarge =>
+      responsiveText(Theme.of(this).textTheme.displayLarge!);
+  TextStyle get displayMedium =>
+      responsiveText(Theme.of(this).textTheme.displayMedium!);
+  TextStyle get displaySmall =>
+      responsiveText(Theme.of(this).textTheme.displaySmall!);
+  TextStyle get headlineLarge =>
+      responsiveText(Theme.of(this).textTheme.headlineLarge!);
+  TextStyle get headlineMedium =>
+      responsiveText(Theme.of(this).textTheme.headlineMedium!);
+  TextStyle get headlineSmall =>
+      responsiveText(Theme.of(this).textTheme.headlineSmall!);
+  TextStyle get titleLarge =>
+      responsiveText(Theme.of(this).textTheme.titleLarge!);
+  TextStyle get titleMedium =>
+      responsiveText(Theme.of(this).textTheme.titleMedium!);
+  TextStyle get titleSmall =>
+      responsiveText(Theme.of(this).textTheme.titleSmall!);
+  TextStyle get bodyLarge =>
+      responsiveText(Theme.of(this).textTheme.bodyLarge!);
+  TextStyle get bodyMedium =>
+      responsiveText(Theme.of(this).textTheme.bodyMedium!);
+  TextStyle get bodySmall =>
+      responsiveText(Theme.of(this).textTheme.bodySmall!);
 
   void dismissKeyboard() => FocusScope.of(this).unfocus();
 
@@ -148,18 +165,17 @@ class ResponsiveCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(borderRadius ?? 20),
-        boxShadow: boxShadow ?? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow:
+            boxShadow ??
+            [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
       ),
-      child: Padding(
-        padding: padding ?? EdgeInsets.all(rp),
-        child: child,
-      ),
+      child: Padding(padding: padding ?? EdgeInsets.all(rp), child: child),
     );
   }
 }

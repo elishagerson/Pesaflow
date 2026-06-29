@@ -11,14 +11,20 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
   Stream<List<Tracker>> watchAllTrackers() {
     return (select(trackers)
           ..where((t) => t.isArchived.equals(false))
-          ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+          ]))
         .watch();
   }
 
   Future<List<Tracker>> getAllTrackers() {
     return (select(trackers)
           ..where((t) => t.isArchived.equals(false))
-          ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+          ]))
         .get();
   }
 
@@ -28,18 +34,23 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
 
   Future<int> insertTracker(Tracker tracker) => into(trackers).insert(tracker);
 
-  Future<bool> updateTracker(Tracker tracker) => update(trackers).replace(tracker);
+  Future<bool> updateTracker(Tracker tracker) =>
+      update(trackers).replace(tracker);
 
   Future<void> deleteTrackerWithCascade(String id) async {
     await db.transaction(() async {
       // 1. Fetch all transactions for this tracker
-      final txs = await (db.select(db.transactions)..where((t) => t.trackerId.equals(id))).get();
+      final txs = await (db.select(
+        db.transactions,
+      )..where((t) => t.trackerId.equals(id))).get();
 
       // 2. Reverse balance adjustments for each transaction
       for (final tx in txs) {
         final txAccId = tx.accountId;
         if (txAccId == null) continue;
-        final account = await (db.select(db.accounts)..where((t) => t.id.equals(txAccId))).getSingleOrNull();
+        final account = await (db.select(
+          db.accounts,
+        )..where((t) => t.id.equals(txAccId))).getSingleOrNull();
         if (account != null) {
           int balanceDelta = 0;
           final type = tx.type.toLowerCase();
@@ -50,17 +61,23 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
           } else if (type == 'transfer') {
             balanceDelta = tx.amount;
           }
-          await (db.update(db.accounts)..where((t) => t.id.equals(account.id))).write(
-            AccountsCompanion(
-              balance: Value(account.balance + balanceDelta),
-            ),
+          await (db.update(
+            db.accounts,
+          )..where((t) => t.id.equals(account.id))).write(
+            AccountsCompanion(balance: Value(account.balance + balanceDelta)),
           );
         }
 
-        if (tx.type.toLowerCase() == 'transfer' && tx.destinationAccountId != null) {
-          final destAccount = await (db.select(db.accounts)..where((t) => t.id.equals(tx.destinationAccountId!))).getSingleOrNull();
+        if (tx.type.toLowerCase() == 'transfer' &&
+            tx.destinationAccountId != null) {
+          final destAccount =
+              await (db.select(db.accounts)
+                    ..where((t) => t.id.equals(tx.destinationAccountId!)))
+                  .getSingleOrNull();
           if (destAccount != null) {
-            await (db.update(db.accounts)..where((t) => t.id.equals(destAccount.id))).write(
+            await (db.update(
+              db.accounts,
+            )..where((t) => t.id.equals(destAccount.id))).write(
               AccountsCompanion(
                 balance: Value(destAccount.balance - tx.amount),
               ),
@@ -70,14 +87,22 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
       }
 
       // 3. Delete transactions
-      await (db.delete(db.transactions)..where((t) => t.trackerId.equals(id))).go();
+      await (db.delete(
+        db.transactions,
+      )..where((t) => t.trackerId.equals(id))).go();
 
       // 4. Delete savings goals and contributions
-      final goals = await (db.select(db.savingsGoals)..where((t) => t.trackerId.equals(id))).get();
+      final goals = await (db.select(
+        db.savingsGoals,
+      )..where((t) => t.trackerId.equals(id))).get();
       final goalIds = goals.map((g) => g.id).toList();
       if (goalIds.isNotEmpty) {
-        await (db.delete(db.savingsGoalContributions)..where((t) => t.savingsGoalId.isIn(goalIds))).go();
-        await (db.delete(db.savingsGoals)..where((t) => t.trackerId.equals(id))).go();
+        await (db.delete(
+          db.savingsGoalContributions,
+        )..where((t) => t.savingsGoalId.isIn(goalIds))).go();
+        await (db.delete(
+          db.savingsGoals,
+        )..where((t) => t.trackerId.equals(id))).go();
       }
 
       // 5. Finally delete the tracker
@@ -85,4 +110,3 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
     });
   }
 }
-

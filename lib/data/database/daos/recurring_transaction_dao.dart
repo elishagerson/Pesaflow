@@ -5,7 +5,8 @@ import '../tables/recurring_transactions_table.dart';
 part 'recurring_transaction_dao.g.dart';
 
 @DriftAccessor(tables: [RecurringTransactions])
-class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$RecurringTransactionDaoMixin {
+class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
+    with _$RecurringTransactionDaoMixin {
   RecurringTransactionDao(super.db);
 
   Stream<List<RecurringTransaction>> watchAll({String? trackerId}) {
@@ -27,15 +28,19 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
   }
 
   Future<RecurringTransaction?> getById(String id) {
-    return (select(recurringTransactions)..where((r) => r.id.equals(id))).getSingleOrNull();
+    return (select(
+      recurringTransactions,
+    )..where((r) => r.id.equals(id))).getSingleOrNull();
   }
 
   /// Returns active recurring transactions whose nextDate is on or before [date].
   Future<List<RecurringTransaction>> getDueTransactions(DateTime date) {
     final query = select(recurringTransactions)
-      ..where((r) =>
-        r.status.equals('active') &
-        r.nextDate.isSmallerOrEqual(Constant(date)))
+      ..where(
+        (r) =>
+            r.status.equals('active') &
+            r.nextDate.isSmallerOrEqual(Constant(date)),
+      )
       ..orderBy([(r) => OrderingTerm.asc(r.nextDate)]);
     return query.get();
   }
@@ -54,19 +59,19 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
   Future<void> markAsProcessed(String id, DateTime nextOccurrence) async {
     final tx = await getById(id);
     if (tx == null) return;
-    await update(recurringTransactions).replace(tx.copyWith(
-      nextDate: nextOccurrence,
-      updatedAt: DateTime.now(),
-    ));
+    await update(
+      recurringTransactions,
+    ).replace(tx.copyWith(nextDate: nextOccurrence, updatedAt: DateTime.now()));
   }
 
   /// Returns all active recurring transactions with non-empty merchantKeywords.
   Future<List<RecurringTransaction>> getActiveWithKeywords() {
-    return (select(recurringTransactions)
-          ..where((r) =>
+    return (select(recurringTransactions)..where(
+          (r) =>
               r.status.equals('active') &
               r.merchantKeywords.isNotNull() &
-              r.merchantKeywords.equals('').not()))
+              r.merchantKeywords.equals('').not(),
+        ))
         .get();
   }
 
@@ -76,13 +81,15 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
     if (tx == null) return;
 
     final nextDue = _advanceDate(tx.nextDate, tx.frequency, tx.intervalValue);
-    await update(recurringTransactions).replace(tx.copyWith(
-      lastPaidAt: Value(paidAt),
-      totalPaid: tx.totalPaid + amount,
-      paymentCount: tx.paymentCount + 1,
-      nextDate: nextDue,
-      updatedAt: DateTime.now(),
-    ));
+    await update(recurringTransactions).replace(
+      tx.copyWith(
+        lastPaidAt: Value(paidAt),
+        totalPaid: tx.totalPaid + amount,
+        paymentCount: tx.paymentCount + 1,
+        nextDate: nextDue,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   DateTime _advanceDate(DateTime from, String frequency, int interval) {

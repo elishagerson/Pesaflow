@@ -126,7 +126,11 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: const [Colors.transparent, Colors.white24, Colors.transparent],
+            colors: const [
+              Colors.transparent,
+              Colors.white24,
+              Colors.transparent,
+            ],
             stops: [
               _animation.value - 0.3,
               _animation.value,

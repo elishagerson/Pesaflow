@@ -13,8 +13,8 @@ class PesaFlowIllustration extends StatelessWidget {
     Color? color,
     Color? accentColor,
     required this.painter,
-  })  : primaryColor = color ?? const Color(0xFF0F4C5C),
-        accentColor = accentColor ?? const Color(0xFFD4942D);
+  }) : primaryColor = color ?? const Color(0xFF0F4C5C),
+       accentColor = accentColor ?? const Color(0xFFD4942D);
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +28,55 @@ class PesaFlowIllustration extends StatelessWidget {
   static const Color _teal = Color(0xFF0F4C5C);
   static const Color _gold = Color(0xFFD4942D);
 
-  factory PesaFlowIllustration.emptyTransactions({double size = 120, Color? color}) {
+  factory PesaFlowIllustration.emptyTransactions({
+    double size = 120,
+    Color? color,
+  }) {
     final p = color ?? _teal;
-    return PesaFlowIllustration(size: size, color: color, painter: _TransactionsPainter(p, _gold));
+    return PesaFlowIllustration(
+      size: size,
+      color: color,
+      painter: _TransactionsPainter(p, _gold),
+    );
   }
 
   factory PesaFlowIllustration.emptyBudgets({double size = 120, Color? color}) {
     final p = color ?? _teal;
-    return PesaFlowIllustration(size: size, color: color, painter: _BudgetsPainter(p, _gold));
+    return PesaFlowIllustration(
+      size: size,
+      color: color,
+      painter: _BudgetsPainter(p, _gold),
+    );
   }
 
   factory PesaFlowIllustration.emptyGoals({double size = 120, Color? color}) {
     final p = color ?? _teal;
-    return PesaFlowIllustration(size: size, color: color, painter: _GoalsPainter(p, _gold));
+    return PesaFlowIllustration(
+      size: size,
+      color: color,
+      painter: _GoalsPainter(p, _gold),
+    );
   }
 
   factory PesaFlowIllustration.emptyLoans({double size = 120, Color? color}) {
     final p = color ?? _teal;
-    return PesaFlowIllustration(size: size, color: color, painter: _LoansPainter(p, _gold));
+    return PesaFlowIllustration(
+      size: size,
+      color: color,
+      painter: _LoansPainter(p, _gold),
+    );
   }
 
-  factory PesaFlowIllustration.emptySubscriptions({double size = 120, Color? color}) {
+  factory PesaFlowIllustration.emptySubscriptions({
+    double size = 120,
+    Color? color,
+  }) {
     final p = color ?? _teal;
-    return PesaFlowIllustration(size: size, color: color, painter: _SubscriptionsPainter(p, _gold));
+    return PesaFlowIllustration(
+      size: size,
+      color: color,
+      painter: _SubscriptionsPainter(p, _gold),
+    );
   }
 }
 
@@ -68,7 +94,11 @@ class _TransactionsPainter extends CustomPainter {
     final cx = w / 2;
 
     final rrect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: Offset(cx, h * 0.54), width: w * 0.5, height: h * 0.7),
+      Rect.fromCenter(
+        center: Offset(cx, h * 0.54),
+        width: w * 0.5,
+        height: h * 0.7,
+      ),
       const Radius.circular(10),
     );
 
@@ -108,7 +138,11 @@ class _TransactionsPainter extends CustomPainter {
     }
     canvas.drawPath(path, zigzag);
 
-    canvas.drawCircle(Offset(w * 0.7, h * 0.22), 9, Paint()..color = accent.withValues(alpha: 0.15));
+    canvas.drawCircle(
+      Offset(w * 0.7, h * 0.22),
+      9,
+      Paint()..color = accent.withValues(alpha: 0.15),
+    );
     canvas.drawCircle(
       Offset(w * 0.7, h * 0.22),
       9,
@@ -117,11 +151,16 @@ class _TransactionsPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5,
     );
-    canvas.drawCircle(Offset(w * 0.7, h * 0.22), 4, Paint()..color = accent.withValues(alpha: 0.5));
+    canvas.drawCircle(
+      Offset(w * 0.7, h * 0.22),
+      4,
+      Paint()..color = accent.withValues(alpha: 0.5),
+    );
   }
 
   @override
-  bool shouldRepaint(_TransactionsPainter old) => old.primary != primary || old.accent != accent;
+  bool shouldRepaint(_TransactionsPainter old) =>
+      old.primary != primary || old.accent != accent;
 }
 
 // ─── Budgets (Progress gauge) ────────────────────────────────────────────────
@@ -192,7 +231,8 @@ class _BudgetsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_BudgetsPainter old) => old.primary != primary || old.accent != accent;
+  bool shouldRepaint(_BudgetsPainter old) =>
+      old.primary != primary || old.accent != accent;
 }
 
 // ─── Goals (Target / Bullseye) ───────────────────────────────────────────────
@@ -209,7 +249,11 @@ class _GoalsPainter extends CustomPainter {
     final cx = w / 2;
     final cy = h / 2;
 
-    canvas.drawCircle(Offset(cx, cy), w * 0.4, Paint()..color = accent.withValues(alpha: 0.1));
+    canvas.drawCircle(
+      Offset(cx, cy),
+      w * 0.4,
+      Paint()..color = accent.withValues(alpha: 0.1),
+    );
     canvas.drawCircle(
       Offset(cx, cy),
       w * 0.4,
@@ -219,7 +263,11 @@ class _GoalsPainter extends CustomPainter {
         ..strokeWidth = 2,
     );
 
-    canvas.drawCircle(Offset(cx, cy), w * 0.27, Paint()..color = primary.withValues(alpha: 0.1));
+    canvas.drawCircle(
+      Offset(cx, cy),
+      w * 0.27,
+      Paint()..color = primary.withValues(alpha: 0.1),
+    );
     canvas.drawCircle(
       Offset(cx, cy),
       w * 0.27,
@@ -229,7 +277,11 @@ class _GoalsPainter extends CustomPainter {
         ..strokeWidth = 2,
     );
 
-    canvas.drawCircle(Offset(cx, cy), w * 0.14, Paint()..color = accent.withValues(alpha: 0.2));
+    canvas.drawCircle(
+      Offset(cx, cy),
+      w * 0.14,
+      Paint()..color = accent.withValues(alpha: 0.2),
+    );
     canvas.drawCircle(
       Offset(cx, cy),
       w * 0.14,
@@ -249,7 +301,8 @@ class _GoalsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_GoalsPainter old) => old.primary != primary || old.accent != accent;
+  bool shouldRepaint(_GoalsPainter old) =>
+      old.primary != primary || old.accent != accent;
 }
 
 // ─── Loans (Document / Contract) ─────────────────────────────────────────────
@@ -266,7 +319,11 @@ class _LoansPainter extends CustomPainter {
     final cx = w / 2;
 
     final rrect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: Offset(cx, h * 0.5), width: w * 0.48, height: h * 0.72),
+      Rect.fromCenter(
+        center: Offset(cx, h * 0.5),
+        width: w * 0.48,
+        height: h * 0.72,
+      ),
       const Radius.circular(8),
     );
 
@@ -280,14 +337,22 @@ class _LoansPainter extends CustomPainter {
     );
 
     canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTWH(w * 0.33, h * 0.25, w * 0.3, 4), const Radius.circular(2)),
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(w * 0.33, h * 0.25, w * 0.3, 4),
+        const Radius.circular(2),
+      ),
       Paint()..color = primary.withValues(alpha: 0.25),
     );
 
     for (int i = 0; i < 3; i++) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(w * 0.33, h * 0.37 + i * (h * 0.09), w * 0.24 + (i == 2 ? 0 : w * 0.06), 3),
+          Rect.fromLTWH(
+            w * 0.33,
+            h * 0.37 + i * (h * 0.09),
+            w * 0.24 + (i == 2 ? 0 : w * 0.06),
+            3,
+          ),
           const Radius.circular(1.5),
         ),
         Paint()..color = primary.withValues(alpha: 0.15),
@@ -307,7 +372,11 @@ class _LoansPainter extends CustomPainter {
     }
     canvas.drawPath(sigPath, sigPaint);
 
-    canvas.drawCircle(Offset(w * 0.68, h * 0.76), 12, Paint()..color = accent.withValues(alpha: 0.15));
+    canvas.drawCircle(
+      Offset(w * 0.68, h * 0.76),
+      12,
+      Paint()..color = accent.withValues(alpha: 0.15),
+    );
     canvas.drawCircle(
       Offset(w * 0.68, h * 0.76),
       12,
@@ -330,7 +399,8 @@ class _LoansPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_LoansPainter old) => old.primary != primary || old.accent != accent;
+  bool shouldRepaint(_LoansPainter old) =>
+      old.primary != primary || old.accent != accent;
 }
 
 // ─── Subscriptions (Recurring / Refresh) ─────────────────────────────────────
@@ -348,7 +418,11 @@ class _SubscriptionsPainter extends CustomPainter {
     final cy = h / 2;
     final r = w * 0.34;
 
-    canvas.drawCircle(Offset(cx, cy), r + 6, Paint()..color = primary.withValues(alpha: 0.06));
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r + 6,
+      Paint()..color = primary.withValues(alpha: 0.06),
+    );
 
     canvas.drawArc(
       Rect.fromCircle(center: Offset(cx, cy), radius: r),
@@ -396,9 +470,14 @@ class _SubscriptionsPainter extends CustomPainter {
       ..close();
     canvas.drawPath(head2, headPaint2);
 
-    canvas.drawCircle(Offset(cx, cy), 4, Paint()..color = primary.withValues(alpha: 0.3));
+    canvas.drawCircle(
+      Offset(cx, cy),
+      4,
+      Paint()..color = primary.withValues(alpha: 0.3),
+    );
   }
 
   @override
-  bool shouldRepaint(_SubscriptionsPainter old) => old.primary != primary || old.accent != accent;
+  bool shouldRepaint(_SubscriptionsPainter old) =>
+      old.primary != primary || old.accent != accent;
 }

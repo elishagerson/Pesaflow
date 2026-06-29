@@ -59,7 +59,12 @@ class AppTheme {
 
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
-      fontFamilyFallback: const ['SF Mono', 'JetBrains Mono', 'Roboto Mono', 'Courier New'],
+      fontFamilyFallback: const [
+        'SF Mono',
+        'JetBrains Mono',
+        'Roboto Mono',
+        'Courier New',
+      ],
       fontWeight: FontWeight.w900,
     );
   }
@@ -216,9 +221,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isLight
-            ? const Color(0xFFF0F1F4)
-            : const Color(0xFF21262D),
+        fillColor: isLight ? const Color(0xFFF0F1F4) : const Color(0xFF21262D),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,
@@ -226,7 +229,9 @@ class AppTheme {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide(
-            color: isLight ? Colors.black.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.08),
+            color: isLight
+                ? Colors.black.withValues(alpha: 0.05)
+                : Colors.white.withValues(alpha: 0.08),
             width: 0.8,
           ),
         ),
@@ -245,11 +250,16 @@ class AppTheme {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide(
-            color: isLight ? Colors.black.withValues(alpha: 0.02) : Colors.white.withValues(alpha: 0.03),
+            color: isLight
+                ? Colors.black.withValues(alpha: 0.02)
+                : Colors.white.withValues(alpha: 0.03),
             width: 0.8,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 14.0,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -262,26 +272,17 @@ class AppTheme {
           ),
           padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
           minimumSize: const Size(48, 48),
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-          ),
+          textStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 48),
-        ),
+        style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          minimumSize: const Size(48, 48),
-        ),
+        style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
       ),
       iconButtonTheme: IconButtonThemeData(
-        style: IconButton.styleFrom(
-          minimumSize: const Size(48, 48),
-        ),
+        style: IconButton.styleFrom(minimumSize: const Size(48, 48)),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: SegmentedButton.styleFrom(
@@ -298,9 +299,7 @@ class AppTheme {
         color: Colors.transparent,
       ),
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         side: BorderSide.none,
       ),
       dialogTheme: DialogThemeData(
@@ -318,15 +317,26 @@ class AppTheme {
       datePickerTheme: DatePickerThemeData(
         backgroundColor: isLight ? bgLight : surfaceHighDark,
         elevation: 0,
-        headerBackgroundColor: isLight ? const Color(0xFFF0F1F4) : const Color(0xFF161B22),
+        headerBackgroundColor: isLight
+            ? const Color(0xFFF0F1F4)
+            : const Color(0xFF161B22),
         headerForegroundColor: isLight ? onBgLight : Colors.white,
-        headerHeadlineStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        headerHeadlineStyle: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
         dayStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        weekdayStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isLight ? Colors.grey[700] : Colors.grey[400]),
+        weekdayStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: isLight ? Colors.grey[700] : Colors.grey[400],
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24.0),
           side: BorderSide(
-            color: isLight ? Colors.black.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.08),
+            color: isLight
+                ? Colors.black.withValues(alpha: 0.08)
+                : Colors.white.withValues(alpha: 0.08),
             width: 1.0,
           ),
         ),
@@ -349,7 +359,9 @@ class AppTheme {
         todayForegroundColor: WidgetStateProperty.all(scheme.primary),
         todayBorder: BorderSide(color: scheme.primary, width: 1.5),
         cancelButtonStyle: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all(isLight ? Colors.grey[700] : Colors.grey[400]),
+          foregroundColor: WidgetStateProperty.all(
+            isLight ? Colors.grey[700] : Colors.grey[400],
+          ),
         ),
         confirmButtonStyle: ButtonStyle(
           foregroundColor: WidgetStateProperty.all(scheme.primary),
@@ -371,22 +383,36 @@ class AppTheme {
       brightness: brightness,
       primary: isLight ? primaryLight : const Color(0xFF83C5BE),
       onPrimary: isLight ? onPrimaryLight : Colors.black,
-      primaryContainer: isLight ? primaryContainerLight : const Color(0xFF0A3A45),
-      onPrimaryContainer: isLight ? onPrimaryContainerLight : const Color(0xFFC7E8ED),
+      primaryContainer: isLight
+          ? primaryContainerLight
+          : const Color(0xFF0A3A45),
+      onPrimaryContainer: isLight
+          ? onPrimaryContainerLight
+          : const Color(0xFFC7E8ED),
       secondary: isLight ? secondaryLight : const Color(0xFF83C5BE),
       onSecondary: isLight ? onSecondaryLight : Colors.black,
-      secondaryContainer: isLight ? secondaryContainerLight : const Color(0xFF1A4F52),
-      onSecondaryContainer: isLight ? onSecondaryContainerLight : const Color(0xFFBEE3E6),
+      secondaryContainer: isLight
+          ? secondaryContainerLight
+          : const Color(0xFF1A4F52),
+      onSecondaryContainer: isLight
+          ? onSecondaryContainerLight
+          : const Color(0xFFBEE3E6),
       tertiary: isLight ? tertiaryLight : const Color(0xFFF4B740),
       onTertiary: isLight ? onTertiaryLight : Colors.black,
-      tertiaryContainer: isLight ? tertiaryContainerLight : const Color(0xFF4A350E),
-      onTertiaryContainer: isLight ? onTertiaryContainerLight : const Color(0xFFFCECC8),
+      tertiaryContainer: isLight
+          ? tertiaryContainerLight
+          : const Color(0xFF4A350E),
+      onTertiaryContainer: isLight
+          ? onTertiaryContainerLight
+          : const Color(0xFFFCECC8),
       surface: isLight ? bgLight : bgDark,
       onSurface: isLight ? onBgLight : onBgDark,
       surfaceContainerHigh: isLight ? surfaceHighLight : surfaceHighDark,
       surfaceContainerLow: isLight ? bgLight : bgDark,
       outline: isLight ? const Color(0x1A000000) : const Color(0x1AFFFFFF),
-      outlineVariant: isLight ? const Color(0x0F000000) : const Color(0x0FFFFFFF),
+      outlineVariant: isLight
+          ? const Color(0x0F000000)
+          : const Color(0x0FFFFFFF),
       error: isLight ? errorLight : errorDark,
       onError: isLight ? onErrorLight : onErrorDark,
     );

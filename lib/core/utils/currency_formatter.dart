@@ -4,16 +4,19 @@ class CurrencyFormatter {
   static const String currencyPrefix = 'Tsh ';
 
   static final NumberFormat _commaFormatter = NumberFormat('#,##0', 'en_US');
-  static final NumberFormat _decimalFormatter = NumberFormat('#,##0.00', 'en_US');
+  static final NumberFormat _decimalFormatter = NumberFormat(
+    '#,##0.00',
+    'en_US',
+  );
 
   /// Formats TZS amount stored in integer cents (e.g. 5000000 -> Tsh 50,000)
   /// If [showDecimals] is true or [amountInCents] has a remainder, it displays cents decimals.
   static String formatCents(int amountInCents, {bool showDecimals = false}) {
     final double value = amountInCents / 100.0;
-    
+
     // Check if the cents portion is non-zero
     final bool hasCents = (amountInCents % 100) != 0;
-    
+
     if (showDecimals || hasCents) {
       return '$currencyPrefix${_decimalFormatter.format(value)}';
     } else {

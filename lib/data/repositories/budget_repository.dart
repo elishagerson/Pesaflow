@@ -17,20 +17,28 @@ class BudgetRepository {
 
   BudgetRepository(this._budgetDao);
 
-  Stream<List<Budget>> watchAllActiveBudgets() => _budgetDao.watchAllActiveBudgets();
+  Stream<List<Budget>> watchAllActiveBudgets() =>
+      _budgetDao.watchAllActiveBudgets();
 
-  Future<List<Budget>> getAllActiveBudgets() => _budgetDao.getAllActiveBudgets();
+  Future<List<Budget>> getAllActiveBudgets() =>
+      _budgetDao.getAllActiveBudgets();
 
   Future<Budget?> getBudgetById(String id) => _budgetDao.getBudgetById(id);
 
-  Future<BudgetPeriod?> getCurrentPeriod(String budgetId) => _budgetDao.getCurrentPeriod(budgetId);
+  Future<BudgetPeriod?> getCurrentPeriod(String budgetId) =>
+      _budgetDao.getCurrentPeriod(budgetId);
 
-  Future<List<BudgetPeriod>> getPeriodsForBudget(String budgetId) => _budgetDao.getPeriodsForBudget(budgetId);
+  Future<List<BudgetPeriod>> getPeriodsForBudget(String budgetId) =>
+      _budgetDao.getPeriodsForBudget(budgetId);
 
-  Stream<List<BudgetPeriod>> watchPeriodsForBudget(String budgetId) => _budgetDao.watchPeriodsForBudget(budgetId);
+  Stream<List<BudgetPeriod>> watchPeriodsForBudget(String budgetId) =>
+      _budgetDao.watchPeriodsForBudget(budgetId);
 
-  Future<int> getSpentForCategoryInPeriod(String categoryId, DateTime start, DateTime end) =>
-      _budgetDao.getSpentForCategoryInPeriod(categoryId, start, end);
+  Future<int> getSpentForCategoryInPeriod(
+    String categoryId,
+    DateTime start,
+    DateTime end,
+  ) => _budgetDao.getSpentForCategoryInPeriod(categoryId, start, end);
 
   /// Creates a new budget with its first period auto-generated.
   Future<void> createBudget({
@@ -86,76 +94,79 @@ class BudgetRepository {
   }
 
   /// Deletes a budget and all periods.
-  Future<void> deleteBudget(String budgetId) => _budgetDao.deleteBudget(budgetId);
+  Future<void> deleteBudget(String budgetId) =>
+      _budgetDao.deleteBudget(budgetId);
 
-   /// Gets all active budgets enriched with progress data using optimized queries.
-   /// This avoids the N+1 query problem by batching database operations.
-   Future<List<BudgetWithProgress>> getActiveBudgetsWithProgress() async {
-     return await _budgetDao.getActiveBudgetsWithProgressOptimized();
-   }
+  /// Gets all active budgets enriched with progress data using optimized queries.
+  /// This avoids the N+1 query problem by batching database operations.
+  Future<List<BudgetWithProgress>> getActiveBudgetsWithProgress() async {
+    return await _budgetDao.getActiveBudgetsWithProgressOptimized();
+  }
 
   Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(
     String budgetId,
     DateTime periodStart,
     DateTime periodEnd,
-  ) =>
-      _budgetDao.getDailySpendForBudget(budgetId, periodStart, periodEnd);
+  ) => _budgetDao.getDailySpendForBudget(budgetId, periodStart, periodEnd);
 
-  Future<int> getSpentForBudgetInRange(String budgetId, DateTime start, DateTime end) =>
-      _budgetDao.getSpentForBudgetInRange(budgetId, start, end);
+  Future<int> getSpentForBudgetInRange(
+    String budgetId,
+    DateTime start,
+    DateTime end,
+  ) => _budgetDao.getSpentForBudgetInRange(budgetId, start, end);
 
-   /// Checks and closes any expired budget periods, creating new ones with rollover.
-   Future<void> checkAndCloseExpiredPeriods() async {
-     final activeBudgets = await _budgetDao.getAllActiveBudgets();
-     final now = DateTime.now();
+  /// Checks and closes any expired budget periods, creating new ones with rollover.
+  Future<void> checkAndCloseExpiredPeriods() async {
+    final activeBudgets = await _budgetDao.getAllActiveBudgets();
+    final now = DateTime.now();
 
-     for (final budget in activeBudgets) {
-       final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
-       if (currentPeriod == null) continue;
+    for (final budget in activeBudgets) {
+      final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
+      if (currentPeriod == null) continue;
 
-       if (now.isAfter(currentPeriod.periodEnd)) {
-         // Period has expired — close it and create next
-         final spent = await _budgetDao.getSpentForCategoryInPeriod(
-           budget.categoryId,
-           currentPeriod.periodStart,
-           currentPeriod.periodEnd,
-         );
+      if (now.isAfter(currentPeriod.periodEnd)) {
+        // Period has expired — close it and create next
+        final spent = await _budgetDao.getSpentForCategoryInPeriod(
+          budget.categoryId,
+          currentPeriod.periodStart,
+          currentPeriod.periodEnd,
+        );
 
-         int rolloverAmount = 0;
-         if (budget.rollover) {
-           rolloverAmount = BudgetEngine.computeRollover(
-             allocated: currentPeriod.allocated,
-             spent: spent,
-             rolloverType: budget.rolloverType,
-             rolloverCap: budget.rolloverCap,
-           );
-         }
+        int rolloverAmount = 0;
+        if (budget.rollover) {
+          rolloverAmount = BudgetEngine.computeRollover(
+            allocated: currentPeriod.allocated,
+            spent: spent,
+            rolloverType: budget.rolloverType,
+            rolloverCap: budget.rolloverCap,
+          );
+        }
 
-         final nextStart = currentPeriod.periodEnd;
-         final nextEnd = _computePeriodEnd(nextStart, budget.period);
+        final nextStart = currentPeriod.periodEnd;
+        final nextEnd = _computePeriodEnd(nextStart, budget.period);
 
-         final closedPeriod = currentPeriod.copyWith(
-           spent: spent,
-           isClosed: true,
-           rolledTo: Value(rolloverAmount),
-         );
+        final closedPeriod = currentPeriod.copyWith(
+          spent: spent,
+          isClosed: true,
+          rolledTo: Value(rolloverAmount),
+        );
 
-         final nextPeriod = BudgetPeriod(
-           id: _uuid.v4(),
-           budgetId: budget.id,
-           periodStart: nextStart,
-           periodEnd: nextEnd,
-           allocated: budget.amount + rolloverAmount,
-           spent: 0,
-           rolledFrom: rolloverAmount,
-           isClosed: false,
-           createdAt: DateTime.now(),
-         );
+        final nextPeriod = BudgetPeriod(
+          id: _uuid.v4(),
+          budgetId: budget.id,
+          periodStart: nextStart,
+          periodEnd: nextEnd,
+          allocated: budget.amount + rolloverAmount,
+          spent: 0,
+          rolledFrom: rolloverAmount,
+          isClosed: false,
+          createdAt: DateTime.now(),
+        );
 
-         await _budgetDao.closePeriodAndCreateNext(closedPeriod, nextPeriod);
-       }
-     }
-   }
+        await _budgetDao.closePeriodAndCreateNext(closedPeriod, nextPeriod);
+      }
+    }
+  }
 
   /// Computes the end date for a budget period.
   DateTime _computePeriodEnd(DateTime start, String period) {

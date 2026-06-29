@@ -19,7 +19,8 @@ class TransactionWithCategoryAndAccount {
 }
 
 @DriftAccessor(tables: [Transactions, Accounts, Categories])
-class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDaoMixin {
+class TransactionDao extends DatabaseAccessor<AppDatabase>
+    with _$TransactionDaoMixin {
   TransactionDao(super.db);
 
   /// Streams filtered transactions with full category and account details.
@@ -52,10 +53,12 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       query.where(transactions.trackerId.equals(trackerId));
     }
     if (searchQuery != null && searchQuery.isNotEmpty) {
-      query.where(transactions.description.like('%$searchQuery%') |
-                  transactions.sender.like('%$searchQuery%') |
-                  transactions.recipient.like('%$searchQuery%') |
-                  transactions.reference.like('%$searchQuery%'));
+      query.where(
+        transactions.description.like('%$searchQuery%') |
+            transactions.sender.like('%$searchQuery%') |
+            transactions.recipient.like('%$searchQuery%') |
+            transactions.reference.like('%$searchQuery%'),
+      );
     }
     if (startDate != null) {
       query.where(transactions.createdAt.isBiggerOrEqual(Constant(startDate)));
@@ -84,7 +87,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   /// Fetches the recent N transactions with category and account details.
-  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(int limit, {String? trackerId}) {
+  Stream<List<TransactionWithCategoryAndAccount>> watchRecentTransactions(
+    int limit, {
+    String? trackerId,
+  }) {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
@@ -111,7 +117,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   /// Inserts a transaction and adjusts the linked account(s) balance inside a transaction.
   /// Transactions pending user review (source == 'sms_reviewed') are inserted without
   /// adjusting balances — the adjustment is deferred to [approveReviewedTransaction].
-  Future<void> writeTransactionWithBalanceAdjustment(Transaction transaction) async {
+  Future<void> writeTransactionWithBalanceAdjustment(
+    Transaction transaction,
+  ) async {
     await attachedDatabase.transaction(() async {
       // 1. Insert the transaction
       await into(transactions).insert(transaction);
@@ -152,7 +160,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
       // 5. For transfers, also credit the destination account
       if (type == 'transfer' && transaction.destinationAccountId != null) {
-        final destQuery = select(accounts)..where((t) => t.id.equals(transaction.destinationAccountId!));
+        final destQuery = select(accounts)
+          ..where((t) => t.id.equals(transaction.destinationAccountId!));
         final destAccount = await destQuery.getSingleOrNull();
         if (destAccount != null) {
           // For transfers, always use delta for the destination (no carrier balance available).
@@ -167,15 +176,20 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Inserts a transaction without adjusting any account balance.
   /// Used for offline/record-only payments where no wallet should be affected.
-  Future<void> insertTransactionWithoutBalanceAdjustment(Transaction transaction) async {
+  Future<void> insertTransactionWithoutBalanceAdjustment(
+    Transaction transaction,
+  ) async {
     await into(transactions).insert(transaction);
   }
 
   /// Deletes a transaction and reverses the linked account's balance adjustment inside a transaction.
-  Future<void> deleteTransactionWithBalanceAdjustment(String transactionId) async {
+  Future<void> deleteTransactionWithBalanceAdjustment(
+    String transactionId,
+  ) async {
     await attachedDatabase.transaction(() async {
       // 1. Fetch the transaction to know the amount and type
-      final transQuery = select(transactions)..where((t) => t.id.equals(transactionId));
+      final transQuery = select(transactions)
+        ..where((t) => t.id.equals(transactionId));
       final transactionObj = await transQuery.getSingleOrNull();
 
       if (transactionObj == null) return;
@@ -212,8 +226,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       }
 
       // 5. For transfers, also reverse the destination credit
-      if (transactionObj.type.toLowerCase() == 'transfer' && transactionObj.destinationAccountId != null) {
-        final destQuery = select(accounts)..where((t) => t.id.equals(transactionObj.destinationAccountId!));
+      if (transactionObj.type.toLowerCase() == 'transfer' &&
+          transactionObj.destinationAccountId != null) {
+        final destQuery = select(accounts)
+          ..where((t) => t.id.equals(transactionObj.destinationAccountId!));
         final destAccount = await destQuery.getSingleOrNull();
         if (destAccount != null) {
           final updatedDest = destAccount.copyWith(
@@ -224,13 +240,16 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       }
 
       // 6. Delete the transaction
-      await (delete(transactions)..where((t) => t.id.equals(transactionId))).go();
+      await (delete(
+        transactions,
+      )..where((t) => t.id.equals(transactionId))).go();
     });
   }
 
   /// Checks if a transaction with the given reference exists in the database.
   Future<bool> existsByReference(String reference) async {
-    final query = select(transactions)..where((t) => t.reference.equals(reference));
+    final query = select(transactions)
+      ..where((t) => t.reference.equals(reference));
     final row = await query.getSingleOrNull();
     return row != null;
   }
@@ -244,16 +263,20 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     required DateTime end,
   }) async {
     final query = select(transactions)
-      ..where((t) => t.provider.equals(provider) & 
-                     t.type.equals(type) & 
-                     t.amount.equals(amount) & 
-                     t.createdAt.isBiggerOrEqual(Constant(start)) & 
-                     t.createdAt.isSmallerOrEqual(Constant(end)));
+      ..where(
+        (t) =>
+            t.provider.equals(provider) &
+            t.type.equals(type) &
+            t.amount.equals(amount) &
+            t.createdAt.isBiggerOrEqual(Constant(start)) &
+            t.createdAt.isSmallerOrEqual(Constant(end)),
+      );
     return query.get();
   }
 
   /// Streams transactions that need user review (source = 'sms_reviewed').
-  Stream<List<TransactionWithCategoryAndAccount>> watchReviewQueueTransactions() {
+  Stream<List<TransactionWithCategoryAndAccount>>
+  watchReviewQueueTransactions() {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
@@ -275,15 +298,20 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Approves a reviewed transaction by updating its source to 'sms_auto',
   /// optionally changing its category, and applying the deferred balance adjustment.
-  Future<void> approveReviewedTransaction(String transactionId, {String? newCategoryId}) async {
+  Future<void> approveReviewedTransaction(
+    String transactionId, {
+    String? newCategoryId,
+  }) async {
     await attachedDatabase.transaction(() async {
-      final query = select(transactions)..where((t) => t.id.equals(transactionId));
+      final query = select(transactions)
+        ..where((t) => t.id.equals(transactionId));
       final existing = await query.getSingleOrNull();
       if (existing == null) return;
 
       String? trackerId = existing.trackerId;
       if (trackerId == null) {
-        final settingsQuery = db.select(db.appSettings)..where((t) => t.key.equals('active_tracker_id'));
+        final settingsQuery = db.select(db.appSettings)
+          ..where((t) => t.key.equals('active_tracker_id'));
         final setting = await settingsQuery.getSingleOrNull();
         trackerId = setting?.value ?? 'default_personal';
       }
@@ -300,11 +328,18 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   /// Finds the category ID of the most recent transaction that matches the description
   /// or sender/recipient to dynamically adapt auto-categorization based on past history.
-  Future<List<String>> findRecentCategoriesForDescription(String description, String senderOrRecipient, {int limit = 3}) async {
+  Future<List<String>> findRecentCategoriesForDescription(
+    String description,
+    String senderOrRecipient, {
+    int limit = 3,
+  }) async {
     final query = select(transactions)
-      ..where((t) => t.description.equals(description) |
-                     t.sender.equals(senderOrRecipient) |
-                     t.recipient.equals(senderOrRecipient))
+      ..where(
+        (t) =>
+            t.description.equals(description) |
+            t.sender.equals(senderOrRecipient) |
+            t.recipient.equals(senderOrRecipient),
+      )
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(limit);
     final rows = await query.get();
@@ -319,12 +354,13 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   /// Fetches a single transaction with its category and account details by ID.
-  Future<TransactionWithCategoryAndAccount?> getTransactionWithDetailsById(String id) async {
+  Future<TransactionWithCategoryAndAccount?> getTransactionWithDetailsById(
+    String id,
+  ) async {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
-    ])
-      ..where(transactions.id.equals(id));
+    ])..where(transactions.id.equals(id));
 
     final row = await query.getSingleOrNull();
     if (row == null) return null;
@@ -343,14 +379,18 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     required DateTime end,
   }) async {
     final query = select(transactions)
-      ..where((t) => t.type.equals('transfer') &
-                     t.amount.equals(amount) &
-                     ((t.accountId.equals(accountId) & t.destinationAccountId.equals(destinationAccountId)) |
-                      (t.accountId.equals(destinationAccountId) & t.destinationAccountId.equals(accountId))) &
-                     t.smsTimestamp.isBiggerOrEqual(Constant(start)) &
-                     t.smsTimestamp.isSmallerOrEqual(Constant(end)));
+      ..where(
+        (t) =>
+            t.type.equals('transfer') &
+            t.amount.equals(amount) &
+            ((t.accountId.equals(accountId) &
+                    t.destinationAccountId.equals(destinationAccountId)) |
+                (t.accountId.equals(destinationAccountId) &
+                    t.destinationAccountId.equals(accountId))) &
+            t.smsTimestamp.isBiggerOrEqual(Constant(start)) &
+            t.smsTimestamp.isSmallerOrEqual(Constant(end)),
+      );
     final results = await query.get();
     return results.isNotEmpty ? results.first : null;
   }
 }
-
