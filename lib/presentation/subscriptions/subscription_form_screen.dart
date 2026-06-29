@@ -243,7 +243,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      contentPadding: EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing8),
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) {
@@ -252,7 +252,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                     },
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: kSpacing8),
                 Text(_frequencyLabel(_frequency), style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[300] : Colors.grey[700])),
               ],
             ),
