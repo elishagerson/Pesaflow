@@ -148,7 +148,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               decoration: const InputDecoration(labelText: 'Service name', hintText: 'Netflix, Spotify, DStv...'),
               validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             accountsAsync.when(
               data: (accounts) {
                 return ModernDropdown<String>(
@@ -168,7 +168,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               loading: () => const LinearProgressIndicator(),
               error: (e, _) => Text('Error loading accounts: $e'),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Consumer(builder: (context, watchRef, _) {
               final catsAsync = watchRef.watch(categoriesFutureProvider);
               return catsAsync.when(
@@ -194,7 +194,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 error: (e, _) => Text('Error: $e'),
               );
             }),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             TextFormField(
               controller: _keywordsController,
               decoration: const InputDecoration(
@@ -204,7 +204,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
               ),
               validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Amount (TZS)', hintText: '15000'),
@@ -216,7 +216,7 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             DropdownButtonFormField<String>(
               initialValue: _frequency,
               decoration: const InputDecoration(labelText: 'Frequency'),
@@ -231,11 +231,11 @@ class _SubscriptionFormScreenState extends ConsumerState<SubscriptionFormScreen>
                 if (v != null) setState(() => _frequency = v);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Row(
               children: [
                 Text('Every', style: TextStyle(fontSize: 14, color: isDark ? Colors.grey[300] : Colors.grey[700])),
-                const SizedBox(width: 8),
+                const SizedBox(width: kSpacing8),
                 SizedBox(
                   width: 60,
                   child: TextFormField(

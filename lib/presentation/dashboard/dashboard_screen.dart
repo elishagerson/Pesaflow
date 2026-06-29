@@ -416,8 +416,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 56,
-                width: 56,
+                height: kSpacing56,
+                width: kSpacing56,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -1499,7 +1499,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: SizedBox(
-                          height: 8,
+                          height: kSpacing8,
                           child: Row(
                             children: [
                               Expanded(
@@ -1676,7 +1676,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: SizedBox(
-                              height: 6,
+                              height: kSpacing6,
                               child: Row(
                                 children: [
                                   Expanded(
@@ -3001,10 +3001,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 4.0,
-            bottom: 16.0,
+            left: kSpacing16,
+            right: kSpacing16,
+            top: kSpacing4,
+            bottom: kSpacing16,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -3079,8 +3079,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Row(
                             children: [
                               SizedBox(
-                                height: 12,
-                                width: 12,
+                                height: kSpacing12,
+                                width: kSpacing12,
                                 child: CircularProgressIndicator(
                                   value: overallPct,
                                   strokeWidth: 2,
@@ -3168,8 +3168,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             
                             return Padding(
                               padding: EdgeInsets.only(
-                                right: 8.0,
-                                left: index == 0 ? 2.0 : 0.0,
+                                right: kSpacing8,
+                                left: index == 0 ? kSpacing2 : 0.0,
                               ),
                               child: TactileSpringContainer(
                                 onTap: () {
