@@ -616,7 +616,8 @@ class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Widget buildScrollbar(
       BuildContext context, Widget child, ScrollableDetails details) {
-    if (details.direction == Axis.horizontal) {
+    if (details.direction == AxisDirection.left ||
+        details.direction == AxisDirection.right) {
       return child;
     }
     return super.buildScrollbar(context, child, details);
