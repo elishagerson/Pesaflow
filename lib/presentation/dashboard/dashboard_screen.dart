@@ -25,6 +25,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -43,7 +44,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return 'Good Evening';
   }
 
-  Widget _buildActiveParserBadge(bool isDark, String label) {
+  Widget _buildActiveParserBadge(ThemeData theme, bool isDark, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -65,10 +66,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(
+            style: theme.textTheme.labelSmall?.copyWith(
               fontSize: 9,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -458,10 +459,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 10),
               Text(
                 bp.budget.name,
-                style: TextStyle(
-                  fontSize: 12,
+                style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black,
+                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -470,7 +470,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: 3),
               Text(
                 remainingText,
-                style: TextStyle(
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: remainingColor,
@@ -565,11 +565,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       Text(
                         'THIS MONTH',
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
-                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -586,7 +586,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Text(
                         netSavings >= 0 ? '$savingsPct% SAVED' : '${savingsPct.abs()}% DEFICIT',
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: FontWeight.w900,
                           color: netSavings >= 0
@@ -648,12 +648,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
+                                Text(
                                   'Income',
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  style: theme.textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -662,7 +661,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               amountInCents: income,
                               type: AmountType.income,
                               useMonospace: true,
-                              style: const TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -685,12 +684,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
+                                Text(
                                   'Expense',
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  style: theme.textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -699,7 +697,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               amountInCents: expense,
                               type: AmountType.expense,
                               useMonospace: true,
-                              style: const TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -732,10 +730,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 const SizedBox(width: 8),
                                 Text(
                                   netSavings >= 0 ? 'Saved' : 'Deficit',
-                                  style: const TextStyle(
+                                  style: theme.textTheme.bodySmall?.copyWith(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
+                                    color: theme.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -744,7 +742,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               amountInCents: netSavings.abs(),
                               type: netSavings >= 0 ? AmountType.income : AmountType.expense,
                               useMonospace: true,
-                              style: const TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -793,9 +791,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 children: [
                   Icon(Icons.message_rounded, size: 14, color: const Color(0xFF609F8A)),
                   const SizedBox(width: 6),
-                  Text('SMS AUTO-TRACKING', style: TextStyle(
+                  Text('SMS AUTO-TRACKING', style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   )),
                 ],
               ),
@@ -809,8 +807,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 child: Text(
                   pendingReviewCount > 0 ? '$pendingReviewCount PENDING' : '0 PENDING',
-                  style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900,
-                    color: pendingReviewCount > 0 ? const Color(0xFFFF9F0A) : Colors.grey[500],
+                  style: theme.textTheme.labelSmall?.copyWith(fontSize: 8, fontWeight: FontWeight.w900,
+                    color: pendingReviewCount > 0 ? const Color(0xFFFF9F0A) : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -819,8 +817,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const SizedBox(height: 10),
           Text(
             'Review parsed mobile money & bank transactions from your SMS.',
-            style: TextStyle(fontSize: 11, height: 1.3,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            style: theme.textTheme.labelSmall?.copyWith(fontSize: 11, height: 1.3,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -834,10 +832,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: Wrap(
                   spacing: 4, runSpacing: 4,
                   children: [
-                    _buildActiveParserBadge(isDark, 'M-Pesa'),
-                    _buildActiveParserBadge(isDark, 'Tigo'),
-                    _buildActiveParserBadge(isDark, 'Airtel'),
-                    _buildActiveParserBadge(isDark, 'Selcom'),
+                    _buildActiveParserBadge(theme, isDark, 'M-Pesa'),
+                    _buildActiveParserBadge(theme, isDark, 'Tigo'),
+                    _buildActiveParserBadge(theme, isDark, 'Airtel'),
+                    _buildActiveParserBadge(theme, isDark, 'Selcom'),
                   ],
                 ),
               ),
@@ -853,8 +851,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Let's go", style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black,
+                      Text("Let's go", style: theme.textTheme.labelSmall?.copyWith(
+                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
                         fontWeight: FontWeight.bold, fontSize: 11,
                       )),
                       const SizedBox(width: 2),
@@ -895,11 +893,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       Text(
                         'LIMITS & SPENDING',
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
-                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -971,11 +969,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     Text(
                       'LIMITS & SPENDING',
-                      style: TextStyle(
+                      style: theme.textTheme.labelSmall?.copyWith(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -1058,10 +1056,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Expanded(
                 child: Text(
                   message,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: theme.textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.white70 : Colors.black87,
+                    color: isDark ? Colors.white.withValues(alpha: 0.7) : theme.colorScheme.onSurface.withValues(alpha: 0.87),
                   ),
                 ),
               ),
@@ -1112,11 +1109,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       Text(
                         'ACTIVE EMERGENCY VAULT',
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
-                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -1203,14 +1200,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             Text(
                               goal.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)} of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -1221,16 +1217,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           Text(
                             '$percentInt%',
-                            style: TextStyle(
+                            style: theme.textTheme.titleSmall?.copyWith(
                               color: goalColor,
                               fontWeight: FontWeight.w900,
                               fontSize: 16,
                             ),
                           ),
                           const SizedBox(height: 2),
-                          const Text(
+                          Text(
                             'Completed',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),
@@ -1274,11 +1273,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 Text(
                   'DEBT OVERVIEW',
-                  style: TextStyle(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     fontSize: 9,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.2,
-                    color: isDark ? Colors.grey[500] : Colors.grey[600],
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -1292,7 +1291,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           padding: const EdgeInsets.only(right: 8),
                           child: Text(
                             '$count paid',
-                            style: TextStyle(fontSize: 11, color: const Color(0xFF609F8A), fontWeight: FontWeight.w600),
+                            style: theme.textTheme.labelSmall?.copyWith(color: const Color(0xFF609F8A), fontWeight: FontWeight.w600),
                           ),
                         )
                       : const SizedBox.shrink(),
@@ -1347,10 +1346,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Expanded(
                             child: Text(
                               'No active debt. Keep it that way.',
-                              style: TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
-                                color: isDark ? Colors.white : Colors.black,
+                                color: isDark ? Colors.white : theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -1383,7 +1382,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     const SizedBox(width: 8),
                                     Text(
                                       '$paidCount loan${paidCount == 1 ? '' : 's'} paid off',
-                                      style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                      ),
                                     ),
                                     const Spacer(),
                                     Icon(Icons.chevron_right_rounded, size: 16, color: Colors.grey),
@@ -1460,18 +1461,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               children: [
                                 Text(
                                   CurrencyFormatter.formatCents(totalOutstanding),
-                                  style: TextStyle(
-                                    fontSize: 24,
+                                  style: theme.textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.w900,
-                                    color: isDark ? Colors.white : Colors.black,
+                                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
                                     letterSpacing: -0.5,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   '$severityLevel DEBT BURDEN',
-                                  style: TextStyle(
-                                    fontSize: 11,
+                                  style: theme.textTheme.labelSmall?.copyWith(
                                     fontWeight: FontWeight.w900,
                                     color: severityColor,
                                     letterSpacing: 0.8,
@@ -1488,8 +1487,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             child: Text(
                               '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
-                              style: TextStyle(
-                                fontSize: 11,
+                              style: theme.textTheme.labelSmall?.copyWith(
                                 fontWeight: FontWeight.w800,
                                 color: severityColor,
                               ),
@@ -1537,7 +1535,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           Text(
                             '${(debtRatio * 100).round()}% of net worth',
-                            style: TextStyle(
+                            style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
                               color: severityColor,
@@ -1547,9 +1545,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             netWorth > 0
                                 ? 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}'
                                 : 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}',
-                            style: TextStyle(
+                            style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 10,
-                              color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -1595,7 +1593,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 Expanded(
                                   child: Text(
                                     '$count active loans in 3 months — consider reducing new borrowing',
-                                    style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[300] : Colors.grey[700]),
+                                    style: theme.textTheme.labelSmall?.copyWith(fontSize: 11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                                   ),
                                 ),
                               ],
@@ -1646,13 +1644,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   children: [
                                     Text(
                                       loan.description ?? 'Loan',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
                                       '${ratio > 0.5 ? '⚠' : ''} ${(ratio * 100).round()}% unpaid',
-                                      style: TextStyle(
+                                      style: theme.textTheme.labelSmall?.copyWith(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                         color: loanSeverity,
@@ -1663,7 +1664,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                               Text(
                                 CurrencyFormatter.formatCents(loan.remaining),
-                                style: TextStyle(
+                                style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   fontSize: 14,
                                   color: loanSeverity,
@@ -1943,9 +1944,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Select Icon',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -1983,9 +1984,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Select Color',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -2140,9 +2141,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Select Icon',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -2180,9 +2181,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Select Color',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -2283,7 +2284,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       titleIcon: Icons.warning_amber_rounded,
       content: Text(
         'Are you sure you want to delete "${tracker.name}"? This will permanently delete all transactions and savings goals in this workspace.',
-        style: const TextStyle(fontSize: 14),
+        style: theme.textTheme.bodyMedium,
       ),
       actions: [
         TextButton(
@@ -2348,11 +2349,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       Text(
                         'TRACK RECURRING SERVICES',
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
-                          color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -2387,18 +2388,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             Text(
                               'Track your subscriptions',
-                              style: TextStyle(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: isDark ? Colors.white : Colors.black,
+                                color: isDark ? Colors.white : theme.colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Log recurring payments like streaming, utility bills, or gym memberships to get ahead of renewals.',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -2441,11 +2440,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     Text(
                       '${active.length} ACTIVE',
-                      style: TextStyle(
+                      style: theme.textTheme.labelSmall?.copyWith(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -2462,10 +2461,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         child: Text(
                           '${due.length} due',
-                          style: const TextStyle(
+                          style: theme.textTheme.labelSmall?.copyWith(
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFFFF6B35),
+                            color: const Color(0xFFFF6B35),
                           ),
                         ),
                       ),
@@ -2490,8 +2489,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: [
                     Text(
                       '${CurrencyFormatter.formatCents(totals.monthly)}/mo',
-                      style: TextStyle(
-                        fontSize: 28,
+                      style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
                         color: theme.colorScheme.primary,
                       ),
@@ -2500,11 +2498,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _cycleChip('${_fmtShort(totals.daily)}/day', isDark),
+                        _cycleChip(theme, '${_fmtShort(totals.daily)}/day', isDark),
                         const SizedBox(width: 8),
-                        _cycleChip('${_fmtShort(totals.weekly)}/wk', isDark),
+                        _cycleChip(theme, '${_fmtShort(totals.weekly)}/wk', isDark),
                         const SizedBox(width: 8),
-                        _cycleChip('${_fmtShort(totals.yearly)}/yr', isDark),
+                        _cycleChip(theme, '${_fmtShort(totals.yearly)}/yr', isDark),
                       ],
                     ),
                   ],
@@ -2521,11 +2519,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const SizedBox(width: 6),
                     Text(
                       'UPCOMING RENEWALS',
-                      style: TextStyle(
+                      style: theme.textTheme.labelSmall?.copyWith(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -2551,20 +2549,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Expanded(
                         child: Text(
                           sub.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                          style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
                         _formatDate(sub.nextDueDate),
-                        style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                        style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                       const SizedBox(width: 8),
                       AmountText(
                         amountInCents: sub.amount,
                         type: AmountType.expense,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -2608,7 +2606,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               Expanded(
                                 child: Text(
                                   sub.name,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -2618,7 +2619,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           const SizedBox(height: 2),
                           Text(
                             frequencyLabel(sub.frequency, sub.intervalValue),
-                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                            style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                           ),
                         ],
                       ),
@@ -2627,7 +2628,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       amountInCents: sub.amount,
                       type: AmountType.expense,
                       useMonospace: true,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -2641,7 +2645,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _cycleChip(String text, bool isDark) {
+  Widget _cycleChip(ThemeData theme, String text, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
@@ -2650,10 +2654,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: theme.textTheme.labelSmall?.copyWith(
           fontSize: 9,
           fontWeight: FontWeight.w700,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
       ),
     );
@@ -2671,7 +2675,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildUpcomingRecurring(ThemeData theme, BuildContext context) {
-    final isDark = theme.brightness == Brightness.dark;
     final recurringAsync = ref.watch(dueRecurringTransactionsProvider);
 
     return recurringAsync.when(
@@ -2695,11 +2698,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     Text(
                       'RECURRING',
-                      style: TextStyle(
+                      style: theme.textTheme.labelSmall?.copyWith(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -2738,14 +2741,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           Text(
                             r.description ?? r.frequency,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
                           Text(
                             '${r.frequency} · ${r.nextDate.day}/${r.nextDate.month}',
-                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+                            style: theme.textTheme.labelSmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                           ),
                         ],
                       ),
@@ -2754,7 +2760,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       amountInCents: r.amount,
                       type: r.type == 'income' ? AmountType.income : AmountType.expense,
                       useMonospace: true,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -2894,10 +2903,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 const SizedBox(width: 8),
                 Text(
                   trackerName,
-                  style: TextStyle(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -2966,7 +2975,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Text(
                         '$pendingReviewCount',
-                        style: const TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           color: Colors.white,
                           fontSize: 8,
                           fontWeight: FontWeight.w900,
@@ -3042,7 +3051,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             Text(
                               'pesa',
-                              style: TextStyle(
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 19,
                                 color: isDark ? const Color(0xFF609F8A) : Colors.white,
@@ -3051,7 +3060,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             Text(
                               'flow',
-                              style: TextStyle(
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 19,
                                 color: heroTextColor,
@@ -3086,7 +3095,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               const SizedBox(width: 6),
                               Text(
                                 '${(overallPct * 100).round()}% SPENT',
-                                style: TextStyle(
+                                style: theme.textTheme.labelSmall?.copyWith(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
                                   color: heroTextColor,
@@ -3115,7 +3124,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           _selectedAccountId != null
                               ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
                               : 'TOTAL NET WORTH',
-                          style: TextStyle(
+                          style: theme.textTheme.labelSmall?.copyWith(
                             fontSize: 10,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.5,
@@ -3130,7 +3139,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
                           : netWorth,
                       useMonospace: false,
-                      style: TextStyle(
+                      style: theme.textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w900,
                         fontSize: 42,
                         color: heroTextColor,
@@ -3202,8 +3211,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       const SizedBox(width: 6),
                                       Text(
                                         account.name,
-                                        style: TextStyle(
-                                          fontSize: 12,
+                                        style: theme.textTheme.bodySmall?.copyWith(
                                           fontWeight: FontWeight.bold,
                                           color: isSelected
                                               ? (isDark ? Colors.white : trackerColor)
@@ -3213,8 +3221,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       const SizedBox(width: 8),
                                       Text(
                                         _formatCompact(account.balance),
-                                        style: TextStyle(
-                                          fontSize: 11,
+                                        style: theme.textTheme.labelSmall?.copyWith(
                                           fontFamily: 'monospace',
                                           fontWeight: FontWeight.bold,
                                           color: isSelected
@@ -3235,7 +3242,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       Center(
                         child: Text(
                           'No active accounts. Tap Add Account below to start.',
-                          style: TextStyle(color: heroSubColor, fontSize: 12),
+                          style: theme.textTheme.bodySmall?.copyWith(color: heroSubColor),
                         ),
                       ),
                     ],
@@ -3281,10 +3288,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const SizedBox(width: 6),
                             Text(
                               'Add transaction',
-                              style: TextStyle(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 color: isDark ? trackerColor : Colors.white,
                                 fontWeight: FontWeight.w900,
-                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -3317,10 +3323,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const SizedBox(width: 6),
                             Text(
                               'Add account',
-                              style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: isDark ? Colors.white : theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.w900,
-                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -3371,8 +3376,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       InputChip(
                         label: Text(
                           'Filtered by: ${accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now())).name}',
-                          style: TextStyle(
-                            fontSize: 11,
+                          style: theme.textTheme.labelSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.primary,
                           ),
@@ -3440,10 +3444,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 .withValues(alpha: 0.4),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'No transactions found.',
-                            style: TextStyle(
-                              color: Colors.grey,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -3452,7 +3456,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             _selectedAccountId == null
                                 ? 'Your offline financial logs will display here.'
                                 : 'No activity recorded for this specific account.',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),
@@ -3552,10 +3558,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     children: [
                                       Text(
                                         trans.description.isNotEmpty ? trans.description : item.category.name,
-                                        style: TextStyle(
+                                        style: theme.textTheme.titleMedium?.copyWith(
                                           fontWeight: FontWeight.w800,
-                                          fontSize: 15,
-                                          color: isDark ? Colors.white : Colors.black,
+                                          color: isDark ? Colors.white : theme.colorScheme.onSurface,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -3565,18 +3570,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         children: [
                                           Text(
                                             item.account?.name ?? 'Offline',
-                                            style: TextStyle(
-                                              color: isDark ? Colors.grey[400] : Colors.grey[600],
-                                              fontSize: 11,
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
                                             trans.createdAt.toString().substring(0, 10),
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 11,
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -3590,12 +3593,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   amountInCents: trans.amount,
                                   type: amtType,
                                   showDecimals: true,
-                                  style: TextStyle(
+                                  style: theme.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
                                     color: amtType == AmountType.income
                                         ? AppTheme.transferColorDark
-                                        : (amtType == AmountType.expense ? const Color(0xFFFF453A) : Colors.grey),
+                                        : (amtType == AmountType.expense ? const Color(0xFFFF453A) : theme.colorScheme.onSurfaceVariant),
                                   ),
                                 ),
                               ],

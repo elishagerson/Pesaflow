@@ -8,6 +8,8 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/responsive.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -306,18 +308,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
+                                            children: [
                                             Text(account.name,
-                                                style: TextStyle(
-                                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                style: theme.textTheme.bodyLarge?.copyWith(
                                                   fontSize: 15,
+                                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                                                   color: isSelected
                                                       ? theme.colorScheme.primary
-                                                      : (isDark ? Colors.white : Colors.black87),
+                                                      : (isDark ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.87)),
                                                 )),
                                             const SizedBox(height: 1),
                                             Text('Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                                style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
+                                                style: theme.textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.38) : theme.colorScheme.onSurface.withValues(alpha: 0.38))),
                                           ],
                                         ),
                                       ),
@@ -469,11 +471,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             Row(
                                               children: [
                                                 Text(account.name,
-                                                    style: TextStyle(
-                                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                    style: theme.textTheme.bodyLarge?.copyWith(
                                                       fontSize: 15,
-                                                      color: isDisabled ? Colors.grey :
-                                                          isSelected ? theme.colorScheme.primary : (isDark ? Colors.white : Colors.black87),
+                                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                      color: isDisabled ? theme.colorScheme.onSurfaceVariant :
+                                                          isSelected ? theme.colorScheme.primary : (isDark ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.87)),
                                                     )),
                                                 if (isDisabled) ...[
                                                   const SizedBox(width: 6),
@@ -483,14 +485,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                       color: Colors.grey.withValues(alpha: 0.15),
                                                       borderRadius: BorderRadius.circular(4),
                                                     ),
-                                                    child: const Text('source', style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
+                                                    child: Text('source', style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600)),
                                                   ),
                                                 ],
                                               ],
                                             ),
                                             const SizedBox(height: 1),
                                             Text('Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                                style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
+                                                style: theme.textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.38) : theme.colorScheme.onSurface.withValues(alpha: 0.38))),
                                           ],
                                         ),
                                       ),
@@ -581,7 +583,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Category', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                          Text('Category', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
                           const SizedBox(height: 12),
                           GridView.builder(
                             shrinkWrap: true,
@@ -639,12 +641,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                           cat.name,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
+                                          style: theme.textTheme.bodySmall?.copyWith(
+                                            fontSize: 11,
                                             color: isSel 
                                                 ? (theme.brightness == Brightness.dark ? Colors.white : catColor) 
-                                                : (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87),
+                                                : (theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.7) : theme.colorScheme.onSurface.withValues(alpha: 0.87)),
                                             fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                            fontSize: 11,
                                           ),
                                         ),
                                       ),
@@ -664,7 +666,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                          Text('Description', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
                           const SizedBox(height: 8),
                           TextField(
                             controller: _descriptionController,
@@ -692,7 +694,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6.0),
                             child: ActionChip(
-                              label: Text(suggestion, style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.black87)),
+                              label: Text(suggestion, style: theme.textTheme.bodySmall?.copyWith(color: isDark ? Colors.white.withValues(alpha: 0.7) : theme.colorScheme.onSurface.withValues(alpha: 0.87))),
                               backgroundColor: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
                               side: BorderSide(color: isDark ? const Color(0x15FFFFFF) : Colors.black.withValues(alpha: 0.08)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
@@ -713,12 +715,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     const SizedBox(height: 20),
 
                     // Carrier Reference field
-                    const Text('Carrier Reference (Optional)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                    Text('Carrier Reference (Optional)', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
                     const SizedBox(height: 8),
                     TextField(
                       controller: _referenceController,
                       textCapitalization: TextCapitalization.characters,
-                      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+                      style: theme.textTheme.bodyLarge?.copyWith(color: isDark ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.87)),
                       decoration: const InputDecoration(
                         hintText: 'e.g. PP230489A1',
                       ),
@@ -767,7 +769,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                           child: Text(
                             _isEditMode ? 'Update Transaction' : 'Record Transaction',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -813,8 +815,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final double amountValue = double.tryParse(_amountStr) ?? 0.0;
     final String formattedDisplay = NumberFormat('#,###.##').format(amountValue);
 
-    // Font size scaling based on length
-    final double fontSize = _amountStr.length > 10 ? 36.0 : (_amountStr.length > 7 ? 46.0 : 64.0);
+      final double baseFontSize = _amountStr.length > 10 ? 36.0 : (_amountStr.length > 7 ? 46.0 : 64.0);
+    final double fontSize = responsiveFontSize(context, base: baseFontSize);
 
     return Scaffold(
       body: _isLoading
@@ -822,21 +824,20 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           : accounts.isEmpty
               ? Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: EdgeInsets.only(left: context.spacing, right: context.spacing, top: 32, bottom: 32),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.warning_amber_rounded, size: 64, color: theme.colorScheme.primary),
+                        Icon(Icons.warning_amber_rounded, size: 64, color: theme.colorScheme.primary.withValues(alpha: 0.6)),
                         const SizedBox(height: 16),
-                        const Text(
-                          'No Accounts Available',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        Text('No Accounts Available',
+                          style: context.titleMedium.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
+                        Text(
                           'You must create at least one Account before recording manual transactions.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
+                          style: context.bodySmall.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                         ),
                         const SizedBox(height: 20),
                         TactileSpringContainer(
@@ -856,7 +857,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                               ],
                             ),
-                            child: const Text('Go to Dashboard', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            child: Text('Go to Dashboard', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ],
@@ -874,12 +875,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           onPressed: () => context.pop(),
                         ),
                       ),
-                      // Header Segment Toggle (internal styled pill like first screenshot)
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.isCompactView ? 8 : 16),
                       StaggeredFadeSlide(
                         index: 0,
                         child: Container(
-                        width: 320,
+                        width: responsiveValue(context, compact: 280, tablet: 400, desktop: 480),
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           color: isDark ? AppTheme.surfaceContainerDark : Colors.black.withValues(alpha: 0.05),
@@ -909,10 +909,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   child: Center(
                                     child: Text(
                                       'Expense',
-                                      style: TextStyle(
-                                        color: _transactionType == 'Expense' ? const Color(0xFFFF453A) : Colors.grey,
-                                        fontWeight: FontWeight.bold,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
                                         fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: _transactionType == 'Expense' ? const Color(0xFFFF453A) : theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -940,10 +940,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   child: Center(
                                     child: Text(
                                       'Income',
-                                      style: TextStyle(
-                                        color: _transactionType == 'Income' ? AppTheme.transferColorDark : Colors.grey,
-                                        fontWeight: FontWeight.bold,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
                                         fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: _transactionType == 'Income' ? AppTheme.transferColorDark : theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -971,10 +971,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   child: Center(
                                     child: Text(
                                       'Transfer',
-                                      style: TextStyle(
-                                        color: _transactionType == 'Transfer' ? AppTheme.transferColorDark : Colors.grey,
-                                        fontWeight: FontWeight.bold,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
                                         fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: _transactionType == 'Transfer' ? AppTheme.transferColorDark : theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -992,9 +992,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         index: 1,
                         child: Column(
                           children: [
-                            const Text(
+                            Text(
                               'Amount',
-                              style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 6),
                             Padding(
@@ -1003,10 +1003,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 fit: BoxFit.scaleDown,
                                 child: KeypadSpringText(
                                   text: 'Tsh $formattedDisplay',
-                                  style: TextStyle(
+                                  style: theme.textTheme.headlineMedium!.copyWith(
                                     fontSize: fontSize,
                                     fontWeight: FontWeight.w900,
-                                    color: isDark ? Colors.white : Colors.black,
+                                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
                                     fontFamily: 'monospace',
                                     letterSpacing: -1.0,
                                   ),
@@ -1037,10 +1037,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 children: [
                                   Text(
                                     'From ${activeAccount.name}',
-                                    style: TextStyle(
-                                      color: isDark ? Colors.white70 : Colors.black87, 
-                                      fontWeight: FontWeight.bold,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? Colors.white.withValues(alpha: 0.7) : theme.colorScheme.onSurface.withValues(alpha: 0.87),
                                     ),
                                   ),
                                   const SizedBox(width: 4),
@@ -1067,10 +1067,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       _selectedDestinationAccountId != null
                                           ? 'To ${accounts.firstWhere((a) => a.id == _selectedDestinationAccountId, orElse: () => Account(id: '', name: 'Unknown', type: '', balance: 0, icon: '', sortOrder: 0, isArchived: false, createdAt: DateTime.now())).name}'
                                           : 'To',
-                                      style: TextStyle(
-                                        color: isDark ? Colors.white70 : Colors.black87, 
-                                        fontWeight: FontWeight.bold,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
                                         fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? Colors.white.withValues(alpha: 0.7) : theme.colorScheme.onSurface.withValues(alpha: 0.87),
                                       ),
                                     ),
                                     const SizedBox(width: 4),
@@ -1107,18 +1107,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                       ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: context.isCompactView ? 16 : 24),
 
-                      // Continue Button (stark white visual CTA)
+                      // Continue Button
                       StaggeredFadeSlide(
                         index: 4,
                         child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        padding: EdgeInsets.symmetric(horizontal: context.spacing, vertical: 12.0),
                         child: TactileSpringContainer(
                           onTap: () => _showSecondaryDetailsSheet(context, categories),
                           child: Container(
                             width: double.infinity,
-                            height: 50,
+                            height: context.isCompactView ? 44 : 50,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -1133,7 +1133,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                               ],
                             ),
-                            child: const Text('Continue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                            child: Text('Continue', style: theme.textTheme.titleSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ),
@@ -1159,7 +1159,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           child: TactileSpringContainer(
             onTap: () => _keypadPress(key),
             child: Container(
-              height: 64,
+              height: context.isCompactView ? 52 : 64,
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(color: dividerColor, width: 0.5),
@@ -1173,7 +1173,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ? Icon(Icons.backspace_outlined, color: textColor, size: 20)
                     : Text(
                         key,
-                        style: TextStyle(
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontSize: 24,
                           fontWeight: FontWeight.w400,
                           color: textColor,
