@@ -31,15 +31,9 @@ import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    const ProviderScope(
-      child: PesaFlowApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: PesaFlowApp()));
 }
 
 class PesaFlowApp extends ConsumerStatefulWidget {
@@ -49,8 +43,11 @@ class PesaFlowApp extends ConsumerStatefulWidget {
   ConsumerState<PesaFlowApp> createState() => _PesaFlowAppState();
 }
 
-class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingObserver {
-  static const _notificationChannel = MethodChannel('pesaflow/notification_listener');
+class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
+    with WidgetsBindingObserver {
+  static const _notificationChannel = MethodChannel(
+    'pesaflow/notification_listener',
+  );
   bool _isAuthenticated = false;
   bool _showOnboarding = false;
 
@@ -72,7 +69,10 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
               body: decoded['body'] as String? ?? '',
             );
           } catch (e) {
-            developer.log('Failed to decode SMS notification: $e', name: 'SmsNotification');
+            developer.log(
+              'Failed to decode SMS notification: $e',
+              name: 'SmsNotification',
+            );
           }
         }
       }
@@ -109,7 +109,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       if (!overlaySeen) {
         // Check DB-based onboarding status only if overlay wasn't shown
         try {
-          final completed = await ref.read(settingsRepositoryProvider).isOnboardingComplete();
+          final completed = await ref
+              .read(settingsRepositoryProvider)
+              .isOnboardingComplete();
           if (!completed) {
             appRouter.go('/onboarding');
             return;
@@ -122,17 +124,29 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       // Request POST_NOTIFICATIONS permission (Android 13+)
       try {
         await _notificationChannel.invokeMethod('requestPostNotifications');
-        developer.log('POST_NOTIFICATIONS permission requested', name: 'AppLaunch');
+        developer.log(
+          'POST_NOTIFICATIONS permission requested',
+          name: 'AppLaunch',
+        );
       } catch (e) {
-        developer.log('POST_NOTIFICATIONS request failed: $e', name: 'AppLaunch');
+        developer.log(
+          'POST_NOTIFICATIONS request failed: $e',
+          name: 'AppLaunch',
+        );
       }
 
       // Initialize background SMS listeners and registration
       try {
         await ref.read(smsBackgroundServiceProvider).initialize();
-        developer.log('Background SMS service initialized successfully', name: 'AppLaunch');
+        developer.log(
+          'Background SMS service initialized successfully',
+          name: 'AppLaunch',
+        );
       } catch (e) {
-        developer.log('Failed to initialize SMS background service: $e', name: 'AppLaunch');
+        developer.log(
+          'Failed to initialize SMS background service: $e',
+          name: 'AppLaunch',
+        );
       }
 
       // Process any SMS notifications captured while app was killed
@@ -160,7 +174,13 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
         await notif.checkSubscriptionRenewals(
           subs: recs
               .where((r) => r.status == 'active' && r.type == 'expense')
-              .map((r) => (name: r.description ?? 'Recurring Bill', amountCents: r.amount, nextDueDate: r.nextDate))
+              .map(
+                (r) => (
+                  name: r.description ?? 'Recurring Bill',
+                  amountCents: r.amount,
+                  nextDueDate: r.nextDate,
+                ),
+              )
               .toList(),
         );
       } catch (e) {
@@ -180,21 +200,32 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
     ref.read(settingsRepositoryProvider).markOnboardingComplete();
   }
 
-  Future<void> _handleSmsNotification({required String sender, required String body}) async {
+  Future<void> _handleSmsNotification({
+    required String sender,
+    required String body,
+  }) async {
     if (sender.isEmpty || body.isEmpty) return;
     try {
       final processor = ref.read(smsProcessorProvider);
       await processor.processSms(sender, body, DateTime.now());
     } catch (e) {
-      developer.log('Notification listener SMS processing failed: $e', name: 'SmsNotification');
+      developer.log(
+        'Notification listener SMS processing failed: $e',
+        name: 'SmsNotification',
+      );
     }
   }
 
   Future<void> _processPendingSms() async {
     try {
-      final result = await _notificationChannel.invokeMethod<List<dynamic>>('getPendingSms');
+      final result = await _notificationChannel.invokeMethod<List<dynamic>>(
+        'getPendingSms',
+      );
       if (result == null || result.isEmpty) return;
-      developer.log('Processing ${result.length} pending SMS from notification listener', name: 'SmsNotification');
+      developer.log(
+        'Processing ${result.length} pending SMS from notification listener',
+        name: 'SmsNotification',
+      );
       for (final raw in result) {
         if (raw is! String) continue;
         try {
@@ -205,26 +236,39 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
             body: decoded['body'] as String? ?? '',
           );
         } catch (e) {
-          developer.log('Failed to process pending SMS: $e', name: 'SmsNotification');
+          developer.log(
+            'Failed to process pending SMS: $e',
+            name: 'SmsNotification',
+          );
         }
       }
       await _notificationChannel.invokeMethod('clearPendingSms');
       developer.log('Cleared pending SMS queue', name: 'SmsNotification');
     } catch (e) {
-      developer.log('Pending SMS retrieval failed: $e', name: 'SmsNotification');
+      developer.log(
+        'Pending SMS retrieval failed: $e',
+        name: 'SmsNotification',
+      );
     }
   }
 
   Future<void> _checkNotificationAccess() async {
     if (!mounted) return;
     try {
-      final dismissed = await ref.read(settingsRepositoryProvider).getSetting('notification_access_prompt_dismissed');
+      final dismissed = await ref
+          .read(settingsRepositoryProvider)
+          .getSetting('notification_access_prompt_dismissed');
       if (dismissed == 'true') return;
 
-      final enabled = await _notificationChannel.invokeMethod<bool>('isNotificationListenerEnabled');
+      final enabled = await _notificationChannel.invokeMethod<bool>(
+        'isNotificationListenerEnabled',
+      );
       if (enabled == true) return;
 
-      developer.log('Notification Access not enabled — prompting user', name: 'AppLaunch');
+      developer.log(
+        'Notification Access not enabled — prompting user',
+        name: 'AppLaunch',
+      );
       if (!mounted) return;
       await ModernDialog.showCustom(
         context: context,
@@ -245,14 +289,21 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
               ),
               TextButton(
                 onPressed: () async {
-                  await ref.read(settingsRepositoryProvider).setSetting('notification_access_prompt_dismissed', 'true');
+                  await ref
+                      .read(settingsRepositoryProvider)
+                      .setSetting(
+                        'notification_access_prompt_dismissed',
+                        'true',
+                      );
                   if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                 },
                 child: const Text("Don't show again"),
               ),
               FilledButton(
                 onPressed: () async {
-                  await _notificationChannel.invokeMethod('openNotificationListenerSettings');
+                  await _notificationChannel.invokeMethod(
+                    'openNotificationListenerSettings',
+                  );
                   if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
                 },
                 child: const Text('Open Settings'),
@@ -314,7 +365,10 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
         });
       }
     } catch (e) {
-      developer.log('Biometric authentication failed: $e', name: 'BiometricLock');
+      developer.log(
+        'Biometric authentication failed: $e',
+        name: 'BiometricLock',
+      );
     }
   }
 
@@ -325,15 +379,11 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
     final lightCs = ColorScheme.fromSeed(
       seedColor: accentColor,
       brightness: Brightness.light,
-    ).copyWith(
-      primary: accentColor,
-    );
+    ).copyWith(primary: accentColor);
     final darkCs = ColorScheme.fromSeed(
       seedColor: accentColor,
       brightness: Brightness.dark,
-    ).copyWith(
-      primary: accentColor,
-    );
+    ).copyWith(primary: accentColor);
 
     final lockEnabled = ref.watch(appLockEnabledProvider).value ?? false;
     final showLockOverlay = lockEnabled && !_isAuthenticated;
@@ -341,11 +391,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
 
     ref.listen(netWorthProvider, (prev, next) {
       final enabled = ref.read(lockScreenBalanceEnabledProvider).value ?? false;
-      ref.read(lockScreenServiceProvider).showBalanceNotification(next, isEnabled: enabled);
+      ref
+          .read(lockScreenServiceProvider)
+          .showBalanceNotification(next, isEnabled: enabled);
     });
     ref.listen(lockScreenBalanceEnabledProvider, (prev, next) {
       final balance = ref.read(netWorthProvider);
-      ref.read(lockScreenServiceProvider).showBalanceNotification(balance, isEnabled: next.value ?? false);
+      ref
+          .read(lockScreenServiceProvider)
+          .showBalanceNotification(balance, isEnabled: next.value ?? false);
     });
 
     return MaterialApp.router(
@@ -356,8 +410,10 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       themeMode: mode,
       routerConfig: appRouter,
       builder: (context, child) {
-        final isLight = mode == ThemeMode.light ||
-            (mode == ThemeMode.system && MediaQuery.platformBrightnessOf(context) == Brightness.light);
+        final isLight =
+            mode == ThemeMode.light ||
+            (mode == ThemeMode.system &&
+                MediaQuery.platformBrightnessOf(context) == Brightness.light);
         final systemOverlay = isLight
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light;
@@ -372,14 +428,16 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
             autofocus: true,
             onKeyEvent: (node, event) {
               if (event is KeyDownEvent) {
-                final ctrl = HardwareKeyboard.instance.isControlPressed ||
+                final ctrl =
+                    HardwareKeyboard.instance.isControlPressed ||
                     HardwareKeyboard.instance.isMetaPressed;
                 final paletteOpen = ref.read(paletteVisibilityProvider);
                 if (ctrl && event.logicalKey == LogicalKeyboardKey.keyK) {
                   ref.read(paletteVisibilityProvider.notifier).toggle();
                   return KeyEventResult.handled;
                 }
-                if (paletteOpen && event.logicalKey == LogicalKeyboardKey.escape) {
+                if (paletteOpen &&
+                    event.logicalKey == LogicalKeyboardKey.escape) {
                   ref.read(paletteVisibilityProvider.notifier).hide();
                   return KeyEventResult.handled;
                 }
@@ -387,91 +445,104 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
               return KeyEventResult.ignored;
             },
             child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: ScrollConfiguration(
-              behavior: CupertinoScrollBehavior(),
-              child: Stack(
-                children: [
-                  child ?? const SizedBox.shrink(),
-                  _PendingReviewOverlay(),
-                  if (showLockOverlay)
-                    Positioned.fill(
-                      child: Container(
-                        color: Colors.black.withValues(alpha: 0.85),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                          child: Center(
-                            child: SingleChildScrollView(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: MediaQuery.sizeOf(context).width < 400 ? 16 : 32,
-                                vertical: 32,
-                              ),
-                              child: Card(
-                                color: Colors.white.withValues(alpha: 0.08),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                  side: BorderSide(
-                                    color: Colors.white.withValues(alpha: 0.12),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Semantics(
-                        label: 'App locked',
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: ScrollConfiguration(
+                behavior: CupertinoScrollBehavior(),
+                child: Stack(
+                  children: [
+                    child ?? const SizedBox.shrink(),
+                    _PendingReviewOverlay(),
+                    if (showLockOverlay)
+                      Positioned.fill(
                         child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF609F8A).withValues(alpha: 0.15),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.lock_outline_rounded,
-                                            color: Color(0xFF609F8A),
-                                            size: 48,
-                                          ),
-                                        ),
+                          color: Colors.black.withValues(alpha: 0.85),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                            child: Center(
+                              child: SingleChildScrollView(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.sizeOf(context).width < 400
+                                      ? 16
+                                      : 32,
+                                  vertical: 32,
+                                ),
+                                child: Card(
+                                  color: Colors.white.withValues(alpha: 0.08),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    side: BorderSide(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.12,
                                       ),
-                                      const SizedBox(height: 24),
-                                      const Text(
-                                        'PesaFlow Locked',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Authentication required to access offline data',
-                                        style: TextStyle(
-                                          color: Colors.grey[400],
-                                          fontSize: 13,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 32),
-                                      FilledButton.icon(
-                                        onPressed: _authenticate,
-                                        icon: const Icon(Icons.fingerprint_rounded),
-                                        label: const Text('Unlock App'),
-                                        style: FilledButton.styleFrom(
-                                          backgroundColor: const Color(0xFF609F8A),
-                                          foregroundColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 14,
-                                          ),
-                                          minimumSize: const Size(200, 48),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(16),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Semantics(
+                                          label: 'App locked',
+                                          child: Container(
+                                            padding: const EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFF609F8A,
+                                              ).withValues(alpha: 0.15),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Icon(
+                                              Icons.lock_outline_rounded,
+                                              color: Color(0xFF609F8A),
+                                              size: 48,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 24),
+                                        const Text(
+                                          'PesaFlow Locked',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Authentication required to access offline data',
+                                          style: TextStyle(
+                                            color: Colors.grey[400],
+                                            fontSize: 13,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 32),
+                                        FilledButton.icon(
+                                          onPressed: _authenticate,
+                                          icon: const Icon(
+                                            Icons.fingerprint_rounded,
+                                          ),
+                                          label: const Text('Unlock App'),
+                                          style: FilledButton.styleFrom(
+                                            backgroundColor: const Color(
+                                              0xFF609F8A,
+                                            ),
+                                            foregroundColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 24,
+                                              vertical: 14,
+                                            ),
+                                            minimumSize: const Size(200, 48),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -479,18 +550,17 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
                           ),
                         ),
                       ),
-                    ),
-                  if (ref.watch(paletteVisibilityProvider))
-                    const CommandPalette(),
-                  if (_showOnboarding)
-                    OnboardingOverlay(onComplete: _onOnboardingComplete),
-                 ],
-               ),
-             ),
-           ),
+                    if (ref.watch(paletteVisibilityProvider))
+                      const CommandPalette(),
+                    if (_showOnboarding)
+                      OnboardingOverlay(onComplete: _onOnboardingComplete),
+                  ],
+                ),
+              ),
+            ),
           ),
-         );
-       },
+        );
+      },
     );
   }
 }
@@ -499,7 +569,8 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
 /// category assignment and shows a dialog immediately.
 class _PendingReviewOverlay extends ConsumerStatefulWidget {
   @override
-  ConsumerState<_PendingReviewOverlay> createState() => _PendingReviewOverlayState();
+  ConsumerState<_PendingReviewOverlay> createState() =>
+      _PendingReviewOverlayState();
 }
 
 class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
