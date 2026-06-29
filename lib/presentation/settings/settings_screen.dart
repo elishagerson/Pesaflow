@@ -70,7 +70,7 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             )),
-          const SizedBox(height: 24),
+          const SizedBox(height: kSpacing24),
         ],
       ),
     );
@@ -217,7 +217,7 @@ class SettingsScreen extends ConsumerWidget {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 TextField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
@@ -253,7 +253,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
               if (accountType == 'Bank') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 ModernDropdown<String>(
                   labelText: 'Bank Brand',
                   value: provider ?? 'NMB',
@@ -288,7 +288,7 @@ class SettingsScreen extends ConsumerWidget {
                   },
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               TextField(
                 controller: balanceController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -333,7 +333,7 @@ class SettingsScreen extends ConsumerWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -428,7 +428,7 @@ class SettingsScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: kSpacing16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -445,11 +445,11 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           if (categories.isEmpty)
-            const Center(child: Padding(padding: EdgeInsets.all(32), child: Text('No categories seeded.')))
+            const Center(child: Padding(padding: EdgeInsets.all(kSpacing32), child: Text('No categories seeded.')))
           else
             ...categories.map((cat) => IosListRow(
               leading: Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(kSpacing8),
                 decoration: BoxDecoration(
                   color: hexToColor(cat.color).withValues(alpha: 0.15),
                   shape: BoxShape.circle,
@@ -460,7 +460,7 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: Text(cat.type.toUpperCase(), style: const TextStyle(fontSize: 11, color: Colors.grey)),
               trailing: cat.isSystem
                   ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4.0),
@@ -477,11 +477,11 @@ class SettingsScreen extends ConsumerWidget {
                            },
                            child: const Icon(Icons.edit_rounded, size: 20, color: Colors.blue),
                          ),
-                         const SizedBox(width: 12),
-                         GestureDetector(
-                           onTap: () async {
-                             try {
-                               await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
+                          const SizedBox(width: kSpacing12),
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                await ref.read(categoryRepositoryProvider).deleteCategory(cat.id);
                                ref.invalidate(categoriesFutureProvider);
                                ref.invalidate(filteredTransactionsStreamProvider);
                                if (context.mounted) Navigator.of(context).pop();
@@ -498,7 +498,7 @@ class SettingsScreen extends ConsumerWidget {
                        ],
                      ),
             )),
-          const SizedBox(height: 24),
+          const SizedBox(height: kSpacing24),
         ],
       ),
     );
@@ -555,7 +555,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               ModernDropdown<String>(
                 labelText: 'Category Type',
                 value: categoryType,
@@ -584,9 +584,9 @@ class SettingsScreen extends ConsumerWidget {
                   }
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               const Text('Select Theme Color', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
-              const SizedBox(height: 10),
+              const SizedBox(height: kSpacing10),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
@@ -612,9 +612,9 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               const Text('Select Icon', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.grey)),
-              const SizedBox(height: 10),
+              const SizedBox(height: kSpacing10),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
@@ -627,7 +627,7 @@ class SettingsScreen extends ConsumerWidget {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.15) : Colors.transparent,
                         borderRadius: BorderRadius.circular(8.0),
@@ -652,7 +652,7 @@ class SettingsScreen extends ConsumerWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
           ),
           onPressed: () async {
             if (nameController.text.trim().isEmpty) return;
@@ -772,7 +772,7 @@ class SettingsScreen extends ConsumerWidget {
       builder: (ctx) => ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: kSpacing24, horizontal: kSpacing20),
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
                 ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
@@ -784,7 +784,7 @@ class SettingsScreen extends ConsumerWidget {
               Center(
                 child: Container(
                   width: 36, height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: kSpacing20),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(100),
@@ -792,11 +792,11 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const Text('App Theme', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               _themeOption(ctx, ref, ThemeMode.system, current, 'System default', Icons.settings_brightness_rounded, 'Follow your device settings'),
               _themeOption(ctx, ref, ThemeMode.light, current, 'Light', Icons.light_mode_rounded, 'Always use light mode'),
               _themeOption(ctx, ref, ThemeMode.dark, current, 'Dark', Icons.dark_mode_rounded, 'Always use dark mode'),
-              const SizedBox(height: 12),
+              const SizedBox(height: kSpacing12),
             ],
           ),
         ),
@@ -808,14 +808,14 @@ class SettingsScreen extends ConsumerWidget {
     final isSelected = mode == current;
     final theme = Theme.of(ctx);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: kSpacing8),
       child: GestureDetector(
         onTap: () {
           ref.read(themeModeProvider.notifier).setThemeMode(mode);
           Navigator.pop(ctx);
         },
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(kSpacing16),
           decoration: BoxDecoration(
             color: isSelected
                 ? theme.colorScheme.primary.withValues(alpha: 0.08)
@@ -832,7 +832,7 @@ class SettingsScreen extends ConsumerWidget {
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.colorScheme.primary.withValues(alpha: 0.12)
@@ -841,7 +841,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 child: Icon(icon, color: isSelected ? theme.colorScheme.primary : Colors.grey, size: 20),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: kSpacing14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -882,7 +882,7 @@ class SettingsScreen extends ConsumerWidget {
                 rows: [
                   IosListRow(
                     leading: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(kSpacing8),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(8),
@@ -1048,7 +1048,7 @@ class SettingsScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                 Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 6, top: 24),
+                padding: const EdgeInsets.only(left: kSpacing16, bottom: kSpacing6, top: kSpacing24),
                 child: Text(
                   'DATABASE HEALTH'.toUpperCase(),
                   style: TextStyle(
@@ -1060,7 +1060,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                 child: Row(
                   children: [
                     Expanded(
@@ -1070,7 +1070,7 @@ class SettingsScreen extends ConsumerWidget {
                         value: '${accounts.length}',
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: kSpacing8),
                     Expanded(
                       child: IosMetricCard(
                         icon: Icons.category_rounded,
@@ -1078,7 +1078,7 @@ class SettingsScreen extends ConsumerWidget {
                         value: '${categories.length}',
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: kSpacing8),
                     Expanded(
                       child: IosMetricCard(
                         icon: Icons.receipt_long_rounded,
@@ -1094,7 +1094,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
 
               // Footer
-              const SizedBox(height: 36),
+              const SizedBox(height: kSpacing40),
               Center(
                 child: Column(
                   children: [
@@ -1102,7 +1102,7 @@ class SettingsScreen extends ConsumerWidget {
                       'PesaFlow v1.0.0',
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark ? Colors.grey[500] : Colors.grey[600]),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
                       style: TextStyle(fontSize: 11, color: theme.brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[400]),

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
@@ -54,24 +55,24 @@ class LoanDetailScreen extends ConsumerWidget {
             ],
           ),
           body: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(kSpacing16),
             children: [
               StaggeredFadeSlide(
                 index: 0,
                 child: _buildLoanHeader(loan, theme, isDark),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 1,
                 child: _buildLoanInfo(context, loan, theme, isDark),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 2,
                 child: _buildStatusTimeline(loan, theme, isDark),
               ),
               if (loan.installmentAmount != null) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 3,
                   child: _buildInstallmentSchedule(loan, theme, isDark),
@@ -82,13 +83,13 @@ class LoanDetailScreen extends ConsumerWidget {
                 child: _buildPayoffProjection(loan, theme, isDark),
               ),
               if (loan.status == 'active') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 5,
                   child: _buildPaymentButton(context, loan, theme, isDark, ref),
                 ),
               ],
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
               StaggeredFadeSlide(
                 index: loan.status == 'active' ? 6 : 5,
                 child: Text(
@@ -96,14 +97,14 @@ class LoanDetailScreen extends ConsumerWidget {
                   style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               transactionsAsync.when(
                 data: (txs) {
                   if (txs.isEmpty) {
                     return StaggeredFadeSlide(
                       index: 6,
                       child: GlassCard(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(kSpacing20),
                         borderRadius: AppTheme.radiusCard,
                         child: Center(
                           child: Text(
@@ -150,11 +151,11 @@ class LoanDetailScreen extends ConsumerWidget {
       elevation: CardElevation.medium,
       accentColor: statusColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(kSpacing20),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(kSpacing16),
               decoration: BoxDecoration(
                 color: statusColor.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
@@ -165,7 +166,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Text(
               CurrencyFormatter.formatCents(isActive ? loan.remaining : loan.amount),
               style: TextStyle(
@@ -174,7 +175,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: kSpacing4),
             Text(
               isActive ? 'Remaining Balance' : isPaid ? 'Fully Paid' : 'Defaulted',
               style: TextStyle(
@@ -184,7 +185,7 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
             ),
             if (isActive) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: LinearProgressIndicator(
@@ -194,7 +195,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   minHeight: 6,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               Text(
                 '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
                 style: TextStyle(
@@ -214,18 +215,18 @@ class LoanDetailScreen extends ConsumerWidget {
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(kSpacing12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(kSpacing4),
               child: Text(
                 'Loan Information',
                 style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             _copyableInfoRow(context, 'Provider', loan.provider ?? 'N/A', isDark),
             if (loan.interestRate != null)
               _infoRow('APR', '${loan.interestRate!.toStringAsFixed(1)}%', isDark),
@@ -282,7 +283,7 @@ class LoanDetailScreen extends ConsumerWidget {
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -290,7 +291,7 @@ class LoanDetailScreen extends ConsumerWidget {
               'Status Timeline',
               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             ...events.map((e) => _buildTimelineRow(e, theme, isDark)),
           ],
         ),
@@ -327,10 +328,10 @@ class LoanDetailScreen extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: kSpacing12),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: event.isLast ? 0 : 20),
+              padding: EdgeInsets.only(bottom: event.isLast ? 0 : kSpacing20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -342,7 +343,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: kSpacing2),
                   Text(
                     event.subtitle,
                     style: TextStyle(
@@ -351,7 +352,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     ),
                   ),
                   if (event.date != null) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(
                       _formatDate(event.date!),
                       style: TextStyle(
@@ -379,7 +380,7 @@ class LoanDetailScreen extends ConsumerWidget {
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -387,7 +388,7 @@ class LoanDetailScreen extends ConsumerWidget {
               'Payment Schedule',
               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             Row(
               children: [
                 Expanded(
@@ -401,7 +402,7 @@ class LoanDetailScreen extends ConsumerWidget {
                           color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: kSpacing6),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
@@ -415,7 +416,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Text(
                   '${(ratio * 100).round()}%',
                   style: TextStyle(
@@ -426,11 +427,11 @@ class LoanDetailScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             ...List.generate(total, (i) {
               final isPaid = i < paid;
               return Padding(
-                padding: EdgeInsets.only(bottom: i < total - 1 ? 6 : 0),
+                padding: EdgeInsets.only(bottom: i < total - 1 ? kSpacing6 : 0),
                 child: Row(
                   children: [
                     Container(
@@ -450,7 +451,7 @@ class LoanDetailScreen extends ConsumerWidget {
                             : (isDark ? Colors.grey[500] : Colors.grey[400]),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: kSpacing10),
                     Expanded(
                       child: Text(
                         'Installment ${i + 1}',
@@ -469,9 +470,9 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: kSpacing8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing2),
                       decoration: BoxDecoration(
                         color: isPaid
                             ? const Color(0xFF609F8A).withValues(alpha: 0.12)
@@ -519,23 +520,23 @@ class LoanDetailScreen extends ConsumerWidget {
     final daysLeft = DateTime.now().difference(estimatedDate).inDays.abs();
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: kSpacing16),
       child: GlassCard(
         borderRadius: AppTheme.radiusCard,
         elevation: CardElevation.low,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(kSpacing16),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFF9F0A).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.event_rounded, size: 20, color: Color(0xFFFF9F0A)),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: kSpacing14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,7 +548,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: isDark ? Colors.grey[400] : Colors.grey[600],
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(
                       _formatDate(estimatedDate),
                       style: TextStyle(
@@ -580,21 +581,21 @@ class LoanDetailScreen extends ConsumerWidget {
       elevation: CardElevation.low,
       accentColor: const Color(0xFF609F8A),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
                     color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.payments_rounded, size: 20, color: Color(0xFF609F8A)),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -619,7 +620,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -629,7 +630,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF609F8A),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -637,7 +638,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: kSpacing10),
             SizedBox(
               width: double.infinity,
               child: TextButton.icon(
@@ -651,7 +652,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   ),
                 ),
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -704,7 +705,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           Container(
                             width: 38,
                             height: 5,
@@ -715,14 +716,14 @@ class LoanDetailScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Expanded(
                             child: RawScrollbar(
                               controller: scrollController,
                               child: SingleChildScrollView(
                                 controller: scrollController,
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                                padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
                                 child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -730,19 +731,19 @@ class LoanDetailScreen extends ConsumerWidget {
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(kSpacing10),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                                           shape: BoxShape.circle,
                                         ),
                                         child: const Icon(Icons.payments_rounded, color: Color(0xFF609F8A), size: 22),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: kSpacing14),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const Text('Make a Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                          const SizedBox(height: 2),
+                                          const SizedBox(height: kSpacing2),
                                           Text(
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
                                             style: TextStyle(fontSize: 13, color: isDark ? Colors.grey[400] : Colors.grey[600]),
@@ -751,15 +752,15 @@ class LoanDetailScreen extends ConsumerWidget {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
 
                                   // ── Loan Progress Ring ──
                                   _buildLoanProgressRing(loan, remainingCents, isDark),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
 
                                   // ── Amount Input ──
                                   const Text('PAYMENT AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
@@ -770,7 +771,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                             : Colors.black.withValues(alpha: 0.06),
                                       ),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
                                     child: Row(
                                       children: [
                                         Text(
@@ -781,7 +782,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                             color: isDark ? Colors.white60 : Colors.black45,
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: TextField(
                                             controller: amountController,
@@ -797,7 +798,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                             decoration: const InputDecoration(
                                               hintText: 'Enter amount',
                                               border: InputBorder.none,
-                                              contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                              contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
                                             ),
                                             onChanged: (val) {
                                               setSheetState(() {});
@@ -811,7 +812,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                               setSheetState(() {});
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(4),
+                                              padding: const EdgeInsets.all(kSpacing4),
                                               decoration: BoxDecoration(
                                                 color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                                 shape: BoxShape.circle,
@@ -822,7 +823,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: kSpacing16),
 
                                   // ── Quick Amount Suggestions ──
                                   Row(
@@ -840,7 +841,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         },
                                         isDark: isDark,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       _QuickAmountChip(
                                         label: '50%',
                                         amount: (remainingCents * 0.5).round(),
@@ -854,7 +855,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         },
                                         isDark: isDark,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       _QuickAmountChip(
                                         label: '75%',
                                         amount: (remainingCents * 0.75).round(),
@@ -868,7 +869,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         },
                                         isDark: isDark,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       _QuickAmountChip(
                                         label: '100%',
                                         amount: remainingCents,
@@ -884,11 +885,11 @@ class LoanDetailScreen extends ConsumerWidget {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
 
                                   // ── Description Field ──
                                   const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
@@ -909,11 +910,11 @@ class LoanDetailScreen extends ConsumerWidget {
                                         prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
                                             color: isDark ? Colors.white38 : Colors.black26),
                                         border: InputBorder.none,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
 
                                   // ── Account Selection ──
                                   Row(
@@ -927,14 +928,14 @@ class LoanDetailScreen extends ConsumerWidget {
                                         ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   FutureBuilder<List<Account>>(
                                     future: ref.read(accountRepositoryProvider).getAllAccounts(),
                                     builder: (context, snapshot) {
                                       final accounts = snapshot.data ?? [];
                                       if (accounts.isEmpty) {
                                         return Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(kSpacing16),
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFE53935).withValues(alpha: 0.08),
                                             borderRadius: BorderRadius.circular(14),
@@ -943,7 +944,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           child: Row(
                                             children: [
                                               const Icon(Icons.warning_rounded, size: 18, color: Color(0xFFE53935)),
-                                              const SizedBox(width: 10),
+                                              const SizedBox(width: kSpacing10),
                                               Text('No accounts available. Create one first.',
                                                   style: TextStyle(fontSize: 13, color: const Color(0xFFE53935).withValues(alpha: 0.9))),
                                             ],
@@ -956,13 +957,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                           final balanceCents = account.balance;
                                           final hasFunds = balanceCents >= paymentAmount();
                                           return Padding(
-                                            padding: const EdgeInsets.only(bottom: 8),
+                                            padding: const EdgeInsets.only(bottom: kSpacing8),
                                             child: GestureDetector(
                                               onTap: () => setSheetState(() => selectedAccountId = account.id),
                                               child: AnimatedContainer(
                                                 duration: const Duration(milliseconds: 200),
                                                 curve: Curves.easeOutCubic,
-                                                padding: const EdgeInsets.all(14),
+                                                padding: const EdgeInsets.all(kSpacing14),
                                                 decoration: BoxDecoration(
                                                   color: isSelected
                                                       ? const Color(0xFF609F8A).withValues(alpha: isDark ? 0.15 : 0.08)
@@ -982,7 +983,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 child: Row(
                                                   children: [
                                                     Container(
-                                                      padding: const EdgeInsets.all(8),
+                                                      padding: const EdgeInsets.all(kSpacing8),
                                                       decoration: BoxDecoration(
                                                         color: isSelected
                                                             ? const Color(0xFF609F8A).withValues(alpha: 0.2)
@@ -997,7 +998,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                             : (isDark ? Colors.white54 : Colors.black45),
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 12),
+                                                    const SizedBox(width: kSpacing12),
                                                     Expanded(
                                                       child: Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1010,15 +1011,15 @@ class LoanDetailScreen extends ConsumerWidget {
                                                                     ? (isDark ? Colors.white : const Color(0xFF609F8A))
                                                                     : (isDark ? Colors.white : Colors.black87),
                                                               )),
-                                                          const SizedBox(height: 1),
+                                                          const SizedBox(height: kSpacing2),
                                                           Row(
                                                             children: [
                                                               Text('Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
                                                                   style: TextStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black38)),
                                                               if (selectedAccountId != null && !hasFunds && paymentAmount() > 0) ...[
-                                                                const SizedBox(width: 8),
+                                                                const SizedBox(width: kSpacing8),
                                                                 Container(
-                                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                                  padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
                                                                   decoration: BoxDecoration(
                                                                     color: const Color(0xFFE53935).withValues(alpha: 0.12),
                                                                     borderRadius: BorderRadius.circular(4),
@@ -1033,7 +1034,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                     ),
                                                     if (isSelected)
                                                       Container(
-                                                        padding: const EdgeInsets.all(4),
+                                                        padding: const EdgeInsets.all(kSpacing4),
                                                         decoration: BoxDecoration(
                                                           color: const Color(0xFF609F8A).withValues(alpha: 0.15),
                                                           shape: BoxShape.circle,
@@ -1049,7 +1050,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                       );
                                     },
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
 
                                   // ── Pay Button ──
                                   SizedBox(
@@ -1092,7 +1093,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                                         ),
                                         child: isProcessing
                                             ? const SizedBox(
@@ -1105,7 +1106,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 children: [
                                                   if (paymentAmount() > 0 && selectedAccountId != null)
                                                     Icon(Icons.lock_rounded, size: 16, color: Colors.white.withValues(alpha: 0.8)),
-                                                  if (paymentAmount() > 0 && selectedAccountId != null) const SizedBox(width: 8),
+                                                  if (paymentAmount() > 0 && selectedAccountId != null) const SizedBox(width: kSpacing8),
                                                   Text(
                                                     paymentAmount() <= 0
                                                         ? 'Enter an amount'
@@ -1172,7 +1173,7 @@ class LoanDetailScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: kSpacing16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1185,7 +1186,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF609F8A))),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: kSpacing4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1195,7 +1196,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 ],
               ),
               if (totalInstallments > 0) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: kSpacing4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1302,7 +1303,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           Container(
                             width: 38,
                             height: 5,
@@ -1313,33 +1314,33 @@ class LoanDetailScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Expanded(
                             child: RawScrollbar(
                               controller: scrollController,
                               child: SingleChildScrollView(
                                 controller: scrollController,
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                                padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(kSpacing10),
                                           decoration: BoxDecoration(
                                             color: const Color(0xFF609F8A).withValues(alpha: 0.12),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(Icons.receipt_long_rounded, color: Color(0xFF609F8A), size: 22),
                                         ),
-                                        const SizedBox(width: 14),
+                                        const SizedBox(width: kSpacing14),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             const Text('Record Offline Payment', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                            const SizedBox(height: 2),
+                                            const SizedBox(height: kSpacing2),
                                             Text(
                                               'No wallet account will be affected',
                                               style: TextStyle(fontSize: 12, color: isDark ? Colors.grey[500] : Colors.grey[500]),
@@ -1348,9 +1349,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 24),
+                                    const SizedBox(height: kSpacing24),
                                     const Text('AMOUNT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: kSpacing8),
                                     Container(
                                       decoration: BoxDecoration(
                                         color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
@@ -1361,7 +1362,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                               : Colors.black.withValues(alpha: 0.06),
                                         ),
                                       ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
                                       child: Row(
                                         children: [
                                           Text(
@@ -1372,7 +1373,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                               color: isDark ? Colors.white60 : Colors.black45,
                                             ),
                                           ),
-                                          const SizedBox(width: 12),
+                                          const SizedBox(width: kSpacing12),
                                           Expanded(
                                             child: TextField(
                                               controller: amountController,
@@ -1388,7 +1389,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                               decoration: const InputDecoration(
                                                 hintText: 'Enter amount',
                                                 border: InputBorder.none,
-                                                contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                                contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
                                               ),
                                               onChanged: (val) {
                                                 setSheetState(() {});
@@ -1402,7 +1403,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                                 setSheetState(() {});
                                               },
                                               child: Container(
-                                                padding: const EdgeInsets.all(4),
+                                                padding: const EdgeInsets.all(kSpacing4),
                                                 decoration: BoxDecoration(
                                                   color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                                                   shape: BoxShape.circle,
@@ -1413,7 +1414,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: kSpacing16),
                                     Row(
                                       children: [
                                         _QuickAmountChip(
@@ -1429,7 +1430,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           },
                                           isDark: isDark,
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: kSpacing8),
                                         _QuickAmountChip(
                                           label: '50%',
                                           amount: (remainingCents * 0.5).round(),
@@ -1443,7 +1444,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           },
                                           isDark: isDark,
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: kSpacing8),
                                         _QuickAmountChip(
                                           label: '75%',
                                           amount: (remainingCents * 0.75).round(),
@@ -1457,7 +1458,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           },
                                           isDark: isDark,
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: kSpacing8),
                                         _QuickAmountChip(
                                           label: '100%',
                                           amount: remainingCents,
@@ -1473,9 +1474,9 @@ class LoanDetailScreen extends ConsumerWidget {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 24),
+                                    const SizedBox(height: kSpacing24),
                                     const Text('MEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: kSpacing8),
                                     Container(
                                       decoration: BoxDecoration(
                                         color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
@@ -1496,13 +1497,13 @@ class LoanDetailScreen extends ConsumerWidget {
                                           prefixIcon: Icon(Icons.edit_note_rounded, size: 20,
                                               color: isDark ? Colors.white38 : Colors.black26),
                                           border: InputBorder.none,
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: kSpacing20),
                                     Container(
-                                      padding: const EdgeInsets.all(12),
+                                      padding: const EdgeInsets.all(kSpacing12),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF609F8A).withValues(alpha: 0.08),
                                         borderRadius: BorderRadius.circular(12),
@@ -1511,7 +1512,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                       child: Row(
                                         children: [
                                           Icon(Icons.info_outline_rounded, size: 16, color: const Color(0xFF609F8A).withValues(alpha: 0.8)),
-                                          const SizedBox(width: 8),
+                                          const SizedBox(width: kSpacing8),
                                           Expanded(
                                             child: Text(
                                               'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
@@ -1521,7 +1522,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(height: 24),
+                                    const SizedBox(height: kSpacing24),
                                     SizedBox(
                                       width: double.infinity,
                                       height: 54,
@@ -1546,7 +1547,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           disabledForegroundColor: isDark ? Colors.white24 : Colors.black26,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                                         ),
                                         child: isProcessing
                                             ? const SizedBox(
@@ -1634,8 +1635,8 @@ class LoanDetailScreen extends ConsumerWidget {
     final isCredit = tx.type == 'income';
     final amountColor = isCredit ? const Color(0xFF609F8A) : const Color(0xFFE53935);
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: kSpacing8),
+      padding: const EdgeInsets.all(kSpacing12),
       decoration: BoxDecoration(
         color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -1647,7 +1648,7 @@ class LoanDetailScreen extends ConsumerWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
               color: amountColor.withValues(alpha: 0.12),
               shape: BoxShape.circle,
@@ -1658,7 +1659,7 @@ class LoanDetailScreen extends ConsumerWidget {
               size: 16,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: kSpacing12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1669,7 +1670,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: kSpacing2),
                 Text(
                   _formatDate(tx.createdAt),
                   style: TextStyle(fontSize: 11, color: isDark ? Colors.grey[500] : Colors.grey[500]),
@@ -1692,7 +1693,7 @@ class LoanDetailScreen extends ConsumerWidget {
 
   Widget _infoRow(String label, String value, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      padding: const EdgeInsets.symmetric(vertical: kSpacing4, horizontal: kSpacing4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1723,7 +1724,7 @@ class LoanDetailScreen extends ConsumerWidget {
       },
       borderRadius: BorderRadius.circular(4),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: kSpacing4, horizontal: kSpacing4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1735,7 +1736,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   value,
                   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: kSpacing4),
                 Icon(
                   Icons.copy_rounded,
                   size: 12,
@@ -1824,7 +1825,7 @@ class _QuickAmountChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: kSpacing10),
           decoration: BoxDecoration(
             color: isActive
                 ? const Color(0xFF609F8A).withValues(alpha: 0.15)
@@ -1852,7 +1853,7 @@ class _QuickAmountChip extends StatelessWidget {
                       : (isDark ? Colors.white70 : Colors.black54),
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: kSpacing2),
               Text(
                 CurrencyFormatter.formatCents(amount),
                 style: TextStyle(
