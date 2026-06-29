@@ -609,3 +609,16 @@ class _PendingReviewOverlayState extends ConsumerState<_PendingReviewOverlay> {
     return const SizedBox.shrink();
   }
 }
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  const AppScrollBehavior();
+
+  @override
+  Widget buildScrollbar(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    if (details.direction == Axis.horizontal) {
+      return child;
+    }
+    return super.buildScrollbar(context, child, details);
+  }
+}
