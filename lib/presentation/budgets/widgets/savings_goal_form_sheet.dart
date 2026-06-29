@@ -82,8 +82,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   }
 
   Future<void> _save() async {
-    if (_formKey.currentState == null || !_formKey.currentState!.validate())
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
+    }
 
     setState(() => _isLoading = true);
     try {
@@ -295,10 +296,13 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 icon: PesaFlowIcons.cash,
                               ),
                               validator: (v) {
-                                if (v == null || v.trim().isEmpty)
-                                  return 'Target is required';
+                                 if (v == null || v.trim().isEmpty) {
+                                   return 'Target is required';
+                                 }
                                 final val = int.tryParse(v) ?? 0;
-                                if (val <= 0) return 'Must be greater than 0';
+                                if (val <= 0) {
+                                  return 'Must be greater than 0';
+                                }
                                 return null;
                               },
                             ),
