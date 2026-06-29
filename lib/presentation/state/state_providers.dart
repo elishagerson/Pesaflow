@@ -10,6 +10,7 @@ import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/budget_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
+import '../../core/utils/settings_keys.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
@@ -301,6 +302,11 @@ final appLockEnabledProvider = StreamProvider<bool>((ref) {
 final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
   return repo.watchSetting('sms_auto_deduplication').map((val) => val == 'true');
+});
+
+final lockScreenBalanceEnabledProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting(SettingsKey.lockScreenBalance).map((val) => val == 'true');
 });
 
 // ═══════════════════════════════════════════════════════
