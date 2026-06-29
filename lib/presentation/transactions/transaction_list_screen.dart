@@ -14,6 +14,7 @@ import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -591,27 +592,23 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           InsightSeverity.critical => const Color(0xFFFF453A),
         };
 
-        return Container(
-          margin: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-          height: 170,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: accentColor.withValues(alpha: 0.3),
-              width: 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: accentColor.withValues(alpha: 0.1),
-                blurRadius: 16,
-                spreadRadius: 1,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(23),
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+          child: Interactive3DCard(
+            borderRadius: 24.0,
+            shadowColor: accentColor,
             child: Container(
+              height: 170,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: accentColor.withValues(alpha: 0.3),
+                  width: 1.0,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(23),
+                child: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -706,11 +703,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               ),
             ),
           ),
-        );
-      },
-      orElse: () => const SizedBox.shrink(),
+        ),
+      ),
     );
-  }
+  },
+  orElse: () => const SizedBox.shrink(),
+);
+}
 
   String _formatKsh(double val) {
     if (val >= 1_000_000) return '${(val / 1_000_000).toStringAsFixed(1)}M';

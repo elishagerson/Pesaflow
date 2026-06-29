@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
+import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 
 class InsightCard extends StatelessWidget {
   final InsightData data;
@@ -16,20 +17,16 @@ class InsightCard extends StatelessWidget {
     return Semantics(
       container: true,
       label: 'Insight: ${data.title}',
-      child: Container(
-        width: 260,
-        padding: const EdgeInsets.all(kSpacing16),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+      child: Interactive3DCard(
+        borderRadius: 16.0,
+        shadowColor: color,
+        child: Container(
+          width: 260,
+          padding: const EdgeInsets.all(kSpacing16),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,6 +59,7 @@ class InsightCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
