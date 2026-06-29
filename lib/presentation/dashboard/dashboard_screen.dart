@@ -4117,14 +4117,21 @@ class _InsightsCarousel extends ConsumerWidget {
 
     return insightsAsync.when(
       data: (insights) {
-        if (insights.isEmpty) return const SizedBox.shrink();
+        if (insights.isEmpty) {
+          return const SizedBox.shrink();
+        }
         return SizedBox(
-          height: 120,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: insights.length,
-            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) => InsightCard(data: insights[i]),
+          height: 138,
+          child: ScrollConfiguration(
+            behavior: const AppScrollBehavior(),
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              clipBehavior: Clip.none,
+              itemCount: insights.length,
+              separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+              itemBuilder: (_, i) => InsightCard(data: insights[i]),
+            ),
           ),
         );
       },
