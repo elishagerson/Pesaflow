@@ -31,15 +31,17 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            illustration ??
-                Semantics(
-                  excludeSemantics: true,
-                  child: Icon(
-                    icon,
-                    size: iconSize,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.4),
+            _AnimatedEmptyIllustration(
+              child: illustration ??
+                  Semantics(
+                    excludeSemantics: true,
+                    child: Icon(
+                      icon,
+                      size: iconSize,
+                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                    ),
                   ),
-                ),
+            ),
             SizedBox(height: context.isCompactView ? 16 : 24),
             Semantics(
               header: true,
@@ -69,6 +71,48 @@ class EmptyState extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedEmptyIllustration extends StatefulWidget {
+  final Widget child;
+
+  const _AnimatedEmptyIllustration({required this.child});
+
+  @override
+  State<_AnimatedEmptyIllustration> createState() =>
+      _AnimatedEmptyIllustrationState();
+}
+
+class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.96, end: 1.04).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutQuad),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _animation,
+      child: widget.child,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// A premium, state-of-the-art interactive container that provides a 3D perspective
 /// tilt effect, dynamic shadow translation, and a shifting light reflection sheen
@@ -31,6 +32,31 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
   double _tiltX = 0.0;
   double _tiltY = 0.0;
   bool _isPressed = false;
+  bool _hasTriggeredHaptic = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Glance auto-tilt sway animation: briefly tilt and release to show off the 3D effect
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      setState(() {
+        _tiltX = 0.35;
+        _tiltY = -0.2;
+      });
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        setState(() {
+          _tiltX = -0.3;
+          _tiltY = 0.35;
+        });
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!mounted) return;
+          _resetTilt();
+        });
+      });
+    });
+  }
 
   void _updateTilt(Offset localPosition, double width, double height) {
     if (width <= 0 || height <= 0) return;
@@ -38,6 +64,17 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
     // Normalize coordinates to [-1.0, 1.0] relative to the center of the widget
     final dx = ((localPosition.dx / width) * 2.0 - 1.0).clamp(-1.0, 1.0);
     final dy = ((localPosition.dy / height) * 2.0 - 1.0).clamp(-1.0, 1.0);
+
+    // Trigger tilt haptic click if absolute tilt exceeds 80% range (0.8 magnitude)
+    final magnitude = Offset(dx, dy).distance;
+    if (magnitude > 0.8) {
+      if (!_hasTriggeredHaptic) {
+        HapticFeedback.selectionClick();
+        _hasTriggeredHaptic = true;
+      }
+    } else {
+      _hasTriggeredHaptic = false;
+    }
 
     setState(() {
       _tiltX = dx;
@@ -51,6 +88,7 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
       _tiltX = 0.0;
       _tiltY = 0.0;
       _isPressed = false;
+      _hasTriggeredHaptic = false;
     });
   }
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class _PaletteAction {
   final IconData icon;
@@ -162,6 +164,29 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
       end: Offset.zero,
     ).animate(_fadeAnimation);
     _animController.forward();
+    _focusNode.onKeyEvent = (node, event) {
+      if (event is KeyDownEvent) {
+        final query = ref.read(paletteQueryProvider);
+        final results = _filtered(query);
+        if (results.isEmpty) return KeyEventResult.ignored;
+
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          setState(() {
+            _selectedIndex = (_selectedIndex + 1) % results.length;
+          });
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          setState(() {
+            _selectedIndex = (_selectedIndex - 1 + results.length) % results.length;
+          });
+          return KeyEventResult.handled;
+        } else if (event.logicalKey == LogicalKeyboardKey.enter) {
+          _select(results[_selectedIndex]);
+          return KeyEventResult.handled;
+        }
+      }
+      return KeyEventResult.ignored;
+    };
     _focusNode.requestFocus();
   }
 
@@ -286,13 +311,27 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                       if (results.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(kSpacing24),
-                          child: Text(
-                            'No matching actions',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'No matching actions',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: kSpacing8),
+                              Text(
+                                'Try: "Groceries", "Income", "MPESA"',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       else
@@ -309,65 +348,68 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                             itemBuilder: (_, i) {
                               final action = results[i];
                               final selected = i == _selectedIndex;
-                              return Semantics(
-                                button: true,
-                                label: action.label,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(12),
-                                    onTap: () => _select(action),
-                                    onHover: (_) =>
-                                        setState(() => _selectedIndex = i),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing12,
-                                        vertical: kSpacing10,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: selected
-                                            ? theme.colorScheme.primary
-                                                  .withValues(
-                                                    alpha: isDark ? 0.2 : 0.1,
-                                                  )
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            action.icon,
-                                            size: 20,
-                                            color: selected
-                                                ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.6),
-                                          ),
-                                          const SizedBox(width: kSpacing12),
-                                          Expanded(
-                                            child: Text(
-                                              action.label,
-                                              style: theme.textTheme.bodyMedium
+                              return StaggeredFadeSlide(
+                                index: i,
+                                child: Semantics(
+                                  button: true,
+                                  label: action.label,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(12),
+                                      onTap: () => _select(action),
+                                      onHover: (_) =>
+                                          setState(() => _selectedIndex = i),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing12,
+                                          vertical: kSpacing10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: selected
+                                              ? theme.colorScheme.primary
+                                                    .withValues(
+                                                      alpha: isDark ? 0.2 : 0.1,
+                                                    )
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              action.icon,
+                                              size: 20,
+                                              color: selected
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme.onSurface
+                                                        .withValues(alpha: 0.6),
+                                            ),
+                                            const SizedBox(width: kSpacing12),
+                                            Expanded(
+                                              child: Text(
+                                                action.label,
+                                                style: theme.textTheme.bodyMedium
+                                                    ?.copyWith(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurface,
+                                                    ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '/>',
+                                              style: theme.textTheme.bodySmall
                                                   ?.copyWith(
-                                                    fontWeight: FontWeight.w500,
                                                     color: theme
                                                         .colorScheme
-                                                        .onSurface,
+                                                        .onSurface
+                                                        .withValues(alpha: 0.3),
+                                                    fontFamily: 'monospace',
                                                   ),
                                             ),
-                                          ),
-                                          Text(
-                                            '/>',
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurface
-                                                      .withValues(alpha: 0.3),
-                                                  fontFamily: 'monospace',
-                                                ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

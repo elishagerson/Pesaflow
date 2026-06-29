@@ -121,7 +121,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   void _keypadPress(String value) {
-    HapticFeedback.lightImpact();
+    if (value == '<') {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
     setState(() {
       if (value == '<') {
         // Backspace
@@ -1663,42 +1667,146 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       children: keys.asMap().entries.map((entry) {
         final index = entry.key;
         final key = entry.value;
-        final keypadButton = TactileSpringContainer(
+        final border = Border(
+          top: BorderSide(color: dividerColor, width: 0.5),
+          right: index < 2
+              ? BorderSide(color: dividerColor, width: 0.5)
+              : BorderSide.none,
+        );
+
+        final keypadButton = KeypadButton(
+          text: key,
           onTap: () => _keypadPress(key),
-          child: Container(
-            height: context.isCompactView ? 52 : 64,
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: dividerColor, width: 0.5),
-                right: index < 2
-                    ? BorderSide(color: dividerColor, width: 0.5)
-                    : BorderSide.none,
-              ),
-            ),
-            child: Center(
-              child: key == '<'
-                  ? Icon(Icons.backspace_outlined, color: textColor, size: 20)
-                  : Text(
-                      key,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                        color: textColor,
-                      ),
-                    ),
-            ),
-          ),
+          height: context.isCompactView ? 52 : 64,
+          border: border,
+          textColor: textColor,
         );
 
         return Expanded(
           child: key == '<'
               ? GestureDetector(
-                  onLongPress: () => setState(() => _amountStr = '0'),
+                  onLongPress: () {
+                    HapticFeedback.vibrate();
+                    setState(() => _amountStr = '0');
+                  },
                   child: keypadButton,
                 )
               : keypadButton,
         );
       }).toList(),
+    );
+  }
+}
+
+class KeypadButton extends StatefulWidget {
+  final String text;
+  final VoidCallback onTap;
+  final double height;
+  final Border border;
+  final Color textColor;
+
+  const KeypadButton({
+    super.key,
+    required this.text,
+    required this.onTap,
+    required this.height,
+    required this.border,
+    required this.textColor,
+  });
+
+  @override
+  State<KeypadButton> createState() => _KeypadButtonState();
+}
+
+class _KeypadButtonState extends State<KeypadButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    );
+    _opacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 0.15),
+        weight: 30,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.15, end: 0.0),
+        weight: 70,
+      ),
+    ]).animate(_animController);
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    _animController.forward(from: 0.0);
+    widget.onTap();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TactileSpringContainer(
+      scaleFactor: 0.94,
+      onTap: _handleTap,
+      child: Container(
+        height: widget.height,
+        decoration: BoxDecoration(
+          border: widget.border,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Pop/Grow background effect
+            AnimatedBuilder(
+              animation: _animController,
+              builder: (context, child) {
+                if (_animController.value == 0.0)
+                  return const SizedBox.shrink();
+                return Container(
+                  width: widget.height * 0.9 * _scaleAnimation.value,
+                  height: widget.height * 0.9 * _scaleAnimation.value,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: widget.textColor.withValues(
+                      alpha: _opacityAnimation.value,
+                    ),
+                  ),
+                );
+              },
+            ),
+            Center(
+              child: widget.text == '<'
+                  ? Icon(
+                      Icons.backspace_outlined,
+                      color: widget.textColor,
+                      size: 20,
+                    )
+                  : Text(
+                      widget.text,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: widget.textColor,
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
