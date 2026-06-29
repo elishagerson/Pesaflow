@@ -14,7 +14,123 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:flutter/services.dart';
+
+enum TrendRange { days, weeks, months }
+
+class TrendDataPoint {
+  final String label;
+  final double income;
+  final double expense;
+
+  TrendDataPoint({
+    required this.label,
+    required this.income,
+    required this.expense,
+  });
+}
+
+class TrendRangeNotifier extends Notifier<TrendRange> {
+  @override
+  TrendRange build() => TrendRange.days;
+
+  @override
+  set state(TrendRange value) => super.state = value;
+}
+
+final trendRangeProvider = NotifierProvider<TrendRangeNotifier, TrendRange>(() {
+  return TrendRangeNotifier();
+});
+
+final trendPointsProvider = FutureProvider<List<TrendDataPoint>>((ref) async {
+  final range = ref.watch(trendRangeProvider);
+  final analyticsRepo = ref.watch(analyticsRepositoryProvider);
+  final now = DateTime.now();
+
+  switch (range) {
+    case TrendRange.days:
+      final daysCount = 14;
+      final startDate = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysCount - 1));
+      final endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+      final snapshots = await analyticsRepo.getDailySnapshots(startDate, endDate);
+      final Map<String, DailySnapshot> snapshotMap = {
+        for (final s in snapshots) s.date: s
+      };
+
+      final List<TrendDataPoint> points = [];
+      for (int i = 0; i < daysCount; i++) {
+        final date = startDate.add(Duration(days: i));
+        final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+        final snapshot = snapshotMap[dateStr];
+
+        final label = DateFormat('dd/MM').format(date);
+        points.add(TrendDataPoint(
+          label: label,
+          income: (snapshot?.totalIncome ?? 0) / 100.0,
+          expense: (snapshot?.totalExpense ?? 0) / 100.0,
+        ));
+      }
+      return points;
+
+    case TrendRange.weeks:
+      final weeksCount = 8;
+      final totalDays = weeksCount * 7;
+      final startDate = DateTime(now.year, now.month, now.day).subtract(Duration(days: totalDays - 1));
+      final endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+      final snapshots = await analyticsRepo.getDailySnapshots(startDate, endDate);
+
+      final List<TrendDataPoint> points = [];
+      for (int w = 0; w < weeksCount; w++) {
+        final weekStart = startDate.add(Duration(days: w * 7));
+        final weekEnd = weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+
+        double weekIncome = 0;
+        double weekExpense = 0;
+
+        for (final s in snapshots) {
+          final sDate = DateTime.parse(s.date);
+          if (sDate.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+              sDate.isBefore(weekEnd.add(const Duration(seconds: 1)))) {
+            weekIncome += s.totalIncome / 100.0;
+            weekExpense += s.totalExpense / 100.0;
+          }
+        }
+
+        final label = 'W${w + 1}\n(${DateFormat('d/M').format(weekStart)})';
+        points.add(TrendDataPoint(
+          label: label,
+          income: weekIncome,
+          expense: weekExpense,
+        ));
+      }
+      return points;
+
+    case TrendRange.months:
+      final snapshots = await analyticsRepo.getMonthlySnapshots(6);
+      final reversed = snapshots.reversed.toList();
+
+      final monthLabels = {
+        '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
+        '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
+        '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
+      };
+
+      return reversed.map((s) {
+        final ym = s.yearMonth;
+        final monthNum = ym.substring(5);
+        final label = monthLabels[monthNum] ?? monthNum;
+        return TrendDataPoint(
+          label: label,
+          income: s.totalIncome / 100.0,
+          expense: s.totalExpense / 100.0,
+        );
+      }).toList();
+  }
+});
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -549,9 +665,44 @@ class _TrendsTab extends StatelessWidget {
   final WidgetRef ref;
   const _TrendsTab({required this.theme, required this.ref});
 
+  Widget _buildRangeButton(TrendRange range, String label, TrendRange current) {
+    final isDark = theme.brightness == Brightness.dark;
+    final isSelected = range == current;
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        ref.read(trendRangeProvider.notifier).state = range;
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? theme.colorScheme.primary
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected
+                ? theme.colorScheme.onPrimary
+                : (isDark ? Colors.white70 : Colors.black54),
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final snapshotsAsync = ref.watch(monthlySnapshotsProvider);
+    final currentRange = ref.watch(trendRangeProvider);
+    final trendPointsAsync = ref.watch(trendPointsProvider);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -561,19 +712,52 @@ class _TrendsTab extends StatelessWidget {
         children: [
           StaggeredFadeSlide(
             index: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-          Text('Income & Expense Trends', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text('Curved trend waves over the last 12 months', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Income & Expense Trends', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 4),
+                      Text(
+                        currentRange == TrendRange.days
+                            ? 'Curved trend waves over the last 14 days'
+                            : (currentRange == TrendRange.weeks
+                                ? 'Curved trend waves over the last 8 weeks'
+                                : 'Curved trend waves over the last 6 months'),
+                        style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildRangeButton(TrendRange.days, 'Days', currentRange),
+                      _buildRangeButton(TrendRange.weeks, 'Weeks', currentRange),
+                      _buildRangeButton(TrendRange.months, 'Months', currentRange),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          snapshotsAsync.when(
-            data: (snapshots) {
-              if (snapshots.isEmpty) {
+          const SizedBox(height: 20),
+          trendPointsAsync.when(
+            data: (points) {
+              if (points.isEmpty) {
                 return const SizedBox(
                   height: 200,
                   child: Center(
@@ -584,135 +768,123 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 );
               }
-              final reversed = snapshots.reversed.toList();
-              
-              // Build points for Income (Green) and Expense (Red)
-              final incomeSpots = List.generate(reversed.length, (i) {
-                return FlSpot(i.toDouble(), reversed[i].totalIncome / 100.0);
+
+              final incomeSpots = List.generate(points.length, (i) {
+                return FlSpot(i.toDouble(), points[i].income);
               });
-              final expenseSpots = List.generate(reversed.length, (i) {
-                return FlSpot(i.toDouble(), reversed[i].totalExpense / 100.0);
+              final expenseSpots = List.generate(points.length, (i) {
+                return FlSpot(i.toDouble(), points[i].expense);
               });
 
-              // Find maximum for clean scaling
               double maxVal = 1000.0;
-              for (final s in reversed) {
-                final inc = s.totalIncome / 100.0;
-                final exp = s.totalExpense / 100.0;
-                if (inc > maxVal) maxVal = inc;
-                if (exp > maxVal) maxVal = exp;
+              for (final p in points) {
+                if (p.income > maxVal) maxVal = p.income;
+                if (p.expense > maxVal) maxVal = p.expense;
               }
 
               return StaggeredFadeSlide(
                 index: 1,
                 child: GlassCard(
-                padding: const EdgeInsets.all(20),
-                frosted: true,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 240,
-                      child: LineChart(
-                        LineChartData(
-                          lineTouchData: LineTouchData(
-                            handleBuiltInTouches: true,
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipColor: (touchedSpot) {
-                                return theme.brightness == Brightness.dark
-                                    ? const Color(0xFF1B1B1D).withValues(alpha: 0.95)
-                                    : Colors.white.withValues(alpha: 0.95);
-                              },
-                              tooltipBorderRadius: BorderRadius.circular(12),
-                              tooltipBorder: BorderSide(
-                                color: theme.brightness == Brightness.dark ? const Color(0x22FFFFFF) : const Color(0x0D000000),
-                                width: 1,
+                  padding: const EdgeInsets.all(20),
+                  frosted: true,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 240,
+                        child: LineChart(
+                          LineChartData(
+                            lineTouchData: LineTouchData(
+                              handleBuiltInTouches: true,
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (touchedSpot) {
+                                  return theme.brightness == Brightness.dark
+                                      ? const Color(0xFF1B1B1D).withValues(alpha: 0.95)
+                                      : Colors.white.withValues(alpha: 0.95);
+                                },
+                                tooltipBorderRadius: BorderRadius.circular(12),
+                                tooltipBorder: BorderSide(
+                                  color: theme.brightness == Brightness.dark ? const Color(0x22FFFFFF) : const Color(0x0D000000),
+                                  width: 1,
+                                ),
+                                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                                  return touchedSpots.map((spot) {
+                                    final isIncome = spot.barIndex == 0;
+                                    return LineTooltipItem(
+                                      '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
+                                      TextStyle(
+                                        color: isIncome
+                                            ? const Color(0xFF609F8A)
+                                            : const Color(0xFFFF453A),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    );
+                                  }).toList();
+                                },
                               ),
-                              getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                                return touchedSpots.map((spot) {
-                                  final isIncome = spot.barIndex == 0;
-                                  return LineTooltipItem(
-                                    '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
-                                    TextStyle(
-                                      color: isIncome
-                                          ? const Color(0xFF609F8A)
-                                          : const Color(0xFFFF453A),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                              getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
+                                return spotIndexes.map((spotIndex) {
+                                  return TouchedSpotIndicatorData(
+                                    FlLine(
+                                      color: (barData.gradient?.colors.first ?? Colors.grey).withValues(alpha: 0.3),
+                                      strokeWidth: 2,
+                                      dashArray: [4, 4],
+                                    ),
+                                    FlDotData(
+                                      show: true,
+                                      getDotPainter: (spot, percent, barData, index) {
+                                        return FlDotCirclePainter(
+                                          radius: 6,
+                                          color: barData.gradient?.colors.first ?? Colors.grey,
+                                          strokeWidth: 2,
+                                          strokeColor: Colors.white,
+                                        );
+                                      },
                                     ),
                                   );
                                 }).toList();
                               },
                             ),
-                            getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
-                              return spotIndexes.map((spotIndex) {
-                                return TouchedSpotIndicatorData(
-                                  FlLine(
-                                    color: (barData.gradient?.colors.first ?? Colors.grey).withValues(alpha: 0.3),
-                                    strokeWidth: 2,
-                                    dashArray: [4, 4],
-                                  ),
-                                  FlDotData(
-                                    show: true,
-                                    getDotPainter: (spot, percent, barData, index) {
-                                      return FlDotCirclePainter(
-                                        radius: 6,
-                                        color: barData.gradient?.colors.first ?? Colors.grey,
-                                        strokeWidth: 2,
-                                        strokeColor: Colors.white,
-                                      );
-                                    },
-                                  ),
-                                );
-                              }).toList();
-                            },
-                          ),
-                          gridData: FlGridData(
-                            show: true,
-                            drawVerticalLine: false,
-                            horizontalInterval: maxVal > 0 ? maxVal / 4 : 1000,
-                            getDrawingHorizontalLine: (value) => FlLine(
-                              color: Colors.white.withValues(alpha: 0.04),
-                              strokeWidth: 1,
-                              dashArray: [5, 5],
-                            ),
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                interval: 1,
-                                getTitlesWidget: (val, _) {
-                                  final idx = val.toInt();
-                                  if (idx < 0 || idx >= reversed.length) return const SizedBox();
-                                  final ym = reversed[idx].yearMonth;
-                                  final monthNum = ym.substring(5);
-                                  final monthLabels = {
-                                    '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
-                                    '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
-                                    '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec',
-                                  };
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      monthLabels[monthNum] ?? monthNum,
-                                      style: TextStyle(color: Colors.grey[500], fontSize: 10),
-                                    ),
-                                  );
-                                },
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: false,
+                              horizontalInterval: maxVal > 0 ? maxVal / 4 : 1000,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: Colors.white.withValues(alpha: 0.04),
+                                strokeWidth: 1,
+                                dashArray: [5, 5],
                               ),
                             ),
-                          ),
-                          borderData: FlBorderData(show: false),
-                          minX: 0,
-                          maxX: (reversed.length - 1).toDouble(),
-                          minY: 0,
-                          maxY: maxVal * 1.15,
-                          lineBarsData: [
-                            // Neon Cyan/Blue Income line
-                             LineChartBarData(
+                            titlesData: FlTitlesData(
+                              leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  interval: 1,
+                                  getTitlesWidget: (val, _) {
+                                    final idx = val.toInt();
+                                    if (idx < 0 || idx >= points.length) return const SizedBox();
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        points[idx].label,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.grey[500], fontSize: 9),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            borderData: FlBorderData(show: false),
+                            minX: 0,
+                            maxX: (points.length - 1).toDouble(),
+                            minY: 0,
+                            maxY: maxVal * 1.15,
+                            lineBarsData: [
+                              LineChartBarData(
                                 spots: incomeSpots,
                                 isCurved: true,
                                 gradient: const LinearGradient(
@@ -721,9 +893,9 @@ class _TrendsTab extends StatelessWidget {
                                     Color(0xFF609F8A),
                                   ],
                                 ),
-                               barWidth: 3,
-                               isStrokeCapRound: true,
-                               dotData: const FlDotData(show: false),
+                                barWidth: 3,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
                                 belowBarData: BarAreaData(
                                   show: true,
                                   gradient: LinearGradient(
@@ -731,64 +903,62 @@ class _TrendsTab extends StatelessWidget {
                                       const Color(0xFF609F8A).withValues(alpha: 0.24),
                                       const Color(0xFF609F8A).withValues(alpha: 0.0),
                                     ],
-                                   begin: Alignment.topCenter,
-                                   end: Alignment.bottomCenter,
-                                 ),
-                               ),
-                             ),
-                            // Neon Pink/Red Expense line
-                            LineChartBarData(
-                              spots: expenseSpots,
-                              isCurved: true,
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFFFF453A),
-                                  Color(0xFFE11D48),
-                                ],
-                              ),
-                              barWidth: 3,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(
-                                show: true,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    const Color(0xFFFF453A).withValues(alpha: 0.24),
-                                    const Color(0xFFFF453A).withValues(alpha: 0.0),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                              LineChartBarData(
+                                spots: expenseSpots,
+                                isCurved: true,
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFFFF453A),
+                                    Color(0xFFE11D48),
+                                  ],
+                                ),
+                                barWidth: 3,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      const Color(0xFFFF453A).withValues(alpha: 0.24),
+                                      const Color(0xFFFF453A).withValues(alpha: 0.0),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               );
             },
             loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
             error: (e, _) => Text('Error: $e'),
           ),
           const SizedBox(height: 20),
-          // Legend
           StaggeredFadeSlide(
             index: 2,
             child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF609F8A), shape: BoxShape.circle)),
-              const SizedBox(width: 6),
-              const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
-              const SizedBox(width: 24),
-              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFFF453A), shape: BoxShape.circle)),
-              const SizedBox(width: 6),
-              const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF609F8A), shape: BoxShape.circle)),
+                const SizedBox(width: 6),
+                const Text('Income', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 24),
+                Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFFFF453A), shape: BoxShape.circle)),
+                const SizedBox(width: 6),
+                const Text('Expense', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
         ],
       ),
