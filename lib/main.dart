@@ -17,6 +17,8 @@ import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/sms_review_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/command_palette.dart';
+import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/data/repositories/subscription_repository.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
@@ -323,7 +325,25 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
             systemNavigationBarContrastEnforced: false,
             systemStatusBarContrastEnforced: false,
           ),
-          child: GestureDetector(
+          child: Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              if (event is KeyDownEvent) {
+                final ctrl = HardwareKeyboard.instance.isControlPressed ||
+                    HardwareKeyboard.instance.isMetaPressed;
+                final paletteOpen = ref.read(paletteVisibilityProvider);
+                if (ctrl && event.logicalKey == LogicalKeyboardKey.keyK) {
+                  ref.read(paletteVisibilityProvider.notifier).state = !paletteOpen;
+                  return KeyEventResult.handled;
+                }
+                if (paletteOpen && event.logicalKey == LogicalKeyboardKey.escape) {
+                  ref.read(paletteVisibilityProvider.notifier).state = false;
+                  return KeyEventResult.handled;
+                }
+              }
+              return KeyEventResult.ignored;
+            },
+            child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: ScrollConfiguration(
               behavior: CupertinoScrollBehavior(),
@@ -417,12 +437,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
                         ),
                       ),
                     ),
-                ],
-              ),
-            ),
+                  if (ref.watch(paletteVisibilityProvider))
+                    const CommandPalette(),
+                 ],
+               ),
+             ),
+           ),
           ),
-        );
-      },
+         );
+       },
     );
   }
 }
