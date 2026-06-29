@@ -60,7 +60,7 @@ class LockScreenService {
     if (!_hasBalanceNotification) return;
     try {
       final plugin = _notifService.plugin;
-      await plugin.cancel(_notificationId);
+      await plugin.cancel(id: _notificationId);
       _hasBalanceNotification = false;
       developer.log('Balance notification removed', name: 'LockScreenService');
     } catch (e) {
