@@ -294,7 +294,7 @@ class _SavingsGoalDetailScreenState
                                             color: accentColor,
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: TextFormField(
                                             controller: _amountController,
