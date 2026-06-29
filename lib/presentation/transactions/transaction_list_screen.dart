@@ -101,13 +101,74 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           transactionsAsync.when(
             data: (transactionsList) {
               if (transactionsList.isEmpty) {
+                final isFiltered = activeAccount != null ||
+                    activeCategory != null ||
+                    searchQuery.isNotEmpty ||
+                    activeType != 'All' ||
+                    amountMin != null ||
+                    amountMax != null ||
+                    dateFrom != null ||
+                    dateTo != null;
+
                 return StaggeredFadeSlide(
                   index: 0,
                   child: EmptyState(
-                    icon: Icons.search_off_rounded,
-                    title: 'No Transactions Found',
-                    subtitle: 'Try adjusting your filters or typing a different query.',
+                    icon: isFiltered ? Icons.search_off_rounded : PesaFlowIcons.transactions,
+                    title: isFiltered ? 'No Transactions Found' : 'No Transactions Recorded',
+                    subtitle: isFiltered
+                        ? 'Try adjusting your filters or typing a different query.'
+                        : 'Start logging your offline financial transactions to track your spending habits.',
                     illustration: PesaFlowIllustration.emptyTransactions(),
+                    action: TactileSpringContainer(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        if (isFiltered) {
+                          ref.read(transactionTypeFilterProvider.notifier).state = 'All';
+                          ref.read(transactionAccountFilterProvider.notifier).state = null;
+                          ref.read(transactionCategoryFilterProvider.notifier).state = null;
+                          ref.read(transactionSearchQueryProvider.notifier).state = '';
+                          ref.read(transactionAmountMinProvider.notifier).state = null;
+                          ref.read(transactionAmountMaxProvider.notifier).state = null;
+                          ref.read(transactionDateFromProvider.notifier).state = null;
+                          ref.read(transactionDateToProvider.notifier).state = null;
+                        } else {
+                          context.go('/transactions/add');
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isFiltered ? Icons.clear_all_rounded : PesaFlowIcons.add,
+                              color: theme.colorScheme.onPrimary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              isFiltered ? 'Clear Filters' : 'Add First Transaction',
+                              style: TextStyle(
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 );
               }
@@ -449,7 +510,28 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   ].length,
                                   onPressed: () => showTransactionFilterSheet(context, ref),
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 8),
+                                TactileSpringContainer(
+                                  onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
+                                  child: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.03),
+                                      border: Border.all(
+                                        color: isDark ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.06),
+                                        width: 0.8,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.search_rounded,
+                                      size: 18,
+                                      color: isDark ? Colors.white70 : Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
                                 Container(
                                    width: 36,
                                    height: 36,
