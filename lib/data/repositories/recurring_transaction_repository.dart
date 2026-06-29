@@ -28,4 +28,8 @@ class RecurringTransactionRepository {
   Future<void> deleteRecurringTransaction(String id) => _recurringTransactionDao.deleteRecurringTransaction(id);
 
   Future<void> markAsProcessed(String id, DateTime nextOccurrence) => _recurringTransactionDao.markAsProcessed(id, nextOccurrence);
+
+  Future<List<RecurringTransaction>> getActiveWithKeywords() => _recurringTransactionDao.getActiveWithKeywords();
+
+  Future<void> recordPayment(String id, int amount, DateTime paidAt) => _recurringTransactionDao.recordPayment(id, amount, paidAt);
 }

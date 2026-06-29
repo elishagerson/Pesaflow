@@ -9,7 +9,7 @@ import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/loan_repository.dart';
 import '../../data/repositories/settings_repository.dart';
-import '../../data/repositories/subscription_repository.dart';
+import '../../data/repositories/recurring_transaction_repository.dart';
 import '../../services/notification_service.dart';
 import '../categorization/auto_categorizer.dart';
 import 'deduplicator.dart';
@@ -23,7 +23,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
   final transactionRepo = ref.watch(transactionRepositoryProvider);
   final loanRepo = ref.watch(loanRepositoryProvider);
   final settingsRepo = ref.watch(settingsRepositoryProvider);
-  final subscriptionRepo = ref.watch(subscriptionRepositoryProvider);
+  final recurringTransactionRepo = ref.watch(recurringTransactionRepositoryProvider);
   final deduplicator = ref.watch(deduplicatorProvider);
   final categorizer = ref.watch(autoCategorizerProvider);
   final notificationService = ref.watch(notificationServiceProvider);
@@ -33,7 +33,7 @@ final smsProcessorProvider = Provider<SmsProcessor>((ref) {
     transactionRepo: transactionRepo,
     loanRepo: loanRepo,
     settingsRepo: settingsRepo,
-    subscriptionRepo: subscriptionRepo,
+    recurringTransactionRepo: recurringTransactionRepo,
     deduplicator: deduplicator,
     categorizer: categorizer,
     notificationService: notificationService,
@@ -46,7 +46,7 @@ class SmsProcessor {
   final TransactionRepository _transactionRepo;
   final LoanRepository _loanRepo;
   final SettingsRepository _settingsRepo;
-  final SubscriptionRepository _subscriptionRepo;
+  final RecurringTransactionRepository _recurringTransactionRepo;
   final Deduplicator _deduplicator;
   final AutoCategorizer _categorizer;
   final NotificationService _notificationService;
@@ -58,7 +58,7 @@ class SmsProcessor {
     required this._transactionRepo,
     required this._loanRepo,
     required this._settingsRepo,
-    required this._subscriptionRepo,
+    required this._recurringTransactionRepo,
     required this._deduplicator,
     required this._categorizer,
     required this._notificationService,
@@ -343,21 +343,22 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
-      // 8.5 Subscription matching: link expense to subscription if recipient matches keywords
+      // 8.5 Recurring matching: link expense to active recurring transaction if recipient matches merchantKeywords
       if (finalType == 'expense') {
         try {
-          final activeSubs = await _subscriptionRepo.getActive();
+          final activeRecs = await _recurringTransactionRepo.getActiveWithKeywords();
           final textToMatch = '$finalDescription $body'.toLowerCase();
-          for (final sub in activeSubs) {
-            final keywords = sub.merchantKeywords.split(',').map((k) => k.trim().toLowerCase());
+          for (final rec in activeRecs) {
+            if (rec.merchantKeywords == null) continue;
+            final keywords = rec.merchantKeywords!.split(',').map((k) => k.trim().toLowerCase());
             if (keywords.any((k) => k.isNotEmpty && textToMatch.contains(k))) {
-              await _subscriptionRepo.recordPayment(sub.id, sms.amount, DateTime.now());
-              developer.log('Linked expense to subscription ${sub.name} (amount: ${sms.amount})', name: 'SmsProcessor');
+              await _recurringTransactionRepo.recordPayment(rec.id, sms.amount, DateTime.now());
+              developer.log('Linked expense to recurring transaction ${rec.description ?? rec.id} (amount: ${sms.amount})', name: 'SmsProcessor');
               break;
             }
           }
         } catch (e) {
-          developer.log('Subscription match error: $e', name: 'SmsProcessor');
+          developer.log('Recurring match error: $e', name: 'SmsProcessor');
         }
       }
 
