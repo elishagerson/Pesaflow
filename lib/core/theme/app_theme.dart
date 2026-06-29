@@ -178,10 +178,12 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: null, // system font (SF Pro on iOS, Roboto on Android)
+      fontFamily: null,
       textTheme: _buildTextTheme(isLight ? onBgLight : onBgDark),
       colorScheme: scheme,
       scaffoldBackgroundColor: isLight ? bgLight : bgDark,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -205,6 +207,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(radiusCard),
           side: BorderSide.none,
         ),
+        clipBehavior: Clip.antiAlias,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -253,10 +256,26 @@ class AppTheme {
             borderRadius: BorderRadius.circular(radiusButton),
           ),
           padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+          minimumSize: const Size(48, 48),
           textStyle: TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(48, 48),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          minimumSize: const Size(48, 48),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          minimumSize: const Size(48, 48),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(

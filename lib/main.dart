@@ -311,89 +311,115 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp> with WidgetsBindingOb
       themeMode: mode,
       routerConfig: appRouter,
       builder: (context, child) {
-        return ScrollConfiguration(
-          behavior: CupertinoScrollBehavior(),
-          child: Stack(
-            children: [
-              ?child,
-              _PendingReviewOverlay(),
-              if (showLockOverlay)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.85),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Center(
-                        child: Card(
-                          color: Colors.white.withValues(alpha: 0.08),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            side: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.12),
-                              width: 1,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF609F8A).withValues(alpha: 0.15),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.lock_outline_rounded,
-                                    color: Color(0xFF609F8A),
-                                    size: 48,
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                const Text(
-                                  'PesaFlow Locked',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
+        final isLight = mode == ThemeMode.light ||
+            (mode == ThemeMode.system && MediaQuery.platformBrightnessOf(context) == Brightness.light);
+        final systemOverlay = isLight
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: systemOverlay.copyWith(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarContrastEnforced: false,
+            systemStatusBarContrastEnforced: false,
+          ),
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: ScrollConfiguration(
+              behavior: CupertinoScrollBehavior(),
+              child: Stack(
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  _PendingReviewOverlay(),
+                  if (showLockOverlay)
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.85),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                          child: Center(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: MediaQuery.sizeOf(context).width < 400 ? 16 : 32,
+                                vertical: 32,
+                              ),
+                              child: Card(
+                                color: Colors.white.withValues(alpha: 0.08),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                  side: BorderSide(
+                                    color: Colors.white.withValues(alpha: 0.12),
+                                    width: 1,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Authentication required to access offline data',
-                                  style: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontSize: 13,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(32.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Semantics(
+                        label: 'App locked',
+                        child: Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF609F8A).withValues(alpha: 0.15),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.lock_outline_rounded,
+                                            color: Color(0xFF609F8A),
+                                            size: 48,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 24),
+                                      const Text(
+                                        'PesaFlow Locked',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Authentication required to access offline data',
+                                        style: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontSize: 13,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 32),
+                                      FilledButton.icon(
+                                        onPressed: _authenticate,
+                                        icon: const Icon(Icons.fingerprint_rounded),
+                                        label: const Text('Unlock App'),
+                                        style: FilledButton.styleFrom(
+                                          backgroundColor: const Color(0xFF609F8A),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 14,
+                                          ),
+                                          minimumSize: const Size(200, 48),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(16),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: 32),
-                                FilledButton.icon(
-                                  onPressed: _authenticate,
-                                  icon: const Icon(Icons.fingerprint_rounded),
-                                  label: const Text('Unlock App'),
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: const Color(0xFF609F8A),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
         );
       },
