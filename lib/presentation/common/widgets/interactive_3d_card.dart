@@ -84,7 +84,7 @@ class _Interactive3DCardState extends State<Interactive3DCard> {
                   ..rotateY(tilt.dx * widget.maxTiltX); // Rotation around Y axis
 
                 if (_isPressed) {
-                  matrix.scaleByDouble(1.02); // Lift effect
+                  matrix.scaleByDouble(1.02, 1.02, 1.02, 1.0); // Lift effect
                 }
 
                 // Dynamic shadow translation: moves opposite to the tilt direction
