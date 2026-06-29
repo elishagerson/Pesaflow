@@ -575,34 +575,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Monthly Overview',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      Text(
-                        'THIS MONTH',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Compact Net Savings indicator badge
-                  if (income > 0)
+              if (income > 0) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: kSpacing8,
@@ -638,9 +614,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: kSpacing18),
+                  ],
+                ),
+                const SizedBox(height: kSpacing12),
+              ],
               Row(
                 children: [
                   // Donut Pie Chart (Income vs Expense)
@@ -3852,30 +3829,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 _CollapsibleSection(
                   title: 'Recent Activity',
                   icon: Icons.history_rounded,
+                  action: TextButton(
+                    onPressed: () {
+                      context.go('/transactions');
+                    },
+                    child: const Text('See All'),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StaggeredFadeSlide(
-                        index: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Recent Activity',
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                context.go('/transactions');
-                              },
-                              child: const Text('See All'),
-                            ),
-                          ],
-                        ),
-                      ),
-
                       // Clear account filter chip row if _selectedAccountId is active
                       if (_selectedAccountId != null) ...[
                         Padding(
@@ -3924,7 +3886,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                         ),
                       ] else ...[
-                        const SizedBox(height: kSpacing12),
+                        const SizedBox(height: kSpacing4),
                       ],
 
                       recentTransAsync.when(
@@ -4304,11 +4266,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 class _CollapsibleSection extends StatefulWidget {
   final String title;
   final IconData icon;
+  final String? subtitle;
+  final Widget? action;
   final Widget child;
 
   const _CollapsibleSection({
     required this.title,
     required this.icon,
+    this.subtitle,
+    this.action,
     required this.child,
   });
 
@@ -4327,36 +4293,66 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: () => setState(() => _isExpanded = !_isExpanded),
-          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: kSpacing4),
-            child: Row(
-              children: [
-                Icon(widget.icon, size: 18, color: theme.colorScheme.primary),
-                const SizedBox(width: kSpacing8),
-                Text(
-                  widget.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () => setState(() => _isExpanded = !_isExpanded),
+                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(widget.icon, size: 18, color: theme.colorScheme.primary),
+                          const SizedBox(width: kSpacing8),
+                          Text(
+                            widget.title,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          AnimatedRotation(
+                            turns: _isExpanded ? 0.5 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 20,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (widget.subtitle != null) ...[
+                        const SizedBox(height: kSpacing2),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 26.0),
+                          child: Text(
+                            widget.subtitle!.toUpperCase(),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1.2,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-                const Spacer(),
-                AnimatedRotation(
-                  turns: _isExpanded ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 20,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            if (widget.action != null) ...[
+              const SizedBox(width: kSpacing8),
+              widget.action!,
+            ],
+          ],
         ),
+        const SizedBox(height: kSpacing8),
         AnimatedCrossFade(
           firstChild: widget.child,
           secondChild: const SizedBox.shrink(),
@@ -4380,30 +4376,14 @@ class _InsightsCarousel extends ConsumerWidget {
     return insightsAsync.when(
       data: (insights) {
         if (insights.isEmpty) return const SizedBox.shrink();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-              child: Text(
-                'Insights',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            const SizedBox(height: kSpacing10),
-            SizedBox(
-              height: 120,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-                itemCount: insights.length,
-                separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-                itemBuilder: (_, i) => InsightCard(data: insights[i]),
-              ),
-            ),
-          ],
+        return SizedBox(
+          height: 120,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: insights.length,
+            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+            itemBuilder: (_, i) => InsightCard(data: insights[i]),
+          ),
         );
       },
       loading: () => const SizedBox.shrink(),
