@@ -15,8 +15,8 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:pesaflow/data/database/daos/loan_dao.dart';
 import 'package:pesaflow/data/database/daos/analytics_dao.dart';
-import 'package:pesaflow/data/database/daos/subscription_dao.dart';
-import 'package:pesaflow/data/repositories/subscription_repository.dart';
+import 'package:pesaflow/data/database/daos/recurring_transaction_dao.dart';
+import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/domain/categorization/auto_categorizer.dart';
 import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
@@ -47,7 +47,7 @@ void main() {
   late TransactionRepository transactionRepo;
   late LoanRepository loanRepo;
   late SettingsRepository settingsRepo;
-  late SubscriptionRepository subscriptionRepo;
+  late RecurringTransactionRepository recurringTransactionRepo;
   late Deduplicator deduplicator;
   late AutoCategorizer categorizer;
   late MockNotificationService notificationService;
@@ -68,7 +68,7 @@ void main() {
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
     notificationService = MockNotificationService();
-    subscriptionRepo = SubscriptionRepository(SubscriptionDao(database));
+    recurringTransactionRepo = RecurringTransactionRepository(RecurringTransactionDao(database));
 
     smsProcessor = SmsProcessor(
       accountRepo: accountRepo,
@@ -76,7 +76,7 @@ void main() {
       transactionRepo: transactionRepo,
       loanRepo: loanRepo,
       settingsRepo: settingsRepo,
-      subscriptionRepo: subscriptionRepo,
+      recurringTransactionRepo: recurringTransactionRepo,
       deduplicator: deduplicator,
       categorizer: categorizer,
       notificationService: notificationService,

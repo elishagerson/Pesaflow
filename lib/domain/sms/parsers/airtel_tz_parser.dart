@@ -7,7 +7,14 @@ class AirtelTzParser implements SmsParser {
   String _extractReference(String text) {
     final regex = RegExp(r'(?:Rej|Ref|TxnID|TID):\s*([A-Za-z0-9.]+)', caseSensitive: false);
     final match = regex.firstMatch(text);
-    return match?.group(1) ?? 'AIRTEL-REF-UNKNOWN';
+    if (match != null) {
+      var ref = match.group(1) ?? 'AIRTEL-REF-UNKNOWN';
+      if (ref.endsWith('.')) {
+        ref = ref.substring(0, ref.length - 1);
+      }
+      return ref;
+    }
+    return 'AIRTEL-REF-UNKNOWN';
   }
 
   int? _extractBalance(String text) {

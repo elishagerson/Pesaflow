@@ -3038,16 +3038,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
     );
 
-    final recurringAction = dueAsync.maybeWhen(
-      data: (rec) => rec.isNotEmpty
-          ? TextButton(
-              onPressed: () => context.push('/recurring'),
-              child: const Text('Manage'),
-            )
-          : null,
-      orElse: () => null,
-    );
-
     final loansAction = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -4049,20 +4039,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   index: 6,
                   child: _CollapsibleSection(
                     title: 'Bills & Subscriptions',
-                    icon: PesaFlowIcons.subscriptions,
+                    icon: PesaFlowIcons.calendar,
                     subtitle: activeCount > 0 ? '$activeCount active' : 'track recurring bills',
                     action: subscriptionsAction,
                     child: _buildRecurringExpensesDashboard(theme, context),
                   ),
-                ),
-
-                // ── 7. Upcoming Payments — "Recurring" ──
-                _CollapsibleSection(
-                  title: 'Recurring Payments',
-                  icon: PesaFlowIcons.calendar,
-                  subtitle: 'RECURRING',
-                  action: recurringAction,
-                  child: _buildUpcomingRecurring(theme, context),
                 ),
 
                 const SizedBox(height: kSpacing20),
