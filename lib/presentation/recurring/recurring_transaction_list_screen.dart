@@ -157,8 +157,37 @@ class RecurringTransactionListScreen extends ConsumerWidget {
                       CurrencyFormatter.formatCents(recurring.amount),
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    const SizedBox(height: 2),
-                    _buildStatusBadge(recurring.status),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (recurring.merchantKeywords != null && recurring.merchantKeywords!.isNotEmpty) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.key_rounded, size: 8, color: theme.colorScheme.primary),
+                                const SizedBox(width: 2),
+                                Text(
+                                  'Auto',
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w700,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                        _buildStatusBadge(recurring.status),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -177,6 +206,35 @@ class RecurringTransactionListScreen extends ConsumerWidget {
                 ),
               ],
             ),
+            if (recurring.type == 'expense' && recurring.paymentCount > 0) ...[
+              const SizedBox(height: 8),
+              Divider(
+                height: 1,
+                color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.04),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Paid: ${CurrencyFormatter.formatCents(recurring.totalPaid)} (${recurring.paymentCount} payments)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  if (recurring.lastPaidAt != null)
+                    Text(
+                      'Last: ${recurring.lastPaidAt!.day}/${recurring.lastPaidAt!.month}/${recurring.lastPaidAt!.year}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isDark ? Colors.grey[500] : Colors.grey[400],
+                      ),
+                    ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

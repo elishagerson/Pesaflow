@@ -16,7 +16,6 @@ import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
 import '../../data/repositories/loan_repository.dart';
 import '../../data/repositories/recurring_transaction_repository.dart';
-import '../../data/repositories/subscription_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 class ActiveTrackerIdNotifier extends Notifier<String> {
@@ -368,27 +367,26 @@ final dueRecurringTransactionsProvider = FutureProvider<List<RecurringTransactio
   return repo.getDueTransactions(DateTime.now());
 });
 
-// ── Subscription Providers ───────────────────────────────────────────
+// ── Recurring Expense Providers ───────────────────────────────────────
 
-class SubscriptionTotals {
+class RecurringTotals {
   final int monthly;
   final int weekly;
   final int daily;
   final int yearly;
-  const SubscriptionTotals({
+  const RecurringTotals({
     required this.monthly,
     required this.weekly,
     required this.daily,
     required this.yearly,
   });
-  const SubscriptionTotals.zero()
+  const RecurringTotals.zero()
       : monthly = 0,
         weekly = 0,
         daily = 0,
         yearly = 0;
 }
 
-/// Number of payments per year for a given frequency and interval.
 int _paymentsPerYear(String frequency, int interval) {
   final interval_ = interval < 1 ? 1 : interval;
   return switch (frequency) {
@@ -401,50 +399,39 @@ int _paymentsPerYear(String frequency, int interval) {
   } ~/ interval_;
 }
 
-/// Monthly-equivalent cost for a subscription amount in cents.
 int _monthlyCost(int amountCents, String frequency, int interval) {
   return amountCents * _paymentsPerYear(frequency, interval) ~/ 12;
 }
 
-final subscriptionsStreamProvider = StreamProvider<List<Subscription>>((ref) {
-  final repo = ref.watch(subscriptionRepositoryProvider);
-  return repo.watchAll();
-});
-
-final dueSubscriptionsProvider = FutureProvider<List<Subscription>>((ref) {
-  final repo = ref.watch(subscriptionRepositoryProvider);
-  return repo.getDue(DateTime.now());
-});
-
-final subscriptionTotalsProvider = Provider<SubscriptionTotals>((ref) {
-  final subsAsync = ref.watch(subscriptionsStreamProvider);
-  return subsAsync.when(
-    data: (subs) {
-      final active = subs.where((s) => s.status == 'active');
+final recurringTotalsProvider = Provider<RecurringTotals>((ref) {
+  final recAsync = ref.watch(recurringTransactionsStreamProvider);
+  return recAsync.when(
+    data: (recs) {
+      final activeExpenses = recs.where((r) => r.status == 'active' && r.type == 'expense');
       int monthly = 0, yearly = 0;
-      for (final s in active) {
-        monthly += _monthlyCost(s.amount, s.frequency, s.intervalValue);
-        yearly += s.amount * _paymentsPerYear(s.frequency, s.intervalValue);
+      for (final r in activeExpenses) {
+        monthly += _monthlyCost(r.amount, r.frequency, r.intervalValue);
+        yearly += r.amount * _paymentsPerYear(r.frequency, r.intervalValue);
       }
-      return SubscriptionTotals(
+      return RecurringTotals(
         monthly: monthly,
         weekly: monthly * 12 ~/ 52,
         daily: yearly ~/ 365,
         yearly: yearly,
       );
     },
-    loading: () => const SubscriptionTotals.zero(),
-    error: (_, _) => const SubscriptionTotals.zero(),
+    loading: () => const RecurringTotals.zero(),
+    error: (_, _) => const RecurringTotals.zero(),
   );
 });
 
-final upcomingRenewalsProvider = Provider<List<Subscription>>((ref) {
-  final subsAsync = ref.watch(subscriptionsStreamProvider);
-  return subsAsync.when(
-    data: (subs) {
-      final active = subs.where((s) => s.status == 'active').toList();
-      active.sort((a, b) => a.nextDueDate.compareTo(b.nextDueDate));
-      return active.take(5).toList();
+final upcomingRecurringExpensesProvider = Provider<List<RecurringTransaction>>((ref) {
+  final recAsync = ref.watch(recurringTransactionsStreamProvider);
+  return recAsync.when(
+    data: (recs) {
+      final activeExpenses = recs.where((r) => r.status == 'active' && r.type == 'expense').toList();
+      activeExpenses.sort((a, b) => a.nextDate.compareTo(b.nextDate));
+      return activeExpenses.take(5).toList();
     },
     loading: () => [],
     error: (_, _) => [],

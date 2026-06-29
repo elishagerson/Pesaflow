@@ -18,9 +18,6 @@ import 'package:pesaflow/presentation/loans/loan_detail_screen.dart';
 import 'package:pesaflow/presentation/loans/loan_form_screen.dart';
 import 'package:pesaflow/presentation/recurring/recurring_transaction_form_screen.dart';
 import 'package:pesaflow/presentation/recurring/recurring_transaction_list_screen.dart';
-import 'package:pesaflow/presentation/subscriptions/subscription_form_screen.dart';
-import 'package:pesaflow/presentation/subscriptions/subscription_list_screen.dart';
-import 'package:pesaflow/presentation/subscriptions/subscription_detail_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_list_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_form_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
@@ -224,34 +221,6 @@ final GoRouter appRouter = GoRouter(
                       pageBuilder: (context, state) {
                         return _springSlidePage(RecurringTransactionFormScreen(recurringId: state.param('id')));
                       },
-                    ),
-                  ],
-                ),
-                GoRoute(
-                  path: 'subscriptions',
-                  parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) => _springSlidePage(const SubscriptionListScreen()),
-                  routes: [
-                    GoRoute(
-                      path: 'add',
-                      parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _springSlidePage(const SubscriptionFormScreen()),
-                    ),
-                    GoRoute(
-                      path: ':id',
-                      parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) {
-                        return _springSlidePage(SubscriptionDetailScreen(subscriptionId: state.param('id')));
-                      },
-                      routes: [
-                        GoRoute(
-                          path: 'edit',
-                          parentNavigatorKey: _rootNavigatorKey,
-                          pageBuilder: (context, state) {
-                            return _springSlidePage(SubscriptionFormScreen(subscriptionId: state.param('id')));
-                          },
-                        ),
-                      ],
                     ),
                   ],
                 ),

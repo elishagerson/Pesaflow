@@ -25,6 +25,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
   final _intervalController = TextEditingController(text: '1');
+  final _keywordsController = TextEditingController();
 
   String? _selectedAccountId;
   String? _selectedCategoryId;
@@ -59,6 +60,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
       _intervalController.text = existing.intervalValue.toString();
       _nextDate = existing.nextDate;
       _endDate = existing.endDate;
+      _keywordsController.text = existing.merchantKeywords ?? '';
     });
   }
 
@@ -67,6 +69,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
     _descriptionController.dispose();
     _amountController.dispose();
     _intervalController.dispose();
+    _keywordsController.dispose();
     super.dispose();
   }
 
@@ -130,6 +133,7 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
         intervalValue: interval,
         nextDate: _nextDate,
         endDate: Value(_endDate),
+        merchantKeywords: Value(_keywordsController.text.trim().isEmpty ? null : _keywordsController.text.trim()),
         updatedAt: DateTime.now(),
       );
       try {
@@ -158,6 +162,8 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
         endDate: _endDate,
         status: 'active',
         trackerId: activeTrackerId,
+        merchantKeywords: _keywordsController.text.trim().isEmpty
+            ? null : _keywordsController.text.trim(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -314,6 +320,26 @@ class _RecurringTransactionFormScreenState extends ConsumerState<RecurringTransa
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
+              if (_type == 'expense') ...[
+                const SizedBox(height: 16),
+                StaggeredFadeSlide(
+                  index: 4,
+                  child: TextField(
+                    controller: _keywordsController,
+                    decoration: InputDecoration(
+                      labelText: 'SMS Auto-Matching Keywords (optional)',
+                      hintText: 'e.g. netflix, spotify (comma separated)',
+                      prefixIcon: const Icon(Icons.key_rounded, size: 18),
+                      filled: true,
+                      fillColor: inputFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               StaggeredFadeSlide(
                 index: 5,

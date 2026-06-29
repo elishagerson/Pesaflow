@@ -2413,21 +2413,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: const Text('Delete'),
         ),
       ],
-    );
-  }
-
-  Widget _buildSubscriptionsDashboard(ThemeData theme, BuildContext context) {
+      Widget _buildRecurringExpensesDashboard(ThemeData theme, BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
-    final subsAsync = ref.watch(subscriptionsStreamProvider);
-    final dueAsync = ref.watch(dueSubscriptionsProvider);
-    final totals = ref.watch(subscriptionTotalsProvider);
-    final upcoming = ref.watch(upcomingRenewalsProvider);
+    final recsAsync = ref.watch(recurringTransactionsStreamProvider);
+    final dueAsync = ref.watch(dueRecurringTransactionsProvider);
+    final totals = ref.watch(recurringTotalsProvider);
+    final upcoming = ref.watch(upcomingRecurringExpensesProvider);
 
-    return subsAsync.when(
-      data: (subscriptions) {
-        if (subscriptions.isEmpty) {
+    return recsAsync.when(
+      data: (recs) {
+        final expenses = recs.where((r) => r.type == 'expense').toList();
+        if (expenses.isEmpty) {
           return GestureDetector(
-            onTap: () => context.push('/subscriptions'),
+            onTap: () => context.push('/recurring'),
             child: GlassCard(
               borderRadius: AppTheme.radiusCard,
               elevation: CardElevation.low,
@@ -2454,7 +2452,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Track your subscriptions',
+                          'Track recurring expenses',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isDark
@@ -2464,7 +2462,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         const SizedBox(height: kSpacing4),
                         Text(
-                          'Log recurring payments like streaming, utility bills, or gym memberships to get ahead of renewals.',
+                          'Log recurring payments like streaming, utility bills, or memberships to get ahead of renewals.',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(
                               alpha: 0.6,
@@ -2480,7 +2478,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           );
         }
         final due = dueAsync.asData?.value ?? [];
-        final active = subscriptions
+        final active = expenses
             .where((s) => s.status == 'active')
             .toList();
         final categories =
@@ -2492,7 +2490,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           return cat != null ? hexToColor(cat.color) : null;
         }
 
-        // Upcoming renewals already shown in timeline — exclude from active tiles
         final upcomingIds = upcoming.map((s) => s.id).toSet();
         final remaining = active
             .where((s) => !upcomingIds.contains(s.id))
@@ -2501,8 +2498,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            // ── Hero total card ──
             if (totals.monthly > 0)
               GlassCard(
                 borderRadius: AppTheme.radiusCard,
@@ -2545,7 +2540,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
 
-            // ── Upcoming renewals ──
             if (upcoming.isNotEmpty) ...[
               Padding(
                 padding: const EdgeInsets.only(bottom: kSpacing8),
@@ -2589,7 +2583,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               width: 6,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: due.contains(sub)
+                                color: due.any((d) => d.id == sub.id)
                                     ? const Color(0xFFFF6B35)
                                     : (catColor(sub.categoryId) ??
                                           const Color(0xFF609F8A)),
@@ -2599,7 +2593,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const SizedBox(width: kSpacing10),
                             Expanded(
                               child: Text(
-                                sub.name,
+                                sub.description ?? 'Recurring Expense',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -2608,7 +2602,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ),
                             ),
                             Text(
-                              _formatDate(sub.nextDueDate),
+                              _formatDate(sub.nextDate),
                               style: theme.textTheme.labelSmall?.copyWith(
                                 fontSize: 10,
                                 color: theme.colorScheme.onSurface.withValues(
@@ -2632,7 +2626,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               const SizedBox(height: kSpacing4),
             ],
 
-            // ── Remaining subscription tiles (excluding those in upcoming) ──
             ...remaining
                 .take(3)
                 .map(
@@ -2684,7 +2677,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ],
                                     Expanded(
                                       child: Text(
-                                        sub.name,
+                                        sub.description ?? 'Recurring Expense',
                                         style: theme.textTheme.bodyMedium
                                             ?.copyWith(
                                               fontWeight: FontWeight.bold,
