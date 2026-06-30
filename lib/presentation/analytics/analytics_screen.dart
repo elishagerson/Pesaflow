@@ -300,7 +300,7 @@ class _OverviewTab extends StatelessWidget {
                   ? ((net / income) * 100).round()
                   : 0;
               final isDark = theme.brightness == Brightness.dark;
-              final incomeColorVal = const Color(0xFF609F8A);
+              final incomeColorVal = const Color(0xFF10B981);
               final expenseColorVal = isDark
                   ? const Color(0xFFFF453A)
                   : const Color(0xFFE11D48);
@@ -1056,7 +1056,7 @@ class _TrendsTab extends StatelessWidget {
                                       '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
                                       TextStyle(
                                         color: isIncome
-                                            ? const Color(0xFF609F8A)
+                                            ? const Color(0xFF10B981)
                                             : const Color(0xFFFF453A),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
@@ -1158,8 +1158,8 @@ class _TrendsTab extends StatelessWidget {
                                 isCurved: true,
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFF609F8A),
-                                    Color(0xFF609F8A),
+                                    Color(0xFF10B981),
+                                    Color(0xFF10B981),
                                   ],
                                 ),
                                 barWidth: 3,
@@ -1234,7 +1234,7 @@ class _TrendsTab extends StatelessWidget {
                   width: 8,
                   height: 8,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF609F8A),
+                    color: Color(0xFF10B981),
                     shape: BoxShape.circle,
                   ),
                 ),

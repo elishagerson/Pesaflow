@@ -53,7 +53,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accentColor = const Color(0xFF609F8A);
+    final accentColor = const Color(0xFF0F4C5C);
 
     return Positioned.fill(
       child: Material(

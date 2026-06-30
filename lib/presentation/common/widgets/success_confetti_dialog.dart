@@ -177,7 +177,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF609F8A),
+                        color: Color(0xFF0F4C5C),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -208,7 +208,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                         fontSize: 22,
                         fontFamily: 'monospace',
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF609F8A),
+                        color: Color(0xFF0F4C5C),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -222,7 +222,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                         onTap: () => Navigator.of(context).pop(),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFF609F8A),
+                            color: const Color(0xFF0F4C5C),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,

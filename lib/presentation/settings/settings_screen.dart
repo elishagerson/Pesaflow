@@ -187,7 +187,7 @@ class SettingsScreen extends ConsumerWidget {
                     value: 'Mobile Money',
                     label: 'Mobile Money',
                     icon: PesaFlowIcons.cash,
-                    color: Color(0xFF609F8A),
+                    color: Color(0xFF0F4C5C),
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(

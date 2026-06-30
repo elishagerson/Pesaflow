@@ -155,7 +155,7 @@ class LoanDetailScreen extends ConsumerWidget {
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
     final statusColor = isActive
         ? (ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A))
-        : const Color(0xFF609F8A);
+        : const Color(0xFF10B981);
 
     return Hero(
       tag: 'loan-${loan.id}',
@@ -373,7 +373,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     color: event.isWarning
                         ? const Color(0xFFE53935)
                         : event.isCompleted
-                        ? const Color(0xFF609F8A)
+                        ? const Color(0xFF10B981)
                         : Colors.grey,
                     shape: BoxShape.circle,
                   ),
@@ -383,7 +383,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     child: Container(
                       width: 2,
                       color: event.isCompleted
-                          ? const Color(0xFF609F8A).withValues(alpha: 0.3)
+                          ? const Color(0xFF10B981).withValues(alpha: 0.3)
                           : Colors.grey.withValues(alpha: 0.3),
                     ),
                   ),
@@ -475,7 +475,7 @@ class LoanDetailScreen extends ConsumerWidget {
                               ? Colors.grey[800]
                               : Colors.grey[200],
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                            Color(0xFF609F8A),
+                            Color(0xFF10B981),
                           ),
                           minHeight: 6,
                         ),
@@ -491,7 +491,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w900,
                     color: Color.lerp(
                       const Color(0xFFE53935),
-                      const Color(0xFF609F8A),
+                      const Color(0xFF10B981),
                       ratio,
                     ),
                   ),
@@ -510,7 +510,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       height: 20,
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? const Color(0xFF609F8A).withValues(alpha: 0.15)
+                            ? const Color(0xFF10B981).withValues(alpha: 0.15)
                             : (isDark ? Colors.grey[800] : Colors.grey[200]),
                         shape: BoxShape.circle,
                       ),
@@ -518,7 +518,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         isPaid ? Icons.check_rounded : Icons.schedule_rounded,
                         size: 12,
                         color: isPaid
-                            ? const Color(0xFF609F8A)
+                            ? const Color(0xFF10B981)
                             : (isDark ? Colors.grey[500] : Colors.grey[400]),
                       ),
                     ),
@@ -549,7 +549,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? const Color(0xFF609F8A).withValues(alpha: 0.12)
+                            ? const Color(0xFF10B981).withValues(alpha: 0.12)
                             : const Color(0xFFFF9F0A).withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -559,7 +559,7 @@ class LoanDetailScreen extends ConsumerWidget {
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: isPaid
-                              ? const Color(0xFF609F8A)
+                              ? const Color(0xFF10B981)
                               : const Color(0xFFFF9F0A),
                         ),
                       ),
@@ -666,7 +666,7 @@ class LoanDetailScreen extends ConsumerWidget {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
-      accentColor: const Color(0xFF609F8A),
+      accentColor: const Color(0xFF10B981),
       child: Padding(
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -677,13 +677,13 @@ class LoanDetailScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     PesaFlowIcons.cash,
                     size: 20,
-                    color: Color(0xFF609F8A),
+                    color: Color(0xFF10B981),
                   ),
                 ),
                 const SizedBox(width: kSpacing12),
@@ -719,7 +719,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 icon: const Icon(Icons.payment_rounded, size: 18),
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF609F8A),
+                  backgroundColor: const Color(0xFF10B981),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                   shape: RoundedRectangleBorder(
@@ -849,7 +849,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           ),
                                           child: const Icon(
                                             PesaFlowIcons.cash,
-                                            color: Color(0xFF609F8A),
+                                            color: Color(0xFF10B981),
                                             size: 22,
                                           ),
                                         ),
@@ -1668,7 +1668,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       ? Colors.white.withValues(alpha: 0.08)
                       : Colors.black.withValues(alpha: 0.06),
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF609F8A),
+                    Color(0xFF10B981),
                   ),
                 ),
               ),
@@ -1702,7 +1702,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF609F8A),
+                      color: Color(0xFF10B981),
                     ),
                   ),
                 ],
@@ -1903,7 +1903,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                           ),
                                           child: const Icon(
                                             PesaFlowIcons.transactions,
-                                            color: Color(0xFF609F8A),
+                                            color: Color(0xFF10B981),
                                             size: 22,
                                           ),
                                         ),
@@ -2403,7 +2403,7 @@ class LoanDetailScreen extends ConsumerWidget {
   Widget _buildTransactionTile(Transaction tx, ThemeData theme, bool isDark) {
     final isCredit = tx.type == 'income';
     final amountColor = isCredit
-        ? const Color(0xFF609F8A)
+        ? const Color(0xFF10B981)
         : const Color(0xFFE53935);
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
@@ -2672,14 +2672,14 @@ class _QuickAmountChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: kSpacing10),
           decoration: BoxDecoration(
             color: isActive
-                ? const Color(0xFF609F8A).withValues(alpha: 0.15)
+                ? const Color(0xFF10B981).withValues(alpha: 0.15)
                 : isDark
                 ? Colors.white.withValues(alpha: 0.06)
                 : Colors.black.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isActive
-                  ? const Color(0xFF609F8A).withValues(alpha: 0.5)
+                  ? const Color(0xFF10B981).withValues(alpha: 0.5)
                   : isDark
                   ? Colors.white.withValues(alpha: 0.08)
                   : Colors.black.withValues(alpha: 0.06),
@@ -2693,7 +2693,7 @@ class _QuickAmountChip extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: isActive
-                      ? const Color(0xFF609F8A)
+                      ? const Color(0xFF10B981)
                       : (isDark ? Colors.white70 : Colors.black54),
                 ),
               ),

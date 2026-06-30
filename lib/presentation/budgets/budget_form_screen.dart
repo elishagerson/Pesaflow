@@ -31,6 +31,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   final _amountController = TextEditingController();
   final _capController = TextEditingController();
   String? _selectedCategoryId;
+  String? _nameError;
+  String? _amountError;
   String _period = 'monthly';
   bool _rollover = false;
   String _rolloverType = 'none';
@@ -88,21 +90,40 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
   Future<void> _save() async {
     if (_isSaving) return;
-    if (_formKey.currentState == null ||
-        !_formKey.currentState!.validate() ||
-        _selectedCategoryId == null) {
-      if (_selectedCategoryId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a category')),
-        );
-      }
+
+    setState(() {
+      _nameError = null;
+      _amountError = null;
+    });
+
+    bool hasError = false;
+
+    if (_nameController.text.trim().isEmpty) {
+      _nameError = 'Enter a budget name';
+      hasError = true;
+    }
+
+    final amountCents = CurrencyFormatter.parseToCents(
+      _amountController.text,
+    );
+    if (amountCents <= 0) {
+      _amountError = 'Enter a valid amount';
+      hasError = true;
+    }
+
+    if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
+
+    if (hasError) {
+      setState(() {});
       return;
     }
 
     final repo = ref.read(budgetRepositoryProvider);
-    final amountCents = CurrencyFormatter.parseToCents(
-      _amountController.text,
-    );
     int? rolloverCap;
     if (_rollover &&
         _rolloverType == 'capped' &&
@@ -261,11 +282,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     label: 'Budget Name',
                                     hint: 'e.g. Monthly Food',
                                     icon: Icons.label_rounded,
-                                  ),
-                                  validator: (v) =>
-                                      v == null || v.trim().isEmpty
-                                      ? 'Name required'
-                                      : null,
+                                  ).copyWith(errorText: _nameError),
+                                  onChanged: (_) =>
+                                      setState(() => _nameError = null),
                                 ),
                                 const SizedBox(height: 12),
                                 categoriesAsync.when(
@@ -306,11 +325,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     label: 'Budget Amount (Tsh)',
                                     hint: 'e.g. 300000',
                                     icon: PesaFlowIcons.cash,
-                                  ),
-                                  validator: (v) =>
-                                      v == null || v.trim().isEmpty
-                                      ? 'Amount required'
-                                      : null,
+                                  ).copyWith(errorText: _amountError),
+                                  onChanged: (_) =>
+                                      setState(() => _amountError = null),
                                 ),
                               ],
                             ),

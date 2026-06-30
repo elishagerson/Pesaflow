@@ -93,7 +93,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     final mutedCatColor = desaturateColor(catColor);
     final isIncome = t.type == 'income';
     final amountColor = isIncome
-        ? const Color(0xFF609F8A)
+        ? const Color(0xFF10B981)
         : const Color(0xFFFF453A);
 
     final hasExtraDetails =

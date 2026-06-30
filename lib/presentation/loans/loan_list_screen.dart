@@ -128,7 +128,7 @@ class LoanListScreen extends ConsumerWidget {
                         context,
                         'Paid Loans',
                         '${paidLoans.length} paid',
-                        const Color(0xFF609F8A),
+                        const Color(0xFF10B981),
                       ),
                       const SizedBox(height: 4),
                       StaggeredList(
@@ -486,7 +486,7 @@ class LoanListScreen extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: kSpacing10),
         borderRadius: AppTheme.radiusCard,
         elevation: CardElevation.low,
-        accentColor: const Color(0xFF609F8A),
+        accentColor: const Color(0xFF10B981),
         onTap: () => context.push('/loans/${loan.id}'),
         child: Padding(
           padding: const EdgeInsets.all(kSpacing14),
@@ -495,12 +495,12 @@ class LoanListScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(kSpacing8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF609F8A).withValues(alpha: 0.12),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   PesaFlowIcons.success,
-                  color: Color(0xFF609F8A),
+                  color: Color(0xFF10B981),
                   size: 18,
                 ),
               ),

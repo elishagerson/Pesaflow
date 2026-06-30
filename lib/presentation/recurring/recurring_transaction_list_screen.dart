@@ -806,7 +806,7 @@ class _RecurringTransactionListScreenState
 
     // Status badge
     final (label, color) = switch (recurring.status) {
-      'active' => ('Active', const Color(0xFF609F8A)),
+      'active' => ('Active', const Color(0xFF10B981)),
       'paused' => ('Paused', const Color(0xFFFF9F0A)),
       'cancelled' => ('Cancelled', Colors.grey),
       _ => (recurring.status, Colors.grey),

@@ -42,6 +42,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   String? _selectedDestinationAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
+  String? _amountError;
 
   final _descriptionController = TextEditingController();
   final _referenceController = TextEditingController();
@@ -127,6 +128,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       HapticFeedback.lightImpact();
     }
     setState(() {
+      _amountError = null;
       if (value == '<') {
         // Backspace
         if (_amountStr.length > 1) {
@@ -159,11 +161,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   Future<void> _saveTransaction() async {
     final cents = _getAmountCents().round();
     if (cents <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid amount greater than zero.'),
-        ),
-      );
+      setState(() => _amountError = 'Enter a valid amount');
       return;
     }
     if (_selectedAccountId == null) {
@@ -1460,6 +1458,17 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                              ),
+                            ),
+                          ),
+                        if (_amountError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              _amountError!,
+                              style: const TextStyle(
+                                color: Color(0xFFEF4444),
+                                fontSize: 12,
                               ),
                             ),
                           ),

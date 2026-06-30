@@ -177,7 +177,7 @@ class _SavingsGoalDetailSheetState
         final theme = Theme.of(ctx);
         final isDark = theme.brightness == Brightness.dark;
         final accentColor = isDeposit
-            ? const Color(0xFF609F8A)
+            ? const Color(0xFF10B981)
             : const Color(0xFFFF453A);
 
         return DraggableScrollableSheet(

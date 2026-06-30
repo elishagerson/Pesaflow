@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -63,7 +64,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     } else if (compareDate == yesterday) {
       return 'Yesterday';
     } else {
-      return DateFormat('EEEE, MMMM d, yyyy').format(date);
+      return DateFormatter.relative(date);
     }
   }
 
@@ -1004,7 +1005,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         }
 
         final Color accentColor = switch (severity) {
-          InsightSeverity.positive => const Color(0xFF609F8A),
+          InsightSeverity.positive => const Color(0xFF10B981),
           InsightSeverity.neutral => const Color(0xFFFF9F0A),
           InsightSeverity.warning => const Color(0xFFFF453A),
           InsightSeverity.critical => const Color(0xFFFF453A),
@@ -1105,7 +1106,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   label: 'Income',
                                   value: income,
                                   maxValue: maxVal,
-                                  color: const Color(0xFF609F8A),
+                                  color: const Color(0xFF10B981),
                                   formatValue: (v) => 'TSh ${_formatKsh(v)}',
                                 ),
                                 const SizedBox(height: 10),

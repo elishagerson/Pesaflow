@@ -23,7 +23,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
   await ModernDialog.show(
     context: context,
     titleIcon: Icons.file_download_rounded,
-    iconColor: const Color(0xFF609F8A),
+    iconColor: const Color(0xFF0F4C5C),
     title: const Text('Export Monthly Statement'),
     content: StatefulBuilder(
       builder: (ctx, setState) {
@@ -180,7 +180,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF609F8A),
+          backgroundColor: const Color(0xFF0F4C5C),
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

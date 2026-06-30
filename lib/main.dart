@@ -393,7 +393,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
 
   @override
   Widget build(BuildContext context) {
-    const accentColor = Color(0xFF609F8A);
+    const accentColor = Color(0xFF0F4C5C);
 
     final lightCs = ColorScheme.fromSeed(
       seedColor: accentColor,
@@ -495,7 +495,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                             ),
                                             child: const Icon(
                                               Icons.lock_outline_rounded,
-                                              color: Color(0xFF609F8A),
+                                              color: Color(0xFF0F4C5C),
                                               size: 48,
                                             ),
                                           ),

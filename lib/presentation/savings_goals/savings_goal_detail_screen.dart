@@ -142,7 +142,7 @@ class _SavingsGoalDetailScreenState
         final theme = Theme.of(ctx);
         final isDark = theme.brightness == Brightness.dark;
         final accentColor = isDeposit
-            ? const Color(0xFF609F8A)
+            ? const Color(0xFF0F4C5C)
             : const Color(0xFFFF453A);
         bool sheetIsContributing = false;
 

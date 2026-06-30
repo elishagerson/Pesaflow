@@ -12,19 +12,23 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
-class SmsReviewScreen extends ConsumerWidget {
+class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
 
-  void _showCategoryPicker(
-    BuildContext context,
-    WidgetRef ref,
-    TransactionWithCategoryAndAccount item,
-  ) async {
+  @override
+  ConsumerState<SmsReviewScreen> createState() => _SmsReviewScreenState();
+}
+
+class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
+  final Set<String> _selectedIds = {};
+  bool _selectAll = false;
+
+  Future<String?> _showCategorySheet({String? title}) async {
     final categoriesAsync = ref.read(categoriesFutureProvider);
     final categories = categoriesAsync.value ?? [];
-    if (categories.isEmpty) return;
+    if (categories.isEmpty) return null;
 
-    final selectedCategoryId = await showModalBottomSheet<String>(
+    return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -40,7 +44,6 @@ class SmsReviewScreen extends ConsumerWidget {
           builder: (context, scrollController) {
             return Column(
               children: [
-                // Handle bar
                 Container(
                   margin: const EdgeInsets.only(top: 12),
                   width: 40,
@@ -53,7 +56,7 @@ class SmsReviewScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Assign Category',
+                    title ?? 'Assign Category',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -65,15 +68,11 @@ class SmsReviewScreen extends ConsumerWidget {
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
                       final cat = categories[index];
-                      final isSelected = cat.id == item.category.id;
                       return ListTile(
-                        selected: isSelected,
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: hexToColor(
-                              cat.color,
-                            ).withValues(alpha: 0.15),
+                            color: hexToColor(cat.color).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -82,27 +81,11 @@ class SmsReviewScreen extends ConsumerWidget {
                             size: 20,
                           ),
                         ),
-                        title: Text(
-                          cat.name,
-                          style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
+                        title: Text(cat.name),
                         subtitle: Text(
                           cat.type.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
-                        trailing: isSelected
-                            ? Icon(
-                                PesaFlowIcons.success,
-                                color: theme.colorScheme.primary,
-                              )
-                            : null,
                         onTap: () => Navigator.of(context).pop(cat.id),
                       );
                     },
@@ -114,9 +97,11 @@ class SmsReviewScreen extends ConsumerWidget {
         );
       },
     );
+  }
 
-    if (selectedCategoryId != null) {
-      if (!context.mounted) return;
+  void _showCategoryPicker(TransactionWithCategoryAndAccount item) async {
+    final selectedCategoryId = await _showCategorySheet();
+    if (selectedCategoryId != null && mounted) {
       await ref
           .read(transactionRepositoryProvider)
           .approveReviewedTransaction(
@@ -128,8 +113,30 @@ class SmsReviewScreen extends ConsumerWidget {
     }
   }
 
+  void _showBatchCategoryPicker() async {
+    final selectedCategoryId = await _showCategorySheet(
+      title: 'Assign Category (${_selectedIds.length} items)',
+    );
+    if (selectedCategoryId != null && mounted) {
+      for (final id in _selectedIds) {
+        await ref
+            .read(transactionRepositoryProvider)
+            .approveReviewedTransaction(
+              id,
+              newCategoryId: selectedCategoryId,
+            );
+      }
+      ref.invalidate(reviewQueueStreamProvider);
+      ref.invalidate(recentTransactionsStreamProvider);
+      setState(() {
+        _selectedIds.clear();
+        _selectAll = false;
+      });
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final reviewAsync = ref.watch(reviewQueueStreamProvider);
     final theme = Theme.of(context);
 
@@ -138,7 +145,32 @@ class SmsReviewScreen extends ConsumerWidget {
         top: false,
         child: Column(
           children: [
-            IosNavBar(title: 'SMS Review', largeTitle: true),
+            IosNavBar(
+              title: 'SMS Review',
+              largeTitle: true,
+              actions: [
+                TextButton.icon(
+                  icon: Icon(_selectAll ? Icons.deselect : Icons.select_all),
+                  label: Text(_selectAll ? 'Deselect' : 'Select All'),
+                  onPressed: () {
+                    setState(() {
+                      _selectAll = !_selectAll;
+                      final items = reviewAsync.asData?.value ?? [];
+                      if (_selectAll) {
+                        _selectedIds.addAll(items.map((e) => e.transaction.id));
+                      } else {
+                        _selectedIds.clear();
+                      }
+                    });
+                  },
+                ),
+                if (_selectedIds.isNotEmpty)
+                  TextButton(
+                    onPressed: _showBatchCategoryPicker,
+                    child: Text('Categorize (${_selectedIds.length})'),
+                  ),
+              ],
+            ),
             Expanded(
               child: reviewAsync.when(
                 data: (items) {
@@ -553,11 +585,7 @@ class SmsReviewScreen extends ConsumerWidget {
                                             children: [
                                               TextButton.icon(
                                                 onPressed: () =>
-                                                    _showCategoryPicker(
-                                                      context,
-                                                      ref,
-                                                      item,
-                                                    ),
+                                                    _showCategoryPicker(item),
                                                 icon: const Icon(
                                                   Icons.category_rounded,
                                                   size: 16,
