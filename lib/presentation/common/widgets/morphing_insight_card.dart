@@ -5,11 +5,15 @@ import 'package:pesaflow/presentation/state/insight_provider.dart';
 class MorphingInsightCard extends StatefulWidget {
   final InsightData data;
   final int index;
+  final bool? expanded;
+  final VoidCallback? onTap;
 
   const MorphingInsightCard({
     super.key,
     required this.data,
     this.index = 0,
+    this.expanded,
+    this.onTap,
   });
 
   @override
@@ -17,7 +21,7 @@ class MorphingInsightCard extends StatefulWidget {
 }
 
 class _MorphingInsightCardState extends State<MorphingInsightCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   bool _expanded = false;
   late AnimationController _expandController;
   late Animation<double> _expandAnimation;
@@ -26,6 +30,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   @override
   void initState() {
     super.initState();
+    _expanded = widget.expanded ?? false;
     _expandController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -35,6 +40,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
     );
+    if (_expanded) {
+      _expandController.value = 1.0;
+    }
 
     _counterController = AnimationController(
       vsync: this,
@@ -43,6 +51,19 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     Future.delayed(Duration(milliseconds: widget.index * 80), () {
       if (mounted) _counterController.forward();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant MorphingInsightCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.expanded != null && widget.expanded != oldWidget.expanded) {
+      _expanded = widget.expanded!;
+      if (_expanded) {
+        _expandController.forward();
+      } else {
+        _expandController.reverse();
+      }
+    }
   }
 
   @override
@@ -72,11 +93,15 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
 
     return GestureDetector(
       onTap: () {
-        setState(() => _expanded = !_expanded);
-        if (_expanded) {
-          _expandController.forward();
+        if (widget.onTap != null) {
+          widget.onTap!();
         } else {
-          _expandController.reverse();
+          setState(() => _expanded = !_expanded);
+          if (_expanded) {
+            _expandController.forward();
+          } else {
+            _expandController.reverse();
+          }
         }
       },
       child: AnimatedBuilder(
@@ -123,6 +148,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                   Padding(
                     padding: const EdgeInsets.all(kSpacing16),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -253,12 +279,17 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             fontWeight: FontWeight.w500,
           ),
         ),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 11,
-            color: isDark ? Colors.grey[400] : Colors.grey[600],
+        const SizedBox(width: kSpacing8),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 11,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

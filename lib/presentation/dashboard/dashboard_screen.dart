@@ -4167,9 +4167,18 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
   }
 }
 
-class _InsightsCarousel extends ConsumerWidget {
+class _InsightsCarousel extends ConsumerStatefulWidget {
+  const _InsightsCarousel();
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_InsightsCarousel> createState() => _InsightsCarouselState();
+}
+
+class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
+  final Set<int> _expandedIndices = {};
+
+  @override
+  Widget build(BuildContext context) {
     final insightsAsync = ref.watch(dynamicInsightsProvider);
 
     return insightsAsync.when(
@@ -4177,15 +4186,39 @@ class _InsightsCarousel extends ConsumerWidget {
         if (insights.isEmpty) {
           return const SizedBox.shrink();
         }
-        return SizedBox(
-          height: 158,
+        // Animated height between 114 (all collapsed) and 176 (any expanded)
+        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: height,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(vertical: 8),
             clipBehavior: Clip.none,
             itemCount: insights.length,
             separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) => MorphingInsightCard(data: insights[i], index: i),
+            itemBuilder: (_, i) {
+              final isExpanded = _expandedIndices.contains(i);
+              return Align(
+                alignment: Alignment.topCenter,
+                child: MorphingInsightCard(
+                  data: insights[i],
+                  index: i,
+                  expanded: isExpanded,
+                  onTap: () {
+                    setState(() {
+                      if (isExpanded) {
+                        _expandedIndices.remove(i);
+                      } else {
+                        _expandedIndices.add(i);
+                      }
+                    });
+                  },
+                ),
+              );
+            },
           ),
         );
       },
