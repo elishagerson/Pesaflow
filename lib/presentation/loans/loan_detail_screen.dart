@@ -1734,7 +1734,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _processPayment({
+  Future<bool> _processPayment({
     required BuildContext context,
     required WidgetRef ref,
     required Loan loan,
@@ -1776,6 +1776,7 @@ class LoanDetailScreen extends ConsumerWidget {
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
       HapticFeedback.mediumImpact();
+      return true;
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (context.mounted) {
@@ -1786,6 +1787,7 @@ class LoanDetailScreen extends ConsumerWidget {
           ),
         );
       }
+      return false;
     }
   }
 
@@ -2296,7 +2298,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _processOfflinePayment({
+  Future<bool> _processOfflinePayment({
     required BuildContext context,
     required WidgetRef ref,
     required Loan loan,
@@ -2337,6 +2339,7 @@ class LoanDetailScreen extends ConsumerWidget {
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
       HapticFeedback.mediumImpact();
+      return true;
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (context.mounted) {
@@ -2347,6 +2350,7 @@ class LoanDetailScreen extends ConsumerWidget {
           ),
         );
       }
+      return false;
     }
   }
 

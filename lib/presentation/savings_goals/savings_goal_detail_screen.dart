@@ -144,6 +144,7 @@ class _SavingsGoalDetailScreenState
         final accentColor = isDeposit
             ? const Color(0xFF609F8A)
             : const Color(0xFFFF453A);
+        bool _sheetIsContributing = false;
 
         return DraggableScrollableSheet(
           initialChildSize: 0.65,
@@ -166,7 +167,6 @@ class _SavingsGoalDetailScreenState
                 ),
                 child: StatefulBuilder(
                   builder: (context, setModalState) {
-                    bool sheetIsContributing = false;
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -617,10 +617,37 @@ class _SavingsGoalDetailScreenState
                                     width: double.infinity,
                                     height: kSpacing56,
                                     child: ElevatedButton(
-                                      onPressed: () => _handleContribution(
-                                        goal,
-                                        isDeposit,
-                                      ),
+                                      onPressed: _sheetIsContributing
+                                          ? null
+                                          : () async {
+                                              setModalState(() {
+                                                _sheetIsContributing = true;
+                                              });
+                                              try {
+                                                await _handleContribution(
+                                                  goal,
+                                                  isDeposit,
+                                                );
+                                                if (context.mounted) {
+                                                  Navigator.of(context).pop();
+                                                }
+                                              } catch (e) {
+                                                setModalState(() {
+                                                  _sheetIsContributing = false;
+                                                });
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'Error: $e',
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              }
+                                            },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: accentColor,
                                         foregroundColor: Colors.white,
@@ -634,34 +661,44 @@ class _SavingsGoalDetailScreenState
                                           vertical: kSpacing14,
                                         ),
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            isDeposit
-                                                ? Icons
-                                                    .add_circle_outline_rounded
-                                                : Icons
-                                                    .remove_circle_outline_rounded,
-                                            size: 18,
-                                            color: Colors.white
-                                                .withValues(alpha: 0.8),
-                                          ),
-                                          const SizedBox(
-                                            width: kSpacing8,
-                                          ),
-                                          Text(
-                                            isDeposit
-                                                ? 'Confirm Deposit'
-                                                : 'Confirm Withdrawal',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                                      child: _sheetIsContributing
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child:
+                                                  CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  isDeposit
+                                                      ? Icons
+                                                          .add_circle_outline_rounded
+                                                      : Icons
+                                                          .remove_circle_outline_rounded,
+                                                  size: 18,
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.8),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                                Text(
+                                                  isDeposit
+                                                      ? 'Confirm Deposit'
+                                                      : 'Confirm Withdrawal',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ),
                                 ],
