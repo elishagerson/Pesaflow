@@ -55,6 +55,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
 
     // Register notification listener method channel handler
     _notificationChannel.setMethodCallHandler((call) async {
@@ -317,8 +318,26 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
     }
   }
 
+  bool _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      final ctrl = HardwareKeyboard.instance.isControlPressed ||
+          HardwareKeyboard.instance.isMetaPressed;
+      final paletteOpen = ref.read(paletteVisibilityProvider);
+      if (ctrl && event.logicalKey == LogicalKeyboardKey.keyK) {
+        ref.read(paletteVisibilityProvider.notifier).toggle();
+        return true;
+      }
+      if (paletteOpen && event.logicalKey == LogicalKeyboardKey.escape) {
+        ref.read(paletteVisibilityProvider.notifier).hide();
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -425,35 +444,15 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
             systemNavigationBarContrastEnforced: false,
             systemStatusBarContrastEnforced: false,
           ),
-          child: Focus(
-            autofocus: true,
-            onKeyEvent: (node, event) {
-              if (event is KeyDownEvent) {
-                final ctrl =
-                    HardwareKeyboard.instance.isControlPressed ||
-                    HardwareKeyboard.instance.isMetaPressed;
-                final paletteOpen = ref.read(paletteVisibilityProvider);
-                if (ctrl && event.logicalKey == LogicalKeyboardKey.keyK) {
-                  ref.read(paletteVisibilityProvider.notifier).toggle();
-                  return KeyEventResult.handled;
-                }
-                if (paletteOpen &&
-                    event.logicalKey == LogicalKeyboardKey.escape) {
-                  ref.read(paletteVisibilityProvider.notifier).hide();
-                  return KeyEventResult.handled;
-                }
-              }
-              return KeyEventResult.ignored;
-            },
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: ScrollConfiguration(
-                behavior: CupertinoScrollBehavior(),
-                child: Stack(
-                  children: [
-                    child ?? const SizedBox.shrink(),
-                    _PendingReviewOverlay(),
-                    if (showLockOverlay)
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: ScrollConfiguration(
+              behavior: CupertinoScrollBehavior(),
+              child: Stack(
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  _PendingReviewOverlay(),
+                  if (showLockOverlay)
                       Positioned.fill(
                         child: Container(
                           color: Colors.black.withValues(alpha: 0.85),
@@ -559,10 +558,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                 ),
               ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
   }
 }
 

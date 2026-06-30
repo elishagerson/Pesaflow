@@ -1103,7 +1103,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildSavingsGoalsDashboard(ThemeData theme, BuildContext context) {
-    final isDark = theme.brightness == Brightness.dark;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
 
     return savingsGoalsAsync.when(
@@ -1117,26 +1116,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             : 0.0;
         final percentInt = (pct * 100).round();
 
-        return GestureDetector(
+        return TactileSpringContainer(
           onTap: () {
             HapticFeedback.mediumImpact();
             context.push('/savings-goals/${goal.id}');
           },
-          child: Container(
-            width: double.infinity,
+          child: GlassCard(
+            frosted: false,
+            elevation: CardElevation.low,
             padding: const EdgeInsets.all(kSpacing16),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AppTheme.surfaceContainerDark
-                  : AppTheme.surfaceLight,
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-              border: Border.all(
-                color: isDark
-                    ? const Color(0x12FFFFFF)
-                    : const Color(0x1F000000),
-                width: 0.5,
-              ),
-            ),
             child: Row(
               children: [
                 Semantics(
@@ -1265,26 +1253,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         if (activeLoans.isEmpty) {
           return Column(
             children: [
-              GestureDetector(
+              TactileSpringContainer(
                 onTap: () => context.go('/loans'),
-                child: Container(
-                  width: double.infinity,
+                child: GlassCard(
+                  frosted: false,
+                  elevation: CardElevation.low,
                   padding: const EdgeInsets.all(kSpacing20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF609F8A).withValues(alpha: 0.1),
-                        const Color(0xFF609F8A).withValues(alpha: 0.02),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: const Color(0xFF609F8A).withValues(alpha: 0.2),
-                      width: 0.5,
-                    ),
-                  ),
                   child: Row(
                     children: [
                       Container(
@@ -1328,25 +1302,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 data: (paidCount) => paidCount > 0
                     ? Padding(
                         padding: const EdgeInsets.only(top: kSpacing8),
-                        child: GestureDetector(
+                        child: TactileSpringContainer(
                           onTap: () => context.go('/loans'),
-                          child: Container(
-                            width: double.infinity,
+                          child: GlassCard(
+                            frosted: false,
+                            elevation: CardElevation.low,
                             padding: const EdgeInsets.all(kSpacing12),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? AppTheme.surfaceContainerDark
-                                  : AppTheme.surfaceLight,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusCard,
-                              ),
-                              border: Border.all(
-                                color: const Color(
-                                  0xFF609F8A,
-                                ).withValues(alpha: 0.15),
-                                width: 0.5,
-                              ),
-                            ),
                             child: Row(
                               children: [
                                 Icon(
@@ -1620,21 +1581,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   : ratio > 0.4
                   ? const Color(0xFFFF9F0A)
                   : const Color(0xFF609F8A);
-              return GestureDetector(
+              return TactileSpringContainer(
                 onTap: () => context.go('/loans/${loan.id}'),
-                child: Container(
+                child: GlassCard(
+                  frosted: false,
+                  elevation: CardElevation.low,
                   margin: const EdgeInsets.only(bottom: kSpacing8),
                   padding: const EdgeInsets.all(kSpacing14),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AppTheme.surfaceContainerDark
-                        : AppTheme.surfaceLight,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(
-                      color: loanSeverity.withValues(alpha: 0.2),
-                      width: 0.5,
-                    ),
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -2410,9 +2363,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       data: (recs) {
         final expenses = recs.where((r) => r.type == 'expense').toList();
         if (expenses.isEmpty) {
-          return GestureDetector(
+          return TactileSpringContainer(
             onTap: () => context.push('/recurring'),
             child: GlassCard(
+              frosted: false,
               borderRadius: AppTheme.radiusCard,
               elevation: CardElevation.low,
               padding: const EdgeInsets.all(kSpacing20),

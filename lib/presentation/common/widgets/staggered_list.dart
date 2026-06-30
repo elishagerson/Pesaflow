@@ -14,15 +14,14 @@ class StaggeredList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: itemCount,
-      itemBuilder: (context, index) {
+    return Column(
+      children: List.generate(itemCount, (index) {
         return _StaggeredItem(
           index: index,
           staggerDelay: staggerDelay,
           child: itemBuilder(context, index),
         );
-      },
+      }),
     );
   }
 }

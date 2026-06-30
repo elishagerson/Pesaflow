@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 /// Filter options for the recurring flows list.
 enum _RecurringFilter { all, expenses, income }
@@ -204,7 +205,20 @@ class _RecurringTransactionListScreenState
                   ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Padding(
+          padding: EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing8),
+          child: Column(
+            children: [
+              SkeletonCard(height: 100),
+              SizedBox(height: 8),
+              SkeletonCard(height: 100),
+              SizedBox(height: 8),
+              SkeletonCard(height: 100),
+              SizedBox(height: 8),
+              SkeletonCard(height: 100),
+            ],
+          ),
+        ),
         error: (e, _) => Center(child: Text('Error: $e')),
       ),
     );

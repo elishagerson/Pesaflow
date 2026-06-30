@@ -772,7 +772,6 @@ class LoanDetailScreen extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         String? selectedAccountId;
-        bool isProcessing = false;
 
         int paymentAmount() =>
             CurrencyFormatter.parseToCents(amountController.text);
@@ -781,8 +780,7 @@ class LoanDetailScreen extends ConsumerWidget {
           builder: (context, setSheetState) {
             final canSubmit =
                 paymentAmount() > 0 &&
-                selectedAccountId != null &&
-                !isProcessing;
+                selectedAccountId != null;
 
             return DraggableScrollableSheet(
               initialChildSize: 0.7,
@@ -1519,14 +1517,15 @@ class LoanDetailScreen extends ConsumerWidget {
                                         child: ElevatedButton(
                                           onPressed: canSubmit
                                               ? () async {
-                                                  setSheetState(
-                                                    () => isProcessing = true,
-                                                  );
                                                   final desc =
                                                       descriptionController.text
                                                           .trim();
+                                                  if (sheetContext.mounted) {
+                                                    Navigator.of(sheetContext)
+                                                        .pop();
+                                                  }
                                                   await _processPayment(
-                                                    context: sheetContext,
+                                                    context: context,
                                                     ref: ref,
                                                     loan: loan,
                                                     amount: paymentAmount(),
@@ -1562,52 +1561,41 @@ class LoanDetailScreen extends ConsumerWidget {
                                               vertical: kSpacing14,
                                             ),
                                           ),
-                                          child: isProcessing
-                                              ? const SizedBox(
-                                                  width: 22,
-                                                  height: 22,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2.5,
-                                                        color: Colors.white,
-                                                      ),
-                                                )
-                                              : Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    if (paymentAmount() > 0 &&
-                                                        selectedAccountId !=
-                                                            null)
-                                                      Icon(
-                                                        PesaFlowIcons.lock,
-                                                        size: 16,
-                                                        color: Colors.white
-                                                            .withValues(
-                                                              alpha: 0.8,
-                                                            ),
-                                                      ),
-                                                    if (paymentAmount() > 0 &&
-                                                        selectedAccountId !=
-                                                            null)
-                                                      const SizedBox(
-                                                        width: kSpacing8,
-                                                      ),
-                                                    Text(
-                                                      paymentAmount() <= 0
-                                                          ? 'Enter an amount'
-                                                          : selectedAccountId ==
-                                                                null
-                                                          ? 'Select an account'
-                                                          : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  ],
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              if (paymentAmount() > 0 &&
+                                                  selectedAccountId !=
+                                                      null)
+                                                Icon(
+                                                  PesaFlowIcons.lock,
+                                                  size: 16,
+                                                  color: Colors.white
+                                                      .withValues(
+                                                    alpha: 0.8,
+                                                  ),
                                                 ),
+                                              if (paymentAmount() > 0 &&
+                                                  selectedAccountId !=
+                                                      null)
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                              Text(
+                                                paymentAmount() <= 0
+                                                    ? 'Enter an amount'
+                                                    : selectedAccountId ==
+                                                          null
+                                                    ? 'Select an account'
+                                                    : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1787,18 +1775,7 @@ class LoanDetailScreen extends ConsumerWidget {
           .createTransaction(txn);
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        HapticFeedback.mediumImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Payment of ${CurrencyFormatter.formatCents(amount)} recorded',
-            ),
-            backgroundColor: const Color(0xFF609F8A),
-          ),
-        );
-      }
+      HapticFeedback.mediumImpact();
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (context.mounted) {
@@ -1827,14 +1804,12 @@ class LoanDetailScreen extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        bool isProcessing = false;
-
         int paymentAmount() =>
             CurrencyFormatter.parseToCents(amountController.text);
 
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final canSubmit = paymentAmount() > 0 && !isProcessing;
+            final canSubmit = paymentAmount() > 0;
 
             return DraggableScrollableSheet(
               initialChildSize: 0.5,
@@ -2246,71 +2221,62 @@ class LoanDetailScreen extends ConsumerWidget {
                                     SizedBox(
                                       width: double.infinity,
                                       height: 54,
-                                      child: ElevatedButton(
-                                        onPressed: canSubmit
-                                            ? () async {
-                                                setSheetState(
-                                                  () => isProcessing = true,
-                                                );
-                                                final desc =
-                                                    descriptionController.text
-                                                        .trim();
-                                                await _processOfflinePayment(
-                                                  context: sheetContext,
-                                                  ref: ref,
-                                                  loan: loan,
-                                                  amount: paymentAmount(),
-                                                  description: desc.isNotEmpty
-                                                      ? desc
-                                                      : 'Offline loan payment',
-                                                );
-                                              }
-                                            : null,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(
-                                            0xFF609F8A,
-                                          ),
-                                          foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.05,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.05,
-                                                ),
-                                          disabledForegroundColor: isDark
-                                              ? Colors.white24
-                                              : Colors.black26,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
+                                        child: ElevatedButton(
+                                          onPressed: canSubmit
+                                              ? () async {
+                                                  final desc =
+                                                      descriptionController.text
+                                                          .trim();
+                                                  if (sheetContext.mounted) {
+                                                    Navigator.of(sheetContext)
+                                                        .pop();
+                                                  }
+                                                  await _processOfflinePayment(
+                                                    context: context,
+                                                    ref: ref,
+                                                    loan: loan,
+                                                    amount: paymentAmount(),
+                                                    description: desc.isNotEmpty
+                                                        ? desc
+                                                        : 'Offline loan payment',
+                                                  );
+                                                }
+                                              : null,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(
+                                              0xFF609F8A,
+                                            ),
+                                            foregroundColor: Colors.white,
+                                            disabledBackgroundColor: isDark
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.05,
+                                                  )
+                                                : Colors.black.withValues(
+                                                    alpha: 0.05,
+                                                  ),
+                                            disabledForegroundColor: isDark
+                                                ? Colors.white24
+                                                : Colors.black26,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                16,
+                                              ),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: kSpacing14,
                                             ),
                                           ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: kSpacing14,
+                                          child: Text(
+                                            paymentAmount() <= 0
+                                                ? 'Enter an amount'
+                                                : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
-                                        child: isProcessing
-                                            ? const SizedBox(
-                                                width: 22,
-                                                height: 22,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2.5,
-                                                      color: Colors.white,
-                                                    ),
-                                              )
-                                            : Text(
-                                                paymentAmount() <= 0
-                                                    ? 'Enter an amount'
-                                                    : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -2370,18 +2336,7 @@ class LoanDetailScreen extends ConsumerWidget {
           .createTransactionNoBalanceAdjustment(txn);
       await ref.read(loanRepositoryProvider).applyPayment(loan.id, amount);
 
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        HapticFeedback.mediumImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Offline payment of ${CurrencyFormatter.formatCents(amount)} recorded',
-            ),
-            backgroundColor: const Color(0xFF609F8A),
-          ),
-        );
-      }
+      HapticFeedback.mediumImpact();
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (context.mounted) {

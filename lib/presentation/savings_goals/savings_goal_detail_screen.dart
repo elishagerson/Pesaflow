@@ -35,7 +35,6 @@ class _SavingsGoalDetailScreenState
   final _noteController = TextEditingController();
   String? _selectedAccountId;
   bool _deductFromWallet = false;
-  bool _isOperationLoading = false;
 
   int _calculateDaysRemaining(DateTime targetDate) {
     final diff = targetDate.difference(DateTime.now()).inDays;
@@ -51,7 +50,8 @@ class _SavingsGoalDetailScreenState
 
     final amountCents = amountVal * 100;
 
-    setState(() => _isOperationLoading = true);
+    // Pop sheet immediately (optimistic)
+    if (mounted) Navigator.of(context).pop();
 
     try {
       final repo = ref.read(savingsGoalRepositoryProvider);
@@ -111,35 +111,15 @@ class _SavingsGoalDetailScreenState
           updatedGoal.currentAmount >= updatedGoal.targetAmount &&
           goal.currentAmount < goal.targetAmount;
 
-      if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isDeposit
-                  ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!'
-                  : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
-            ),
-            backgroundColor: isDeposit
-                ? AppTheme.transferColorDark
-                : const Color(0xFFFF453A),
+      if (reachedMilestone && mounted) {
+        ModernDialog.showCustom(
+          context: context,
+          barrierDismissible: true,
+          child: SuccessConfettiDialog(
+            goalName: goal.name,
+            targetAmount: goal.targetAmount,
           ),
         );
-
-        if (reachedMilestone) {
-          Future.delayed(const Duration(milliseconds: 300), () {
-            if (mounted) {
-              ModernDialog.showCustom(
-                context: context,
-                barrierDismissible: true,
-                child: SuccessConfettiDialog(
-                  goalName: goal.name,
-                  targetAmount: goal.targetAmount,
-                ),
-              );
-            }
-          });
-        }
       }
     } catch (e) {
       if (mounted) {
@@ -147,8 +127,6 @@ class _SavingsGoalDetailScreenState
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
-    } finally {
-      if (mounted) setState(() => _isOperationLoading = false);
     }
   }
 
@@ -648,91 +626,51 @@ class _SavingsGoalDetailScreenState
                                   SizedBox(
                                     width: double.infinity,
                                     height: kSpacing56,
-                                    child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 250,
+                                    child: ElevatedButton(
+                                      onPressed: () => _handleContribution(
+                                        goal,
+                                        isDeposit,
                                       ),
-                                      curve: Curves.easeOutCubic,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: !_isOperationLoading
-                                            ? [
-                                                BoxShadow(
-                                                  color: accentColor.withValues(
-                                                    alpha: 0.3,
-                                                  ),
-                                                  blurRadius: 12,
-                                                  offset: const Offset(0, 4),
-                                                ),
-                                              ]
-                                            : [],
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: _isOperationLoading
-                                            ? null
-                                            : () => _handleContribution(
-                                                goal,
-                                                isDeposit,
-                                              ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: accentColor,
-                                          foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.05,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.05,
-                                                ),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: kSpacing14,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: accentColor,
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
                                           ),
                                         ),
-                                        child: _isOperationLoading
-                                            ? const SizedBox(
-                                                width: kSpacing24,
-                                                height: kSpacing24,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2.5,
-                                                      color: Colors.white,
-                                                    ),
-                                              )
-                                            : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    isDeposit
-                                                        ? Icons
-                                                              .add_circle_outline_rounded
-                                                        : Icons
-                                                              .remove_circle_outline_rounded,
-                                                    size: 18,
-                                                    color: Colors.white
-                                                        .withValues(alpha: 0.8),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing8,
-                                                  ),
-                                                  Text(
-                                                    isDeposit
-                                                        ? 'Confirm Deposit'
-                                                        : 'Confirm Withdrawal',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: kSpacing14,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            isDeposit
+                                                ? Icons
+                                                    .add_circle_outline_rounded
+                                                : Icons
+                                                    .remove_circle_outline_rounded,
+                                            size: 18,
+                                            color: Colors.white
+                                                .withValues(alpha: 0.8),
+                                          ),
+                                          const SizedBox(
+                                            width: kSpacing8,
+                                          ),
+                                          Text(
+                                            isDeposit
+                                                ? 'Confirm Deposit'
+                                                : 'Confirm Withdrawal',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

@@ -36,8 +36,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   String _rolloverType = 'none';
   double _threshold = 0.8;
   DateTime _startDate = DateTime.now();
-  bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
@@ -98,18 +96,21 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       }
       return;
     }
-    setState(() => _isLoading = true);
+
+    final repo = ref.read(budgetRepositoryProvider);
+    final amountCents = CurrencyFormatter.parseToCents(
+      _amountController.text,
+    );
+    int? rolloverCap;
+    if (_rollover &&
+        _rolloverType == 'capped' &&
+        _capController.text.isNotEmpty) {
+      rolloverCap = CurrencyFormatter.parseToCents(_capController.text);
+    }
+
+    if (mounted) context.pop();
+
     try {
-      final repo = ref.read(budgetRepositoryProvider);
-      final amountCents = CurrencyFormatter.parseToCents(
-        _amountController.text,
-      );
-      int? rolloverCap;
-      if (_rollover &&
-          _rolloverType == 'capped' &&
-          _capController.text.isNotEmpty) {
-        rolloverCap = CurrencyFormatter.parseToCents(_capController.text);
-      }
       if (widget.budgetId != null) {
         final existing = await repo.getBudgetById(widget.budgetId!);
         if (existing != null) {
@@ -140,15 +141,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       }
       ref.invalidate(budgetProgressProvider);
       ref.invalidate(activeBudgetsStreamProvider);
-      if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -546,7 +544,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: TactileSpringContainer(
-                            onTap: _isLoading ? null : _save,
+                            onTap: _save,
                             child: Container(
                               width: double.infinity,
                               height: 50,
@@ -571,25 +569,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   ),
                                 ],
                               ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(
-                                      isEditing
-                                          ? 'Update Budget'
-                                          : 'Create Budget',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
+                              child: Text(
+                                isEditing
+                                    ? 'Update Budget'
+                                    : 'Create Budget',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),

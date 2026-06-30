@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +9,11 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
-import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {
   const SavingsGoalListScreen({super.key});
@@ -46,44 +46,59 @@ class SavingsGoalListScreen extends ConsumerWidget {
               ref.invalidate(savingsGoalsStreamProvider);
               ref.invalidate(savingsGoalsTotalSavedProvider);
             },
-            child: ListView(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(kSpacing16),
-              children: [
-                _buildSummaryCard(
-                  context,
-                  isDark,
-                  totalSaved,
-                  totalTarget,
-                  overallPct,
-                ),
-                const SizedBox(height: kSpacing20),
-                Text(
-                  'ACTIVE GOALS',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.5)
-                        : Colors.black.withValues(alpha: 0.4),
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: kSpacing12),
-                ...goals.asMap().entries.map(
-                  (entry) => _buildGoalCard(
+              child: Column(
+                children: [
+                  _buildSummaryCard(
                     context,
-                    ref,
-                    entry.value,
-                    entry.key,
                     isDark,
-                    theme,
+                    totalSaved,
+                    totalTarget,
+                    overallPct,
                   ),
-                ),
-              ],
+                  const SizedBox(height: kSpacing20),
+                  Text(
+                    'ACTIVE GOALS',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.5)
+                          : Colors.black.withValues(alpha: 0.4),
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  const SizedBox(height: kSpacing12),
+                  StaggeredList(
+                    itemCount: goals.length,
+                    itemBuilder: (context, index) => _buildGoalCard(
+                      context,
+                      ref,
+                      goals[index],
+                      isDark,
+                      theme,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
-        loading: () => const Center(child: CupertinoActivityIndicator()),
+        loading: () => const Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              SkeletonCard(height: 130),
+              SizedBox(height: 12),
+              SkeletonCard(height: 130),
+              SizedBox(height: 12),
+              SkeletonCard(height: 130),
+              SizedBox(height: 12),
+              SkeletonCard(height: 130),
+            ],
+          ),
+        ),
         error: (err, _) =>
             Center(child: Text('Error loading savings goals: $err')),
       ),
@@ -240,7 +255,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     dynamic goal,
-    int index,
     bool isDark,
     ThemeData theme,
   ) {
@@ -251,200 +265,189 @@ class SavingsGoalListScreen extends ConsumerWidget {
     final diff = goal.targetDate.difference(DateTime.now()).inDays;
     final daysLeft = diff < 0 ? 0 : diff;
 
-    return StaggeredFadeSlide(
-      index: index,
-      child: TactileSpringContainer(
-        onTap: () => context.push('/savings-goals/${goal.id}'),
-        child: Hero(
-          tag: 'goal-${goal.id}',
-          child: Container(
-            margin: const EdgeInsets.only(bottom: kSpacing12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-              color: isDark
-                  ? goalColor.withValues(alpha: 0.08)
-                  : Colors.white.withValues(alpha: 0.65),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(width: 4, color: goalColor),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(kSpacing16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Semantics(
-                                label:
-                                    'Savings goal progress: ${(goalPct * 100).round()}% completed.',
-                                excludeSemantics: true,
-                                child: SizedBox(
-                                  height: 48,
-                                  width: 48,
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      PieChart(
-                                        PieChartData(
-                                          startDegreeOffset: -90,
-                                          sectionsSpace: 0,
-                                          centerSpaceRadius: 16,
-                                          sections: [
-                                            PieChartSectionData(
-                                              value: goalPct * 100,
-                                              color: goalColor,
-                                              radius: 4,
-                                              showTitle: false,
-                                            ),
-                                            PieChartSectionData(
-                                              value: (1.0 - goalPct) * 100,
-                                              color: goalColor.withValues(
-                                                alpha: 0.12,
-                                              ),
-                                              radius: 4,
-                                              showTitle: false,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Icon(
-                                        getGoalIcon(goal.icon),
-                                        color: goalColor,
-                                        size: 16,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+    return TactileSpringContainer(
+      onTap: () => context.push('/savings-goals/${goal.id}'),
+      child: Hero(
+        tag: 'goal-${goal.id}',
+        child: GlassCard(
+          frosted: false,
+          elevation: CardElevation.none,
+          margin: const EdgeInsets.only(bottom: kSpacing12),
+          backgroundColor: isDark
+              ? goalColor.withValues(alpha: 0.08)
+              : Colors.white.withValues(alpha: 0.65),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(width: 4, color: goalColor),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kSpacing16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Semantics(
+                              label:
+                                  'Savings goal progress: ${(goalPct * 100).round()}% completed.',
+                              excludeSemantics: true,
+                              child: SizedBox(
+                                height: 48,
+                                width: 48,
+                                child: Stack(
+                                  alignment: Alignment.center,
                                   children: [
-                                    Text(
-                                      goal.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: kSpacing2),
-                                    Text(
-                                      'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                            fontSize: 10,
+                                    PieChart(
+                                      PieChartData(
+                                        startDegreeOffset: -90,
+                                        sectionsSpace: 0,
+                                        centerSpaceRadius: 16,
+                                        sections: [
+                                          PieChartSectionData(
+                                            value: goalPct * 100,
+                                            color: goalColor,
+                                            radius: 4,
+                                            showTitle: false,
                                           ),
+                                          PieChartSectionData(
+                                            value: (1.0 - goalPct) * 100,
+                                            color: goalColor.withValues(
+                                              alpha: 0.12,
+                                            ),
+                                            radius: 4,
+                                            showTitle: false,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      getGoalIcon(goal.icon),
+                                      color: goalColor,
+                                      size: 16,
                                     ),
                                   ],
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                            ),
+                            const SizedBox(width: kSpacing14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (goal.isCompleted)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing8,
-                                        vertical: kSpacing4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.transferColorDark
-                                            .withValues(alpha: 0.12),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: const Text(
-                                        'COMPLETED',
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.w900,
-                                          color: AppTheme.transferColorDark,
-                                        ),
-                                      ),
-                                    )
-                                  else
-                                    Text(
-                                      '$daysLeft days remaining',
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey,
-                                      ),
+                                  Text(
+                                    goal.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
                                     ),
-                                  const SizedBox(height: kSpacing4),
-                                  GestureDetector(
-                                    onTap: () => context.push(
-                                      '/savings-goals/${goal.id}/edit',
-                                    ),
-                                    child: Text(
-                                      'Edit',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: theme.colorScheme.primary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: kSpacing2),
+                                  Text(
+                                    'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                      fontSize: 10,
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: kSpacing14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                CurrencyFormatter.formatCents(
-                                  goal.currentAmount,
-                                ),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: kSpacing8),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: LinearProgressIndicator(
-                              value: goalPct,
-                              backgroundColor: goalColor.withValues(
-                                alpha: 0.12,
-                              ),
-                              color: goalColor,
-                              minHeight: 6,
                             ),
-                          ),
-                          const SizedBox(height: kSpacing4),
-                          Text(
-                            '${(goalPct * 100).round()}% completed',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                if (goal.isCompleted)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing8,
+                                      vertical: kSpacing4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.transferColorDark
+                                          .withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Text(
+                                      'COMPLETED',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w900,
+                                        color: AppTheme.transferColorDark,
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    '$daysLeft days remaining',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                const SizedBox(height: kSpacing4),
+                                GestureDetector(
+                                  onTap: () => context.push(
+                                    '/savings-goals/${goal.id}/edit',
+                                  ),
+                                  child: Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing14),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              CurrencyFormatter.formatCents(goal.currentAmount),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: LinearProgressIndicator(
+                            value: goalPct,
+                            backgroundColor: goalColor.withValues(alpha: 0.12),
+                            color: goalColor,
+                            minHeight: 6,
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: kSpacing4),
+                        Text(
+                          '${(goalPct * 100).round()}% completed',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

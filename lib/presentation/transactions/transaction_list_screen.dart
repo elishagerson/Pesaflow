@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -14,14 +15,17 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -236,46 +240,43 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 final sortedDays = grouped.keys.toList()
                   ..sort((a, b) => b.compareTo(a));
 
-                return ListView.builder(
+                return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 195.0,
                     bottom: 110.0,
                   ),
-                  itemCount: sortedDays.length + 1,
-                  itemBuilder: (context, dayIndex) {
-                    // Append insights card at the end of the transactions list
-                    if (dayIndex == sortedDays.length) {
-                      return StaggeredFadeSlide(
-                        index: sortedDays.length,
-                        child: _buildInsightsCard(context, ref, isDark),
-                      );
-                    }
-
-                    final dayStr = sortedDays[dayIndex];
-                    final dayItems = grouped[dayStr]!;
-                    final firstItemDate = dayItems.first.transaction.createdAt;
-
-                    // Calculate daily net balance change (income - expense)
-                    int dailyNetChange = 0;
-                    for (final item in dayItems) {
-                      final type = item.transaction.type.toLowerCase();
-                      if (type == 'income') {
-                        dailyNetChange += item.transaction.amount;
-                      } else if (type == 'expense' ||
-                          type == 'airtime' ||
-                          type == 'fee') {
-                        dailyNetChange -= item.transaction.amount;
+                  child: StaggeredList(
+                    itemCount: sortedDays.length + 1,
+                    itemBuilder: (context, dayIndex) {
+                      // Append insights card at the end of the transactions list
+                      if (dayIndex == sortedDays.length) {
+                        return _buildInsightsCard(context, ref, isDark);
                       }
-                    }
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Group Date Header
-                        StaggeredFadeSlide(
-                          index: dayIndex,
-                          child: Padding(
+                      final dayStr = sortedDays[dayIndex];
+                      final dayItems = grouped[dayStr]!;
+                      final firstItemDate =
+                          dayItems.first.transaction.createdAt;
+
+                      // Calculate daily net balance change (income - expense)
+                      int dailyNetChange = 0;
+                      for (final item in dayItems) {
+                        final type = item.transaction.type.toLowerCase();
+                        if (type == 'income') {
+                          dailyNetChange += item.transaction.amount;
+                        } else if (type == 'expense' ||
+                            type == 'airtime' ||
+                            type == 'fee') {
+                          dailyNetChange -= item.transaction.amount;
+                        }
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Group Date Header
+                          Padding(
                             padding: const EdgeInsets.fromLTRB(
                               20.0,
                               24.0,
@@ -319,40 +320,40 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               ],
                             ),
                           ),
-                        ),
 
-                        // Transaction Items as Individual GlassCards
-                        ...dayItems.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final item = entry.value;
-                          final trans = item.transaction;
+                          // Transaction Items as Individual GlassCards
+                          ...dayItems.asMap().entries.map((entry) {
+                            final item = entry.value;
+                            final trans = item.transaction;
 
-                          AmountType amtType = AmountType.neutral;
-                          if (trans.type.toLowerCase() == 'income') {
-                            amtType = AmountType.income;
-                          } else if (trans.type.toLowerCase() == 'expense' ||
-                              trans.type.toLowerCase() == 'airtime' ||
-                              trans.type.toLowerCase() == 'fee') {
-                            amtType = AmountType.expense;
-                          }
+                            AmountType amtType = AmountType.neutral;
+                            if (trans.type.toLowerCase() == 'income') {
+                              amtType = AmountType.income;
+                            } else if (trans.type.toLowerCase() == 'expense' ||
+                                trans.type.toLowerCase() == 'airtime' ||
+                                trans.type.toLowerCase() == 'fee') {
+                              amtType = AmountType.expense;
+                            }
 
-                          final categoryColor = hexToColor(item.category.color);
-                          final formattedTime = DateFormat(
-                            'HH:mm',
-                          ).format(trans.createdAt);
+                            final categoryColor = hexToColor(
+                              item.category.color,
+                            );
+                            final formattedTime = DateFormat(
+                              'HH:mm',
+                            ).format(trans.createdAt);
 
-                          return StaggeredFadeSlide(
-                            index: index,
-                            child: Dismissible(
+                            return Dismissible(
                               key: Key(trans.id),
                               direction: DismissDirection.endToStart,
                               background: Container(
                                 alignment: Alignment.centerRight,
                                 margin: const EdgeInsets.symmetric(
-                                  horizontal: 20.0,
-                                  vertical: 6.0,
+                                  horizontal: kSpacing20,
+                                  vertical: kSpacing6,
                                 ),
-                                padding: const EdgeInsets.only(right: 20.0),
+                                padding: const EdgeInsets.only(
+                                  right: kSpacing20,
+                                ),
                                 decoration: BoxDecoration(
                                   color: theme.colorScheme.error,
                                   borderRadius: BorderRadius.circular(20),
@@ -377,38 +378,21 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 onTap: () => context.go(
                                   '/transactions/edit/${trans.id}',
                                 ),
-                                child: Container(
+                                child: GlassCard(
+                                  frosted: false,
+                                  elevation: CardElevation.low,
                                   margin: const EdgeInsets.symmetric(
-                                    horizontal: 20.0,
-                                    vertical: 6.0,
+                                    horizontal: kSpacing20,
+                                    vertical: kSpacing6,
                                   ),
-                                  padding: const EdgeInsets.all(16.0),
-                                  decoration: BoxDecoration(
-                                    color: isDark
-                                        ? const Color(
-                                            0xFF1B1C22,
-                                          ).withValues(alpha: 0.65)
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: isDark
-                                          ? const Color(0x10FFFFFF)
-                                          : const Color(0x0F000000),
-                                      width: 0.5,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: isDark ? 0.2 : 0.03,
-                                        ),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
+                                  padding: const EdgeInsets.all(kSpacing16),
+                                  backgroundColor: isDark
+                                      ? const Color(
+                                          0xFF1B1C22,
+                                        ).withValues(alpha: 0.65)
+                                      : Colors.white,
                                   child: Row(
                                     children: [
-                                      // Category Icon Container (Squircle Style)
                                       Container(
                                         width: 46,
                                         height: 46,
@@ -539,15 +523,28 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                      ],
-                    );
-                  },
+                            );
+                          }),
+                        ],
+                      );
+                    },
+                  ),
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Column(
+                  children: [
+                    SkeletonCard(height: 80),
+                    SizedBox(height: 8),
+                    SkeletonCard(height: 80),
+                    SizedBox(height: 8),
+                    SkeletonCard(height: 80),
+                    SizedBox(height: 8),
+                    SkeletonCard(height: 80),
+                  ],
+                ),
+              ),
               error: (err, _) =>
                   Center(child: Text('Error loading transactions: $err')),
             ),
@@ -586,7 +583,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
+                              horizontal: kSpacing20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -784,7 +781,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
+                              horizontal: kSpacing20,
                             ),
                             child: TextField(
                               controller: _searchController,
@@ -843,7 +840,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                     final isSelected = activeType == type;
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 4.0,
+                                        horizontal: kSpacing4,
                                       ),
                                       child: GestureDetector(
                                         onTap: () {
@@ -924,7 +921,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 80),
+        padding: const EdgeInsets.only(bottom: kSpacing80),
         child: PremiumFab(onPressed: () => context.go('/transactions/add')),
       ),
     );
@@ -960,7 +957,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         };
 
         return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+          padding: EdgeInsets.fromLTRB(
+            kSpacing20,
+            kSpacing24,
+            kSpacing20,
+            kSpacing24,
+          ),
           child: Interactive3DCard(
             borderRadius: 24.0,
             shadowColor: accentColor,
