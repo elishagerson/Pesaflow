@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
+import 'package:pesaflow/presentation/state/sms_stats_provider.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
@@ -3491,6 +3492,101 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 const SizedBox(height: kSpacing20),
 
+                // ── 3b. Quick Actions ──
+                StaggeredFadeSlide(
+                  index: 2,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: kSpacing20),
+                    child: Row(
+                      children: [
+                        _QuickActionButton(
+                          icon: PesaFlowIcons.expense,
+                          label: 'Expense',
+                          color: const Color(0xFFEF4444),
+                          onTap: () => context.go('/transactions/add'),
+                        ),
+                        const SizedBox(width: kSpacing10),
+                        _QuickActionButton(
+                          icon: PesaFlowIcons.income,
+                          label: 'Income',
+                          color: const Color(0xFF10B981),
+                          onTap: () => context.go('/transactions/add'),
+                        ),
+                        const SizedBox(width: kSpacing10),
+                        _QuickActionButton(
+                          icon: PesaFlowIcons.transfer,
+                          label: 'Transfer',
+                          color: const Color(0xFF6366F1),
+                          onTap: () => context.go('/transactions/add'),
+                        ),
+                        const SizedBox(width: kSpacing10),
+                        _QuickActionButton(
+                          icon: PesaFlowIcons.goal,
+                          label: 'Goal',
+                          color: const Color(0xFFD4942D),
+                          onTap: () => context.go('/savings-goals/add'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: kSpacing20),
+
+                // ── SMS auto-categorization count ──
+                Consumer(
+                  builder: (context, ref, _) {
+                    final smsCountAsync = ref.watch(todaySmsCountProvider);
+                    return smsCountAsync.when(
+                      data: (count) {
+                        if (count == 0) return const SizedBox.shrink();
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            top: kSpacing12,
+                            left: kSpacing20,
+                            right: kSpacing20,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                              vertical: kSpacing12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0F4C5C).withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.message_rounded,
+                                  size: 18,
+                                  color: const Color(0xFF0F4C5C),
+                                ),
+                                SizedBox(width: kSpacing10),
+                                Expanded(
+                                  child: Text(
+                                    'Auto-categorized $count message${count == 1 ? '' : 's'} today  ↗',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF0F4C5C),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      error: (_, _) => const SizedBox.shrink(),
+                      loading: () => const SizedBox.shrink(),
+                    );
+                  },
+                ),
+                const SizedBox(height: kSpacing12),
+
                 // ── 3. Insights — contextual nudges ──
                 _CollapsibleSection(
                   title: 'Insights',
@@ -4088,6 +4184,56 @@ class _InsightsCarousel extends ConsumerWidget {
       },
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _QuickActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: kSpacing12),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: color.withValues(alpha: 0.12)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 22),
+                SizedBox(height: kSpacing4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -364,7 +364,35 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 ),
                               ),
                               confirmDismiss: (_) async {
-                                await ref
+                                return await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: const Text('Delete transaction?'),
+                                    content: const Text(
+                                      'This action cannot be undone.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(ctx, false),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(ctx, true),
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: Color(0xFFEF4444),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              onDismissed: (_) {
+                                ref
                                     .read(transactionRepositoryProvider)
                                     .deleteTransaction(trans.id);
                                 ref.invalidate(
@@ -372,11 +400,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 );
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
-                                return true;
                               },
                               child: TactileSpringContainer(
                                 onTap: () => context.go(
-                                  '/transactions/edit/${trans.id}',
+                                  '/transactions/${trans.id}',
                                 ),
                                 child: GlassCard(
                                   frosted: false,
@@ -474,6 +501,30 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                                if (trans.source.startsWith('sms')) ...[
+                                                  const SizedBox(width: 6),
+                                                  Container(
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                        0xFF0F4C5C,
+                                                      ).withValues(alpha: 0.08),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      '📨',
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
