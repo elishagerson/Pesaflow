@@ -1155,17 +1155,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           },
                           loading: () => const SizedBox.shrink(),
                           error: (_, _) => const SizedBox.shrink(),
-                        ),
                       ),
                     ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  );
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
       },
       orElse: () => const SizedBox.shrink(),
     );
