@@ -98,7 +98,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     return Scaffold(
       body: RefreshIndicator(
         color: const Color(0xFF0F4C5C),
-        backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
+        backgroundColor: isDark
+            ? const Color(0xFF161B22)
+            : const Color(0xFFF5F3F0),
         onRefresh: () async {
           ref.invalidate(filteredTransactionsStreamProvider);
           ref.invalidate(recentTransactionsStreamProvider);
@@ -410,22 +412,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
 
-                                final messenger = ScaffoldMessenger.of(
-                                  context,
-                                );
+                                final messenger = ScaffoldMessenger.of(context);
                                 messenger.showSnackBar(
                                   SnackBar(
-                                    content: const Text(
-                                      'Transaction deleted',
-                                    ),
+                                    content: const Text('Transaction deleted'),
                                     duration: const Duration(seconds: 4),
                                     action: SnackBarAction(
                                       label: 'Undo',
                                       onPressed: () async {
                                         await ref
-                                            .read(
-                                              transactionRepositoryProvider,
-                                            )
+                                            .read(transactionRepositoryProvider)
                                             .createTransaction(txData);
                                         ref.invalidate(
                                           filteredTransactionsStreamProvider,
@@ -438,57 +434,54 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 );
                               },
                               child: TactileSpringContainer(
-                                onTap: () => context.go(
-                                  '/transactions/${trans.id}',
-                                ),
+                                onTap: () =>
+                                    context.go('/transactions/${trans.id}'),
                                 child: GlassCard(
                                   frosted: false,
-                                    elevation: CardElevation.low,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing20,
-                                      vertical: kSpacing6,
-                                    ),
-                                    padding: const EdgeInsets.all(kSpacing16),
-                                    backgroundColor: isDark
-                                        ? const Color(
-                                            0xFF1B1C22,
-                                          ).withValues(alpha: 0.65)
-                                        : Colors.white,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 46,
-                                          height: 46,
-                                          decoration: BoxDecoration(
-                                            color: mutedCategoryColor.withValues(
-                                              alpha: 0.15,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              14,
-                                            ),
+                                  elevation: CardElevation.low,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing20,
+                                    vertical: kSpacing6,
+                                  ),
+                                  padding: const EdgeInsets.all(kSpacing16),
+                                  backgroundColor: isDark
+                                      ? const Color(
+                                          0xFF1B1C22,
+                                        ).withValues(alpha: 0.65)
+                                      : Colors.white,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 46,
+                                        height: 46,
+                                        decoration: BoxDecoration(
+                                          color: mutedCategoryColor.withValues(
+                                            alpha: 0.15,
                                           ),
-                                          child: Center(
-                                            child: Icon(
-                                              getCategoryIcon(
-                                                item.category.icon,
-                                              ),
-                                              color: categoryColor,
-                                              size: 22,
-                                            ),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
                                           ),
                                         ),
-                                        const SizedBox(width: 14),
-                                        // Content
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                trans.description.isNotEmpty
-                                                    ? trans.description
-                                                    : item.category.name,
-                                                style: TextStyle(
+                                        child: Center(
+                                          child: Icon(
+                                            getCategoryIcon(item.category.icon),
+                                            color: categoryColor,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      // Content
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              trans.description.isNotEmpty
+                                                  ? trans.description
+                                                  : item.category.name,
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 15,
                                                 color: isDark
@@ -542,13 +535,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                     ),
                                                   ),
                                                 ],
-                                                if (trans.source.startsWith('sms')) ...[
+                                                if (trans.source.startsWith(
+                                                  'sms',
+                                                )) ...[
                                                   const SizedBox(width: 6),
                                                   Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: 6,
-                                                      vertical: 2,
-                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 6,
+                                                          vertical: 2,
+                                                        ),
                                                     decoration: BoxDecoration(
                                                       color: const Color(
                                                         0xFF0F4C5C,
@@ -610,9 +606,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       ),
                                     ],
                                   ),
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }),
                         ],
                       );
                     },
@@ -1155,6 +1152,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           },
                           loading: () => const SizedBox.shrink(),
                           error: (_, _) => const SizedBox.shrink(),
+                        ),
                       ),
                     ],
                   ),
