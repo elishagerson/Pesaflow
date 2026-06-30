@@ -437,14 +437,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   ),
                                 );
                               },
-                              child: Hero(
-                                tag: 'transaction-${trans.id}',
-                                child: TactileSpringContainer(
-                                  onTap: () => context.go(
-                                    '/transactions/${trans.id}',
-                                  ),
-                                  child: GlassCard(
-                                    frosted: false,
+                              child: TactileSpringContainer(
+                                onTap: () => context.go(
+                                  '/transactions/${trans.id}',
+                                ),
+                                child: GlassCard(
+                                  frosted: false,
                                     elevation: CardElevation.low,
                                     margin: const EdgeInsets.symmetric(
                                       horizontal: kSpacing20,
@@ -612,7 +610,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       ),
                                     ],
                                   ),
-                                ),
                               ),
                             ),
                           );
