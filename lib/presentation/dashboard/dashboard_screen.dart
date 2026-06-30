@@ -28,10 +28,13 @@ import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/insight_card.dart';
+import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -3101,35 +3104,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 // ── 2. Balance Hero Card — "Your Money" ──
                 StaggeredFadeSlide(
                   index: 0,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(kSpacing24),
-                    decoration: BoxDecoration(
-                      gradient: isDark
-                          ? LinearGradient(
-                              colors: [
-                                trackerColor.withValues(alpha: 0.15),
-                                const Color(0xFF0F1013),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
-                          : cardGradient,
-                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                      border: Border.all(
-                        color: isDark
-                            ? trackerColor.withValues(alpha: 0.25)
-                            : trackerColor.withValues(alpha: 0.12),
-                        width: 0.8,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: trackerColor.withValues(alpha: isDark ? 0.2 : 0.15),
-                          blurRadius: 40,
-                          offset: const Offset(0, 12),
+                  child: _AnimatedHeroGradient(
+                    trackerColor: trackerColor,
+                    isDark: isDark,
+                    cardGradient: cardGradient,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(kSpacing24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        border: Border.all(
+                          color: isDark
+                              ? trackerColor.withValues(alpha: 0.25)
+                              : trackerColor.withValues(alpha: 0.12),
+                          width: 0.8,
                         ),
-                      ],
-                    ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: trackerColor.withValues(alpha: isDark ? 0.2 : 0.15),
+                            blurRadius: 40,
+                            offset: const Offset(0, 12),
+                          ),
+                        ],
+                      ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -3381,6 +3378,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ],
                     ),
                   ),
+                ),
                 ),
                 const SizedBox(height: kSpacing16),
 
@@ -4181,19 +4179,99 @@ class _InsightsCarousel extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         return SizedBox(
-          height: 138,
+          height: 158,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(vertical: 8),
             clipBehavior: Clip.none,
             itemCount: insights.length,
             separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) => InsightCard(data: insights[i]),
+            itemBuilder: (_, i) => MorphingInsightCard(data: insights[i], index: i),
           ),
         );
       },
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _AnimatedHeroGradient extends StatefulWidget {
+  final Color trackerColor;
+  final bool isDark;
+  final LinearGradient cardGradient;
+  final Widget child;
+
+  const _AnimatedHeroGradient({
+    required this.trackerColor,
+    required this.isDark,
+    required this.cardGradient,
+    required this.child,
+  });
+
+  @override
+  State<_AnimatedHeroGradient> createState() => _AnimatedHeroGradientState();
+}
+
+class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final t = _controller.value;
+        final shiftedBegin = Alignment(
+          -0.3 + t * 0.6,
+          -0.3 + t * 0.6,
+        );
+        final shiftedEnd = Alignment(
+          0.3 - t * 0.6,
+          0.3 - t * 0.6,
+        );
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: widget.isDark
+                ? LinearGradient(
+                    colors: [
+                      widget.trackerColor.withValues(alpha: 0.12 + t * 0.08),
+                      const Color(0xFF0F1013),
+                    ],
+                    begin: shiftedBegin,
+                    end: shiftedEnd,
+                  )
+                : LinearGradient(
+                    colors: [
+                      widget.trackerColor.withValues(alpha: 0.08 + t * 0.06),
+                      const Color(0xFFF5F3F0),
+                    ],
+                    begin: shiftedBegin,
+                    end: shiftedEnd,
+                  ),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+          ),
+          child: child,
+        );
+      },
+      child: widget.child,
     );
   }
 }
@@ -4214,33 +4292,30 @@ class _QuickActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: kSpacing12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: color.withValues(alpha: 0.12)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: color, size: 22),
-                SizedBox(height: kSpacing4),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                  ),
+      child: SpringButton(
+        haptic: HapticType.selection,
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: kSpacing12),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: color.withValues(alpha: 0.12)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 22),
+              SizedBox(height: kSpacing4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: color,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -66,15 +66,21 @@ class TransactionDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: itemAsync.when(
-        data: (item) {
-          if (item == null) {
-            return const Center(child: Text('Transaction not found'));
-          }
-          return _buildDetail(context, ref, theme, isDark, item);
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+      body: Hero(
+        tag: 'transaction-$transactionId',
+        child: Material(
+          type: MaterialType.transparency,
+          child: itemAsync.when(
+            data: (item) {
+              if (item == null) {
+                return const Center(child: Text('Transaction not found'));
+              }
+              return _buildDetail(context, ref, theme, isDark, item);
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, _) => Center(child: Text('Error: $err')),
+          ),
+        ),
       ),
     );
   }

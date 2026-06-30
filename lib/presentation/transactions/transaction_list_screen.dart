@@ -437,56 +437,60 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   ),
                                 );
                               },
-                              child: TactileSpringContainer(
-                                onTap: () => context.go(
-                                  '/transactions/${trans.id}',
-                                ),
-                                child: GlassCard(
-                                  frosted: false,
-                                  elevation: CardElevation.low,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: kSpacing20,
-                                    vertical: kSpacing6,
+                              child: Hero(
+                                tag: 'transaction-${trans.id}',
+                                child: TactileSpringContainer(
+                                  onTap: () => context.go(
+                                    '/transactions/${trans.id}',
                                   ),
-                                  padding: const EdgeInsets.all(kSpacing16),
-                                  backgroundColor: isDark
-                                      ? const Color(
-                                          0xFF1B1C22,
-                                        ).withValues(alpha: 0.65)
-                                      : Colors.white,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 46,
-                                        height: 46,
-                                        decoration: BoxDecoration(
-                                          color: mutedCategoryColor.withValues(
-                                            alpha: 0.15,
+                                  child: GlassCard(
+                                    frosted: false,
+                                    elevation: CardElevation.low,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing20,
+                                      vertical: kSpacing6,
+                                    ),
+                                    padding: const EdgeInsets.all(kSpacing16),
+                                    backgroundColor: isDark
+                                        ? const Color(
+                                            0xFF1B1C22,
+                                          ).withValues(alpha: 0.65)
+                                        : Colors.white,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 46,
+                                          height: 46,
+                                          decoration: BoxDecoration(
+                                            color: mutedCategoryColor.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            14,
+                                          child: Center(
+                                            child: Icon(
+                                              getCategoryIcon(
+                                                item.category.icon,
+                                              ),
+                                              color: categoryColor,
+                                              size: 22,
+                                            ),
                                           ),
                                         ),
-                                        child: Center(
-                                          child: Icon(
-                                            getCategoryIcon(item.category.icon),
-                                            color: categoryColor,
-                                            size: 22,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 14),
-                                      // Content
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              trans.description.isNotEmpty
-                                                  ? trans.description
-                                                  : item.category.name,
-                                              style: TextStyle(
+                                        const SizedBox(width: 14),
+                                        // Content
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                trans.description.isNotEmpty
+                                                    ? trans.description
+                                                    : item.category.name,
+                                                style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 15,
                                                 color: isDark
@@ -610,8 +614,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   ),
                                 ),
                               ),
-                            );
-                          }),
+                            ),
+                          );
                         ],
                       );
                     },
@@ -1157,12 +1161,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  );
       },
       orElse: () => const SizedBox.shrink(),
     );

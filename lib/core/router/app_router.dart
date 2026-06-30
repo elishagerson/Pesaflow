@@ -35,15 +35,13 @@ Page<dynamic> _springSlidePage(Widget page) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 0.05);
       const end = Offset.zero;
-      const curve = Curves.easeOutCubic;
-      final tween = Tween(
-        begin: begin,
-        end: end,
-      ).chain(CurveTween(curve: curve));
+      final tween = Tween(begin: begin, end: end).chain(
+        CurveTween(curve: Curves.easeOutCubic),
+      );
       final fadeTween = Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).chain(CurveTween(curve: curve));
+      ).chain(CurveTween(curve: Curves.easeOutCubic));
       return SlideTransition(
         position: animation.drive(tween),
         child: FadeTransition(
@@ -56,8 +54,30 @@ Page<dynamic> _springSlidePage(Widget page) {
   );
 }
 
-/// Subtle cross-fade + scale transition for tab switches.
-/// Replaces NoTransitionPage to make tab changes feel connected.
+Page<dynamic> _heroSlidePage(Widget page) {
+  return CustomTransitionPage(
+    key: ValueKey(page.runtimeType),
+    child: page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 0.03);
+      const end = Offset.zero;
+      final tween = Tween(begin: begin, end: end).chain(
+        CurveTween(curve: Curves.easeOutCubic),
+      );
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          ),
+          child: child,
+        ),
+      );
+    },
+    reverseTransitionDuration: const Duration(milliseconds: 200),
+  );
+}
+
 Page<dynamic> _tabTransitionPage(Widget child) {
   return CustomTransitionPage(
     child: child,
@@ -92,6 +112,11 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isPhone = width < 600;
+    final isTablet = width >= 600 && width < 1200;
+    final isDesktop = width >= 1200;
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, _) {
@@ -114,8 +139,18 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
         }
       },
       child: Scaffold(
-        body: widget.navigationShell,
-        bottomNavigationBar: IosTabBar(
+        body: Row(
+          children: [
+            if (isDesktop)
+              _buildSidebar(context)
+            else if (isTablet)
+              _buildNavigationRail(context),
+            Expanded(
+              child: widget.navigationShell,
+            ),
+          ],
+        ),
+        bottomNavigationBar: isPhone ? IosTabBar(
           selectedIndex: widget.navigationShell.currentIndex,
           onDestinationSelected: (int index) {
             widget.navigationShell.goBranch(
@@ -123,7 +158,204 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               initialLocation: index == widget.navigationShell.currentIndex,
             );
           },
+        ) : null,
+      ),
+    );
+  }
+
+  Widget _buildNavigationRail(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final currentIndex = widget.navigationShell.currentIndex;
+
+    final navItems = [
+      (Icons.home_rounded, 'Home', 0),
+      (Icons.swap_horiz_rounded, 'Transactions', 1),
+      (Icons.donut_large_rounded, 'Budgets', 2),
+      (Icons.analytics_rounded, 'Analytics', 3),
+      (Icons.settings_rounded, 'Settings', 4),
+    ];
+
+    return NavigationRail(
+      selectedIndex: currentIndex,
+      onDestinationSelected: (index) {
+        widget.navigationShell.goBranch(
+          index,
+          initialLocation: index == currentIndex,
+        );
+      },
+      labelType: NavigationRailLabelType.all,
+      backgroundColor: isDark
+          ? const Color(0xFF161B22)
+          : const Color(0xFFF5F3F0),
+      indicatorColor: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFF0F4C5C),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.account_balance_wallet_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'PesaFlow',
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w900,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
         ),
+      ),
+      destinations: navItems.map((item) {
+        return NavigationRailDestination(
+          icon: Icon(item.$1, size: 20),
+          selectedIcon: Icon(item.$1, size: 20),
+          label: Text(item.$2),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSidebar(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final navItems = [
+      (Icons.home_rounded, 'Dashboard', 0),
+      (Icons.swap_horiz_rounded, 'Transactions', 1),
+      (Icons.donut_large_rounded, 'Budgets', 2),
+      (Icons.analytics_rounded, 'Analytics', 3),
+      (Icons.settings_rounded, 'Settings', 4),
+    ];
+
+    return Container(
+      width: 220,
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF161B22)
+            : const Color(0xFFF5F3F0),
+        border: Border(
+          right: BorderSide(
+            color: isDark
+                ? const Color(0x1AFFFFFF)
+                : const Color(0x0F000000),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 48),
+          // App logo / brand
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F4C5C),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.account_balance_wallet_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'PesaFlow',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Navigation items
+          ...navItems.map((item) {
+            final isSelected = widget.navigationShell.currentIndex == item.$3;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    widget.navigationShell.goBranch(
+                      item.$3,
+                      initialLocation:
+                          item.$3 == widget.navigationShell.currentIndex,
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFF0F4C5C).withValues(alpha: 0.1)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          item.$1,
+                          size: 20,
+                          color: isSelected
+                              ? const Color(0xFF0F4C5C)
+                              : (isDark
+                                  ? Colors.grey[400]
+                                  : Colors.grey[600]),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          item.$2,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected
+                                ? const Color(0xFF0F4C5C)
+                                : (isDark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+          const Spacer(),
+          // Version
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'PesaFlow v1.0.0',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.grey,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -134,7 +366,6 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: kDebugMode,
   routes: <RouteBase>[
-    // Onboarding (full-screen, above bottom nav)
     GoRoute(
       path: '/onboarding',
       parentNavigatorKey: _rootNavigatorKey,
@@ -142,7 +373,6 @@ final GoRouter appRouter = GoRouter(
           _springSlidePage(const OnboardingScreen()),
     ),
 
-    // Main persistent shell routes
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return ScaffoldWithNavBar(navigationShell: navigationShell);
@@ -158,7 +388,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'loans',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const LoanListScreen()),
+                      _heroSlidePage(const LoanListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
@@ -170,8 +400,10 @@ final GoRouter appRouter = GoRouter(
                       path: ':id',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _springSlidePage(
-                          LoanDetailScreen(loanId: state.pathParameters['id']!),
+                        return _heroSlidePage(
+                          LoanDetailScreen(
+                            loanId: state.pathParameters['id']!,
+                          ),
                         );
                       },
                       routes: [
@@ -194,7 +426,7 @@ final GoRouter appRouter = GoRouter(
                   path: 'savings-goals',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const SavingsGoalListScreen()),
+                      _heroSlidePage(const SavingsGoalListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
@@ -206,7 +438,7 @@ final GoRouter appRouter = GoRouter(
                       path: ':id',
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
-                        return _springSlidePage(
+                        return _heroSlidePage(
                           SavingsGoalDetailScreen(
                             goalId: state.pathParameters['id']!,
                           ),
@@ -232,14 +464,17 @@ final GoRouter appRouter = GoRouter(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(const RecurringTransactionListScreen()),
+                      _springSlidePage(
+                        const RecurringTransactionListScreen(),
+                      ),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) => _springSlidePage(
-                        const RecurringTransactionFormScreen(),
-                      ),
+                      pageBuilder: (context, state) =>
+                          _springSlidePage(
+                            const RecurringTransactionFormScreen(),
+                          ),
                     ),
                     GoRoute(
                       path: ':id/edit',
@@ -287,7 +522,9 @@ final GoRouter appRouter = GoRouter(
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     return _springSlidePage(
-                      TransactionDetailScreen(transactionId: state.param('id')),
+                      TransactionDetailScreen(
+                        transactionId: state.param('id'),
+                      ),
                     );
                   },
                 ),
@@ -312,7 +549,7 @@ final GoRouter appRouter = GoRouter(
                   path: ':id',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    return _springSlidePage(
+                    return _heroSlidePage(
                       BudgetDetailScreen(budgetId: state.param('id')),
                     );
                   },
@@ -353,7 +590,6 @@ final GoRouter appRouter = GoRouter(
       ],
     ),
 
-    // SMS Review Queue (full-screen, above bottom nav)
     GoRoute(
       path: '/sms-review',
       parentNavigatorKey: _rootNavigatorKey,
