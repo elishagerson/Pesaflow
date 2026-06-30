@@ -36,6 +36,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   String _rolloverType = 'none';
   double _threshold = 0.8;
   DateTime _startDate = DateTime.now();
+  bool _isSaving = false;
   @override
   void initState() {
     super.initState();
@@ -86,6 +87,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   }
 
   Future<void> _save() async {
+    if (_isSaving) return;
     if (_formKey.currentState == null ||
         !_formKey.currentState!.validate() ||
         _selectedCategoryId == null) {
@@ -108,7 +110,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       rolloverCap = CurrencyFormatter.parseToCents(_capController.text);
     }
 
-    if (mounted) context.pop();
+    setState(() => _isSaving = true);
 
     try {
       if (widget.budgetId != null) {
@@ -141,12 +143,20 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       }
       ref.invalidate(budgetProgressProvider);
       ref.invalidate(activeBudgetsStreamProvider);
+      if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            action: SnackBarAction(
+              label: 'Retry',
+              onPressed: _save,
+            ),
+          ),
+        );
       }
+      setState(() => _isSaving = false);
     }
   }
 
@@ -569,16 +579,25 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   ),
                                 ],
                               ),
-                              child: Text(
-                                isEditing
-                                    ? 'Update Budget'
-                                    : 'Create Budget',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
+                              child: _isSaving
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      isEditing
+                                          ? 'Update Budget'
+                                          : 'Create Budget',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

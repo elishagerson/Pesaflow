@@ -4,24 +4,32 @@ class StaggeredList extends StatelessWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final double staggerDelay;
+  final EdgeInsetsGeometry? padding;
+  final ScrollPhysics? physics;
 
   const StaggeredList({
     super.key,
     required this.itemCount,
     required this.itemBuilder,
     this.staggerDelay = 30,
+    this.padding,
+    this.physics,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(itemCount, (index) {
+    return ListView.builder(
+      physics: physics ?? const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      padding: padding,
+      itemCount: itemCount,
+      itemBuilder: (context, index) {
         return _StaggeredItem(
           index: index,
           staggerDelay: staggerDelay,
           child: itemBuilder(context, index),
         );
-      }),
+      },
     );
   }
 }

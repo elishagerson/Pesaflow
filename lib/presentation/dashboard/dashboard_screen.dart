@@ -3144,7 +3144,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     fontWeight: FontWeight.w900,
                                     fontSize: 19,
                                     color: isDark
-                                        ? const Color(0xFF609F8A)
+                                        ? const Color(0xFF0F4C5C)
                                         : Colors.white,
                                     letterSpacing: -0.5,
                                   ),

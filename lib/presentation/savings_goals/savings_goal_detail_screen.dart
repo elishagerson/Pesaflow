@@ -50,83 +50,72 @@ class _SavingsGoalDetailScreenState
 
     final amountCents = amountVal * 100;
 
-    // Pop sheet immediately (optimistic)
-    if (mounted) Navigator.of(context).pop();
+    final repo = ref.read(savingsGoalRepositoryProvider);
+    final trackerId = ref.read(activeTrackerIdProvider);
 
-    try {
-      final repo = ref.read(savingsGoalRepositoryProvider);
-      final trackerId = ref.read(activeTrackerIdProvider);
+    final contributionAmount = isDeposit ? amountCents : -amountCents;
 
-      final contributionAmount = isDeposit ? amountCents : -amountCents;
+    await repo.addContribution(
+      savingsGoalId: goal.id,
+      amount: contributionAmount,
+      notes: _noteController.text.trim().isEmpty
+          ? null
+          : _noteController.text.trim(),
+    );
 
-      await repo.addContribution(
-        savingsGoalId: goal.id,
-        amount: contributionAmount,
-        notes: _noteController.text.trim().isEmpty
-            ? null
-            : _noteController.text.trim(),
-      );
-
-      if (_deductFromWallet && _selectedAccountId != null) {
-        final txRepo = ref.read(transactionRepositoryProvider);
-        final categories = ref.read(categoriesFutureProvider).value ?? [];
-        if (categories.isNotEmpty) {
-          final savingsCategory = categories.firstWhere(
-            (c) => c.name.toLowerCase() == 'savings' || c.icon == 'piggy-bank',
-            orElse: () => categories.first,
-          );
-
-          final uuid = const Uuid();
-          final tx = Transaction(
-            id: uuid.v4(),
-            accountId: _selectedAccountId!,
-            categoryId: savingsCategory.id,
-            trackerId: trackerId,
-            amount: amountCents,
-            type: isDeposit ? 'expense' : 'income',
-            description: isDeposit
-                ? 'Saved: ${goal.name}'
-                : 'Withdrawal: ${goal.name}',
-            source: 'manual',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-
-          await txRepo.createTransaction(tx);
-
-          ref.invalidate(recentTransactionsStreamProvider);
-          ref.invalidate(filteredTransactionsStreamProvider);
-          ref.invalidate(accountsStreamProvider);
-          ref.invalidate(netWorthProvider);
-        }
-      }
-
-      ref.invalidate(savingsGoalsStreamProvider);
-      ref.invalidate(savingsGoalsTotalSavedProvider);
-
-      final updatedGoal = await repo.getSavingsGoalById(goal.id);
-      final reachedMilestone =
-          isDeposit &&
-          updatedGoal != null &&
-          updatedGoal.currentAmount >= updatedGoal.targetAmount &&
-          goal.currentAmount < goal.targetAmount;
-
-      if (reachedMilestone && mounted) {
-        ModernDialog.showCustom(
-          context: context,
-          barrierDismissible: true,
-          child: SuccessConfettiDialog(
-            goalName: goal.name,
-            targetAmount: goal.targetAmount,
-          ),
+    if (_deductFromWallet && _selectedAccountId != null) {
+      final txRepo = ref.read(transactionRepositoryProvider);
+      final categories = ref.read(categoriesFutureProvider).value ?? [];
+      if (categories.isNotEmpty) {
+        final savingsCategory = categories.firstWhere(
+          (c) => c.name.toLowerCase() == 'savings' || c.icon == 'piggy-bank',
+          orElse: () => categories.first,
         );
+
+        final uuid = const Uuid();
+        final tx = Transaction(
+          id: uuid.v4(),
+          accountId: _selectedAccountId!,
+          categoryId: savingsCategory.id,
+          trackerId: trackerId,
+          amount: amountCents,
+          type: isDeposit ? 'expense' : 'income',
+          description: isDeposit
+              ? 'Saved: ${goal.name}'
+              : 'Withdrawal: ${goal.name}',
+          source: 'manual',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        await txRepo.createTransaction(tx);
+
+        ref.invalidate(recentTransactionsStreamProvider);
+        ref.invalidate(filteredTransactionsStreamProvider);
+        ref.invalidate(accountsStreamProvider);
+        ref.invalidate(netWorthProvider);
       }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
+    }
+
+    ref.invalidate(savingsGoalsStreamProvider);
+    ref.invalidate(savingsGoalsTotalSavedProvider);
+
+    final updatedGoal = await repo.getSavingsGoalById(goal.id);
+    final reachedMilestone =
+        isDeposit &&
+        updatedGoal != null &&
+        updatedGoal.currentAmount >= updatedGoal.targetAmount &&
+        goal.currentAmount < goal.targetAmount;
+
+    if (reachedMilestone && mounted) {
+      ModernDialog.showCustom(
+        context: context,
+        barrierDismissible: true,
+        child: SuccessConfettiDialog(
+          goalName: goal.name,
+          targetAmount: goal.targetAmount,
+        ),
+      );
     }
   }
 

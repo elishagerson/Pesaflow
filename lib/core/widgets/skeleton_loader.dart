@@ -145,3 +145,52 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
     );
   }
 }
+
+/// Wraps content and ensures skeleton loading is shown
+/// for at least [minimumDuration] to prevent flicker.
+class SkeletonLoader extends StatefulWidget {
+  final bool isLoading;
+  final Widget skeleton;
+  final Widget child;
+  final Duration minimumDuration;
+
+  const SkeletonLoader({
+    super.key,
+    required this.isLoading,
+    required this.skeleton,
+    required this.child,
+    this.minimumDuration = const Duration(milliseconds: 300),
+  });
+
+  @override
+  State<SkeletonLoader> createState() => _SkeletonLoaderState();
+}
+
+class _SkeletonLoaderState extends State<SkeletonLoader> {
+  bool _showSkeleton = true;
+
+  @override
+  void didUpdateWidget(SkeletonLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isLoading) {
+      _showSkeleton = true;
+    } else if (!widget.isLoading && oldWidget.isLoading && _showSkeleton) {
+      Future.delayed(widget.minimumDuration, () {
+        if (mounted && !widget.isLoading) {
+          setState(() => _showSkeleton = false);
+        }
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _showSkeleton = widget.isLoading;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showSkeleton ? widget.skeleton : widget.child;
+  }
+}
