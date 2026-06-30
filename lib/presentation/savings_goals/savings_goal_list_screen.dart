@@ -306,26 +306,26 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                         sectionsSpace: 0,
                                         centerSpaceRadius: 16,
                                         sections: [
-                                          PieChartSectionData(
-                                            value: goalPct * 100,
-                                            color: goalColor,
-                                            radius: 4,
-                                            showTitle: false,
+                                        PieChartSectionData(
+                                          value: goalPct * 100,
+                                          color: mutedGoalColor,
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                        PieChartSectionData(
+                                          value: (1.0 - goalPct) * 100,
+                                          color: mutedGoalColor.withValues(
+                                            alpha: 0.12,
                                           ),
-                                          PieChartSectionData(
-                                            value: (1.0 - goalPct) * 100,
-                                            color: goalColor.withValues(
-                                              alpha: 0.12,
-                                            ),
-                                            radius: 4,
-                                            showTitle: false,
-                                          ),
-                                        ],
-                                      ),
+                                          radius: 4,
+                                          showTitle: false,
+                                        ),
+                                      ],
                                     ),
-                                    Icon(
-                                      getGoalIcon(goal.icon),
-                                      color: goalColor,
+                                  ),
+                                  Icon(
+                                    getGoalIcon(goal.icon),
+                                    color: goalColor,
                                       size: 16,
                                     ),
                                   ],

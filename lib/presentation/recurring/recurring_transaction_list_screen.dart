@@ -567,6 +567,9 @@ class _RecurringTransactionListScreenState
               (isExpense
                   ? (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor)
                   : (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor));
+    final mutedAccent = categoryColor != null
+        ? desaturateColor(accentColor)
+        : accentColor;
 
     final daysUntil = recurring.nextDate.difference(DateTime.now()).inDays;
     final nextDateLabel = daysUntil == 0
@@ -581,7 +584,7 @@ class _RecurringTransactionListScreenState
       margin: const EdgeInsets.only(bottom: kSpacing10),
       borderRadius: AppTheme.radiusCard,
       elevation: isDue ? CardElevation.medium : CardElevation.low,
-      accentColor: accentColor,
+      accentColor: mutedAccent,
       onTap: () => context.push('/recurring/${recurring.id}/edit'),
       child: Padding(
         padding: const EdgeInsets.all(kSpacing14),
@@ -594,7 +597,7 @@ class _RecurringTransactionListScreenState
                 Container(
                   padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
-                    color: accentColor.withValues(alpha: 0.12),
+                    color: mutedAccent.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(

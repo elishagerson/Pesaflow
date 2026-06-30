@@ -77,6 +77,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                   DateTime.now().add(const Duration(days: 30)),
             );
             final catColor = hexToColor(bp.category.color);
+            final mutedCatColor = desaturateColor(catColor);
 
             return Column(
               children: [
@@ -168,7 +169,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                 100,
                                             color: status.isOverBudget
                                                 ? theme.colorScheme.error
-                                                : catColor,
+                                                : mutedCatColor,
                                             radius: 20,
                                             showTitle: false,
                                           ),
@@ -180,7 +181,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                       1.0,
                                                     )) *
                                                 100,
-                                            color: catColor.withValues(
+                                            color: mutedCatColor.withValues(
                                               alpha: 0.15,
                                             ),
                                             radius: 20,
@@ -406,7 +407,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                             barRods: [
                                               BarChartRodData(
                                                 toY: entry.value.toDouble(),
-                                                color: catColor,
+                                                color: mutedCatColor,
                                                 width: 8,
                                                 borderRadius:
                                                     const BorderRadius.only(
