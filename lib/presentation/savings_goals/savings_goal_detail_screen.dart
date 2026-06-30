@@ -144,7 +144,7 @@ class _SavingsGoalDetailScreenState
         final accentColor = isDeposit
             ? const Color(0xFF609F8A)
             : const Color(0xFFFF453A);
-        bool _sheetIsContributing = false;
+        bool sheetIsContributing = false;
 
         return DraggableScrollableSheet(
           initialChildSize: 0.65,
@@ -617,11 +617,11 @@ class _SavingsGoalDetailScreenState
                                     width: double.infinity,
                                     height: kSpacing56,
                                     child: ElevatedButton(
-                                      onPressed: _sheetIsContributing
+                                      onPressed: sheetIsContributing
                                           ? null
                                           : () async {
                                               setModalState(() {
-                                                _sheetIsContributing = true;
+                                                sheetIsContributing = true;
                                               });
                                               try {
                                                 await _handleContribution(
@@ -633,7 +633,7 @@ class _SavingsGoalDetailScreenState
                                                 }
                                               } catch (e) {
                                                 setModalState(() {
-                                                  _sheetIsContributing = false;
+                                                  sheetIsContributing = false;
                                                 });
                                                 if (context.mounted) {
                                                   ScaffoldMessenger.of(
@@ -661,7 +661,7 @@ class _SavingsGoalDetailScreenState
                                           vertical: kSpacing14,
                                         ),
                                       ),
-                                      child: _sheetIsContributing
+                                      child: sheetIsContributing
                                           ? const SizedBox(
                                               width: 20,
                                               height: 20,
