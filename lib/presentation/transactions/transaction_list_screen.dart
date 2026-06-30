@@ -338,6 +338,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                             final categoryColor = hexToColor(
                               item.category.color,
                             );
+                            final mutedCategoryColor = desaturateColor(
+                              categoryColor,
+                            );
                             final formattedTime = DateFormat(
                               'HH:mm',
                             ).format(trans.createdAt);
@@ -424,7 +427,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         width: 46,
                                         height: 46,
                                         decoration: BoxDecoration(
-                                          color: categoryColor.withValues(
+                                          color: mutedCategoryColor.withValues(
                                             alpha: 0.15,
                                           ),
                                           borderRadius: BorderRadius.circular(

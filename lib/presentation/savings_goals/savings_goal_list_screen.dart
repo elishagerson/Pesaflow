@@ -259,6 +259,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
     ThemeData theme,
   ) {
     final goalColor = hexToColor(goal.color);
+    final mutedGoalColor = desaturateColor(goalColor);
     final goalPct = goal.targetAmount > 0
         ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
         : 0.0;
@@ -274,13 +275,13 @@ class SavingsGoalListScreen extends ConsumerWidget {
           elevation: CardElevation.none,
           margin: const EdgeInsets.only(bottom: kSpacing12),
           backgroundColor: isDark
-              ? goalColor.withValues(alpha: 0.08)
+              ? mutedGoalColor.withValues(alpha: 0.08)
               : Colors.white.withValues(alpha: 0.65),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(width: 4, color: goalColor),
+                Container(width: 4, color: mutedGoalColor),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(kSpacing16),

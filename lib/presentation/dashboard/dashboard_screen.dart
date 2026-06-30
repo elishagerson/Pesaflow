@@ -422,7 +422,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       borderRadius: AppTheme.radiusCard,
       margin: const EdgeInsets.only(right: kSpacing12),
       elevation: CardElevation.low,
-      accentColor: hexToColor(bp.category.color),
+      accentColor: desaturateColor(hexToColor(bp.category.color)),
       onTap: () => context.go('/budgets/${bp.budget.id}'),
       padding: EdgeInsets.zero,
       child: Container(
@@ -448,7 +448,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       value: 1.0,
                       strokeWidth: 4.5,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        catColor.withValues(alpha: 0.12),
+                        desaturateColor(catColor).withValues(alpha: 0.12),
                       ),
                     ),
                   ),
@@ -462,7 +462,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       strokeCap: StrokeCap.round,
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        remainingCents < 0 ? AppTheme.expenseColor : catColor,
+                        remainingCents < 0 ? AppTheme.expenseColor : desaturateColor(catColor),
                       ),
                     ),
                   ),
@@ -1112,6 +1112,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
         final goal = goals.first;
         final goalColor = hexToColor(goal.color);
+        final mutedGoalColor = desaturateColor(goalColor);
         final pct = goal.targetAmount > 0
             ? (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0)
             : 0.0;
@@ -1146,13 +1147,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             sections: [
                               PieChartSectionData(
                                 value: pct * 100,
-                                color: goalColor,
+                                color: mutedGoalColor,
                                 radius: 4,
                                 showTitle: false,
                               ),
                               PieChartSectionData(
                                 value: (1.0 - pct) * 100,
-                                color: goalColor.withValues(alpha: 0.12),
+                                color: mutedGoalColor.withValues(alpha: 0.12),
                                 radius: 4,
                                 showTitle: false,
                               ),
@@ -1766,6 +1767,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             final item = trackersList[index];
                             final isSelected = item.id == activeTrackerId;
                             final itemColor = hexToColor(item.color);
+                            final mutedItemColor = desaturateColor(itemColor);
 
                             return TactileSpringContainer(
                               onTap: () {
@@ -1781,7 +1783,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 padding: const EdgeInsets.all(kSpacing16),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? itemColor.withValues(alpha: 0.08)
+                                      ? mutedItemColor.withValues(alpha: 0.08)
                                       : (theme.brightness == Brightness.dark
                                             ? AppTheme.surfaceContainerDark
                                             : AppTheme.surfaceLight),
@@ -1790,7 +1792,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                   border: Border.all(
                                     color: isSelected
-                                        ? itemColor.withValues(alpha: 0.3)
+                                        ? mutedItemColor.withValues(alpha: 0.3)
                                         : (theme.brightness == Brightness.dark
                                               ? const Color(0x1FFFFFFF)
                                               : const Color(0x1F000000)),
@@ -1801,7 +1803,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     Container(
                                       padding: const EdgeInsets.all(kSpacing10),
                                       decoration: BoxDecoration(
-                                        color: itemColor.withValues(
+                                        color: mutedItemColor.withValues(
                                           alpha: 0.12,
                                         ),
                                         shape: BoxShape.circle,
@@ -2580,10 +2582,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Container(
                             padding: const EdgeInsets.all(kSpacing8),
                             decoration: BoxDecoration(
-                              color:
-                                  (catColor(sub.categoryId) ??
-                                          const Color(0xFF609F8A))
-                                      .withValues(alpha: 0.12),
+                              color: desaturateColor(
+                                catColor(sub.categoryId) ??
+                                    const Color(0xFF609F8A),
+                              ).withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -2775,14 +2777,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final cardGradient = isDark
         ? LinearGradient(
             colors: [
-              trackerColor.withValues(alpha: 0.24),
-              const Color(0xFF09090A),
+              trackerColor.withValues(alpha: 0.35),
+              const Color(0xFF05080C),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           )
         : LinearGradient(
-            colors: [trackerColor, trackerColor.withValues(alpha: 0.82)],
+            colors: [trackerColor, const Color(0xFF062028)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           );
@@ -3122,11 +3124,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: isDark
-                              ? trackerColor.withValues(alpha: 0.12)
-                              : trackerColor.withValues(alpha: 0.08),
-                          blurRadius: 24,
-                          offset: const Offset(0, 8),
+                          color: trackerColor.withValues(alpha: isDark ? 0.2 : 0.15),
+                          blurRadius: 40,
+                          offset: const Offset(0, 12),
                         ),
                       ],
                     ),
@@ -3825,20 +3825,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             width: 46,
                                             height: 46,
                                             decoration: BoxDecoration(
-                                              color: hexToColor(
-                                                item.category.color,
-                                              ).withValues(alpha: 0.15),
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
+                                          color: desaturateColor(
+                                            hexToColor(
+                                              item.category.color,
                                             ),
-                                            child: Center(
-                                              child: Icon(
-                                                getCategoryIcon(
-                                                  item.category.icon,
-                                                ),
-                                                color: hexToColor(
-                                                  item.category.color,
-                                                ),
+                                          ).withValues(alpha: 0.15),
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            getCategoryIcon(
+                                              item.category.icon,
+                                            ),
+                                            color: hexToColor(
+                                              item.category.color,
+                                            ),
                                                 size: 22,
                                               ),
                                             ),
@@ -4085,7 +4087,12 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
                 onTap: () => setState(() => _isExpanded = !_isExpanded),
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: kSpacing6),
+                  padding: const EdgeInsets.only(
+                    left: kSpacing8,
+                    right: kSpacing8,
+                    top: kSpacing6,
+                    bottom: kSpacing6,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -4146,14 +4153,17 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
           ],
         ),
         const SizedBox(height: kSpacing8),
-        AnimatedCrossFade(
-          firstChild: widget.child,
-          secondChild: const SizedBox.shrink(),
-          crossFadeState: _isExpanded
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          duration: const Duration(milliseconds: 200),
-          sizeCurve: Curves.easeInOut,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
+          child: AnimatedCrossFade(
+            firstChild: widget.child,
+            secondChild: const SizedBox.shrink(),
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 200),
+            sizeCurve: Curves.easeInOut,
+          ),
         ),
       ],
     );

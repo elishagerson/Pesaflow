@@ -90,6 +90,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     final cat = item.category;
     final acc = item.account;
     final catColor = hexToColor(cat.color);
+    final mutedCatColor = desaturateColor(catColor);
     final isIncome = t.type == 'income';
     final amountColor = isIncome
         ? const Color(0xFF609F8A)
@@ -116,8 +117,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    catColor.withValues(alpha: isDark ? 0.22 : 0.12),
-                    catColor.withValues(alpha: isDark ? 0.06 : 0.03),
+                    mutedCatColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                    mutedCatColor.withValues(alpha: isDark ? 0.06 : 0.03),
                     Colors.transparent,
                   ],
                   stops: const [0.0, 0.6, 1.0],
@@ -150,17 +151,17 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: catColor.withValues(
+                            color: mutedCatColor.withValues(
                               alpha: isDark ? 0.18 : 0.1,
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: catColor.withValues(alpha: 0.35),
+                              color: mutedCatColor.withValues(alpha: 0.35),
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: catColor.withValues(
+                                color: mutedCatColor.withValues(
                                   alpha: isDark ? 0.25 : 0.15,
                                 ),
                                 blurRadius: 20,

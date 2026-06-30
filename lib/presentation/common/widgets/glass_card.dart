@@ -88,28 +88,23 @@ class _GlassCardState extends State<GlassCard>
     final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.04),
+          color: Colors.black.withValues(alpha: 0.04),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
       ],
       CardElevation.medium => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.06),
+          color: Colors.black.withValues(alpha: 0.08),
           blurRadius: 16,
-          offset: const Offset(0, 4),
+          offset: const Offset(0, 6),
         ),
       ],
       CardElevation.high => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-        BoxShadow(
-          color: Colors.black.withValues(alpha: isDark ? 0.10 : 0.03),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
+          color: Colors.black.withValues(alpha: 0.12),
+          blurRadius: 40,
+          offset: const Offset(0, 12),
         ),
       ],
       CardElevation.none => [],

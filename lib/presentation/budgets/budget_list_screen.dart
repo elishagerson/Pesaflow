@@ -398,6 +398,7 @@ class BudgetListScreen extends ConsumerWidget {
                 );
 
                 final catColor = hexToColor(bp.category.color);
+                final mutedCatColor = desaturateColor(catColor);
 
                 return Hero(
                   tag: 'budget-${bp.budget.id}',
@@ -409,7 +410,7 @@ class BudgetListScreen extends ConsumerWidget {
                       backgroundColor: isDark
                           ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
                           : Colors.white,
-                      accentColor: catColor,
+                      accentColor: mutedCatColor,
                       accentWidth: 2.5,
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -420,7 +421,7 @@ class BudgetListScreen extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: catColor.withValues(alpha: 0.12),
+                                  color: mutedCatColor.withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(
@@ -545,7 +546,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   : Colors.black.withValues(alpha: 0.05),
                               color: status.isOverBudget
                                   ? const Color(0xFFFF453A)
-                                  : catColor,
+                                  : mutedCatColor,
                               minHeight: 6,
                             ),
                           ),

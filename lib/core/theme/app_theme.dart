@@ -17,15 +17,16 @@ class AppTheme {
   static const Color onSecondaryContainerLight = Color(0xFF0A2F33);
 
   static const Color tertiaryLight = Color(0xFFD4942D);
+  static const Color tertiaryLightVariant = Color(0xFFF4B740);
   static const Color onTertiaryLight = Color(0xFFFFFFFF);
   static const Color tertiaryContainerLight = Color(0xFFFCECC8);
   static const Color onTertiaryContainerLight = Color(0xFF3D2A06);
 
-  static const Color bgLight = Color(0xFFF5F6F8);
+  static const Color bgLight = Color(0xFFF5F3F0);
   static const Color onBgLight = Color(0xFF1E202A);
-  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color surfaceLight = Color(0xFFFEFDFB);
   static const Color onSurfaceLight = Color(0xFF1E202A);
-  static const Color surfaceHighLight = Color(0xFFF0F1F4);
+  static const Color surfaceHighLight = Color(0xFFF0EEEA);
 
   // Dark — deep navy base
   static const Color bgDark = Color(0xFF0D1117);
@@ -265,8 +266,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
-          elevation: 0,
-          shadowColor: Colors.transparent,
+          elevation: 2,
+          shadowColor: scheme.primary.withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
