@@ -166,6 +166,7 @@ class _SavingsGoalDetailScreenState
                 ),
                 child: StatefulBuilder(
                   builder: (context, setModalState) {
+                    bool sheetIsContributing = false;
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
