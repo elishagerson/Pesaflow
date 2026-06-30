@@ -63,12 +63,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     return Severity.neutral;
   }
 
-  String _extractAmount(String s) {
-    final re = RegExp(r'Tsh\s[\d,]+');
-    final match = re.firstMatch(s);
-    return match?.group(0) ?? '';
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -88,7 +82,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
       child: AnimatedBuilder(
         animation: _expandAnimation,
         builder: (context, _) {
-          final expandedHeight = 120.0 + _expandAnimation.value * 60;
           final glowOpacity = 0.08 + _expandAnimation.value * 0.12;
 
           return Container(

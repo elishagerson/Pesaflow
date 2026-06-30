@@ -100,7 +100,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 

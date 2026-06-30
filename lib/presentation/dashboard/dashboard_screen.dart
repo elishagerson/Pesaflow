@@ -27,7 +27,6 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
-import 'package:pesaflow/presentation/common/widgets/insight_card.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:flutter/services.dart';
