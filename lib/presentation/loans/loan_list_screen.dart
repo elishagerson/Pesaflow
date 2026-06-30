@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -34,6 +35,8 @@ class LoanListScreen extends ConsumerWidget {
         label: 'Add Loan',
       ),
       body: RefreshIndicator(
+        color: const Color(0xFF0F4C5C),
+        backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
         onRefresh: () => Future.wait([
           ref.refresh(activeLoansStreamProvider.future),
           ref.refresh(paidLoansStreamProvider.future),
@@ -421,8 +424,8 @@ class LoanListScreen extends ConsumerWidget {
                           const SizedBox(height: 2),
                           Text(
                             loan.dueAt!.isBefore(DateTime.now())
-                                ? 'OVERDUE'
-                                : 'Due ${loan.dueAt!.day}/${loan.dueAt!.month}/${loan.dueAt!.year}',
+                                ? 'Overdue by ${DateTime.now().difference(loan.dueAt!).inDays} days'
+                                : 'Due ${DateFormatter.relative(loan.dueAt!)}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
@@ -520,7 +523,7 @@ class LoanListScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Paid ${loan.paidAt != null ? 'on ${loan.paidAt!.day}/${loan.paidAt!.month}/${loan.paidAt!.year}' : ''}',
+                      'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
                       style: TextStyle(
                         fontSize: 11,
                         color: isDark ? Colors.grey[400] : Colors.grey[600],

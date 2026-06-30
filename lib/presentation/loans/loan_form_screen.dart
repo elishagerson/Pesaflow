@@ -30,6 +30,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   DateTime _disbursedAt = DateTime.now();
   DateTime? _dueAt;
   Loan? _existingLoan;
+  String? _descriptionError;
+  String? _amountError;
+  String? _interestRateError;
 
   @override
   void initState() {
@@ -95,10 +98,41 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _descriptionError = null;
+      _amountError = null;
+      _interestRateError = null;
+    });
+
+    bool hasError = false;
+
+    if (_descriptionController.text.trim().isEmpty) {
+      _descriptionError = 'Enter a description';
+      hasError = true;
+    }
 
     final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
-    if (amountCents <= 0) return;
+    if (amountCents <= 0) {
+      _amountError = 'Enter a valid amount';
+      hasError = true;
+    }
+
+    final interestText = _interestRateController.text.trim();
+    if (interestText.isNotEmpty) {
+      final rate = double.tryParse(interestText);
+      if (rate == null || rate < 0) {
+        _interestRateError = 'Enter a valid rate';
+        hasError = true;
+      }
+    }
+
+    if (hasError) {
+      setState(() {});
+      return;
+    }
+
+    if (!_formKey.currentState!.validate()) return;
+
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 
     if (_existingLoan != null) {
@@ -203,18 +237,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    errorText: _amountError,
                   ),
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) {
-                      return 'Enter loan amount';
-                    }
-                    final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
-                    final parsed = int.tryParse(cleaned);
-                    if (parsed == null || parsed <= 0) {
-                      return 'Enter a valid amount';
-                    }
-                    return null;
-                  },
+                  onChanged: (_) =>
+                      setState(() => _amountError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),
@@ -223,7 +249,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 child: TextField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
-                    labelText: 'Description (optional)',
+                    labelText: 'Description',
                     hintText: 'e.g. M-Pesa Loan, Bank Loan',
                     prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
                     filled: true,
@@ -232,8 +258,11 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    errorText: _descriptionError,
                   ),
                   textCapitalization: TextCapitalization.sentences,
+                  onChanged: (_) =>
+                      setState(() => _descriptionError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),
@@ -308,7 +337,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     decimal: true,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Interest Rate (optional)',
+                    labelText: 'Interest Rate',
                     hintText: 'e.g. 18.5',
                     prefixIcon: const Icon(Icons.percent_rounded, size: 18),
                     filled: true,
@@ -317,7 +346,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    errorText: _interestRateError,
                   ),
+                  onChanged: (_) =>
+                      setState(() => _interestRateError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),

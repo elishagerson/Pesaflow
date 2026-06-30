@@ -7,19 +7,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
+import 'package:pesaflow/presentation/state/global_search_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 
 class _PaletteAction {
   final IconData icon;
   final String label;
+  final String? subtitle;
   final String route;
   final List<String> keywords;
+  final bool isDataResult;
 
   const _PaletteAction({
     required this.icon,
     required this.label,
+    this.subtitle,
     required this.route,
     this.keywords = const [],
+    this.isDataResult = false,
   });
 
   bool matches(String query) {
@@ -149,6 +154,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   int _selectedIndex = 0;
+  List<_PaletteAction> _cachedDataResults = [];
 
   @override
   void initState() {
@@ -203,7 +209,11 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   }
 
   List<_PaletteAction> _filtered(String query) {
-    return _actions.where((a) => a.matches(query)).toList();
+    final actions = _actions.where((a) => a.matches(query)).toList();
+    if (_cachedDataResults.isNotEmpty) {
+      return [...actions, ..._cachedDataResults];
+    }
+    return actions;
   }
 
   void _select(_PaletteAction action) {
@@ -222,6 +232,17 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final query = ref.watch(paletteQueryProvider);
+    final searchResults = ref.watch(globalSearchProvider(query));
+    final dataResults = (searchResults.asData?.value ?? [])
+        .map((r) => _PaletteAction(
+              icon: r.icon,
+              label: r.title,
+              subtitle: r.subtitle,
+              route: r.route,
+              isDataResult: true,
+            ))
+        .toList();
+    _cachedDataResults = dataResults;
     final results = _filtered(query);
 
     _selectedIndex = _selectedIndex.clamp(0, results.length - 1);
@@ -334,7 +355,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'No matching actions',
+                                query.trim().length >= 2
+                                    ? 'No results found'
+                                    : 'No matching actions',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.5,
@@ -343,7 +366,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                               ),
                               const SizedBox(height: kSpacing8),
                               Text(
-                                'Try: "Groceries", "Income", "MPESA"',
+                                query.trim().length >= 2
+                                    ? 'Try searching transactions, budgets, goals, or loans'
+                                    : 'Try: "Groceries", "Income", "MPESA"',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.3,
@@ -398,35 +423,75 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                             Icon(
                                               action.icon,
                                               size: 20,
-                                              color: selected
-                                                  ? theme.colorScheme.primary
-                                                  : theme.colorScheme.onSurface
-                                                        .withValues(alpha: 0.6),
+                                              color: action.isDataResult
+                                                  ? theme.colorScheme.secondary
+                                                  : selected
+                                                      ? theme.colorScheme.primary
+                                                      : theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
                                             ),
                                             const SizedBox(width: kSpacing12),
                                             Expanded(
-                                              child: Text(
-                                                action.label,
-                                                style: theme.textTheme.bodyMedium
-                                                    ?.copyWith(
-                                                      fontWeight: FontWeight.w500,
-                                                      color: theme
-                                                          .colorScheme
-                                                          .onSurface,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    action.label,
+                                                    style: theme
+                                                        .textTheme.bodyMedium
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface,
+                                                        ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  if (action.subtitle != null) ...[
+                                                    const SizedBox(height: 2),
+                                                    Text(
+                                                      action.subtitle!,
+                                                      style: theme
+                                                          .textTheme.bodySmall
+                                                          ?.copyWith(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withValues(
+                                                                  alpha: 0.5,
+                                                                ),
+                                                          ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
+                                                  ],
+                                                ],
                                               ),
                                             ),
-                                            Text(
-                                              '/>',
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurface
-                                                        .withValues(alpha: 0.3),
-                                                    fontFamily: 'monospace',
-                                                  ),
-                                            ),
+                                            if (!action.isDataResult)
+                                              Text(
+                                                '/>',
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.3,
+                                                          ),
+                                                      fontFamily: 'monospace',
+                                                    ),
+                                              ),
                                           ],
                                         ),
                                       ),

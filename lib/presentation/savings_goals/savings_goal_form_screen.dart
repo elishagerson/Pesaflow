@@ -27,6 +27,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
+  String? _nameError;
+  String? _amountError;
 
   late String _selectedColor;
   late String _selectedIcon;
@@ -85,13 +87,33 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _nameError = null;
+      _amountError = null;
+    });
+
+    bool hasError = false;
+
+    if (_nameController.text.trim().isEmpty) {
+      _nameError = 'Enter a goal name';
+      hasError = true;
+    }
+
+    final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
+    if (targetVal <= 0) {
+      _amountError = 'Enter a valid amount';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setState(() {});
+      return;
+    }
 
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(savingsGoalRepositoryProvider);
       final trackerId = ref.read(activeTrackerIdProvider);
-      final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
 
       if (widget.goalId != null) {
         final existing = await repo.getSavingsGoalById(widget.goalId!);
@@ -214,10 +236,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           label: 'Goal Title',
                           hint: 'e.g. Vacation to Zanzibar',
                           icon: Icons.title_rounded,
-                        ),
-                        validator: (v) => v == null || v.trim().isEmpty
-                            ? 'Title is required'
-                            : null,
+                        ).copyWith(errorText: _nameError),
+                        onChanged: (_) =>
+                            setState(() => _nameError = null),
                       ),
                       const SizedBox(height: kSpacing12),
                       TextFormField(
@@ -235,15 +256,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           label: 'Target Amount (Tsh)',
                           hint: 'e.g. 1500000',
                           icon: PesaFlowIcons.cash,
-                        ),
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) {
-                            return 'Target is required';
-                          }
-                          final val = int.tryParse(v) ?? 0;
-                          if (val <= 0) return 'Must be greater than 0';
-                          return null;
-                        },
+                        ).copyWith(errorText: _amountError),
+                        onChanged: (_) =>
+                            setState(() => _amountError = null),
                       ),
                       const SizedBox(height: kSpacing12),
                       ModernDateSelector(

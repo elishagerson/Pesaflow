@@ -97,6 +97,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
     return Scaffold(
       body: RefreshIndicator(
+        color: const Color(0xFF0F4C5C),
+        backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
         onRefresh: () async {
           ref.invalidate(filteredTransactionsStreamProvider);
           ref.invalidate(recentTransactionsStreamProvider);
@@ -396,14 +398,44 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 );
                               },
                               onDismissed: (_) {
+                                final txId = trans.id;
+                                final txData = trans;
+
                                 ref
                                     .read(transactionRepositoryProvider)
-                                    .deleteTransaction(trans.id);
+                                    .deleteTransaction(txId);
                                 ref.invalidate(
                                   filteredTransactionsStreamProvider,
                                 );
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
+
+                                final messenger = ScaffoldMessenger.of(
+                                  context,
+                                );
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                      'Transaction deleted',
+                                    ),
+                                    duration: const Duration(seconds: 4),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () async {
+                                        await ref
+                                            .read(
+                                              transactionRepositoryProvider,
+                                            )
+                                            .createTransaction(txData);
+                                        ref.invalidate(
+                                          filteredTransactionsStreamProvider,
+                                        );
+                                        ref.invalidate(accountsStreamProvider);
+                                        ref.invalidate(netWorthProvider);
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                               child: TactileSpringContainer(
                                 onTap: () => context.go(

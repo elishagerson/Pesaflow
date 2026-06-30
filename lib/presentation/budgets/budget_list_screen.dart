@@ -269,6 +269,8 @@ class BudgetListScreen extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return RefreshIndicator(
+      color: const Color(0xFF0F4C5C),
+      backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
       onRefresh: () async {
         ref.invalidate(budgetProgressProvider);
         ref.invalidate(savingsGoalsStreamProvider);
@@ -654,6 +656,8 @@ class BudgetListScreen extends ConsumerWidget {
             : 0.0;
 
         return RefreshIndicator(
+          color: const Color(0xFF0F4C5C),
+          backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
           onRefresh: () async {
             ref.invalidate(budgetProgressProvider);
             ref.invalidate(savingsGoalsStreamProvider);

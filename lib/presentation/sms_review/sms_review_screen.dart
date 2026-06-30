@@ -357,6 +357,25 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
+                                  // Checkbox for batch selection
+                                  SizedBox(
+                                    width: 40,
+                                    child: Center(
+                                      child: Checkbox(
+                                        value: _selectedIds.contains(trans.id),
+                                        onChanged: (checked) {
+                                          setState(() {
+                                            if (checked == true) {
+                                              _selectedIds.add(trans.id);
+                                            } else {
+                                              _selectedIds.remove(trans.id);
+                                              _selectAll = false;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                   // Left Accent Border strip (dynamic category colored)
                                   Container(
                                     width: 5,
