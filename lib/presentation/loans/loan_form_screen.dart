@@ -239,8 +239,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     ),
                     errorText: _amountError,
                   ),
-                  onChanged: (_) =>
-                      setState(() => _amountError = null),
+                  onChanged: (_) => setState(() => _amountError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),
@@ -261,8 +260,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     errorText: _descriptionError,
                   ),
                   textCapitalization: TextCapitalization.sentences,
-                  onChanged: (_) =>
-                      setState(() => _descriptionError = null),
+                  onChanged: (_) => setState(() => _descriptionError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),
@@ -348,8 +346,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     ),
                     errorText: _interestRateError,
                   ),
-                  onChanged: (_) =>
-                      setState(() => _interestRateError = null),
+                  onChanged: (_) => setState(() => _interestRateError = null),
                 ),
               ),
               const SizedBox(height: kSpacing16),

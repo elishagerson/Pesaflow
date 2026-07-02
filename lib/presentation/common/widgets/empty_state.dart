@@ -32,7 +32,8 @@ class EmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _AnimatedEmptyIllustration(
-              child: illustration ??
+              child:
+                  illustration ??
                   Semantics(
                     excludeSemantics: true,
                     child: Icon(
@@ -110,10 +111,7 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _animation, child: widget.child);
   }
 }
 

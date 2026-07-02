@@ -36,7 +36,9 @@ class LoanListScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         color: const Color(0xFF0F4C5C),
-        backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
+        backgroundColor: isDark
+            ? const Color(0xFF161B22)
+            : const Color(0xFFF5F3F0),
         onRefresh: () => Future.wait([
           ref.refresh(activeLoansStreamProvider.future),
           ref.refresh(paidLoansStreamProvider.future),

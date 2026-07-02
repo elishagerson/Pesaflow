@@ -98,10 +98,7 @@ class _CheckmarkPainter extends CustomPainter {
       final checkProgress = ((progress - 0.6) / 0.4).clamp(0.0, 1.0);
       paint.strokeWidth = size.width * 0.08;
 
-      final checkStart = Offset(
-        center.dx - radius * 0.35,
-        center.dy,
-      );
+      final checkStart = Offset(center.dx - radius * 0.35, center.dy);
       final checkMid = Offset(
         center.dx - radius * 0.08,
         center.dy + radius * 0.4,

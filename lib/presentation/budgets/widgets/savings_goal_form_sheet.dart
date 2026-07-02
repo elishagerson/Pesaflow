@@ -296,9 +296,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 icon: PesaFlowIcons.cash,
                               ),
                               validator: (v) {
-                                 if (v == null || v.trim().isEmpty) {
-                                   return 'Target is required';
-                                 }
+                                if (v == null || v.trim().isEmpty) {
+                                  return 'Target is required';
+                                }
                                 final val = int.tryParse(v) ?? 0;
                                 if (val <= 0) {
                                   return 'Must be greater than 0';

@@ -35,9 +35,10 @@ Page<dynamic> _springSlidePage(Widget page) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 0.05);
       const end = Offset.zero;
-      final tween = Tween(begin: begin, end: end).chain(
-        CurveTween(curve: Curves.easeOutCubic),
-      );
+      final tween = Tween(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: Curves.easeOutCubic));
       final fadeTween = Tween<double>(
         begin: 0.0,
         end: 1.0,
@@ -61,15 +62,17 @@ Page<dynamic> _heroSlidePage(Widget page) {
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 0.03);
       const end = Offset.zero;
-      final tween = Tween(begin: begin, end: end).chain(
-        CurveTween(curve: Curves.easeOutCubic),
-      );
+      final tween = Tween(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: Curves.easeOutCubic));
       return SlideTransition(
         position: animation.drive(tween),
         child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          ),
+          opacity: Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
           child: child,
         ),
       );
@@ -145,20 +148,21 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               _buildSidebar(context)
             else if (isTablet)
               _buildNavigationRail(context),
-            Expanded(
-              child: widget.navigationShell,
-            ),
+            Expanded(child: widget.navigationShell),
           ],
         ),
-        bottomNavigationBar: isPhone ? IosTabBar(
-          selectedIndex: widget.navigationShell.currentIndex,
-          onDestinationSelected: (int index) {
-            widget.navigationShell.goBranch(
-              index,
-              initialLocation: index == widget.navigationShell.currentIndex,
-            );
-          },
-        ) : null,
+        bottomNavigationBar: isPhone
+            ? IosTabBar(
+                selectedIndex: widget.navigationShell.currentIndex,
+                onDestinationSelected: (int index) {
+                  widget.navigationShell.goBranch(
+                    index,
+                    initialLocation:
+                        index == widget.navigationShell.currentIndex,
+                  );
+                },
+              )
+            : null,
       ),
     );
   }
@@ -241,14 +245,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
     return Container(
       width: 220,
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF161B22)
-            : const Color(0xFFF5F3F0),
+        color: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
         border: Border(
           right: BorderSide(
-            color: isDark
-                ? const Color(0x1AFFFFFF)
-                : const Color(0x0F000000),
+            color: isDark ? const Color(0x1AFFFFFF) : const Color(0x0F000000),
             width: 0.5,
           ),
         ),
@@ -320,21 +320,20 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                           size: 20,
                           color: isSelected
                               ? const Color(0xFF0F4C5C)
-                              : (isDark
-                                  ? Colors.grey[400]
-                                  : Colors.grey[600]),
+                              : (isDark ? Colors.grey[400] : Colors.grey[600]),
                         ),
                         const SizedBox(width: 12),
                         Text(
                           item.$2,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                             color: isSelected
                                 ? const Color(0xFF0F4C5C)
                                 : (isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600]),
+                                      ? Colors.grey[400]
+                                      : Colors.grey[600]),
                           ),
                         ),
                       ],
@@ -350,9 +349,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
             padding: const EdgeInsets.all(16),
             child: Text(
               'PesaFlow v1.0.0',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-              ),
+              style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
             ),
           ),
         ],
@@ -401,9 +398,7 @@ final GoRouter appRouter = GoRouter(
                       parentNavigatorKey: _rootNavigatorKey,
                       pageBuilder: (context, state) {
                         return _heroSlidePage(
-                          LoanDetailScreen(
-                            loanId: state.pathParameters['id']!,
-                          ),
+                          LoanDetailScreen(loanId: state.pathParameters['id']!),
                         );
                       },
                       routes: [
@@ -464,17 +459,14 @@ final GoRouter appRouter = GoRouter(
                   path: 'recurring',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) =>
-                      _springSlidePage(
-                        const RecurringTransactionListScreen(),
-                      ),
+                      _springSlidePage(const RecurringTransactionListScreen()),
                   routes: [
                     GoRoute(
                       path: 'add',
                       parentNavigatorKey: _rootNavigatorKey,
-                      pageBuilder: (context, state) =>
-                          _springSlidePage(
-                            const RecurringTransactionFormScreen(),
-                          ),
+                      pageBuilder: (context, state) => _springSlidePage(
+                        const RecurringTransactionFormScreen(),
+                      ),
                     ),
                     GoRoute(
                       path: ':id/edit',
@@ -522,9 +514,7 @@ final GoRouter appRouter = GoRouter(
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
                     return _springSlidePage(
-                      TransactionDetailScreen(
-                        transactionId: state.param('id'),
-                      ),
+                      TransactionDetailScreen(transactionId: state.param('id')),
                     );
                   },
                 ),

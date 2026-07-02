@@ -346,21 +346,30 @@ class TransactionDetailScreen extends ConsumerWidget {
                                   vertical: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0F4C5C).withValues(alpha: 0.08),
+                                  color: const Color(
+                                    0xFF0F4C5C,
+                                  ).withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
+                                    color: const Color(
+                                      0xFF0F4C5C,
+                                    ).withValues(alpha: 0.15),
                                   ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('📨', style: TextStyle(fontSize: 12)),
+                                    const Text(
+                                      '📨',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                     const SizedBox(width: 6),
                                     Text(
                                       t.source.startsWith('sms')
                                           ? 'Auto-imported via SMS'
-                                          : t.source == 'transfer' ? 'Transfer' : 'Manual entry',
+                                          : t.source == 'transfer'
+                                          ? 'Transfer'
+                                          : 'Manual entry',
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,

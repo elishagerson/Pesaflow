@@ -68,17 +68,19 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
 
   void _spawnParticles(int count) {
     for (int i = 0; i < count; i++) {
-      _particles.add(_ConfettiParticle(
-        x: _rand.nextDouble() * 400,
-        y: -_rand.nextDouble() * 300 - 20,
-        size: _rand.nextDouble() * 10 + 6,
-        color: widget.colors[_rand.nextInt(widget.colors.length)],
-        vx: (_rand.nextDouble() - 0.5) * 4,
-        vy: _rand.nextDouble() * 5 + 3,
-        rotation: _rand.nextDouble() * 2 * pi,
-        rotationSpeed: (_rand.nextDouble() - 0.5) * 0.2,
-        isStreamer: _rand.nextBool(),
-      ));
+      _particles.add(
+        _ConfettiParticle(
+          x: _rand.nextDouble() * 400,
+          y: -_rand.nextDouble() * 300 - 20,
+          size: _rand.nextDouble() * 10 + 6,
+          color: widget.colors[_rand.nextInt(widget.colors.length)],
+          vx: (_rand.nextDouble() - 0.5) * 4,
+          vy: _rand.nextDouble() * 5 + 3,
+          rotation: _rand.nextDouble() * 2 * pi,
+          rotationSpeed: (_rand.nextDouble() - 0.5) * 0.2,
+          isStreamer: _rand.nextBool(),
+        ),
+      );
     }
   }
 
@@ -166,11 +168,7 @@ class _ConfettiPainter extends CustomPainter {
       } else {
         canvas.drawRRect(
           RRect.fromRectAndRadius(
-            Rect.fromCenter(
-              center: Offset.zero,
-              width: p.size,
-              height: p.size,
-            ),
+            Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size),
             const Radius.circular(2),
           ),
           paint,

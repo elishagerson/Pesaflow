@@ -43,7 +43,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             color: const Color(0xFF0F4C5C),
-            backgroundColor: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
+            backgroundColor: isDark
+                ? const Color(0xFF161B22)
+                : const Color(0xFFF5F3F0),
             onRefresh: () async {
               ref.invalidate(savingsGoalsStreamProvider);
               ref.invalidate(savingsGoalsTotalSavedProvider);
@@ -308,26 +310,26 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                         sectionsSpace: 0,
                                         centerSpaceRadius: 16,
                                         sections: [
-                                        PieChartSectionData(
-                                          value: goalPct * 100,
-                                          color: mutedGoalColor,
-                                          radius: 4,
-                                          showTitle: false,
-                                        ),
-                                        PieChartSectionData(
-                                          value: (1.0 - goalPct) * 100,
-                                          color: mutedGoalColor.withValues(
-                                            alpha: 0.12,
+                                          PieChartSectionData(
+                                            value: goalPct * 100,
+                                            color: mutedGoalColor,
+                                            radius: 4,
+                                            showTitle: false,
                                           ),
-                                          radius: 4,
-                                          showTitle: false,
-                                        ),
-                                      ],
+                                          PieChartSectionData(
+                                            value: (1.0 - goalPct) * 100,
+                                            color: mutedGoalColor.withValues(
+                                              alpha: 0.12,
+                                            ),
+                                            radius: 4,
+                                            showTitle: false,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Icon(
-                                    getGoalIcon(goal.icon),
-                                    color: goalColor,
+                                    Icon(
+                                      getGoalIcon(goal.icon),
+                                      color: goalColor,
                                       size: 16,
                                     ),
                                   ],

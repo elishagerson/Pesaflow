@@ -13,11 +13,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'payment_sheet.dart';
 
-void showOfflinePaymentSheet(
-  BuildContext context,
-  WidgetRef ref,
-  Loan loan,
-) {
+void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
   final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -79,12 +75,7 @@ void showOfflinePaymentSheet(
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(
-                                20,
-                                0,
-                                20,
-                                24,
-                              ),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -242,15 +233,13 @@ void showOfflinePaymentSheet(
                                     children: [
                                       QuickAmountChip(
                                         label: '25%',
-                                        amount: (remainingCents * 0.25)
-                                            .round(),
+                                        amount: (remainingCents * 0.25).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.25).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.25)
-                                                          .round() /
+                                              ((remainingCents * 0.25).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -263,20 +252,17 @@ void showOfflinePaymentSheet(
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
                                         label: '50%',
-                                        amount: (remainingCents * 0.5)
-                                            .round(),
+                                        amount: (remainingCents * 0.5).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.5).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.5)
-                                                          .round() /
+                                              ((remainingCents * 0.5).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -289,20 +275,17 @@ void showOfflinePaymentSheet(
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
                                         label: '75%',
-                                        amount: (remainingCents * 0.75)
-                                            .round(),
+                                        amount: (remainingCents * 0.75).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.75).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.75)
-                                                          .round() /
+                                              ((remainingCents * 0.75).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -315,7 +298,6 @@ void showOfflinePaymentSheet(
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
@@ -337,7 +319,6 @@ void showOfflinePaymentSheet(
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                     ],
                                   ),
@@ -443,83 +424,82 @@ void showOfflinePaymentSheet(
                                   SizedBox(
                                     width: double.infinity,
                                     height: 54,
-                                      child: ElevatedButton(
-                                        onPressed: canSubmit && !sheetIsProcessing
-                                            ? () async {
-                                                final desc =
-                                                    descriptionController.text
-                                                        .trim();
-                                                setSheetState(() {
-                                                  sheetIsProcessing = true;
-                                                });
-                                                final success =
-                                                    await processOfflinePayment(
-                                                  context: context,
-                                                  ref: ref,
-                                                  loan: loan,
-                                                  amount: paymentAmount(),
-                                                  description: desc.isNotEmpty
-                                                      ? desc
-                                                      : 'Offline loan payment',
-                                                );
-                                                if (success) {
-                                                  if (sheetContext.mounted) {
-                                                    Navigator.of(
-                                                      sheetContext,
-                                                    ).pop();
-                                                  }
-                                                } else {
-                                                  setSheetState(() {
-                                                    sheetIsProcessing = false;
-                                                  });
+                                    child: ElevatedButton(
+                                      onPressed: canSubmit && !sheetIsProcessing
+                                          ? () async {
+                                              final desc = descriptionController
+                                                  .text
+                                                  .trim();
+                                              setSheetState(() {
+                                                sheetIsProcessing = true;
+                                              });
+                                              final success =
+                                                  await processOfflinePayment(
+                                                    context: context,
+                                                    ref: ref,
+                                                    loan: loan,
+                                                    amount: paymentAmount(),
+                                                    description: desc.isNotEmpty
+                                                        ? desc
+                                                        : 'Offline loan payment',
+                                                  );
+                                              if (success) {
+                                                if (sheetContext.mounted) {
+                                                  Navigator.of(
+                                                    sheetContext,
+                                                  ).pop();
                                                 }
+                                              } else {
+                                                setSheetState(() {
+                                                  sheetIsProcessing = false;
+                                                });
                                               }
-                                            : null,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(
-                                            0xFF609F8A,
-                                          ),
-                                          foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.05,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.05,
-                                                ),
-                                          disabledForegroundColor: isDark
-                                              ? Colors.white24
-                                              : Colors.black26,
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 14,
+                                            }
+                                          : null,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF609F8A,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        disabledBackgroundColor: isDark
+                                            ? Colors.white.withValues(
+                                                alpha: 0.05,
+                                              )
+                                            : Colors.black.withValues(
+                                                alpha: 0.05,
+                                              ),
+                                        disabledForegroundColor: isDark
+                                            ? Colors.white24
+                                            : Colors.black26,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
                                           ),
                                         ),
-                                        child: sheetIsProcessing
-                                            ? const SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            : Text(
-                                                paymentAmount() <= 0
-                                                    ? 'Enter an amount'
-                                                    : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 14,
+                                        ),
                                       ),
+                                      child: sheetIsProcessing
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Text(
+                                              paymentAmount() <= 0
+                                                  ? 'Enter an amount'
+                                                  : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                    ),
                                   ),
                                 ],
                               ),

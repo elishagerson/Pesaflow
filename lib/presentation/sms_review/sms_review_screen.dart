@@ -72,7 +72,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: hexToColor(cat.color).withValues(alpha: 0.15),
+                            color: hexToColor(
+                              cat.color,
+                            ).withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -84,7 +86,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         title: Text(cat.name),
                         subtitle: Text(
                           cat.type.toUpperCase(),
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
                         ),
                         onTap: () => Navigator.of(context).pop(cat.id),
                       );
@@ -121,10 +126,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
       for (final id in _selectedIds) {
         await ref
             .read(transactionRepositoryProvider)
-            .approveReviewedTransaction(
-              id,
-              newCategoryId: selectedCategoryId,
-            );
+            .approveReviewedTransaction(id, newCategoryId: selectedCategoryId);
       }
       ref.invalidate(reviewQueueStreamProvider);
       ref.invalidate(recentTransactionsStreamProvider);

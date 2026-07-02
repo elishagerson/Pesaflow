@@ -100,9 +100,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              margin: const EdgeInsets.only(
-                                bottom: kSpacing8,
-                              ),
+                              margin: const EdgeInsets.only(bottom: kSpacing8),
                               padding: const EdgeInsets.all(kSpacing16),
                               decoration: BoxDecoration(
                                 color: isSelected
@@ -186,18 +184,18 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                         },
                       );
                     },
-                      loading: () => Padding(
-                        padding: EdgeInsets.symmetric(vertical: kSpacing16),
-                        child: Column(
-                          children: [
-                            SkeletonCard(height: 80),
-                            SizedBox(height: kSpacing8),
-                            SkeletonCard(height: 80),
-                            SizedBox(height: kSpacing8),
-                            SkeletonCard(height: 80),
-                          ],
-                        ),
+                    loading: () => Padding(
+                      padding: EdgeInsets.symmetric(vertical: kSpacing16),
+                      child: Column(
+                        children: [
+                          SkeletonCard(height: 80),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 80),
+                          SizedBox(height: kSpacing8),
+                          SkeletonCard(height: 80),
+                        ],
                       ),
+                    ),
                     error: (err, _) => Text('Error loading workspaces: $err'),
                   ),
                   const SizedBox(height: kSpacing20),
@@ -383,9 +381,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
           );
 
           try {
-            await ref
-                .read(trackerRepositoryProvider)
-                .createTracker(newTracker);
+            await ref.read(trackerRepositoryProvider).createTracker(newTracker);
             ref.invalidate(allTrackersStreamProvider);
 
             await ref
@@ -654,9 +650,7 @@ void confirmDeleteTracker(
                   .read(activeTrackerIdProvider.notifier)
                   .setTrackerId(anotherTracker.id);
             }
-            await ref
-                .read(trackerRepositoryProvider)
-                .deleteTracker(tracker.id);
+            await ref.read(trackerRepositoryProvider).deleteTracker(tracker.id);
             ref.invalidate(allTrackersStreamProvider);
             if (context.mounted) {
               Navigator.of(context, rootNavigator: true).pop();

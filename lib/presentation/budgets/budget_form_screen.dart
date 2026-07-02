@@ -103,18 +103,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       hasError = true;
     }
 
-    final amountCents = CurrencyFormatter.parseToCents(
-      _amountController.text,
-    );
+    final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
     if (amountCents <= 0) {
       _amountError = 'Enter a valid amount';
       hasError = true;
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -170,10 +168,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            action: SnackBarAction(
-              label: 'Retry',
-              onPressed: _save,
-            ),
+            action: SnackBarAction(label: 'Retry', onPressed: _save),
           ),
         );
       }

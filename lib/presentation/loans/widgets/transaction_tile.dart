@@ -6,10 +6,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 class TransactionTile extends StatelessWidget {
   final Transaction tx;
 
-  const TransactionTile({
-    super.key,
-    required this.tx,
-  });
+  const TransactionTile({super.key, required this.tx});
 
   @override
   Widget build(BuildContext context) {

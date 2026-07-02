@@ -231,9 +231,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
 
       return StatefulBuilder(
         builder: (context, setSheetState) {
-          final canSubmit =
-              paymentAmount() > 0 &&
-              selectedAccountId != null;
+          final canSubmit = paymentAmount() > 0 && selectedAccountId != null;
 
           return DraggableScrollableSheet(
             initialChildSize: 0.7,
@@ -277,12 +275,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(
-                                20,
-                                0,
-                                20,
-                                24,
-                              ),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -332,7 +325,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   LoanProgressRing(
                                     loan: loan,
                                     remainingCents: remainingCents,
-                                    isDark: isDark,
                                   ),
                                   const SizedBox(height: 24),
                                   const Text(
@@ -355,15 +347,13 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     children: [
                                       QuickAmountChip(
                                         label: '25%',
-                                        amount: (remainingCents * 0.25)
-                                            .round(),
+                                        amount: (remainingCents * 0.25).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.25).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.25)
-                                                          .round() /
+                                              ((remainingCents * 0.25).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -376,20 +366,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
                                         label: '50%',
-                                        amount: (remainingCents * 0.5)
-                                            .round(),
+                                        amount: (remainingCents * 0.5).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.5).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.5)
-                                                          .round() /
+                                              ((remainingCents * 0.5).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -402,20 +389,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
                                         label: '75%',
-                                        amount: (remainingCents * 0.75)
-                                            .round(),
+                                        amount: (remainingCents * 0.75).round(),
                                         isActive:
                                             paymentAmount() ==
                                             (remainingCents * 0.75).round(),
                                         onTap: () {
                                           amountController.text =
-                                              ((remainingCents * 0.75)
-                                                          .round() /
+                                              ((remainingCents * 0.75).round() /
                                                       100)
                                                   .toStringAsFixed(0);
                                           amountController.selection =
@@ -428,7 +412,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                       const SizedBox(width: 8),
                                       QuickAmountChip(
@@ -450,7 +433,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               );
                                           setSheetState(() {});
                                         },
-                                        isDark: isDark,
                                       ),
                                     ],
                                   ),
@@ -557,8 +539,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             color: const Color(
                                               0xFFE53935,
                                             ).withValues(alpha: 0.08),
-                                            borderRadius:
-                                                BorderRadius.circular(14),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
                                             border: Border.all(
                                               color: const Color(
                                                 0xFFE53935,
@@ -572,9 +555,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 size: 18,
                                                 color: Color(0xFFE53935),
                                               ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
+                                              const SizedBox(width: 10),
                                               Text(
                                                 'No accounts available. Create one first.',
                                                 style: TextStyle(
@@ -592,8 +573,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         children: accounts.map((account) {
                                           final isSelected =
                                               account.id == selectedAccountId;
-                                          final balanceCents =
-                                              account.balance;
+                                          final balanceCents = account.balance;
                                           final hasFunds =
                                               balanceCents >= paymentAmount();
                                           return Padding(
@@ -623,14 +603,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               : 0.08,
                                                         )
                                                       : isDark
-                                                      ? const Color(
-                                                          0xFF1C1C1E,
-                                                        )
+                                                      ? const Color(0xFF1C1C1E)
                                                       : Colors.white,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                        14,
-                                                      ),
+                                                      BorderRadius.circular(14),
                                                   border: Border.all(
                                                     color: isSelected
                                                         ? const Color(
@@ -647,9 +623,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               .withValues(
                                                                 alpha: 0.06,
                                                               ),
-                                                    width: isSelected
-                                                        ? 1.5
-                                                        : 1,
+                                                    width: isSelected ? 1.5 : 1,
                                                   ),
                                                 ),
                                                 child: Row(
@@ -667,20 +641,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                 alpha: 0.2,
                                                               )
                                                             : (isDark
-                                                                  ? Colors
-                                                                      .white
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.06,
-                                                                      )
-                                                                  : Colors
-                                                                      .black
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.04,
-                                                                      )),
-                                                        shape:
-                                                            BoxShape.circle,
+                                                                  ? Colors.white
+                                                                        .withValues(
+                                                                          alpha:
+                                                                              0.06,
+                                                                        )
+                                                                  : Colors.black
+                                                                        .withValues(
+                                                                          alpha:
+                                                                              0.04,
+                                                                        )),
+                                                        shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
                                                         isSelected
@@ -695,14 +666,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               )
                                                             : (isDark
                                                                   ? Colors
-                                                                      .white54
+                                                                        .white54
                                                                   : Colors
-                                                                      .black45),
+                                                                        .black45),
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      width: 12,
-                                                    ),
+                                                    const SizedBox(width: 12),
                                                     Expanded(
                                                       child: Column(
                                                         crossAxisAlignment:
@@ -715,20 +684,22 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               fontWeight:
                                                                   isSelected
                                                                   ? FontWeight
-                                                                      .w700
+                                                                        .w700
                                                                   : FontWeight
-                                                                      .w500,
+                                                                        .w500,
                                                               fontSize: 15,
-                                                              color:
-                                                                  isSelected
+                                                              color: isSelected
                                                                   ? (isDark
-                                                                        ? Colors.white
+                                                                        ? Colors
+                                                                              .white
                                                                         : const Color(
                                                                             0xFF609F8A,
                                                                           ))
                                                                   : (isDark
-                                                                        ? Colors.white
-                                                                        : Colors.black87),
+                                                                        ? Colors
+                                                                              .white
+                                                                        : Colors
+                                                                              .black87),
                                                             ),
                                                           ),
                                                           const SizedBox(
@@ -739,14 +710,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               Text(
                                                                 'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
                                                                 style: TextStyle(
-                                                                  fontSize:
-                                                                      12,
-                                                                  color:
-                                                                      isDark
+                                                                  fontSize: 12,
+                                                                  color: isDark
                                                                       ? Colors
-                                                                          .white38
+                                                                            .white38
                                                                       : Colors
-                                                                          .black38,
+                                                                            .black38,
                                                                 ),
                                                               ),
                                                               if (selectedAccountId !=
@@ -758,12 +727,13 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   width: 8,
                                                                 ),
                                                                 Container(
-                                                                  padding: const EdgeInsets.symmetric(
-                                                                    horizontal:
-                                                                        6,
-                                                                    vertical:
-                                                                        2,
-                                                                  ),
+                                                                  padding:
+                                                                      const EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            6,
+                                                                        vertical:
+                                                                            2,
+                                                                      ),
                                                                   decoration: BoxDecoration(
                                                                     color:
                                                                         const Color(
@@ -809,8 +779,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   const Color(
                                                                     0xFF609F8A,
                                                                   ).withValues(
-                                                                    alpha:
-                                                                        0.15,
+                                                                    alpha: 0.15,
                                                                   ),
                                                               shape: BoxShape
                                                                   .circle,
@@ -842,9 +811,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                       curve: Curves.easeOutCubic,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          16,
-                                        ),
+                                        borderRadius: BorderRadius.circular(16),
                                         boxShadow: canSubmit
                                             ? [
                                                 BoxShadow(
@@ -858,7 +825,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             : [],
                                       ),
                                       child: ElevatedButton(
-                                        onPressed: canSubmit && !sheetIsProcessing
+                                        onPressed:
+                                            canSubmit && !sheetIsProcessing
                                             ? () async {
                                                 final desc =
                                                     descriptionController.text
@@ -868,16 +836,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 });
                                                 final success =
                                                     await processPayment(
-                                                  context: context,
-                                                  ref: ref,
-                                                  loan: loan,
-                                                  amount: paymentAmount(),
-                                                  description: desc.isNotEmpty
-                                                      ? desc
-                                                      : 'Manual loan payment',
-                                                  accountId:
-                                                      selectedAccountId!,
-                                                );
+                                                      context: context,
+                                                      ref: ref,
+                                                      loan: loan,
+                                                      amount: paymentAmount(),
+                                                      description:
+                                                          desc.isNotEmpty
+                                                          ? desc
+                                                          : 'Manual loan payment',
+                                                      accountId:
+                                                          selectedAccountId!,
+                                                    );
                                                 if (success) {
                                                   if (sheetContext.mounted) {
                                                     Navigator.of(
@@ -908,8 +877,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               : Colors.black26,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
                                           ),
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 14,
@@ -921,31 +891,27 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 height: 20,
                                                 child:
                                                     CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: Colors.white,
-                                                ),
+                                                      strokeWidth: 2,
+                                                      color: Colors.white,
+                                                    ),
                                               )
                                             : Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   if (paymentAmount() > 0 &&
-                                                      selectedAccountId !=
-                                                          null)
+                                                      selectedAccountId != null)
                                                     Icon(
                                                       PesaFlowIcons.lock,
                                                       size: 16,
                                                       color: Colors.white
                                                           .withValues(
-                                                        alpha: 0.8,
-                                                      ),
+                                                            alpha: 0.8,
+                                                          ),
                                                     ),
                                                   if (paymentAmount() > 0 &&
-                                                      selectedAccountId !=
-                                                          null)
-                                                    const SizedBox(
-                                                      width: 8,
-                                                    ),
+                                                      selectedAccountId != null)
+                                                    const SizedBox(width: 8),
                                                   Text(
                                                     paymentAmount() <= 0
                                                         ? 'Enter an amount'
@@ -990,9 +956,7 @@ Widget _buildAmountField({
 }) {
   return Container(
     decoration: BoxDecoration(
-      color: isDark
-          ? const Color(0xFF1C1C1E)
-          : Colors.white,
+      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
         color: isDark
@@ -1000,10 +964,7 @@ Widget _buildAmountField({
             : Colors.black.withValues(alpha: 0.06),
       ),
     ),
-    padding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 4,
-    ),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     child: Row(
       children: [
         Text(
@@ -1011,40 +972,28 @@ Widget _buildAmountField({
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
-            color: isDark
-                ? Colors.white60
-                : Colors.black45,
+            color: isDark ? Colors.white60 : Colors.black45,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: TextField(
             controller: amountController,
-            keyboardType:
-                const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             autofocus: true,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegExp(r'[\d.,]'),
-              ),
+              FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
             ],
             style: TextStyle(
               fontSize: 28,
               fontFamily: 'monospace',
               fontWeight: FontWeight.bold,
-              color: isDark
-                  ? Colors.white
-                  : Colors.black,
+              color: isDark ? Colors.white : Colors.black,
             ),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
+              contentPadding: EdgeInsets.symmetric(vertical: 12),
             ),
             onChanged: (val) {
               setSheetState(() {});
@@ -1061,20 +1010,14 @@ Widget _buildAmountField({
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.white.withValues(
-                        alpha: 0.1,
-                      )
-                    : Colors.black.withValues(
-                        alpha: 0.05,
-                      ),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.black.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 PesaFlowIcons.close,
                 size: 18,
-                color: isDark
-                    ? Colors.white54
-                    : Colors.black45,
+                color: isDark ? Colors.white54 : Colors.black45,
               ),
             ),
           ),

@@ -15,9 +15,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 class _CycleChip extends StatelessWidget {
   final String text;
 
-  const _CycleChip({
-    required this.text,
-  });
+  const _CycleChip({required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -152,17 +150,11 @@ class RecurringSection extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _CycleChip(
-                          text: '${_fmtShort(totals.daily)}/day',
-                        ),
+                        _CycleChip(text: '${_fmtShort(totals.daily)}/day'),
                         const SizedBox(width: kSpacing8),
-                        _CycleChip(
-                          text: '${_fmtShort(totals.weekly)}/wk',
-                        ),
+                        _CycleChip(text: '${_fmtShort(totals.weekly)}/wk'),
                         const SizedBox(width: kSpacing8),
-                        _CycleChip(
-                          text: '${_fmtShort(totals.yearly)}/yr',
-                        ),
+                        _CycleChip(text: '${_fmtShort(totals.yearly)}/yr'),
                       ],
                     ),
                   ],

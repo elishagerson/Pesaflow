@@ -665,8 +665,7 @@ class _SavingsGoalDetailScreenState
                                           ? const SizedBox(
                                               width: 20,
                                               height: 20,
-                                              child:
-                                                  CircularProgressIndicator(
+                                              child: CircularProgressIndicator(
                                                 strokeWidth: 2,
                                                 color: Colors.white,
                                               ),
@@ -678,9 +677,9 @@ class _SavingsGoalDetailScreenState
                                                 Icon(
                                                   isDeposit
                                                       ? Icons
-                                                          .add_circle_outline_rounded
+                                                            .add_circle_outline_rounded
                                                       : Icons
-                                                          .remove_circle_outline_rounded,
+                                                            .remove_circle_outline_rounded,
                                                   size: 18,
                                                   color: Colors.white
                                                       .withValues(alpha: 0.8),

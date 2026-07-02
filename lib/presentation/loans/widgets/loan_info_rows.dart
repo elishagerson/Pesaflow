@@ -5,20 +5,13 @@ class InfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const InfoRow({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const InfoRow({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 4,
-        horizontal: 4,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -43,11 +36,7 @@ class CopyableInfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const CopyableInfoRow({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const CopyableInfoRow({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +62,7 @@ class CopyableInfoRow extends StatelessWidget {
       },
       borderRadius: BorderRadius.circular(4),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 4,
-          horizontal: 4,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -237,8 +237,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           hint: 'e.g. Vacation to Zanzibar',
                           icon: Icons.title_rounded,
                         ).copyWith(errorText: _nameError),
-                        onChanged: (_) =>
-                            setState(() => _nameError = null),
+                        onChanged: (_) => setState(() => _nameError = null),
                       ),
                       const SizedBox(height: kSpacing12),
                       TextFormField(
@@ -257,8 +256,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                           hint: 'e.g. 1500000',
                           icon: PesaFlowIcons.cash,
                         ).copyWith(errorText: _amountError),
-                        onChanged: (_) =>
-                            setState(() => _amountError = null),
+                        onChanged: (_) => setState(() => _amountError = null),
                       ),
                       const SizedBox(height: kSpacing12),
                       ModernDateSelector(

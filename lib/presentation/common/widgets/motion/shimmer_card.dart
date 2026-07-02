@@ -76,20 +76,17 @@ class _ShimmerCardState extends State<ShimmerCard>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    widget.barHeights.length,
-                    (i) {
-                      final widths = widget.barWidths;
-                      final w = i < widths.length ? widths[i] : double.infinity;
-                      final h = i < widget.barHeights.length
-                          ? widget.barHeights[i]
-                          : 10.0;
-                      return Padding(
-                        padding: EdgeInsets.only(top: i > 0 ? h * 0.6 : 0),
-                        child: _pulseBar(width: w, height: h),
-                      );
-                    },
-                  ),
+                  children: List.generate(widget.barHeights.length, (i) {
+                    final widths = widget.barWidths;
+                    final w = i < widths.length ? widths[i] : double.infinity;
+                    final h = i < widget.barHeights.length
+                        ? widget.barHeights[i]
+                        : 10.0;
+                    return Padding(
+                      padding: EdgeInsets.only(top: i > 0 ? h * 0.6 : 0),
+                      child: _pulseBar(width: w, height: h),
+                    );
+                  }),
                 ),
               ),
               if (widget.trailing != null) ...[

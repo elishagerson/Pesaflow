@@ -129,8 +129,6 @@ class LoanDetailScreen extends ConsumerWidget {
                         index: 7 + idx,
                         child: TransactionTile(
                           tx: tx,
-                          theme: theme,
-                          isDark: isDark,
                         ),
                       );
                     }).toList(),
@@ -255,39 +253,30 @@ class LoanDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(height: kSpacing12),
             CopyableInfoRow(
-              context: context,
               label: 'Provider',
               value: loan.provider ?? 'N/A',
-              isDark: isDark,
             ),
             if (loan.interestRate != null)
               InfoRow(
                 label: 'APR',
                 value: '${loan.interestRate!.toStringAsFixed(1)}%',
-                isDark: isDark,
               ),
             CopyableInfoRow(
-              context: context,
               label: 'Reference',
               value: loan.reference ?? 'N/A',
-              isDark: isDark,
             ),
             CopyableInfoRow(
-              context: context,
               label: 'Sender',
               value: loan.sender ?? 'N/A',
-              isDark: isDark,
             ),
             InfoRow(
               label: 'Disbursed',
               value: formatLoanDate(loan.disbursedAt),
-              isDark: isDark,
             ),
             if (loan.dueAt != null)
               InfoRow(
                 label: 'Due Date',
                 value: formatLoanDate(loan.dueAt!),
-                isDark: isDark,
               ),
             InfoRow(
               label: 'Status',
@@ -296,7 +285,6 @@ class LoanDetailScreen extends ConsumerWidget {
                   : loan.status == 'active'
                   ? 'Active'
                   : 'Defaulted',
-              isDark: isDark,
             ),
           ],
         ),

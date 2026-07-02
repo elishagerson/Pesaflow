@@ -125,7 +125,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       strokeCap: StrokeCap.round,
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        remainingCents < 0 ? AppTheme.expenseColor : desaturateColor(catColor),
+                        remainingCents < 0
+                            ? AppTheme.expenseColor
+                            : desaturateColor(catColor),
                       ),
                     ),
                   ),
@@ -178,9 +180,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     bool isDark,
     int pendingReviewCount,
   ) {
-    return SmsReviewCard(
-      pendingReviewCount: pendingReviewCount,
-    );
+    return SmsReviewCard(pendingReviewCount: pendingReviewCount);
   }
 
   Widget _buildBudgetRings(ThemeData theme, BuildContext context) {
@@ -702,7 +702,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(kSpacing24),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
                         border: Border.all(
                           color: isDark
                               ? trackerColor.withValues(alpha: 0.25)
@@ -711,264 +713,275 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: trackerColor.withValues(alpha: isDark ? 0.2 : 0.15),
+                            color: trackerColor.withValues(
+                              alpha: isDark ? 0.2 : 0.15,
+                            ),
                             blurRadius: 40,
                             offset: const Offset(0, 12),
                           ),
                         ],
                       ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Brand & Budget Gauge Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'pesa',
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 19,
-                                    color: isDark
-                                        ? const Color(0xFF0F4C5C)
-                                        : Colors.white,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                                Text(
-                                  'flow',
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 19,
-                                    color: heroTextColor,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Dynamic Spent Progress Badge
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kSpacing10,
-                                vertical: kSpacing4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Brand & Budget Gauge Row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  SizedBox(
-                                    height: kSpacing12,
-                                    width: kSpacing12,
-                                    child: CircularProgressIndicator(
-                                      value: overallPct,
-                                      strokeWidth: 2,
-                                      backgroundColor: Colors.white24,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        overallPct > 0.9
-                                            ? const Color(0xFFFF453A)
-                                            : Colors.white,
-                                      ),
+                                  Text(
+                                    'pesa',
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 19,
+                                      color: isDark
+                                          ? const Color(0xFF0F4C5C)
+                                          : Colors.white,
+                                      letterSpacing: -0.5,
                                     ),
                                   ),
-                                  const SizedBox(width: kSpacing6),
                                   Text(
-                                    '${(overallPct * 100).round()}% SPENT',
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
+                                    'flow',
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 19,
                                       color: heroTextColor,
-                                      letterSpacing: 0.5,
+                                      letterSpacing: -0.5,
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: kSpacing24),
-                        // Title Label & Main Value
-                        Row(
-                          children: [
-                            Container(
-                              width: 4,
-                              height: 4,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: kSpacing6),
-                            Text(
-                              _selectedAccountId != null
-                                  ? (accounts
-                                        .firstWhere(
-                                          (a) => a.id == _selectedAccountId,
-                                          orElse: () => accounts.first,
-                                        )
-                                        .name
-                                        .toUpperCase())
-                                  : 'TOTAL NET WORTH',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.5,
-                                color: heroSubColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: kSpacing8),
-                        AmountText(
-                          amountInCents: _selectedAccountId != null
-                              ? (accounts
-                                    .firstWhere(
-                                      (a) => a.id == _selectedAccountId,
-                                      orElse: () => accounts.first,
-                                    )
-                                    .balance)
-                              : netWorth,
-                          useMonospace: false,
-                          style: theme.textTheme.displaySmall?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 42,
-                            color: heroTextColor,
-                            letterSpacing: -1.0,
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing24),
-                        Divider(height: 0.5, thickness: 0.5, color: pillBorder),
-
-                        // Dynamic scrolling Account Pills in the Balance Hero Card
-                        if (accounts.isNotEmpty) ...[
-                          const SizedBox(height: kSpacing18),
-                          SizedBox(
-                            height: 36,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: accounts.length,
-                              itemBuilder: (context, index) {
-                                final account = accounts[index];
-                                final isSelected =
-                                    _selectedAccountId == account.id;
-
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    right: kSpacing8,
-                                    left: index == 0 ? kSpacing2 : 0.0,
-                                  ),
-                                  child: TactileSpringContainer(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_selectedAccountId == account.id) {
-                                          _selectedAccountId =
-                                              null; // Clear filter
-                                        } else {
-                                          _selectedAccountId =
-                                              account.id; // Apply filter
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing14,
-                                        vertical: kSpacing6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? (isDark
-                                                  ? trackerColor.withValues(
-                                                      alpha: 0.35,
-                                                    )
-                                                  : Colors.white)
-                                            : pillBg,
-                                        borderRadius: BorderRadius.circular(
-                                          100,
-                                        ),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? (isDark
-                                                    ? trackerColor
-                                                    : Colors.white)
-                                              : pillBorder,
-                                          width: isSelected ? 1.5 : 0.8,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            getAccountIcon(account.icon),
-                                            size: 14,
-                                            color: isSelected
-                                                ? (isDark
-                                                      ? Colors.white
-                                                      : trackerColor)
-                                                : heroTextColor,
-                                          ),
-                                          const SizedBox(width: kSpacing6),
-                                          Text(
-                                            account.name,
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected
-                                                      ? (isDark
-                                                            ? Colors.white
-                                                            : trackerColor)
-                                                      : heroTextColor,
-                                                ),
-                                          ),
-                                          const SizedBox(width: kSpacing8),
-                                          Text(
-                                            _formatCompact(account.balance),
-                                            style: theme.textTheme.labelSmall
-                                                ?.copyWith(
-                                                  fontFamily: 'monospace',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected
-                                                      ? (isDark
-                                                            ? Colors.white
-                                                                  .withValues(
-                                                                    alpha: 0.9,
-                                                                  )
-                                                            : trackerColor
-                                                                  .withValues(
-                                                                    alpha: 0.9,
-                                                                  ))
-                                                      : heroTextColor
-                                                            .withValues(
-                                                              alpha: 0.8,
-                                                            ),
-                                                ),
-                                          ),
-                                        ],
+                              // Dynamic Spent Progress Badge
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing10,
+                                  vertical: kSpacing4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: kSpacing12,
+                                      width: kSpacing12,
+                                      child: CircularProgressIndicator(
+                                        value: overallPct,
+                                        strokeWidth: 2,
+                                        backgroundColor: Colors.white24,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              overallPct > 0.9
+                                                  ? const Color(0xFFFF453A)
+                                                  : Colors.white,
+                                            ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                    const SizedBox(width: kSpacing6),
+                                    Text(
+                                      '${(overallPct * 100).round()}% SPENT',
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: heroTextColor,
+                                            letterSpacing: 0.5,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: kSpacing24),
+                          // Title Label & Main Value
+                          Row(
+                            children: [
+                              Container(
+                                width: 4,
+                                height: 4,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing6),
+                              Text(
+                                _selectedAccountId != null
+                                    ? (accounts
+                                          .firstWhere(
+                                            (a) => a.id == _selectedAccountId,
+                                            orElse: () => accounts.first,
+                                          )
+                                          .name
+                                          .toUpperCase())
+                                    : 'TOTAL NET WORTH',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.5,
+                                  color: heroSubColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: kSpacing8),
+                          AmountText(
+                            amountInCents: _selectedAccountId != null
+                                ? (accounts
+                                      .firstWhere(
+                                        (a) => a.id == _selectedAccountId,
+                                        orElse: () => accounts.first,
+                                      )
+                                      .balance)
+                                : netWorth,
+                            useMonospace: false,
+                            style: theme.textTheme.displaySmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 42,
+                              color: heroTextColor,
+                              letterSpacing: -1.0,
                             ),
                           ),
-                        ] else ...[
-                          const SizedBox(height: kSpacing18),
-                          Center(
-                            child: Text(
-                              'No active accounts. Tap Add Account below to start.',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: heroSubColor,
+                          const SizedBox(height: kSpacing24),
+                          Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: pillBorder,
+                          ),
+
+                          // Dynamic scrolling Account Pills in the Balance Hero Card
+                          if (accounts.isNotEmpty) ...[
+                            const SizedBox(height: kSpacing18),
+                            SizedBox(
+                              height: 36,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: accounts.length,
+                                itemBuilder: (context, index) {
+                                  final account = accounts[index];
+                                  final isSelected =
+                                      _selectedAccountId == account.id;
+
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: kSpacing8,
+                                      left: index == 0 ? kSpacing2 : 0.0,
+                                    ),
+                                    child: TactileSpringContainer(
+                                      onTap: () {
+                                        setState(() {
+                                          if (_selectedAccountId ==
+                                              account.id) {
+                                            _selectedAccountId =
+                                                null; // Clear filter
+                                          } else {
+                                            _selectedAccountId =
+                                                account.id; // Apply filter
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing14,
+                                          vertical: kSpacing6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? (isDark
+                                                    ? trackerColor.withValues(
+                                                        alpha: 0.35,
+                                                      )
+                                                    : Colors.white)
+                                              : pillBg,
+                                          borderRadius: BorderRadius.circular(
+                                            100,
+                                          ),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? (isDark
+                                                      ? trackerColor
+                                                      : Colors.white)
+                                                : pillBorder,
+                                            width: isSelected ? 1.5 : 0.8,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              getAccountIcon(account.icon),
+                                              size: 14,
+                                              color: isSelected
+                                                  ? (isDark
+                                                        ? Colors.white
+                                                        : trackerColor)
+                                                  : heroTextColor,
+                                            ),
+                                            const SizedBox(width: kSpacing6),
+                                            Text(
+                                              account.name,
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isSelected
+                                                        ? (isDark
+                                                              ? Colors.white
+                                                              : trackerColor)
+                                                        : heroTextColor,
+                                                  ),
+                                            ),
+                                            const SizedBox(width: kSpacing8),
+                                            Text(
+                                              _formatCompact(account.balance),
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    fontFamily: 'monospace',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isSelected
+                                                        ? (isDark
+                                                              ? Colors.white
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.9,
+                                                                    )
+                                                              : trackerColor
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.9,
+                                                                    ))
+                                                        : heroTextColor
+                                                              .withValues(
+                                                                alpha: 0.8,
+                                                              ),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          ),
+                          ] else ...[
+                            const SizedBox(height: kSpacing18),
+                            Center(
+                              child: Text(
+                                'No active accounts. Tap Add Account below to start.',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: heroSubColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
-                ),
                 ),
                 const SizedBox(height: kSpacing16),
 
@@ -1139,10 +1152,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0F4C5C).withValues(alpha: 0.08),
+                              color: const Color(
+                                0xFF0F4C5C,
+                              ).withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
+                                color: const Color(
+                                  0xFF0F4C5C,
+                                ).withValues(alpha: 0.15),
                               ),
                             ),
                             child: Row(
@@ -1413,22 +1430,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             width: 46,
                                             height: 46,
                                             decoration: BoxDecoration(
-                                          color: desaturateColor(
-                                            hexToColor(
-                                              item.category.color,
+                                              color: desaturateColor(
+                                                hexToColor(item.category.color),
+                                              ).withValues(alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
                                             ),
-                                          ).withValues(alpha: 0.15),
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            getCategoryIcon(
-                                              item.category.icon,
-                                            ),
-                                            color: hexToColor(
-                                              item.category.color,
-                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                getCategoryIcon(
+                                                  item.category.icon,
+                                                ),
+                                                color: hexToColor(
+                                                  item.category.color,
+                                                ),
                                                 size: 22,
                                               ),
                                             ),
@@ -1861,14 +1876,8 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
       animation: _controller,
       builder: (context, child) {
         final t = _controller.value;
-        final shiftedBegin = Alignment(
-          -0.3 + t * 0.6,
-          -0.3 + t * 0.6,
-        );
-        final shiftedEnd = Alignment(
-          0.3 - t * 0.6,
-          0.3 - t * 0.6,
-        );
+        final shiftedBegin = Alignment(-0.3 + t * 0.6, -0.3 + t * 0.6);
+        final shiftedEnd = Alignment(0.3 - t * 0.6, 0.3 - t * 0.6);
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(

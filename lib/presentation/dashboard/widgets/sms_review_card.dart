@@ -8,10 +8,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 class ActiveParserBadge extends StatelessWidget {
   final String label;
 
-  const ActiveParserBadge({
-    super.key,
-    required this.label,
-  });
+  const ActiveParserBadge({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +49,7 @@ class ActiveParserBadge extends StatelessWidget {
 class SmsReviewCard extends StatelessWidget {
   final int pendingReviewCount;
 
-  const SmsReviewCard({
-    super.key,
-    required this.pendingReviewCount,
-  });
+  const SmsReviewCard({super.key, required this.pendingReviewCount});
 
   @override
   Widget build(BuildContext context) {

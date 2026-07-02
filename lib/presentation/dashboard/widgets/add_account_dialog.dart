@@ -295,9 +295,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
           );
 
           try {
-            await ref
-                .read(accountRepositoryProvider)
-                .createAccount(newAccount);
+            await ref.read(accountRepositoryProvider).createAccount(newAccount);
 
             ref.invalidate(accountsStreamProvider);
 

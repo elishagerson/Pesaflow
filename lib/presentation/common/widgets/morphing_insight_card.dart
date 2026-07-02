@@ -116,7 +116,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
               color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: color.withValues(alpha: 0.2 + _expandAnimation.value * 0.2),
+                color: color.withValues(
+                  alpha: 0.2 + _expandAnimation.value * 0.2,
+                ),
                 width: 0.5 + _expandAnimation.value * 1.0,
               ),
               boxShadow: [
@@ -183,9 +185,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                 vertical: 3,
                               ),
                               decoration: BoxDecoration(
-                                color: _severityColor(severity).withValues(
-                                  alpha: 0.12,
-                                ),
+                                color: _severityColor(
+                                  severity,
+                                ).withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Row(
@@ -214,8 +216,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         Text(
                           widget.data.subtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                           maxLines: _expanded ? 5 : 2,
                           overflow: TextOverflow.ellipsis,
@@ -371,9 +374,10 @@ class _PulseIconState extends State<PulseIcon>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 1.0, end: 1.15).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
