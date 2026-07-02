@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
@@ -155,26 +156,109 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
               title: 'SMS Review',
               largeTitle: true,
               actions: [
-                TextButton.icon(
-                  icon: Icon(_selectAll ? Icons.deselect : Icons.select_all),
-                  label: Text(_selectAll ? 'Deselect' : 'Select All'),
-                  onPressed: () {
-                    setState(() {
-                      _selectAll = !_selectAll;
-                      final items = reviewAsync.asData?.value ?? [];
-                      if (_selectAll) {
-                        _selectedIds.addAll(items.map((e) => e.transaction.id));
-                      } else {
-                        _selectedIds.clear();
-                      }
-                    });
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TactileSpringContainer(
+                      onTap: () {
+                        setState(() {
+                          _selectAll = !_selectAll;
+                          final items = reviewAsync.asData?.value ?? [];
+                          if (_selectAll) {
+                            _selectedIds.addAll(
+                              items.map((e) => e.transaction.id),
+                            );
+                          } else {
+                            _selectedIds.clear();
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing12,
+                          vertical: kSpacing6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white.withValues(alpha: 0.06)
+                              : Colors.black.withValues(alpha: 0.03),
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: theme.brightness == Brightness.dark
+                                ? Colors.white.withValues(alpha: 0.10)
+                                : Colors.black.withValues(alpha: 0.05),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _selectAll ? Icons.deselect : Icons.select_all,
+                              size: 16,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing6),
+                            Text(
+                              _selectAll ? 'Deselect' : 'Select All',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.8,
+                                ),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (_selectedIds.isNotEmpty) ...[
+                      const SizedBox(width: kSpacing10),
+                      TactileSpringContainer(
+                        onTap: _showBatchCategoryPicker,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing12,
+                            vertical: kSpacing8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            borderRadius: BorderRadius.circular(kSpacing8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.category_rounded,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: kSpacing6),
+                              Text(
+                                'Categorize (${_selectedIds.length})',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-                if (_selectedIds.isNotEmpty)
-                  TextButton(
-                    onPressed: _showBatchCategoryPicker,
-                    child: Text('Categorize (${_selectedIds.length})'),
-                  ),
               ],
             ),
             Expanded(
