@@ -212,6 +212,21 @@ class SmsProcessor {
       }
       final sms = smsParsed;
 
+      // 3.5 Defensive classifier guard — some parsers (especially the
+      //     generic fallback and broad Swahili patterns) can match promo
+      //     messages that happen to contain an amount + verb.  Run the
+      //     classifier on every successful parse and reject obvious promos.
+      final defensiveClass = SmsClassifier.classify(body);
+      if (!defensiveClass.isTransaction) {
+        developer.log(
+          'SMS rejected by defensive classifier: ${defensiveClass.label} '
+          '(confidence: ${defensiveClass.transactionConfidence.toStringAsFixed(2)}) '
+          'for provider $provider — reasons: ${defensiveClass.reasons.join("; ")}',
+          name: 'SmsProcessor',
+        );
+        return;
+      }
+
       // 4. Check for duplicate logs
       final isDeduplicationEnabled =
           await _settingsRepo.getSetting('sms_auto_deduplication') != 'false';
