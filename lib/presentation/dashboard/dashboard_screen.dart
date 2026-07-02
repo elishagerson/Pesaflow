@@ -34,6 +34,13 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/sms_review_card.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/loan_overview_section.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/recurring_section.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/savings_section.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
