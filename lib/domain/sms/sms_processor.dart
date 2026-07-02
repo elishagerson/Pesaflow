@@ -55,6 +55,24 @@ class SmsProcessor {
   final NotificationService _notificationService;
   void Function(TransactionWithCategoryAndAccount item)? onReviewNeeded;
 
+  // ── Multi-SMS coalescing buffer ──────────────────────────────────────
+  // Providers sometimes dispatch multiple messages for one transaction
+  // (e.g. a transfer alert + a separate fee notification).  We buffer
+  // messages from the same provider inside a short debounce window,
+  // concatenate them, and parse the combined text.  Individual messages
+  // can trigger different parser rules (sent vs. fee) and produce
+  // spurious duplicate transactions; the combined text hits the most
+  // important rule first and produces a single correct result.
+  final Map<String, List<_BufferedSms>> _messageBuffer = {};
+  Timer? _flushTimer;
+  static const _debounceWindow = Duration(milliseconds: 800);
+
+  // ── In-memory content dedup cache ───────────────────────────────────
+  // Catches the same SMS body arriving through multiple reception paths
+  // (foreground listener, background handler, periodic inbox scan).
+  final Set<_ContentKey> _recentContentKeys = {};
+  static const _dedupCapacity = 200;
+
   SmsProcessor({
     required this._accountRepo,
     required this._categoryRepo,
@@ -68,26 +86,97 @@ class SmsProcessor {
     this.onReviewNeeded,
   });
 
-  /// Processes a raw incoming SMS string and timestamp.
-  /// If recognized as a transaction and not a duplicate, parses, categorizes,
-  /// auto-creates accounts if needed, persists, and notifies the user.
+  // ═════════════════════════════════════════════════════════════════════
+  // PUBLIC ENTRY POINT
+  // ═════════════════════════════════════════════════════════════════════
+
+  /// Buffers the incoming SMS, coalesces multiple messages for the same
+  /// transaction, then parses and persists the combined result.
   Future<bool> processSms(
     String sender,
     String body,
     DateTime timestamp,
   ) async {
+    final provider = ProviderMatcher.matchProvider(sender, body: body);
+    if (provider == null) {
+      developer.log(
+        'SMS ignored: Unrecognized sender shortcode $sender',
+        name: 'SmsProcessor',
+      );
+      return false;
+    }
+
+    final key = _ContentKey(provider, body);
+
+    // In-memory dedup — skip if we already buffered identical content
+    if (_recentContentKeys.contains(key)) {
+      developer.log(
+        'SMS skipped (in-memory dedup) for $provider',
+        name: 'SmsProcessor',
+      );
+      return false;
+    }
+    _recentContentKeys.add(key);
+    if (_recentContentKeys.length > _dedupCapacity) {
+      _recentContentKeys.clear();
+    }
+
+    _messageBuffer
+        .putIfAbsent(provider, () => [])
+        .add(_BufferedSms(sender: sender, body: body, timestamp: timestamp));
+
+    _flushTimer?.cancel();
+    _flushTimer = Timer(_debounceWindow, _flushBuffer);
+
+    return true;
+  }
+
+  // ═════════════════════════════════════════════════════════════════════
+  // BUFFER FLUSH
+  // ═════════════════════════════════════════════════════════════════════
+
+  void _flushBuffer() {
+    final snapshot = Map<String, List<_BufferedSms>>.from(_messageBuffer);
+    _messageBuffer.clear();
+
+    for (final entry in snapshot.entries) {
+      final messages = entry.value;
+      if (messages.isEmpty) continue;
+      final provider = entry.key;
+
+      // Concatenate all buffered bodies — the primary parser rule fires
+      // on the combined text and extracts the main transaction, while any
+      // secondary fragments (fee, balance-only) blend into the context.
+      final combinedBody = messages.map((e) => e.body).join('\n');
+      final earliestTimestamp = messages
+          .map((e) => e.timestamp)
+          .reduce((a, b) => a.isBefore(b) ? a : b);
+
+      unawaited(
+        _processParsed(
+          provider: provider,
+          sender: messages.first.sender,
+          body: combinedBody,
+          timestamp: earliestTimestamp,
+        ),
+      );
+    }
+  }
+
+  // ═════════════════════════════════════════════════════════════════════
+  // CORE PROCESSING (extracted from original processSms)
+  // ═════════════════════════════════════════════════════════════════════
+
+  /// Parses, deduplicates, categorises, persists and notifies.
+  /// The [provider] must already be resolved (no sender matching here).
+  Future<void> _processParsed({
+    required String provider,
+    required String sender,
+    required String body,
+    required DateTime timestamp,
+  }) async {
     String? loanId;
     try {
-      // 1. Identify provider
-      final provider = ProviderMatcher.matchProvider(sender, body: body);
-      if (provider == null) {
-        developer.log(
-          'SMS ignored: Unrecognized sender shortcode $sender',
-          name: 'SmsProcessor',
-        );
-        return false;
-      }
-
       // 2. Select the parser via provider registry
       final parser = ProviderRegistry.parserFor(provider);
 
@@ -95,8 +184,6 @@ class SmsProcessor {
       bool usedGenericFallback = false;
       var smsParsed = parser.parse(body, timestamp);
       if (smsParsed == null) {
-        // Run the classifier before falling back — if the message is clearly
-        // promo/informational, skip the fallback parser entirely.
         final classification = SmsClassifier.classify(body);
         if (!classification.isTransaction) {
           developer.log(
@@ -105,7 +192,7 @@ class SmsProcessor {
             'for provider $provider — reasons: ${classification.reasons.join("; ")}',
             name: 'SmsProcessor',
           );
-          return false;
+          return;
         }
 
         developer.log(
@@ -119,7 +206,7 @@ class SmsProcessor {
             'SMS ignored: all parsers failed for provider $provider',
             name: 'SmsProcessor',
           );
-          return false;
+          return;
         }
         usedGenericFallback = true;
       }
@@ -135,7 +222,7 @@ class SmsProcessor {
             'SMS ignored: Duplicate transaction detected. Reference: ${sms.reference}',
             name: 'SmsProcessor',
           );
-          return false;
+          return;
         }
       }
 
@@ -187,8 +274,7 @@ class SmsProcessor {
           id: const Uuid().v4(),
           name: friendlyName,
           type: type,
-          balance:
-              0, // start with 0. We will reconcile to exact balanceAfter post-transaction!
+          balance: 0,
           provider: provider,
           icon: type == 'bank' ? 'bank' : 'wallet',
           sortOrder: accounts.length + 1,
@@ -212,11 +298,8 @@ class SmsProcessor {
       String finalDescription = sms.senderOrRecipient;
       double finalConfidence = catResult.confidence;
 
-      // Determine if the destination is one of the user's own accounts.
-      // We use phone number matching (reliable) with a name-based fallback.
       Account? matchedOwnAccount;
 
-      // 1) Phone number matching — compare extracted destination phone against account phone numbers
       final destPhone = _extractPhoneNumber(sms.senderOrRecipient);
       if (destPhone != null) {
         final normalizedDestPhone = _normalizePhone(destPhone);
@@ -231,11 +314,9 @@ class SmsProcessor {
       }
 
       if (matchedOwnAccount != null) {
-        // This is a transfer between targetAccount and matchedOwnAccount!
         finalType = 'transfer';
         finalConfidence = 1.0;
 
-        // Fetch "Between Accounts" category
         final categories = await _categoryRepo.getAllCategories();
         final transferCat = categories.firstWhere(
           (cat) =>
@@ -245,9 +326,6 @@ class SmsProcessor {
         );
         finalCategoryId = transferCat.id;
 
-        // Determine direction:
-        // If this is an income SMS (deposit/credit to targetAccount), money is coming FROM matchedOwnAccount TO targetAccount.
-        // If this is an expense SMS (withdrawal/debit from targetAccount), money is going FROM targetAccount TO matchedOwnAccount.
         if (sms.type == 'income') {
           finalAccountId = matchedOwnAccount.id;
           finalDestinationAccountId = targetAccount.id;
@@ -260,8 +338,6 @@ class SmsProcessor {
               'Transfer from ${targetAccount.name} to ${matchedOwnAccount.name}';
         }
 
-        // Dynamic Transfer Deduplication:
-        // Check if there is an existing transfer within +-90s window
         final startWindow = sms.timestamp.subtract(const Duration(seconds: 90));
         final endWindow = sms.timestamp.add(const Duration(seconds: 90));
         final dupTransfer = await _transactionRepo.findFuzzyTransferMatch(
@@ -273,21 +349,18 @@ class SmsProcessor {
         );
 
         if (dupTransfer != null) {
-          // Already processed via the other account's SMS alert!
-          // Skip inserting a new duplicate transaction.
           developer.log(
             'Transfer already processed via other account SMS. Skipping duplicate creation.',
             name: 'SmsProcessor',
           );
 
-          // Still perform balance reconciliation for the targetAccount using the ground truth from its own SMS!
           if (sms.balanceAfter != null) {
             final reconciledAccount = targetAccount.copyWith(
               balance: sms.balanceAfter!,
             );
             await _accountRepo.updateAccount(reconciledAccount);
           }
-          return true;
+          return;
         }
       }
 
@@ -338,7 +411,6 @@ class SmsProcessor {
             trackerId: activeTrackerId,
           );
           if (activeLoans.isNotEmpty) {
-            // Match by amount: exact remaining match, then nearest with remaining >= amount
             final exact = activeLoans
                 .where((l) => l.remaining == sms.amount)
                 .toList();
@@ -379,7 +451,6 @@ class SmsProcessor {
       }
 
       // 8. Persist Transaction
-      // Generic fallback results always go to review regardless of keyword confidence
       if (usedGenericFallback && finalConfidence > 0.40) {
         finalConfidence = 0.40;
       }
@@ -412,7 +483,7 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
-      // 8.5 Recurring matching: link expense to active recurring transaction if recipient matches merchantKeywords
+      // 8.5 Recurring matching
       if (finalType == 'expense') {
         try {
           final activeRecs = await _recurringTransactionRepo
@@ -441,11 +512,7 @@ class SmsProcessor {
         }
       }
 
-      // Balance reconciliation is handled by [TransactionDao.writeTransactionWithBalanceAdjustment],
-      // which uses [transaction.balanceAfter] as ground truth when the SMS provided it,
-      // otherwise falls back to delta-based adjustment. No redundant update needed here.
-
-      // 8. Trigger local notification (non-fatal — transaction is already saved)
+      // 9. Trigger local notification
       final amountFormatted =
           'Tsh ${(sms.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
       final isCredit = sms.type == 'income' || sms.type == 'loan';
@@ -479,10 +546,7 @@ class SmsProcessor {
         );
         onReviewNeeded!(reviewItem);
       }
-
-      return true;
     } catch (e, stack) {
-      // Rollback orphaned loan if one was created but transaction failed
       if (loanId != null) {
         try {
           await _loanRepo.deleteLoan(loanId);
@@ -504,7 +568,6 @@ class SmsProcessor {
         name: 'SmsProcessor',
       );
     }
-    return false;
   }
 
   /// Extracts a Tanzanian phone number from text.
@@ -523,4 +586,34 @@ class SmsProcessor {
     if (digits.length >= 9) return digits.substring(digits.length - 9);
     return digits;
   }
+}
+
+/// A single SMS message held in the coalescing buffer.
+class _BufferedSms {
+  final String sender;
+  final String body;
+  final DateTime timestamp;
+
+  const _BufferedSms({
+    required this.sender,
+    required this.body,
+    required this.timestamp,
+  });
+}
+
+/// Content-addressed key for the in-memory dedup cache.
+/// Uses provider + full body so that two identical messages are
+/// recognised as duplicates even when arriving through different paths.
+class _ContentKey {
+  final String provider;
+  final String body;
+
+  const _ContentKey(this.provider, this.body);
+
+  @override
+  bool operator ==(Object other) =>
+      other is _ContentKey && other.provider == provider && other.body == body;
+
+  @override
+  int get hashCode => Object.hash(provider, body);
 }
