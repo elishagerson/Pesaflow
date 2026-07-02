@@ -1,6 +1,5 @@
 import 'dart:developer' as developer;
 import '../../models/sms_parsed.dart';
-import '../sms_classifier.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
@@ -21,6 +20,14 @@ class SelcomPesaParser implements SmsParser {
     );
     final match = swaRegex.firstMatch(text);
     if (match != null) return match.group(1) ?? '';
+
+    // Swahili: [reference] Imethibitishwa (Confirmed)
+    final swaConfirmRegex = RegExp(
+      r'([A-Za-z0-9]+)\s+Imethibitishwa',
+      caseSensitive: false,
+    );
+    final swaConfirmMatch = swaConfirmRegex.firstMatch(text);
+    if (swaConfirmMatch != null) return swaConfirmMatch.group(1) ?? '';
 
     return 'SELCOM-REF-UNKNOWN';
   }
@@ -126,22 +133,7 @@ class SelcomPesaParser implements SmsParser {
       final amt = parseAmount(match.group(1) ?? '');
       if (amt == 0) return null;
 
-      // 4. Defensive promo guard — the fallback patterns above are broad
-      //    enough to match promotional SMS (e.g. Selcom bonus/promo messages
-      //    that happen to say "You have received TZS X from SELCOM PROMO").
-      //    If the classifier labels this as promo, reject it.
-      final classification = SmsClassifier.classify(text);
-      if (!classification.isTransaction) {
-        developer.log(
-          'Selcom fallback parse rejected by classifier: '
-          '${classification.label} (confidence: ${classification.transactionConfidence.toStringAsFixed(2)})'
-          ' — reasons: ${classification.reasons.join("; ")}',
-          name: 'SelcomParser',
-        );
-        return null;
-      }
-
-      // 5. Determine transaction type (income / expense)
+      // 4. Determine transaction type (income / expense)
       String type = 'expense';
       final incomeKeywords = [
         'receive',
