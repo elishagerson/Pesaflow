@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -679,9 +682,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// HIGH-FIDELITY CUSTOM-PAINTED CONFIDENCE RING WIDGET
+// ANIMATED CONFIDENCE RING WIDGET
 // ════════════════════════════════════════════════════════════════════════════
-class ConfidenceRing extends StatelessWidget {
+class ConfidenceRing extends StatefulWidget {
   final double score;
   final Color color;
   final double size;
@@ -694,12 +697,39 @@ class ConfidenceRing extends StatelessWidget {
   });
 
   @override
+  State<ConfidenceRing> createState() => _ConfidenceRingState();
+}
+
+class _ConfidenceRingState extends State<ConfidenceRing>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size,
-      height: size,
+      width: widget.size,
+      height: widget.size,
       child: CustomPaint(
-        painter: _ConfidenceRingPainter(score: score, color: color),
+        painter: _ConfidenceRingPainter(
+          score: widget.score,
+          color: widget.color,
+          pulseValue: _pulseController.value,
+        ),
       ),
     );
   }
@@ -708,8 +738,13 @@ class ConfidenceRing extends StatelessWidget {
 class _ConfidenceRingPainter extends CustomPainter {
   final double score;
   final Color color;
+  final double pulseValue;
 
-  _ConfidenceRingPainter({required this.score, required this.color});
+  _ConfidenceRingPainter({
+    required this.score,
+    required this.color,
+    required this.pulseValue,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -724,28 +759,44 @@ class _ConfidenceRingPainter extends CustomPainter {
     canvas.drawCircle(center, radius, bgPaint);
 
     final activePaint = Paint()
-      ..color = color
+      ..color = color.withValues(alpha: 0.65 + 0.35 * pulseValue)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -1.5708, // -90 degrees
-      6.28318 * score, // 2 * pi * score
+      -1.5708,
+      6.28318 * score,
       false,
       activePaint,
+    );
+
+    final glowPaint = Paint()
+      ..color = color.withValues(alpha: 0.12 + 0.12 * pulseValue)
+      ..strokeWidth = 4
+      ..style = PaintingStyle.stroke
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -1.5708,
+      6.28318 * score,
+      false,
+      glowPaint,
     );
   }
 
   @override
   bool shouldRepaint(covariant _ConfidenceRingPainter oldDelegate) {
-    return oldDelegate.score != score || oldDelegate.color != color;
+    return oldDelegate.score != score ||
+        oldDelegate.color != color ||
+        oldDelegate.pulseValue != pulseValue;
   }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// TINDER-STYLE SPRING SWIPE CARD INTERACTION WIDGET
+// SPRING SWIPE CARD WIDGET — physics-based snap-back and fluid drag
 // ════════════════════════════════════════════════════════════════════════════
 class SwipeableCard extends StatefulWidget {
   final Widget child;
@@ -766,16 +817,37 @@ class SwipeableCard extends StatefulWidget {
 class _SwipeableCardState extends State<SwipeableCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  Offset _dragOffset = Offset.zero;
-  double _angle = 0.0;
+  late Animation<Offset> _position;
+  late Animation<double> _rotation;
+  late Animation<double> _scale;
+
+  final SpringDescription _snapSpring = const SpringDescription(
+    mass: 0.6,
+    stiffness: 200,
+    damping: 18,
+  );
+
+  final SpringDescription _swipeSpring = const SpringDescription(
+    mass: 1.0,
+    stiffness: 300,
+    damping: 30,
+  );
+
+  bool _hapticTriggered = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 400),
     );
+    _position = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset.zero,
+    ).animate(_controller);
+    _rotation = Tween<double>(begin: 0.0, end: 0.0).animate(_controller);
+    _scale = Tween<double>(begin: 1.0, end: 1.0).animate(_controller);
   }
 
   @override
@@ -785,179 +857,197 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    setState(() {
-      _dragOffset += details.delta;
-      _angle = _dragOffset.dx / 800.0; // Subtle rotation
-    });
+    final newDx = (_position.value.dx + details.delta.dx).clamp(
+      -MediaQuery.of(context).size.width,
+      MediaQuery.of(context).size.width,
+    );
+    final newDy = _position.value.dy + details.delta.dy;
+    final angle = newDx / 800.0;
+    final scale = 1.0 - (newDx.abs() / MediaQuery.of(context).size.width) * 0.04;
+
+    _position = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(newDx, newDy),
+    ).animate(_controller);
+    _rotation = Tween<double>(begin: 0.0, end: angle).animate(_controller);
+    _scale = Tween<double>(begin: 1.0, end: scale).animate(_controller);
+
+    final threshold = MediaQuery.of(context).size.width * 0.35;
+    if (newDx.abs() > threshold && !_hapticTriggered) {
+      HapticFeedback.mediumImpact();
+      _hapticTriggered = true;
+    } else if (newDx.abs() <= threshold) {
+      _hapticTriggered = false;
+    }
+
+    _controller.value = 1.0;
   }
 
   void _onPanEnd(DragEndDetails details) {
     final threshold = MediaQuery.of(context).size.width * 0.35;
-    if (_dragOffset.dx > threshold) {
-      _swipeOut(const Offset(600, 0), widget.onSwipeRight);
-    } else if (_dragOffset.dx < -threshold) {
-      _swipeOut(const Offset(-600, 0), widget.onSwipeLeft);
+    final dx = _position.value.dx;
+
+    if (dx > threshold) {
+      _flyOut(const Offset(400, -40), widget.onSwipeRight);
+    } else if (dx < -threshold) {
+      _flyOut(const Offset(-400, -40), widget.onSwipeLeft);
     } else {
       _snapBack();
     }
   }
 
-  void _swipeOut(Offset targetOffset, VoidCallback onComplete) {
-    final startOffset = _dragOffset;
-    final startAngle = _angle;
-
-    _controller.duration = const Duration(milliseconds: 200);
-    final animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-
-    animation.addListener(() {
-      setState(() {
-        _dragOffset = Offset.lerp(startOffset, targetOffset, animation.value)!;
-        _angle = startAngle + (startAngle * 1.5 - startAngle) * animation.value;
-      });
-    });
-
-    _controller.forward(from: 0.0).then((_) {
-      onComplete();
-    });
+  void _flyOut(Offset target, VoidCallback onDone) {
+    final sim = SpringSimulation(_swipeSpring, 0.0, 1.0, -_position.value.dx * 0.002);
+    _position = Tween<Offset>(
+      begin: _position.value,
+      end: target,
+    ).animate(_controller);
+    _rotation = Tween<double>(
+      begin: _rotation.value,
+      end: _rotation.value * 2.0,
+    ).animate(_controller);
+    _scale = Tween<double>(begin: _scale.value, end: 0.85).animate(_controller);
+    _controller.animateWith(sim).then((_) => onDone());
   }
 
   void _snapBack() {
-    final startOffset = _dragOffset;
-    final startAngle = _angle;
+    final startPos = _position.value;
+    final startRot = _rotation.value;
 
-    _controller.duration = const Duration(milliseconds: 300);
-    final animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
-
-    animation.addListener(() {
-      setState(() {
-        _dragOffset = Offset.lerp(startOffset, Offset.zero, animation.value)!;
-        _angle = startAngle + (0.0 - startAngle) * animation.value;
-      });
-    });
-
-    _controller.forward(from: 0.0);
+    _position = Tween<Offset>(
+      begin: startPos,
+      end: Offset.zero,
+    ).animate(_controller);
+    _rotation = Tween<double>(begin: startRot, end: 0.0).animate(_controller);
+    _scale = Tween<double>(begin: _scale.value, end: 1.0).animate(_controller);
+    _controller.animateWith(SpringSimulation(_snapSpring, 0.0, 1.0, 0.0));
+    _hapticTriggered = false;
   }
 
   @override
   Widget build(BuildContext context) {
     final threshold = MediaQuery.of(context).size.width * 0.35;
-    final double approveOpacity = (_dragOffset.dx / threshold).clamp(0.0, 1.0);
-    final double rejectOpacity = (-_dragOffset.dx / threshold).clamp(0.0, 1.0);
 
     return GestureDetector(
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
-      child: Transform.translate(
-        offset: _dragOffset,
-        child: Transform.rotate(
-          angle: _angle,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              widget.child,
-              if (approveOpacity > 0)
-                Positioned.fill(
-                  child: Opacity(
-                    opacity: approveOpacity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusCard,
-                        ),
-                        border: Border.all(
-                          color: AppTheme.transferColorDark,
-                          width: 3,
-                        ),
-                      ),
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final dx = _position.value.dx;
+          final dy = _position.value.dy;
+          final angle = _rotation.value;
+          final scale = _scale.value;
+          final approveOpacity = (dx / threshold).clamp(0.0, 1.0);
+          final rejectOpacity = (-dx / threshold).clamp(0.0, 1.0);
+
+          return Transform(
+            transform: Matrix4.identity()
+              ..translate(dx, dy)
+              ..rotateZ(angle)
+              ..scale(scale),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                widget.child,
+                if (approveOpacity > 0)
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: approveOpacity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme.incomeColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusCard,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppTheme.transferColorDark,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppTheme.transferColorDark.withValues(
-                                  alpha: 0.4,
+                          border: Border.all(
+                            color: AppTheme.incomeColor,
+                            width: 3,
+                          ),
+                        ),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.incomeColor,
+                              borderRadius: BorderRadius.circular(kSpacing12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.incomeColor.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                  blurRadius: 15,
                                 ),
-                                blurRadius: 15,
+                              ],
+                            ),
+                            child: const Text(
+                              'APPROVE',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
+                                letterSpacing: 1.5,
                               ),
-                            ],
-                          ),
-                          child: const Text(
-                            'APPROVE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              letterSpacing: 1.5,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              if (rejectOpacity > 0)
-                Positioned.fill(
-                  child: Opacity(
-                    opacity: rejectOpacity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.radiusCard,
-                        ),
-                        border: Border.all(
-                          color: const Color(0xFFFF453A),
-                          width: 3,
-                        ),
-                      ),
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+                if (rejectOpacity > 0)
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: rejectOpacity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme.expenseColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusCard,
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF453A),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(
-                                  0xFFFF453A,
-                                ).withValues(alpha: 0.4),
-                                blurRadius: 15,
+                          border: Border.all(
+                            color: AppTheme.expenseColor,
+                            width: 3,
+                          ),
+                        ),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.expenseColor,
+                              borderRadius: BorderRadius.circular(kSpacing12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.expenseColor.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                  blurRadius: 15,
+                                ),
+                              ],
+                            ),
+                            child: const Text(
+                              'REJECT',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
+                                letterSpacing: 1.5,
                               ),
-                            ],
-                          ),
-                          child: const Text(
-                            'REJECT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              letterSpacing: 1.5,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

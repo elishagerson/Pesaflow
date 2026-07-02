@@ -10,7 +10,7 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(kSpacing4),
       child: Row(
@@ -18,15 +18,11 @@ class InfoRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
+          Text(value, style: theme.textTheme.labelMedium),
         ],
       ),
     );
@@ -41,7 +37,7 @@ class CopyableInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
     if (value == 'N/A' || value.isEmpty) {
       return InfoRow(label: label, value: value);
     }
@@ -69,26 +65,19 @@ class CopyableInfoRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 12,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text(value, style: theme.textTheme.labelMedium),
                 const SizedBox(width: kSpacing4),
                 Icon(
                   Icons.copy_rounded,
                   size: 12,
-                  color: isDark ? Colors.white30 : Colors.black26,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                 ),
               ],
             ),

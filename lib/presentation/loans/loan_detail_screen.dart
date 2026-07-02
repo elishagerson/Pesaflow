@@ -113,9 +113,9 @@ class LoanDetailScreen extends ConsumerWidget {
                           child: Text(
                             'No payment transactions recorded',
                             style: TextStyle(
-                              color: isDark
-                                  ? Colors.grey[400]
-                                  : Colors.grey[600],
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                         ),
@@ -151,8 +151,8 @@ class LoanDetailScreen extends ConsumerWidget {
     final isPaid = loan.status == 'paid';
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
     final statusColor = isActive
-        ? (ratio > 0.5 ? const Color(0xFFE53935) : const Color(0xFFFF9F0A))
-        : const Color(0xFF10B981);
+        ? (ratio > 0.5 ? AppTheme.expenseColor : const Color(0xFFFF9F0A))
+        : AppTheme.incomeColor;
 
     return Hero(
       tag: 'loan-${loan.id}',
@@ -181,10 +181,8 @@ class LoanDetailScreen extends ConsumerWidget {
                 CurrencyFormatter.formatCents(
                   isActive ? loan.remaining : loan.amount,
                 ),
-                style: TextStyle(
-                  fontSize: 28,
+                style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: isDark ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: kSpacing4),
@@ -194,8 +192,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     : isPaid
                     ? 'Fully Paid'
                     : 'Defaulted',
-                style: TextStyle(
-                  fontSize: 13,
+                style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: statusColor,
                 ),
@@ -203,7 +200,7 @@ class LoanDetailScreen extends ConsumerWidget {
               if (isActive) ...[
                 const SizedBox(height: kSpacing16),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(kSpacing6),
                   child: LinearProgressIndicator(
                     value: ratio.clamp(0.0, 1.0),
                     backgroundColor: statusColor.withValues(alpha: 0.12),
@@ -214,9 +211,8 @@ class LoanDetailScreen extends ConsumerWidget {
                 const SizedBox(height: kSpacing8),
                 Text(
                   '${(ratio * 100).round()}% remaining of ${CurrencyFormatter.formatCents(loan.amount)}',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -357,10 +353,10 @@ class LoanDetailScreen extends ConsumerWidget {
                   height: 12,
                   decoration: BoxDecoration(
                     color: event.isWarning
-                        ? const Color(0xFFE53935)
+                        ? AppTheme.expenseColor
                         : event.isCompleted
-                        ? const Color(0xFF10B981)
-                        : Colors.grey,
+                        ? AppTheme.incomeColor
+                        : Colors.grey[400],
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -369,8 +365,8 @@ class LoanDetailScreen extends ConsumerWidget {
                     child: Container(
                       width: 2,
                       color: event.isCompleted
-                          ? const Color(0xFF10B981).withValues(alpha: 0.3)
-                          : Colors.grey.withValues(alpha: 0.3),
+                          ? AppTheme.incomeColor.withValues(alpha: 0.3)
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.15),
                     ),
                   ),
               ],
@@ -385,25 +381,26 @@ class LoanDetailScreen extends ConsumerWidget {
                 children: [
                   Text(
                     event.title,
-                    style: TextStyle(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: kSpacing2),
                   Text(
                     event.subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   if (event.date != null) ...[
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(event.date!),
-                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
                     ),
                   ],
                 ],
@@ -444,21 +441,21 @@ class LoanDetailScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '$paid of $total installments paid',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                       const SizedBox(height: kSpacing6),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(kSpacing4),
                         child: LinearProgressIndicator(
                           value: ratio.clamp(0.0, 1.0),
-                          backgroundColor: isDark
-                              ? Colors.grey[800]
-                              : Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            Color(0xFF10B981),
+                          backgroundColor: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.1),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.incomeColor,
                           ),
                           minHeight: 6,
                         ),
@@ -473,8 +470,8 @@ class LoanDetailScreen extends ConsumerWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
                     color: Color.lerp(
-                      const Color(0xFFE53935),
-                      const Color(0xFF10B981),
+                      AppTheme.expenseColor,
+                      AppTheme.incomeColor,
                       ratio,
                     ),
                   ),
@@ -493,35 +490,35 @@ class LoanDetailScreen extends ConsumerWidget {
                       height: 20,
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? const Color(0xFF10B981).withValues(alpha: 0.15)
-                            : (isDark ? Colors.grey[800] : Colors.grey[200]),
+                            ? AppTheme.incomeColor.withValues(alpha: 0.15)
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.08,
+                              ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         isPaid ? Icons.check_rounded : Icons.schedule_rounded,
                         size: 12,
                         color: isPaid
-                            ? const Color(0xFF10B981)
-                            : (isDark ? Colors.grey[500] : Colors.grey[400]),
+                            ? AppTheme.incomeColor
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
                       ),
                     ),
                     const SizedBox(width: kSpacing10),
                     Expanded(
                       child: Text(
                         'Installment ${i + 1}',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: theme.textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                     ),
                     Text(
                       CurrencyFormatter.formatCents(amount),
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
                     const SizedBox(width: kSpacing8),
@@ -532,9 +529,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? const Color(0xFF10B981).withValues(alpha: 0.12)
-                            : const Color(0xFFFF9F0A).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                            ? AppTheme.incomeColor.withValues(alpha: 0.12)
+                            : AppTheme.tertiaryLight.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(kSpacing8),
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',
@@ -542,8 +539,8 @@ class LoanDetailScreen extends ConsumerWidget {
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: isPaid
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFFF9F0A),
+                              ? AppTheme.incomeColor
+                              : AppTheme.tertiaryLight,
                         ),
                       ),
                     ),
@@ -590,13 +587,13 @@ class LoanDetailScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF9F0A).withValues(alpha: 0.12),
+                  color: AppTheme.tertiaryLight.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   PesaFlowIcons.calendar,
                   size: 20,
-                  color: Color(0xFFFF9F0A),
+                  color: AppTheme.tertiaryLight,
                 ),
               ),
               const SizedBox(width: kSpacing14),
@@ -608,7 +605,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       description,
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
@@ -617,7 +616,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? Colors.white : Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -648,7 +647,7 @@ class LoanDetailScreen extends ConsumerWidget {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
-      accentColor: const Color(0xFF10B981),
+      accentColor: AppTheme.incomeColor,
       child: Padding(
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -659,13 +658,13 @@ class LoanDetailScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                    color: AppTheme.incomeColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     PesaFlowIcons.cash,
                     size: 20,
-                    color: Color(0xFF10B981),
+                    color: AppTheme.incomeColor,
                   ),
                 ),
                 const SizedBox(width: kSpacing12),
@@ -675,17 +674,16 @@ class LoanDetailScreen extends ConsumerWidget {
                     children: [
                       Text(
                         'Ready to pay?',
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} remaining',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                     ],
@@ -701,11 +699,11 @@ class LoanDetailScreen extends ConsumerWidget {
                 icon: const Icon(Icons.payment_rounded, size: 18),
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF10B981),
+                  backgroundColor: AppTheme.incomeColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                   ),
                   elevation: 0,
                 ),
@@ -719,19 +717,19 @@ class LoanDetailScreen extends ConsumerWidget {
                 icon: Icon(
                   PesaFlowIcons.transactions,
                   size: 18,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 label: Text(
                   'Record Offline Payment',
                   style: TextStyle(
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     fontSize: 13,
                   ),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: kSpacing10),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                   ),
                 ),
               ),

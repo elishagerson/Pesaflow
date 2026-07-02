@@ -15,9 +15,7 @@ class TransactionTile extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isCredit = tx.type == 'income';
-    final amountColor = isCredit
-        ? const Color(0xFF10B981)
-        : const Color(0xFFE53935);
+    final amountColor = isCredit ? AppTheme.incomeColor : AppTheme.expenseColor;
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
       padding: const EdgeInsets.all(kSpacing12),
@@ -59,9 +57,8 @@ class TransactionTile extends StatelessWidget {
                             : (tx.type == 'income'
                                   ? 'Payment Received'
                                   : 'Payment Sent'),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -69,44 +66,56 @@ class TransactionTile extends StatelessWidget {
                     ),
                     if (tx.accountId == null) ...[
                       const SizedBox(width: kSpacing6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing6,
-                          vertical: kSpacing2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'Offline',
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
-                          ),
-                        ),
-                      ),
+                      _OfflineBadge(isDark: isDark),
                     ],
                   ],
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   DateFormatter.shortDate(tx.createdAt),
-                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             '${isCredit ? '+' : '-'}${CurrencyFormatter.formatCents(tx.amount)}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
               color: amountColor,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _OfflineBadge extends StatelessWidget {
+  final bool isDark;
+
+  const _OfflineBadge({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: kSpacing6,
+        vertical: kSpacing2,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(kSpacing4),
+      ),
+      child: Text(
+        'Offline',
+        style: TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.w600,
+          color: isDark ? Colors.grey[400] : Colors.grey[600],
+        ),
       ),
     );
   }
