@@ -35,7 +35,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppTheme.radiusCard),
+        ),
       ),
       builder: (context) {
         final theme = Theme.of(context);
@@ -57,7 +59,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(kSpacing16),
                   child: Text(
                     title ?? 'Assign Category',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -89,8 +91,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         title: Text(cat.name),
                         subtitle: Text(
                           cat.type.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 11,
+                          style: theme.textTheme.labelSmall?.copyWith(
                             color: Colors.grey,
                           ),
                         ),
@@ -182,12 +183,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                   if (items.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(32.0),
+                        padding: const EdgeInsets.all(kSpacing32),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(24),
+                              padding: const EdgeInsets.all(kSpacing24),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.primary.withValues(
                                   alpha: 0.1,
@@ -200,21 +201,20 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: kSpacing20),
                             Text(
                               'All Clear!',
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: kSpacing8),
                             Text(
                               'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant
                                     .withValues(alpha: 0.6),
-                                fontSize: 14,
                               ),
                             ),
                           ],
@@ -226,8 +226,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                   return ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                      horizontal: kSpacing16,
+                      vertical: kSpacing12,
                     ),
                     itemCount: items.length + 1, // +1 for header
                     itemBuilder: (context, index) {
@@ -238,7 +238,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(kSpacing16),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusCard,
@@ -266,7 +266,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     color: theme.colorScheme.tertiary,
                                     size: 28,
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: kSpacing12),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -282,13 +282,13 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         const SizedBox(height: 2),
                                         Text(
                                           'Swipe right to approve, left to reject',
-                                          style: TextStyle(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant
-                                                .withValues(alpha: 0.6),
-                                            fontSize: 12,
-                                          ),
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurfaceVariant
+                                                    .withValues(alpha: 0.6),
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -355,7 +355,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             }
                           },
                           child: GlassCard(
-                            margin: const EdgeInsets.only(bottom: 10),
+                            margin: const EdgeInsets.only(bottom: kSpacing10),
                             padding: EdgeInsets.zero,
                             frosted: true,
                             child: IntrinsicHeight(
@@ -424,7 +424,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                   size: 22,
                                                 ),
                                               ),
-                                              const SizedBox(width: 12),
+                                              const SizedBox(width: kSpacing12),
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -450,8 +450,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         Container(
                                                           padding:
                                                               const EdgeInsets.symmetric(
-                                                                horizontal: 8,
-                                                                vertical: 2,
+                                                                horizontal:
+                                                                    kSpacing8,
+                                                                vertical:
+                                                                    kSpacing2,
                                                               ),
                                                           decoration: BoxDecoration(
                                                             color: theme
@@ -462,24 +464,27 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                 ),
                                                             borderRadius:
                                                                 BorderRadius.circular(
-                                                                  12,
+                                                                  AppTheme
+                                                                      .radiusInput,
                                                                 ),
                                                           ),
                                                           child: Text(
                                                             item.account!.name,
-                                                            style: TextStyle(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .primary,
-                                                              fontSize: 11,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                            style: theme
+                                                                .textTheme
+                                                                .labelSmall
+                                                                ?.copyWith(
+                                                                  color: theme
+                                                                      .colorScheme
+                                                                      .primary,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                          width: 8,
+                                                          width: kSpacing8,
                                                         ),
                                                         // High-fidelity confidence score badge
                                                         Container(
@@ -523,7 +528,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               ),
                                                               Text(
                                                                 '94% MATCH',
-                                                                style: TextStyle(
+                                                                style: theme.textTheme.labelSmall?.copyWith(
                                                                   color:
                                                                       theme.brightness ==
                                                                           Brightness
@@ -552,10 +557,13 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                               AmountText(
                                                 amountInCents: trans.amount,
                                                 type: amtType,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
+                                                style: theme
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -566,33 +574,41 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             trans.rawSms!.isNotEmpty)
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
-                                              16,
+                                              kSpacing16,
                                               0,
-                                              16,
-                                              8,
+                                              kSpacing16,
+                                              kSpacing8,
                                             ),
                                             child: Container(
                                               width: double.infinity,
-                                              padding: const EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing10,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: Colors.white.withValues(
                                                   alpha: 0.03,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8),
+                                                    BorderRadius.circular(
+                                                      kSpacing8,
+                                                    ),
                                               ),
                                               child: Text(
                                                 trans.rawSms!,
                                                 maxLines: 3,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  fontFamily: 'monospace',
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant
-                                                      .withValues(alpha: 0.7),
-                                                ),
+                                                style: theme
+                                                    .textTheme
+                                                    .labelSmall
+                                                    ?.copyWith(
+                                                      fontFamily: 'monospace',
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurfaceVariant
+                                                          .withValues(
+                                                            alpha: 0.7,
+                                                          ),
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -600,10 +616,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         // Action buttons
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
-                                            8,
+                                            kSpacing8,
                                             0,
-                                            8,
-                                            8,
+                                            kSpacing8,
+                                            kSpacing8,
                                           ),
                                           child: Row(
                                             children: [
@@ -614,11 +630,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                   Icons.category_rounded,
                                                   size: 16,
                                                 ),
-                                                label: const Text(
+                                                label: Text(
                                                   'Change Category',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .labelMedium,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -646,12 +662,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 ),
                                                 label: Text(
                                                   'Approve',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary,
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -863,7 +881,8 @@ class _SwipeableCardState extends State<SwipeableCard>
     );
     final newDy = _position.value.dy + details.delta.dy;
     final angle = newDx / 800.0;
-    final scale = 1.0 - (newDx.abs() / MediaQuery.of(context).size.width) * 0.04;
+    final scale =
+        1.0 - (newDx.abs() / MediaQuery.of(context).size.width) * 0.04;
 
     _position = Tween<Offset>(
       begin: Offset.zero,
@@ -897,7 +916,12 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _flyOut(Offset target, VoidCallback onDone) {
-    final sim = SpringSimulation(_swipeSpring, 0.0, 1.0, -_position.value.dx * 0.002);
+    final sim = SpringSimulation(
+      _swipeSpring,
+      0.0,
+      1.0,
+      -_position.value.dx * 0.002,
+    );
     _position = Tween<Offset>(
       begin: _position.value,
       end: target,
@@ -943,9 +967,9 @@ class _SwipeableCardState extends State<SwipeableCard>
 
           return Transform(
             transform: Matrix4.identity()
-              ..translate(dx, dy)
+              ..translateByDouble(dx, dy, 0.0, 1.0)
               ..rotateZ(angle)
-              ..scale(scale),
+              ..scaleByDouble(scale, scale, 1.0, 1.0),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
