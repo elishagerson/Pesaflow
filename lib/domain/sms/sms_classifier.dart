@@ -125,10 +125,10 @@ class SmsClassifier {
       reasons.add('Has balance-after pattern → receipt');
     }
 
-    // Signal: Has "Confirmed" keyword (carrier confirmation)
-    if (lower.contains('confirmed')) {
+    // Signal: Has "Confirmed" keyword (carrier confirmation) — English + Swahili
+    if (lower.contains('confirmed') || lower.contains('imethibitishwa')) {
       score += 2.5;
-      reasons.add('Contains "Confirmed" → receipt');
+      reasons.add('Contains "Confirmed/imethibitishwa" → receipt');
     }
 
     // Signal: Contains strong transaction verbs (Swahili + English)

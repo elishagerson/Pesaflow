@@ -57,12 +57,14 @@ class GenericFallbackParser implements SmsParser {
         return null;
       }
 
+      final counterparty = _extractCounterparty(text, type);
+
       final bal = _extractAnyBalance(text);
 
       return SmsParsed(
         amount: amount,
         type: type,
-        senderOrRecipient: 'Unknown',
+        senderOrRecipient: counterparty,
         reference: ref,
         provider: provider,
         balanceAfter: bal,
@@ -144,21 +146,41 @@ class GenericFallbackParser implements SmsParser {
   /// We no longer generate random UUIDs as fallback references because they
   /// defeat deduplication across inbox re-scans.
   static String? _extractAnyReference(String text) {
-    // Pattern 1: Explicit labelled reference (Rej:, Ref:, TxnID:, etc.)
+    // Pattern 1: Explicit labelled reference (English + Swahili)
     final labelledRegex = RegExp(
-      r'(?:Rej|Ref|TxnID|TxnId|Transaction|Kumbukumbu|ID)[:\s]+([A-Za-z0-9]+)',
+      r'(?:Rej|Ref|TxnID|TxnId|Transaction|Kumbukumbu|Marejeleo|Rejeleo|Namba)[:\s]+([A-Za-z0-9]+)',
       caseSensitive: false,
     );
     final labelledMatch = labelledRegex.firstMatch(text);
     if (labelledMatch != null) return labelledMatch.group(1);
 
-    // Pattern 2: Reference code before "Confirmed." (e.g., "Z10DN636 Confirmed.")
-    final confirmedRegex = RegExp(r'([A-Za-z0-9]{6,})\s+[Cc]onfirmed');
+    // Pattern 2: Reference code before "Confirmed." (English + Swahili)
+    final confirmedRegex = RegExp(
+      r'([A-Za-z0-9]{6,})\s+(?:[Cc]onfirmed|[Ii]methibitishwa)',
+    );
     final confirmedMatch = confirmedRegex.firstMatch(text);
     if (confirmedMatch != null) return confirmedMatch.group(1);
 
     // No recognisable reference — signal that this is likely not a receipt.
     return null;
+  }
+
+  static String _extractCounterparty(String text, String type) {
+    final pattern = type == 'income'
+        ? RegExp(
+            r'\b(?:from|kutoka(?:\s+kwa)?)\s+([A-Za-z0-9\s_\-\(\)\+]+?)(?:\.|\s+tarehe|\s+on|\s+Ref|\s+Updated balance|\s+Salio|\s+Balance|$)',
+            caseSensitive: false,
+          )
+        : RegExp(
+            r'\b(?:to|kwa|kwenda)\s+([A-Za-z0-9\s_\-\(\)\+]+?)(?:\.|\s+tarehe|\s+on|\s+Ref|\s+Updated balance|\s+Salio|\s+Balance|$)',
+            caseSensitive: false,
+          );
+    final match = pattern.firstMatch(text);
+    if (match != null) {
+      final name = match.group(1)?.trim();
+      if (name != null && name.isNotEmpty && name.length < 60) return name;
+    }
+    return 'Unknown';
   }
 
   static int? _extractAnyBalance(String text) {

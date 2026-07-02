@@ -14,14 +14,13 @@ class Deduplicator {
 
   /// Analyzes the parsed receipt and returns true if it represents a duplicate entry.
   Future<bool> isDuplicate(SmsParsed sms) async {
-    // 1. Check unique carrier reference ID
-    if (sms.reference != 'MPESA-REF-UNKNOWN' &&
-        sms.reference != 'AIRTEL-REF-UNKNOWN' &&
-        sms.reference != 'TIGO-REF-UNKNOWN' &&
-        sms.reference != 'HALO-REF-UNKNOWN' &&
-        sms.reference != 'NMB-REF-UNKNOWN' &&
-        sms.reference != 'SELCOM-REF-UNKNOWN' &&
-        !sms.reference.startsWith('NBC-REF-')) {
+    // 1. Check unique carrier reference ID.
+    //    Skip the check when the reference is a sentinel value (parser
+    //    couldn't extract a real reference).  Any reference matching
+    //    `XXXX-REF-UNKNOWN` or `NBC-REF-*` pattern is a sentinel.
+    final isSentinel = sms.reference.endsWith('-REF-UNKNOWN') ||
+        sms.reference.startsWith('NBC-REF-');
+    if (!isSentinel) {
       final exists = await _transactionRepository.transactionExistsByReference(
         sms.reference,
       );
