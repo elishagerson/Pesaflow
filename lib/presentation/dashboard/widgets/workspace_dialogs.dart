@@ -12,7 +12,7 @@ import 'package:pesaflow/data/repositories/tracker_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
@@ -186,18 +186,18 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                         },
                       );
                     },
-                    loading: () => const Padding(
-                      padding: EdgeInsets.symmetric(vertical: kSpacing16),
-                      child: Column(
-                        children: [
-                          SkeletonCard(height: 80),
-                          SizedBox(height: kSpacing8),
-                          SkeletonCard(height: 80),
-                          SizedBox(height: kSpacing8),
-                          SkeletonCard(height: 80),
-                        ],
+                      loading: () => Padding(
+                        padding: EdgeInsets.symmetric(vertical: kSpacing16),
+                        child: Column(
+                          children: [
+                            SkeletonCard(height: 80),
+                            SizedBox(height: kSpacing8),
+                            SkeletonCard(height: 80),
+                            SizedBox(height: kSpacing8),
+                            SkeletonCard(height: 80),
+                          ],
+                        ),
                       ),
-                    ),
                     error: (err, _) => Text('Error loading workspaces: $err'),
                   ),
                   const SizedBox(height: kSpacing20),
