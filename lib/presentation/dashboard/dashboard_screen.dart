@@ -179,8 +179,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     int pendingReviewCount,
   ) {
     return SmsReviewCard(
-      theme: theme,
-      isDark: isDark,
       pendingReviewCount: pendingReviewCount,
     );
   }

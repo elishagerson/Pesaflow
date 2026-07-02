@@ -5,18 +5,16 @@ import 'package:pesaflow/data/database/app_database.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction tx;
-  final ThemeData theme;
-  final bool isDark;
 
   const TransactionTile({
     super.key,
     required this.tx,
-    required this.theme,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isCredit = tx.type == 'income';
     final amountColor = isCredit
         ? const Color(0xFF10B981)

@@ -4,17 +4,16 @@ import 'package:flutter/services.dart';
 class InfoRow extends StatelessWidget {
   final String label;
   final String value;
-  final bool isDark;
 
   const InfoRow({
     super.key,
     required this.label,
     required this.value,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 4,
@@ -41,23 +40,20 @@ class InfoRow extends StatelessWidget {
 }
 
 class CopyableInfoRow extends StatelessWidget {
-  final BuildContext context;
   final String label;
   final String value;
-  final bool isDark;
 
   const CopyableInfoRow({
     super.key,
-    required this.context,
     required this.label,
     required this.value,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (value == 'N/A' || value.isEmpty) {
-      return InfoRow(label: label, value: value, isDark: isDark);
+      return InfoRow(label: label, value: value);
     }
     return InkWell(
       onTap: () {

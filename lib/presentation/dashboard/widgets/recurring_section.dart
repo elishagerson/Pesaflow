@@ -13,18 +13,16 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 class _CycleChip extends StatelessWidget {
-  final ThemeData theme;
   final String text;
-  final bool isDark;
 
   const _CycleChip({
-    required this.theme,
     required this.text,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing8,
@@ -155,21 +153,15 @@ class RecurringSection extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _CycleChip(
-                          theme: theme,
                           text: '${_fmtShort(totals.daily)}/day',
-                          isDark: isDark,
                         ),
                         const SizedBox(width: kSpacing8),
                         _CycleChip(
-                          theme: theme,
                           text: '${_fmtShort(totals.weekly)}/wk',
-                          isDark: isDark,
                         ),
                         const SizedBox(width: kSpacing8),
                         _CycleChip(
-                          theme: theme,
                           text: '${_fmtShort(totals.yearly)}/yr',
-                          isDark: isDark,
                         ),
                       ],
                     ),

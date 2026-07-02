@@ -16,17 +16,16 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
   final int remainingCents;
-  final bool isDark;
 
   const LoanProgressRing({
     super.key,
     required this.loan,
     required this.remainingCents,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final totalInstallments = loan.totalInstallments ?? 0;
     final paidInstallments = loan.paidInstallments ?? 0;
     final totalAmount = loan.amount;
@@ -148,7 +147,6 @@ class QuickAmountChip extends StatelessWidget {
   final int amount;
   final bool isActive;
   final VoidCallback onTap;
-  final bool isDark;
 
   const QuickAmountChip({
     super.key,
@@ -156,11 +154,11 @@ class QuickAmountChip extends StatelessWidget {
     required this.amount,
     required this.isActive,
     required this.onTap,
-    required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
