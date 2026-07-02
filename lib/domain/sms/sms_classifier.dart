@@ -293,6 +293,10 @@ class SmsClassifier {
     if (RegExp(r'[A-Za-z0-9]{6,}\s+[Cc]onfirmed').hasMatch(text)) {
       return true;
     }
+    // Reference before Swahili "Imethibitishwa" (Confirmed)
+    if (RegExp(r'[A-Za-z0-9]{6,}\s+[Ii]methibitishwa').hasMatch(text)) {
+      return true;
+    }
     return false;
   }
 
@@ -305,10 +309,20 @@ class SmsClassifier {
 
   static bool _hasDateTimeNearAmount(String text) {
     // Matches patterns like "on 15/5/2026 at 1:19 PM" or "tarehe 15/5/2026"
-    return RegExp(
+    if (RegExp(
       r'(?:on|tarehe)\s+\d{1,2}/\d{1,2}/\d{2,4}',
       caseSensitive: false,
-    ).hasMatch(text);
+    ).hasMatch(text)) {
+      return true;
+    }
+    // ISO date format: "tarehe 2026-07-02 18:21:44" or "on 2026-07-02"
+    if (RegExp(
+      r'(?:on|tarehe)\s+\d{4}-\d{2}-\d{2}',
+      caseSensitive: false,
+    ).hasMatch(text)) {
+      return true;
+    }
+    return false;
   }
 
   static bool _hasCurrencyAmount(String lower) {
