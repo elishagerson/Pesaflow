@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/date_formatter.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -18,8 +19,8 @@ class TransactionTile extends StatelessWidget {
         ? const Color(0xFF10B981)
         : const Color(0xFFE53935);
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: kSpacing8),
+      padding: const EdgeInsets.all(kSpacing12),
       decoration: BoxDecoration(
         color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -31,7 +32,7 @@ class TransactionTile extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
               color: amountColor.withValues(alpha: 0.12),
               shape: BoxShape.circle,
@@ -44,7 +45,7 @@ class TransactionTile extends StatelessWidget {
               size: 16,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: kSpacing12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,11 +68,11 @@ class TransactionTile extends StatelessWidget {
                       ),
                     ),
                     if (tx.accountId == null) ...[
-                      const SizedBox(width: 6),
+                      const SizedBox(width: kSpacing6),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                          horizontal: kSpacing6,
+                          vertical: kSpacing2,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.15),
@@ -89,13 +90,10 @@ class TransactionTile extends StatelessWidget {
                     ],
                   ],
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: kSpacing2),
                 Text(
                   DateFormatter.shortDate(tx.createdAt),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark ? Colors.grey[500] : Colors.grey[500],
-                  ),
+                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                 ),
               ],
             ),
