@@ -6,19 +6,17 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class ActiveParserBadge extends StatelessWidget {
-  final ThemeData theme;
-  final bool isDark;
   final String label;
 
   const ActiveParserBadge({
     super.key,
-    required this.theme,
-    required this.isDark,
     required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing8,
@@ -52,19 +50,17 @@ class ActiveParserBadge extends StatelessWidget {
 }
 
 class SmsReviewCard extends StatelessWidget {
-  final ThemeData theme;
-  final bool isDark;
   final int pendingReviewCount;
 
   const SmsReviewCard({
     super.key,
-    required this.theme,
-    required this.isDark,
     required this.pendingReviewCount,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(kSpacing16),
@@ -152,10 +148,10 @@ class SmsReviewCard extends StatelessWidget {
                   spacing: 4,
                   runSpacing: 4,
                   children: [
-                    ActiveParserBadge(theme: theme, isDark: isDark, label: 'M-Pesa'),
-                    ActiveParserBadge(theme: theme, isDark: isDark, label: 'Tigo'),
-                    ActiveParserBadge(theme: theme, isDark: isDark, label: 'Airtel'),
-                    ActiveParserBadge(theme: theme, isDark: isDark, label: 'Selcom'),
+                    const ActiveParserBadge(label: 'M-Pesa'),
+                    const ActiveParserBadge(label: 'Tigo'),
+                    const ActiveParserBadge(label: 'Airtel'),
+                    const ActiveParserBadge(label: 'Selcom'),
                   ],
                 ),
               ),
