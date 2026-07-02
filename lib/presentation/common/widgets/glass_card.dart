@@ -19,6 +19,7 @@ class GlassCard extends StatefulWidget {
   final VoidCallback? onTap;
   final double blurSigma;
   final bool frosted;
+  final bool liquidOverlay;
 
   const GlassCard({
     super.key,
@@ -27,7 +28,7 @@ class GlassCard extends StatefulWidget {
     this.backgroundColor,
     this.backgroundGradient,
     this.accentColor,
-    this.accentWidth = 4,
+    this.accentWidth = 2,
     this.elevation = CardElevation.none,
     this.hasBorder = false,
     this.margin,
@@ -35,6 +36,7 @@ class GlassCard extends StatefulWidget {
     this.onTap,
     this.blurSigma = 15,
     this.frosted = true,
+    this.liquidOverlay = false,
   });
 
   @override
@@ -148,10 +150,10 @@ class _GlassCardState extends State<GlassCard>
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 3,
+                  height: widget.accentWidth,
                   decoration: BoxDecoration(
                     color: widget.accentColor!.withValues(
-                      alpha: isDark ? 0.5 : 0.4,
+                      alpha: isDark ? 0.35 : 0.25,
                     ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(widget.borderRadius),
@@ -163,7 +165,7 @@ class _GlassCardState extends State<GlassCard>
             Padding(
               padding: (widget.padding ?? EdgeInsets.zero).add(
                 widget.accentColor != null
-                    ? const EdgeInsets.only(top: 3 + 2)
+                    ? EdgeInsets.only(top: widget.accentWidth + 2)
                     : EdgeInsets.zero,
               ),
               child: widget.child,
@@ -173,7 +175,9 @@ class _GlassCardState extends State<GlassCard>
       ),
     );
 
-    body = LiquidGlassOverlay(child: body);
+    if (widget.liquidOverlay) {
+      body = LiquidGlassOverlay(child: body);
+    }
 
     if (widget.margin != null) {
       body = Padding(padding: widget.margin!, child: body);

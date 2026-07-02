@@ -1860,7 +1860,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 6),
+      duration: const Duration(seconds: 10),
     )..repeat(reverse: true);
   }
 
@@ -1884,7 +1884,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
             gradient: widget.isDark
                 ? LinearGradient(
                     colors: [
-                      widget.trackerColor.withValues(alpha: 0.12 + t * 0.08),
+                      widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
                       const Color(0xFF0F1013),
                     ],
                     begin: shiftedBegin,
@@ -1892,7 +1892,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
                   )
                 : LinearGradient(
                     colors: [
-                      widget.trackerColor.withValues(alpha: 0.08 + t * 0.06),
+                      widget.trackerColor.withValues(alpha: 0.08 + t * 0.04),
                       const Color(0xFFF5F3F0),
                     ],
                     begin: shiftedBegin,
