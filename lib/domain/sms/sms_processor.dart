@@ -157,8 +157,10 @@ class SmsProcessor {
       } else if (providerAccounts.length > 1) {
         final phoneInSms = _extractPhoneNumber(sms.senderOrRecipient);
         if (phoneInSms != null) {
+          final normalizedSmsPhone = _normalizePhone(phoneInSms);
           for (final acc in providerAccounts) {
-            if (acc.phoneNumber != null && acc.phoneNumber == phoneInSms) {
+            if (acc.phoneNumber != null &&
+                _normalizePhone(acc.phoneNumber!) == normalizedSmsPhone) {
               targetAccount = acc;
               break;
             }
@@ -216,10 +218,11 @@ class SmsProcessor {
       // 1) Phone number matching — compare extracted destination phone against account phone numbers
       final destPhone = _extractPhoneNumber(sms.senderOrRecipient);
       if (destPhone != null) {
+        final normalizedDestPhone = _normalizePhone(destPhone);
         for (final acc in accounts) {
           if (acc.id != targetAccount.id &&
               acc.phoneNumber != null &&
-              acc.phoneNumber == destPhone) {
+              _normalizePhone(acc.phoneNumber!) == normalizedDestPhone) {
             matchedOwnAccount = acc;
             break;
           }
@@ -503,9 +506,20 @@ class SmsProcessor {
     return false;
   }
 
-  /// Extracts a Tanzanian phone number (07XX/06XX/255XX) from text.
+  /// Extracts a Tanzanian phone number from text.
+  /// Supports formats: 07XXXXXXXX, 2557XXXXXXXX, +2557XXXXXXXX, and 7XXXXXXXX (subscriber only).
   String? _extractPhoneNumber(String text) {
-    final regex = RegExp(r'(?:\+?255|0)[67]\d{8}(?!\d)');
-    return regex.firstMatch(text)?.group(0);
+    final regex = RegExp(r'(?:(?:\+?255|0)?[67]\d{8})(?!\d)');
+    final match = regex.firstMatch(text);
+    if (match == null) return null;
+    return match.group(0)!.replaceAll('+', '');
+  }
+
+  /// Normalizes a Tanzanian phone number to its last 9 subscriber digits
+  /// so that 0712345678, 255712345678, and 712345678 all compare equal.
+  String _normalizePhone(String phone) {
+    final digits = phone.replaceAll(RegExp(r'\D'), '');
+    if (digits.length >= 9) return digits.substring(digits.length - 9);
+    return digits;
   }
 }
