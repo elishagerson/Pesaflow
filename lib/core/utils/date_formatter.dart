@@ -25,4 +25,8 @@ class DateFormatter {
     }
     return '${diff ~/ 365} year${diff ~/ 365 > 1 ? 's' : ''} ago';
   }
+
+  static String shortDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
 }

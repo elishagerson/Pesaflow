@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'widgets/transaction_tile.dart';
 import 'widgets/loan_info_rows.dart';
 import 'widgets/payment_sheet.dart';
@@ -127,9 +128,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       final tx = entry.value;
                       return StaggeredFadeSlide(
                         index: 7 + idx,
-                        child: TransactionTile(
-                          tx: tx,
-                        ),
+                        child: TransactionTile(tx: tx),
                       );
                     }).toList(),
                   );
@@ -228,11 +227,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanInfo(
-    BuildContext context,
-    Loan loan,
-    ThemeData theme,
-  ) {
+  Widget _buildLoanInfo(BuildContext context, Loan loan, ThemeData theme) {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
@@ -251,31 +246,22 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kSpacing12),
-            CopyableInfoRow(
-              label: 'Provider',
-              value: loan.provider ?? 'N/A',
-            ),
+            CopyableInfoRow(label: 'Provider', value: loan.provider ?? 'N/A'),
             if (loan.interestRate != null)
               InfoRow(
                 label: 'APR',
                 value: '${loan.interestRate!.toStringAsFixed(1)}%',
               ),
-            CopyableInfoRow(
-              label: 'Reference',
-              value: loan.reference ?? 'N/A',
-            ),
-            CopyableInfoRow(
-              label: 'Sender',
-              value: loan.sender ?? 'N/A',
-            ),
+            CopyableInfoRow(label: 'Reference', value: loan.reference ?? 'N/A'),
+            CopyableInfoRow(label: 'Sender', value: loan.sender ?? 'N/A'),
             InfoRow(
               label: 'Disbursed',
-              value: formatLoanDate(loan.disbursedAt),
+              value: DateFormatter.shortDate(loan.disbursedAt),
             ),
             if (loan.dueAt != null)
               InfoRow(
                 label: 'Due Date',
-                value: formatLoanDate(loan.dueAt!),
+                value: DateFormatter.shortDate(loan.dueAt!),
               ),
             InfoRow(
               label: 'Status',
@@ -416,11 +402,8 @@ class LoanDetailScreen extends ConsumerWidget {
                   if (event.date != null) ...[
                     const SizedBox(height: kSpacing2),
                     Text(
-                      formatLoanDate(event.date!),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: isDark ? Colors.grey[500] : Colors.grey[500],
-                      ),
+                      DateFormatter.shortDate(event.date!),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                     ),
                   ],
                 ],
@@ -630,7 +613,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
-                      formatLoanDate(estimatedDate),
+                      DateFormatter.shortDate(estimatedDate),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
@@ -818,7 +801,7 @@ class _TimelineEvent {
   final bool isLast;
   final bool isWarning;
 
-  _TimelineEvent({
+  const _TimelineEvent({
     required this.title,
     required this.subtitle,
     this.date,

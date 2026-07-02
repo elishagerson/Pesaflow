@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/date_formatter.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -90,7 +91,7 @@ class TransactionTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  formatLoanDate(tx.createdAt),
+                  DateFormatter.shortDate(tx.createdAt),
                   style: TextStyle(
                     fontSize: 11,
                     color: isDark ? Colors.grey[500] : Colors.grey[500],
@@ -111,8 +112,4 @@ class TransactionTile extends StatelessWidget {
       ),
     );
   }
-}
-
-String formatLoanDate(DateTime date) {
-  return '${date.day}/${date.month}/${date.year}';
 }
