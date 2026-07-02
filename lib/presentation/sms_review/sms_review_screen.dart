@@ -76,7 +76,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                       final cat = categories[index];
                       return ListTile(
                         leading: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(kSpacing8),
                           decoration: BoxDecoration(
                             color: hexToColor(
                               cat.color,
@@ -93,7 +93,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         subtitle: Text(
                           cat.type.toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.grey,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         onTap: () => Navigator.of(context).pop(cat.id),
@@ -320,7 +320,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                         return StaggeredFadeSlide(
                           index: 0,
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
+                            padding: const EdgeInsets.only(bottom: kSpacing16),
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing16),
                               decoration: BoxDecoration(
@@ -448,7 +448,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 children: [
                                   // Checkbox for batch selection
                                   SizedBox(
-                                    width: 40,
+                                    width: kSpacing40,
                                     child: Center(
                                       child: Checkbox(
                                         value: _selectedIds.contains(trans.id),
@@ -479,10 +479,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         // Top section: provider badge + amount
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
-                                            16,
-                                            14,
-                                            16,
-                                            8,
+                                            kSpacing16,
+                                            kSpacing14,
+                                            kSpacing16,
+                                            kSpacing8,
                                           ),
                                           child: Row(
                                             crossAxisAlignment:
@@ -490,7 +490,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             children: [
                                               Container(
                                                 padding: const EdgeInsets.all(
-                                                  10,
+                                                  kSpacing10,
                                                 ),
                                                 decoration: BoxDecoration(
                                                   color: hexToColor(
@@ -528,7 +528,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                 FontWeight.bold,
                                                           ),
                                                     ),
-                                                    const SizedBox(height: 4),
+                                                    const SizedBox(
+                                                      height: kSpacing4,
+                                                    ),
                                                     Row(
                                                       children: [
                                                         Container(
@@ -574,14 +576,16 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         Container(
                                                           padding:
                                                               const EdgeInsets.symmetric(
-                                                                horizontal: 8,
-                                                                vertical: 4,
+                                                                horizontal:
+                                                                    kSpacing8,
+                                                                vertical:
+                                                                    kSpacing4,
                                                               ),
                                                           decoration: BoxDecoration(
                                                             color: AppTheme
-                                                                .transferColorDark
+                                                                .incomeColor
                                                                 .withValues(
-                                                                  alpha: 0.08,
+                                                                  alpha: 0.1,
                                                                 ),
                                                             borderRadius:
                                                                 BorderRadius.circular(
@@ -589,9 +593,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                 ),
                                                             border: Border.all(
                                                               color: AppTheme
-                                                                  .transferColorDark
+                                                                  .incomeColor
                                                                   .withValues(
-                                                                    alpha: 0.2,
+                                                                    alpha: 0.25,
                                                                   ),
                                                               width: 1,
                                                             ),
@@ -604,31 +608,27 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                               ConfidenceRing(
                                                                 score: 0.94,
                                                                 color: AppTheme
-                                                                    .transferColorDark,
+                                                                    .incomeColor,
                                                                 size: 12,
                                                               ),
                                                               const SizedBox(
-                                                                width: 6,
+                                                                width:
+                                                                    kSpacing6,
                                                               ),
                                                               Text(
                                                                 '94% MATCH',
-                                                                style: theme.textTheme.labelSmall?.copyWith(
-                                                                  color:
-                                                                      theme.brightness ==
-                                                                          Brightness
-                                                                              .dark
-                                                                      ? AppTheme
-                                                                            .transferColorDark
-                                                                      : const Color(
-                                                                          0xFF2E7D32,
-                                                                        ),
-                                                                  fontSize: 9,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w900,
-                                                                  letterSpacing:
-                                                                      0.5,
-                                                                ),
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .labelSmall
+                                                                    ?.copyWith(
+                                                                      color: AppTheme
+                                                                          .incomeColor,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      letterSpacing:
+                                                                          0.5,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -669,9 +669,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 kSpacing10,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withValues(
-                                                  alpha: 0.03,
-                                                ),
+                                                color: theme
+                                                    .colorScheme
+                                                    .surfaceContainerHighest
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                       kSpacing8,
@@ -707,23 +708,87 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           ),
                                           child: Row(
                                             children: [
-                                              TextButton.icon(
-                                                onPressed: () =>
+                                              TactileSpringContainer(
+                                                onTap: () =>
                                                     _showCategoryPicker(item),
-                                                icon: const Icon(
-                                                  Icons.category_rounded,
-                                                  size: 16,
-                                                ),
-                                                label: Text(
-                                                  'Change Category',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelMedium,
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing12,
+                                                        vertical: kSpacing8,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        theme.brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                              .withValues(
+                                                                alpha: 0.06,
+                                                              )
+                                                        : Colors.black
+                                                              .withValues(
+                                                                alpha: 0.03,
+                                                              ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          theme.brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.10,
+                                                                )
+                                                          : Colors.black
+                                                                .withValues(
+                                                                  alpha: 0.05,
+                                                                ),
+                                                      width: 0.8,
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.category_rounded,
+                                                        size: 14,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.6,
+                                                            ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing6,
+                                                      ),
+                                                      Text(
+                                                        'Category',
+                                                        style: theme
+                                                            .textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurface
+                                                                  .withValues(
+                                                                    alpha: 0.7,
+                                                                  ),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               const Spacer(),
-                                              TextButton.icon(
-                                                onPressed: () async {
+                                              TactileSpringContainer(
+                                                onTap: () async {
                                                   await ref
                                                       .read(
                                                         transactionRepositoryProvider,
@@ -738,22 +803,58 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     recentTransactionsStreamProvider,
                                                   );
                                                 },
-                                                icon: Icon(
-                                                  Icons.check_rounded,
-                                                  size: 16,
-                                                  color:
-                                                      theme.colorScheme.primary,
-                                                ),
-                                                label: Text(
-                                                  'Approve',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelMedium
-                                                      ?.copyWith(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary,
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing14,
+                                                        vertical: kSpacing8,
                                                       ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppTheme.incomeColor
+                                                        .withValues(
+                                                          alpha: 0.12,
+                                                        ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: AppTheme
+                                                          .incomeColor
+                                                          .withValues(
+                                                            alpha: 0.3,
+                                                          ),
+                                                      width: 0.8,
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.check_rounded,
+                                                        size: 14,
+                                                        color: AppTheme
+                                                            .incomeColor,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing6,
+                                                      ),
+                                                      Text(
+                                                        'Approve',
+                                                        style: theme
+                                                            .textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                              color: AppTheme
+                                                                  .incomeColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -771,9 +872,39 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, _) =>
-                    Center(child: Text('Error loading review queue: $err')),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(strokeWidth: 3),
+                ),
+                error: (err, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kSpacing32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          size: 48,
+                          color: theme.colorScheme.error,
+                        ),
+                        const SizedBox(height: kSpacing16),
+                        Text(
+                          'Failed to load reviews',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        Text(
+                          '$err',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -1076,8 +1207,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                         child: Center(
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
+                              horizontal: kSpacing24,
+                              vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
                               color: AppTheme.incomeColor,
@@ -1091,14 +1222,14 @@ class _SwipeableCardState extends State<SwipeableCard>
                                 ),
                               ],
                             ),
-                            child: const Text(
+                            child: Text(
                               'APPROVE',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 20,
-                                letterSpacing: 1.5,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.5,
+                                  ),
                             ),
                           ),
                         ),
@@ -1123,8 +1254,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                         child: Center(
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
+                              horizontal: kSpacing24,
+                              vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
                               color: AppTheme.expenseColor,
@@ -1138,14 +1269,14 @@ class _SwipeableCardState extends State<SwipeableCard>
                                 ),
                               ],
                             ),
-                            child: const Text(
+                            child: Text(
                               'REJECT',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 20,
-                                letterSpacing: 1.5,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.5,
+                                  ),
                             ),
                           ),
                         ),
