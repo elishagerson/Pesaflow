@@ -20,8 +20,9 @@ class DateFormatter {
       return weekdays[date.weekday - 1];
     }
     if (diff <= 30) return '${diff ~/ 7} week${diff ~/ 7 > 1 ? 's' : ''} ago';
-    if (diff <= 365)
+    if (diff <= 365) {
       return '${diff ~/ 30} month${diff ~/ 30 > 1 ? 's' : ''} ago';
+    }
     return '${diff ~/ 365} year${diff ~/ 365 > 1 ? 's' : ''} ago';
   }
 }

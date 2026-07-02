@@ -64,7 +64,7 @@ class LoanDetailScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 1,
-                child: _buildLoanInfo(context, loan, theme, isDark),
+                child: _buildLoanInfo(context, loan, theme),
               ),
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
@@ -232,7 +232,6 @@ class LoanDetailScreen extends ConsumerWidget {
     BuildContext context,
     Loan loan,
     ThemeData theme,
-    bool isDark,
   ) {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
