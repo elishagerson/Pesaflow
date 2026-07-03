@@ -525,9 +525,7 @@ class BudgetListScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(100),
                             child: LinearProgressIndicator(
                               value: status.percentage.clamp(0.0, 1.0),
-                              backgroundColor: isDark
-                                  ? Colors.white.withValues(alpha: 0.05)
-                                  : Colors.black.withValues(alpha: 0.05),
+                              backgroundColor: onSurface.withValues(alpha: 0.05),
                               color: status.isOverBudget
                                   ? const Color(0xFFFF453A)
                                   : mutedCatColor,

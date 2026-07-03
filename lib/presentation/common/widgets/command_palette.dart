@@ -276,15 +276,13 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                             color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.1)
-                                  : Colors.black.withValues(alpha: 0.08),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.09),
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withValues(
-                                  alpha: isDark ? 0.4 : 0.1,
+                                  alpha: 0.25,
                                 ),
                                 blurRadius: 40,
                                 offset: const Offset(0, 12),

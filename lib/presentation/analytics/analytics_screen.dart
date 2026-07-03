@@ -935,14 +935,10 @@ class _TrendsTab extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.03),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.04),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
                       width: 0.8,
                     ),
                   ),

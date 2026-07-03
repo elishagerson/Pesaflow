@@ -278,7 +278,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                   'PesaFlow',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
-                      color: theme.colorScheme.onSurface,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
