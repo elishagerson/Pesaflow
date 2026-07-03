@@ -140,7 +140,7 @@ class _SavingsGoalDetailScreenState
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         final theme = Theme.of(ctx);
-        final isDark = theme.brightness == Brightness.dark;
+        final onSurface = theme.colorScheme.onSurface;
         final accentColor = isDeposit
             ? const Color(0xFF0F4C5C)
             : const Color(0xFFFF453A);
@@ -158,9 +158,7 @@ class _SavingsGoalDetailScreenState
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xF01C1C1E)
-                      : const Color(0xF0F2F2F7),
+                  color: theme.colorScheme.surface.withValues(alpha: 0.94),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24),
                   ),
@@ -175,9 +173,7 @@ class _SavingsGoalDetailScreenState
                           width: 38,
                           height: 5,
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.15),
+                            color: onSurface.withValues(alpha: 0.17),
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
@@ -755,7 +751,7 @@ class _SavingsGoalDetailScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
 
     return goalsAsync.when(
@@ -848,9 +844,7 @@ class _SavingsGoalDetailScreenState
                             'Target deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year} ($remainingDays days remaining)',
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark
-                                  ? Colors.grey[400]
-                                  : Colors.grey[600],
+                              color: onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -867,14 +861,10 @@ class _SavingsGoalDetailScreenState
                     width: double.infinity,
                     padding: const EdgeInsets.all(kSpacing20),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF1C1C1E)
-                          : AppTheme.surfaceLight,
+                      color: theme.colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isDark
-                            ? const Color(0x1AFFFFFF)
-                            : const Color(0x0F000000),
+                        color: onSurface.withValues(alpha: 0.08),
                         width: 0.5,
                       ),
                     ),
@@ -940,7 +930,7 @@ class _SavingsGoalDetailScreenState
                                   fontSize: 22,
                                   fontFamily: 'monospace',
                                   fontWeight: FontWeight.w900,
-                                  color: isDark ? Colors.white : Colors.black,
+                                  color: onSurface,
                                 ),
                               ),
                               const SizedBox(height: kSpacing4),
@@ -990,9 +980,7 @@ class _SavingsGoalDetailScreenState
                               Text(
                                 'Add Money',
                                 style: TextStyle(
-                                  color: isDark
-                                      ? Colors.white
-                                      : const Color(0xFF2E7D32),
+                                  color: context.appColors.incomeColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13,
                                 ),
@@ -1030,9 +1018,7 @@ class _SavingsGoalDetailScreenState
                               Text(
                                 'Withdraw',
                                 style: TextStyle(
-                                  color: isDark
-                                      ? Colors.white
-                                      : const Color(0xFFC62828),
+                                  color: context.appColors.expenseColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13,
                                 ),
@@ -1083,9 +1069,7 @@ class _SavingsGoalDetailScreenState
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: logs.length,
                       separatorBuilder: (_, _) => Divider(
-                        color: isDark
-                            ? const Color(0xFF2C2C2E)
-                            : Colors.grey[200],
+                        color: onSurface.withValues(alpha: 0.12),
                         height: 1,
                       ),
                       itemBuilder: (context, idx) {

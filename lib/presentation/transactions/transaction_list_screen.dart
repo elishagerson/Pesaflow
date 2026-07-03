@@ -71,7 +71,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     // Watch filters
     final activeType = ref.watch(transactionTypeFilterProvider);
@@ -98,9 +98,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     return Scaffold(
       body: RefreshIndicator(
         color: const Color(0xFF0F4C5C),
-        backgroundColor: isDark
-            ? const Color(0xFF161B22)
-            : const Color(0xFFF5F3F0),
+        backgroundColor: theme.colorScheme.surface,
         onRefresh: () async {
           ref.invalidate(filteredTransactionsStreamProvider);
           ref.invalidate(recentTransactionsStreamProvider);
@@ -655,9 +653,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                             : Colors.white.withValues(alpha: 0.25),
                         border: Border(
                           bottom: BorderSide(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : Colors.black.withValues(alpha: 0.05),
+                            color: onSurface.withValues(alpha: 0.06),
                             width: 0.5,
                           ),
                         ),
@@ -679,9 +675,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       ?.copyWith(
                                         fontWeight: FontWeight.w900,
                                         letterSpacing: -0.8,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color: onSurface,
                                       ),
                                 ),
                                 Row(
@@ -799,30 +793,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         height: 36,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.06,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.03,
-                                                ),
+                                          color: onSurface.withValues(alpha: 0.04),
                                           border: Border.all(
-                                            color: isDark
-                                                ? Colors.white.withValues(
-                                                    alpha: 0.12,
-                                                  )
-                                                : Colors.black.withValues(
-                                                    alpha: 0.06,
-                                                  ),
+                                            color: onSurface.withValues(alpha: 0.08),
                                             width: 0.8,
                                           ),
                                         ),
                                         child: Icon(
                                           Icons.search_rounded,
                                           size: 18,
-                                          color: isDark
-                                              ? Colors.white70
-                                              : Colors.black54,
+                                          color: onSurface.withValues(alpha: 0.62),
                                         ),
                                       ),
                                     ),
@@ -832,30 +812,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       height: 36,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.06,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.03,
-                                              ),
+                                        color: onSurface.withValues(alpha: 0.04),
                                         border: Border.all(
-                                          color: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.12,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.06,
-                                                ),
+                                          color: onSurface.withValues(alpha: 0.08),
                                           width: 0.8,
                                         ),
                                       ),
                                       child: Icon(
                                         Icons.person_outline_rounded,
                                         size: 18,
-                                        color: isDark
-                                            ? Colors.white70
-                                            : Colors.black54,
+                                        color: onSurface.withValues(alpha: 0.62),
                                       ),
                                     ),
                                   ],
@@ -896,9 +862,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         icon: Icon(
                                           Icons.clear_rounded,
                                           size: 16,
-                                          color: isDark
-                                              ? Colors.white54
-                                              : Colors.black54,
+                                          color: onSurface.withValues(alpha: 0.54),
                                         ),
                                         onPressed: () {
                                           ref
@@ -949,28 +913,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                : (isDark
-                                                      ? Colors.white.withValues(
-                                                          alpha: 0.06,
-                                                        )
-                                                      : Colors.black.withValues(
-                                                          alpha: 0.03,
-                                                        )),
+                                                : onSurface.withValues(alpha: 0.04),
                                             borderRadius: BorderRadius.circular(
                                               100,
                                             ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
-                                                  : (isDark
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.08,
-                                                              )
-                                                        : Colors.black
-                                                              .withValues(
-                                                                alpha: 0.04,
-                                                              )),
+                                                  : onSurface.withValues(alpha: 0.06),
                                               width: 0.8,
                                             ),
                                           ),
@@ -979,9 +929,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                             style: TextStyle(
                                               color: isSelected
                                                   ? theme.colorScheme.onPrimary
-                                                  : (isDark
-                                                        ? Colors.white60
-                                                        : Colors.black45),
+                                                  : onSurface.withValues(alpha: 0.52),
                                               fontWeight: isSelected
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,
@@ -1013,7 +961,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   }
 
   // ── INSIGHTS CARD BUILDER ──
-  Widget _buildInsightsCard(BuildContext context, WidgetRef ref, bool isDark) {
+  Widget _buildInsightsCard(BuildContext context, WidgetRef ref) {
     final insightsAsync = ref.watch(insightsProvider);
     final monthlyTotalsAsync = ref.watch(monthlyTotalsProvider);
 
@@ -1187,22 +1135,18 @@ class _FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     return Container(
       decoration: BoxDecoration(
         color: isActive
             ? theme.colorScheme.primary.withValues(alpha: 0.12)
-            : (isDark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.black.withValues(alpha: 0.03)),
+            : onSurface.withValues(alpha: 0.04),
         shape: BoxShape.circle,
         border: Border.all(
           color: isActive
               ? theme.colorScheme.primary.withValues(alpha: 0.20)
-              : (isDark
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : Colors.black.withValues(alpha: 0.06)),
+              : onSurface.withValues(alpha: 0.08),
           width: 0.8,
         ),
       ),
@@ -1214,7 +1158,7 @@ class _FilterButton extends StatelessWidget {
               Icons.tune_rounded,
               color: isActive
                   ? theme.colorScheme.primary
-                  : (isDark ? Colors.white70 : Colors.black54),
+                  : onSurface.withValues(alpha: 0.62),
               size: 22,
             ),
             onPressed: onPressed,
