@@ -921,12 +921,17 @@ class _ConfidenceRingState extends State<ConfidenceRing>
     return SizedBox(
       width: widget.size,
       height: widget.size,
-      child: CustomPaint(
-        painter: _ConfidenceRingPainter(
-          score: widget.score,
-          color: widget.color,
-          pulseValue: _pulseController.value,
-        ),
+      child: AnimatedBuilder(
+        animation: _pulseController,
+        builder: (context, child) {
+          return CustomPaint(
+            painter: _ConfidenceRingPainter(
+              score: widget.score,
+              color: widget.color,
+              pulseValue: _pulseController.value,
+            ),
+          );
+        },
       ),
     );
   }
