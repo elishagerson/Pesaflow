@@ -104,11 +104,8 @@ class PremiumExtendedFab extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
+              style: theme.textTheme.labelLarge?.copyWith(
                 color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.w700,
-                fontSize: 15,
-                letterSpacing: -0.2,
               ),
             ),
           ],

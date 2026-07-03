@@ -159,22 +159,20 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                     const SizedBox(height: 20),
 
                     // Celebration Swahili & English Headers
-                    const Text(
+                    Text(
                       'Hongera sana!',
-                      style: TextStyle(
-                        fontSize: 24,
+                      style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.5,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Goal Achieved!',
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F4C5C),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -183,8 +181,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                     // Completed Details text
                     Text(
                       'You have successfully completed your savings goal for:',
-                      style: TextStyle(
-                        fontSize: 13,
+                      style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.6,
                         ),
@@ -194,8 +191,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                     const SizedBox(height: 10),
                     Text(
                       widget.goalName,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                       textAlign: TextAlign.center,
@@ -203,11 +199,10 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                     const SizedBox(height: 8),
                     Text(
                       CurrencyFormatter.formatCents(widget.targetAmount),
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: theme.textTheme.titleLarge?.copyWith(
                         fontFamily: 'monospace',
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F4C5C),
+                        color: theme.colorScheme.primary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -221,16 +216,15 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                         onTap: () => Navigator.of(context).pop(),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0F4C5C),
+                            color: theme.colorScheme.primary,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
+                          child: Text(
                             'Hooray!',
-                            style: TextStyle(
+                            style: theme.textTheme.labelLarge?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
-                              fontSize: 15,
                             ),
                           ),
                         ),

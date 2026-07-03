@@ -10,6 +10,8 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 
+import 'package:pesaflow/core/utils/context_extensions.dart';
+
 class SmsReviewDialog extends ConsumerStatefulWidget {
   final TransactionWithCategoryAndAccount item;
 
@@ -129,7 +131,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     AmountText(
                       amountInCents: transactedCents,
                       type: amountType,
-                      style: const TextStyle(
+                      style: context.appTypography.monospace.copyWith(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
@@ -156,9 +158,8 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       child: Text(
                         widget.item.account!.name,
-                        style: TextStyle(
+                        style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.primary,
-                          fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -244,8 +245,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         title: Text(
                           cat.name,
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.normal,
@@ -253,8 +253,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         ),
                         subtitle: Text(
                           cat.type.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 10,
+                          style: context.appTypography.labelMicro.copyWith(
                             color: Colors.grey,
                           ),
                         ),

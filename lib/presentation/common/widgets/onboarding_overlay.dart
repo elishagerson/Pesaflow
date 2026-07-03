@@ -52,16 +52,17 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final accentColor = const Color(0xFF0F4C5C);
 
     return Positioned.fill(
       child: Material(
         color: Colors.transparent,
         child: Container(
-          color: isDark
-              ? Colors.black.withValues(alpha: 0.85)
-              : Colors.white.withValues(alpha: 0.92),
+          color: theme.colorScheme.surface.withValues(
+            alpha: isDark ? 0.85 : 0.92,
+          ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Column(
@@ -113,7 +114,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -122,9 +123,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 height: 1.5,
                               ),
                             ),
