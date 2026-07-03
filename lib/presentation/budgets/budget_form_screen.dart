@@ -399,23 +399,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       );
     }
 
-    InputDecoration inputDeco({
-      required String label,
-      String? hint,
-      IconData? icon,
-    }) {
-      return InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: icon != null ? Icon(icon, size: 18, color: theme.colorScheme.primary) : null,
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        focusedErrorBorder: InputBorder.none,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-      );
-    }
 
     return Scaffold(
       body: SafeArea(
@@ -448,7 +431,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: GlassCard(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.all(16),
                             borderRadius: AppTheme.radiusCard,
                             child: Column(
                               children: [
@@ -462,21 +445,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   onChanged: (_) =>
                                       setState(() => _nameError = null),
                                 ),
-                                Divider(
-                                  color: onSurface.withValues(alpha: 0.08),
-                                  height: 1,
-                                ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 categoriesAsync.when(
                                   data: (cats) => _buildCategorySelector(cats, theme),
                                   loading: () =>
                                       const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
                                 ),
-                                Divider(
-                                  color: onSurface.withValues(alpha: 0.08),
-                                  height: 1,
-                                ),
+                                const SizedBox(height: 8),
                                 _InteractiveInputRow(
                                   controller: _amountController,
                                   label: 'Budget Amount (Tsh)',
@@ -857,12 +833,20 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing4, vertical: kSpacing2),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing4),
+        decoration: ShapeDecoration(
           color: _isFocused
               ? theme.colorScheme.primary.withValues(alpha: 0.03)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+              : theme.colorScheme.onSurface.withValues(alpha: 0.02),
+          shape: SquircleBorder(
+            side: BorderSide(
+              color: _isFocused
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outlineVariant,
+              width: _isFocused ? 1.5 : 0.8,
+            ),
+            borderRadius: 16.0,
+          ),
         ),
         child: Row(
           children: [
