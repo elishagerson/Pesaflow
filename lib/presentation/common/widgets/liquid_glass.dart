@@ -66,18 +66,19 @@ class _LiquidGlassPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.width <= 0.0 || size.height <= 0.0) {
+      return;
+    }
+
     // -- Highlight 1: drifting radial pool --
-    final hx =
-        size.width * (0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15)));
-    final hy =
-        size.height *
-        (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.11 + 1.8)));
+    final px1 = 0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15));
+    final py1 = 0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.11 + 1.8));
 
     final poolPaint = Paint()
       ..shader = RadialGradient(
         center: Alignment(
-          (hx / size.width) * 2 - 1,
-          (hy / size.height) * 2 - 1,
+          px1 * 2 - 1,
+          py1 * 2 - 1,
         ),
         radius: 0.7,
         colors: [
@@ -89,18 +90,14 @@ class _LiquidGlassPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint);
 
     // -- Highlight 2: smaller secondary drift (opposite phase) --
-    final hx2 =
-        size.width *
-        (0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.09 + 3.2)));
-    final hy2 =
-        size.height *
-        (0.3 + 0.6 * (0.5 + 0.5 * cos(time * 2 * pi * 0.13 + 0.7)));
+    final px2 = 0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.09 + 3.2));
+    final py2 = 0.3 + 0.6 * (0.5 + 0.5 * cos(time * 2 * pi * 0.13 + 0.7));
 
     final poolPaint2 = Paint()
       ..shader = RadialGradient(
         center: Alignment(
-          (hx2 / size.width) * 2 - 1,
-          (hy2 / size.height) * 2 - 1,
+          px2 * 2 - 1,
+          py2 * 2 - 1,
         ),
         radius: 0.5,
         colors: [
