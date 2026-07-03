@@ -245,21 +245,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 Container(
                   padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.06)
-                        : Colors.black.withValues(alpha: 0.03),
+                    color: onSurface.withValues(alpha: 0.04),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.12)
-                          : Colors.black.withValues(alpha: 0.06),
+                      color: onSurface.withValues(alpha: 0.08),
                       width: 0.8,
                     ),
                   ),
                   child: Icon(
                     Icons.notifications_none_rounded,
                     size: 20,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: onSurface,
                   ),
                 ),
                 if (pendingReviewCount > 0)
@@ -275,7 +271,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         color: const Color(0xFFFF453A),
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                          color: isDark ? Colors.black : Colors.white,
+                          color: theme.colorScheme.surface,
                           width: 1.5,
                         ),
                       ),
@@ -324,7 +320,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   index: 0,
                   child: _AnimatedHeroGradient(
                     trackerColor: trackerColor,
-                    isDark: isDark,
                     cardGradient: cardGradient,
                     child: Container(
                       width: double.infinity,
