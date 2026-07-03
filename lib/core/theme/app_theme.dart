@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors_theme.dart';
 import 'app_typography_theme.dart';
+import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 class AppTheme {
   // ── "Ocean & Gold" — distinctive fintech palette ──
@@ -340,8 +341,8 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: isLight ? Colors.grey[700] : Colors.grey[400],
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.0),
+        shape: SquircleBorder(
+          borderRadius: 24.0,
           side: BorderSide(
             color: isLight
                 ? Colors.black.withValues(alpha: 0.08)

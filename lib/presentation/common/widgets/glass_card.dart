@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
+import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 enum CardElevation { none, low, medium, high }
 
@@ -112,27 +113,35 @@ class _GlassCardState extends State<GlassCard>
     };
 
     Widget body = Container(
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
         color: glassColor,
         gradient: widget.backgroundGradient,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant,
-          width: 0.8,
+        shape: SquircleBorder(
+          side: BorderSide(
+            color: theme.colorScheme.outlineVariant,
+            width: 0.8,
+          ),
+          borderRadius: widget.borderRadius,
         ),
-        boxShadow: shadows.isEmpty ? null : shadows,
+        shadows: shadows,
       ),
       foregroundDecoration: widget.accentColor != null
-          ? BoxDecoration(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              border: Border.all(
-                color: widget.accentColor!.withValues(alpha: 0.16),
-                width: 0.5,
+          ? ShapeDecoration(
+              shape: SquircleBorder(
+                side: BorderSide(
+                  color: widget.accentColor!.withValues(alpha: 0.16),
+                  width: 0.5,
+                ),
+                borderRadius: widget.borderRadius,
               ),
             )
           : null,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: ClipPath(
+        clipper: ShapeBorderClipper(
+          shape: SquircleBorder(
+            borderRadius: widget.borderRadius,
+          ),
+        ),
         child: Stack(
           children: [
             if (widget.frosted)

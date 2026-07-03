@@ -729,23 +729,52 @@ class _OverviewTab extends StatelessWidget {
                           child: SizedBox(
                             height: 120,
                             width: 120,
-                            child: PieChart(
-                              PieChartData(
-                                sectionsSpace: 2,
-                                centerSpaceRadius: 36,
-                                sections: List.generate(cats.length, (i) {
-                                  final cat = cats[i];
-                                  final color = i < colors.length
-                                      ? colors[i]
-                                      : hexToColor(cat.categoryColor);
-                                  return PieChartSectionData(
-                                    value: cat.amount.toDouble(),
-                                    gradient: _getCategoryNeonGradient(color),
-                                    radius: 18,
-                                    showTitle: false,
-                                  );
-                                }),
-                              ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                PieChart(
+                                  PieChartData(
+                                    sectionsSpace: 2,
+                                    centerSpaceRadius: 36,
+                                    sections: List.generate(cats.length, (i) {
+                                      final cat = cats[i];
+                                      final color = i < colors.length
+                                          ? colors[i]
+                                          : hexToColor(cat.categoryColor);
+                                      return PieChartSectionData(
+                                        value: cat.amount.toDouble(),
+                                        gradient: _getCategoryNeonGradient(color),
+                                        radius: 14,
+                                        showTitle: false,
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'SPENT',
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.w900,
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                        letterSpacing: 1.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '${(total / 1000.0).toStringAsFixed(0)}k',
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontFamily: 'monospace',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: theme.colorScheme.onSurface,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
