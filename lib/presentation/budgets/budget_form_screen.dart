@@ -16,7 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
@@ -203,10 +203,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       String? hint,
       IconData? icon,
     }) {
-      return context.inputDecoration(
+      return InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: icon != null ? Icon(icon, size: 18) : null,
+        prefixIcon: icon != null ? Icon(icon, size: 18, color: theme.colorScheme.primary) : null,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
       );
     }
 
@@ -236,7 +242,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: GlassCard(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             borderRadius: AppTheme.radiusCard,
                             child: Column(
                               children: [
@@ -255,7 +261,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   onChanged: (_) =>
                                       setState(() => _nameError = null),
                                 ),
-                                const SizedBox(height: 12),
+                                Divider(
+                                  color: onSurface.withValues(alpha: 0.08),
+                                  height: 1,
+                                ),
+                                const SizedBox(height: 4),
                                 categoriesAsync.when(
                                   data: (cats) => ModernDropdown<String>(
                                     labelText: 'Category',
@@ -281,7 +291,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 4),
+                                Divider(
+                                  color: onSurface.withValues(alpha: 0.08),
+                                  height: 1,
+                                ),
                                 TextFormField(
                                   controller: _amountController,
                                   keyboardType: TextInputType.number,
@@ -312,36 +326,34 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           child: GlassCard(
                             padding: const EdgeInsets.all(6),
                             borderRadius: AppTheme.radiusCard,
-                            child: SegmentedButton<String>(
-                              style: SegmentedButton.styleFrom(
-                                side: BorderSide.none,
-                                backgroundColor: Colors.transparent,
-                                selectedBackgroundColor:
-                                    theme.colorScheme.primary,
-                                selectedForegroundColor:
-                                    theme.colorScheme.onPrimary,
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: CupertinoSlidingSegmentedControl<String>(
+                                groupValue: _period,
+                                backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                thumbColor: theme.colorScheme.surface,
+                                children: {
+                                  'weekly': Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    child: Text('Week', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'weekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                  ),
+                                  'biweekly': Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    child: Text('2 Wk', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'biweekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                  ),
+                                  'monthly': Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    child: Text('Month', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'monthly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                  ),
+                                  'yearly': Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    child: Text('Year', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'yearly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                  ),
+                                },
+                                onValueChanged: (v) {
+                                  if (v != null) setState(() => _period = v);
+                                },
                               ),
-                              segments: const [
-                                ButtonSegment(
-                                  value: 'weekly',
-                                  label: Text('Week'),
-                                ),
-                                ButtonSegment(
-                                  value: 'biweekly',
-                                  label: Text('2 Wk'),
-                                ),
-                                ButtonSegment(
-                                  value: 'monthly',
-                                  label: Text('Month'),
-                                ),
-                                ButtonSegment(
-                                  value: 'yearly',
-                                  label: Text('Year'),
-                                ),
-                              ],
-                              selected: {_period},
-                              onSelectionChanged: (v) =>
-                                  setState(() => _period = v.first),
                             ),
                           ),
                         ),
@@ -402,28 +414,26 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               borderRadius: AppTheme.radiusCard,
                               child: Column(
                                 children: [
-                                  SegmentedButton<String>(
-                                    style: SegmentedButton.styleFrom(
-                                      side: BorderSide.none,
-                                      backgroundColor: Colors.transparent,
-                                      selectedBackgroundColor:
-                                          theme.colorScheme.primary,
-                                      selectedForegroundColor:
-                                          theme.colorScheme.onPrimary,
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: CupertinoSlidingSegmentedControl<String>(
+                                      groupValue: _rolloverType,
+                                      backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                      thumbColor: theme.colorScheme.surface,
+                                      children: {
+                                        'all': Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          child: Text('All', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'all' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                        ),
+                                        'capped': Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          child: Text('Capped', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'capped' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                        ),
+                                      },
+                                      onValueChanged: (v) {
+                                        if (v != null) setState(() => _rolloverType = v);
+                                      },
                                     ),
-                                    segments: const [
-                                      ButtonSegment(
-                                        value: 'all',
-                                        label: Text('All'),
-                                      ),
-                                      ButtonSegment(
-                                        value: 'capped',
-                                        label: Text('Capped'),
-                                      ),
-                                    ],
-                                    selected: {_rolloverType},
-                                    onSelectionChanged: (v) =>
-                                        setState(() => _rolloverType = v.first),
                                   ),
                                   if (_rolloverType == 'capped') ...[
                                     const SizedBox(height: 10),
@@ -545,7 +555,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               width: double.infinity,
                               height: 50,
                               alignment: Alignment.center,
-                              decoration: BoxDecoration(
+                              decoration: ShapeDecoration(
                                 gradient: LinearGradient(
                                   colors: [
                                     theme.colorScheme.primary,
@@ -554,8 +564,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(100),
-                                boxShadow: [
+                                shape: const SquircleBorder(
+                                  borderRadius: 24.0,
+                                ),
+                                shadows: [
                                   BoxShadow(
                                     color: theme.colorScheme.primary.withValues(
                                       alpha: 0.3,
