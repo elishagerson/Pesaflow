@@ -13,6 +13,7 @@ class AmountText extends ConsumerWidget {
   final TextStyle? style;
   final bool showDecimals;
   final bool useMonospace;
+  final bool animate;
 
   const AmountText({
     required this.amountInCents,
@@ -20,6 +21,7 @@ class AmountText extends ConsumerWidget {
     this.style,
     this.showDecimals = false,
     this.useMonospace = true,
+    this.animate = false,
     super.key,
   });
 
@@ -54,30 +56,42 @@ class AmountText extends ConsumerWidget {
         ref.watch(currencyShowDecimalsProvider).value ?? false;
     final finalShowDecimals = showDecimals || globalShowDecimals;
 
-    // Build the string representation: Prepend +/- signs for visually dynamic grids
-    String displayString = CurrencyFormatter.formatCents(
-      amountInCents,
-      showDecimals: finalShowDecimals,
-    );
+    Widget buildText(double val) {
+      String displayString = CurrencyFormatter.formatCents(
+        val.round(),
+        showDecimals: finalShowDecimals,
+      );
 
-    if (type == AmountType.income) {
-      displayString = '+ $displayString';
-    } else if (type == AmountType.expense) {
-      displayString = '- $displayString';
+      if (type == AmountType.income) {
+        displayString = '+ $displayString';
+      } else if (type == AmountType.expense) {
+        displayString = '- $displayString';
+      }
+
+      if (useMonospace) {
+        displayString = '$displayString\u200A';
+      }
+
+      return Padding(
+        padding: const EdgeInsets.only(right: 2.0),
+        child: Text(
+          displayString,
+          style: customStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
     }
 
-    if (useMonospace) {
-      displayString = '$displayString\u200A';
+    if (animate) {
+      return TweenAnimationBuilder<double>(
+        duration: const Duration(milliseconds: 1200),
+        curve: Curves.easeOutCubic,
+        tween: Tween<double>(begin: 0, end: amountInCents.toDouble()),
+        builder: (context, val, child) => buildText(val),
+      );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 2.0),
-      child: Text(
-        displayString,
-        style: customStyle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
+    return buildText(amountInCents.toDouble());
   }
 }

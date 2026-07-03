@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -112,11 +113,17 @@ class BudgetListScreen extends ConsumerWidget {
   }
 
   Widget _buildSegmentedControl(BuildContext context, WidgetRef ref) {
-    final onSurface = Theme.of(context).colorScheme.onSurface;
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
     final activeTab = ref.watch(budgetActiveTabProvider);
 
     return Container(
-      margin: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+      margin: const EdgeInsets.only(
+        left: kSpacing16,
+        right: kSpacing16,
+        top: kSpacing16,
+        bottom: kSpacing8,
+      ),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.065),
@@ -134,26 +141,23 @@ class BudgetListScreen extends ConsumerWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeInOut,
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(
                   color: activeTab == 0
-                      ? Theme.of(context).colorScheme.primary
+                      ? theme.colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
                   'Category Budgets',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
+                  style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: activeTab == 0
-                        ? FontWeight.w700
+                        ? FontWeight.bold
                         : FontWeight.w500,
                     color: activeTab == 0
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.5),
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -169,26 +173,23 @@ class BudgetListScreen extends ConsumerWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeInOut,
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(
                   color: activeTab == 1
-                      ? Theme.of(context).colorScheme.primary
+                      ? theme.colorScheme.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
                   'Savings Goals',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
+                  style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: activeTab == 1
-                        ? FontWeight.w700
+                        ? FontWeight.bold
                         : FontWeight.w500,
                     color: activeTab == 1
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.5),
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -241,13 +242,12 @@ class BudgetListScreen extends ConsumerWidget {
                   color: theme.colorScheme.onPrimary,
                   size: 20,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: kSpacing8),
                 Text(
                   'Create First Budget',
-                  style: TextStyle(
+                  style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
                   ),
                 ),
               ],
@@ -302,17 +302,17 @@ class BudgetListScreen extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Total Spent',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           AmountText(
                             amountInCents: totalSpent,
-                            style: TextStyle(
-                              color: onSurface,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                               letterSpacing: -0.5,
                             ),
                           ),
@@ -321,17 +321,17 @@ class BudgetListScreen extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text(
+                          Text(
                             'Total Allocated',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           AmountText(
                             amountInCents: totalAllocated,
-                            style: TextStyle(
-                              color: onSurface,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                               letterSpacing: -0.5,
                             ),
                           ),
@@ -339,7 +339,7 @@ class BudgetListScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: kSpacing16),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
@@ -349,24 +349,23 @@ class BudgetListScreen extends ConsumerWidget {
                       backgroundColor: onSurface.withValues(alpha: 0.07),
                       color: totalSpent > totalAllocated
                           ? AppTheme.expenseColor
-                          : Theme.of(context).colorScheme.primary,
+                          : theme.colorScheme.primary,
                       minHeight: 8,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: kSpacing6),
                   Text(
                     totalAllocated > 0
                         ? '${(totalSpent / totalAllocated * 100).round()}% used'
                         : '0% used',
-                    style: TextStyle(
-                      fontSize: 12,
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: onSurface.withValues(alpha: 0.45),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: kSpacing24),
 
             Text(
               'Active Budgets',
@@ -431,12 +430,11 @@ class BudgetListScreen extends ConsumerWidget {
                                       bp.budget.name,
                                       style: theme.textTheme.titleSmall
                                           ?.copyWith(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
                                             color: onSurface,
                                           ),
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: kSpacing2),
                                     Text(
                                       bp.category.name,
                                       style: theme.textTheme.bodySmall
@@ -455,8 +453,8 @@ class BudgetListScreen extends ConsumerWidget {
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
+                                      horizontal: kSpacing10,
+                                      vertical: kSpacing4,
                                     ),
                                     decoration: BoxDecoration(
                                       color: status.isOverBudget
@@ -473,23 +471,23 @@ class BudgetListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       status.paceLabel,
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w900,
-                                        color: status.isOverBudget
-                                            ? const Color(0xFFFF453A)
-                                            : status.isOnTrack
-                                            ? AppTheme.transferColorDark
-                                            : Colors.orange,
-                                        letterSpacing: 0.3,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: status.isOverBudget
+                                                ? const Color(0xFFFF453A)
+                                                : status.isOnTrack
+                                                ? AppTheme.transferColorDark
+                                                : Colors.orange,
+                                            letterSpacing: 0.3,
+                                          ),
                                     ),
                                   ),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: kSpacing6),
                                   Text(
                                     '${status.daysLeft} days left',
-                                    style: TextStyle(
-                                      fontSize: 11,
+                                    style: theme.textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: onSurface.withValues(alpha: 0.34),
                                     ),
@@ -498,31 +496,29 @@ class BudgetListScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AmountText(
                                 amountInCents: bp.spentInPeriod,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                   color: status.isOverBudget
-                                      ? const Color(0xFFFF453A)
+                                      ? AppTheme.expenseColor
                                       : onSurface,
                                 ),
                               ),
                               AmountText(
                                 amountInCents: status.allocated,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                   color: onSurface.withValues(alpha: 0.54),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: LinearProgressIndicator(
@@ -531,16 +527,15 @@ class BudgetListScreen extends ConsumerWidget {
                                 alpha: 0.05,
                               ),
                               color: status.isOverBudget
-                                  ? const Color(0xFFFF453A)
+                                  ? AppTheme.expenseColor
                                   : mutedCatColor,
                               minHeight: 6,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: kSpacing6),
                           Text(
                             '${(status.percentage * 100).round()}% used',
-                            style: TextStyle(
-                              fontSize: 11,
+                            style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: onSurface.withValues(alpha: 0.34),
                             ),
@@ -613,13 +608,12 @@ class BudgetListScreen extends ConsumerWidget {
                       color: theme.colorScheme.onPrimary,
                       size: 20,
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: kSpacing8),
                     Text(
                       'Set First Savings Goal',
-                      style: TextStyle(
+                      style: theme.textTheme.titleSmall?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
                       ),
                     ),
                   ],
@@ -668,27 +662,24 @@ class BudgetListScreen extends ConsumerWidget {
                           letterSpacing: 0.3,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Total Saved',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                CurrencyFormatter.formatCents(totalSaved),
-                                style: TextStyle(
-                                  color: onSurface,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 22,
+                              const SizedBox(height: kSpacing2),
+                              AmountText(
+                                amountInCents: totalSaved,
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -697,20 +688,17 @@ class BudgetListScreen extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text(
+                              Text(
                                 'Combined Target',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                CurrencyFormatter.formatCents(totalTarget),
-                                style: TextStyle(
-                                  color: onSurface,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 22,
+                              const SizedBox(height: kSpacing2),
+                              AmountText(
+                                amountInCents: totalTarget,
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -718,7 +706,7 @@ class BudgetListScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: kSpacing16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
@@ -728,18 +716,17 @@ class BudgetListScreen extends ConsumerWidget {
                           minHeight: 8,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: kSpacing6),
                       Text(
                         '${(overallPct * 100).round()}% overall progress',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: onSurface.withValues(alpha: 0.45),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: kSpacing24),
 
                 Text(
                   'Active Goals',
@@ -747,7 +734,7 @@ class BudgetListScreen extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: kSpacing12),
 
                 // Savings goals list
                 StaggeredList(
@@ -851,26 +838,24 @@ class BudgetListScreen extends ConsumerWidget {
                                               children: [
                                                 Text(
                                                   goal.name,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
-                                                const SizedBox(height: 2),
+                                                const SizedBox(
+                                                  height: kSpacing2,
+                                                ),
                                                 Text(
                                                   'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                                  style: theme
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
-                                                        fontSize: 10,
-                                                      ),
+                                                  style:
+                                                      theme.textTheme.bodySmall,
                                                 ),
                                               ],
                                             ),
@@ -883,8 +868,8 @@ class BudgetListScreen extends ConsumerWidget {
                                                 Container(
                                                   padding:
                                                       const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 3,
+                                                        horizontal: kSpacing8,
+                                                        vertical: kSpacing3,
                                                       ),
                                                   decoration: BoxDecoration(
                                                     color: AppTheme
@@ -897,26 +882,33 @@ class BudgetListScreen extends ConsumerWidget {
                                                           12,
                                                         ),
                                                   ),
-                                                  child: const Text(
+                                                  child: Text(
                                                     'COMPLETED',
-                                                    style: TextStyle(
-                                                      fontSize: 9,
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      color: AppTheme
-                                                          .transferColorDark,
-                                                    ),
+                                                    style: theme
+                                                        .textTheme
+                                                        .labelSmall
+                                                        ?.copyWith(
+                                                          fontSize: 9,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: AppTheme
+                                                              .transferColorDark,
+                                                        ),
                                                   ),
                                                 )
                                               else
                                                 Text(
                                                   '$daysLeft days remaining',
-                                                  style: const TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
                                                 ),
-                                              const SizedBox(height: 4),
+                                              const SizedBox(height: kSpacing4),
                                               GestureDetector(
                                                 onTap: () {
                                                   showModalBottomSheet(
@@ -932,13 +924,16 @@ class BudgetListScreen extends ConsumerWidget {
                                                 },
                                                 child: Text(
                                                   'Edit',
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .primary,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -950,27 +945,25 @@ class BudgetListScreen extends ConsumerWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            CurrencyFormatter.formatCents(
-                                              goal.currentAmount,
-                                            ),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
+                                          AmountText(
+                                            amountInCents: goal.currentAmount,
+                                            style: theme.textTheme.titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                           Text(
                                             'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurfaceVariant,
-                                            ),
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: kSpacing8),
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(6),
                                         child: LinearProgressIndicator(
@@ -982,13 +975,15 @@ class BudgetListScreen extends ConsumerWidget {
                                           minHeight: 6,
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: kSpacing4),
                                       Text(
                                         '${(goalPct * 100).round()}% completed',
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey,
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                            ),
                                       ),
                                     ],
                                   ),
