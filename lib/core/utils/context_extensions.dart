@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors_theme.dart';
 import 'responsive.dart';
 
 extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
+
+  AppColorsTheme get appColors => Theme.of(this).extension<AppColorsTheme>()!;
 
   bool get isCompactView {
     final s = getScreenSize(this);

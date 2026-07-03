@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'app_colors_theme.dart';
 
 class AppTheme {
   // ── "Ocean & Gold" — distinctive fintech palette ──
@@ -192,6 +193,9 @@ class AppTheme {
       fontFamily: GoogleFonts.inter().fontFamily,
       textTheme: _buildTextTheme(isLight ? onBgLight : onBgDark),
       colorScheme: scheme,
+      extensions: [
+        isLight ? AppColorsTheme.light() : AppColorsTheme.dark(),
+      ],
       scaffoldBackgroundColor: isLight ? bgLight : bgDark,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
