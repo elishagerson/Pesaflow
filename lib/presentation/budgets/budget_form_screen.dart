@@ -215,9 +215,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: onSurface.withValues(alpha: 0.07),
-          ),
+          borderSide: BorderSide(color: onSurface.withValues(alpha: 0.07)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

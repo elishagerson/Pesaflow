@@ -18,7 +18,8 @@ class Deduplicator {
     //    Skip the check when the reference is a sentinel value (parser
     //    couldn't extract a real reference).  Any reference matching
     //    `XXXX-REF-UNKNOWN` or `NBC-REF-*` pattern is a sentinel.
-    final isSentinel = sms.reference.endsWith('-REF-UNKNOWN') ||
+    final isSentinel =
+        sms.reference.endsWith('-REF-UNKNOWN') ||
         sms.reference.startsWith('NBC-REF-');
     if (!isSentinel) {
       final exists = await _transactionRepository.transactionExistsByReference(

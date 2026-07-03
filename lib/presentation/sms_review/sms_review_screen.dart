@@ -53,9 +53,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
             return Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  width: 40,
-                  height: 4,
+                  margin: const EdgeInsets.only(top: kSpacing12),
+                  width: kSpacing40,
+                  height: kSpacing4,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(2),
@@ -331,7 +331,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                         ),
-                                        const SizedBox(height: 2),
+                                        const SizedBox(height: kSpacing2),
                                         Text(
                                           'Swipe right to approve, left to reject',
                                           style: theme.textTheme.labelMedium
@@ -435,7 +435,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   ),
                                   // Left Accent Border strip (dynamic category colored)
                                   Container(
-                                    width: 5,
+                                    width: kSpacing4,
                                     color: hexToColor(item.category.color),
                                   ),
                                   // Main content
@@ -687,13 +687,28 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       ),
                                                   decoration: BoxDecoration(
                                                     color: context.isDark
-                                                        ? Colors.white.withValues(alpha: 0.06)
-                                                        : Colors.black.withValues(alpha: 0.03),
-                                                    borderRadius: BorderRadius.circular(100),
+                                                        ? Colors.white
+                                                              .withValues(
+                                                                alpha: 0.06,
+                                                              )
+                                                        : Colors.black
+                                                              .withValues(
+                                                                alpha: 0.03,
+                                                              ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
                                                     border: Border.all(
                                                       color: context.isDark
-                                                          ? Colors.white.withValues(alpha: 0.10)
-                                                          : Colors.black.withValues(alpha: 0.05),
+                                                          ? Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.10,
+                                                                )
+                                                          : Colors.black
+                                                                .withValues(
+                                                                  alpha: 0.05,
+                                                                ),
                                                       width: 0.8,
                                                     ),
                                                   ),

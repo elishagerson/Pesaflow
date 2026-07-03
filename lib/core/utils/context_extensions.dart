@@ -7,7 +7,8 @@ extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
 
   AppColorsTheme get appColors => Theme.of(this).extension<AppColorsTheme>()!;
-  AppTypographyTheme get appTypography => Theme.of(this).extension<AppTypographyTheme>()!;
+  AppTypographyTheme get appTypography =>
+      Theme.of(this).extension<AppTypographyTheme>()!;
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 

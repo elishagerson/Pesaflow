@@ -317,9 +317,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     ),
                     child: Text(
                       '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
-                      style: TextStyle(
-                        color: onSurface,
-                      ),
+                      style: TextStyle(color: onSurface),
                     ),
                   ),
                 ),

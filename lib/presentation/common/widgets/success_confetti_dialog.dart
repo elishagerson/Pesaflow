@@ -119,7 +119,9 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
               child: Container(
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.93),
+                  color: theme.colorScheme.surfaceContainerHigh.withValues(
+                    alpha: 0.93,
+                  ),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
@@ -183,7 +185,9 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       'You have successfully completed your savings goal for:',
                       style: TextStyle(
                         fontSize: 13,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),

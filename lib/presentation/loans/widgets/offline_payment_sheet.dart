@@ -109,7 +109,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'No wallet account will be affected',
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: onSurface.withValues(alpha: 0.6),
+                                              color: onSurface.withValues(
+                                                alpha: 0.6,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -131,7 +133,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: onSurface.withValues(alpha: 0.07),
+                                        color: onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
                                       ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
@@ -145,7 +149,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w900,
-                                            color: onSurface.withValues(alpha: 0.55),
+                                            color: onSurface.withValues(
+                                              alpha: 0.55,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -190,13 +196,17 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             child: Container(
                                               padding: const EdgeInsets.all(4),
                                               decoration: BoxDecoration(
-                                                color: onSurface.withValues(alpha: 0.07),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.07,
+                                                ),
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
                                                 PesaFlowIcons.close,
                                                 size: 18,
-                                                color: onSurface.withValues(alpha: 0.55),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.55,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -312,7 +322,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: onSurface.withValues(alpha: 0.07),
+                                        color: onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
                                       ),
                                     ),
                                     child: TextField(
@@ -326,12 +338,16 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
-                                          color: onSurface.withValues(alpha: 0.28),
+                                          color: onSurface.withValues(
+                                            alpha: 0.28,
+                                          ),
                                         ),
                                         prefixIcon: Icon(
                                           PesaFlowIcons.edit,
                                           size: 20,
-                                          color: onSurface.withValues(alpha: 0.32),
+                                          color: onSurface.withValues(
+                                            alpha: 0.32,
+                                          ),
                                         ),
                                         border: InputBorder.none,
                                         contentPadding:
@@ -422,12 +438,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           0xFF609F8A,
                                         ),
                                         foregroundColor: Colors.white,
-                                        disabledBackgroundColor: onSurface.withValues(
-                                            alpha: 0.05,
-                                          ),
-                                        disabledForegroundColor: onSurface.withValues(
-                                            alpha: 0.25,
-                                          ),
+                                        disabledBackgroundColor: onSurface
+                                            .withValues(alpha: 0.05),
+                                        disabledForegroundColor: onSurface
+                                            .withValues(alpha: 0.25),
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(

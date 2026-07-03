@@ -120,14 +120,18 @@ class IosTabBar extends StatelessWidget {
                                 ? theme.colorScheme.primary.withValues(
                                     alpha: 0.20,
                                   )
-                                : theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.05,
+                                  ),
                           ),
                           child: Center(
                             child: Icon(
                               tab.icon,
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.4,
+                                    ),
                               size: minimized ? 18 : 26,
                             ),
                           ),
@@ -191,7 +195,9 @@ class IosTabBar extends StatelessWidget {
                                   size: minimized ? 20 : 22,
                                   color: isSelected
                                       ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                      : theme.colorScheme.onSurface.withValues(
+                                          alpha: 0.4,
+                                        ),
                                 ),
                               ),
                               if (!minimized) ...[
@@ -206,7 +212,8 @@ class IosTabBar extends StatelessWidget {
                                         : FontWeight.w500,
                                     color: isSelected
                                         ? theme.colorScheme.primary
-                                        : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                        : theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.4),
                                   ),
                                 ),
                               ],

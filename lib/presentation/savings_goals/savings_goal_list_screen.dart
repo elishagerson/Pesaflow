@@ -79,12 +79,8 @@ class SavingsGoalListScreen extends ConsumerWidget {
                   const SizedBox(height: kSpacing12),
                   StaggeredList(
                     itemCount: goals.length,
-                    itemBuilder: (context, index) => _buildGoalCard(
-                      context,
-                      ref,
-                      goals[index],
-                      theme,
-                    ),
+                    itemBuilder: (context, index) =>
+                        _buildGoalCard(context, ref, goals[index], theme),
                   ),
                 ],
               ),
@@ -318,9 +314,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                   const SizedBox(height: kSpacing2),
                                   Text(
                                     'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                    style: context.appTypography.labelMicro.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                                    style: context.appTypography.labelMicro
+                                        .copyWith(
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -341,10 +340,11 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       'COMPLETED',
-                                      style: context.appTypography.labelMicro.copyWith(
-                                        fontSize: 9,
-                                        color: theme.colorScheme.primary,
-                                      ),
+                                      style: context.appTypography.labelMicro
+                                          .copyWith(
+                                            fontSize: 9,
+                                            color: theme.colorScheme.primary,
+                                          ),
                                     ),
                                   )
                                 else

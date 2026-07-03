@@ -237,7 +237,9 @@ class _SavingsGoalDetailScreenState
                                                   : 'Take money out of your savings goal',
                                               style: TextStyle(
                                                 fontSize: 12,
-                                                color: onSurface.withValues(alpha: 0.6),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.6,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -260,7 +262,9 @@ class _SavingsGoalDetailScreenState
                                       color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: onSurface.withValues(alpha: 0.07),
+                                        color: onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
                                       ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
@@ -296,10 +300,14 @@ class _SavingsGoalDetailScreenState
                                             decoration: InputDecoration(
                                               hintText: '0',
                                               hintStyle: TextStyle(
-                                                color: onSurface.withValues(alpha: 0.28),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.28,
+                                                ),
                                               ),
                                               filled: true,
-                                              fillColor: theme.colorScheme.surfaceContainerHigh,
+                                              fillColor: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHigh,
                                               border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(14),
@@ -308,8 +316,10 @@ class _SavingsGoalDetailScreenState
                                               enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(14),
-                                                  borderSide: BorderSide(
-                                                   color: onSurface.withValues(alpha: 0.07),
+                                                borderSide: BorderSide(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.07,
+                                                  ),
                                                 ),
                                               ),
                                               focusedBorder: OutlineInputBorder(
@@ -342,13 +352,17 @@ class _SavingsGoalDetailScreenState
                                                 kSpacing4,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: onSurface.withValues(alpha: 0.07),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.07,
+                                                ),
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
                                                 PesaFlowIcons.close,
                                                 size: 18,
-                                                color: onSurface.withValues(alpha: 0.5),
+                                                color: onSurface.withValues(
+                                                  alpha: 0.5,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -376,15 +390,21 @@ class _SavingsGoalDetailScreenState
                                     decoration: InputDecoration(
                                       hintText: 'Add an optional note',
                                       hintStyle: TextStyle(
-                                        color: onSurface.withValues(alpha: 0.28),
+                                        color: onSurface.withValues(
+                                          alpha: 0.28,
+                                        ),
                                       ),
                                       prefixIcon: Icon(
                                         PesaFlowIcons.edit,
                                         size: 20,
-                                        color: onSurface.withValues(alpha: 0.32),
+                                        color: onSurface.withValues(
+                                          alpha: 0.32,
+                                        ),
                                       ),
                                       filled: true,
-                                      fillColor: theme.colorScheme.surfaceContainerHigh,
+                                      fillColor: theme
+                                          .colorScheme
+                                          .surfaceContainerHigh,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(14),
                                         borderSide: BorderSide.none,
@@ -392,7 +412,9 @@ class _SavingsGoalDetailScreenState
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(14),
                                         borderSide: BorderSide(
-                                          color: onSurface.withValues(alpha: 0.07),
+                                          color: onSurface.withValues(
+                                            alpha: 0.07,
+                                          ),
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -416,7 +438,9 @@ class _SavingsGoalDetailScreenState
                                       color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: onSurface.withValues(alpha: 0.07),
+                                        color: onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
                                       ),
                                     ),
                                     child: Column(
@@ -451,7 +475,10 @@ class _SavingsGoalDetailScreenState
                                                       'Updates real balance & logs a transaction',
                                                       style: TextStyle(
                                                         fontSize: 12,
-                                                        color: onSurface.withValues(alpha: 0.38),
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.38,
+                                                            ),
                                                       ),
                                                     ),
                                                   ],
@@ -473,7 +500,9 @@ class _SavingsGoalDetailScreenState
                                           Divider(
                                             height: 0.5,
                                             thickness: 0.5,
-                                            color: onSurface.withValues(alpha: 0.07),
+                                            color: onSurface.withValues(
+                                              alpha: 0.07,
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -486,7 +515,9 @@ class _SavingsGoalDetailScreenState
                                                   Icons
                                                       .account_balance_wallet_rounded,
                                                   size: 18,
-                                                  color: onSurface.withValues(alpha: 0.38),
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.38,
+                                                  ),
                                                 ),
                                                 const SizedBox(
                                                   width: kSpacing10,
@@ -503,13 +534,16 @@ class _SavingsGoalDetailScreenState
                                                 ),
                                                 DropdownButton<String>(
                                                   value: _selectedAccountId,
-                                                  dropdownColor: theme.colorScheme.surface,
+                                                  dropdownColor:
+                                                      theme.colorScheme.surface,
                                                   underline: const SizedBox(),
                                                   icon: Icon(
                                                     Icons
                                                         .keyboard_arrow_down_rounded,
                                                     size: 20,
-                                                    color: onSurface.withValues(alpha: 0.5),
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.5,
+                                                    ),
                                                   ),
                                                   style: TextStyle(
                                                     fontSize: 14,

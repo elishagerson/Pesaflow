@@ -39,11 +39,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 color: onSurface.withValues(alpha: 0.06),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                PesaFlowIcons.edit,
-                size: 18,
-                color: onSurface,
-              ),
+              child: Icon(PesaFlowIcons.edit, size: 18, color: onSurface),
             ),
           ),
           const SizedBox(width: 8),
@@ -155,9 +151,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: mutedCatColor.withValues(
-                              alpha: 0.14,
-                            ),
+                            color: mutedCatColor.withValues(alpha: 0.14),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: mutedCatColor.withValues(alpha: 0.35),
@@ -165,9 +159,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: mutedCatColor.withValues(
-                                  alpha: 0.2,
-                                ),
+                                color: mutedCatColor.withValues(alpha: 0.2),
                                 blurRadius: 20,
                                 spreadRadius: 4,
                               ),
@@ -201,9 +193,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: amountColor.withValues(
-                              alpha: 0.115,
-                            ),
+                            color: amountColor.withValues(alpha: 0.115),
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(
                               color: amountColor.withValues(alpha: 0.25),

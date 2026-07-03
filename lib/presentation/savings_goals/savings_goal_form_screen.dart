@@ -176,9 +176,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-          color: onSurface.withValues(alpha: 0.07),
-          ),
+          borderSide: BorderSide(color: onSurface.withValues(alpha: 0.07)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -312,10 +310,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               color: colorVal,
                               shape: BoxShape.circle,
                               border: isSelected
-                                  ? Border.all(
-                                  color: onSurface,
-                                      width: 3,
-                                    )
+                                  ? Border.all(color: onSurface, width: 3)
                                   : Border.all(
                                       color: colorVal.withValues(alpha: 0.3),
                                       width: 1,

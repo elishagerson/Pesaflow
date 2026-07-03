@@ -269,7 +269,9 @@ class _SavingsGoalDetailSheetState
                                                     : 'Take money out of your savings goal',
                                                 style: TextStyle(
                                                   fontSize: 12,
-color: onSurface.withValues(alpha: 0.6),
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.6,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -291,10 +293,12 @@ color: onSurface.withValues(alpha: 0.6),
                                     const SizedBox(height: 8),
                                     Container(
                                       decoration: BoxDecoration(
-color: theme.colorScheme.surface,
+                                        color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
-                                          color: onSurface.withValues(alpha: 0.07),
+                                          color: onSurface.withValues(
+                                            alpha: 0.07,
+                                          ),
                                         ),
                                       ),
                                       padding: const EdgeInsets.symmetric(
@@ -331,10 +335,14 @@ color: theme.colorScheme.surface,
                                               decoration: InputDecoration(
                                                 hintText: '0',
                                                 hintStyle: TextStyle(
-                                                  color: onSurface.withValues(alpha: 0.28),
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.28,
+                                                  ),
                                                 ),
                                                 filled: true,
-                                                fillColor: theme.colorScheme.surfaceContainerHigh,
+                                                fillColor: theme
+                                                    .colorScheme
+                                                    .surfaceContainerHigh,
                                                 border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(14),
@@ -346,11 +354,14 @@ color: theme.colorScheme.surface,
                                                           BorderRadius.circular(
                                                             14,
                                                           ),
-                                                       borderSide: BorderSide(
-                                                         color: onSurface.withValues(alpha: 0.07),
-                                                       ),
-                                                     ),
-                                                     focusedBorder:
+                                                      borderSide: BorderSide(
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.07,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                focusedBorder:
                                                     OutlineInputBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -385,13 +396,17 @@ color: theme.colorScheme.surface,
                                                   4,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  color: onSurface.withValues(alpha: 0.07),
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.07,
+                                                  ),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Icon(
                                                   PesaFlowIcons.close,
                                                   size: 18,
-                                                  color: onSurface.withValues(alpha: 0.5),
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.5,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -422,15 +437,21 @@ color: theme.colorScheme.surface,
                                         hintText:
                                             'Add an optional note (e.g. Salary bonus)',
                                         hintStyle: TextStyle(
-                                          color: onSurface.withValues(alpha: 0.28),
+                                          color: onSurface.withValues(
+                                            alpha: 0.28,
+                                          ),
                                         ),
                                         prefixIcon: Icon(
                                           PesaFlowIcons.edit,
                                           size: 20,
-                                          color: onSurface.withValues(alpha: 0.32),
+                                          color: onSurface.withValues(
+                                            alpha: 0.32,
+                                          ),
                                         ),
                                         filled: true,
-                                        fillColor: theme.colorScheme.surfaceContainerHigh,
+                                        fillColor: theme
+                                            .colorScheme
+                                            .surfaceContainerHigh,
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
                                             14,
@@ -442,7 +463,9 @@ color: theme.colorScheme.surface,
                                             14,
                                           ),
                                           borderSide: BorderSide(
-                                            color: onSurface.withValues(alpha: 0.07),
+                                            color: onSurface.withValues(
+                                              alpha: 0.07,
+                                            ),
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
@@ -467,10 +490,12 @@ color: theme.colorScheme.surface,
                                     // Wallet deduct toggle
                                     Container(
                                       decoration: BoxDecoration(
-color: theme.colorScheme.surface,
+                                        color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: onSurface.withValues(alpha: 0.07),
+                                          color: onSurface.withValues(
+                                            alpha: 0.07,
+                                          ),
                                         ),
                                       ),
                                       child: Column(
@@ -504,7 +529,10 @@ color: theme.colorScheme.surface,
                                                         'Updates real balance & logs a transaction',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          color: onSurface.withValues(alpha: 0.38),
+                                                          color: onSurface
+                                                              .withValues(
+                                                                alpha: 0.38,
+                                                              ),
                                                         ),
                                                       ),
                                                     ],
@@ -526,7 +554,9 @@ color: theme.colorScheme.surface,
                                             Divider(
                                               height: 0.5,
                                               thickness: 0.5,
-                                              color: onSurface.withValues(alpha: 0.07),
+                                              color: onSurface.withValues(
+                                                alpha: 0.07,
+                                              ),
                                             ),
                                             Padding(
                                               padding:
@@ -539,7 +569,9 @@ color: theme.colorScheme.surface,
                                                   Icon(
                                                     PesaFlowIcons.wallet,
                                                     size: 18,
-                                                    color: onSurface.withValues(alpha: 0.38),
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.38,
+                                                    ),
                                                   ),
                                                   const SizedBox(width: 10),
                                                   const Expanded(
@@ -554,13 +586,18 @@ color: theme.colorScheme.surface,
                                                   ),
                                                   DropdownButton<String>(
                                                     value: _selectedAccountId,
-                                                    dropdownColor: theme.colorScheme.surface,
+                                                    dropdownColor: theme
+                                                        .colorScheme
+                                                        .surface,
                                                     underline: const SizedBox(),
                                                     icon: Icon(
                                                       Icons
                                                           .keyboard_arrow_down_rounded,
                                                       size: 20,
-                                                      color: onSurface.withValues(alpha: 0.5),
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
                                                     ),
                                                     style: TextStyle(
                                                       fontSize: 14,
@@ -626,7 +663,8 @@ color: theme.colorScheme.surface,
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: accentColor,
                                             foregroundColor: Colors.white,
-                                            disabledBackgroundColor: onSurface.withValues(alpha: 0.05),
+                                            disabledBackgroundColor: onSurface
+                                                .withValues(alpha: 0.05),
                                             elevation: 0,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:

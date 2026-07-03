@@ -441,7 +441,9 @@ class BudgetListScreen extends ConsumerWidget {
                                       bp.category.name,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
-                                            color: onSurface.withValues(alpha: 0.38),
+                                            color: onSurface.withValues(
+                                              alpha: 0.38,
+                                            ),
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
@@ -525,7 +527,9 @@ class BudgetListScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(100),
                             child: LinearProgressIndicator(
                               value: status.percentage.clamp(0.0, 1.0),
-                              backgroundColor: onSurface.withValues(alpha: 0.05),
+                              backgroundColor: onSurface.withValues(
+                                alpha: 0.05,
+                              ),
                               color: status.isOverBudget
                                   ? const Color(0xFFFF453A)
                                   : mutedCatColor,
@@ -775,7 +779,9 @@ class BudgetListScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusCard,
                           ),
-                          color: theme.colorScheme.surface.withValues(alpha: 0.85),
+                          color: theme.colorScheme.surface.withValues(
+                            alpha: 0.85,
+                          ),
                         ),
                         child: IntrinsicHeight(
                           child: Row(

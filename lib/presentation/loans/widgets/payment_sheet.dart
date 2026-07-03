@@ -305,7 +305,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
                                             style: TextStyle(
                                               fontSize: 13,
-                                              color: onSurface.withValues(alpha: 0.6),
+                                              color: onSurface.withValues(
+                                                alpha: 0.6,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -442,7 +444,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: onSurface.withValues(alpha: 0.07),
+                                        color: onSurface.withValues(
+                                          alpha: 0.07,
+                                        ),
                                       ),
                                     ),
                                     child: TextField(
@@ -456,12 +460,16 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
-                                          color: onSurface.withValues(alpha: 0.28),
+                                          color: onSurface.withValues(
+                                            alpha: 0.28,
+                                          ),
                                         ),
                                         prefixIcon: Icon(
                                           PesaFlowIcons.edit,
                                           size: 20,
-                                          color: onSurface.withValues(alpha: 0.32),
+                                          color: onSurface.withValues(
+                                            alpha: 0.32,
+                                          ),
                                         ),
                                         border: InputBorder.none,
                                         contentPadding:
@@ -577,7 +585,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         ).withValues(
                                                           alpha: 0.12,
                                                         )
-                                                      : theme.colorScheme.surface,
+                                                      : theme
+                                                            .colorScheme
+                                                            .surface,
                                                   borderRadius:
                                                       BorderRadius.circular(14),
                                                   border: Border.all(
@@ -587,7 +597,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                           ).withValues(
                                                             alpha: 0.5,
                                                           )
-                                                        : onSurface.withValues(alpha: 0.07),
+                                                        : onSurface.withValues(
+                                                            alpha: 0.07,
+                                                          ),
                                                     width: isSelected ? 1.5 : 1,
                                                   ),
                                                 ),
@@ -605,7 +617,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               ).withValues(
                                                                 alpha: 0.2,
                                                               )
-                                                            : onSurface.withValues(alpha: 0.05),
+                                                            : onSurface
+                                                                  .withValues(
+                                                                    alpha: 0.05,
+                                                                  ),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
@@ -619,7 +634,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                             ? const Color(
                                                                 0xFF609F8A,
                                                               )
-                                                            : onSurface.withValues(alpha: 0.55),
+                                                            : onSurface
+                                                                  .withValues(
+                                                                    alpha: 0.55,
+                                                                  ),
                                                       ),
                                                     ),
                                                     const SizedBox(width: 12),
@@ -655,7 +673,11 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                 'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
                                                                 style: TextStyle(
                                                                   fontSize: 12,
-                                                                  color: onSurface.withValues(alpha: 0.38),
+                                                                  color: onSurface
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.38,
+                                                                      ),
                                                                 ),
                                                               ),
                                                               if (selectedAccountId !=
@@ -805,12 +827,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             0xFF609F8A,
                                           ),
                                           foregroundColor: Colors.white,
-                                          disabledBackgroundColor: onSurface.withValues(
-                                              alpha: 0.05,
-                                            ),
-                                          disabledForegroundColor: onSurface.withValues(
-                                              alpha: 0.25,
-                                            ),
+                                          disabledBackgroundColor: onSurface
+                                              .withValues(alpha: 0.05),
+                                          disabledForegroundColor: onSurface
+                                              .withValues(alpha: 0.25),
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -895,9 +915,7 @@ Widget _buildAmountField({
     decoration: BoxDecoration(
       color: theme.colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: onSurface.withValues(alpha: 0.07),
-      ),
+      border: Border.all(color: onSurface.withValues(alpha: 0.07)),
     ),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     child: Row(

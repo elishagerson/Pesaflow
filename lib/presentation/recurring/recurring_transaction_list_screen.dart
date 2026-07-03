@@ -107,10 +107,7 @@ class _RecurringTransactionListScreenState
                       SliverToBoxAdapter(
                         child: StaggeredFadeSlide(
                           index: 1,
-                          child: _buildSegmentedFilter(
-                            theme,
-                            recurring,
-                          ),
+                          child: _buildSegmentedFilter(theme, recurring),
                         ),
                       ),
 
@@ -329,12 +326,7 @@ class _RecurringTransactionListScreenState
     );
   }
 
-  Widget _statPill(
-    ThemeData theme,
-    String value,
-    String label,
-    Color color,
-  ) {
+  Widget _statPill(ThemeData theme, String value, String label, Color color) {
     return Column(
       children: [
         Container(
@@ -422,12 +414,7 @@ class _RecurringTransactionListScreenState
             expenseCount,
             _RecurringFilter.expenses,
           ),
-          _filterTab(
-            theme,
-            'Income',
-            incomeCount,
-            _RecurringFilter.income,
-          ),
+          _filterTab(theme, 'Income', incomeCount, _RecurringFilter.income),
         ],
       ),
     );
@@ -544,9 +531,7 @@ class _RecurringTransactionListScreenState
         : recurring.status != 'active'
         ? Colors.grey
         : categoryColor ??
-              (isExpense
-                  ? AppTheme.expenseColor
-                  : AppTheme.incomeColor);
+              (isExpense ? AppTheme.expenseColor : AppTheme.incomeColor);
     final mutedAccent = categoryColor != null
         ? desaturateColor(accentColor)
         : accentColor;

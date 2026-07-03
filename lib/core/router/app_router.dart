@@ -319,7 +319,9 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                           size: 20,
                           color: isSelected
                               ? const Color(0xFF0F4C5C)
-                              : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -330,7 +332,9 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                                 : FontWeight.w500,
                             color: isSelected
                                 ? const Color(0xFF0F4C5C)
-                                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                           ),
                         ),
                       ],

@@ -209,11 +209,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   width: 0.8,
                 ),
               ),
-              child: Icon(
-                Icons.search_rounded,
-                color: onSurface,
-                size: 20,
-              ),
+              child: Icon(Icons.search_rounded, color: onSurface, size: 20),
             ),
           ),
           const SizedBox(width: kSpacing8),
@@ -334,9 +330,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: trackerColor.withValues(
-                              alpha: 0.18,
-                            ),
+                            color: trackerColor.withValues(alpha: 0.18),
                             blurRadius: 40,
                             offset: const Offset(0, 12),
                           ),
@@ -356,7 +350,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 19,
-                                      color: Colors.white.withValues(alpha: 0.85),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.85,
+                                      ),
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -519,7 +515,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           ),
                                           border: Border.all(
                                             color: isSelected
-                                                ? Colors.white.withValues(alpha: 0.6)
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.6,
+                                                  )
                                                 : pillBorder,
                                             width: isSelected ? 1.5 : 0.8,
                                           ),
@@ -553,8 +551,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     fontFamily: 'monospace',
                                                     fontWeight: FontWeight.bold,
                                                     color: isSelected
-                                                        ? Colors.white.withValues(alpha: 0.9)
-                                                        : heroTextColor.withValues(alpha: 0.8),
+                                                        ? Colors.white
+                                                              .withValues(
+                                                                alpha: 0.9,
+                                                              )
+                                                        : heroTextColor
+                                                              .withValues(
+                                                                alpha: 0.8,
+                                                              ),
                                                   ),
                                             ),
                                           ],
@@ -877,7 +881,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 vertical: kSpacing40,
                               ),
                               decoration: BoxDecoration(
-                              color: theme.colorScheme.surface,
+                                color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusCard,
                                 ),
@@ -980,12 +984,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                          color: onSurface.withValues(alpha: 0.08),
+                                          color: onSurface.withValues(
+                                            alpha: 0.08,
+                                          ),
                                           width: 0.5,
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: onSurface.withValues(alpha: 0.08),
+                                            color: onSurface.withValues(
+                                              alpha: 0.08,
+                                            ),
                                             blurRadius: 8,
                                             offset: const Offset(0, 4),
                                           ),
@@ -1131,7 +1139,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
 
-    // ── 6. At a Glance — summary nav cards ──
+                // ── 6. At a Glance — summary nav cards ──
                 const SizedBox(height: kSpacing20),
                 _SummaryNavCardRow(
                   budgets: budgets,
@@ -1139,7 +1147,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   savingsGoals: savingsGoalsAsync.value ?? [],
                   activeRecurringCount: recsAsync.maybeWhen(
                     data: (recs) => recs
-                        .where((r) => r.type == 'expense' && r.status == 'active')
+                        .where(
+                          (r) => r.type == 'expense' && r.status == 'active',
+                        )
                         .length,
                     orElse: () => 0,
                   ),
@@ -1198,14 +1208,17 @@ class _SummaryNavCardRow extends StatelessWidget {
           if (savingsGoals.isNotEmpty)
             _SummaryNavCard(
               icon: PesaFlowIcons.target,
-              metric: '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
+              metric:
+                  '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
               label: 'Emergency vault',
               color: const Color(0xFF609F8A),
               onTap: () => context.go('/savings-goals'),
             ),
           _SummaryNavCard(
             icon: PesaFlowIcons.calendar,
-            metric: dueCount > 0 ? '$dueCount due' : '$activeRecurringCount active',
+            metric: dueCount > 0
+                ? '$dueCount due'
+                : '$activeRecurringCount active',
             label: 'Recurring',
             color: const Color(0xFFFF6B35),
             onTap: () => context.go('/recurring'),

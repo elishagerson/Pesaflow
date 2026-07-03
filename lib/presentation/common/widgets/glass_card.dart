@@ -122,9 +122,7 @@ class _GlassCardState extends State<GlassCard>
           ? BoxDecoration(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(
-                color: widget.accentColor!.withValues(
-                  alpha: 0.16,
-                ),
+                color: widget.accentColor!.withValues(alpha: 0.16),
                 width: 0.5,
               ),
             )
@@ -143,7 +141,9 @@ class _GlassCardState extends State<GlassCard>
                   child: Container(color: Colors.transparent),
                 ),
               ),
-            if (widget.accentColor != null && widget.onTap != null && widget.showAccentStrip)
+            if (widget.accentColor != null &&
+                widget.onTap != null &&
+                widget.showAccentStrip)
               Positioned(
                 top: 0,
                 left: 0,
@@ -151,9 +151,7 @@ class _GlassCardState extends State<GlassCard>
                 child: Container(
                   height: widget.accentWidth,
                   decoration: BoxDecoration(
-                    color: widget.accentColor!.withValues(
-                      alpha: 0.30,
-                    ),
+                    color: widget.accentColor!.withValues(alpha: 0.30),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(widget.borderRadius),
                       topRight: Radius.circular(widget.borderRadius),
@@ -163,7 +161,9 @@ class _GlassCardState extends State<GlassCard>
               ),
             Padding(
               padding: (widget.padding ?? EdgeInsets.zero).add(
-                widget.accentColor != null && widget.onTap != null && widget.showAccentStrip
+                widget.accentColor != null &&
+                        widget.onTap != null &&
+                        widget.showAccentStrip
                     ? EdgeInsets.only(top: widget.accentWidth + 2)
                     : EdgeInsets.zero,
               ),

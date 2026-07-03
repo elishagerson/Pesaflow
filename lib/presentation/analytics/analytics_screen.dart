@@ -12,7 +12,6 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -189,7 +188,7 @@ class AnalyticsScreen extends ConsumerWidget {
                   height: 38,
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
+                    color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
                       color: onSurface.withValues(alpha: 0.1),
@@ -205,7 +204,9 @@ class AnalyticsScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.shadow.withValues(alpha: 0.04),
+                          color: theme.colorScheme.shadow.withValues(
+                            alpha: 0.04,
+                          ),
                           blurRadius: 1,
                           offset: const Offset(0, 1),
                         ),
@@ -307,7 +308,9 @@ class _OverviewTab extends StatelessWidget {
                       Text(
                         'THIS MONTH',
                         style: TextStyle(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                           fontSize: 11,
                           letterSpacing: 1.2,
                           fontWeight: FontWeight.bold,
@@ -323,7 +326,8 @@ class _OverviewTab extends StatelessWidget {
                                 Text(
                                   'Income',
                                   style: TextStyle(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -346,7 +350,8 @@ class _OverviewTab extends StatelessWidget {
                                 Text(
                                   'Expense',
                                   style: TextStyle(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -368,7 +373,9 @@ class _OverviewTab extends StatelessWidget {
                       Divider(
                         height: 0.5,
                         thickness: 0.5,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.06,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -377,7 +384,9 @@ class _OverviewTab extends StatelessWidget {
                           Text(
                             net >= 0 ? 'Net Savings' : 'Net Deficit',
                             style: TextStyle(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
@@ -402,7 +411,9 @@ class _OverviewTab extends StatelessWidget {
                       Text(
                         'Savings rate: $savingsRate%',
                         style: TextStyle(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                           fontSize: 11,
                         ),
                       ),
@@ -574,12 +585,16 @@ class _OverviewTab extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.03),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.03,
+                        ),
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusCard,
                         ),
                         border: Border.all(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.07),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.07,
+                          ),
                           width: 0.5,
                         ),
                       ),
@@ -621,7 +636,9 @@ class _OverviewTab extends StatelessWidget {
                                 ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
                                 : 'Set a visual savings goal target to build a structured emergency safety vault.',
                             style: TextStyle(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.78,
+                              ),
                               fontSize: 12,
                               height: 1.4,
                             ),
@@ -935,7 +952,9 @@ class _TrendsTab extends StatelessWidget {
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.06,
+                      ),
                       width: 0.8,
                     ),
                   ),
@@ -1001,11 +1020,15 @@ class _TrendsTab extends StatelessWidget {
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (touchedSpot) {
-                                  return theme.colorScheme.surface.withValues(alpha: 0.95);
+                                  return theme.colorScheme.surface.withValues(
+                                    alpha: 0.95,
+                                  );
                                 },
                                 tooltipBorderRadius: BorderRadius.circular(12),
                                 tooltipBorder: BorderSide(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.09),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.09,
+                                  ),
                                   width: 1,
                                 ),
                                 getTooltipItems: (List<LineBarSpot> touchedSpots) {

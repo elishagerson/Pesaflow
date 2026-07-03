@@ -261,11 +261,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     );
   }
 
-  Widget _buildDetailRow(
-    IconData icon,
-    String label,
-    String value,
-  ) {
+  Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
       children: [
         Icon(icon, size: 14, color: Colors.grey),
@@ -284,7 +280,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             value,
             style: TextStyle(
               fontSize: 11,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.end,
             maxLines: 1,

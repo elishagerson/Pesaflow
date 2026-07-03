@@ -535,9 +535,7 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
-    final bg =
-        color ??
-        onSurface.withValues(alpha: 0.06);
+    final bg = color ?? onSurface.withValues(alpha: 0.06);
     final fg = textColor ?? onSurface.withValues(alpha: 0.62);
 
     return GestureDetector(
@@ -595,9 +593,7 @@ class _DateButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: onSurface.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: onSurface.withValues(alpha: 0.10),
-          ),
+          border: Border.all(color: onSurface.withValues(alpha: 0.10)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

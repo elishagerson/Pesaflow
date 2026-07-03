@@ -488,7 +488,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                   item.account?.name ??
                                                       'Offline',
                                                   style: TextStyle(
-                                                    color: onSurface.withValues(alpha: 0.6),
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.6,
+                                                    ),
                                                     fontSize: 11,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -498,26 +500,32 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                         .reference!
                                                         .isNotEmpty) ...[
                                                   const SizedBox(width: 6),
-                                                Text(
-                                                  '•',
-                                                  style: TextStyle(
-                                                    color: onSurface.withValues(alpha: 0.11),
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 6),
-                                                Flexible(
-                                                  child: Text(
-                                                    trans.reference!,
+                                                  Text(
+                                                    '•',
                                                     style: TextStyle(
-                                                      color: onSurface.withValues(alpha: 0.34),
-                                                      fontSize: 11,
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.11,
+                                                          ),
+                                                      fontSize: 10,
                                                     ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
                                                   ),
-                                                ),
+                                                  const SizedBox(width: 6),
+                                                  Flexible(
+                                                    child: Text(
+                                                      trans.reference!,
+                                                      style: TextStyle(
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.34,
+                                                            ),
+                                                        fontSize: 11,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
                                                 ],
                                                 if (trans.source.startsWith(
                                                   'sms',
@@ -579,7 +587,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           Text(
                                             formattedTime,
                                             style: TextStyle(
-                                            color: onSurface.withValues(alpha: 0.25),
+                                              color: onSurface.withValues(
+                                                alpha: 0.25,
+                                              ),
                                               fontSize: 11,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -775,16 +785,22 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         height: 36,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: onSurface.withValues(alpha: 0.04),
+                                          color: onSurface.withValues(
+                                            alpha: 0.04,
+                                          ),
                                           border: Border.all(
-                                            color: onSurface.withValues(alpha: 0.08),
+                                            color: onSurface.withValues(
+                                              alpha: 0.08,
+                                            ),
                                             width: 0.8,
                                           ),
                                         ),
                                         child: Icon(
                                           Icons.search_rounded,
                                           size: 18,
-                                          color: onSurface.withValues(alpha: 0.62),
+                                          color: onSurface.withValues(
+                                            alpha: 0.62,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -794,16 +810,22 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       height: 36,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: onSurface.withValues(alpha: 0.04),
+                                        color: onSurface.withValues(
+                                          alpha: 0.04,
+                                        ),
                                         border: Border.all(
-                                          color: onSurface.withValues(alpha: 0.08),
+                                          color: onSurface.withValues(
+                                            alpha: 0.08,
+                                          ),
                                           width: 0.8,
                                         ),
                                       ),
                                       child: Icon(
                                         Icons.person_outline_rounded,
                                         size: 18,
-                                        color: onSurface.withValues(alpha: 0.62),
+                                        color: onSurface.withValues(
+                                          alpha: 0.62,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -844,7 +866,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         icon: Icon(
                                           Icons.clear_rounded,
                                           size: 16,
-                                          color: onSurface.withValues(alpha: 0.54),
+                                          color: onSurface.withValues(
+                                            alpha: 0.54,
+                                          ),
                                         ),
                                         onPressed: () {
                                           ref
@@ -895,14 +919,18 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                : onSurface.withValues(alpha: 0.04),
+                                                : onSurface.withValues(
+                                                    alpha: 0.04,
+                                                  ),
                                             borderRadius: BorderRadius.circular(
                                               100,
                                             ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary
-                                                  : onSurface.withValues(alpha: 0.06),
+                                                  : onSurface.withValues(
+                                                      alpha: 0.06,
+                                                    ),
                                               width: 0.8,
                                             ),
                                           ),
@@ -911,7 +939,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                             style: TextStyle(
                                               color: isSelected
                                                   ? theme.colorScheme.onPrimary
-                                                  : onSurface.withValues(alpha: 0.52),
+                                                  : onSurface.withValues(
+                                                      alpha: 0.52,
+                                                    ),
                                               fontWeight: isSelected
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,

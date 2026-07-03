@@ -88,11 +88,8 @@ class LoanListScreen extends ConsumerWidget {
                       const SizedBox(height: 4),
                       StaggeredList(
                         itemCount: activeLoans.length,
-                        itemBuilder: (context, index) => _buildLoanTile(
-                          context,
-                          activeLoans[index],
-                          theme,
-                        ),
+                        itemBuilder: (context, index) =>
+                            _buildLoanTile(context, activeLoans[index], theme),
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -359,11 +356,7 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanTile(
-    BuildContext context,
-    Loan loan,
-    ThemeData theme,
-  ) {
+  Widget _buildLoanTile(BuildContext context, Loan loan, ThemeData theme) {
     final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
@@ -477,11 +470,7 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaidLoanTile(
-    BuildContext context,
-    Loan loan,
-    ThemeData theme,
-  ) {
+  Widget _buildPaidLoanTile(BuildContext context, Loan loan, ThemeData theme) {
     return Hero(
       tag: 'loan-${loan.id}',
       child: GlassCard(
@@ -525,7 +514,9 @@ class LoanListScreen extends ConsumerWidget {
                       'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
                       style: TextStyle(
                         fontSize: 11,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],

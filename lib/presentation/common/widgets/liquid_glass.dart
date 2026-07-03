@@ -62,10 +62,7 @@ class _LiquidGlassPainter extends CustomPainter {
   final double time;
   final Color baseColor;
 
-  _LiquidGlassPainter({
-    required this.time,
-    required this.baseColor,
-  });
+  _LiquidGlassPainter({required this.time, required this.baseColor});
 
   @override
   void paint(Canvas canvas, Size size) {

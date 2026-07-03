@@ -524,9 +524,7 @@ class _RecurringTransactionFormScreenState
                       children: [
                         Text(
                           '${_nextDate.day}/${_nextDate.month}/${_nextDate.year}',
-                          style: TextStyle(
-                            color: onSurface,
-                          ),
+                          style: TextStyle(color: onSurface),
                         ),
                       ],
                     ),

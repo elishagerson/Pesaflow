@@ -54,7 +54,9 @@ class IosListSection extends StatelessWidget {
                       height: 0.5,
                       thickness: 0.5,
                       indent: row is IosListRow ? row.indent ?? 56 : 56,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.07),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.07,
+                      ),
                     ),
                 ],
               );
@@ -224,8 +226,7 @@ class IosMetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final c =
-        color ?? context.appColors.incomeColor;
+    final c = color ?? context.appColors.incomeColor;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),

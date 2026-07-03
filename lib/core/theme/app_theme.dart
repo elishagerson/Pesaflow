@@ -196,7 +196,9 @@ class AppTheme {
       colorScheme: scheme,
       extensions: [
         isLight ? AppColorsTheme.light() : AppColorsTheme.dark(),
-        AppTypographyTheme.base(_buildTextTheme(isLight ? onBgLight : onBgDark)),
+        AppTypographyTheme.base(
+          _buildTextTheme(isLight ? onBgLight : onBgDark),
+        ),
       ],
       scaffoldBackgroundColor: isLight ? bgLight : bgDark,
       visualDensity: VisualDensity.adaptivePlatformDensity,

@@ -276,14 +276,14 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                             color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.09),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.09,
+                              ),
                               width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: 0.25,
-                                ),
+                                color: Colors.black.withValues(alpha: 0.25),
                                 blurRadius: 40,
                                 offset: const Offset(0, 12),
                               ),
@@ -335,7 +335,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                         ),
                                       ),
                                       filled: true,
-                                      fillColor: theme.colorScheme.surfaceContainerHigh,
+                                      fillColor: theme
+                                          .colorScheme
+                                          .surfaceContainerHigh,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,

@@ -158,7 +158,9 @@ class ModernDialog extends StatelessWidget {
                             (theme.textTheme.bodyMedium ??
                                     theme.textTheme.bodySmall!)
                                 .copyWith(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                 ),
                         child: content,
                       ),
