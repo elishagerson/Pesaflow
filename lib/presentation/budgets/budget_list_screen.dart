@@ -869,7 +869,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                   padding:
                                                       const EdgeInsets.symmetric(
                                                         horizontal: kSpacing8,
-                                                        vertical: kSpacing3,
+                                                        vertical: kSpacing2,
                                                       ),
                                                   decoration: BoxDecoration(
                                                     color: AppTheme
