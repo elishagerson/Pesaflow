@@ -507,7 +507,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   fontSize: 16,
                                   color: status.isOverBudget
                                       ? const Color(0xFFFF453A)
-                                      : (isDark ? Colors.white : Colors.black),
+                                      : onSurface,
                                 ),
                               ),
                               AmountText(
@@ -515,9 +515,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark
-                                      ? Colors.white54
-                                      : Colors.black54,
+                                  color: onSurface.withValues(alpha: 0.54),
                                 ),
                               ),
                             ],

@@ -863,7 +863,6 @@ class _TrendsTab extends StatelessWidget {
   const _TrendsTab({required this.theme, required this.ref});
 
   Widget _buildRangeButton(TrendRange range, String label, TrendRange current) {
-    final isDark = theme.brightness == Brightness.dark;
     final isSelected = range == current;
 
     return GestureDetector(
@@ -884,7 +883,7 @@ class _TrendsTab extends StatelessWidget {
           style: TextStyle(
             color: isSelected
                 ? theme.colorScheme.onPrimary
-                : (isDark ? Colors.white70 : Colors.black54),
+                : theme.colorScheme.onSurface.withValues(alpha: 0.62),
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             fontSize: 12,
           ),
@@ -897,7 +896,6 @@ class _TrendsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentRange = ref.watch(trendRangeProvider);
     final trendPointsAsync = ref.watch(trendPointsProvider);
-    final isDark = theme.brightness == Brightness.dark;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
