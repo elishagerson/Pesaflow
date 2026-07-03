@@ -76,10 +76,7 @@ class _LiquidGlassPainter extends CustomPainter {
 
     final poolPaint = Paint()
       ..shader = RadialGradient(
-        center: Alignment(
-          px1 * 2 - 1,
-          py1 * 2 - 1,
-        ),
+        center: Alignment(px1 * 2 - 1, py1 * 2 - 1),
         radius: 0.7,
         colors: [
           baseColor.withValues(alpha: 0.035),
@@ -95,10 +92,7 @@ class _LiquidGlassPainter extends CustomPainter {
 
     final poolPaint2 = Paint()
       ..shader = RadialGradient(
-        center: Alignment(
-          px2 * 2 - 1,
-          py2 * 2 - 1,
-        ),
+        center: Alignment(px2 * 2 - 1, py2 * 2 - 1),
         radius: 0.5,
         colors: [
           baseColor.withValues(alpha: 0.025),
