@@ -76,7 +76,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     if (items.isEmpty) {
       return const SizedBox.shrink();
@@ -99,16 +99,12 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
               vertical: 14.0,
             ),
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppTheme.surfaceContainerDark
-                  : AppTheme.surfaceLight,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               border: Border.all(
                 color: errorText != null
                     ? theme.colorScheme.error
-                    : (isDark
-                          ? const Color(0x15FFFFFF)
-                          : const Color(0x1F000000)),
+                    : onSurface.withValues(alpha: 0.1),
                 width: errorText != null ? 1.5 : 1.0,
               ),
               boxShadow: [
@@ -126,7 +122,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     selectedItem.icon ?? prefixIcon,
                     color:
                         selectedItem.color ??
-                        (isDark ? Colors.white70 : Colors.black87),
+                        onSurface.withValues(alpha: 0.78),
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -140,7 +136,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -149,7 +145,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: onSurface,
                         ),
                       ),
                     ],
@@ -157,7 +153,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                 ),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: isDark ? Colors.grey[500] : Colors.grey[600],
+                  color: onSurface.withValues(alpha: 0.6),
                 ),
               ],
             ),
@@ -180,7 +176,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
   void _showSelectionSheet(BuildContext context) {
     HapticFeedback.mediumImpact();
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     showModalBottomSheet(
       context: context,
@@ -193,16 +189,12 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
             child: Container(
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xF2161618)
-                    : const Color(0xF2FFFFFF),
+                color: theme.colorScheme.surface.withValues(alpha: 0.95),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
                 border: Border.all(
-                  color: isDark
-                      ? const Color(0x1AFFFFFF)
-                      : const Color(0x1A000000),
+                  color: onSurface.withValues(alpha: 0.1),
                   width: 0.5,
                 ),
               ),
@@ -218,7 +210,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? Colors.white24 : Colors.black12,
+                      color: onSurface.withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
@@ -232,16 +224,14 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: onSurface,
                         ),
                       ),
                       IconButton(
                         icon: const Icon(PesaFlowIcons.close, size: 20),
                         onPressed: () => Navigator.pop(context),
                         style: IconButton.styleFrom(
-                          backgroundColor: isDark
-                              ? Colors.white10
-                              : Colors.black12,
+                          backgroundColor: onSurface.withValues(alpha: 0.11),
                           padding: const EdgeInsets.all(6),
                         ),
                       ),
@@ -276,13 +266,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? itemColor.withValues(alpha: 0.08)
-                                        : (isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.02,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.01,
-                                                )),
+                                        : onSurface.withValues(alpha: 0.01),
                                     borderRadius: BorderRadius.circular(
                                       AppTheme.radiusCard,
                                     ),

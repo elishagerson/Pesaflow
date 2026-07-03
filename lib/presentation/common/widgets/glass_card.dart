@@ -152,7 +152,7 @@ class _GlassCardState extends State<GlassCard>
                   height: widget.accentWidth,
                   decoration: BoxDecoration(
                     color: widget.accentColor!.withValues(
-                      alpha: isDark ? 0.35 : 0.25,
+                      alpha: 0.30,
                     ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(widget.borderRadius),

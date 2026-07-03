@@ -98,7 +98,6 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
 
     return Stack(
@@ -120,14 +119,10 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
               child: Container(
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF1C1C1E).withValues(alpha: 0.92)
-                      : Colors.white.withValues(alpha: 0.95),
+                  color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.93),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.12)
-                        : Colors.black.withValues(alpha: 0.08),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
                     width: 0.5,
                   ),
                   boxShadow: [
@@ -188,7 +183,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       'You have successfully completed your savings goal for:',
                       style: TextStyle(
                         fontSize: 13,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       textAlign: TextAlign.center,
                     ),

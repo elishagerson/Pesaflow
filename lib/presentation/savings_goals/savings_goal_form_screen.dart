@@ -207,9 +207,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.5)
-                      : Colors.black.withValues(alpha: 0.4),
+                  color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
                 ),
               ),
@@ -276,9 +274,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.5)
-                      : Colors.black.withValues(alpha: 0.4),
+                  color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
                 ),
               ),
@@ -317,9 +313,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               shape: BoxShape.circle,
                               border: isSelected
                                   ? Border.all(
-                                      color: isDark
-                                          ? Colors.white
-                                          : Colors.black,
+                                  color: onSurface,
                                       width: 3,
                                     )
                                   : Border.all(
@@ -350,9 +344,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.5)
-                      : Colors.black.withValues(alpha: 0.4),
+                  color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
                 ),
               ),
@@ -389,9 +381,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? themeCol.withValues(alpha: 0.15)
-                                  : (isDark
-                                        ? const Color(0xFF1C1C1E)
-                                        : Colors.grey[100]),
+                                  : theme.colorScheme.surfaceContainerHigh,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: isSelected
@@ -404,9 +394,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               item['icon'],
                               color: isSelected
                                   ? themeCol
-                                  : (isDark
-                                        ? Colors.grey[400]
-                                        : Colors.grey[600]),
+                                  : onSurface.withValues(alpha: 0.6),
                               size: 22,
                             ),
                           ),
