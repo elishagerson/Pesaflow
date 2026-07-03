@@ -73,6 +73,8 @@ class SmsProcessor {
   final Set<_ContentKey> _recentContentKeys = {};
   static const _dedupCapacity = 200;
 
+  final bool debounceEnabled;
+
   SmsProcessor({
     required this._accountRepo,
     required this._categoryRepo,
@@ -84,6 +86,7 @@ class SmsProcessor {
     required this._categorizer,
     required this._notificationService,
     this.onReviewNeeded,
+    this.debounceEnabled = true,
   });
 
   // ═════════════════════════════════════════════════════════════════════
@@ -119,6 +122,16 @@ class SmsProcessor {
     _recentContentKeys.add(key);
     if (_recentContentKeys.length > _dedupCapacity) {
       _recentContentKeys.clear();
+    }
+
+    if (!debounceEnabled) {
+      await _processParsed(
+        provider: provider,
+        sender: sender,
+        body: body,
+        timestamp: timestamp,
+      );
+      return true;
     }
 
     _messageBuffer

@@ -74,6 +74,7 @@ void main() {
       deduplicator: deduplicator,
       categorizer: categorizer,
       notificationService: _MockNotificationService(),
+      debounceEnabled: false,
     );
   });
 
