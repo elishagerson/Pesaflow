@@ -60,6 +60,7 @@ class PesaFlowIcons {
   static const IconData pdf = Icons.picture_as_pdf_outlined;
   static const IconData csv = Icons.table_chart_outlined;
   static const IconData backup = Icons.backup_outlined;
+  static const IconData lightbulb = Icons.lightbulb_outline_rounded;
   static const IconData lightMode = Icons.light_mode_outlined;
   static const IconData darkMode = Icons.dark_mode_outlined;
 }

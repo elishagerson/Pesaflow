@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
@@ -203,27 +204,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       String? hint,
       IconData? icon,
     }) {
-      return InputDecoration(
+      return context.inputDecoration(
         labelText: label,
         hintText: hint,
         prefixIcon: icon != null ? Icon(icon, size: 18) : null,
-        filled: true,
-        fillColor: inputFill,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: onSurface.withValues(alpha: 0.07)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: theme.colorScheme.primary.withValues(alpha: 0.5),
-            width: 1.5,
-          ),
-        ),
       );
     }
 

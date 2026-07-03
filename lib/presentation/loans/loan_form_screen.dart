@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanFormScreen extends ConsumerStatefulWidget {
   final String? loanId;
@@ -225,16 +226,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 child: TextFormField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Loan Amount (Tsh)',
                     hintText: 'e.g. 100000',
                     prefixIcon: const Icon(Icons.money_rounded, size: 18),
-                    filled: true,
-                    fillColor: inputFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
                     errorText: _amountError,
                   ),
                   onChanged: (_) => setState(() => _amountError = null),
@@ -245,16 +240,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 index: 1,
                 child: TextField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Description',
                     hintText: 'e.g. M-Pesa Loan, Bank Loan',
                     prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                    filled: true,
-                    fillColor: inputFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
                     errorText: _descriptionError,
                   ),
                   textCapitalization: TextCapitalization.sentences,
@@ -266,16 +255,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 index: 2,
                 child: TextField(
                   controller: _senderController,
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Lender / Source (optional)',
                     hintText: 'e.g. Vodacom, NMB Bank',
                     prefixIcon: const Icon(Icons.person_rounded, size: 18),
-                    filled: true,
-                    fillColor: inputFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
                   ),
                   textCapitalization: TextCapitalization.words,
                 ),
@@ -285,16 +268,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 index: 3,
                 child: TextField(
                   controller: _referenceController,
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Reference (optional)',
                     hintText: 'e.g. loan reference number',
                     prefixIcon: const Icon(Icons.tag_rounded, size: 18),
-                    filled: true,
-                    fillColor: inputFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
                   ),
                 ),
               ),
@@ -305,15 +282,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   onTap: () => _pickDate(dueDate: false),
                   borderRadius: BorderRadius.circular(12),
                   child: InputDecorator(
-                    decoration: InputDecoration(
+                    decoration: context.inputDecoration(
                       labelText: 'Disbursement Date',
                       prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
-                      filled: true,
-                      fillColor: inputFill,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
                     ),
                     child: Text(
                       '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
@@ -330,16 +301,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Interest Rate',
                     hintText: 'e.g. 18.5',
                     prefixIcon: const Icon(Icons.percent_rounded, size: 18),
-                    filled: true,
-                    fillColor: inputFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
                     errorText: _interestRateError,
                   ),
                   onChanged: (_) => setState(() => _interestRateError = null),
@@ -352,15 +317,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   onTap: () => _pickDate(dueDate: true),
                   borderRadius: BorderRadius.circular(12),
                   child: InputDecorator(
-                    decoration: InputDecoration(
+                    decoration: context.inputDecoration(
                       labelText: 'Due Date (optional)',
                       prefixIcon: const Icon(PesaFlowIcons.calendar, size: 18),
-                      filled: true,
-                      fillColor: inputFill,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

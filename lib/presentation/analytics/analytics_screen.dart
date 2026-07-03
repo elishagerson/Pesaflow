@@ -1302,7 +1302,7 @@ class _InsightsTab extends StatelessWidget {
       data: (insights) {
         if (insights.isEmpty) {
           return EmptyState(
-            icon: Icons.lightbulb_outline_rounded,
+            icon: PesaFlowIcons.lightbulb,
             title: 'No Insights Yet',
             subtitle:
                 'Insights will appear after you have transactions recorded.',

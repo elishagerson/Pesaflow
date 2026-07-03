@@ -919,7 +919,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           TextField(
                             controller: _descriptionController,
                             textCapitalization: TextCapitalization.sentences,
-                            decoration: const InputDecoration(
+                            decoration: context.inputDecoration(
                               hintText: 'e.g. Lunch, taxi, data bundle',
                             ),
                             onChanged: (val) => setState(() {}),
@@ -1004,7 +1004,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       style: theme.textTheme.bodyLarge?.copyWith(
                         color: onSurface.withValues(alpha: 0.87),
                       ),
-                      decoration: const InputDecoration(
+                      decoration: context.inputDecoration(
                         hintText: 'e.g. PP230489A1',
                       ),
                     ),

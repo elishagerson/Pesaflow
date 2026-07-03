@@ -79,6 +79,62 @@ extension PesaFlowContext on BuildContext {
   double get keyboardInset => MediaQuery.viewInsetsOf(this).bottom;
   double get bottomInset => MediaQuery.paddingOf(this).bottom;
   double get topInset => MediaQuery.paddingOf(this).top;
+
+  InputDecoration inputDecoration({
+    String? labelText,
+    String? hintText,
+    Widget? prefixIcon,
+    Widget? suffixIcon,
+    String? errorText,
+    String? prefixText,
+    String? suffixText,
+    EdgeInsetsGeometry? contentPadding,
+  }) {
+    final theme = Theme.of(this);
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixIcon: prefixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: prefixIcon,
+            )
+          : null,
+      prefixIconConstraints: const BoxConstraints(
+        minWidth: 40,
+        minHeight: 40,
+      ),
+      suffixIcon: suffixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: suffixIcon,
+            )
+          : null,
+      suffixIconConstraints: const BoxConstraints(
+        minWidth: 40,
+        minHeight: 40,
+      ),
+      errorText: errorText,
+      prefixText: prefixText,
+      suffixText: suffixText,
+      labelStyle: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+      ),
+      floatingLabelStyle: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.primary,
+      ),
+      errorStyle: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.error,
+      ),
+      hintStyle: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
+      ),
+      contentPadding: contentPadding ?? const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 14.0,
+      ),
+    );
+  }
 }
 
 class PageScaffold extends StatelessWidget {
