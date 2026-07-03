@@ -335,9 +335,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                         ),
                                       ),
                                       filled: true,
-                                      fillColor: isDark
-                                          ? const Color(0xFF2C2C2E)
-                                          : const Color(0xFFF2F2F7),
+                                      fillColor: theme.colorScheme.surfaceContainerHigh,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
@@ -416,9 +414,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                             .colorScheme
                                                             .primary
                                                             .withValues(
-                                                              alpha: isDark
-                                                                  ? 0.2
-                                                                  : 0.1,
+                                                              alpha: 0.15,
                                                             )
                                                       : Colors.transparent,
                                                   borderRadius:
