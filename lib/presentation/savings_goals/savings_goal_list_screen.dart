@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {
   const SavingsGoalListScreen({super.key});
@@ -21,7 +22,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
+    final isDark = context.isDark;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
 
@@ -30,7 +31,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
       body: savingsGoalsAsync.when(
         data: (goals) {
           if (goals.isEmpty) {
-            return _buildEmptyState(context, onSurface);
+            return _buildEmptyState(context, theme);
           }
 
           int totalTarget = 0;
@@ -56,7 +57,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 children: [
                   _buildSummaryCard(
                     context,
-                    isDark,
+                    theme,
                     totalSaved,
                     totalTarget,
                     overallPct,
@@ -80,7 +81,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
                       context,
                       ref,
                       goals[index],
-                      isDark,
                       theme,
                     ),
                   ),
@@ -114,66 +114,34 @@ class SavingsGoalListScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context, ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(kSpacing32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(kSpacing24),
-              decoration: BoxDecoration(
-                color: AppTheme.transferColorDark.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                PesaFlowIcons.savings,
-                size: 48,
-                color: AppTheme.transferColorDark,
-              ),
+    return EmptyState(
+      icon: PesaFlowIcons.savings,
+      title: 'No Savings Goals Yet',
+      subtitle:
+          'Set a savings target and track your progress.\nEvery journey starts with a goal.',
+      illustration: PesaFlowIllustration.emptyGoals(),
+      action: TactileSpringContainer(
+        onTap: () => context.push('/savings-goals/add'),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing28,
+            vertical: kSpacing14,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withValues(alpha: 0.8),
+              ],
             ),
-            const SizedBox(height: kSpacing24),
-            const Text(
-              'No Savings Goals Yet',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Text(
+            'Set Your First Goal',
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onPrimary,
             ),
-            const SizedBox(height: kSpacing8),
-            Text(
-              'Set a savings target and track your progress.\nEvery journey starts with a goal.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-            ),
-            const SizedBox(height: kSpacing24),
-            TactileSpringContainer(
-              onTap: () => context.push('/savings-goals/add'),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing28,
-                  vertical: kSpacing14,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.transferColorDark,
-                      AppTheme.transferColorDark.withValues(alpha: 0.8),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: const Text(
-                  'Set Your First Goal',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -186,6 +154,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
     int totalTarget,
     double overallPct,
   ) {
+    final onSurface = theme.colorScheme.onSurface;
     return GlassCard(
       padding: const EdgeInsets.all(kSpacing20),
       borderRadius: AppTheme.radiusCard,
@@ -197,22 +166,20 @@ class SavingsGoalListScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(kSpacing10),
                 decoration: BoxDecoration(
-                  color: AppTheme.transferColorDark.withValues(alpha: 0.12),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   PesaFlowIcons.income,
-                  color: AppTheme.transferColorDark,
+                  color: theme.colorScheme.primary,
                   size: 20,
                 ),
               ),
               const SizedBox(width: kSpacing12),
               Text(
                 'TOTAL SAVED',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: onSurface.withValues(alpha: 0.6),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -221,34 +188,36 @@ class SavingsGoalListScreen extends ConsumerWidget {
           const SizedBox(height: kSpacing16),
           Text(
             CurrencyFormatter.formatCents(totalSaved),
-            style: TextStyle(
+            style: context.appTypography.monospace.copyWith(
               fontSize: 28,
-              fontFamily: 'monospace',
-              fontWeight: FontWeight.w900,
-              color: theme.colorScheme.onSurface,
+              color: onSurface,
             ),
           ),
           const SizedBox(height: kSpacing4),
           Text(
             'Combined target: ${CurrencyFormatter.formatCents(totalTarget)}',
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: kSpacing12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: overallPct,
-              backgroundColor: AppTheme.transferColorDark.withValues(
+              backgroundColor: theme.colorScheme.primary.withValues(
                 alpha: 0.12,
               ),
-              color: AppTheme.transferColorDark,
+              color: theme.colorScheme.primary,
               minHeight: 8,
             ),
           ),
           const SizedBox(height: kSpacing6),
           Text(
             '${(overallPct * 100).round()}% of combined target achieved',
-            style: const TextStyle(fontSize: 11, color: Colors.grey),
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -340,19 +309,15 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                 children: [
                                   Text(
                                     goal.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
+                                    style: theme.textTheme.titleSmall,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: kSpacing2),
                                   Text(
                                     'by ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}',
-                                    style: theme.textTheme.bodySmall?.copyWith(
+                                    style: context.appTypography.labelMicro.copyWith(
                                       color: theme.colorScheme.onSurfaceVariant,
-                                      fontSize: 10,
                                     ),
                                   ),
                                 ],
@@ -368,25 +333,23 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                       vertical: kSpacing4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppTheme.transferColorDark
+                                      color: theme.colorScheme.primary
                                           .withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'COMPLETED',
-                                      style: TextStyle(
+                                      style: context.appTypography.labelMicro.copyWith(
                                         fontSize: 9,
-                                        fontWeight: FontWeight.w900,
-                                        color: AppTheme.transferColorDark,
+                                        color: theme.colorScheme.primary,
                                       ),
                                     ),
                                   )
                                 else
                                   Text(
                                     '$daysLeft days remaining',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey,
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 const SizedBox(height: kSpacing4),
@@ -396,8 +359,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                   ),
                                   child: Text(
                                     'Edit',
-                                    style: TextStyle(
-                                      fontSize: 11,
+                                    style: theme.textTheme.labelSmall?.copyWith(
                                       color: theme.colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -413,15 +375,11 @@ class SavingsGoalListScreen extends ConsumerWidget {
                           children: [
                             Text(
                               CurrencyFormatter.formatCents(goal.currentAmount),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              style: theme.textTheme.titleMedium,
                             ),
                             Text(
                               'Target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                              style: TextStyle(
-                                fontSize: 12,
+                              style: theme.textTheme.labelMedium?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
@@ -440,9 +398,8 @@ class SavingsGoalListScreen extends ConsumerWidget {
                         const SizedBox(height: kSpacing4),
                         Text(
                           '${(goalPct * 100).round()}% completed',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],

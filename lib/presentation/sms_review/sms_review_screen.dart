@@ -15,6 +15,8 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
@@ -265,45 +267,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
               child: reviewAsync.when(
                 data: (items) {
                   if (items.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(kSpacing32),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(kSpacing24),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.1,
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                PesaFlowIcons.success,
-                                size: 56,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing20),
-                            Text(
-                              'All Clear!',
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing8),
-                            Text(
-                              'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant
-                                    .withValues(alpha: 0.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    return EmptyState(
+                      icon: PesaFlowIcons.success,
+                      title: 'All Clear!',
+                      subtitle:
+                          'No transactions awaiting review.\nAuto-logged entries appear on the Dashboard.',
                     );
                   }
 

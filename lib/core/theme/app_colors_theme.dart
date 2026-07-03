@@ -9,6 +9,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color surfaceLow;
   final Color surfaceHigh;
   final Color surfaceContainer;
+  final Color surfaceContainerHighest;
   final Color bgColor;
   final Color onBgColor;
   final Color textMedium;
@@ -22,6 +23,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.surfaceLow,
     required this.surfaceHigh,
     required this.surfaceContainer,
+    required this.surfaceContainerHighest,
     required this.bgColor,
     required this.onBgColor,
     required this.textMedium,
@@ -36,6 +38,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgLight,
     surfaceHigh: AppTheme.surfaceHighLight,
     surfaceContainer: AppTheme.surfaceLight,
+    surfaceContainerHighest: Color(0xFFF0F1F4),
     bgColor: AppTheme.bgLight,
     onBgColor: AppTheme.onBgLight,
     textMedium: Color(0xFF9E9E9E),
@@ -50,6 +53,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgDark,
     surfaceHigh: AppTheme.surfaceHighDark,
     surfaceContainer: AppTheme.surfaceDark,
+    surfaceContainerHighest: Color(0xFF21262D),
     bgColor: AppTheme.bgDark,
     onBgColor: AppTheme.onBgDark,
     textMedium: Color(0xFF9E9E9E),
@@ -65,6 +69,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? surfaceLow,
     Color? surfaceHigh,
     Color? surfaceContainer,
+    Color? surfaceContainerHighest,
     Color? bgColor,
     Color? onBgColor,
     Color? textMedium,
@@ -78,6 +83,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       surfaceLow: surfaceLow ?? this.surfaceLow,
       surfaceHigh: surfaceHigh ?? this.surfaceHigh,
       surfaceContainer: surfaceContainer ?? this.surfaceContainer,
+      surfaceContainerHighest: surfaceContainerHighest ?? this.surfaceContainerHighest,
       bgColor: bgColor ?? this.bgColor,
       onBgColor: onBgColor ?? this.onBgColor,
       textMedium: textMedium ?? this.textMedium,
@@ -96,6 +102,7 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       surfaceLow: Color.lerp(surfaceLow, other.surfaceLow, t)!,
       surfaceHigh: Color.lerp(surfaceHigh, other.surfaceHigh, t)!,
       surfaceContainer: Color.lerp(surfaceContainer, other.surfaceContainer, t)!,
+      surfaceContainerHighest: Color.lerp(surfaceContainerHighest, other.surfaceContainerHighest, t)!,
       bgColor: Color.lerp(bgColor, other.bgColor, t)!,
       onBgColor: Color.lerp(onBgColor, other.onBgColor, t)!,
       textMedium: Color.lerp(textMedium, other.textMedium, t)!,

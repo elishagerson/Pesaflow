@@ -11,6 +11,8 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -687,14 +689,11 @@ class _OverviewTab extends StatelessWidget {
                 categoriesAsync.when(
                   data: (cats) {
                     if (cats.isEmpty) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Text(
-                            'No spending data yet',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
+                      return EmptyState(
+                        icon: PesaFlowIcons.budgets,
+                        title: 'No Spending Data Yet',
+                        subtitle:
+                            'Log some transactions to see your category breakdown.',
                       );
                     }
                     final total = cats.fold<int>(0, (s, c) => s + c.amount);
