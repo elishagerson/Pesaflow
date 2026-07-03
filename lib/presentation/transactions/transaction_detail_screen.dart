@@ -168,7 +168,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             boxShadow: [
                               BoxShadow(
                                 color: mutedCatColor.withValues(
-                                  alpha: isDark ? 0.25 : 0.15,
+                                  alpha: 0.2,
                                 ),
                                 blurRadius: 20,
                                 spreadRadius: 4,
@@ -190,7 +190,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? Colors.white : Colors.black87,
+                            color: onSurface,
                             letterSpacing: -0.4,
                           ),
                           textAlign: TextAlign.center,
@@ -204,7 +204,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             color: amountColor.withValues(
-                              alpha: isDark ? 0.15 : 0.08,
+                              alpha: 0.115,
                             ),
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(

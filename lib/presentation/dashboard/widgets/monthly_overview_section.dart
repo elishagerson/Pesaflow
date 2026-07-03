@@ -131,17 +131,13 @@ class MonthlyOverviewSection extends ConsumerWidget {
                           sections: [
                             PieChartSectionData(
                               value: incomePct,
-                              color: isDark
-                                  ? AppTheme.incomeColorDark
-                                  : AppTheme.incomeColor,
+                              color: appColors.incomeColor,
                               radius: 10,
                               showTitle: false,
                             ),
                             PieChartSectionData(
                               value: expensePct,
-                              color: isDark
-                                  ? AppTheme.expenseColorDark
-                                  : AppTheme.expenseColor,
+                              color: appColors.expenseColor,
                               radius: 10,
                               showTitle: false,
                             ),
@@ -164,9 +160,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppTheme.incomeColorDark
-                                        : AppTheme.incomeColor,
+                                    color: appColors.incomeColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
