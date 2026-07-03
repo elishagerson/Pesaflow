@@ -195,9 +195,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppTheme.expenseColorDark
-                                        : AppTheme.expenseColor,
+                                    color: appColors.expenseColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),

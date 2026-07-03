@@ -257,9 +257,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             clipBehavior: Clip.none,
                             children: [
                               DashedDivider(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.15)
-                                    : Colors.black.withValues(alpha: 0.1),
+                                color: onSurface.withValues(alpha: 0.125),
                                 height: 1.5,
                                 dashWidth: 5,
                                 dashSpace: 4,
