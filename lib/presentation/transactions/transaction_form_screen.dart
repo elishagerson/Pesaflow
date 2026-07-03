@@ -246,7 +246,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       isScrollControlled: true,
       builder: (ctx) {
         final theme = Theme.of(ctx);
-        final isDark = theme.brightness == Brightness.dark;
+        final onSurface = theme.colorScheme.onSurface;
         return DraggableScrollableSheet(
           initialChildSize: 0.5,
           maxChildSize: 0.75,
@@ -259,9 +259,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               child: LiquidGlassOverlay(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xF01C1C1E)
-                        : const Color(0xF0F2F2F7),
+                    color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
@@ -274,9 +272,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         width: 38,
                         height: 5,
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.2)
-                              : Colors.black.withValues(alpha: 0.15),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.17),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -338,21 +334,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       color: isSelected
                                           ? theme.colorScheme.primary
                                                 .withValues(alpha: 0.08)
-                                          : isDark
-                                          ? const Color(0xFF1C1C1E)
-                                          : Colors.white,
+                                          : theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
                                         color: isSelected
                                             ? theme.colorScheme.primary
                                                   .withValues(alpha: 0.4)
-                                            : isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.08,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
+                                            : theme.colorScheme.onSurface.withValues(alpha: 0.07),
                                         width: isSelected ? 1.5 : 1,
                                       ),
                                     ),
@@ -364,13 +352,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             color: isSelected
                                                 ? theme.colorScheme.primary
                                                       .withValues(alpha: 0.15)
-                                                : isDark
-                                                ? Colors.white.withValues(
-                                                    alpha: 0.06,
-                                                  )
-                                                : Colors.black.withValues(
-                                                    alpha: 0.04,
-                                                  ),
+                                                : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
@@ -492,9 +474,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               child: LiquidGlassOverlay(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xF01C1C1E)
-                        : const Color(0xF0F2F2F7),
+                    color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
@@ -507,9 +487,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         width: 38,
                         height: 5,
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.2)
-                              : Colors.black.withValues(alpha: 0.15),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.17),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -577,9 +555,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       color: isSelected
                                           ? theme.colorScheme.primary
                                                 .withValues(alpha: 0.08)
-                                          : isDark
-                                          ? const Color(0xFF1C1C1E)
-                                          : Colors.white,
+                                          : theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
                                         color: isDisabled
@@ -589,13 +565,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             : isSelected
                                             ? theme.colorScheme.primary
                                                   .withValues(alpha: 0.4)
-                                            : isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.08,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
+                                            : theme.colorScheme.onSurface.withValues(alpha: 0.07),
                                         width: isSelected ? 1.5 : 1,
                                       ),
                                     ),
@@ -611,13 +581,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 : isSelected
                                                 ? theme.colorScheme.primary
                                                       .withValues(alpha: 0.15)
-                                                : isDark
-                                                ? Colors.white.withValues(
-                                                    alpha: 0.06,
-                                                  )
-                                                : Colors.black.withValues(
-                                                    alpha: 0.04,
-                                                  ),
+                                                : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
