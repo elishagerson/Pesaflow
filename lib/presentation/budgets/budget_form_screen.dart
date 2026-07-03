@@ -7,11 +7,13 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -43,6 +45,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   @override
   void initState() {
     super.initState();
+    _nameController.addListener(() => setState(() {}));
+    _amountController.addListener(() => setState(() {}));
     if (widget.budgetId != null) {
       _loadExistingBudget();
     }
@@ -176,6 +180,204 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     }
   }
 
+  Widget _buildCategorySelector(List<dynamic> categories, ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 10, top: 12),
+          child: Text(
+            'SELECT CATEGORY',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 80,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final cat = categories[index];
+              final isSelected = cat.id == _selectedCategoryId;
+              final color = hexToColor(cat.color);
+              
+              return Padding(
+                padding: const EdgeInsets.only(right: kSpacing12),
+                child: TactileSpringContainer(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    setState(() {
+                      _selectedCategoryId = cat.id;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 76,
+                    decoration: ShapeDecoration(
+                      color: isSelected
+                          ? color.withValues(alpha: 0.15)
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.03),
+                      shape: SquircleBorder(
+                        side: BorderSide(
+                          color: isSelected
+                              ? color
+                              : theme.colorScheme.outlineVariant,
+                          width: isSelected ? 1.5 : 0.8,
+                        ),
+                        borderRadius: 14.0,
+                      ),
+                      shadows: isSelected
+                          ? [
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.25),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          getCategoryIcon(cat.icon),
+                          color: isSelected ? color : theme.colorScheme.onSurface,
+                          size: 20,
+                        ),
+                        const SizedBox(height: 6),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Text(
+                            cat.name,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              fontSize: 9,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Widget _buildBudgetHero(ThemeData theme, List<dynamic> categories) {
+    final selectedCat = categories.firstWhere(
+      (c) => c.id == _selectedCategoryId,
+      orElse: () => null,
+    );
+    final themeColor = selectedCat != null
+        ? hexToColor(selectedCat.color)
+        : theme.colorScheme.primary;
+
+    final double amount = double.tryParse(_amountController.text) ?? 0.0;
+    final formattedVal = NumberFormat('#,###').format(amount);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: kSpacing20),
+      alignment: Alignment.center,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 350),
+            width: 140,
+            height: 140,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: themeColor.withValues(alpha: 0.16),
+                  blurRadius: 40,
+                  spreadRadius: 8,
+                ),
+              ],
+            ),
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 350),
+            width: 130,
+            height: 130,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: themeColor.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _nameController.text.isEmpty
+                    ? 'NEW BUDGET'
+                    : _nameController.text.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  letterSpacing: 1.5,
+                  fontSize: 9,
+                ),
+              ),
+              const SizedBox(height: 4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Text(
+                    'Tsh $formattedVal',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: 'monospace',
+                      fontSize: 24,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 350),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: themeColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  _period.toUpperCase(),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: themeColor,
+                    fontSize: 8,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -236,6 +438,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      categoriesAsync.maybeWhen(
+                        data: (cats) => _buildBudgetHero(theme, cats),
+                        orElse: () => _buildBudgetHero(theme, []),
+                      ),
+                      const SizedBox(height: 16),
                       sectionLabel('BUDGET DETAILS'),
                       StaggeredFadeSlide(
                         index: 0,
@@ -265,33 +472,13 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   color: onSurface.withValues(alpha: 0.08),
                                   height: 1,
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 8),
                                 categoriesAsync.when(
-                                  data: (cats) => ModernDropdown<String>(
-                                    labelText: 'Category',
-                                    value: _selectedCategoryId,
-                                    prefixIcon: Icons.category_rounded,
-                                    items: cats
-                                        .where((c) => c.type == 'expense')
-                                        .map(
-                                          (c) => ModernDropdownItem<String>(
-                                            value: c.id,
-                                            label: c.name,
-                                            icon: getCategoryIcon(c.icon),
-                                            color: hexToColor(c.color),
-                                            subtitle:
-                                                'Budget category for ${c.name}',
-                                          ),
-                                        )
-                                        .toList(),
-                                    onChanged: (v) =>
-                                        setState(() => _selectedCategoryId = v),
-                                  ),
+                                  data: (cats) => _buildCategorySelector(cats, theme),
                                   loading: () =>
                                       const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
                                 ),
-                                const SizedBox(height: 4),
                                 Divider(
                                   color: onSurface.withValues(alpha: 0.08),
                                   height: 1,
@@ -471,75 +658,79 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             ),
                             borderRadius: AppTheme.radiusCard,
                             elevation: CardElevation.medium,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                            child: Builder(
+                              builder: (context) {
+                                final Color thresholdColor = _threshold >= 0.85
+                                    ? const Color(0xFFFF453A)
+                                    : (_threshold >= 0.75 ? Colors.amber : const Color(0xFF30D158));
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildLeadingIcon(
-                                      PesaFlowIcons.notification,
-                                      Colors.amber,
+                                    Row(
+                                      children: [
+                                        _buildLeadingIcon(
+                                          PesaFlowIcons.notification,
+                                          thresholdColor,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            'Notify when spending reaches',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ),
+                                        AnimatedDefaultTextStyle(
+                                          duration: const Duration(milliseconds: 200),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                            color: thresholdColor,
+                                          ),
+                                          child: Text('${(_threshold * 100).round()}%'),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        'Notify when spending reaches',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.7),
+                                    const SizedBox(height: 12),
+                                    SliderTheme(
+                                      data: SliderTheme.of(context).copyWith(
+                                        trackHeight: 4,
+                                        activeTrackColor: thresholdColor,
+                                        inactiveTrackColor: thresholdColor.withValues(alpha: 0.2),
+                                        thumbColor: thresholdColor,
+                                        overlayColor: thresholdColor.withValues(alpha: 0.1),
+                                        thumbShape: const RoundSliderThumbShape(
+                                          enabledThumbRadius: 8,
+                                        ),
+                                        overlayShape: const RoundSliderOverlayShape(
+                                          overlayRadius: 16,
+                                        ),
+                                        valueIndicatorShape:
+                                            const RectangularSliderValueIndicatorShape(),
+                                        valueIndicatorColor: thresholdColor,
+                                        valueIndicatorTextStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      '${(_threshold * 100).round()}%',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                        color: theme.colorScheme.primary,
+                                      child: Slider(
+                                        value: _threshold,
+                                        min: 0.5,
+                                        max: 1.0,
+                                        divisions: 10,
+                                        label: '${(_threshold * 100).round()}%',
+                                        onChanged: (v) =>
+                                            setState(() => _threshold = v),
                                       ),
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: 12),
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    trackHeight: 4,
-                                    activeTrackColor: theme.colorScheme.primary,
-                                    inactiveTrackColor: theme
-                                        .colorScheme
-                                        .primary
-                                        .withValues(alpha: 0.2),
-                                    thumbColor: theme.colorScheme.primary,
-                                    overlayColor: theme.colorScheme.primary
-                                        .withValues(alpha: 0.1),
-                                    thumbShape: const RoundSliderThumbShape(
-                                      enabledThumbRadius: 8,
-                                    ),
-                                    overlayShape: const RoundSliderOverlayShape(
-                                      overlayRadius: 16,
-                                    ),
-                                    valueIndicatorShape:
-                                        const RectangularSliderValueIndicatorShape(),
-                                    valueIndicatorColor:
-                                        theme.colorScheme.primary,
-                                    valueIndicatorTextStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  child: Slider(
-                                    value: _threshold,
-                                    min: 0.5,
-                                    max: 1.0,
-                                    divisions: 10,
-                                    label: '${(_threshold * 100).round()}%',
-                                    onChanged: (v) =>
-                                        setState(() => _threshold = v),
-                                  ),
-                                ),
-                              ],
+                                );
+                              }
                             ),
                           ),
                         ),
