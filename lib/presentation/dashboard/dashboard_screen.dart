@@ -315,14 +315,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(
-              left: kSpacing16,
-              right: kSpacing16,
               top: kSpacing4,
               bottom: kSpacing16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                 // ── 2. Balance Hero Card — "Your Money" ──
                 StaggeredFadeSlide(
                   index: 0,
@@ -1151,32 +1154,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ],
                   ),
                 ),
-
-                // ── 6. At a Glance — summary nav cards ──
-                const SizedBox(height: kSpacing20),
-                _SummaryNavCardRow(
-                  budgets: budgets,
-                  overallPct: overallPct,
-                  savingsGoals: savingsGoalsAsync.value ?? [],
-                  activeRecurringCount: recsAsync.maybeWhen(
-                    data: (recs) => recs
-                        .where(
-                          (r) => r.type == 'expense' && r.status == 'active',
-                        )
-                        .length,
-                    orElse: () => 0,
-                  ),
-                  dueCount: dueAsync.maybeWhen(
-                    data: (due) => due.where((d) => d.type == 'expense').length,
-                    orElse: () => 0,
-                  ),
-                  pendingReviewCount: pendingReviewCount,
-                  trackerColor: trackerColor,
-                ),
-                const SizedBox(height: kSpacing24),
               ],
             ),
           ),
+          const SizedBox(height: kSpacing20),
+          _SummaryNavCardRow(
+            budgets: budgets,
+            overallPct: overallPct,
+            savingsGoals: savingsGoalsAsync.value ?? [],
+            activeRecurringCount: recsAsync.maybeWhen(
+              data: (recs) => recs
+                  .where(
+                    (r) => r.type == 'expense' && r.status == 'active',
+                  )
+                  .length,
+              orElse: () => 0,
+            ),
+            dueCount: dueAsync.maybeWhen(
+              data: (due) => due.where((d) => d.type == 'expense').length,
+              orElse: () => 0,
+            ),
+            pendingReviewCount: pendingReviewCount,
+            trackerColor: trackerColor,
+          ),
+          const SizedBox(height: kSpacing24),
+        ],
+      ),
+    ),
         ),),
       ),
     );
@@ -1207,8 +1211,11 @@ class _SummaryNavCardRow extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
-      child: Row(
-        children: [
+      clipBehavior: Clip.none,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+        child: Row(
+          children: [
           _SummaryNavCard(
             icon: Icons.pie_chart_rounded,
             metric: budgets.isNotEmpty
@@ -1253,8 +1260,9 @@ class _SummaryNavCardRow extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _SummaryNavCard extends StatelessWidget {
