@@ -1083,17 +1083,8 @@ class _TrendsTab extends StatelessWidget {
                                     }).toList();
                                   },
                             ),
-                            gridData: FlGridData(
-                              show: true,
-                              drawVerticalLine: false,
-                              horizontalInterval: maxVal > 0
-                                  ? maxVal / 4
-                                  : 1000,
-                              getDrawingHorizontalLine: (value) => FlLine(
-                                color: Colors.white.withValues(alpha: 0.04),
-                                strokeWidth: 1,
-                                dashArray: [5, 5],
-                              ),
+                            gridData: const FlGridData(
+                              show: false,
                             ),
                             titlesData: FlTitlesData(
                               leftTitles: const AxisTitles(

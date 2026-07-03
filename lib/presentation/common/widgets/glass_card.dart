@@ -116,6 +116,10 @@ class _GlassCardState extends State<GlassCard>
         color: glassColor,
         gradient: widget.backgroundGradient,
         borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant,
+          width: 0.8,
+        ),
         boxShadow: shadows.isEmpty ? null : shadows,
       ),
       foregroundDecoration: widget.accentColor != null

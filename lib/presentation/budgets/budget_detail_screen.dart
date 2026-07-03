@@ -400,17 +400,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                                             ),
                                           ),
                                         ),
-                                        gridData: FlGridData(
-                                          show: true,
-                                          horizontalInterval: maxAmount / 4,
-                                          drawVerticalLine: false,
-                                          getDrawingHorizontalLine: (value) =>
-                                              FlLine(
-                                                color: Colors.grey.withValues(
-                                                  alpha: 0.2,
-                                                ),
-                                                strokeWidth: 0.5,
-                                              ),
+                                        gridData: const FlGridData(
+                                          show: false,
                                         ),
                                         borderData: FlBorderData(show: false),
                                         barGroups: dailyData.map((entry) {

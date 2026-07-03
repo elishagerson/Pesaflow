@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class IosTabBar extends StatelessWidget {
   final int selectedIndex;
@@ -276,20 +277,22 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
 
     final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
 
-    return Container(
-      padding: EdgeInsets.only(top: top),
-      decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.065),
-            width: 0.5,
+    return ClipRect(
+      child: LiquidGlassOverlay(
+        child: Container(
+          padding: EdgeInsets.only(top: top),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface.withValues(alpha: 0.7),
+            border: Border(
+              bottom: BorderSide(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.065),
+                width: 0.5,
+              ),
+            ),
           ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
           SizedBox(height: hasRow ? 12.0 : 16.0),
           if (hasRow)
             Padding(
@@ -319,6 +322,6 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
             ),
         ],
       ),
-    );
+    ),),);
   }
 }

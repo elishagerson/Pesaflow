@@ -236,7 +236,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(
-                                Icons.category_rounded,
+                                PesaFlowIcons.category,
                                 size: 16,
                                 color: Colors.white,
                               ),
@@ -308,7 +308,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.sms_rounded,
+                                    PesaFlowIcons.sms,
                                     color: theme.colorScheme.tertiary,
                                     size: 28,
                                   ),
@@ -695,7 +695,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         MainAxisSize.min,
                                                     children: [
                                                       Icon(
-                                                        Icons.category_rounded,
+                                                        PesaFlowIcons.category,
                                                         size: 14,
                                                         color: theme
                                                             .colorScheme

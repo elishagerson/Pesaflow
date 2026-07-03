@@ -55,10 +55,10 @@ class AppTheme {
   static Color get surfaceContainerDark => surfaceHighDark;
 
   // Radii
-  static const double radiusCard = 20.0;
-  static const double radiusDialog = 24.0;
-  static const double radiusInput = 16.0;
-  static const double radiusButton = 100.0;
+  static const double radiusCard = 12.0;
+  static const double radiusDialog = 16.0;
+  static const double radiusInput = 8.0;
+  static const double radiusButton = 28.0;
 
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
