@@ -20,16 +20,13 @@ class _CycleChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing8,
         vertical: kSpacing4,
       ),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.06)
-            : Colors.black.withValues(alpha: 0.04),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Text(
@@ -50,7 +47,6 @@ class RecurringSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
     final totals = ref.watch(recurringTotalsProvider);
@@ -90,9 +86,7 @@ class RecurringSection extends ConsumerWidget {
                           'Track recurring expenses',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? Colors.white
-                                : theme.colorScheme.onSurface,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: kSpacing4),
@@ -169,7 +163,7 @@ class RecurringSection extends ConsumerWidget {
                     Icon(
                       PesaFlowIcons.calendar,
                       size: 14,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     const SizedBox(width: kSpacing6),
                     Text(

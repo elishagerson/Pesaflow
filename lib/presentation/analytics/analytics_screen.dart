@@ -168,7 +168,7 @@ class AnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -187,14 +187,10 @@ class AnalyticsScreen extends ConsumerWidget {
                   height: 38,
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xE60F1013)
-                        : const Color(0xE6E5E5EA),
+                  color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: isDark
-                          ? const Color(0x1AFFFFFF)
-                          : const Color(0x1F000000),
+                      color: onSurface.withValues(alpha: 0.1),
                       width: 0.5,
                     ),
                   ),
@@ -203,22 +199,18 @@ class AnalyticsScreen extends ConsumerWidget {
                     dividerColor: Colors.transparent,
                     indicatorPadding: EdgeInsets.zero,
                     indicator: BoxDecoration(
-                      color: isDark ? AppTheme.surfaceHighDark : Colors.white,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(100),
-                      boxShadow: isDark
-                          ? []
-                          : [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.04),
-                                blurRadius: 1,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withValues(alpha: 0.04),
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
-                    labelColor: isDark ? Colors.white : Colors.black,
-                    unselectedLabelColor: isDark
-                        ? Colors.grey[600]
-                        : Colors.grey[500],
+                    labelColor: onSurface,
+                    unselectedLabelColor: onSurface.withValues(alpha: 0.6),
                     labelStyle: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
@@ -299,11 +291,8 @@ class _OverviewTab extends StatelessWidget {
               final savingsRate = income > 0
                   ? ((net / income) * 100).round()
                   : 0;
-              final isDark = theme.brightness == Brightness.dark;
               final incomeColorVal = const Color(0xFF10B981);
-              final expenseColorVal = isDark
-                  ? const Color(0xFFFF453A)
-                  : const Color(0xFFE11D48);
+              final expenseColorVal = AppTheme.expenseColor;
 
               return StaggeredFadeSlide(
                 index: 0,
@@ -316,7 +305,7 @@ class _OverviewTab extends StatelessWidget {
                       Text(
                         'THIS MONTH',
                         style: TextStyle(
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           fontSize: 11,
                           letterSpacing: 1.2,
                           fontWeight: FontWeight.bold,
@@ -332,9 +321,7 @@ class _OverviewTab extends StatelessWidget {
                                 Text(
                                   'Income',
                                   style: TextStyle(
-                                    color: isDark
-                                        ? Colors.grey[500]
-                                        : Colors.grey[500],
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -357,9 +344,7 @@ class _OverviewTab extends StatelessWidget {
                                 Text(
                                   'Expense',
                                   style: TextStyle(
-                                    color: isDark
-                                        ? Colors.grey[500]
-                                        : Colors.grey[500],
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -381,9 +366,7 @@ class _OverviewTab extends StatelessWidget {
                       Divider(
                         height: 0.5,
                         thickness: 0.5,
-                        color: isDark
-                            ? const Color(0x12FFFFFF)
-                            : const Color(0x0F000000),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -392,9 +375,7 @@ class _OverviewTab extends StatelessWidget {
                           Text(
                             net >= 0 ? 'Net Savings' : 'Net Deficit',
                             style: TextStyle(
-                              color: isDark
-                                  ? Colors.grey[300]
-                                  : Colors.grey[700],
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
@@ -419,7 +400,7 @@ class _OverviewTab extends StatelessWidget {
                       Text(
                         'Savings rate: $savingsRate%',
                         style: TextStyle(
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           fontSize: 11,
                         ),
                       ),
@@ -441,8 +422,6 @@ class _OverviewTab extends StatelessWidget {
               .watch(savingsGoalsStreamProvider)
               .when(
                 data: (goals) {
-                  final isDark = theme.brightness == Brightness.dark;
-
                   if (goals.isNotEmpty) {
                     return SizedBox(
                       height: 125,
@@ -593,16 +572,12 @@ class _OverviewTab extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.04)
-                            : Colors.black.withValues(alpha: 0.03),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.03),
                         borderRadius: BorderRadius.circular(
                           AppTheme.radiusCard,
                         ),
                         border: Border.all(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.08)
-                              : Colors.black.withValues(alpha: 0.06),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.07),
                           width: 0.5,
                         ),
                       ),
@@ -644,7 +619,7 @@ class _OverviewTab extends StatelessWidget {
                                 ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
                                 : 'Set a visual savings goal target to build a structured emergency safety vault.',
                             style: TextStyle(
-                              color: isDark ? Colors.white70 : Colors.black87,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
                               fontSize: 12,
                               height: 1.4,
                             ),

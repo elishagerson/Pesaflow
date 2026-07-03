@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
@@ -13,17 +14,16 @@ class ActiveParserBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing8,
         vertical: kSpacing4,
       ),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0x0AFFFFFF) : const Color(0x0A000000),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: isDark ? const Color(0x10FFFFFF) : const Color(0x10000000),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
           width: 0.5,
         ),
       ),
@@ -54,15 +54,15 @@ class SmsReviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final appColors = theme.extension<AppColorsTheme>()!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(kSpacing16),
       decoration: BoxDecoration(
-        color: isDark ? AppTheme.surfaceHighDark : AppTheme.bgLight,
+        color: appColors.surfaceHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
           width: 0.5,
         ),
       ),
@@ -99,7 +99,7 @@ class SmsReviewCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: pendingReviewCount > 0
                       ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
-                      : (isDark ? Colors.white10 : Colors.black12),
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.11),
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
@@ -131,7 +131,7 @@ class SmsReviewCard extends StatelessWidget {
           Divider(
             height: 0.5,
             thickness: 0.5,
-            color: isDark ? const Color(0x12FFFFFF) : const Color(0x0F000000),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
           ),
           const SizedBox(height: kSpacing10),
           Row(
@@ -158,9 +158,7 @@ class SmsReviewCard extends StatelessWidget {
                     vertical: kSpacing6,
                   ),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF2C2C2E)
-                        : const Color(0xFFE5E5EA),
+                    color: appColors.surfaceHigh,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Row(
@@ -169,9 +167,7 @@ class SmsReviewCard extends StatelessWidget {
                       Text(
                         "Let's go",
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: isDark
-                              ? Colors.white
-                              : theme.colorScheme.onSurface,
+                          color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                           fontSize: 11,
                         ),
@@ -180,7 +176,7 @@ class SmsReviewCard extends StatelessWidget {
                       Icon(
                         Icons.chevron_right_rounded,
                         size: 12,
-                        color: isDark ? Colors.white : Colors.black,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ],
                   ),

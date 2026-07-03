@@ -86,7 +86,7 @@ class _RecurringTransactionListScreenState
             child: recurring.isEmpty
                 ? SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    child: _buildEmptyState(context, theme, isDark),
+                    child: _buildEmptyState(context, theme),
                   )
                 : CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -97,7 +97,6 @@ class _RecurringTransactionListScreenState
                           index: 0,
                           child: _buildSummaryHeader(
                             theme,
-                            isDark,
                             totals,
                             recurring,
                             dueIds,
@@ -111,7 +110,6 @@ class _RecurringTransactionListScreenState
                           index: 1,
                           child: _buildSegmentedFilter(
                             theme,
-                            isDark,
                             recurring,
                           ),
                         ),
@@ -193,7 +191,6 @@ class _RecurringTransactionListScreenState
                                   context,
                                   sorted[i],
                                   theme,
-                                  isDark,
                                   dueIds.contains(sorted[i].id),
                                   catColor(sorted[i].categoryId),
                                 ),
@@ -230,7 +227,6 @@ class _RecurringTransactionListScreenState
   // ── Summary Header ──────────────────────────────────────────────────────
   Widget _buildSummaryHeader(
     ThemeData theme,
-    bool isDark,
     RecurringTotals totals,
     List<RecurringTransaction> allRecurring,
     Set<String> dueIds,
@@ -282,19 +278,17 @@ class _RecurringTransactionListScreenState
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _cycleChip(theme, isDark, '${_fmtShort(totals.daily)}/day'),
+                  _cycleChip(theme, '${_fmtShort(totals.daily)}/day'),
                   const SizedBox(width: kSpacing8),
-                  _cycleChip(theme, isDark, '${_fmtShort(totals.weekly)}/wk'),
+                  _cycleChip(theme, '${_fmtShort(totals.weekly)}/wk'),
                   const SizedBox(width: kSpacing8),
-                  _cycleChip(theme, isDark, '${_fmtShort(totals.yearly)}/yr'),
+                  _cycleChip(theme, '${_fmtShort(totals.yearly)}/yr'),
                 ],
               ),
               const SizedBox(height: kSpacing14),
               Divider(
                 height: 0.5,
-                color: isDark
-                    ? const Color(0x1AFFFFFF)
-                    : const Color(0x1A000000),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
               ),
               const SizedBox(height: kSpacing14),
             ],
@@ -304,22 +298,19 @@ class _RecurringTransactionListScreenState
               children: [
                 _statPill(
                   theme,
-                  isDark,
                   '${activeExpenses.length}',
                   'Expenses',
-                  isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor,
+                  AppTheme.expenseColor,
                 ),
                 _statPill(
                   theme,
-                  isDark,
                   '${activeIncome.length}',
                   'Income',
-                  isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor,
+                  AppTheme.incomeColor,
                 ),
                 if (paused.isNotEmpty)
                   _statPill(
                     theme,
-                    isDark,
                     '${paused.length}',
                     'Paused',
                     const Color(0xFFFF9F0A),
@@ -327,7 +318,6 @@ class _RecurringTransactionListScreenState
                 if (dueIds.isNotEmpty)
                   _statPill(
                     theme,
-                    isDark,
                     '${dueIds.length}',
                     'Due',
                     const Color(0xFFFF6B35),
@@ -342,7 +332,6 @@ class _RecurringTransactionListScreenState
 
   Widget _statPill(
     ThemeData theme,
-    bool isDark,
     String value,
     String label,
     Color color,
@@ -379,16 +368,14 @@ class _RecurringTransactionListScreenState
     );
   }
 
-  Widget _cycleChip(ThemeData theme, bool isDark, String text) {
+  Widget _cycleChip(ThemeData theme, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing8,
         vertical: kSpacing4,
       ),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.06)
-            : Colors.black.withValues(alpha: 0.04),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Text(
@@ -411,7 +398,6 @@ class _RecurringTransactionListScreenState
   // ── Segmented Filter ────────────────────────────────────────────────────
   Widget _buildSegmentedFilter(
     ThemeData theme,
-    bool isDark,
     List<RecurringTransaction> allRecurring,
   ) {
     final allCount = allRecurring.length;
@@ -425,24 +411,20 @@ class _RecurringTransactionListScreenState
       ),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : Colors.black.withValues(alpha: 0.05),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Row(
         children: [
-          _filterTab(theme, isDark, 'All', allCount, _RecurringFilter.all),
+          _filterTab(theme, 'All', allCount, _RecurringFilter.all),
           _filterTab(
             theme,
-            isDark,
             'Expenses',
             expenseCount,
             _RecurringFilter.expenses,
           ),
           _filterTab(
             theme,
-            isDark,
             'Income',
             incomeCount,
             _RecurringFilter.income,
@@ -454,7 +436,6 @@ class _RecurringTransactionListScreenState
 
   Widget _filterTab(
     ThemeData theme,
-    bool isDark,
     String label,
     int count,
     _RecurringFilter filter,
@@ -473,15 +454,13 @@ class _RecurringTransactionListScreenState
           padding: const EdgeInsets.symmetric(vertical: kSpacing8),
           decoration: BoxDecoration(
             color: isActive
-                ? (isDark ? Colors.white.withValues(alpha: 0.12) : Colors.white)
+                ? theme.colorScheme.surfaceContainerHigh
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(100),
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: Colors.black.withValues(
-                        alpha: isDark ? 0.2 : 0.06,
-                      ),
+                      color: Colors.black.withValues(alpha: 0.12),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
@@ -533,7 +512,7 @@ class _RecurringTransactionListScreenState
   }
 
   // ── Empty State ─────────────────────────────────────────────────────────
-  Widget _buildEmptyState(BuildContext context, ThemeData theme, bool isDark) {
+  Widget _buildEmptyState(BuildContext context, ThemeData theme) {
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
       child: EmptyState(
@@ -555,7 +534,6 @@ class _RecurringTransactionListScreenState
     BuildContext context,
     RecurringTransaction recurring,
     ThemeData theme,
-    bool isDark,
     bool isDue,
     Color? categoryColor,
   ) {
@@ -568,8 +546,8 @@ class _RecurringTransactionListScreenState
         ? Colors.grey
         : categoryColor ??
               (isExpense
-                  ? (isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor)
-                  : (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor));
+                  ? AppTheme.expenseColor
+                  : AppTheme.incomeColor);
     final mutedAccent = categoryColor != null
         ? desaturateColor(accentColor)
         : accentColor;
@@ -710,9 +688,7 @@ class _RecurringTransactionListScreenState
               const SizedBox(height: kSpacing10),
               Divider(
                 height: 0.5,
-                color: isDark
-                    ? const Color(0x10FFFFFF)
-                    : const Color(0x10000000),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
               ),
               const SizedBox(height: kSpacing10),
               Row(

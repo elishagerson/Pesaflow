@@ -33,7 +33,6 @@ class IosBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return DraggableScrollableSheet(
       initialChildSize: initialChildSize,
@@ -45,9 +44,7 @@ class IosBottomSheet extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xF01C1C1E)
-                  : const Color(0xF0F2F2F7),
+              color: theme.colorScheme.surfaceContainerHigh,
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(20),
               ),
@@ -60,9 +57,7 @@ class IosBottomSheet extends StatelessWidget {
                   width: 36,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.2)
-                        : Colors.black.withValues(alpha: 0.15),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.175),
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),

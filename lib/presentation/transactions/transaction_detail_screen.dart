@@ -36,15 +36,13 @@ class TransactionDetailScreen extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : Colors.black.withValues(alpha: 0.04),
+                color: onSurface.withValues(alpha: 0.06),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 PesaFlowIcons.edit,
                 size: 18,
-                color: isDark ? Colors.white : Colors.black,
+                color: onSurface,
               ),
             ),
           ),
@@ -302,21 +300,19 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 value: cat.name,
                               ),
                             ),
-                            _verticalDivider(isDark),
+                            _verticalDivider(onSurface),
                             Expanded(
                               child: _gridItem(
                                 context,
                                 icon: acc != null
                                     ? getAccountIcon(acc.icon)
                                     : Icons.link_off_rounded,
-                                iconColor: isDark
-                                    ? Colors.white70
-                                    : Colors.black87,
+                                iconColor: onSurface.withValues(alpha: 0.78),
                                 label: 'Account',
                                 value: acc?.name ?? 'Offline',
                               ),
                             ),
-                            _verticalDivider(isDark),
+                            _verticalDivider(onSurface),
                             Expanded(
                               child: _gridItem(
                                 context,
@@ -383,7 +379,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         if (hasExtraDetails) ...[
                           Padding(
                             padding: const EdgeInsets.only(top: 24),
-                            child: _divider(isDark),
+                            child: _divider(onSurface),
                           ),
                           const SizedBox(height: 16),
                           if (t.reference != null &&
@@ -433,9 +429,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               PesaFlowIcons.loans,
                               'Balance After',
                               CurrencyFormatter.formatCents(t.balanceAfter!),
-                              valueColor: isDark
-                                  ? Colors.white
-                                  : Colors.black87,
+                              valueColor: onSurface,
                             ),
                           ],
                         ],
@@ -443,10 +437,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                         // Receipt Footer/Barcode
                         Padding(
                           padding: const EdgeInsets.only(top: 28),
-                          child: _divider(isDark),
+                          child: _divider(onSurface),
                         ),
                         const SizedBox(height: 24),
-                        _buildBarcode(t.id, isDark),
+                        _buildBarcode(t.id, onSurface),
                       ],
                     ),
                   ),
@@ -462,9 +456,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     Expanded(
                       child: GlassCard(
                         onTap: () => context.go('/transactions/edit/${t.id}'),
-                        backgroundColor: isDark
-                            ? Colors.white.withValues(alpha: 0.06)
-                            : Colors.black.withValues(alpha: 0.03),
+                        backgroundColor: onSurface.withValues(alpha: 0.045),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         borderRadius: 16,
                         child: Row(
@@ -473,7 +465,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             Icon(
                               PesaFlowIcons.edit,
                               size: 16,
-                              color: isDark ? Colors.white : Colors.black87,
+                              color: onSurface,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -481,7 +473,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: onSurface,
                               ),
                             ),
                           ],
@@ -560,23 +552,19 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _verticalDivider(bool isDark) {
+  Widget _verticalDivider(Color onSurface) {
     return Container(
       width: 0.5,
       height: 36,
-      color: isDark
-          ? Colors.white.withValues(alpha: 0.12)
-          : Colors.black.withValues(alpha: 0.08),
+      color: onSurface.withValues(alpha: 0.1),
     );
   }
 
-  Widget _divider(bool isDark) {
+  Widget _divider(Color onSurface) {
     return Divider(
       height: 1,
       thickness: 0.5,
-      color: isDark
-          ? Colors.white.withValues(alpha: 0.12)
-          : Colors.black.withValues(alpha: 0.08),
+      color: onSurface.withValues(alpha: 0.1),
     );
   }
 
@@ -587,17 +575,13 @@ class TransactionDetailScreen extends ConsumerWidget {
     String label,
     String value,
   ) {
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : Colors.black.withValues(alpha: 0.015),
+        color: onSurface.withValues(alpha: 0.022),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.05)
-              : Colors.black.withValues(alpha: 0.04),
+          color: onSurface.withValues(alpha: 0.045),
           width: 0.5,
         ),
       ),
@@ -627,9 +611,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.03),
+                    color: onSurface.withValues(alpha: 0.04),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -659,7 +641,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: onSurface,
                         ),
                       ),
                     ],
@@ -688,17 +670,13 @@ class TransactionDetailScreen extends ConsumerWidget {
     String value, {
     Color? valueColor,
   }) {
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : Colors.black.withValues(alpha: 0.015),
+        color: onSurface.withValues(alpha: 0.022),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.05)
-              : Colors.black.withValues(alpha: 0.04),
+          color: onSurface.withValues(alpha: 0.045),
           width: 0.5,
         ),
       ),
@@ -708,9 +686,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.03),
+              color: onSurface.withValues(alpha: 0.04),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -738,8 +714,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color:
-                        valueColor ?? (isDark ? Colors.white : Colors.black87),
+                    color: valueColor ?? onSurface,
                   ),
                 ),
               ],
@@ -750,11 +725,9 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBarcode(String id, bool isDark) {
+  Widget _buildBarcode(String id, Color onSurface) {
     final random = id.hashCode;
-    final barColor = isDark
-        ? Colors.white.withValues(alpha: 0.3)
-        : Colors.black.withValues(alpha: 0.15);
+    final barColor = onSurface.withValues(alpha: 0.225);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -780,7 +753,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           style: TextStyle(
             fontSize: 9,
             fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white38 : Colors.black38,
+            color: onSurface.withValues(alpha: 0.38),
             letterSpacing: 2,
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_form_screen.dart';
@@ -169,7 +170,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 
   Widget _buildNavigationRail(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final appColors = theme.extension<AppColorsTheme>()!;
     final currentIndex = widget.navigationShell.currentIndex;
 
     final navItems = [
@@ -189,9 +190,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
         );
       },
       labelType: NavigationRailLabelType.all,
-      backgroundColor: isDark
-          ? const Color(0xFF161B22)
-          : const Color(0xFFF5F3F0),
+      backgroundColor: appColors.surfaceContainer,
       indicatorColor: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
       leading: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -233,7 +232,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 
   Widget _buildSidebar(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final appColors = theme.extension<AppColorsTheme>()!;
     final navItems = [
       (Icons.home_rounded, 'Dashboard', 0),
       (Icons.swap_horiz_rounded, 'Transactions', 1),
@@ -245,10 +244,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
     return Container(
       width: 220,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF161B22) : const Color(0xFFF5F3F0),
+        color: appColors.surfaceContainer,
         border: Border(
           right: BorderSide(
-            color: isDark ? const Color(0x1AFFFFFF) : const Color(0x0F000000),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
             width: 0.5,
           ),
         ),
@@ -279,7 +278,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                   'PesaFlow',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w900,
-                    color: isDark ? Colors.white : Colors.black,
+                      color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -320,7 +319,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                           size: 20,
                           color: isSelected
                               ? const Color(0xFF0F4C5C)
-                              : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -331,9 +330,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                                 : FontWeight.w500,
                             color: isSelected
                                 ? const Color(0xFF0F4C5C)
-                                : (isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600]),
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ],

@@ -15,7 +15,6 @@ class LoanOverviewSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
     final netWorth = ref.watch(netWorthProvider);
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
@@ -55,9 +54,7 @@ class LoanOverviewSection extends ConsumerWidget {
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
-                            color: isDark
-                                ? Colors.white
-                                : theme.colorScheme.onSurface,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -181,9 +178,7 @@ class LoanOverviewSection extends ConsumerWidget {
                               CurrencyFormatter.formatCents(totalOutstanding),
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.w900,
-                                color: isDark
-                                    ? Colors.white
-                                    : theme.colorScheme.onSurface,
+                                color: theme.colorScheme.onSurface,
                                 letterSpacing: -0.5,
                               ),
                             ),

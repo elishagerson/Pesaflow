@@ -112,16 +112,14 @@ class BudgetListScreen extends ConsumerWidget {
   }
 
   Widget _buildSegmentedControl(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     final activeTab = ref.watch(budgetActiveTabProvider);
 
     return Container(
       margin: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : Colors.black.withValues(alpha: 0.05),
+        color: onSurface.withValues(alpha: 0.065),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Row(
@@ -266,13 +264,11 @@ class BudgetListScreen extends ConsumerWidget {
       totalSpent += bp.spentInPeriod;
     }
 
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     return RefreshIndicator(
       color: const Color(0xFF0F4C5C),
-      backgroundColor: isDark
-          ? const Color(0xFF161B22)
-          : const Color(0xFFF5F3F0),
+      backgroundColor: theme.scaffoldBackgroundColor,
       onRefresh: () async {
         ref.invalidate(budgetProgressProvider);
         ref.invalidate(savingsGoalsStreamProvider);
@@ -294,9 +290,7 @@ class BudgetListScreen extends ConsumerWidget {
                   Text(
                     'Budget Overview',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : Colors.black.withValues(alpha: 0.4),
+                      color: onSurface.withValues(alpha: 0.45),
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.3,
                     ),
@@ -316,7 +310,7 @@ class BudgetListScreen extends ConsumerWidget {
                           AmountText(
                             amountInCents: totalSpent,
                             style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black,
+                              color: onSurface,
                               fontWeight: FontWeight.w900,
                               fontSize: 22,
                               letterSpacing: -0.5,
@@ -335,7 +329,7 @@ class BudgetListScreen extends ConsumerWidget {
                           AmountText(
                             amountInCents: totalAllocated,
                             style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black,
+                              color: onSurface,
                               fontWeight: FontWeight.w900,
                               fontSize: 22,
                               letterSpacing: -0.5,
@@ -352,9 +346,7 @@ class BudgetListScreen extends ConsumerWidget {
                       value: totalAllocated > 0
                           ? (totalSpent / totalAllocated).clamp(0.0, 1.0)
                           : 0,
-                      backgroundColor: isDark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
+                      backgroundColor: onSurface.withValues(alpha: 0.07),
                       color: totalSpent > totalAllocated
                           ? AppTheme.expenseColor
                           : Theme.of(context).colorScheme.primary,
@@ -368,9 +360,7 @@ class BudgetListScreen extends ConsumerWidget {
                         : '0% used',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : Colors.black.withValues(alpha: 0.4),
+                      color: onSurface.withValues(alpha: 0.45),
                     ),
                   ),
                 ],
@@ -411,9 +401,7 @@ class BudgetListScreen extends ConsumerWidget {
                     child: GlassCard(
                       borderRadius: 20,
                       onTap: () => context.go('/budgets/${bp.budget.id}'),
-                      backgroundColor: isDark
-                          ? const Color(0xFF1B1C22).withValues(alpha: 0.65)
-                          : Colors.white,
+                      backgroundColor: theme.colorScheme.surface,
                       accentColor: mutedCatColor,
                       accentWidth: 2.5,
                       padding: const EdgeInsets.all(16.0),
@@ -445,9 +433,7 @@ class BudgetListScreen extends ConsumerWidget {
                                           ?.copyWith(
                                             fontWeight: FontWeight.w800,
                                             fontSize: 15,
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black,
+                                            color: onSurface,
                                           ),
                                     ),
                                     const SizedBox(height: 2),
@@ -455,9 +441,7 @@ class BudgetListScreen extends ConsumerWidget {
                                       bp.category.name,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
-                                            color: isDark
-                                                ? Colors.white38
-                                                : Colors.black38,
+                                            color: onSurface.withValues(alpha: 0.38),
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
@@ -505,9 +489,7 @@ class BudgetListScreen extends ConsumerWidget {
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
-                                      color: isDark
-                                          ? Colors.white30
-                                          : Colors.black38,
+                                      color: onSurface.withValues(alpha: 0.34),
                                     ),
                                   ),
                                 ],

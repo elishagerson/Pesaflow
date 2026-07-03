@@ -224,9 +224,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                         Divider(
                           height: 0.5,
                           thickness: 0.5,
-                          color: isDark
-                              ? const Color(0x1AFFFFFF)
-                              : const Color(0x1A000000),
+                          color: appColors.scaffoldLine,
                         ),
                         const SizedBox(height: kSpacing8),
                         Row(
@@ -239,12 +237,8 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                   height: 8,
                                   decoration: BoxDecoration(
                                     color: netSavings >= 0
-                                        ? (isDark
-                                              ? AppTheme.incomeColorDark
-                                              : AppTheme.incomeColor)
-                                        : (isDark
-                                              ? AppTheme.expenseColorDark
-                                              : AppTheme.expenseColor),
+                                        ? appColors.incomeColor
+                                        : appColors.expenseColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),

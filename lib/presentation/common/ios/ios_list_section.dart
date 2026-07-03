@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class IosListSection extends StatelessWidget {
@@ -19,7 +20,6 @@ class IosListSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,9 +32,7 @@ class IosListSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.5)
-                    : Colors.black.withValues(alpha: 0.5),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 letterSpacing: 0.3,
               ),
             ),
@@ -56,9 +54,7 @@ class IosListSection extends StatelessWidget {
                       height: 0.5,
                       thickness: 0.5,
                       indent: row is IosListRow ? row.indent ?? 56 : 56,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.07),
                     ),
                 ],
               );
@@ -134,14 +130,13 @@ class IosListRow extends StatelessWidget {
             Icon(
               Icons.chevron_right_rounded,
               size: 20,
-              color: isDark(context) ? Colors.grey[500] : Colors.grey[400],
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
         ],
       ),
     );
 
     if (onTap != null) {
-      final isDarkMode = isDark(context);
       return Material(
         color: Colors.transparent,
         child: InkWell(
@@ -149,21 +144,14 @@ class IosListRow extends StatelessWidget {
             HapticFeedback.selectionClick();
             onTap!();
           },
-          highlightColor: isDarkMode
-              ? Colors.white.withValues(alpha: 0.05)
-              : Colors.black.withValues(alpha: 0.03),
-          splashColor: isDarkMode
-              ? Colors.white.withValues(alpha: 0.08)
-              : Colors.black.withValues(alpha: 0.05),
+          highlightColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+          splashColor: theme.colorScheme.onSurface.withValues(alpha: 0.065),
           child: content,
         ),
       );
     }
     return content;
   }
-
-  bool isDark(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark;
 }
 
 class IosToggleRow extends IosListRow {
@@ -236,16 +224,13 @@ class IosMetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final c =
-        color ?? (isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor);
+        color ?? context.appColors.incomeColor;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : Colors.white.withValues(alpha: 0.65),
+        color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       ),
       child: Column(
@@ -257,7 +242,7 @@ class IosMetricCard extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
-              color: isDark ? Colors.white : Colors.black,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 2),
@@ -265,9 +250,7 @@ class IosMetricCard extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 11,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.5)
-                  : Colors.black.withValues(alpha: 0.4),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
             ),
           ),
         ],

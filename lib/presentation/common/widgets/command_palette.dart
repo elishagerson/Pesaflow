@@ -231,7 +231,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final query = ref.watch(paletteQueryProvider);
     final searchResults = ref.watch(globalSearchProvider(query));
     final dataResults = (searchResults.asData?.value ?? [])
@@ -262,7 +261,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                 child: Container(
-                  color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.25),
+                  color: Colors.black.withValues(alpha: 0.35),
                   child: Center(
                     child: GestureDetector(
                       onTap: () {},
@@ -274,9 +273,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                           ),
                           margin: const EdgeInsets.all(kSpacing24),
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? const Color(0xF01C1C1E)
-                                : const Color(0xF0FFFFFF),
+                            color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isDark

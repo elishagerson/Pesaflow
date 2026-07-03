@@ -206,10 +206,8 @@ class _RecurringTransactionFormScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark
-        ? const Color(0xFF1B1C22)
-        : const Color(0xFFF2F2F7);
+    final onSurface = theme.colorScheme.onSurface;
+    final inputFill = theme.colorScheme.surfaceContainerHighest;
     final accountsAsync = ref.watch(accountsStreamProvider);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
 
@@ -496,7 +494,7 @@ class _RecurringTransactionFormScreenState
                               ? 'quarter(s)'
                               : 'year(s)',
                           style: TextStyle(
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            color: onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                       ),
@@ -527,7 +525,7 @@ class _RecurringTransactionFormScreenState
                         Text(
                           '${_nextDate.day}/${_nextDate.month}/${_nextDate.year}',
                           style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black,
+                            color: onSurface,
                           ),
                         ),
                       ],
@@ -561,10 +559,8 @@ class _RecurringTransactionFormScreenState
                               : 'Set end date',
                           style: TextStyle(
                             color: _endDate != null
-                                ? (isDark ? Colors.white : Colors.black)
-                                : (isDark
-                                      ? Colors.grey[500]
-                                      : Colors.grey[400]),
+                                ? onSurface
+                                : onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                         if (_endDate != null)

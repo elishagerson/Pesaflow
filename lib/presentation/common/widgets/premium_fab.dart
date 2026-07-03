@@ -11,7 +11,6 @@ class PremiumFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final color = accentColor ?? theme.colorScheme.primary;
 
     return TactileSpringContainer(
@@ -29,13 +28,13 @@ class PremiumFab extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: isDark ? 0.45 : 0.35),
+              color: color.withValues(alpha: 0.4),
               blurRadius: 16,
               spreadRadius: 1,
               offset: const Offset(0, 6),
             ),
             BoxShadow(
-              color: color.withValues(alpha: isDark ? 0.2 : 0.15),
+              color: color.withValues(alpha: 0.175),
               blurRadius: 32,
               spreadRadius: -4,
               offset: const Offset(0, 12),
@@ -44,7 +43,7 @@ class PremiumFab extends StatelessWidget {
         ),
         child: Icon(
           PesaFlowIcons.add,
-          color: isDark ? Colors.black : Colors.white,
+          color: theme.colorScheme.onPrimary,
           size: 28,
         ),
       ),
@@ -69,7 +68,6 @@ class PremiumExtendedFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final color = accentColor ?? theme.colorScheme.primary;
 
     return TactileSpringContainer(
@@ -86,13 +84,13 @@ class PremiumExtendedFab extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: isDark ? 0.45 : 0.35),
+              color: color.withValues(alpha: 0.4),
               blurRadius: 16,
               spreadRadius: 1,
               offset: const Offset(0, 6),
             ),
             BoxShadow(
-              color: color.withValues(alpha: isDark ? 0.2 : 0.15),
+              color: color.withValues(alpha: 0.175),
               blurRadius: 32,
               spreadRadius: -4,
               offset: const Offset(0, 12),
@@ -102,12 +100,12 @@ class PremiumExtendedFab extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: isDark ? Colors.black : Colors.white, size: 20),
+            Icon(icon, color: theme.colorScheme.onPrimary, size: 20),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                color: isDark ? Colors.black : Colors.white,
+                color: theme.colorScheme.onPrimary,
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
                 letterSpacing: -0.2,

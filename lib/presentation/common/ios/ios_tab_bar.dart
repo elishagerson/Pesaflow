@@ -21,7 +21,6 @@ class IosTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final height = minimized ? minimizedHeight : navBarHeight;
 
@@ -71,7 +70,7 @@ class IosTabBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -88,13 +87,9 @@ class IosTabBar extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: isDark
-                    ? Colors.black.withValues(alpha: 0.45)
-                    : Colors.white.withValues(alpha: 0.45),
+                color: theme.colorScheme.surface.withValues(alpha: 0.45),
                 border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.12)
-                      : Colors.black.withValues(alpha: 0.08),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
                   width: 0.8,
                 ),
               ),
@@ -125,18 +120,14 @@ class IosTabBar extends StatelessWidget {
                                 ? theme.colorScheme.primary.withValues(
                                     alpha: 0.20,
                                   )
-                                : (isDark
-                                      ? Colors.white.withValues(alpha: 0.06)
-                                      : Colors.black.withValues(alpha: 0.04)),
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                           ),
                           child: Center(
                             child: Icon(
                               tab.icon,
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : (isDark
-                                        ? Colors.white.withValues(alpha: 0.5)
-                                        : Colors.black.withValues(alpha: 0.3)),
+                                  : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                               size: minimized ? 18 : 26,
                             ),
                           ),
@@ -169,14 +160,14 @@ class IosTabBar extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? theme.colorScheme.primary.withValues(
-                                    alpha: isDark ? 0.15 : 0.10,
+                                    alpha: 0.125,
                                   )
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(
                               color: isSelected
                                   ? theme.colorScheme.primary.withValues(
-                                      alpha: isDark ? 0.20 : 0.15,
+                                      alpha: 0.175,
                                     )
                                   : Colors.transparent,
                               width: 0.5,
@@ -200,13 +191,7 @@ class IosTabBar extends StatelessWidget {
                                   size: minimized ? 20 : 22,
                                   color: isSelected
                                       ? theme.colorScheme.primary
-                                      : (isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.45,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.35,
-                                              )),
+                                      : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                                 ),
                               ),
                               if (!minimized) ...[
@@ -221,13 +206,7 @@ class IosTabBar extends StatelessWidget {
                                         : FontWeight.w500,
                                     color: isSelected
                                         ? theme.colorScheme.primary
-                                        : (isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.45,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.35,
-                                                )),
+                                        : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                                   ),
                                 ),
                               ],
@@ -286,7 +265,6 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final top = MediaQuery.of(context).padding.top;
 
     final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
@@ -297,9 +275,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
         color: theme.scaffoldBackgroundColor,
         border: Border(
           bottom: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.05),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.065),
             width: 0.5,
           ),
         ),

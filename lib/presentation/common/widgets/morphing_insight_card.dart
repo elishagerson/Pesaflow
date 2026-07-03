@@ -87,7 +87,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final color = widget.data.color;
     final severity = _computeSeverity();
 
@@ -113,7 +112,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             width: 280,
             margin: const EdgeInsets.only(right: kSpacing12),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+              color: theme.colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: color.withValues(
@@ -142,7 +141,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                       height: 3 + _expandAnimation.value * 2,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: _severityGradient(severity, isDark),
+                          colors: _severityGradient(severity),
                         ),
                       ),
                     ),
@@ -239,14 +238,12 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                     Icons.trending_up_rounded,
                                     'Category trend',
                                     'Based on your spending in this category',
-                                    isDark,
                                   ),
                                   const SizedBox(height: kSpacing4),
                                   _buildDetailRow(
                                     Icons.calendar_month_rounded,
                                     'Time period',
                                     'This month vs last month',
-                                    isDark,
                                   ),
                                 ],
                               ),
@@ -268,7 +265,6 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     IconData icon,
     String label,
     String value,
-    bool isDark,
   ) {
     return Row(
       children: [
@@ -288,7 +284,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             value,
             style: TextStyle(
               fontSize: 11,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.end,
             maxLines: 1,
@@ -299,7 +295,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     );
   }
 
-  List<Color> _severityGradient(Severity s, bool isDark) {
+  List<Color> _severityGradient(Severity s) {
     switch (s) {
       case Severity.good:
         return [const Color(0xFF10B981), const Color(0xFF34D399)];
