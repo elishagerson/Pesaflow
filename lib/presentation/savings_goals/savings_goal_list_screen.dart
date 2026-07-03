@@ -113,7 +113,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, bool isDark) {
+  Widget _buildEmptyState(BuildContext context, ThemeData theme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(kSpacing32),
@@ -143,7 +143,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: kSpacing24),
@@ -181,7 +181,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
   Widget _buildSummaryCard(
     BuildContext context,
-    bool isDark,
+    ThemeData theme,
     int totalSaved,
     int totalTarget,
     double overallPct,
@@ -212,7 +212,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -225,7 +225,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               fontSize: 28,
               fontFamily: 'monospace',
               fontWeight: FontWeight.w900,
-              color: isDark ? Colors.white : Colors.black,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: kSpacing4),

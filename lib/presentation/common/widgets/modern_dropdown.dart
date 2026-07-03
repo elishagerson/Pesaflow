@@ -287,18 +287,14 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                                 ? itemColor.withValues(
                                                     alpha: 0.15,
                                                   )
-                                                : (isDark
-                                                      ? Colors.white10
-                                                      : Colors.black12),
+                                                : onSurface.withValues(alpha: 0.11),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             item.icon,
                                             color: isSelected
                                                 ? itemColor
-                                                : (isDark
-                                                      ? Colors.white70
-                                                      : Colors.black54),
+                                                : onSurface.withValues(alpha: 0.62),
                                             size: 20,
                                           ),
                                         ),
@@ -317,12 +313,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                                     ? FontWeight.bold
                                                     : FontWeight.normal,
                                                 color: isSelected
-                                                    ? (isDark
-                                                          ? Colors.white
-                                                          : itemColor)
-                                                    : (isDark
-                                                          ? Colors.white70
-                                                          : Colors.black87),
+                                                    ? itemColor
+                                                    : onSurface.withValues(alpha: 0.78),
                                               ),
                                             ),
                                             if (item.subtitle != null) ...[
@@ -331,9 +323,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                                 item.subtitle!,
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: isDark
-                                                      ? Colors.grey[400]
-                                                      : Colors.grey[600],
+                                                  color: onSurface.withValues(alpha: 0.6),
                                                 ),
                                               ),
                                             ],

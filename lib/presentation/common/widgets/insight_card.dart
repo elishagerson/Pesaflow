@@ -11,7 +11,6 @@ class InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final color = data.color;
 
     return Semantics(
@@ -24,7 +23,7 @@ class InsightCard extends StatelessWidget {
           width: 260,
           padding: const EdgeInsets.all(kSpacing16),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+            color: theme.colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
