@@ -305,9 +305,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
                                             style: TextStyle(
                                               fontSize: 13,
-                                              color: isDark
-                                                  ? Colors.grey[400]
-                                                  : Colors.grey[600],
+                                              color: onSurface.withValues(alpha: 0.6),
                                             ),
                                           ),
                                         ],
@@ -330,7 +328,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   ),
                                   const SizedBox(height: 8),
                                   _buildAmountField(
-                                    isDark: isDark,
+                                    theme: theme,
                                     amountController: amountController,
                                     paymentAmount: paymentAmount,
                                     setSheetState: setSheetState,
