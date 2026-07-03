@@ -208,15 +208,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 color: theme.colorScheme.onPrimary,
                                 size: 20,
                               ),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: kSpacing8),
                               Text(
                                 isFiltered
                                     ? 'Clear Filters'
                                     : 'Add First Transaction',
-                                style: TextStyle(
+                                style: theme.textTheme.titleSmall?.copyWith(
                                   color: theme.colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15,
                                 ),
                               ),
                             ],
@@ -281,10 +280,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           // Group Date Header
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
-                              20.0,
-                              24.0,
-                              20.0,
-                              12.0,
+                              kSpacing16,
+                              kSpacing16,
+                              kSpacing20,
+                              kSpacing12,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,9 +292,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   _formatHeaderDate(
                                     firstItemDate,
                                   ).toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
                                     letterSpacing: 1.2,
                                     color: onSurface.withValues(alpha: 0.34),
                                   ),
@@ -308,14 +306,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       : (dailyNetChange < 0
                                             ? AmountType.expense
                                             : AmountType.neutral),
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w800,
-                                    color: dailyNetChange > 0
-                                        ? AppTheme.transferColorDark
-                                        : (dailyNetChange < 0
-                                              ? const Color(0xFFFF453A)
-                                              : Colors.grey),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
@@ -473,54 +465,66 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                               trans.description.isNotEmpty
                                                   ? trans.description
                                                   : item.category.name,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 15,
-                                                color: onSurface,
-                                              ),
+                                              style: theme.textTheme.bodyMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: onSurface,
+                                                  ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            const SizedBox(height: 3),
+                                            const SizedBox(height: kSpacing2),
                                             Row(
                                               children: [
                                                 Text(
                                                   item.account?.name ??
                                                       'Offline',
-                                                  style: TextStyle(
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.6,
-                                                    ),
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.6,
+                                                            ),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                 ),
                                                 if (trans.reference != null &&
                                                     trans
                                                         .reference!
                                                         .isNotEmpty) ...[
-                                                  const SizedBox(width: 6),
+                                                  const SizedBox(
+                                                    width: kSpacing6,
+                                                  ),
                                                   Text(
                                                     '•',
-                                                    style: TextStyle(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.11,
-                                                          ),
-                                                      fontSize: 10,
-                                                    ),
+                                                    style: theme
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                          color: onSurface
+                                                              .withValues(
+                                                                alpha: 0.11,
+                                                              ),
+                                                        ),
                                                   ),
-                                                  const SizedBox(width: 6),
+                                                  const SizedBox(
+                                                    width: kSpacing6,
+                                                  ),
                                                   Flexible(
                                                     child: Text(
                                                       trans.reference!,
-                                                      style: TextStyle(
-                                                        color: onSurface
-                                                            .withValues(
-                                                              alpha: 0.34,
-                                                            ),
-                                                        fontSize: 11,
-                                                      ),
+                                                      style: theme
+                                                          .textTheme
+                                                          .bodySmall
+                                                          ?.copyWith(
+                                                            color: onSurface
+                                                                .withValues(
+                                                                  alpha: 0.34,
+                                                                ),
+                                                          ),
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -530,12 +534,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                 if (trans.source.startsWith(
                                                   'sms',
                                                 )) ...[
-                                                  const SizedBox(width: 6),
+                                                  const SizedBox(
+                                                    width: kSpacing6,
+                                                  ),
                                                   Container(
                                                     padding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 6,
-                                                          vertical: 2,
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: kSpacing6,
+                                                          vertical: kSpacing2,
                                                         ),
                                                     decoration: BoxDecoration(
                                                       color: const Color(
@@ -543,14 +549,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                       ).withValues(alpha: 0.08),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            6,
+                                                            kSpacing6,
                                                           ),
                                                     ),
-                                                    child: Text(
-                                                      '📨',
-                                                      style: TextStyle(
-                                                        fontSize: 11,
-                                                      ),
+                                                    child: Icon(
+                                                      PesaFlowIcons.sms,
+                                                      size: 11,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .primary,
                                                     ),
                                                   ),
                                                 ],
@@ -559,7 +566,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      const SizedBox(width: kSpacing12),
                                       // Amount & Time
                                       Column(
                                         crossAxisAlignment:
@@ -569,30 +576,21 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                             amountInCents: trans.amount,
                                             type: amtType,
                                             showDecimals: true,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 16,
-                                              color:
-                                                  amtType == AmountType.income
-                                                  ? AppTheme.transferColorDark
-                                                  : (amtType ==
-                                                            AmountType.expense
-                                                        ? const Color(
-                                                            0xFFFF453A,
-                                                          )
-                                                        : Colors.grey),
-                                            ),
+                                            style: theme.textTheme.titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
-                                          const SizedBox(height: 4),
+                                          const SizedBox(height: kSpacing4),
                                           Text(
                                             formattedTime,
-                                            style: TextStyle(
-                                              color: onSurface.withValues(
-                                                alpha: 0.25,
-                                              ),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                            style: theme.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.25,
+                                                  ),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -936,17 +934,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           ),
                                           child: Text(
                                             type,
-                                            style: TextStyle(
-                                              color: isSelected
-                                                  ? theme.colorScheme.onPrimary
-                                                  : onSurface.withValues(
-                                                      alpha: 0.52,
-                                                    ),
-                                              fontWeight: isSelected
-                                                  ? FontWeight.w700
-                                                  : FontWeight.w500,
-                                              fontSize: 13,
-                                            ),
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .onPrimary
+                                                      : onSurface.withValues(
+                                                          alpha: 0.52,
+                                                        ),
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.bold
+                                                      : FontWeight.w500,
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -974,6 +974,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
   // ── INSIGHTS CARD BUILDER ──
   Widget _buildInsightsCard(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final insightsAsync = ref.watch(insightsProvider);
     final monthlyTotalsAsync = ref.watch(monthlyTotalsProvider);
 
@@ -1041,19 +1042,17 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           children: [
                             Text(
                               'INSIGHTS',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 color: accentColor,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: kSpacing8),
                             Text(
                               title,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
                                 letterSpacing: -0.6,
                                 color: Colors.white,
                                 height: 1.15,
@@ -1061,12 +1060,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: kSpacing6),
                             Text(
                               message,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 color: Colors.white.withValues(alpha: 0.7),
                                 height: 1.25,
                               ),
@@ -1188,10 +1185,10 @@ class _FilterButton extends StatelessWidget {
                 constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                 child: Text(
                   '$activeCount',
-                  style: const TextStyle(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: Colors.white,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1220,6 +1217,7 @@ class _MiniBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final fraction = maxValue > 0 ? (value / maxValue).clamp(0.0, 1.0) : 0.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1229,24 +1227,22 @@ class _MiniBar extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
                 color: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             const Spacer(),
             Text(
               formatValue(value),
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
                 color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: kSpacing4),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: TweenAnimationBuilder<double>(

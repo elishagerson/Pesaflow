@@ -453,6 +453,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       .balance)
                                 : netWorth,
                             useMonospace: false,
+                            animate: true,
                             style: theme.textTheme.displaySmall?.copyWith(
                               fontWeight: FontWeight.w900,
                               fontSize: 42,

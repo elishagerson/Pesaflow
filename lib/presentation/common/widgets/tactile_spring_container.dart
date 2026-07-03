@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/services.dart';
 
 class TactileSpringContainer extends StatefulWidget {
   final Widget child;
@@ -64,6 +65,9 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
+        if (widget.onTap != null) {
+          HapticFeedback.lightImpact();
+        }
         _springBack();
         widget.onTap?.call();
       },

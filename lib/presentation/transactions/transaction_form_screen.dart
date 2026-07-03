@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -51,6 +52,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   bool _isEditMode = false;
   bool _isLoading = false;
+  bool _showAdvanced = false;
   Transaction? _existingTransaction;
 
   final List<String> _expenseSuggestions = [
@@ -986,27 +988,74 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-
-                    // Carrier Reference field
-                    Text(
-                      'Carrier Reference (Optional)',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurfaceVariant,
+                    // Progressive Disclosure: Collapsible details
+                    const SizedBox(height: kSpacing12),
+                    InkWell(
+                      onTap: () {
+                        setSheetState(() => _showAdvanced = !_showAdvanced);
+                        setState(() => _showAdvanced = !_showAdvanced);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kSpacing8,
+                          horizontal: kSpacing4,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'ADDITIONAL DETAILS',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            Icon(
+                              _showAdvanced
+                                  ? Icons.keyboard_arrow_up_rounded
+                                  : Icons.keyboard_arrow_down_rounded,
+                              color: theme.colorScheme.primary,
+                              size: 20,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _referenceController,
-                      textCapitalization: TextCapitalization.characters,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: onSurface.withValues(alpha: 0.87),
+                    AnimatedCrossFade(
+                      firstChild: const SizedBox.shrink(),
+                      secondChild: Padding(
+                        padding: const EdgeInsets.only(top: kSpacing12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Carrier Reference (Optional)',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _referenceController,
+                              textCapitalization: TextCapitalization.characters,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: onSurface.withValues(alpha: 0.87),
+                              ),
+                              decoration: context.inputDecoration(
+                                hintText: 'e.g. PP230489A1',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      decoration: context.inputDecoration(
-                        hintText: 'e.g. PP230489A1',
-                      ),
+                      crossFadeState: _showAdvanced
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      duration: const Duration(milliseconds: 250),
                     ),
                     const SizedBox(height: 20),
 

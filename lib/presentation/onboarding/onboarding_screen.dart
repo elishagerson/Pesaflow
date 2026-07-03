@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -13,6 +14,8 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
+import 'package:pesaflow/data/database/database_providers.dart';
+import 'package:pesaflow/data/seed/demo_seeder.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -82,34 +85,39 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  Future<void> _finish() async {
+  Future<void> _finish({bool seedDemo = false}) async {
     try {
-      final accountRepo = ref.read(accountRepositoryProvider);
-      const uuid = Uuid();
-      for (final entry in _accounts.entries) {
-        if (entry.value) {
-          final accType = _types[entry.key] ?? 'mobile_money';
-          final iconStr = accType == 'mobile_money'
-              ? 'phone-android'
-              : accType == 'bank'
-              ? 'account-balance'
-              : 'wallet';
-          final provider = _providers[entry.key];
-          await accountRepo.createAccount(
-            Account(
-              id: uuid.v4(),
-              name: entry.key,
-              type: accType,
-              balance: 0,
-              provider: (provider != null && provider.isNotEmpty)
-                  ? provider
-                  : null,
-              icon: iconStr,
-              sortOrder: 0,
-              isArchived: false,
-              createdAt: DateTime.now(),
-            ),
-          );
+      if (seedDemo) {
+        final db = ref.read(databaseProvider);
+        await DemoSeeder(db).seedDemoData();
+      } else {
+        final accountRepo = ref.read(accountRepositoryProvider);
+        const uuid = Uuid();
+        for (final entry in _accounts.entries) {
+          if (entry.value) {
+            final accType = _types[entry.key] ?? 'mobile_money';
+            final iconStr = accType == 'mobile_money'
+                ? 'phone-android'
+                : accType == 'bank'
+                ? 'account-balance'
+                : 'wallet';
+            final provider = _providers[entry.key];
+            await accountRepo.createAccount(
+              Account(
+                id: uuid.v4(),
+                name: entry.key,
+                type: accType,
+                balance: 0,
+                provider: (provider != null && provider.isNotEmpty)
+                    ? provider
+                    : null,
+                icon: iconStr,
+                sortOrder: 0,
+                isArchived: false,
+                createdAt: DateTime.now(),
+              ),
+            );
+          }
         }
       }
       await ref.read(settingsRepositoryProvider).markOnboardingComplete();
@@ -134,7 +142,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create accounts: $e')),
+          SnackBar(content: Text('Failed to initialize setup: $e')),
         );
       }
     }
@@ -199,89 +207,118 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             // Bottom buttons
             Padding(
               padding: const EdgeInsets.all(24),
-              child: Row(
-                children: [
-                  if (_currentPage > 0 && _currentPage < 3)
-                    TextButton(
-                      onPressed: () => _pageController.previousPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      ),
-                      child: const Text('Back'),
-                    ),
-                  const Spacer(),
-                  if (_currentPage < 3)
-                    TactileSpringContainer(
-                      onTap: _nextPage,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 28,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              theme.colorScheme.primary,
-                              theme.colorScheme.primary.withValues(alpha: 0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.3,
+              child: _currentPage == 3
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TactileSpringContainer(
+                          onTap: () => _finish(seedDemo: true),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  theme.colorScheme.primary.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ],
                               ),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: const Text(
-                          'Continue',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            child: const Text(
+                              'Explore with Demo Data',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: kSpacing12),
+                        TactileSpringContainer(
+                          onTap: () => _finish(seedDemo: false),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: theme.colorScheme.outline,
+                                width: 1.5,
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              'Start Fresh',
+                              style: TextStyle(
+                                color: theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
-                  else
-                    TactileSpringContainer(
-                      onTap: _finish,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 28,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              theme.colorScheme.primary,
-                              theme.colorScheme.primary.withValues(alpha: 0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.3,
-                              ),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
+                  : Row(
+                      children: [
+                        if (_currentPage > 0)
+                          TextButton(
+                            onPressed: () => _pageController.previousPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
                             ),
-                          ],
-                        ),
-                        child: const Text(
-                          'Start Tracking',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            child: const Text('Back'),
+                          ),
+                        const Spacer(),
+                        TactileSpringContainer(
+                          onTap: _nextPage,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 28,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  theme.colorScheme.primary.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: const Text(
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                ],
-              ),
             ),
           ],
         ),
