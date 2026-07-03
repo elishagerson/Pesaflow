@@ -452,18 +452,13 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             borderRadius: AppTheme.radiusCard,
                             child: Column(
                               children: [
-                                TextFormField(
+                                _InteractiveInputRow(
                                   controller: _nameController,
+                                  label: 'Budget Name',
+                                  hint: 'e.g. Monthly Food',
+                                  icon: Icons.label_rounded,
                                   textCapitalization: TextCapitalization.words,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  decoration: inputDeco(
-                                    label: 'Budget Name',
-                                    hint: 'e.g. Monthly Food',
-                                    icon: Icons.label_rounded,
-                                  ).copyWith(errorText: _nameError),
+                                  errorText: _nameError,
                                   onChanged: (_) =>
                                       setState(() => _nameError = null),
                                 ),
@@ -482,19 +477,18 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   color: onSurface.withValues(alpha: 0.08),
                                   height: 1,
                                 ),
-                                TextFormField(
+                                _InteractiveInputRow(
                                   controller: _amountController,
+                                  label: 'Budget Amount (Tsh)',
+                                  hint: 'e.g. 300000',
+                                  icon: PesaFlowIcons.cash,
                                   keyboardType: TextInputType.number,
+                                  errorText: _amountError,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'monospace',
                                   ),
-                                  decoration: inputDeco(
-                                    label: 'Budget Amount (Tsh)',
-                                    hint: 'e.g. 300000',
-                                    icon: PesaFlowIcons.cash,
-                                  ).copyWith(errorText: _amountError),
                                   onChanged: (_) =>
                                       setState(() => _amountError = null),
                                 ),
@@ -623,18 +617,16 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   ),
                                   if (_rolloverType == 'capped') ...[
                                     const SizedBox(height: 10),
-                                    TextFormField(
+                                    _InteractiveInputRow(
                                       controller: _capController,
+                                      label: 'Max Rollover (Tsh)',
+                                      hint: 'e.g. 50000',
+                                      icon: Icons.upcoming_rounded,
                                       keyboardType: TextInputType.number,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'monospace',
-                                      ),
-                                      decoration: inputDeco(
-                                        label: 'Max Rollover (Tsh)',
-                                        hint: 'e.g. 50000',
-                                        icon: Icons.upcoming_rounded,
                                       ),
                                     ),
                                   ],
@@ -796,6 +788,150 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InteractiveInputRow extends StatefulWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final IconData icon;
+  final TextInputType? keyboardType;
+  final TextCapitalization textCapitalization;
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
+  final TextStyle? style;
+
+  const _InteractiveInputRow({
+    required this.controller,
+    required this.label,
+    required this.hint,
+    required this.icon,
+    this.keyboardType,
+    this.textCapitalization = TextCapitalization.none,
+    this.errorText,
+    this.onChanged,
+    this.style,
+  });
+
+  @override
+  State<_InteractiveInputRow> createState() => _InteractiveInputRowState();
+}
+
+class _InteractiveInputRowState extends State<_InteractiveInputRow> {
+  bool _isFocused = false;
+  bool _showClear = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_updateClearState);
+    _showClear = widget.controller.text.isNotEmpty;
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_updateClearState);
+    super.dispose();
+  }
+
+  void _updateClearState() {
+    final show = widget.controller.text.isNotEmpty;
+    if (show != _showClear) {
+      setState(() => _showClear = show);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
+
+    return Focus(
+      onFocusChange: (hasFocus) {
+        setState(() => _isFocused = hasFocus);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing4, vertical: kSpacing2),
+        decoration: BoxDecoration(
+          color: _isFocused
+              ? theme.colorScheme.primary.withValues(alpha: 0.03)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _isFocused
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                widget.icon,
+                color: _isFocused ? theme.colorScheme.primary : onSurface.withValues(alpha: 0.6),
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: TextFormField(
+                controller: widget.controller,
+                keyboardType: widget.keyboardType,
+                textCapitalization: widget.textCapitalization,
+                style: widget.style ?? theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+                onChanged: widget.onChanged,
+                decoration: InputDecoration(
+                  labelText: widget.label,
+                  labelStyle: TextStyle(
+                    color: _isFocused
+                        ? theme.colorScheme.primary
+                        : onSurface.withValues(alpha: 0.5),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  hintText: widget.hint,
+                  hintStyle: TextStyle(
+                    color: onSurface.withValues(alpha: 0.3),
+                    fontSize: 14,
+                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  errorText: widget.errorText,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 6),
+                ),
+              ),
+            ),
+            if (_showClear && _isFocused)
+              TactileSpringContainer(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  widget.controller.clear();
+                  if (widget.onChanged != null) widget.onChanged!('');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.cancel_rounded,
+                    color: onSurface.withValues(alpha: 0.3),
+                    size: 18,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
