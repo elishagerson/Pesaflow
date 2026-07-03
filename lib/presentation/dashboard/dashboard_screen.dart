@@ -1270,7 +1270,7 @@ class _SummaryNavCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: 130,
-          height: 80,
+          height: 88,
           padding: const EdgeInsets.all(kSpacing14),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.06),
