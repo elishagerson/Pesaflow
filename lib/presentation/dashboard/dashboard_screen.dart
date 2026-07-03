@@ -74,7 +74,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final totalsAsync = ref.watch(monthlyTotalsProvider);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -128,31 +128,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final accounts = accountsAsync.value ?? [];
 
     // Dynamic Balance card color properties matching HIG/M3 design brief
-    final cardGradient = isDark
-        ? LinearGradient(
-            colors: [
-              trackerColor.withValues(alpha: 0.35),
-              const Color(0xFF05080C),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )
-        : LinearGradient(
-            colors: [trackerColor, const Color(0xFF062028)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          );
+    final cardGradient = LinearGradient(
+      colors: [
+        trackerColor.withValues(alpha: 0.35),
+        theme.brightness == Brightness.dark
+            ? const Color(0xFF05080C)
+            : const Color(0xFF062028),
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
 
-    final Color heroTextColor = Colors.white;
-    final Color heroSubColor = isDark
-        ? Colors.grey[400]!
-        : Colors.white.withValues(alpha: 0.8);
-    final Color pillBg = isDark
-        ? Colors.white.withValues(alpha: 0.06)
-        : Colors.white.withValues(alpha: 0.18);
-    final Color pillBorder = isDark
-        ? const Color(0x1AFFFFFF)
-        : const Color(0x33FFFFFF);
+    const Color heroTextColor = Colors.white;
+    final Color heroSubColor = Colors.white.withValues(alpha: 0.7);
+    final Color pillBg = Colors.white.withValues(alpha: 0.10);
+    final Color pillBorder = const Color(0x26FFFFFF);
 
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -169,14 +159,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               vertical: kSpacing8,
             ),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.black.withValues(alpha: 0.03),
+              color: onSurface.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(100),
               border: Border.all(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.10)
-                    : Colors.black.withValues(alpha: 0.05),
+                color: onSurface.withValues(alpha: 0.07),
                 width: 0.8,
               ),
             ),
@@ -197,16 +183,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                    color: onSurface,
                   ),
                 ),
                 const SizedBox(width: kSpacing4),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 14,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.5)
-                      : Colors.black.withValues(alpha: 0.4),
+                  color: onSurface.withValues(alpha: 0.45),
                 ),
               ],
             ),
@@ -218,20 +202,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: Container(
               padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.06)
-                    : Colors.black.withValues(alpha: 0.03),
+                color: onSurface.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.12)
-                      : Colors.black.withValues(alpha: 0.06),
+                  color: onSurface.withValues(alpha: 0.08),
                   width: 0.8,
                 ),
               ),
               child: Icon(
                 Icons.search_rounded,
-                color: isDark ? Colors.white : Colors.black,
+                color: onSurface,
                 size: 20,
               ),
             ),
@@ -242,20 +222,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: Container(
               padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.06)
-                    : Colors.black.withValues(alpha: 0.03),
+                color: onSurface.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.12)
-                      : Colors.black.withValues(alpha: 0.06),
+                  color: onSurface.withValues(alpha: 0.08),
                   width: 0.8,
                 ),
               ),
               child: Icon(
                 Icons.person_outline_rounded,
-                color: isDark ? Colors.white : Colors.black,
+                color: onSurface,
                 size: 20,
               ),
             ),
