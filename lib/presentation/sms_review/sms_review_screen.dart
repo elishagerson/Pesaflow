@@ -181,12 +181,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           vertical: kSpacing6,
                         ),
                         decoration: BoxDecoration(
-                          color: theme.brightness == Brightness.dark
+                          color: context.isDark
                               ? Colors.white.withValues(alpha: 0.06)
                               : Colors.black.withValues(alpha: 0.03),
                           borderRadius: BorderRadius.circular(100),
                           border: Border.all(
-                            color: theme.brightness == Brightness.dark
+                            color: context.isDark
                                 ? Colors.white.withValues(alpha: 0.10)
                                 : Colors.black.withValues(alpha: 0.05),
                             width: 0.8,
@@ -686,33 +686,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         vertical: kSpacing8,
                                                       ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        theme.brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.06,
-                                                              )
-                                                        : Colors.black
-                                                              .withValues(
-                                                                alpha: 0.03,
-                                                              ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          100,
-                                                        ),
+                                                    color: context.isDark
+                                                        ? Colors.white.withValues(alpha: 0.06)
+                                                        : Colors.black.withValues(alpha: 0.03),
+                                                    borderRadius: BorderRadius.circular(100),
                                                     border: Border.all(
-                                                      color:
-                                                          theme.brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.10,
-                                                                )
-                                                          : Colors.black
-                                                                .withValues(
-                                                                  alpha: 0.05,
-                                                                ),
+                                                      color: context.isDark
+                                                          ? Colors.white.withValues(alpha: 0.10)
+                                                          : Colors.black.withValues(alpha: 0.05),
                                                       width: 0.8,
                                                     ),
                                                   ),
