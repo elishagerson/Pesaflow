@@ -329,15 +329,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           AppTheme.radiusCard,
                         ),
                         border: Border.all(
-                          color: isDark
-                              ? trackerColor.withValues(alpha: 0.25)
-                              : trackerColor.withValues(alpha: 0.12),
+                          color: trackerColor.withValues(alpha: 0.18),
                           width: 0.8,
                         ),
                         boxShadow: [
                           BoxShadow(
                             color: trackerColor.withValues(
-                              alpha: isDark ? 0.2 : 0.15,
+                              alpha: 0.18,
                             ),
                             blurRadius: 40,
                             offset: const Offset(0, 12),
@@ -358,9 +356,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 19,
-                                      color: isDark
-                                          ? const Color(0xFF0F4C5C)
-                                          : Colors.white,
+                                      color: Colors.white.withValues(alpha: 0.85),
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -514,20 +510,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? (isDark
-                                                    ? trackerColor.withValues(
-                                                        alpha: 0.35,
-                                                      )
-                                                    : Colors.white)
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.25,
+                                                )
                                               : pillBg,
                                           borderRadius: BorderRadius.circular(
                                             100,
                                           ),
                                           border: Border.all(
                                             color: isSelected
-                                                ? (isDark
-                                                      ? trackerColor
-                                                      : Colors.white)
+                                                ? Colors.white.withValues(alpha: 0.6)
                                                 : pillBorder,
                                             width: isSelected ? 1.5 : 0.8,
                                           ),
@@ -539,9 +531,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               getAccountIcon(account.icon),
                                               size: 14,
                                               color: isSelected
-                                                  ? (isDark
-                                                        ? Colors.white
-                                                        : trackerColor)
+                                                  ? Colors.white
                                                   : heroTextColor,
                                             ),
                                             const SizedBox(width: kSpacing6),
@@ -551,9 +541,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   ?.copyWith(
                                                     fontWeight: FontWeight.bold,
                                                     color: isSelected
-                                                        ? (isDark
-                                                              ? Colors.white
-                                                              : trackerColor)
+                                                        ? Colors.white
                                                         : heroTextColor,
                                                   ),
                                             ),
@@ -565,21 +553,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     fontFamily: 'monospace',
                                                     fontWeight: FontWeight.bold,
                                                     color: isSelected
-                                                        ? (isDark
-                                                              ? Colors.white
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.9,
-                                                                    )
-                                                              : trackerColor
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.9,
-                                                                    ))
-                                                        : heroTextColor
-                                                              .withValues(
-                                                                alpha: 0.8,
-                                                              ),
+                                                        ? Colors.white.withValues(alpha: 0.9)
+                                                        : heroTextColor.withValues(alpha: 0.8),
                                                   ),
                                             ),
                                           ],
@@ -621,43 +596,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               vertical: kSpacing16,
                             ),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? const Color(
-                                      0xFF1B1C22,
-                                    ).withValues(alpha: 0.8)
-                                  : Colors.black,
+                              color: Colors.black,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                color: isDark
-                                    ? trackerColor.withValues(alpha: 0.4)
-                                    : Colors.black,
+                                color: Colors.black,
                                 width: 1.0,
                               ),
-                              boxShadow: isDark
-                                  ? [
-                                      BoxShadow(
-                                        color: trackerColor.withValues(
-                                          alpha: 0.15,
-                                        ),
-                                        blurRadius: 10,
-                                        spreadRadius: 0.5,
-                                      ),
-                                    ]
-                                  : null,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: trackerColor.withValues(alpha: 0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 0.5,
+                                ),
+                              ],
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   PesaFlowIcons.add,
-                                  color: isDark ? trackerColor : Colors.white,
+                                  color: Colors.white,
                                   size: 20,
                                 ),
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Add transaction',
                                   style: theme.textTheme.titleMedium?.copyWith(
-                                    color: isDark ? trackerColor : Colors.white,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
@@ -675,16 +640,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               vertical: kSpacing16,
                             ),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? const Color(
-                                      0xFF1B1C22,
-                                    ).withValues(alpha: 0.8)
-                                  : const Color(0xFFE5E5EA),
+                              color: onSurface.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                color: isDark
-                                    ? const Color(0x10FFFFFF)
-                                    : const Color(0x0F000000),
+                                color: onSurface.withValues(alpha: 0.12),
                                 width: 0.5,
                               ),
                             ),
@@ -693,16 +652,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               children: [
                                 Icon(
                                   PesaFlowIcons.wallet,
-                                  color: isDark ? Colors.white : Colors.black,
+                                  color: onSurface,
                                   size: 18,
                                 ),
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   'Add account',
                                   style: theme.textTheme.titleMedium?.copyWith(
-                                    color: isDark
-                                        ? Colors.white
-                                        : theme.colorScheme.onSurface,
+                                    color: onSurface,
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
@@ -920,16 +877,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 vertical: kSpacing40,
                               ),
                               decoration: BoxDecoration(
-                                color: theme.brightness == Brightness.dark
-                                    ? AppTheme.surfaceContainerDark
-                                    : AppTheme.surfaceLight,
+                              color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusCard,
                                 ),
                                 border: Border.all(
-                                  color: isDark
-                                      ? const Color(0x12FFFFFF)
-                                      : const Color(0x0F000000),
+                                  color: onSurface.withValues(alpha: 0.08),
                                   width: 0.5,
                                 ),
                               ),
@@ -1024,23 +977,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       ),
                                       padding: const EdgeInsets.all(kSpacing16),
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? const Color(
-                                                0xFF1B1C22,
-                                              ).withValues(alpha: 0.65)
-                                            : Colors.white,
+                                        color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                          color: isDark
-                                              ? const Color(0x10FFFFFF)
-                                              : const Color(0x0F000000),
+                                          color: onSurface.withValues(alpha: 0.08),
                                           width: 0.5,
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: isDark ? 0.2 : 0.03,
-                                            ),
+                                            color: onSurface.withValues(alpha: 0.08),
                                             blurRadius: 8,
                                             offset: const Offset(0, 4),
                                           ),
@@ -1088,11 +1033,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       ?.copyWith(
                                                         fontWeight:
                                                             FontWeight.w800,
-                                                        color: isDark
-                                                            ? Colors.white
-                                                            : theme
-                                                                  .colorScheme
-                                                                  .onSurface,
+                                                        color: onSurface,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
@@ -1308,7 +1249,6 @@ class _SummaryNavCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.only(right: kSpacing12),
@@ -1318,14 +1258,10 @@ class _SummaryNavCard extends StatelessWidget {
           width: 130,
           padding: const EdgeInsets.all(kSpacing14),
           decoration: BoxDecoration(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.06)
-                : color.withValues(alpha: 0.06),
+            color: color.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : color.withValues(alpha: 0.12),
+              color: color.withValues(alpha: 0.12),
               width: 0.5,
             ),
           ),
@@ -1525,13 +1461,11 @@ class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
 
 class _AnimatedHeroGradient extends StatefulWidget {
   final Color trackerColor;
-  final bool isDark;
   final LinearGradient cardGradient;
   final Widget child;
 
   const _AnimatedHeroGradient({
     required this.trackerColor,
-    required this.isDark,
     required this.cardGradient,
     required this.child,
   });
@@ -1570,7 +1504,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: widget.isDark
+            gradient: Theme.of(context).brightness == Brightness.dark
                 ? LinearGradient(
                     colors: [
                       widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
