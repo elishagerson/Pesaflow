@@ -123,26 +123,41 @@ class MonthlyOverviewSection extends ConsumerWidget {
                     child: SizedBox(
                       height: 84,
                       width: 84,
-                      child: PieChart(
-                        PieChartData(
-                          startDegreeOffset: -90,
-                          sectionsSpace: 2,
-                          centerSpaceRadius: 26,
-                          sections: [
-                            PieChartSectionData(
-                              value: incomePct,
-                              color: appColors.incomeColor,
-                              radius: 10,
-                              showTitle: false,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          PieChart(
+                            PieChartData(
+                              startDegreeOffset: -90,
+                              sectionsSpace: 2,
+                              centerSpaceRadius: 28,
+                              sections: [
+                                PieChartSectionData(
+                                  value: incomePct,
+                                  color: appColors.incomeColor,
+                                  radius: 12,
+                                  showTitle: false,
+                                ),
+                                PieChartSectionData(
+                                  value: expensePct,
+                                  color: appColors.expenseColor,
+                                  radius: 12,
+                                  showTitle: false,
+                                ),
+                              ],
                             ),
-                            PieChartSectionData(
-                              value: expensePct,
-                              color: appColors.expenseColor,
-                              radius: 10,
-                              showTitle: false,
+                          ),
+                          Text(
+                            netSavings >= 0 ? '+$savingsPct%' : '-${savingsPct.abs()}%',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: netSavings >= 0
+                                  ? appColors.incomeColor
+                                  : appColors.expenseColor,
+                              fontSize: 10,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

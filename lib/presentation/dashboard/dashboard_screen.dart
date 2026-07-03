@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
+import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -1523,29 +1524,32 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
         final t = _controller.value;
         final shiftedBegin = Alignment(-0.3 + t * 0.6, -0.3 + t * 0.6);
         final shiftedEnd = Alignment(0.3 - t * 0.6, 0.3 - t * 0.6);
-        return Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: Theme.of(context).brightness == Brightness.dark
-                ? LinearGradient(
-                    colors: [
-                      widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
-                      const Color(0xFF0F1013),
-                    ],
-                    begin: shiftedBegin,
-                    end: shiftedEnd,
-                  )
-                : LinearGradient(
-                    colors: [
-                      widget.trackerColor.withValues(alpha: 0.08 + t * 0.04),
-                      const Color(0xFFF5F3F0),
-                    ],
-                    begin: shiftedBegin,
-                    end: shiftedEnd,
-                  ),
-            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        return LiquidGlassOverlay(
+          accentColor: widget.trackerColor,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: Theme.of(context).brightness == Brightness.dark
+                  ? LinearGradient(
+                      colors: [
+                        widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
+                        const Color(0xFF0F1013),
+                      ],
+                      begin: shiftedBegin,
+                      end: shiftedEnd,
+                    )
+                  : LinearGradient(
+                      colors: [
+                        widget.trackerColor.withValues(alpha: 0.08 + t * 0.04),
+                        const Color(0xFFF5F3F0),
+                      ],
+                      begin: shiftedBegin,
+                      end: shiftedEnd,
+                    ),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            ),
+            child: child,
           ),
-          child: child,
         );
       },
       child: widget.child,
