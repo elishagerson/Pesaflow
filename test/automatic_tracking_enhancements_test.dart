@@ -80,6 +80,7 @@ void main() {
       deduplicator: deduplicator,
       categorizer: categorizer,
       notificationService: notificationService,
+      debounceEnabled: false,
     );
 
   });
