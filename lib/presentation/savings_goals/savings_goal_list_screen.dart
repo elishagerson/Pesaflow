@@ -21,7 +21,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
 
@@ -30,7 +30,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
       body: savingsGoalsAsync.when(
         data: (goals) {
           if (goals.isEmpty) {
-            return _buildEmptyState(context, isDark);
+            return _buildEmptyState(context, onSurface);
           }
 
           int totalTarget = 0;
@@ -259,7 +259,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     dynamic goal,
-    bool isDark,
     ThemeData theme,
   ) {
     final goalColor = hexToColor(goal.color);
@@ -278,9 +277,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
           frosted: false,
           elevation: CardElevation.none,
           margin: const EdgeInsets.only(bottom: kSpacing12),
-          backgroundColor: isDark
-              ? mutedGoalColor.withValues(alpha: 0.08)
-              : Colors.white.withValues(alpha: 0.65),
+          backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
