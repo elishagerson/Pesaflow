@@ -955,7 +955,7 @@ class _SavingsGoalDetailSheetState
                                   fontSize: 22,
                                   fontFamily: 'monospace',
                                   fontWeight: FontWeight.w900,
-                                  color: isDark ? Colors.white : Colors.black,
+                                  color: onSurface,
                                 ),
                               ),
                               const SizedBox(height: 4),

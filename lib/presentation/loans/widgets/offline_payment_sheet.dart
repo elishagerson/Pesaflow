@@ -309,18 +309,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: 8),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? const Color(0xFF1C1C1E)
-                                          : Colors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.08,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
+                                        color: onSurface.withValues(alpha: 0.07),
                                       ),
                                     ),
                                     child: TextField(
@@ -329,23 +321,17 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           TextCapitalization.sentences,
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color: onSurface,
                                       ),
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
-                                          color: isDark
-                                              ? Colors.white30
-                                              : Colors.black26,
+                                          color: onSurface.withValues(alpha: 0.28),
                                         ),
                                         prefixIcon: Icon(
                                           PesaFlowIcons.edit,
                                           size: 20,
-                                          color: isDark
-                                              ? Colors.white38
-                                              : Colors.black26,
+                                          color: onSurface.withValues(alpha: 0.32),
                                         ),
                                         border: InputBorder.none,
                                         contentPadding:
