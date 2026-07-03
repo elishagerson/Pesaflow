@@ -362,9 +362,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             size: 20,
                                             color: isSelected
                                                 ? theme.colorScheme.primary
-                                                : (isDark
-                                                      ? Colors.white54
-                                                      : Colors.black45),
+                                                : theme.colorScheme.onSurface.withValues(alpha: 0.55),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -385,15 +383,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                           ? theme
                                                                 .colorScheme
                                                                 .primary
-                                                          : (isDark
-                                                                ? Colors.white
-                                                                : theme
-                                                                      .colorScheme
-                                                                      .onSurface
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.87,
-                                                                      )),
+                                                          : onSurface.withValues(
+                                                              alpha: 0.87,
+                                                            ),
                                                     ),
                                               ),
                                               const SizedBox(height: 1),
@@ -401,17 +393,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
                                                 style: theme.textTheme.bodySmall
                                                     ?.copyWith(
-                                                      color: isDark
-                                                          ? Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.38,
-                                                                )
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                                .withValues(
-                                                                  alpha: 0.38,
-                                                                ),
+                                                      color: onSurface.withValues(
+                                                        alpha: 0.38,
+                                                      ),
                                                     ),
                                               ),
                                             ],
@@ -461,7 +445,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       isScrollControlled: true,
       builder: (ctx) {
         final theme = Theme.of(ctx);
-        final isDark = theme.brightness == Brightness.dark;
+        final onSurface = theme.colorScheme.onSurface;
         return DraggableScrollableSheet(
           initialChildSize: 0.5,
           maxChildSize: 0.75,
@@ -595,9 +579,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 ? Colors.grey
                                                 : isSelected
                                                 ? theme.colorScheme.primary
-                                                : (isDark
-                                                      ? Colors.white54
-                                                      : Colors.black45),
+                                                : theme.colorScheme.onSurface.withValues(alpha: 0.55),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -623,71 +605,57 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                           ? theme
                                                                 .colorScheme
                                                                 .primary
-                                                          : (isDark
-                                                                ? Colors.white
-                                                                : theme
-                                                                      .colorScheme
-                                                                      .onSurface
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.87,
-                                                                      )),
-                                                    ),
-                                                  ),
-                                                  if (isDisabled) ...[
-                                                    const SizedBox(width: 6),
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 6,
-                                                            vertical: 2,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey
-                                                            .withValues(
-                                                              alpha: 0.15,
-                                                            ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              4,
-                                                            ),
-                                                      ),
-                                                      child: Text(
-                                                        'source',
-                                                        style: theme
-                                                            .textTheme
-                                                            .bodySmall
-                                                            ?.copyWith(
-                                                              fontSize: 10,
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ],
-                                              ),
-                                              const SizedBox(height: 1),
-                                              Text(
-                                                'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      color: isDark
-                                                          ? Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.38,
-                                                                )
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                                .withValues(
-                                                                  alpha: 0.38,
-                                                                ),
-                                                    ),
+                                                           : onSurface.withValues(
+                                                               alpha: 0.87,
+                                                             ),
+                                                     ),
+                                                   ),
+                                                   if (isDisabled) ...[
+                                                     const SizedBox(width: 6),
+                                                     Container(
+                                                       padding:
+                                                           const EdgeInsets.symmetric(
+                                                             horizontal: 6,
+                                                             vertical: 2,
+                                                           ),
+                                                       decoration: BoxDecoration(
+                                                         color: Colors.grey
+                                                             .withValues(
+                                                               alpha: 0.15,
+                                                             ),
+                                                         borderRadius:
+                                                             BorderRadius.circular(
+                                                               4,
+                                                             ),
+                                                       ),
+                                                       child: Text(
+                                                         'source',
+                                                         style: theme
+                                                             .textTheme
+                                                             .bodySmall
+                                                             ?.copyWith(
+                                                               fontSize: 10,
+                                                               color: theme
+                                                                   .colorScheme
+                                                                   .onSurfaceVariant,
+                                                               fontWeight:
+                                                                   FontWeight
+                                                                       .w600,
+                                                             ),
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 ],
+                                               ),
+                                               const SizedBox(height: 1),
+                                               Text(
+                                                 'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
+                                                 style: theme.textTheme.bodySmall
+                                                     ?.copyWith(
+                                                       color: onSurface.withValues(
+                                                         alpha: 0.38,
+                                                       ),
+                                                     ),
                                               ),
                                             ],
                                           ),
@@ -744,7 +712,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       isScrollControlled: true,
       builder: (context) {
         final theme = Theme.of(context);
-        final isDark = theme.brightness == Brightness.dark;
+        final onSurface = theme.colorScheme.onSurface;
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return AnimatedPadding(
@@ -752,9 +720,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               duration: const Duration(milliseconds: 100),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppTheme.surfaceHighDark
-                      : AppTheme.surfaceLight,
+                  color: theme.colorScheme.surface,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24.0),
                   ),
@@ -1113,7 +1079,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
 
