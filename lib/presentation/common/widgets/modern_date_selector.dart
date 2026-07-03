@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'tactile_spring_container.dart';
 
 class ModernDateSelector extends FormField<DateTime> {
   final String labelText;
@@ -25,7 +26,7 @@ class ModernDateSelector extends FormField<DateTime> {
   }) : super(
          initialValue: value,
          builder: (FormFieldState<DateTime> state) {
-           return _ModernDateSelectorWidget(
+            return _ModernDateSelectorWidget(
              labelText: labelText,
              value: state.value ?? value,
              onChanged: (newVal) {
@@ -70,7 +71,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
+        TactileSpringContainer(
           onTap: () async {
             HapticFeedback.mediumImpact();
             final picked = await showDatePicker(
