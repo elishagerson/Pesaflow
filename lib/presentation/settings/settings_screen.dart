@@ -10,6 +10,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
@@ -258,35 +259,10 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(height: kSpacing16),
                 TextField(
                   keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
+                  decoration: context.inputDecoration(
                     labelText: 'Phone Number',
                     hintText: 'e.g. 076XXXXXXX',
-                    prefixIcon: Icon(Icons.phone_rounded, size: 18),
-                    filled: true,
-                    fillColor: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF1C1C1E)
-                        : const Color(0xFFF2F2F7),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withValues(alpha: 0.08)
-                            : Colors.black.withValues(alpha: 0.06),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.5),
-                        width: 1.5,
-                      ),
-                    ),
+                    prefixIcon: const Icon(PesaFlowIcons.phone, size: 18),
                   ),
                   controller: TextEditingController(text: phoneNumber ?? ''),
                   onChanged: (val) {
@@ -660,7 +636,7 @@ class SettingsScreen extends ConsumerWidget {
     ModernDialog.show(
       context: context,
       title: Text(isEditing ? 'Edit Category' : 'Add Custom Category'),
-      titleIcon: Icons.category_rounded,
+      titleIcon: PesaFlowIcons.category,
       content: StatefulBuilder(
         builder: (context, setState) {
           final theme = Theme.of(context);
@@ -670,35 +646,10 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(
+                decoration: context.inputDecoration(
                   labelText: 'Category Name',
                   hintText: 'e.g. Subscriptions, Laundry',
-                  prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
-                  filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1C1C1E)
-                      : const Color(0xFFF2F2F7),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.5),
-                      width: 1.5,
-                    ),
-                  ),
+                  prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -706,7 +657,7 @@ class SettingsScreen extends ConsumerWidget {
               ModernDropdown<String>(
                 labelText: 'Category Type',
                 value: categoryType,
-                prefixIcon: Icons.unfold_more_rounded,
+                prefixIcon: PesaFlowIcons.sort,
                 items: const [
                   ModernDropdownItem(
                     value: 'Expense',
@@ -942,7 +893,7 @@ class SettingsScreen extends ConsumerWidget {
         ModernDialog.show(
           context: context,
           title: const Text('Restore Failed'),
-          titleIcon: Icons.error_outline_rounded,
+          titleIcon: PesaFlowIcons.error,
           iconColor: Colors.red,
           content: Text(
             e is FormatException
@@ -1005,7 +956,7 @@ class SettingsScreen extends ConsumerWidget {
                 ThemeMode.system,
                 current,
                 'System default',
-                Icons.settings_brightness_rounded,
+                PesaFlowIcons.themeMode,
                 'Follow your device settings',
               ),
               _themeOption(
@@ -1014,7 +965,7 @@ class SettingsScreen extends ConsumerWidget {
                 ThemeMode.light,
                 current,
                 'Light',
-                Icons.light_mode_rounded,
+                PesaFlowIcons.lightMode,
                 'Always use light mode',
               ),
               _themeOption(
@@ -1023,7 +974,7 @@ class SettingsScreen extends ConsumerWidget {
                 ThemeMode.dark,
                 current,
                 'Dark',
-                Icons.dark_mode_rounded,
+                PesaFlowIcons.darkMode,
                 'Always use dark mode',
               ),
               const SizedBox(height: kSpacing12),
@@ -1157,7 +1108,7 @@ class SettingsScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
-                          Icons.shield_rounded,
+                          PesaFlowIcons.security,
                           color: theme.colorScheme.primary,
                           size: 22,
                         ),
@@ -1180,7 +1131,7 @@ class SettingsScreen extends ConsumerWidget {
                   rows: [
                     IosToggleRow(
                       leading: Icon(
-                        Icons.fingerprint_rounded,
+                        PesaFlowIcons.biometric,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -1198,7 +1149,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     IosToggleRow(
                       leading: Icon(
-                        Icons.lock_open_rounded,
+                        PesaFlowIcons.unlock,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -1228,7 +1179,7 @@ class SettingsScreen extends ConsumerWidget {
                   rows: [
                     IosToggleRow(
                       leading: Icon(
-                        Icons.pin_rounded,
+                        PesaFlowIcons.pin,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -1251,7 +1202,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     IosToggleRow(
                       leading: Icon(
-                        Icons.sms_rounded,
+                        PesaFlowIcons.sms,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -1274,7 +1225,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     IosListRow(
                       leading: Icon(
-                        Icons.brightness_6_rounded,
+                        PesaFlowIcons.themeMode,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -1285,7 +1236,7 @@ class SettingsScreen extends ConsumerWidget {
                         _ => 'System default',
                       }),
                       trailing: const Icon(
-                        Icons.chevron_right_rounded,
+                        PesaFlowIcons.chevronRight,
                         size: 18,
                         color: Colors.grey,
                       ),
@@ -1361,7 +1312,7 @@ class SettingsScreen extends ConsumerWidget {
                           const SizedBox(width: kSpacing8),
                           Expanded(
                             child: IosMetricCard(
-                              icon: Icons.category_rounded,
+                              icon: PesaFlowIcons.category,
                               label: 'Categories',
                               value: '${categories.length}',
                             ),
@@ -1381,7 +1332,7 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => showExportDialog(context, ref),
                       child: IosListRow(
                         leading: Icon(
-                          Icons.insert_drive_file_rounded,
+                          PesaFlowIcons.file,
                           color: theme.colorScheme.primary,
                           size: 24,
                         ),
@@ -1394,7 +1345,7 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => _handleExportCsv(context, ref),
                       child: IosListRow(
                         leading: Icon(
-                          Icons.file_download_rounded,
+                          PesaFlowIcons.download,
                           color: theme.colorScheme.primary,
                           size: 24,
                         ),
@@ -1409,7 +1360,7 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => _handleBackupDb(context, ref),
                       child: IosListRow(
                         leading: const Icon(
-                          Icons.backup_rounded,
+                          PesaFlowIcons.backup,
                           color: Colors.blue,
                           size: 24,
                         ),
@@ -1424,7 +1375,7 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => _handleRestoreDb(context, ref),
                       child: IosListRow(
                         leading: const Icon(
-                          Icons.restore_rounded,
+                          PesaFlowIcons.restore,
                           color: Colors.orange,
                           size: 24,
                         ),

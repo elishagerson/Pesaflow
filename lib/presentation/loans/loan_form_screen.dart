@@ -207,7 +207,6 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
-    final inputFill = theme.colorScheme.surfaceContainerHighest;
 
     return Scaffold(
       appBar: AppBar(

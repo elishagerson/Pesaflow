@@ -100,20 +100,14 @@ extension PesaFlowContext on BuildContext {
               child: prefixIcon,
             )
           : null,
-      prefixIconConstraints: const BoxConstraints(
-        minWidth: 40,
-        minHeight: 40,
-      ),
+      prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       suffixIcon: suffixIcon != null
           ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: suffixIcon,
             )
           : null,
-      suffixIconConstraints: const BoxConstraints(
-        minWidth: 40,
-        minHeight: 40,
-      ),
+      suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       errorText: errorText,
       prefixText: prefixText,
       suffixText: suffixText,
@@ -129,10 +123,9 @@ extension PesaFlowContext on BuildContext {
       hintStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
       ),
-      contentPadding: contentPadding ?? const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 14.0,
-      ),
+      contentPadding:
+          contentPadding ??
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
     );
   }
 }

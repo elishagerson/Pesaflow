@@ -15,6 +15,9 @@ import 'widgets/transaction_tile.dart';
 import 'widgets/loan_info_rows.dart';
 import 'widgets/payment_sheet.dart';
 import 'widgets/offline_payment_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
   final String loanId;
@@ -32,8 +35,12 @@ class LoanDetailScreen extends ConsumerWidget {
         final loan = loans.where((l) => l.id == loanId).firstOrNull;
         if (loan == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Loan')),
-            body: const Center(child: Text('Loan not found')),
+            appBar: AppBar(title: const Text('Loan Details')),
+            body: EmptyState(
+              icon: PesaFlowIcons.loans,
+              title: 'Loan Not Found',
+              subtitle: 'The requested loan details could not be located.',
+            ),
           );
         }
         return Scaffold(
@@ -132,16 +139,40 @@ class LoanDetailScreen extends ConsumerWidget {
                     }).toList(),
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Text('Error: $e'),
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: kSpacing20),
+                  child: SkeletonCard(height: 80),
+                ),
+                error: (e, _) => ErrorState(
+                  title: 'Failed to Load Payments',
+                  message: e.toString(),
+                  onRetry: () =>
+                      ref.invalidate(loanTransactionsStreamProvider(loanId)),
+                ),
               ),
             ],
           ),
         );
       },
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => Scaffold(body: Center(child: Text('Error: $e'))),
+      loading: () => const Scaffold(
+        body: Padding(
+          padding: EdgeInsets.all(kSpacing20),
+          child: Column(
+            children: [
+              SkeletonCard(height: 180),
+              SizedBox(height: kSpacing16),
+              SkeletonCard(height: 100),
+            ],
+          ),
+        ),
+      ),
+      error: (e, _) => Scaffold(
+        body: ErrorState(
+          title: 'Failed to Load Loan Details',
+          message: e.toString(),
+          onRetry: () => ref.invalidate(loansStreamProvider),
+        ),
+      ),
     );
   }
 

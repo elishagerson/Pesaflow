@@ -63,4 +63,14 @@ class PesaFlowIcons {
   static const IconData lightbulb = Icons.lightbulb_outline_rounded;
   static const IconData lightMode = Icons.light_mode_outlined;
   static const IconData darkMode = Icons.dark_mode_outlined;
+  static const IconData phone = Icons.phone_outlined;
+  static const IconData category = Icons.category_outlined;
+  static const IconData security = Icons.shield_outlined;
+  static const IconData unlock = Icons.lock_open_outlined;
+  static const IconData pin = Icons.password_outlined;
+  static const IconData sms = Icons.sms_outlined;
+  static const IconData themeMode = Icons.brightness_medium_outlined;
+  static const IconData file = Icons.insert_drive_file_outlined;
+  static const IconData chevronRight = Icons.chevron_right_rounded;
+  static const IconData restore = Icons.history_outlined;
 }

@@ -180,7 +180,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
-    final inputFill = theme.colorScheme.surfaceContainerHigh;
     final categoriesAsync = ref.watch(categoriesFutureProvider);
     final isEditing = widget.budgetId != null;
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
@@ -14,6 +15,9 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
@@ -66,7 +70,15 @@ class BudgetDetailScreen extends ConsumerWidget {
         child: detailAsync.when(
           data: (bp) {
             if (bp == null) {
-              return const Center(child: Text('Budget not found'));
+              return Scaffold(
+                appBar: AppBar(title: const Text('Budget Details')),
+                body: EmptyState(
+                  icon: PesaFlowIcons.budgets,
+                  title: 'Budget Not Found',
+                  subtitle:
+                      'The requested envelope budget could not be located.',
+                ),
+              );
             }
             final status = BudgetEngine.computeStatus(
               allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
@@ -532,9 +544,16 @@ class BudgetDetailScreen extends ConsumerWidget {
                               );
                             }).toList(),
                           ),
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          error: (e, _) => Text('Error: $e'),
+                          loading: () => const Padding(
+                            padding: EdgeInsets.symmetric(vertical: kSpacing12),
+                            child: SkeletonCard(height: 70),
+                          ),
+                          error: (e, _) => ErrorState(
+                            title: 'Failed to Load Periods',
+                            message: e.toString(),
+                            onRetry: () =>
+                                ref.invalidate(budgetPeriodsProvider(budgetId)),
+                          ),
                         ),
                       ],
                     ),
@@ -543,8 +562,25 @@ class BudgetDetailScreen extends ConsumerWidget {
               ],
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
+          loading: () => const Scaffold(
+            body: Padding(
+              padding: EdgeInsets.all(kSpacing20),
+              child: Column(
+                children: [
+                  SkeletonCard(height: 160),
+                  SizedBox(height: kSpacing16),
+                  SkeletonCard(height: 120),
+                ],
+              ),
+            ),
+          ),
+          error: (e, _) => Scaffold(
+            body: ErrorState(
+              title: 'Failed to Load Budget details',
+              message: e.toString(),
+              onRetry: () => ref.invalidate(budgetDetailProvider(budgetId)),
+            ),
+          ),
         ),
       ),
     );

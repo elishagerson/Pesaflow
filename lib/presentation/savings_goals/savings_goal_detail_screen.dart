@@ -20,6 +20,9 @@ import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dar
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
   final String goalId;
@@ -724,8 +727,13 @@ class _SavingsGoalDetailScreenState
         final goal = goals.where((g) => g.id == widget.goalId).firstOrNull;
         if (goal == null) {
           return Scaffold(
-            appBar: AppBar(),
-            body: const Center(child: Text('Goal not found')),
+            appBar: AppBar(title: const Text('Goal Details')),
+            body: EmptyState(
+              icon: PesaFlowIcons.savings,
+              title: 'Goal Not Found',
+              subtitle:
+                  'The requested savings goal details could not be located.',
+            ),
           );
         }
 
@@ -1177,9 +1185,17 @@ class _SavingsGoalDetailScreenState
                       },
                     );
                   },
-                  loading: () =>
-                      const Center(child: CupertinoActivityIndicator()),
-                  error: (e, _) => Text('Error: $e'),
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: kSpacing20),
+                    child: SkeletonCard(height: 80),
+                  ),
+                  error: (e, _) => ErrorState(
+                    title: 'Failed to Load Contributions',
+                    message: e.toString(),
+                    onRetry: () => ref.invalidate(
+                      savingsGoalContributionsStreamProvider(goal.id),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -1187,12 +1203,25 @@ class _SavingsGoalDetailScreenState
         );
       },
       loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CupertinoActivityIndicator()),
+        appBar: AppBar(title: const Text('Goal Details')),
+        body: const Padding(
+          padding: EdgeInsets.all(kSpacing20),
+          child: Column(
+            children: [
+              SkeletonCard(height: 200),
+              SizedBox(height: kSpacing16),
+              SkeletonCard(height: 120),
+            ],
+          ),
+        ),
       ),
       error: (err, _) => Scaffold(
-        appBar: AppBar(),
-        body: Center(child: Text('Error: $err')),
+        appBar: AppBar(title: const Text('Goal Details')),
+        body: ErrorState(
+          title: 'Failed to Load Goal Details',
+          message: err.toString(),
+          onRetry: () => ref.invalidate(savingsGoalsStreamProvider),
+        ),
       ),
     );
   }
