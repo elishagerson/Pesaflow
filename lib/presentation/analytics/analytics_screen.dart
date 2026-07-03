@@ -963,13 +963,12 @@ class _TrendsTab extends StatelessWidget {
           trendPointsAsync.when(
             data: (points) {
               if (points.isEmpty) {
-                return const SizedBox(
+                return SizedBox(
                   height: 200,
-                  child: Center(
-                    child: Text(
-                      'No data yet',
-                      style: TextStyle(color: Colors.grey),
-                    ),
+                  child: EmptyState(
+                    icon: PesaFlowIcons.transactions,
+                    title: 'No Data Yet',
+                    subtitle: 'Transaction history is required to plot trends.',
                   ),
                 );
               }
@@ -1279,31 +1278,11 @@ class _InsightsTab extends StatelessWidget {
     return insightsAsync.when(
       data: (insights) {
         if (insights.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.lightbulb_outline_rounded,
-                    size: 48,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'No insights yet',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Insights will appear after you have transactions recorded.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
+          return EmptyState(
+            icon: Icons.lightbulb_outline_rounded,
+            title: 'No Insights Yet',
+            subtitle:
+                'Insights will appear after you have transactions recorded.',
           );
         }
         return ListView.builder(
