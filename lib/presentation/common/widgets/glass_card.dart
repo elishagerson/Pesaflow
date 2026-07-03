@@ -20,6 +20,7 @@ class GlassCard extends StatefulWidget {
   final double blurSigma;
   final bool frosted;
   final bool liquidOverlay;
+  final bool showAccentStrip;
 
   const GlassCard({
     super.key,
@@ -35,8 +36,9 @@ class GlassCard extends StatefulWidget {
     this.padding,
     this.onTap,
     this.blurSigma = 15,
-    this.frosted = true,
+    this.frosted = false,
     this.liquidOverlay = false,
+    this.showAccentStrip = true,
   });
 
   @override
@@ -144,7 +146,7 @@ class _GlassCardState extends State<GlassCard>
                   child: Container(color: Colors.transparent),
                 ),
               ),
-            if (widget.accentColor != null)
+            if (widget.accentColor != null && widget.onTap != null && widget.showAccentStrip)
               Positioned(
                 top: 0,
                 left: 0,
@@ -164,7 +166,7 @@ class _GlassCardState extends State<GlassCard>
               ),
             Padding(
               padding: (widget.padding ?? EdgeInsets.zero).add(
-                widget.accentColor != null
+                widget.accentColor != null && widget.onTap != null && widget.showAccentStrip
                     ? EdgeInsets.only(top: widget.accentWidth + 2)
                     : EdgeInsets.zero,
               ),

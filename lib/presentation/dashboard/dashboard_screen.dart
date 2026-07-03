@@ -4,10 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/app_database.dart';
-import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
@@ -19,7 +17,6 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
@@ -27,10 +24,6 @@ import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart'
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/sms_review_card.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/loan_overview_section.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/recurring_section.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/savings_section.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -63,233 +56,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return value.toStringAsFixed(0);
   }
 
-  Widget _buildSingleBudgetRing({
-    required BuildContext context,
-    required BudgetWithProgress bp,
-    required Color catColor,
-    required IconData catIcon,
-    required double pct,
-    required ThemeData theme,
-    required bool isDark,
-  }) {
-    final remainingCents =
-        (bp.currentPeriod?.allocated ?? bp.budget.amount) - bp.spentInPeriod;
-    final remainingText = remainingCents >= 0
-        ? '${_formatCompact(remainingCents)} left'
-        : '${_formatCompact(remainingCents.abs())} over';
-    final remainingColor = remainingCents >= 0
-        ? (isDark ? Colors.grey[400] : Colors.grey[600])
-        : AppTheme.expenseColor;
-
-    return GlassCard(
-      borderRadius: AppTheme.radiusCard,
-      margin: const EdgeInsets.only(right: kSpacing12),
-      elevation: CardElevation.low,
-      accentColor: desaturateColor(hexToColor(bp.category.color)),
-      onTap: () => context.go('/budgets/${bp.budget.id}'),
-      padding: EdgeInsets.zero,
-      child: Container(
-        width: 105,
-        padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing8,
-          vertical: kSpacing8,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: kSpacing56,
-              width: kSpacing56,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Progress ring background track
-                  SizedBox(
-                    height: 52,
-                    width: 52,
-                    child: CircularProgressIndicator(
-                      value: 1.0,
-                      strokeWidth: 4.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        desaturateColor(catColor).withValues(alpha: 0.12),
-                      ),
-                    ),
-                  ),
-                  // Progress ring foreground filled track
-                  SizedBox(
-                    height: 52,
-                    width: 52,
-                    child: CircularProgressIndicator(
-                      value: pct,
-                      strokeWidth: 5.5,
-                      strokeCap: StrokeCap.round,
-                      backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        remainingCents < 0
-                            ? AppTheme.expenseColor
-                            : desaturateColor(catColor),
-                      ),
-                    ),
-                  ),
-                  // Centered Category Icon
-                  Icon(
-                    catIcon,
-                    color: remainingCents < 0
-                        ? AppTheme.expenseColor
-                        : catColor,
-                    size: 18,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: kSpacing10),
-            Text(
-              bp.budget.name,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : theme.colorScheme.onSurface,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: kSpacing4),
-            Text(
-              remainingText,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                color: remainingColor,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildMonthlyOverview(ThemeData theme) {
     return const MonthlyOverviewSection();
   }
 
-  Widget _buildSmsReviewCard(
-    ThemeData theme,
-    bool isDark,
-    int pendingReviewCount,
-  ) {
-    return SmsReviewCard(pendingReviewCount: pendingReviewCount);
-  }
-
-  Widget _buildBudgetRings(ThemeData theme, BuildContext context) {
-    final budgetsAsync = ref.watch(budgetProgressProvider);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return budgetsAsync.when(
-      data: (budgets) {
-        if (budgets.isEmpty) {
-          return GlassCard(
-            padding: const EdgeInsets.all(kSpacing24),
-            borderRadius: AppTheme.radiusCard,
-            elevation: CardElevation.low,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(kSpacing14),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.08),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.donut_large_rounded,
-                    color: theme.colorScheme.primary,
-                    size: 28,
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                Text(
-                  'No Active Budgets',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: kSpacing8),
-                Text(
-                  'Set spending targets for Food, Shopping, Transport, and more to monitor your limits automatically.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.7,
-                    ),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
-        return SizedBox(
-          height: 140,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: budgets.length,
-            itemBuilder: (_, i) {
-              final bp = budgets[i];
-              final pct = bp.percentage.clamp(0.0, 1.0);
-              final catColor = hexToColor(bp.category.color);
-              final catIcon = getCategoryIcon(bp.category.icon);
-
-              return StaggeredFadeSlide(
-                index: i,
-                child: _buildSingleBudgetRing(
-                  context: context,
-                  bp: bp,
-                  catColor: catColor,
-                  catIcon: catIcon,
-                  pct: pct,
-                  theme: theme,
-                  isDark: isDark,
-                ),
-              );
-            },
-          ),
-        );
-      },
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
-        child: SkeletonCard(height: 140),
-      ),
-      error: (_, _) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: kSpacing16),
-        child: SkeletonCard(height: 140),
-      ),
-    );
-  }
-
-  Widget _buildSavingsReminder(ThemeData theme) {
-    return const SavingsReminder();
-  }
-
-  Widget _buildSavingsGoalsDashboard(ThemeData theme, BuildContext context) {
-    return const SavingsSection();
-  }
-
-  Widget _buildLoanOverview(ThemeData theme, BuildContext context) {
-    return const LoanOverviewSection();
-  }
-
   void _showWorkspaceSelectorSheet(BuildContext context) {
     showWorkspaceSelectorSheet(context, ref);
-  }
-
-  Widget _buildRecurringExpensesDashboard(
-    ThemeData theme,
-    BuildContext context,
-  ) {
-    return const RecurringSection();
   }
 
   @override
@@ -301,19 +73,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final reviewQueueAsync = ref.watch(reviewQueueStreamProvider);
     final totalsAsync = ref.watch(monthlyTotalsProvider);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
-    final daysSinceLastSaveAsync = ref.watch(daysSinceLastSaveProvider);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
-    final showReminder = daysSinceLastSaveAsync.maybeWhen(
-      data: (days) => days >= 5,
-      orElse: () => false,
-    );
-
-    final showSavingsGoals = savingsGoalsAsync.maybeWhen(
-      data: (goals) => goals.isNotEmpty,
-      orElse: () => false,
-    );
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -393,117 +154,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ? const Color(0x1AFFFFFF)
         : const Color(0x33FFFFFF);
 
-    final paidLoansCountAsync = ref.watch(paidLoansCountProvider);
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
-
-    // Dynamic Action Buttons for Collapsible Sections
-    final budgetAction = budgetsAsync.maybeWhen(
-      data: (budgets) => budgets.isEmpty
-          ? TextButton.icon(
-              onPressed: () => context.go('/budgets/add'),
-              icon: const Icon(PesaFlowIcons.add, size: 16),
-              label: const Text('Add Budget'),
-            )
-          : TextButton(
-              onPressed: () => context.go('/budgets'),
-              child: const Text('See All'),
-            ),
-      orElse: () => const SizedBox.shrink(),
-    );
-
-    final savingsAction = savingsGoalsAsync.maybeWhen(
-      data: (goals) => goals.isNotEmpty
-          ? TextButton(
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                context.push('/savings-goals');
-              },
-              child: const Text('See All'),
-            )
-          : null,
-      orElse: () => null,
-    );
-
-    final subscriptionsAction = recsAsync.maybeWhen(
-      data: (recs) {
-        final expenses = recs
-            .where((r) => r.type == 'expense' && r.status == 'active')
-            .toList();
-        if (expenses.isEmpty) {
-          return TextButton(
-            onPressed: () => context.push('/recurring'),
-            child: const Text('Manage'),
-          );
-        }
-        final due = dueAsync.asData?.value ?? [];
-        final dueExpensesCount = due.where((d) => d.type == 'expense').length;
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (dueExpensesCount > 0)
-              Container(
-                margin: const EdgeInsets.only(right: kSpacing8),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing10,
-                  vertical: kSpacing4,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF6B35).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  '$dueExpensesCount due',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFFFF6B35),
-                  ),
-                ),
-              ),
-            TextButton(
-              onPressed: () => context.push('/recurring'),
-              child: const Text('Manage'),
-            ),
-          ],
-        );
-      },
-      orElse: () => TextButton(
-        onPressed: () => context.push('/recurring'),
-        child: const Text('Manage'),
-      ),
-    );
-
-    final loansAction = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        paidLoansCountAsync.maybeWhen(
-          data: (count) => count > 0
-              ? Padding(
-                  padding: const EdgeInsets.only(right: kSpacing8),
-                  child: Text(
-                    '$count paid',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: const Color(0xFF609F8A),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-          orElse: () => const SizedBox.shrink(),
-        ),
-        TextButton(
-          onPressed: () => context.go('/loans'),
-          child: const Text('See All'),
-        ),
-      ],
-    );
-
-    final activeCount = recsAsync.maybeWhen(
-      data: (recs) =>
-          recs.where((r) => r.type == 'expense' && r.status == 'active').length,
-      orElse: () => 0,
-    );
 
     return Scaffold(
       appBar: IosNavBar(
@@ -1567,81 +1219,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
 
-                // ── 6. Budget Progress — "Your Financial Targets" ──
-                _CollapsibleSection(
-                  title: 'Budget Progress',
-                  icon: PesaFlowIcons.budgets,
-                  subtitle: 'LIMITS & SPENDING',
-                  action: budgetAction,
-                  child: _buildBudgetRings(theme, context),
-                ),
-
-                if (showSavingsGoals) ...[
-                  const SizedBox(height: kSpacing20),
-                  StaggeredFadeSlide(
-                    index: 4,
-                    child: _CollapsibleSection(
-                      title: 'Savings Goals',
-                      icon: PesaFlowIcons.target,
-                      subtitle: 'ACTIVE EMERGENCY VAULT',
-                      action: savingsAction,
-                      child: _buildSavingsGoalsDashboard(theme, context),
-                    ),
-                  ),
-                ],
-
-                if (showReminder) ...[
-                  const SizedBox(height: kSpacing20),
-                  StaggeredFadeSlide(
-                    index: 5,
-                    child: _buildSavingsReminder(theme),
-                  ),
-                ],
-
+    // ── 6. At a Glance — summary nav cards ──
                 const SizedBox(height: kSpacing20),
-
-                // ── 6. Recurring Flows ──
-                StaggeredFadeSlide(
-                  index: 6,
-                  child: _CollapsibleSection(
-                    title: 'Recurring Flows',
-                    icon: PesaFlowIcons.calendar,
-                    subtitle: activeCount > 0
-                        ? '$activeCount active'
-                        : 'track recurring bills',
-                    action: subscriptionsAction,
-                    child: _buildRecurringExpensesDashboard(theme, context),
+                _SummaryNavCardRow(
+                  budgets: budgets,
+                  overallPct: overallPct,
+                  savingsGoals: savingsGoalsAsync.value ?? [],
+                  activeRecurringCount: recsAsync.maybeWhen(
+                    data: (recs) => recs
+                        .where((r) => r.type == 'expense' && r.status == 'active')
+                        .length,
+                    orElse: () => 0,
                   ),
-                ),
-
-                const SizedBox(height: kSpacing20),
-
-                // ── 8. Loan / Debt Overview ──
-                StaggeredFadeSlide(
-                  index: 7,
-                  child: _CollapsibleSection(
-                    title: 'Loans',
-                    icon: Icons.credit_score_rounded,
-                    subtitle: 'DEBT OVERVIEW',
-                    action: loansAction,
-                    child: _buildLoanOverview(theme, context),
+                  dueCount: dueAsync.maybeWhen(
+                    data: (due) => due.where((d) => d.type == 'expense').length,
+                    orElse: () => 0,
                   ),
-                ),
-
-                const SizedBox(height: kSpacing20),
-
-                // ── 9. SMS Auto-Tracking — "How it works" ──
-                StaggeredFadeSlide(
-                  index: 8,
-                  child: _CollapsibleSection(
-                    title: 'SMS Tracking',
-                    icon: Icons.message_rounded,
-                    child: _buildSmsReviewCard(
-                      theme,
-                      isDark,
-                      pendingReviewCount,
-                    ),
-                  ),
+                  pendingReviewCount: pendingReviewCount,
+                  trackerColor: trackerColor,
                 ),
                 const SizedBox(height: kSpacing24),
               ],
@@ -1653,17 +1248,157 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 }
 
+class _SummaryNavCardRow extends StatelessWidget {
+  final List<dynamic> budgets;
+  final double overallPct;
+  final List<dynamic> savingsGoals;
+  final int activeRecurringCount;
+  final int dueCount;
+  final int pendingReviewCount;
+  final Color trackerColor;
+
+  const _SummaryNavCardRow({
+    required this.budgets,
+    required this.overallPct,
+    required this.savingsGoals,
+    required this.activeRecurringCount,
+    required this.dueCount,
+    required this.pendingReviewCount,
+    required this.trackerColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          _SummaryNavCard(
+            icon: Icons.pie_chart_rounded,
+            metric: budgets.isNotEmpty
+                ? '${budgets.length} budgets'
+                : 'No budgets',
+            label: '${(overallPct * 100).toStringAsFixed(0)}% spent',
+            color: trackerColor,
+            onTap: () => context.go('/budgets'),
+          ),
+          if (savingsGoals.isNotEmpty)
+            _SummaryNavCard(
+              icon: PesaFlowIcons.target,
+              metric: '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
+              label: 'Emergency vault',
+              color: const Color(0xFF609F8A),
+              onTap: () => context.go('/savings-goals'),
+            ),
+          _SummaryNavCard(
+            icon: PesaFlowIcons.calendar,
+            metric: dueCount > 0 ? '$dueCount due' : '$activeRecurringCount active',
+            label: 'Recurring',
+            color: const Color(0xFFFF6B35),
+            onTap: () => context.go('/recurring'),
+          ),
+          _SummaryNavCard(
+            icon: Icons.credit_score_rounded,
+            metric: 'Loans',
+            label: 'Debt overview',
+            color: const Color(0xFF6366F1),
+            onTap: () => context.go('/loans'),
+          ),
+          if (pendingReviewCount > 0)
+            _SummaryNavCard(
+              icon: Icons.message_rounded,
+              metric: '$pendingReviewCount pending',
+              label: 'SMS review',
+              color: const Color(0xFF0F4C5C),
+              onTap: () => context.go('/sms-review'),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SummaryNavCard extends StatelessWidget {
+  final IconData icon;
+  final String metric;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _SummaryNavCard({
+    required this.icon,
+    required this.metric,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: kSpacing12),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 130,
+          padding: const EdgeInsets.all(kSpacing14),
+          decoration: BoxDecoration(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.06)
+                : color.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : color.withValues(alpha: 0.12),
+              width: 0.5,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, size: 20, color: color),
+              const Spacer(),
+              Text(
+                metric,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: 10,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CollapsibleSection extends StatefulWidget {
   final String title;
   final IconData icon;
-  final String? subtitle;
   final Widget? action;
   final Widget child;
 
   const _CollapsibleSection({
     required this.title,
     required this.icon,
-    this.subtitle,
     this.action,
     required this.child,
   });
@@ -1727,23 +1462,6 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
                           ),
                         ],
                       ),
-                      if (widget.subtitle != null) ...[
-                        const SizedBox(height: kSpacing2),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 26.0),
-                          child: Text(
-                            widget.subtitle!.toUpperCase(),
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1.2,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.6,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),
