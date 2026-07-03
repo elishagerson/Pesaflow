@@ -123,41 +123,14 @@ class MonthlyOverviewSection extends ConsumerWidget {
                     child: SizedBox(
                       height: 84,
                       width: 84,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          PieChart(
-                            PieChartData(
-                              startDegreeOffset: -90,
-                              sectionsSpace: 2,
-                              centerSpaceRadius: 28,
-                              sections: [
-                                PieChartSectionData(
-                                  value: incomePct,
-                                  color: appColors.incomeColor,
-                                  radius: 12,
-                                  showTitle: false,
-                                ),
-                                PieChartSectionData(
-                                  value: expensePct,
-                                  color: appColors.expenseColor,
-                                  radius: 12,
-                                  showTitle: false,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            netSavings >= 0 ? '+$savingsPct%' : '-${savingsPct.abs()}%',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: netSavings >= 0
-                                  ? appColors.incomeColor
-                                  : appColors.expenseColor,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
+                      child: _BudgetPulseDonut(
+                        incomePct: incomePct,
+                        expensePct: expensePct,
+                        incomeColor: appColors.incomeColor,
+                        expenseColor: appColors.expenseColor,
+                        netSavings: netSavings,
+                        savingsPct: savingsPct,
+                        pulse: expense > 0.8 * income,
                       ),
                     ),
                   ),
@@ -298,6 +271,138 @@ class MonthlyOverviewSection extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: kSpacing16),
         child: SkeletonCard(height: 120),
       ),
+    );
+  }
+}
+
+class _BudgetPulseDonut extends StatefulWidget {
+  final double incomePct;
+  final double expensePct;
+  final Color incomeColor;
+  final Color expenseColor;
+  final int netSavings;
+  final int savingsPct;
+  final bool pulse;
+
+  const _BudgetPulseDonut({
+    required this.incomePct,
+    required this.expensePct,
+    required this.incomeColor,
+    required this.expenseColor,
+    required this.netSavings,
+    required this.savingsPct,
+    required this.pulse,
+  });
+
+  @override
+  State<_BudgetPulseDonut> createState() => _BudgetPulseDonutState();
+}
+
+class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+  Animation<double>? _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pulse) {
+      _initAnimation();
+    }
+  }
+
+  void _initAnimation() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _glowAnimation = Tween<double>(begin: 4.0, end: 14.0).animate(
+      CurvedAnimation(parent: _controller!, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void didUpdateWidget(_BudgetPulseDonut oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.pulse && _controller == null) {
+      _initAnimation();
+    } else if (!widget.pulse && _controller != null) {
+      _controller!.dispose();
+      _controller = null;
+      _glowAnimation = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
+    final chart = PieChart(
+      PieChartData(
+        startDegreeOffset: -90,
+        sectionsSpace: 2,
+        centerSpaceRadius: 28,
+        sections: [
+          PieChartSectionData(
+            value: widget.incomePct,
+            color: widget.incomeColor,
+            radius: 12,
+            showTitle: false,
+          ),
+          PieChartSectionData(
+            value: widget.expensePct,
+            color: widget.expenseColor,
+            radius: 12,
+            showTitle: false,
+          ),
+        ],
+      ),
+    );
+
+    final label = Text(
+      widget.netSavings >= 0 ? '+${widget.savingsPct}%' : '-${widget.savingsPct.abs()}%',
+      style: theme.textTheme.labelMedium?.copyWith(
+        fontWeight: FontWeight.w900,
+        color: widget.netSavings >= 0 ? widget.incomeColor : widget.expenseColor,
+        fontSize: 10,
+      ),
+    );
+
+    if (!widget.pulse || _glowAnimation == null) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [chart, label],
+      );
+    }
+
+    return AnimatedBuilder(
+      animation: _glowAnimation!,
+      builder: (context, child) {
+        return Container(
+          width: 84,
+          height: 84,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: widget.expenseColor.withValues(alpha: 0.15),
+                blurRadius: _glowAnimation!.value,
+                spreadRadius: _glowAnimation!.value * 0.3,
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [chart, label],
+          ),
+        );
+      },
     );
   }
 }

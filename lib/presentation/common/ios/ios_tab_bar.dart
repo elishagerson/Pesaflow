@@ -2,6 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/physics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class IosTabBar extends StatelessWidget {
@@ -145,12 +148,11 @@ class IosTabBar extends StatelessWidget {
                     child: Semantics(
                       label: tab.label,
                       button: true,
-                      child: GestureDetector(
+                      child: _ElasticTabButton(
                         onTap: () {
                           HapticFeedback.lightImpact();
                           onDestinationSelected(tab.routeIndex);
                         },
-                        behavior: HitTestBehavior.opaque,
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 250),
                           curve: Curves.easeInOut,
@@ -249,7 +251,7 @@ class _TabConfig {
   }) : isCenter = false;
 }
 
-class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
+class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
   final List<Widget>? actions;
@@ -271,14 +273,16 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final top = MediaQuery.of(context).padding.top;
+    final speedFactor = ref.watch(scrollSpeedProvider);
 
     final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
 
     return ClipRect(
       child: LiquidGlassOverlay(
+        speedFactor: speedFactor,
         child: Container(
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
@@ -323,5 +327,79 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
     ),),);
+  }
+}
+
+class _ElasticTabButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+
+  const _ElasticTabButton({required this.child, required this.onTap});
+
+  @override
+  State<_ElasticTabButton> createState() => _ElasticTabButtonState();
+}
+
+class _ElasticTabButtonState extends State<_ElasticTabButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _stretchY;
+  late Animation<double> _stretchX;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+    
+    _stretchY = Tween<double>(begin: 1.0, end: 1.12).animate(_controller);
+    _stretchX = Tween<double>(begin: 1.0, end: 0.92).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _pressDown() {
+    _controller.animateTo(
+      1.0,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _release() {
+    const spring = SpringDescription(
+      mass: 0.7,
+      stiffness: 400.0,
+      damping: 12.0,
+    );
+    final simulation = SpringSimulation(spring, _controller.value, 0.0, 0.0);
+    _controller.animateWith(simulation);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => _pressDown(),
+      onTapUp: (_) {
+        _release();
+        widget.onTap();
+      },
+      onTapCancel: () => _release(),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.diagonal3Values(_stretchX.value, _stretchY.value, 1.0),
+            child: child,
+          );
+        },
+        child: widget.child,
+      ),
+    );
   }
 }

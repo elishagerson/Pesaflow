@@ -18,6 +18,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/spending_pattern_provider.dart';
+import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -28,8 +29,9 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
+  final String? initialType;
 
-  const TransactionFormScreen({super.key, this.transactionId});
+  const TransactionFormScreen({super.key, this.transactionId, this.initialType});
 
   @override
   ConsumerState<TransactionFormScreen> createState() =>
@@ -84,6 +86,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _isEditMode = widget.transactionId != null;
     if (_isEditMode) {
       _loadExistingTransaction();
+    } else if (widget.initialType != null) {
+      final type = widget.initialType!.trim().toLowerCase();
+      if (type == 'expense') {
+        _transactionType = 'Expense';
+        _selectedCategoryId = _lastCategoryByType['Expense'];
+      } else if (type == 'income') {
+        _transactionType = 'Income';
+        _selectedCategoryId = _lastCategoryByType['Income'];
+      } else if (type == 'transfer') {
+        _transactionType = 'Transfer';
+        _selectedCategoryId = _lastCategoryByType['Transfer'];
+      }
     }
   }
 
@@ -1626,24 +1640,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final textColor = onSurface;
-    final dividerColor = onSurface.withValues(alpha: 0.08);
 
     return Row(
       children: keys.asMap().entries.map((entry) {
-        final index = entry.key;
         final key = entry.value;
-        final border = Border(
-          top: BorderSide(color: dividerColor, width: 0.5),
-          right: index < 2
-              ? BorderSide(color: dividerColor, width: 0.5)
-              : BorderSide.none,
-        );
 
         final keypadButton = KeypadButton(
           text: key,
           onTap: () => _keypadPress(key),
           height: context.isCompactView ? 60 : 78,
-          border: border,
           textColor: textColor,
         );
 
@@ -1667,7 +1672,6 @@ class KeypadButton extends StatefulWidget {
   final String text;
   final VoidCallback onTap;
   final double height;
-  final Border border;
   final Color textColor;
 
   const KeypadButton({
@@ -1675,7 +1679,6 @@ class KeypadButton extends StatefulWidget {
     required this.text,
     required this.onTap,
     required this.height,
-    required this.border,
     required this.textColor,
   });
 
@@ -1685,91 +1688,111 @@ class KeypadButton extends StatefulWidget {
 
 class _KeypadButtonState extends State<KeypadButton>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animController;
+  late AnimationController _pressController;
   late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
+    _pressController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.90).animate(
+      CurvedAnimation(parent: _pressController, curve: Curves.easeOutCubic),
     );
-    _opacityAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 0.15),
-        weight: 30,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.15, end: 0.0),
-        weight: 70,
-      ),
-    ]).animate(_animController);
   }
 
   @override
   void dispose() {
-    _animController.dispose();
+    _pressController.dispose();
     super.dispose();
   }
 
-  void _handleTap() {
-    _animController.forward(from: 0.0);
+  void _onTapDown() {
+    _pressController.forward();
+    HapticFeedback.lightImpact();
+  }
+
+  void _onTapUp() {
+    _pressController.reverse();
     widget.onTap();
+  }
+
+  void _onTapCancel() {
+    _pressController.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TactileSpringContainer(
-      scaleFactor: 0.94,
-      onTap: _handleTap,
-      child: Container(
-        height: widget.height,
-        decoration: BoxDecoration(border: widget.border),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Pop/Grow background effect
-            AnimatedBuilder(
-              animation: _animController,
-              builder: (context, child) {
-                if (_animController.value == 0.0) {
-                  return const SizedBox.shrink();
-                }
-                return Container(
-                  width: widget.height * 0.9 * _scaleAnimation.value,
-                  height: widget.height * 0.9 * _scaleAnimation.value,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: widget.textColor.withValues(
-                      alpha: _opacityAnimation.value,
+    final theme = Theme.of(context);
+    final isSpecialKey = widget.text == '<' || widget.text == '.';
+
+    final Color baseBg = isSpecialKey
+        ? theme.colorScheme.primary.withValues(alpha: 0.08)
+        : theme.colorScheme.onSurface.withValues(alpha: 0.04);
+
+    final Color activeBg = isSpecialKey
+        ? theme.colorScheme.primary.withValues(alpha: 0.24)
+        : theme.colorScheme.onSurface.withValues(alpha: 0.12);
+
+    return AnimatedBuilder(
+      animation: _pressController,
+      builder: (context, child) {
+        final scale = _scaleAnimation.value;
+        final bg = Color.lerp(baseBg, activeBg, _pressController.value);
+
+        return Transform.scale(
+          scale: scale,
+          child: Padding(
+            padding: const EdgeInsets.all(kSpacing4),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapDown: (_) => _onTapDown(),
+              onTapUp: (_) => _onTapUp(),
+              onTapCancel: () => _onTapCancel(),
+              child: Container(
+                height: widget.height - kSpacing8,
+                decoration: ShapeDecoration(
+                  color: bg,
+                  shape: SquircleBorder(
+                    side: BorderSide(
+                      color: theme.colorScheme.outlineVariant,
+                      width: 0.8,
                     ),
+                    borderRadius: 16.0,
                   ),
-                );
-              },
-            ),
-            Center(
-              child: widget.text == '<'
-                  ? Icon(
-                      Icons.backspace_outlined,
-                      color: widget.textColor,
-                      size: widget.height * 0.35,
-                    )
-                  : Text(
-                      widget.text,
-                      style: TextStyle(
-                        fontSize: widget.height * 0.42,
-                        fontWeight: FontWeight.w300,
-                        color: widget.textColor,
+                  shadows: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(
+                        alpha: 0.04 * (1.0 - _pressController.value),
                       ),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
+                  ],
+                ),
+                child: child,
+              ),
             ),
-          ],
-        ),
+          ),
+        );
+      },
+      child: Center(
+        child: widget.text == '<'
+            ? Icon(
+                Icons.backspace_outlined,
+                color: widget.textColor,
+                size: 20,
+              )
+            : Text(
+                widget.text,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: widget.textColor,
+                ),
+              ),
       ),
     );
   }

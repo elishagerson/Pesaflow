@@ -1,11 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class LiquidGlassOverlay extends StatefulWidget {
   final Widget child;
   final Color? accentColor;
+  final double speedFactor;
 
-  const LiquidGlassOverlay({super.key, required this.child, this.accentColor});
+  const LiquidGlassOverlay({
+    super.key,
+    required this.child,
+    this.accentColor,
+    this.speedFactor = 1.0,
+  });
 
   @override
   State<LiquidGlassOverlay> createState() => _LiquidGlassOverlayState();
@@ -13,20 +20,31 @@ class LiquidGlassOverlay extends StatefulWidget {
 
 class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late Ticker _ticker;
+  double _time = 0.0;
+  Duration _lastElapsed = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    )..repeat();
+    _ticker = createTicker((elapsed) {
+      if (_lastElapsed == Duration.zero) {
+        _lastElapsed = elapsed;
+        return;
+      }
+      final double dt = (elapsed.inMicroseconds - _lastElapsed.inMicroseconds) / 1000000.0;
+      _lastElapsed = elapsed;
+      setState(() {
+        _time += dt * 0.1 * widget.speedFactor;
+        if (_time > 100000.0) _time = 0.0;
+      });
+    });
+    _ticker.start();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _ticker.dispose();
     super.dispose();
   }
 
@@ -35,24 +53,20 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     final theme = Theme.of(context);
     final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
     return RepaintBoundary(
-      child: AnimatedBuilder(
-        animation: _controller,
-        child: widget.child,
-        builder: (context, child) => Stack(
-          children: [
-            child!,
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(
-                  painter: _LiquidGlassPainter(
-                    time: _controller.value,
-                    baseColor: baseColor,
-                  ),
+      child: Stack(
+        children: [
+          widget.child,
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                painter: _LiquidGlassPainter(
+                  time: _time,
+                  baseColor: baseColor,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

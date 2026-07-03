@@ -289,8 +289,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: RefreshIndicator(
-          color: const Color(0xFF0F4C5C),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              final double velocity = notification.scrollDelta?.abs() ?? 0.0;
+              final double targetSpeed = 1.0 + (velocity / 12.0).clamp(0.0, 4.0);
+              ref.read(scrollSpeedProvider.notifier).state = targetSpeed;
+            } else if (notification is ScrollEndNotification) {
+              ref.read(scrollSpeedProvider.notifier).state = 1.0;
+            }
+            return false;
+          },
+          child: RefreshIndicator(
+            color: const Color(0xFF0F4C5C),
           backgroundColor: const Color(0xFFF5F6F8),
           onRefresh: () async {
             ref.invalidate(monthlyTotalsProvider);
@@ -690,21 +701,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           icon: PesaFlowIcons.expense,
                           label: 'Expense',
                           color: const Color(0xFFEF4444),
-                          onTap: () => context.go('/transactions/add'),
+                          onTap: () => context.go('/transactions/add?type=Expense'),
                         ),
                         const SizedBox(width: kSpacing10),
                         _QuickActionButton(
                           icon: PesaFlowIcons.income,
                           label: 'Income',
                           color: const Color(0xFF10B981),
-                          onTap: () => context.go('/transactions/add'),
+                          onTap: () => context.go('/transactions/add?type=Income'),
                         ),
                         const SizedBox(width: kSpacing10),
                         _QuickActionButton(
                           icon: PesaFlowIcons.transfer,
                           label: 'Transfer',
                           color: const Color(0xFF6366F1),
-                          onTap: () => context.go('/transactions/add'),
+                          onTap: () => context.go('/transactions/add?type=Transfer'),
                         ),
                         const SizedBox(width: kSpacing10),
                         _QuickActionButton(
@@ -1166,7 +1177,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
           ),
-        ),
+        ),),
       ),
     );
   }

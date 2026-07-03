@@ -496,8 +496,12 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
-                  pageBuilder: (context, state) =>
-                      _springSlidePage(const TransactionFormScreen()),
+                  pageBuilder: (context, state) {
+                    final type = state.uri.queryParameters['type'];
+                    return _springSlidePage(
+                      TransactionFormScreen(initialType: type),
+                    );
+                  },
                 ),
                 GoRoute(
                   path: 'edit/:id',

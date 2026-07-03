@@ -1138,20 +1138,48 @@ class _SwipeableCardState extends State<SwipeableCard>
             child: Stack(
               clipBehavior: Clip.none,
               children: [
+                // Soft dynamic under-card glow bleed
+                if (dx != 0)
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusCard,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: dx > 0
+                                ? AppTheme.incomeColor.withValues(
+                                    alpha: 0.25 * approveOpacity,
+                                  )
+                                : AppTheme.expenseColor.withValues(
+                                    alpha: 0.25 * rejectOpacity,
+                                  ),
+                            blurRadius: 24,
+                            spreadRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 widget.child,
+                // Green linear gradient bleed (Approve)
                 if (approveOpacity > 0)
                   Positioned.fill(
                     child: Opacity(
                       opacity: approveOpacity,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: AppTheme.incomeColor.withValues(alpha: 0.08),
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              AppTheme.incomeColor.withValues(alpha: 0.24),
+                              AppTheme.incomeColor.withValues(alpha: 0.0),
+                            ],
+                          ),
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusCard,
-                          ),
-                          border: Border.all(
-                            color: AppTheme.incomeColor,
-                            width: 3,
                           ),
                         ),
                         child: Center(
@@ -1186,19 +1214,23 @@ class _SwipeableCardState extends State<SwipeableCard>
                       ),
                     ),
                   ),
+                // Red linear gradient bleed (Reject)
                 if (rejectOpacity > 0)
                   Positioned.fill(
                     child: Opacity(
                       opacity: rejectOpacity,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: AppTheme.expenseColor.withValues(alpha: 0.08),
+                          gradient: LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [
+                              AppTheme.expenseColor.withValues(alpha: 0.24),
+                              AppTheme.expenseColor.withValues(alpha: 0.0),
+                            ],
+                          ),
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusCard,
-                          ),
-                          border: Border.all(
-                            color: AppTheme.expenseColor,
-                            width: 3,
                           ),
                         ),
                         child: Center(

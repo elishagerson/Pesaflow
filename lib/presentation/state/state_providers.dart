@@ -516,3 +516,15 @@ final transactionDetailProvider =
       final repo = ref.watch(transactionRepositoryProvider);
       return repo.getTransactionById(id);
     });
+
+class ScrollSpeedNotifier extends Notifier<double> {
+  @override
+  double build() => 1.0;
+
+  @override
+  set state(double value) => super.state = value;
+}
+
+final scrollSpeedProvider = NotifierProvider<ScrollSpeedNotifier, double>(() {
+  return ScrollSpeedNotifier();
+});
