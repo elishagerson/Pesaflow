@@ -124,7 +124,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 gradient: RadialGradient(
                   colors: [
                     mutedCatColor.withValues(alpha: 0.17),
-                    mutedCatColor.withValues(alpha: isDark ? 0.06 : 0.03),
+                    mutedCatColor.withValues(alpha: 0.045),
                     Colors.transparent,
                   ],
                   stops: const [0.0, 0.6, 1.0],
@@ -158,7 +158,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
                             color: mutedCatColor.withValues(
-                              alpha: isDark ? 0.18 : 0.1,
+                              alpha: 0.14,
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(

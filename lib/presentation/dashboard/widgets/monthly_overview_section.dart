@@ -92,14 +92,8 @@ class MonthlyOverviewSection extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: netSavings >= 0
-                            ? (isDark
-                                      ? AppTheme.incomeColorDark
-                                      : AppTheme.incomeColor)
-                                  .withValues(alpha: 0.12)
-                            : (isDark
-                                      ? AppTheme.expenseColorDark
-                                      : AppTheme.expenseColor)
-                                  .withValues(alpha: 0.12),
+                            ? appColors.incomeColor.withValues(alpha: 0.12)
+                            : appColors.expenseColor.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text(
@@ -110,12 +104,8 @@ class MonthlyOverviewSection extends ConsumerWidget {
                           fontSize: 9,
                           fontWeight: FontWeight.w900,
                           color: netSavings >= 0
-                              ? (isDark
-                                    ? AppTheme.incomeColorDark
-                                    : AppTheme.incomeColor)
-                              : (isDark
-                                    ? AppTheme.expenseColorDark
-                                    : AppTheme.expenseColor),
+                              ? appColors.incomeColor
+                              : appColors.expenseColor,
                           letterSpacing: 0.5,
                         ),
                       ),
