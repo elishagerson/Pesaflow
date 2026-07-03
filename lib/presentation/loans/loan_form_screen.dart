@@ -205,10 +205,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark
-        ? const Color(0xFF1B1C22)
-        : const Color(0xFFF2F2F7);
+    final onSurface = theme.colorScheme.onSurface;
+    final inputFill = theme.colorScheme.surfaceContainerHighest;
 
     return Scaffold(
       appBar: AppBar(
@@ -320,7 +318,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     child: Text(
                       '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
                       style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black,
+                        color: onSurface,
                       ),
                     ),
                   ),
@@ -375,10 +373,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                               : 'Set due date',
                           style: TextStyle(
                             color: _dueAt != null
-                                ? (isDark ? Colors.white : Colors.black)
-                                : (isDark
-                                      ? Colors.grey[500]
-                                      : Colors.grey[400]),
+                                ? onSurface
+                                : onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                         if (_dueAt != null)

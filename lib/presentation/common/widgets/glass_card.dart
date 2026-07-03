@@ -72,7 +72,6 @@ class _GlassCardState extends State<GlassCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     final Color glassColor;
     if (widget.backgroundColor != null) {
@@ -80,13 +79,11 @@ class _GlassCardState extends State<GlassCard>
     } else if (widget.backgroundGradient != null) {
       glassColor = Colors.transparent;
     } else {
-      glassColor = isDark
-          ? (widget.accentColor != null
-                ? widget.accentColor!.withValues(alpha: 0.12)
-                : Colors.white.withValues(alpha: 0.08))
-          : (widget.accentColor != null
-                ? widget.accentColor!.withValues(alpha: 0.06)
-                : Colors.white.withValues(alpha: 0.65));
+      if (widget.accentColor != null) {
+        glassColor = widget.accentColor!.withValues(alpha: 0.09);
+      } else {
+        glassColor = theme.colorScheme.surfaceContainerHigh;
+      }
     }
 
     final List<BoxShadow> shadows = switch (widget.elevation) {
@@ -126,7 +123,7 @@ class _GlassCardState extends State<GlassCard>
               borderRadius: BorderRadius.circular(widget.borderRadius),
               border: Border.all(
                 color: widget.accentColor!.withValues(
-                  alpha: isDark ? 0.20 : 0.12,
+                  alpha: 0.16,
                 ),
                 width: 0.5,
               ),

@@ -65,7 +65,6 @@ class _ModernDateSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final formattedDate = DateFormat('EEE, MMM d, y').format(value);
 
     return Column(
@@ -93,16 +92,12 @@ class _ModernDateSelectorWidget extends StatelessWidget {
               vertical: 14.0,
             ),
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppTheme.surfaceContainerDark
-                  : AppTheme.surfaceLight,
+              color: theme.colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(AppTheme.radiusInput),
               border: Border.all(
                 color: errorText != null
                     ? theme.colorScheme.error
-                    : (isDark
-                          ? const Color(0x15FFFFFF)
-                          : const Color(0x1F000000)),
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.10),
                 width: errorText != null ? 1.5 : 1.0,
               ),
               boxShadow: [
@@ -130,7 +125,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -139,7 +134,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -147,7 +142,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                 ),
                 Icon(
                   PesaFlowIcons.calendar,
-                  color: isDark ? Colors.grey[500] : Colors.grey[600],
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   size: 18,
                 ),
               ],

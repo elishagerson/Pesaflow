@@ -15,14 +15,11 @@ class SkeletonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     return Container(
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-            : theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+        color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: _ShimmerEffect(child: _buildContent()),
@@ -70,16 +67,13 @@ class SkeletonRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     return _ShimmerEffect(
       child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isDark
-              ? theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-              : theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55),
         ),
       ),
     );

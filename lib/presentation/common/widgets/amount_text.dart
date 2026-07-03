@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
@@ -25,19 +26,18 @@ class AmountText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     // Resolve color based on type and dark/light settings
     Color resolveColor() {
       switch (type) {
         case AmountType.income:
-          return isDark ? AppTheme.incomeColorDark : AppTheme.incomeColor;
+          return context.appColors.incomeColor;
         case AmountType.expense:
-          return isDark ? AppTheme.expenseColorDark : AppTheme.expenseColor;
+          return context.appColors.expenseColor;
         case AmountType.transfer:
-          return isDark ? AppTheme.transferColorDark : AppTheme.transferColor;
+          return context.appColors.transferColor;
         case AmountType.neutral:
-          return isDark ? Colors.white : Colors.black;
+          return theme.colorScheme.onSurface;
       }
     }
 

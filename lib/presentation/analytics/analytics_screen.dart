@@ -677,9 +677,7 @@ class _OverviewTab extends StatelessWidget {
                 Text(
                   'TOP SPENDING CATEGORIES',
                   style: TextStyle(
-                    color: theme.brightness == Brightness.dark
-                        ? Colors.grey[400]
-                        : Colors.grey[600],
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     fontSize: 11,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.bold,

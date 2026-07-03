@@ -22,7 +22,6 @@ class LoanListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final activeLoansAsync = ref.watch(activeLoansStreamProvider);
     final paidLoansAsync = ref.watch(paidLoansStreamProvider);
     final totalOutstandingAsync = ref.watch(totalOutstandingLoanProvider);
@@ -36,9 +35,7 @@ class LoanListScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         color: const Color(0xFF0F4C5C),
-        backgroundColor: isDark
-            ? const Color(0xFF161B22)
-            : const Color(0xFFF5F3F0),
+        backgroundColor: theme.colorScheme.surface,
         onRefresh: () => Future.wait([
           ref.refresh(activeLoansStreamProvider.future),
           ref.refresh(paidLoansStreamProvider.future),
@@ -55,7 +52,7 @@ class LoanListScreen extends ConsumerWidget {
               // Outstanding header
               totalOutstandingAsync.when(
                 data: (total) => total > 0
-                    ? _buildOutstandingHeader(context, total, isDark, ref)
+                    ? _buildOutstandingHeader(context, total, ref)
                     : const SizedBox.shrink(),
                 loading: () => const SizedBox.shrink(),
                 error: (_, _) => const SizedBox.shrink(),
@@ -64,7 +61,7 @@ class LoanListScreen extends ConsumerWidget {
               // Loan burden warning
               recentLoanCountAsync.when(
                 data: (count) => count >= 3
-                    ? _buildLoanBurdenWarning(context, count, isDark)
+                    ? _buildLoanBurdenWarning(context, count)
                     : const SizedBox.shrink(),
                 loading: () => const SizedBox.shrink(),
                 error: (_, _) => const SizedBox.shrink(),
@@ -76,7 +73,7 @@ class LoanListScreen extends ConsumerWidget {
                   final paidData = paidLoansAsync.asData?.value;
                   if (activeLoans.isEmpty &&
                       (paidData == null || paidData.isEmpty)) {
-                    return _buildEmptyState(theme, isDark);
+                    return _buildEmptyState(theme);
                   }
                   if (activeLoans.isEmpty) return const SizedBox.shrink();
                   return Column(
@@ -95,7 +92,6 @@ class LoanListScreen extends ConsumerWidget {
                           context,
                           activeLoans[index],
                           theme,
-                          isDark,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -142,7 +138,6 @@ class LoanListScreen extends ConsumerWidget {
                           context,
                           paidLoans[index],
                           theme,
-                          isDark,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -200,7 +195,9 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanBurdenWarning(BuildContext context, int count, bool isDark) {
+  Widget _buildLoanBurdenWarning(BuildContext context, int count) {
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
     return GlassCard(
       frosted: false,
       elevation: CardElevation.none,
@@ -239,7 +236,7 @@ class LoanListScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 13,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -247,7 +244,7 @@ class LoanListScreen extends ConsumerWidget {
                   '$count active loans taken in the last 3 months. Consider slowing down.',
                   style: TextStyle(
                     fontSize: 11,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -261,9 +258,10 @@ class LoanListScreen extends ConsumerWidget {
   Widget _buildOutstandingHeader(
     BuildContext context,
     int total,
-    bool isDark,
     WidgetRef ref,
   ) {
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
     final netWorth = ref.watch(netWorthProvider);
     final debtRatio = netWorth > 0 ? total / netWorth : 999.0;
     final severityColor = debtRatio > 1.0
@@ -312,7 +310,7 @@ class LoanListScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -321,7 +319,7 @@ class LoanListScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? Colors.white : Colors.black,
+                        color: onSurface,
                       ),
                     ),
                   ],
@@ -351,7 +349,7 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme, bool isDark) {
+  Widget _buildEmptyState(ThemeData theme) {
     return EmptyState(
       icon: PesaFlowIcons.loans,
       title: 'No Loans Yet',
@@ -365,8 +363,8 @@ class LoanListScreen extends ConsumerWidget {
     BuildContext context,
     Loan loan,
     ThemeData theme,
-    bool isDark,
   ) {
+    final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
         ? const Color(0xFFE53935)
@@ -455,7 +453,7 @@ class LoanListScreen extends ConsumerWidget {
                         '${CurrencyFormatter.formatCents(loan.remaining)} left',
                         style: TextStyle(
                           fontSize: 11,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -483,7 +481,6 @@ class LoanListScreen extends ConsumerWidget {
     BuildContext context,
     Loan loan,
     ThemeData theme,
-    bool isDark,
   ) {
     return Hero(
       tag: 'loan-${loan.id}',
@@ -528,7 +525,7 @@ class LoanListScreen extends ConsumerWidget {
                       'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
                       style: TextStyle(
                         fontSize: 11,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

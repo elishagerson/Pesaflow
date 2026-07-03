@@ -156,10 +156,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark
-        ? const Color(0xFF1B1C22)
-        : const Color(0xFFF2F2F7);
+    final onSurface = theme.colorScheme.onSurface;
+    final inputFill = theme.colorScheme.surfaceContainerHigh;
 
     InputDecoration inputDeco({
       required String label,
@@ -179,9 +177,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.06),
+          color: onSurface.withValues(alpha: 0.07),
           ),
         ),
         focusedBorder: OutlineInputBorder(

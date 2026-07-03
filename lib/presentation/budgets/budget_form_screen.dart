@@ -77,11 +77,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   }
 
   Widget _buildLeadingIcon(IconData icon, Color color) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.15 : 0.1),
+        color: color.withValues(alpha: 0.125),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(icon, color: color, size: 20),
@@ -179,10 +178,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark
-        ? const Color(0xFF1B1C22)
-        : const Color(0xFFF2F2F7);
+    final onSurface = theme.colorScheme.onSurface;
+    final inputFill = theme.colorScheme.surfaceContainerHigh;
     final categoriesAsync = ref.watch(categoriesFutureProvider);
     final isEditing = widget.budgetId != null;
 
@@ -194,9 +191,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.5)
-                : Colors.black.withValues(alpha: 0.4),
+            color: onSurface.withValues(alpha: 0.45),
             letterSpacing: 0.3,
           ),
         ),
@@ -221,9 +216,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.06),
+            color: onSurface.withValues(alpha: 0.07),
           ),
         ),
         focusedBorder: OutlineInputBorder(

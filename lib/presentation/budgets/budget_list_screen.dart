@@ -538,7 +538,7 @@ class BudgetListScreen extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white30 : Colors.black38,
+                              color: onSurface.withValues(alpha: 0.34),
                             ),
                           ),
                         ],
@@ -562,7 +562,7 @@ class BudgetListScreen extends ConsumerWidget {
     WidgetRef ref,
     ThemeData theme,
   ) {
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
 
@@ -637,9 +637,7 @@ class BudgetListScreen extends ConsumerWidget {
 
         return RefreshIndicator(
           color: const Color(0xFF0F4C5C),
-          backgroundColor: isDark
-              ? const Color(0xFF161B22)
-              : const Color(0xFFF5F3F0),
+          backgroundColor: theme.scaffoldBackgroundColor,
           onRefresh: () async {
             ref.invalidate(budgetProgressProvider);
             ref.invalidate(savingsGoalsStreamProvider);
@@ -661,9 +659,7 @@ class BudgetListScreen extends ConsumerWidget {
                       Text(
                         'Savings Overview',
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.5)
-                              : Colors.black.withValues(alpha: 0.4),
+                          color: onSurface.withValues(alpha: 0.45),
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.3,
                         ),
@@ -686,7 +682,7 @@ class BudgetListScreen extends ConsumerWidget {
                               Text(
                                 CurrencyFormatter.formatCents(totalSaved),
                                 style: TextStyle(
-                                  color: isDark ? Colors.white : Colors.black,
+                                  color: onSurface,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 22,
                                   letterSpacing: -0.5,
@@ -708,7 +704,7 @@ class BudgetListScreen extends ConsumerWidget {
                               Text(
                                 CurrencyFormatter.formatCents(totalTarget),
                                 style: TextStyle(
-                                  color: isDark ? Colors.white : Colors.black,
+                                  color: onSurface,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 22,
                                   letterSpacing: -0.5,
@@ -723,9 +719,7 @@ class BudgetListScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
                           value: overallPct,
-                          backgroundColor: isDark
-                              ? Colors.white.withValues(alpha: 0.08)
-                              : Colors.black.withValues(alpha: 0.06),
+                          backgroundColor: onSurface.withValues(alpha: 0.07),
                           color: AppTheme.incomeColorDark,
                           minHeight: 8,
                         ),
@@ -735,9 +729,7 @@ class BudgetListScreen extends ConsumerWidget {
                         '${(overallPct * 100).round()}% overall progress',
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.5)
-                              : Colors.black.withValues(alpha: 0.4),
+                          color: onSurface.withValues(alpha: 0.45),
                         ),
                       ),
                     ],
@@ -783,9 +775,7 @@ class BudgetListScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusCard,
                           ),
-                          color: isDark
-                              ? goalColor.withValues(alpha: 0.08)
-                              : Colors.white.withValues(alpha: 0.65),
+                          color: theme.colorScheme.surface.withValues(alpha: 0.85),
                         ),
                         child: IntrinsicHeight(
                           child: Row(

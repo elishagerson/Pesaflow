@@ -78,7 +78,6 @@ class ModernDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -95,14 +94,10 @@ class ModernDialog extends StatelessWidget {
             child: Container(
               constraints: const BoxConstraints(maxWidth: 400),
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xE6161618)
-                    : const Color(0xE6FFFFFF),
+                color: theme.colorScheme.surface.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(28.0),
                 border: Border.all(
-                  color: isDark
-                      ? const Color(0x1AFFFFFF)
-                      : const Color(0x1F000000),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.11),
                   width: 1.0,
                 ),
                 boxShadow: [
@@ -145,9 +140,7 @@ class ModernDialog extends StatelessWidget {
                                         theme.textTheme.titleMedium!)
                                     .copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: isDark
-                                          ? Colors.white
-                                          : Colors.black87,
+                                      color: theme.colorScheme.onSurface,
                                     ),
                             child: title,
                           ),
@@ -165,9 +158,7 @@ class ModernDialog extends StatelessWidget {
                             (theme.textTheme.bodyMedium ??
                                     theme.textTheme.bodySmall!)
                                 .copyWith(
-                                  color: isDark
-                                      ? Colors.grey[300]
-                                      : Colors.grey[700],
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
                         child: content,
                       ),

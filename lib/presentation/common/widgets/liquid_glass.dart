@@ -32,7 +32,8 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
     return RepaintBoundary(
       child: AnimatedBuilder(
         animation: _controller,
@@ -45,8 +46,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
                 child: CustomPaint(
                   painter: _LiquidGlassPainter(
                     time: _controller.value,
-                    isDark: isDark,
-                    accentColor: widget.accentColor,
+                    baseColor: baseColor,
                   ),
                 ),
               ),
@@ -60,19 +60,15 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
 
 class _LiquidGlassPainter extends CustomPainter {
   final double time;
-  final bool isDark;
-  final Color? accentColor;
+  final Color baseColor;
 
   _LiquidGlassPainter({
     required this.time,
-    required this.isDark,
-    this.accentColor,
+    required this.baseColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final baseColor = accentColor ?? (isDark ? Colors.white : Colors.black);
-
     // -- Highlight 1: drifting radial pool --
     final hx =
         size.width * (0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15)));
