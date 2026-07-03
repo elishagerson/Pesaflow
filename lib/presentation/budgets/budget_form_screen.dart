@@ -833,31 +833,33 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing4),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing6),
         decoration: ShapeDecoration(
           color: _isFocused
-              ? theme.colorScheme.primary.withValues(alpha: 0.03)
-              : theme.colorScheme.onSurface.withValues(alpha: 0.02),
+              ? theme.colorScheme.primary.withValues(alpha: 0.04)
+              : theme.colorScheme.onSurface.withValues(alpha: 0.03),
           shape: SquircleBorder(
             side: BorderSide(
               color: _isFocused
                   ? theme.colorScheme.primary
                   : theme.colorScheme.outlineVariant,
-              width: _isFocused ? 1.5 : 0.8,
+              width: _isFocused ? 1.8 : 0.8,
             ),
-            borderRadius: 16.0,
+            borderRadius: 24.0,
           ),
         ),
         child: Row(
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(10),
+              decoration: ShapeDecoration(
                 color: _isFocused
                     ? theme.colorScheme.primary.withValues(alpha: 0.1)
                     : theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(10),
+                shape: const SquircleBorder(
+                  borderRadius: 14.0,
+                ),
               ),
               child: Icon(
                 widget.icon,
@@ -877,6 +879,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 ),
                 onChanged: widget.onChanged,
                 decoration: InputDecoration(
+                  filled: false,
                   labelText: widget.label,
                   labelStyle: TextStyle(
                     color: _isFocused
