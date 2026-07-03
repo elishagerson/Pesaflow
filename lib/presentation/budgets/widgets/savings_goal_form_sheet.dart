@@ -130,10 +130,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final inputFill = isDark
-        ? const Color(0xFF1B1C22)
-        : const Color(0xFFF2F2F7);
+    final inputFill = theme.inputDecorationTheme.fillColor ?? Colors.transparent;
 
     InputDecoration inputDeco({
       required String label,
@@ -153,9 +150,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.06),
+            color: theme.colorScheme.outlineVariant,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -175,7 +170,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         child: LiquidGlassOverlay(
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xF01C1C1E) : const Color(0xF0F2F2F7),
+              color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.94),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
@@ -200,9 +195,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         height: 5,
                         margin: const EdgeInsets.only(bottom: 16, top: 4),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.2)
-                              : Colors.black.withValues(alpha: 0.15),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -226,15 +219,13 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           child: Container(
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.1)
-                                  : Colors.black.withValues(alpha: 0.05),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               PesaFlowIcons.close,
                               size: 20,
-                              color: isDark ? Colors.white60 : Colors.black45,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                         ),
@@ -248,9 +239,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : Colors.black.withValues(alpha: 0.4),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -330,9 +319,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : Colors.black.withValues(alpha: 0.4),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -371,9 +358,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     shape: BoxShape.circle,
                                     border: isSelected
                                         ? Border.all(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black,
+                                            color: theme.colorScheme.onSurface,
                                             width: 3,
                                           )
                                         : Border.all(
@@ -409,9 +394,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : Colors.black.withValues(alpha: 0.4),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -448,9 +431,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? themeCol.withValues(alpha: 0.15)
-                                        : (isDark
-                                              ? const Color(0xFF1C1C1E)
-                                              : Colors.grey[100]),
+                                        : theme.colorScheme.surfaceContainerHigh,
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
                                       color: isSelected
@@ -463,9 +444,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     item['icon'],
                                     color: isSelected
                                         ? themeCol
-                                        : (isDark
-                                              ? Colors.grey[400]
-                                              : Colors.grey[600]),
+                                        : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                     size: 22,
                                   ),
                                 ),

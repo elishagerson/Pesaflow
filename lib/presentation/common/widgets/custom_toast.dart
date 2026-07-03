@@ -98,7 +98,6 @@ class _ToastWidgetState extends State<_ToastWidget>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     final IconData icon = switch (widget.type) {
       ToastType.success => PesaFlowIcons.success,
@@ -133,12 +132,10 @@ class _ToastWidgetState extends State<_ToastWidget>
                         vertical: kSpacing14,
                       ),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF1E222B) : Colors.white,
+                        color: theme.colorScheme.surfaceContainerHigh,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.08)
-                              : Colors.black.withValues(alpha: 0.05),
+                          color: theme.colorScheme.outlineVariant,
                           width: 0.8,
                         ),
                         boxShadow: [

@@ -50,10 +50,7 @@ class _ShimmerCardState extends State<ShimmerCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final bgColor = isDark
-        ? theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-        : theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.6);
+    final bgColor = theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55);
 
     return Container(
       height: widget.height,
@@ -119,15 +116,12 @@ class ShimmerCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isDark
-            ? theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-            : theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+        color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55),
       ),
     );
   }

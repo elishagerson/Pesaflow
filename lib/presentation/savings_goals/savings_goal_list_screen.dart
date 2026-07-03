@@ -24,7 +24,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = context.isDark;
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
 
@@ -46,9 +45,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             color: const Color(0xFF0F4C5C),
-            backgroundColor: isDark
-                ? const Color(0xFF161B22)
-                : const Color(0xFFF5F3F0),
+            backgroundColor: theme.colorScheme.surfaceContainerHigh,
             onRefresh: () async {
               ref.invalidate(savingsGoalsStreamProvider);
               ref.invalidate(savingsGoalsTotalSavedProvider);
@@ -70,9 +67,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : Colors.black.withValues(alpha: 0.4),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       letterSpacing: 0.3,
                     ),
                   ),
