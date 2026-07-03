@@ -58,7 +58,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
     final activeType = ref.watch(transactionTypeFilterProvider);
     final activeAccount = ref.watch(transactionAccountFilterProvider);
@@ -176,23 +176,17 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.15)
-                                      : Colors.black.withValues(alpha: 0.1),
+                                  color: onSurface.withValues(alpha: 0.12),
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.black.withValues(alpha: 0.06),
+                                  color: onSurface.withValues(alpha: 0.07),
                                 ),
                               ),
                               filled: true,
-                              fillColor: isDark
-                                  ? Colors.white.withValues(alpha: 0.04)
-                                  : Colors.black.withValues(alpha: 0.02),
+                              fillColor: onSurface.withValues(alpha: 0.03),
                             ),
                           ),
                         ),
@@ -202,7 +196,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             '—',
                             style: TextStyle(
                               fontSize: 18,
-                              color: isDark ? Colors.white38 : Colors.black26,
+                              color: onSurface.withValues(alpha: 0.32),
                             ),
                           ),
                         ),
@@ -222,23 +216,17 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.15)
-                                      : Colors.black.withValues(alpha: 0.1),
+                                  color: onSurface.withValues(alpha: 0.12),
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.black.withValues(alpha: 0.06),
+                                  color: onSurface.withValues(alpha: 0.07),
                                 ),
                               ),
                               filled: true,
-                              fillColor: isDark
-                                  ? Colors.white.withValues(alpha: 0.04)
-                                  : Colors.black.withValues(alpha: 0.02),
+                              fillColor: onSurface.withValues(alpha: 0.03),
                             ),
                           ),
                         ),
@@ -376,7 +364,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                         ? Text(
                             'No categories for selected type',
                             style: TextStyle(
-                              color: isDark ? Colors.white38 : Colors.black38,
+                              color: onSurface.withValues(alpha: 0.38),
                               fontSize: 13,
                             ),
                           )
@@ -448,11 +436,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       Navigator.of(context).pop();
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: isDark ? Colors.white60 : Colors.black45,
+                      foregroundColor: onSurface.withValues(alpha: 0.52),
                       side: BorderSide(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.15)
-                            : Colors.black.withValues(alpha: 0.1),
+                        color: onSurface.withValues(alpha: 0.12),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
@@ -548,13 +534,11 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final bg =
         color ??
-        (isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : Colors.black.withValues(alpha: 0.04));
-    final fg = textColor ?? (isDark ? Colors.white70 : Colors.black54);
+        onSurface.withValues(alpha: 0.06);
+    final fg = textColor ?? onSurface.withValues(alpha: 0.62);
 
     return GestureDetector(
       onTap: onTap,
@@ -603,20 +587,16 @@ class _DateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : Colors.black.withValues(alpha: 0.04),
+          color: onSurface.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.12)
-                : Colors.black.withValues(alpha: 0.08),
+            color: onSurface.withValues(alpha: 0.10),
           ),
         ),
         child: Column(
@@ -626,7 +606,7 @@ class _DateButton extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 11,
-                color: isDark ? Colors.white38 : Colors.black38,
+                color: onSurface.withValues(alpha: 0.38),
               ),
             ),
             const SizedBox(height: 4),
@@ -636,8 +616,8 @@ class _DateButton extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: date != null
-                    ? (isDark ? Colors.white : Colors.black)
-                    : (isDark ? Colors.white38 : Colors.black38),
+                    ? onSurface
+                    : onSurface.withValues(alpha: 0.38),
               ),
             ),
           ],

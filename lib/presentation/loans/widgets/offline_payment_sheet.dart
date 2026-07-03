@@ -16,7 +16,8 @@ import 'payment_sheet.dart';
 void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final theme = Theme.of(context);
+  final onSurface = theme.colorScheme.onSurface;
   final remainingCents = loan.remaining;
 
   showModalBottomSheet(
@@ -47,9 +48,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                 child: LiquidGlassOverlay(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xF01C1C1E)
-                          : const Color(0xF0F2F2F7),
+                      color: theme.colorScheme.surface.withValues(alpha: 0.94),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
@@ -62,9 +61,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                           width: 38,
                           height: 5,
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.15),
+                            color: onSurface.withValues(alpha: 0.17),
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
@@ -112,9 +109,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'No wallet account will be affected',
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: isDark
-                                                  ? Colors.grey[500]
-                                                  : Colors.grey[500],
+                                              color: onSurface.withValues(alpha: 0.6),
                                             ),
                                           ),
                                         ],
@@ -133,18 +128,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: 8),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? const Color(0xFF1C1C1E)
-                                          : Colors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.08,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
+                                        color: onSurface.withValues(alpha: 0.07),
                                       ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
@@ -158,9 +145,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w900,
-                                            color: isDark
-                                                ? Colors.white60
-                                                : Colors.black45,
+                                            color: onSurface.withValues(alpha: 0.55),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -181,9 +166,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               fontSize: 28,
                                               fontFamily: 'monospace',
                                               fontWeight: FontWeight.bold,
-                                              color: isDark
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                              color: onSurface,
                                             ),
                                             decoration: const InputDecoration(
                                               hintText: 'Enter amount',
@@ -207,21 +190,13 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             child: Container(
                                               padding: const EdgeInsets.all(4),
                                               decoration: BoxDecoration(
-                                                color: isDark
-                                                    ? Colors.white.withValues(
-                                                        alpha: 0.1,
-                                                      )
-                                                    : Colors.black.withValues(
-                                                        alpha: 0.05,
-                                                      ),
+                                                color: onSurface.withValues(alpha: 0.07),
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
                                                 PesaFlowIcons.close,
                                                 size: 18,
-                                                color: isDark
-                                                    ? Colors.white54
-                                                    : Colors.black45,
+                                                color: onSurface.withValues(alpha: 0.55),
                                               ),
                                             ),
                                           ),

@@ -18,6 +18,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
@@ -175,7 +176,7 @@ class _SavingsGoalDetailSheetState
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         final theme = Theme.of(ctx);
-        final isDark = theme.brightness == Brightness.dark;
+        final onSurface = theme.colorScheme.onSurface;
         final accentColor = isDeposit
             ? const Color(0xFF10B981)
             : const Color(0xFFFF453A);
@@ -781,7 +782,7 @@ class _SavingsGoalDetailSheetState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final goalColor = hexToColor(widget.goal.color);
 
     final contributionsAsync = ref.watch(

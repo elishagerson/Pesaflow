@@ -254,7 +254,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     itemBuilder: (context, dayIndex) {
                       // Append insights card at the end of the transactions list
                       if (dayIndex == sortedDays.length) {
-                        return _buildInsightsCard(context, ref, isDark);
+                        return _buildInsightsCard(context, ref);
                       }
 
                       final dayStr = sortedDays[dayIndex];
@@ -297,9 +297,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 1.2,
-                                    color: isDark
-                                        ? Colors.white30
-                                        : Colors.black38,
+                                    color: onSurface.withValues(alpha: 0.34),
                                   ),
                                 ),
                                 // Monospace Net Change Indicator
@@ -442,11 +440,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                     vertical: kSpacing6,
                                   ),
                                   padding: const EdgeInsets.all(kSpacing16),
-                                  backgroundColor: isDark
-                                      ? const Color(
-                                          0xFF1B1C22,
-                                        ).withValues(alpha: 0.65)
-                                      : Colors.white,
+                                  backgroundColor: theme.colorScheme.surface,
                                   child: Row(
                                     children: [
                                       Container(
@@ -482,9 +476,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 15,
-                                                color: isDark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                                color: onSurface,
                                               ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -496,9 +488,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                   item.account?.name ??
                                                       'Offline',
                                                   style: TextStyle(
-                                                    color: isDark
-                                                        ? Colors.grey[400]
-                                                        : Colors.grey[600],
+                                                    color: onSurface.withValues(alpha: 0.6),
                                                     fontSize: 11,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -508,30 +498,26 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                         .reference!
                                                         .isNotEmpty) ...[
                                                   const SizedBox(width: 6),
-                                                  Text(
-                                                    '•',
+                                                Text(
+                                                  '•',
+                                                  style: TextStyle(
+                                                    color: onSurface.withValues(alpha: 0.11),
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Flexible(
+                                                  child: Text(
+                                                    trans.reference!,
                                                     style: TextStyle(
-                                                      color: isDark
-                                                          ? Colors.white10
-                                                          : Colors.black12,
-                                                      fontSize: 10,
+                                                      color: onSurface.withValues(alpha: 0.34),
+                                                      fontSize: 11,
                                                     ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                  const SizedBox(width: 6),
-                                                  Flexible(
-                                                    child: Text(
-                                                      trans.reference!,
-                                                      style: TextStyle(
-                                                        color: isDark
-                                                            ? Colors.white30
-                                                            : Colors.black38,
-                                                        fontSize: 11,
-                                                      ),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
+                                                ),
                                                 ],
                                                 if (trans.source.startsWith(
                                                   'sms',
@@ -593,9 +579,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           Text(
                                             formattedTime,
                                             style: TextStyle(
-                                              color: isDark
-                                                  ? Colors.white24
-                                                  : Colors.black26,
+                                            color: onSurface.withValues(alpha: 0.25),
                                               fontSize: 11,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -648,9 +632,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         bottom: 12,
                       ),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.black.withValues(alpha: 0.25)
-                            : Colors.white.withValues(alpha: 0.25),
+                        color: onSurface.withValues(alpha: 0.25),
                         border: Border(
                           bottom: BorderSide(
                             color: onSurface.withValues(alpha: 0.06),

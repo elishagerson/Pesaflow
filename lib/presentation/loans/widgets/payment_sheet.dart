@@ -439,18 +439,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: 8),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? const Color(0xFF1C1C1E)
-                                          : Colors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.08,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.06,
-                                              ),
+                                        color: onSurface.withValues(alpha: 0.07),
                                       ),
                                     ),
                                     child: TextField(
@@ -459,23 +451,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           TextCapitalization.sentences,
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color: onSurface,
                                       ),
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
-                                          color: isDark
-                                              ? Colors.white30
-                                              : Colors.black26,
+                                          color: onSurface.withValues(alpha: 0.28),
                                         ),
                                         prefixIcon: Icon(
                                           PesaFlowIcons.edit,
                                           size: 20,
-                                          color: isDark
-                                              ? Colors.white38
-                                              : Colors.black26,
+                                          color: onSurface.withValues(alpha: 0.32),
                                         ),
                                         border: InputBorder.none,
                                         contentPadding:
@@ -589,13 +575,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                       ? const Color(
                                                           0xFF609F8A,
                                                         ).withValues(
-                                                          alpha: isDark
-                                                              ? 0.15
-                                                              : 0.08,
+                                                          alpha: 0.12,
                                                         )
-                                                      : isDark
-                                                      ? const Color(0xFF1C1C1E)
-                                                      : Colors.white,
+                                                      : theme.colorScheme.surface,
                                                   borderRadius:
                                                       BorderRadius.circular(14),
                                                   border: Border.all(
@@ -605,15 +587,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                           ).withValues(
                                                             alpha: 0.5,
                                                           )
-                                                        : isDark
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.08,
-                                                              )
-                                                        : Colors.black
-                                                              .withValues(
-                                                                alpha: 0.06,
-                                                              ),
+                                                        : onSurface.withValues(alpha: 0.07),
                                                     width: isSelected ? 1.5 : 1,
                                                   ),
                                                 ),
@@ -631,17 +605,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               ).withValues(
                                                                 alpha: 0.2,
                                                               )
-                                                            : (isDark
-                                                                  ? Colors.white
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.06,
-                                                                        )
-                                                                  : Colors.black
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.04,
-                                                                        )),
+                                                            : onSurface.withValues(alpha: 0.05),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
@@ -655,11 +619,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                             ? const Color(
                                                                 0xFF609F8A,
                                                               )
-                                                            : (isDark
-                                                                  ? Colors
-                                                                        .white54
-                                                                  : Colors
-                                                                        .black45),
+                                                            : onSurface.withValues(alpha: 0.55),
                                                       ),
                                                     ),
                                                     const SizedBox(width: 12),
@@ -680,17 +640,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                         .w500,
                                                               fontSize: 15,
                                                               color: isSelected
-                                                                  ? (isDark
-                                                                        ? Colors
-                                                                              .white
-                                                                        : const Color(
-                                                                            0xFF609F8A,
-                                                                          ))
-                                                                  : (isDark
-                                                                        ? Colors
-                                                                              .white
-                                                                        : Colors
-                                                                              .black87),
+                                                                  ? const Color(
+                                                                      0xFF609F8A,
+                                                                    )
+                                                                  : onSurface,
                                                             ),
                                                           ),
                                                           const SizedBox(
@@ -702,11 +655,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                 'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
                                                                 style: TextStyle(
                                                                   fontSize: 12,
-                                                                  color: isDark
-                                                                      ? Colors
-                                                                            .white38
-                                                                      : Colors
-                                                                            .black38,
+                                                                  color: onSurface.withValues(alpha: 0.38),
                                                                 ),
                                                               ),
                                                               if (selectedAccountId !=
@@ -856,16 +805,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             0xFF609F8A,
                                           ),
                                           foregroundColor: Colors.white,
-                                          disabledBackgroundColor: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.05,
-                                                )
-                                              : Colors.black.withValues(
-                                                  alpha: 0.05,
-                                                ),
-                                          disabledForegroundColor: isDark
-                                              ? Colors.white24
-                                              : Colors.black26,
+                                          disabledBackgroundColor: onSurface.withValues(
+                                              alpha: 0.05,
+                                            ),
+                                          disabledForegroundColor: onSurface.withValues(
+                                              alpha: 0.25,
+                                            ),
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -940,19 +885,18 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
 }
 
 Widget _buildAmountField({
-  required bool isDark,
+  required ThemeData theme,
   required TextEditingController amountController,
   required int Function() paymentAmount,
   required StateSetter setSheetState,
 }) {
+  final onSurface = theme.colorScheme.onSurface;
   return Container(
     decoration: BoxDecoration(
-      color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+      color: theme.colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : Colors.black.withValues(alpha: 0.06),
+        color: onSurface.withValues(alpha: 0.07),
       ),
     ),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -963,7 +907,7 @@ Widget _buildAmountField({
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
-            color: isDark ? Colors.white60 : Colors.black45,
+            color: onSurface.withValues(alpha: 0.55),
           ),
         ),
         const SizedBox(width: 12),
@@ -979,7 +923,7 @@ Widget _buildAmountField({
               fontSize: 28,
               fontFamily: 'monospace',
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black,
+              color: onSurface,
             ),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
@@ -1000,15 +944,13 @@ Widget _buildAmountField({
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.black.withValues(alpha: 0.05),
+                color: onSurface.withValues(alpha: 0.07),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 PesaFlowIcons.close,
                 size: 18,
-                color: isDark ? Colors.white54 : Colors.black45,
+                color: onSurface.withValues(alpha: 0.55),
               ),
             ),
           ),
