@@ -24,7 +24,6 @@ class LoanDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final loansAsync = ref.watch(loansStreamProvider);
     final transactionsAsync = ref.watch(loanTransactionsStreamProvider(loanId));
 
@@ -60,7 +59,7 @@ class LoanDetailScreen extends ConsumerWidget {
             children: [
               StaggeredFadeSlide(
                 index: 0,
-                child: _buildLoanHeader(loan, theme, isDark),
+                child: _buildLoanHeader(loan, theme),
               ),
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
@@ -70,24 +69,24 @@ class LoanDetailScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 2,
-                child: _buildStatusTimeline(loan, theme, isDark),
+                child: _buildStatusTimeline(loan, theme),
               ),
               if (loan.installmentAmount != null) ...[
                 const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 3,
-                  child: _buildInstallmentSchedule(loan, theme, isDark),
+                  child: _buildInstallmentSchedule(loan, theme),
                 ),
               ],
               StaggeredFadeSlide(
                 index: 4,
-                child: _buildPayoffProjection(loan, theme, isDark),
+                child: _buildPayoffProjection(loan, theme),
               ),
               if (loan.status == 'active') ...[
                 const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 5,
-                  child: _buildPaymentButton(context, loan, theme, isDark, ref),
+                  child: _buildPaymentButton(context, loan, theme, ref),
                 ),
               ],
               const SizedBox(height: kSpacing20),
@@ -146,7 +145,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanHeader(Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildLoanHeader(Loan loan, ThemeData theme) {
     final isActive = loan.status == 'active';
     final isPaid = loan.status == 'paid';
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
@@ -273,7 +272,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusTimeline(Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildStatusTimeline(Loan loan, ThemeData theme) {
     final events = <_TimelineEvent>[
       _TimelineEvent(
         title: 'Loan Disbursed',
@@ -332,14 +331,14 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kSpacing16),
-            ...events.map((e) => _buildTimelineRow(e, theme, isDark)),
+            ...events.map((e) => _buildTimelineRow(e, theme)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTimelineRow(_TimelineEvent event, ThemeData theme, bool isDark) {
+  Widget _buildTimelineRow(_TimelineEvent event, ThemeData theme) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,7 +411,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInstallmentSchedule(Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildInstallmentSchedule(Loan loan, ThemeData theme) {
     final total = loan.totalInstallments ?? 0;
     final paid = loan.paidInstallments ?? 0;
     final amount = loan.installmentAmount ?? 0;
@@ -554,7 +553,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPayoffProjection(Loan loan, ThemeData theme, bool isDark) {
+  Widget _buildPayoffProjection(Loan loan, ThemeData theme) {
     if (loan.status == 'paid') return const SizedBox.shrink();
 
     DateTime? estimatedDate;
@@ -641,7 +640,6 @@ class LoanDetailScreen extends ConsumerWidget {
     BuildContext context,
     Loan loan,
     ThemeData theme,
-    bool isDark,
     WidgetRef ref,
   ) {
     return GlassCard(

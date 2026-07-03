@@ -422,16 +422,12 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           0xFF609F8A,
                                         ),
                                         foregroundColor: Colors.white,
-                                        disabledBackgroundColor: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.05,
-                                              )
-                                            : Colors.black.withValues(
-                                                alpha: 0.05,
-                                              ),
-                                        disabledForegroundColor: isDark
-                                            ? Colors.white24
-                                            : Colors.black26,
+                                        disabledBackgroundColor: onSurface.withValues(
+                                            alpha: 0.05,
+                                          ),
+                                        disabledForegroundColor: onSurface.withValues(
+                                            alpha: 0.25,
+                                          ),
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(

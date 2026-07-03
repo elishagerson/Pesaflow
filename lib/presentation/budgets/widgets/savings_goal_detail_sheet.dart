@@ -193,9 +193,7 @@ class _SavingsGoalDetailSheetState
               child: LiquidGlassOverlay(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xF01C1C1E)
-                        : const Color(0xF0F2F2F7),
+                    color: theme.colorScheme.surface.withValues(alpha: 0.94),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
@@ -210,9 +208,7 @@ class _SavingsGoalDetailSheetState
                             width: 38,
                             height: 5,
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.2)
-                                  : Colors.black.withValues(alpha: 0.15),
+                              color: onSurface.withValues(alpha: 0.17),
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
@@ -273,9 +269,7 @@ class _SavingsGoalDetailSheetState
                                                     : 'Take money out of your savings goal',
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: isDark
-                                                      ? Colors.grey[400]
-                                                      : Colors.grey[600],
+color: onSurface.withValues(alpha: 0.6),
                                                 ),
                                               ),
                                             ],
@@ -297,9 +291,7 @@ class _SavingsGoalDetailSheetState
                                     const SizedBox(height: 8),
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? const Color(0xFF1C1C1E)
-                                            : Colors.white,
+color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: isDark
@@ -517,9 +509,7 @@ class _SavingsGoalDetailSheetState
                                     // Wallet deduct toggle
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? const Color(0xFF1C1C1E)
-                                            : Colors.white,
+color: theme.colorScheme.surface,
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
                                           color: isDark
@@ -797,7 +787,7 @@ class _SavingsGoalDetailSheetState
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppTheme.surfaceHighDark : AppTheme.surfaceLight,
+        color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       height: MediaQuery.of(context).size.height * 0.85,
@@ -810,7 +800,7 @@ class _SavingsGoalDetailSheetState
               height: 5,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[800] : Colors.grey[300],
+                color: onSurface.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(2.5),
               ),
             ),
