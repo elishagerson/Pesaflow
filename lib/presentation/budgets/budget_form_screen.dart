@@ -277,10 +277,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   }
 
   Widget _buildBudgetHero(ThemeData theme, List<dynamic> categories) {
-    final selectedCat = categories.firstWhere(
-      (c) => c.id == _selectedCategoryId,
-      orElse: () => null,
-    );
+    final selectedCat = categories
+        .where((c) => c.id == _selectedCategoryId)
+        .firstOrNull;
     final themeColor = selectedCat != null
         ? hexToColor(selectedCat.color)
         : theme.colorScheme.primary;
