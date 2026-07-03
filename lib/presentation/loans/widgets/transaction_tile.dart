@@ -13,17 +13,17 @@ class TransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final isCredit = tx.type == 'income';
     final amountColor = isCredit ? AppTheme.incomeColor : AppTheme.expenseColor;
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
       padding: const EdgeInsets.all(kSpacing12),
       decoration: BoxDecoration(
-        color: isDark ? AppTheme.surfaceContainerDark : AppTheme.surfaceLight,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: isDark ? const Color(0x12FFFFFF) : const Color(0x1F000000),
+          color: onSurface.withValues(alpha: 0.09),
           width: 0.5,
         ),
       ),
@@ -66,7 +66,7 @@ class TransactionTile extends StatelessWidget {
                     ),
                     if (tx.accountId == null) ...[
                       const SizedBox(width: kSpacing6),
-                      _OfflineBadge(isDark: isDark),
+                      const _OfflineBadge(),
                     ],
                   ],
                 ),
@@ -74,7 +74,7 @@ class TransactionTile extends StatelessWidget {
                 Text(
                   DateFormatter.shortDate(tx.createdAt),
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -94,12 +94,11 @@ class TransactionTile extends StatelessWidget {
 }
 
 class _OfflineBadge extends StatelessWidget {
-  final bool isDark;
-
-  const _OfflineBadge({required this.isDark});
+  const _OfflineBadge();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kSpacing6,
@@ -114,7 +113,7 @@ class _OfflineBadge extends StatelessWidget {
         style: TextStyle(
           fontSize: 9,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
       ),
     );

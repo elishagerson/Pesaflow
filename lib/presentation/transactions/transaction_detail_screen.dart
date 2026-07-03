@@ -23,7 +23,7 @@ class TransactionDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
     final itemAsync = ref.watch(transactionDetailProvider(transactionId));
 
     return Scaffold(
@@ -75,7 +75,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               if (item == null) {
                 return const Center(child: Text('Transaction not found'));
               }
-              return _buildDetail(context, ref, theme, isDark, item);
+              return _buildDetail(context, ref, theme, onSurface, item);
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, _) => Center(child: Text('Error: $err')),
@@ -89,7 +89,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     ThemeData theme,
-    bool isDark,
+    Color onSurface,
     TransactionWithCategoryAndAccount item,
   ) {
     final t = item.transaction;
@@ -123,7 +123,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    mutedCatColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                    mutedCatColor.withValues(alpha: 0.17),
                     mutedCatColor.withValues(alpha: isDark ? 0.06 : 0.03),
                     Colors.transparent,
                   ],
