@@ -16,8 +16,6 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
-
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
 
@@ -181,14 +179,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           vertical: kSpacing6,
                         ),
                         decoration: BoxDecoration(
-                          color: context.isDark
-                              ? Colors.white.withValues(alpha: 0.06)
-                              : Colors.black.withValues(alpha: 0.03),
+                          color: theme.colorScheme.outlineVariant,
                           borderRadius: BorderRadius.circular(100),
                           border: Border.all(
-                            color: context.isDark
-                                ? Colors.white.withValues(alpha: 0.10)
-                                : Colors.black.withValues(alpha: 0.05),
+                            color: theme.colorScheme.outlineVariant,
                             width: 0.8,
                           ),
                         ),
@@ -686,29 +680,13 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         vertical: kSpacing8,
                                                       ),
                                                   decoration: BoxDecoration(
-                                                    color: context.isDark
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.06,
-                                                              )
-                                                        : Colors.black
-                                                              .withValues(
-                                                                alpha: 0.03,
-                                                              ),
+                                                    color: theme.colorScheme.outlineVariant,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           100,
                                                         ),
                                                     border: Border.all(
-                                                      color: context.isDark
-                                                          ? Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.10,
-                                                                )
-                                                          : Colors.black
-                                                                .withValues(
-                                                                  alpha: 0.05,
-                                                                ),
+                                                      color: theme.colorScheme.outlineVariant,
                                                       width: 0.8,
                                                     ),
                                                   ),
