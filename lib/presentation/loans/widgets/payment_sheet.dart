@@ -25,7 +25,8 @@ class LoanProgressRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
     final totalInstallments = loan.totalInstallments ?? 0;
     final paidInstallments = loan.paidInstallments ?? 0;
     final totalAmount = loan.amount;
@@ -48,9 +49,7 @@ class LoanProgressRing extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: paidFraction,
                   strokeWidth: 5,
-                  backgroundColor: isDark
-                      ? Colors.white.withValues(alpha: 0.08)
-                      : Colors.black.withValues(alpha: 0.06),
+                  backgroundColor: onSurface.withValues(alpha: 0.07),
                   valueColor: const AlwaysStoppedAnimation<Color>(
                     Color(0xFF10B981),
                   ),
@@ -78,7 +77,7 @@ class LoanProgressRing extends StatelessWidget {
                     'Paid',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
@@ -99,7 +98,7 @@ class LoanProgressRing extends StatelessWidget {
                     'Remaining',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
@@ -121,7 +120,7 @@ class LoanProgressRing extends StatelessWidget {
                       'Installments',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
@@ -158,7 +157,8 @@ class QuickAmountChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -169,16 +169,12 @@ class QuickAmountChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: isActive
                 ? const Color(0xFF10B981).withValues(alpha: 0.15)
-                : isDark
-                ? Colors.white.withValues(alpha: 0.06)
-                : Colors.black.withValues(alpha: 0.04),
+                : onSurface.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isActive
                   ? const Color(0xFF10B981).withValues(alpha: 0.5)
-                  : isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : Colors.black.withValues(alpha: 0.06),
+                  : onSurface.withValues(alpha: 0.07),
             ),
           ),
           child: Column(
@@ -190,7 +186,7 @@ class QuickAmountChip extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: isActive
                       ? const Color(0xFF10B981)
-                      : (isDark ? Colors.white70 : Colors.black54),
+                      : onSurface.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 2),
@@ -199,7 +195,7 @@ class QuickAmountChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 9,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white38 : Colors.black38,
+                  color: onSurface.withValues(alpha: 0.38),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -215,7 +211,8 @@ class QuickAmountChip extends StatelessWidget {
 void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final theme = Theme.of(context);
+  final onSurface = theme.colorScheme.onSurface;
   final remainingCents = loan.remaining;
 
   showModalBottomSheet(
@@ -247,9 +244,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                 child: LiquidGlassOverlay(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xF01C1C1E)
-                          : const Color(0xF0F2F2F7),
+                      color: theme.colorScheme.surface.withValues(alpha: 0.94),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
@@ -262,9 +257,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                           width: 38,
                           height: 5,
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.2)
-                                : Colors.black.withValues(alpha: 0.15),
+                            color: onSurface.withValues(alpha: 0.17),
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
