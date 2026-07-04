@@ -22,7 +22,9 @@ import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
+
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
@@ -185,30 +187,36 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       return;
     }
     if (_selectedAccountId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a source account.')),
+      CustomToast.show(
+        context,
+        message: 'Please select a source account.',
+        type: ToastType.error,
       );
       return;
     }
     if (_transactionType == 'Transfer' &&
         _selectedDestinationAccountId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a destination account.')),
+      CustomToast.show(
+        context,
+        message: 'Please select a destination account.',
+        type: ToastType.error,
       );
       return;
     }
     if (_transactionType == 'Transfer' &&
         _selectedDestinationAccountId == _selectedAccountId) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Source and destination accounts must be different.'),
-        ),
+      CustomToast.show(
+        context,
+        message: 'Source and destination accounts must be different.',
+        type: ToastType.error,
       );
       return;
     }
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category.')),
+      CustomToast.show(
+        context,
+        message: 'Please select a category.',
+        type: ToastType.error,
       );
       return;
     }
@@ -253,9 +261,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
-      ScaffoldMessenger.of(
+      CustomToast.show(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to save transaction: $e')));
+        message: 'Failed to save transaction: $e',
+        type: ToastType.error,
+      );
     }
   }
 

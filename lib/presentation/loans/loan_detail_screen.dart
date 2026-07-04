@@ -15,7 +15,9 @@ import 'widgets/transaction_tile.dart';
 import 'widgets/loan_info_rows.dart';
 import 'widgets/payment_sheet.dart';
 import 'widgets/offline_payment_sheet.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
@@ -803,11 +805,10 @@ class LoanDetailScreen extends ConsumerWidget {
               } catch (e) {
                 if (context.mounted) {
                   Navigator.of(ctx, rootNavigator: true).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed: $e'),
-                      backgroundColor: Colors.red,
-                    ),
+                  CustomToast.show(
+                    context,
+                    message: 'Failed: $e',
+                    type: ToastType.error,
                   );
                 }
               }

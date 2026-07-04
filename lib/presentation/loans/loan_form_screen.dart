@@ -11,7 +11,9 @@ import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+
 
 class LoanFormScreen extends ConsumerStatefulWidget {
   final String? loanId;
@@ -163,9 +165,11 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
+        CustomToast.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to update loan: $e')));
+          message: 'Failed to update loan: $e',
+          type: ToastType.error,
+        );
       }
     } else {
       final loanId = const Uuid().v4();
@@ -196,9 +200,11 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
+        CustomToast.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to create loan: $e')));
+          message: 'Failed to create loan: $e',
+          type: ToastType.error,
+        );
       }
     }
   }

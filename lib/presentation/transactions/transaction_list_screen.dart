@@ -22,7 +22,9 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
@@ -387,8 +389,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               },
                               onDismissed: (_) {
                                 final txId = trans.id;
-                                final txData = trans;
-
                                 ref
                                     .read(transactionRepositoryProvider)
                                     .deleteTransaction(txId);
@@ -398,25 +398,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 ref.invalidate(accountsStreamProvider);
                                 ref.invalidate(netWorthProvider);
 
-                                final messenger = ScaffoldMessenger.of(context);
-                                messenger.showSnackBar(
-                                  SnackBar(
-                                    content: const Text('Transaction deleted'),
-                                    duration: const Duration(seconds: 4),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      onPressed: () async {
-                                        await ref
-                                            .read(transactionRepositoryProvider)
-                                            .createTransaction(txData);
-                                        ref.invalidate(
-                                          filteredTransactionsStreamProvider,
-                                        );
-                                        ref.invalidate(accountsStreamProvider);
-                                        ref.invalidate(netWorthProvider);
-                                      },
-                                    ),
-                                  ),
+                                CustomToast.show(
+                                  context,
+                                  message: 'Transaction deleted',
+                                  type: ToastType.info,
                                 );
                               },
                               child: TactileSpringContainer(
