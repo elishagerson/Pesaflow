@@ -565,7 +565,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',
-                        style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w700, color: isPaid
+                        style: theme.extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w700, color: isPaid
                               ? AppTheme.incomeColor
                               : AppTheme.tertiaryLight),
                       ),
@@ -629,14 +629,14 @@ class LoanDetailScreen extends ConsumerWidget {
                   children: [
                     Text(
                       description,
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurface.withValues(
+                      style: theme.textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(estimatedDate),
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
+                      style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
                     ),
                   ],
                 ),

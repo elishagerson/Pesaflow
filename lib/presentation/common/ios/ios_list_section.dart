@@ -98,14 +98,14 @@ class IosListRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DefaultTheme.of(context).textTheme.bodyLarge! ??
-                      Theme.of(context).textTheme.bodyLarge!,
+                DefaultTextStyle.merge(
+                  style: theme.textTheme.bodyLarge!,
                   child: title,
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: kSpacing2),
-                  DefaultTheme.of(context).textTheme.bodySmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
+                  DefaultTextStyle.merge(
+                    style: theme.textTheme.bodySmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                     child: subtitle!,
                   ),
                 ],
