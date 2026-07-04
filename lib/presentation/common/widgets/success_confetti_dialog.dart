@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 
 class SuccessConfettiDialog extends StatefulWidget {
   final String goalName;
@@ -140,23 +142,10 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Celebration Crown / Trophy Icon
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFCC00).withValues(alpha: 0.16),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFFFFCC00).withValues(alpha: 0.3),
-                          width: 2,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.emoji_events_rounded,
-                        color: Color(0xFFFFCC00),
-                        size: 38,
-                      ),
+                    // Celebration Checkmark animation
+                    SuccessCheckmark(
+                      size: 80,
+                      color: const Color(0xFFFFCC00),
                     ),
                     const SizedBox(height: kSpacing20),
 

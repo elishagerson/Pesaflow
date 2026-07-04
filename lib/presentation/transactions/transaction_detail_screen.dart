@@ -15,9 +15,11 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 
 
 class TransactionDetailScreen extends ConsumerWidget {
@@ -66,6 +68,9 @@ class TransactionDetailScreen extends ConsumerWidget {
       ),
       body: Hero(
         tag: 'transaction-$transactionId',
+        createRectTween: (begin, end) {
+          return SpringRectTween(begin: begin!, end: end!);
+        },
         child: Material(
           type: MaterialType.transparency,
           child: itemAsync.when(

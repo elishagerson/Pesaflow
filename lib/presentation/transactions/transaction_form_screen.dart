@@ -1287,7 +1287,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         children: [
                           // Expense pill
                           Expanded(
-                            child: GestureDetector(
+                            child: TactileSpringContainer(
                               onTap: () => setState(() {
                                 _transactionType = 'Expense';
                                 _selectedCategoryId =
@@ -1328,7 +1328,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                           // Income pill
                           Expanded(
-                            child: GestureDetector(
+                            child: TactileSpringContainer(
                               onTap: () => setState(() {
                                 _transactionType = 'Income';
                                 _selectedCategoryId =
@@ -1369,7 +1369,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                           // Transfer pill
                           Expanded(
-                            child: GestureDetector(
+                            child: TactileSpringContainer(
                               onTap: () => setState(() {
                                 _transactionType = 'Transfer';
                                 _selectedCategoryId =
