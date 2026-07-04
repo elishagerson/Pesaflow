@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 enum ToastType { success, error, info }
+
+
 
 class CustomToast {
   static void show(
@@ -106,8 +108,8 @@ class _ToastWidgetState extends State<_ToastWidget>
     };
 
     final Color iconColor = switch (widget.type) {
-      ToastType.success => AppTheme.incomeColor,
-      ToastType.error => AppTheme.expenseColor,
+      ToastType.success => context.appColors.incomeColor,
+      ToastType.error => context.appColors.expenseColor,
       ToastType.info => theme.colorScheme.primary,
     };
 
