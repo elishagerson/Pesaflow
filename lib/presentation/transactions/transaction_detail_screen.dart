@@ -661,12 +661,12 @@ class TransactionDetailScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
+                  style: theme.textTheme.bodySmall!.copyWith(color: Colors.grey),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: valueColor ?? onSurface),
+                  style: theme.textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: valueColor ?? onSurface),
                 ),
               ],
             ),

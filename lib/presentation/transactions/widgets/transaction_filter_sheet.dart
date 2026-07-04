@@ -131,7 +131,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
                       padding: const EdgeInsets.symmetric(horizontal: kSpacing10),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Reset',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
                     ),
@@ -494,7 +494,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Apply Filters',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                     ),
