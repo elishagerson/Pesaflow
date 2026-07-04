@@ -75,6 +75,67 @@ extension PesaFlowContext on BuildContext {
 
   void dismissKeyboard() => FocusScope.of(this).unfocus();
 
+  InputDecoration inputDecoration({
+    String? hintText,
+    String? labelText,
+    Widget? prefixIcon,
+    Widget? suffixIcon,
+    String? helperText,
+  }) {
+    final theme = Theme.of(this);
+    return InputDecoration(
+      hintText: hintText,
+      labelText: labelText,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+      helperText: helperText,
+      filled: true,
+      fillColor: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+          width: 0.8,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: theme.colorScheme.primary.withValues(alpha: 0.5),
+          width: 1.5,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: theme.colorScheme.error,
+          width: 1.0,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: theme.colorScheme.error,
+          width: 1.5,
+        ),
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+      hintStyle: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
+      ),
+      labelStyle: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+      ),
+    );
+  }
+
   EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
   double get keyboardInset => MediaQuery.viewInsetsOf(this).bottom;
   double get bottomInset => MediaQuery.paddingOf(this).bottom;

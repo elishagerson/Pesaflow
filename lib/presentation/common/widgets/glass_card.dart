@@ -87,27 +87,53 @@ class _GlassCardState extends State<GlassCard>
       }
     }
 
+    final bool isDark = theme.brightness == Brightness.dark;
+
     final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.30)
+              : Colors.black.withValues(alpha: 0.04),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
+        if (isDark)
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.03),
+            blurRadius: 4,
+            offset: const Offset(0, -1),
+          ),
       ],
       CardElevation.medium => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.40)
+              : Colors.black.withValues(alpha: 0.08),
           blurRadius: 16,
           offset: const Offset(0, 6),
         ),
+        if (isDark)
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.05),
+            blurRadius: 6,
+            offset: const Offset(0, -1),
+          ),
       ],
       CardElevation.high => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.12),
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.50)
+              : Colors.black.withValues(alpha: 0.12),
           blurRadius: 40,
           offset: const Offset(0, 12),
         ),
+        if (isDark)
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
       ],
       CardElevation.none => [],
     };

@@ -29,17 +29,18 @@ class SkeletonCard extends StatelessWidget {
   Widget _buildContent() {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final theme = Theme.of(context);
         final barHeight = (constraints.maxHeight - 16) / 6.5;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _pulseBar(width: 120, height: barHeight * 1.5),
+              _pulseBar(width: 120, height: barHeight * 1.5, theme: theme),
               SizedBox(height: barHeight),
-              _pulseBar(width: double.infinity, height: barHeight),
+              _pulseBar(width: double.infinity, height: barHeight, theme: theme),
               SizedBox(height: barHeight),
-              _pulseBar(width: 180, height: barHeight),
+              _pulseBar(width: 180, height: barHeight, theme: theme),
             ],
           ),
         );
@@ -47,12 +48,12 @@ class SkeletonCard extends StatelessWidget {
     );
   }
 
-  Widget _pulseBar({double width = 80, double height = 12}) {
+  Widget _pulseBar({double width = 80, double height = 12, required ThemeData theme}) {
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -113,6 +114,10 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final shimmerColor = theme.brightness == Brightness.dark
+        ? Colors.white.withValues(alpha: 0.12)
+        : Colors.white.withValues(alpha: 0.30);
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, child) {
@@ -120,9 +125,9 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: const [
+            colors: [
               Colors.transparent,
-              Colors.white24,
+              shimmerColor,
               Colors.transparent,
             ],
             stops: [

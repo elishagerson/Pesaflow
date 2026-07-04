@@ -53,7 +53,6 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final accentColor = const Color(0xFF0F4C5C);
 
     return Positioned.fill(
@@ -61,7 +60,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
         color: Colors.transparent,
         child: Container(
           color: theme.colorScheme.surface.withValues(
-            alpha: isDark ? 0.85 : 0.92,
+            alpha: 0.88,
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
