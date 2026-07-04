@@ -479,7 +479,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(kSpacing32).0),
+                                  padding: const EdgeInsets.all(kSpacing32)),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [

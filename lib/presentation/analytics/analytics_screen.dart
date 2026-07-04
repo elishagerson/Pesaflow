@@ -1324,7 +1324,7 @@ class _InsightsTab extends StatelessWidget {
                       // Content Row
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(kSpacing18).0),
+                          padding: const EdgeInsets.all(kSpacing18)),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
