@@ -21,7 +21,9 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
@@ -122,17 +124,12 @@ class _SavingsGoalDetailSheetState
 
       if (mounted) {
         Navigator.of(context).pop(); // pop amount modal
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isDeposit
-                  ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!'
-                  : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
-            ),
-            backgroundColor: isDeposit
-                ? AppTheme.transferColorDark
-                : const Color(0xFFFF453A),
-          ),
+        CustomToast.show(
+          context,
+          message: isDeposit
+              ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!'
+              : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
+          type: isDeposit ? ToastType.success : ToastType.error,
         );
 
         if (reachedMilestone) {
@@ -152,9 +149,11 @@ class _SavingsGoalDetailSheetState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
+        CustomToast.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+          message: 'Error: $e',
+          type: ToastType.error,
+        );
       }
     } finally {
       if (mounted) setState(() => _isOperationLoading = false);
