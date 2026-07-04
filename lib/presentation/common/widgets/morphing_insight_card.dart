@@ -197,7 +197,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                     size: 10,
                                     color: _severityColor(severity),
                                   ),
-                                  const SizedBox(width: 3),
+                                  const SizedBox(width: kSpacing4),
                                   Text(
                                     _severityLabel(severity),
                                     style: TextStyle(

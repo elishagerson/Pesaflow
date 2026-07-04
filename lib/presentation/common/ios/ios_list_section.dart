@@ -26,7 +26,7 @@ class IosListSection extends StatelessWidget {
       children: [
         if (header != null)
           Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 6, top: 24),
+            padding: const EdgeInsets.only(left: kSpacing16, bottom: kSpacing6, top: kSpacing24),
             child: Text(
               header!,
               style: TextStyle(
@@ -38,7 +38,7 @@ class IosListSection extends StatelessWidget {
             ),
           ),
         GlassCard(
-          margin: margin ?? const EdgeInsets.symmetric(horizontal: 16),
+          margin: margin ?? const EdgeInsets.symmetric(horizontal: kSpacing16),
           padding: EdgeInsets.zero,
           frosted: true,
           borderRadius: AppTheme.radiusCard,
@@ -92,10 +92,10 @@ class IosListRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing12),
       child: Row(
         children: [
-          if (leading != null) ...[leading!, const SizedBox(width: 14)],
+          if (leading != null) ...[leading!, const SizedBox(width: kSpacing14)],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +113,7 @@ class IosListRow extends StatelessWidget {
                   child: title,
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: kSpacing2),
                   DefaultTextStyle(
                     style: TextStyle(
                       fontSize: 13,
@@ -126,7 +126,7 @@ class IosListRow extends StatelessWidget {
             ),
           ),
           if (trailing != null) ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: kSpacing8),
             trailing!,
           ] else if (onTap != null)
             Icon(
@@ -229,7 +229,7 @@ class IosMetricCard extends StatelessWidget {
     final c = color ?? context.appColors.incomeColor;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: kSpacing16, horizontal: kSpacing12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -237,7 +237,7 @@ class IosMetricCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(icon, color: c, size: 22),
-          const SizedBox(height: 8),
+          const SizedBox(height: kSpacing8),
           Text(
             value,
             style: TextStyle(
@@ -246,7 +246,7 @@ class IosMetricCard extends StatelessWidget {
               color: theme.colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: kSpacing2),
           Text(
             label,
             style: TextStyle(

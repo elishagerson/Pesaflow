@@ -73,7 +73,7 @@ class AmountText extends ConsumerWidget {
       }
 
       return Padding(
-        padding: const EdgeInsets.only(right: 2.0),
+        padding: const EdgeInsets.only(right: kSpacing2),
         child: Text(
           displayString,
           style: customStyle,

@@ -85,13 +85,13 @@ class LoanListScreen extends ConsumerWidget {
                         '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
                         Colors.redAccent,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: kSpacing4),
                       StaggeredList(
                         itemCount: activeLoans.length,
                         itemBuilder: (context, index) =>
                             _buildLoanTile(context, activeLoans[index], theme),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: kSpacing20),
                     ],
                   );
                 },
@@ -103,11 +103,11 @@ class LoanListScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       SkeletonCard(height: 110),
-                      SizedBox(height: 8),
+                      SizedBox(height: kSpacing8),
                       SkeletonCard(height: 110),
-                      SizedBox(height: 8),
+                      SizedBox(height: kSpacing8),
                       SkeletonCard(height: 110),
-                      SizedBox(height: 8),
+                      SizedBox(height: kSpacing8),
                       SkeletonCard(height: 110),
                     ],
                   ),
@@ -128,7 +128,7 @@ class LoanListScreen extends ConsumerWidget {
                         '${paidLoans.length} paid',
                         const Color(0xFF10B981),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: kSpacing4),
                       StaggeredList(
                         itemCount: paidLoans.length,
                         itemBuilder: (context, index) => _buildPaidLoanTile(
@@ -137,7 +137,7 @@ class LoanListScreen extends ConsumerWidget {
                           theme,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: kSpacing20),
                     ],
                   );
                 },
@@ -173,12 +173,12 @@ class LoanListScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: kSpacing10),
           Text(
             title,
             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: kSpacing8),
           Text(
             subtitle,
             style: TextStyle(
@@ -223,7 +223,7 @@ class LoanListScreen extends ConsumerWidget {
               size: 20,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: kSpacing12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +236,7 @@ class LoanListScreen extends ConsumerWidget {
                     color: onSurface,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: kSpacing2),
                 Text(
                   '$count active loans taken in the last 3 months. Consider slowing down.',
                   style: TextStyle(
@@ -297,7 +297,7 @@ class LoanListScreen extends ConsumerWidget {
                   size: 22,
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: kSpacing14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,7 +310,7 @@ class LoanListScreen extends ConsumerWidget {
                         color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(
                       CurrencyFormatter.formatCents(total),
                       style: TextStyle(
@@ -324,7 +324,7 @@ class LoanListScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: kSpacing10),
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: SizedBox(
@@ -390,7 +390,7 @@ class LoanListScreen extends ConsumerWidget {
                       size: 18,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,7 +404,7 @@ class LoanListScreen extends ConsumerWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: kSpacing2),
                         Text(
                           'Active',
                           style: TextStyle(
@@ -414,7 +414,7 @@ class LoanListScreen extends ConsumerWidget {
                           ),
                         ),
                         if (loan.dueAt != null) ...[
-                          const SizedBox(height: 2),
+                          const SizedBox(height: kSpacing2),
                           Text(
                             loan.dueAt!.isBefore(DateTime.now())
                                 ? 'Overdue by ${DateTime.now().difference(loan.dueAt!).inDays} days'
@@ -441,7 +441,7 @@ class LoanListScreen extends ConsumerWidget {
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: kSpacing2),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} left',
                         style: TextStyle(
@@ -453,7 +453,7 @@ class LoanListScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: kSpacing12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
@@ -495,7 +495,7 @@ class LoanListScreen extends ConsumerWidget {
                   size: 18,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: kSpacing12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -509,7 +509,7 @@ class LoanListScreen extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: kSpacing2),
                     Text(
                       'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
                       style: TextStyle(

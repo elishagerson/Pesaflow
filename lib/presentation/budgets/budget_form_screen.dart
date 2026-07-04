@@ -83,7 +83,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
   Widget _buildLeadingIcon(IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(kSpacing8),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.125),
         borderRadius: BorderRadius.circular(10),
@@ -185,7 +185,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 10, top: 12),
+          padding: const EdgeInsets.only(left: kSpacing4, bottom: kSpacing10, top: kSpacing12),
           child: Text(
             'SELECT CATEGORY',
             style: theme.textTheme.labelSmall?.copyWith(
@@ -249,7 +249,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           color: isSelected ? color : theme.colorScheme.onSurface,
                           size: 20,
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: kSpacing6),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: Text(
@@ -271,7 +271,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             },
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: kSpacing12),
       ],
     );
   }
@@ -335,7 +335,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   fontSize: 9,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: kSpacing4),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
@@ -352,10 +352,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: kSpacing4),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 350),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
                 decoration: BoxDecoration(
                   color: themeColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(100),
@@ -386,7 +386,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
     Widget sectionLabel(String label) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
+        padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing6),
         child: Text(
           label,
           style: TextStyle(
@@ -424,14 +424,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         data: (cats) => _buildBudgetHero(theme, cats),
                         orElse: () => _buildBudgetHero(theme, []),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: kSpacing16),
                       sectionLabel('BUDGET DETAILS'),
                       StaggeredFadeSlide(
                         index: 0,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           child: GlassCard(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(kSpacing16),
                             borderRadius: AppTheme.radiusCard,
                             child: Column(
                               children: [
@@ -445,14 +445,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   onChanged: (_) =>
                                       setState(() => _nameError = null),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: kSpacing16),
                                 categoriesAsync.when(
                                   data: (cats) => _buildCategorySelector(cats, theme),
                                   loading: () =>
                                       const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: kSpacing8),
                                 _InteractiveInputRow(
                                   controller: _amountController,
                                   label: 'Budget Amount (Tsh)',
@@ -473,14 +473,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       sectionLabel('PERIOD'),
                       StaggeredFadeSlide(
                         index: 1,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           child: GlassCard(
-                            padding: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(kSpacing6),
                             borderRadius: AppTheme.radiusCard,
                             child: SizedBox(
                               width: double.infinity,
@@ -490,19 +490,19 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 thumbColor: theme.colorScheme.surface,
                                 children: {
                                   'weekly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
                                     child: Text('Week', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'weekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                   ),
                                   'biweekly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
                                     child: Text('2 Wk', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'biweekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                   ),
                                   'monthly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
                                     child: Text('Month', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'monthly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                   ),
                                   'yearly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
                                     child: Text('Year', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'yearly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                   ),
                                 },
@@ -514,14 +514,14 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       sectionLabel('START DATE'),
                       StaggeredFadeSlide(
                         index: 2,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           child: GlassCard(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(kSpacing8),
                             borderRadius: AppTheme.radiusCard,
                             child: ModernDateSelector(
                               labelText: 'Start Date',
@@ -534,7 +534,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       IosListSection(
                         header: 'ROLLOVER',
                         rows: [
@@ -564,9 +564,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         StaggeredFadeSlide(
                           index: 3,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                             child: GlassCard(
-                              padding: const EdgeInsets.all(6),
+                              padding: const EdgeInsets.all(kSpacing6),
                               borderRadius: AppTheme.radiusCard,
                               child: Column(
                                 children: [
@@ -578,11 +578,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       thumbColor: theme.colorScheme.surface,
                                       children: {
                                         'all': Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
                                           child: Text('All', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'all' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                         ),
                                         'capped': Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
                                           child: Text('Capped', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'capped' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
                                         ),
                                       },
@@ -592,7 +592,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ),
                                   if (_rolloverType == 'capped') ...[
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: kSpacing10),
                                     _InteractiveInputRow(
                                       controller: _capController,
                                       label: 'Max Rollover (Tsh)',
@@ -612,12 +612,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       sectionLabel('ALERT THRESHOLD'),
                       StaggeredFadeSlide(
                         index: 4,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           child: GlassCard(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -640,7 +640,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           PesaFlowIcons.notification,
                                           thresholdColor,
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: Text(
                                             'Notify when spending reaches',
@@ -663,7 +663,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 12),
+                                    const SizedBox(height: kSpacing12),
                                     SliderTheme(
                                       data: SliderTheme.of(context).copyWith(
                                         trackHeight: 4,
@@ -702,11 +702,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 36),
+                      const SizedBox(height: kSpacing32),
                       StaggeredFadeSlide(
                         index: 5,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           child: TactileSpringContainer(
                             onTap: _save,
                             child: Container(
@@ -758,7 +758,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: kSpacing40),
                     ],
                   ),
                 ),
@@ -852,7 +852,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(kSpacing10),
               decoration: ShapeDecoration(
                 color: _isFocused
                     ? theme.colorScheme.primary.withValues(alpha: 0.1)
@@ -867,7 +867,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 size: 18,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: kSpacing14),
             Expanded(
               child: TextFormField(
                 controller: widget.controller,
@@ -899,7 +899,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                   errorBorder: InputBorder.none,
                   focusedErrorBorder: InputBorder.none,
                   errorText: widget.errorText,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 6),
+                  contentPadding: const EdgeInsets.symmetric(vertical: kSpacing6),
                 ),
               ),
             ),

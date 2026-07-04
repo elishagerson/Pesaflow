@@ -89,7 +89,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -180,7 +180,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                   color: theme.colorScheme.primary,
                   size: 20,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +195,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: kSpacing2),
                       Text(
                         formattedDate,
                         style: TextStyle(
@@ -217,9 +217,9 @@ class _ModernDateSelectorWidget extends StatelessWidget {
           ),
         ),
         if (errorText != null) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: kSpacing6),
           Padding(
-            padding: const EdgeInsets.only(left: 12.0),
+            padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
               style: TextStyle(color: theme.colorScheme.error, fontSize: 12),

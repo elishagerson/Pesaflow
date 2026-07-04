@@ -22,7 +22,7 @@ Future<Uint8List> generateMonthlyPdf(
   pdf.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4,
-      margin: const pw.EdgeInsets.all(32),
+      margin: const pw.EdgeInsets.all(kSpacing32),
       build: (context) => [
         pw.Header(
           level: 0,
@@ -35,12 +35,12 @@ Future<Uint8List> generateMonthlyPdf(
             ),
           ),
         ),
-        pw.SizedBox(height: 16),
+        pw.SizedBox(height: kSpacing16),
         pw.Header(
           level: 1,
           child: pw.Text('Summary', style: pw.TextStyle(fontSize: 16)),
         ),
-        pw.SizedBox(height: 8),
+        pw.SizedBox(height: kSpacing8),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
@@ -54,7 +54,7 @@ Future<Uint8List> generateMonthlyPdf(
                     fontSize: 12,
                   ),
                 ),
-                pw.SizedBox(height: 4),
+                pw.SizedBox(height: kSpacing4),
                 pw.Text(
                   'Expense:    TSh ${(expense / 100).toStringAsFixed(2)}',
                   style: pw.TextStyle(
@@ -62,7 +62,7 @@ Future<Uint8List> generateMonthlyPdf(
                     fontSize: 12,
                   ),
                 ),
-                pw.SizedBox(height: 4),
+                pw.SizedBox(height: kSpacing4),
                 pw.Text(
                   'Net Savings: TSh ${(netSavings / 100).toStringAsFixed(2)}',
                   style: pw.TextStyle(
@@ -77,27 +77,27 @@ Future<Uint8List> generateMonthlyPdf(
             ),
           ],
         ),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
           child: pw.Text('Account Balances', style: pw.TextStyle(fontSize: 16)),
         ),
-        pw.SizedBox(height: 8),
+        pw.SizedBox(height: kSpacing8),
         ...accounts.map(
           (acc) => pw.Padding(
-            padding: const pw.EdgeInsets.symmetric(vertical: 2),
+            padding: const pw.EdgeInsets.symmetric(vertical: kSpacing2),
             child: pw.Text(
               '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
               style: pw.TextStyle(fontSize: 11),
             ),
           ),
         ),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
           child: pw.Text('Transactions', style: pw.TextStyle(fontSize: 16)),
         ),
-        pw.SizedBox(height: 8),
+        pw.SizedBox(height: kSpacing8),
         pw.TableHelper.fromTextArray(
           headerStyle: pw.TextStyle(
             fontSize: 10,
@@ -128,12 +128,12 @@ Future<Uint8List> generateMonthlyPdf(
             ];
           }).toList(),
         ),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
           child: pw.Text('Notes', style: pw.TextStyle(fontSize: 16)),
         ),
-        pw.SizedBox(height: 8),
+        pw.SizedBox(height: kSpacing8),
         pw.Text(
           'This statement was generated automatically by PesaFlow. '
           'All amounts are in Tanzanian Shillings (TSh).',

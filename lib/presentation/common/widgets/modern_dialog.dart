@@ -119,7 +119,7 @@ class ModernDialog extends StatelessWidget {
                       children: [
                         if (titleIcon != null) ...[
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(kSpacing10),
                             decoration: BoxDecoration(
                               color: (iconColor ?? theme.colorScheme.primary)
                                   .withValues(alpha: 0.12),
@@ -131,7 +131,7 @@ class ModernDialog extends StatelessWidget {
                               size: 22,
                             ),
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: kSpacing14),
                         ],
                         Expanded(
                           child: DefaultTextStyle(
@@ -179,7 +179,7 @@ class ModernDialog extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: actions!.map((act) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
+                            padding: const EdgeInsets.only(left: kSpacing12),
                             child: act,
                           );
                         }).toList(),

@@ -193,7 +193,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
       backgroundColor: appColors.surfaceContainer,
       indicatorColor: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
       leading: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: kSpacing12),
         child: Column(
           children: [
             Container(
@@ -209,7 +209,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                 size: 20,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: kSpacing4),
             Text(
               'PesaFlow',
               style: theme.textTheme.labelSmall?.copyWith(
@@ -254,10 +254,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 48),
+          const SizedBox(height: kSpacing48),
           // App logo / brand
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing16),
             child: Row(
               children: [
                 Container(
@@ -273,7 +273,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                     size: 18,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Text(
                   'PesaFlow',
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -284,12 +284,12 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: kSpacing16),
           // Navigation items
           ...navItems.map((item) {
             final isSelected = widget.navigationShell.currentIndex == item.$3;
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing2),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -323,7 +323,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                                   alpha: 0.6,
                                 ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: kSpacing12),
                         Text(
                           item.$2,
                           style: theme.textTheme.bodyMedium?.copyWith(
@@ -347,7 +347,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
           const Spacer(),
           // Version
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(kSpacing16),
             child: Text(
               'PesaFlow v1.0.0',
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),

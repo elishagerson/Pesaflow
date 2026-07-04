@@ -155,7 +155,7 @@ class SectionHeader extends StatelessWidget {
               child: GestureDetector(
                 onTap: onAction,
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(kSpacing8),
                   child: Text(
                     actionLabel!,
                     style: context.bodySmall.copyWith(

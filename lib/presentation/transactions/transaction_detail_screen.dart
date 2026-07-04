@@ -34,7 +34,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           TactileSpringContainer(
             onTap: () => context.go('/transactions/edit/$transactionId'),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
                 color: onSurface.withValues(alpha: 0.06),
                 shape: BoxShape.circle,
@@ -42,11 +42,11 @@ class TransactionDetailScreen extends ConsumerWidget {
               child: Icon(PesaFlowIcons.edit, size: 18, color: onSurface),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: kSpacing8),
           TactileSpringContainer(
             onTap: () => _confirmDelete(context, ref),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
                 color: const Color(0xFFFF453A).withValues(alpha: 0.12),
                 shape: BoxShape.circle,
@@ -130,7 +130,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         // Scrollable Content
         SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing12, kSpacing16, kSpacing32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -149,7 +149,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       children: [
                         // Floating glowing icon circle
                         Container(
-                          padding: const EdgeInsets.all(18),
+                          padding: const EdgeInsets.all(kSpacing18),
                           decoration: BoxDecoration(
                             color: mutedCatColor.withValues(alpha: 0.14),
                             shape: BoxShape.circle,
@@ -171,7 +171,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             size: 34,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: kSpacing20),
                         // Merchant name / Description
                         Text(
                           t.description.isNotEmpty
@@ -185,7 +185,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: kSpacing8),
                         // Transaction Type Pill
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -210,7 +210,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 color: amountColor,
                                 size: 12,
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: kSpacing4),
                               Text(
                                 isIncome ? 'INCOME' : 'EXPENSE',
                                 style: TextStyle(
@@ -223,7 +223,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: kSpacing20),
                         // Display Amount
                         Text(
                           (isIncome ? '+ ' : '- ') +
@@ -239,7 +239,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
                         // Perforated Ticket Divider & Mask Cutouts
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 28),
+                          padding: const EdgeInsets.symmetric(vertical: kSpacing28),
                           child: Stack(
                             alignment: Alignment.center,
                             clipBehavior: Clip.none,
@@ -318,7 +318,7 @@ class TransactionDetailScreen extends ConsumerWidget {
 
                         // Extra Details
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: kSpacing20),
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
@@ -347,7 +347,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                       '📨',
                                       style: TextStyle(fontSize: 12),
                                     ),
-                                    const SizedBox(width: 6),
+                                    const SizedBox(width: kSpacing6),
                                     Text(
                                       t.source.startsWith('sms')
                                           ? 'Auto-imported via SMS'
@@ -368,10 +368,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ),
                         if (hasExtraDetails) ...[
                           Padding(
-                            padding: const EdgeInsets.only(top: 24),
+                            padding: const EdgeInsets.only(top: kSpacing24),
                             child: _divider(onSurface),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           if (t.reference != null &&
                               t.reference!.isNotEmpty) ...[
                             _copyableDetailRow(
@@ -384,7 +384,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           ],
                           if (t.sender != null && t.sender!.isNotEmpty) ...[
                             if (t.reference != null && t.reference!.isNotEmpty)
-                              const SizedBox(height: 12),
+                              const SizedBox(height: kSpacing12),
                             _copyableDetailRow(
                               context,
                               theme,
@@ -398,7 +398,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             if ((t.reference != null &&
                                     t.reference!.isNotEmpty) ||
                                 (t.sender != null && t.sender!.isNotEmpty))
-                              const SizedBox(height: 12),
+                              const SizedBox(height: kSpacing12),
                             _copyableDetailRow(
                               context,
                               theme,
@@ -413,7 +413,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 (t.sender != null && t.sender!.isNotEmpty) ||
                                 (t.recipient != null &&
                                     t.recipient!.isNotEmpty))
-                              const SizedBox(height: 12),
+                              const SizedBox(height: kSpacing12),
                             _detailRow(
                               theme,
                               PesaFlowIcons.loans,
@@ -426,17 +426,17 @@ class TransactionDetailScreen extends ConsumerWidget {
 
                         // Receipt Footer/Barcode
                         Padding(
-                          padding: const EdgeInsets.only(top: 28),
+                          padding: const EdgeInsets.only(top: kSpacing28),
                           child: _divider(onSurface),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: kSpacing24),
                         _buildBarcode(t.id, onSurface),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: kSpacing20),
 
               // Bottom Action Buttons
               StaggeredFadeSlide(
@@ -447,7 +447,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       child: GlassCard(
                         onTap: () => context.go('/transactions/edit/${t.id}'),
                         backgroundColor: onSurface.withValues(alpha: 0.045),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                         borderRadius: 16,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -457,7 +457,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               size: 16,
                               color: onSurface,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: kSpacing8),
                             Text(
                               'Edit Details',
                               style: TextStyle(
@@ -470,14 +470,14 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: kSpacing12),
                     Expanded(
                       child: GlassCard(
                         onTap: () => _confirmDelete(context, ref),
                         backgroundColor: const Color(
                           0xFFFF453A,
                         ).withValues(alpha: 0.12),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                         borderRadius: 16,
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -487,7 +487,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               size: 16,
                               color: Color(0xFFFF453A),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: kSpacing8),
                             Text(
                               'Delete',
                               style: TextStyle(
@@ -521,7 +521,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 20, color: iconColor),
-        const SizedBox(height: 6),
+        const SizedBox(height: kSpacing6),
         Text(
           label,
           style: const TextStyle(
@@ -530,7 +530,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             color: Colors.grey,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: kSpacing2),
         Text(
           value,
           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -595,11 +595,11 @@ class TransactionDetailScreen extends ConsumerWidget {
           },
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: kSpacing10, horizontal: kSpacing12),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.04),
                     shape: BoxShape.circle,
@@ -612,7 +612,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -625,7 +625,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           color: Colors.grey,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: kSpacing2),
                       Text(
                         value,
                         style: TextStyle(
@@ -637,7 +637,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Icon(
                   Icons.copy_rounded,
                   size: 14,
@@ -670,11 +670,11 @@ class TransactionDetailScreen extends ConsumerWidget {
           width: 0.5,
         ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: kSpacing10, horizontal: kSpacing12),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
               color: onSurface.withValues(alpha: 0.04),
               shape: BoxShape.circle,
@@ -685,7 +685,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: kSpacing12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -698,7 +698,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: kSpacing2),
                 Text(
                   value,
                   style: TextStyle(
@@ -723,7 +723,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       children: [
         Container(
           height: 36,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(24, (index) {
@@ -737,7 +737,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             }),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: kSpacing6),
         Text(
           'PESAFLOW-TXN-${id.length > 8 ? id.substring(0, 8).toUpperCase() : id.toUpperCase()}',
           style: TextStyle(

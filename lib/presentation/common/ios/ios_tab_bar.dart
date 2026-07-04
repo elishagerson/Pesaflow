@@ -117,7 +117,7 @@ class IosTabBar extends StatelessWidget {
                           curve: Curves.easeOutBack,
                           width: minimized ? 36 : 54,
                           height: minimized ? 36 : 54,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          margin: const EdgeInsets.symmetric(horizontal: kSpacing8),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: isSelected
@@ -204,7 +204,7 @@ class IosTabBar extends StatelessWidget {
                                 ),
                               ),
                               if (!minimized) ...[
-                                const SizedBox(height: 2),
+                                const SizedBox(height: kSpacing2),
                                 Text(
                                   tab.label,
                                   style: TextStyle(
@@ -314,7 +314,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
           if (largeTitle)
             Padding(
-              padding: const EdgeInsets.only(left: 16, top: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.only(left: kSpacing16, top: kSpacing8, bottom: kSpacing8),
               child: Text(
                 title,
                 style: TextStyle(

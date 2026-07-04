@@ -113,11 +113,11 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
         // Beautiful glassmorphic dialog card content
         Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
             child: Material(
               color: Colors.transparent,
               child: Container(
-                padding: const EdgeInsets.all(28),
+                padding: const EdgeInsets.all(kSpacing28),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHigh.withValues(
                     alpha: 0.93,
@@ -156,7 +156,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                         size: 38,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: kSpacing20),
 
                     // Celebration Swahili & English Headers
                     Text(
@@ -167,7 +167,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: kSpacing4),
                     Text(
                       'Goal Achieved!',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -176,7 +176,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: kSpacing16),
 
                     // Completed Details text
                     Text(
@@ -188,7 +188,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: kSpacing10),
                     Text(
                       widget.goalName,
                       style: theme.textTheme.titleLarge?.copyWith(
@@ -196,7 +196,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     Text(
                       CurrencyFormatter.formatCents(widget.targetAmount),
                       style: theme.textTheme.titleLarge?.copyWith(
@@ -206,7 +206,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: kSpacing28),
 
                     // Bouncing tactile confirmation button
                     SizedBox(

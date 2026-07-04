@@ -62,12 +62,12 @@ class _ShimmerCardState extends State<ShimmerCard>
       child: _ShimmerEffect(
         animation: _animation,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing8),
           child: Row(
             children: [
               if (widget.leading != null) ...[
                 widget.leading!,
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
               ],
               Expanded(
                 child: Column(
@@ -87,7 +87,7 @@ class _ShimmerCardState extends State<ShimmerCard>
                 ),
               ),
               if (widget.trailing != null) ...[
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 widget.trailing!,
               ],
             ],

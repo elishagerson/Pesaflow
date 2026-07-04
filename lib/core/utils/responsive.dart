@@ -117,13 +117,13 @@ EdgeInsets responsiveHorizontalPadding(BuildContext context) {
   final s = getScreenSize(context);
   switch (s) {
     case ScreenSize.smallPhone:
-      return const EdgeInsets.symmetric(horizontal: 12);
+      return const EdgeInsets.symmetric(horizontal: kSpacing12);
     case ScreenSize.phone:
-      return const EdgeInsets.symmetric(horizontal: 16);
+      return const EdgeInsets.symmetric(horizontal: kSpacing16);
     case ScreenSize.smallTablet:
-      return const EdgeInsets.symmetric(horizontal: 24);
+      return const EdgeInsets.symmetric(horizontal: kSpacing24);
     case ScreenSize.largeTablet:
-      return const EdgeInsets.symmetric(horizontal: 32);
+      return const EdgeInsets.symmetric(horizontal: kSpacing32);
     case ScreenSize.desktop:
       return EdgeInsets.symmetric(
         horizontal: MediaQuery.sizeOf(context).width * 0.15,

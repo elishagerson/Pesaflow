@@ -52,7 +52,7 @@ class IosBottomSheet extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                const SizedBox(height: 8),
+                const SizedBox(height: kSpacing8),
                 Container(
                   width: 36,
                   height: 5,
@@ -61,14 +61,14 @@ class IosBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: kSpacing10),
                 Expanded(
                   child: RawScrollbar(
                     controller: scrollController,
                     child: SingleChildScrollView(
                       controller: scrollController,
                       physics: const ClampingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
                       child: child,
                     ),
                   ),

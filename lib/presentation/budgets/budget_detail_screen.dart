@@ -150,7 +150,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(kSpacing16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -228,7 +228,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: kSpacing24),
 
                         // Stats row
                         StaggeredFadeSlide(
@@ -245,7 +245,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   theme: theme,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: kSpacing12),
                               Expanded(
                                 child: _StatCard(
                                   label: 'Remaining',
@@ -256,7 +256,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   theme: theme,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: kSpacing12),
                               Expanded(
                                 child: _StatCard(
                                   label: 'Allocated',
@@ -268,13 +268,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: kSpacing20),
 
                         // Pace card
                         StaggeredFadeSlide(
                           index: 2,
                           child: GlassCard(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(kSpacing16),
                             frosted: false,
                             child: Row(
                               children: [
@@ -287,7 +287,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       : Colors.orange,
                                   size: 28,
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: kSpacing12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -311,7 +311,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           status.percentage > 0)
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            top: 4,
+                                            top: kSpacing4,
                                           ),
                                           child: Text(
                                             _projectedOverspendDate(status),
@@ -329,7 +329,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: kSpacing24),
 
                         // Daily spend bar chart
                         dailyAsync.when(
@@ -351,7 +351,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: kSpacing12),
                                   SizedBox(
                                     height: 120,
                                     child: BarChart(
@@ -386,7 +386,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                 return Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                        top: 4,
+                                                        top: kSpacing4,
                                                       ),
                                                   child: Text(
                                                     '${value.toInt()}',
@@ -435,11 +435,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                           loading: () => const SizedBox.shrink(),
                           error: (_, _) => const SizedBox.shrink(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: kSpacing16),
 
                         // Previous period comparison
                         _buildPeriodComparison(periodsAsync, bp, theme),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: kSpacing24),
 
                         // Period info
                         StaggeredFadeSlide(
@@ -462,7 +462,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: kSpacing20),
 
                         // Historical Periods
                         StaggeredFadeSlide(
@@ -474,7 +474,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: kSpacing12),
                         periodsAsync.when(
                           data: (periods) => Column(
                             children: periods.asMap().entries.map((entry) {
@@ -486,8 +486,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                               return StaggeredFadeSlide(
                                 index: 7 + idx,
                                 child: GlassCard(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.all(12),
+                                  margin: const EdgeInsets.only(bottom: kSpacing8),
+                                  padding: const EdgeInsets.all(kSpacing12),
                                   borderRadius: 8,
                                   frosted: false,
                                   child: Row(
@@ -499,7 +499,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         size: 16,
                                         color: Colors.grey,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -613,7 +613,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                 size: 14,
                 color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: kSpacing4),
               Text(
                 '${diff.abs().round()}% ${diff > 0 ? 'higher' : 'lower'} than last period',
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -646,13 +646,13 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassCard(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(kSpacing12),
       frosted: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          const SizedBox(height: 4),
+          const SizedBox(height: kSpacing4),
           AmountText(
             amountInCents: amount.abs(),
             style: TextStyle(

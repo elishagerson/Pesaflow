@@ -163,14 +163,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             // Progress dots
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: kSpacing16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   4,
                   (i) => AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: kSpacing4),
                     width: i == _currentPage ? 24 : 8,
                     height: 8,
                     decoration: BoxDecoration(
@@ -206,7 +206,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
             // Bottom buttons
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(kSpacing24),
               child: _currentPage == 3
                   ? Column(
                       mainAxisSize: MainAxisSize.min,
@@ -216,7 +216,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           onTap: () => _finish(seedDemo: true),
                           child: Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -251,7 +251,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           onTap: () => _finish(seedDemo: false),
                           child: Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: theme.colorScheme.outline,
@@ -335,12 +335,12 @@ class _WelcomePage extends StatelessWidget {
     return StaggeredFadeSlide(
       index: 0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(28),
+              padding: const EdgeInsets.all(kSpacing28),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -356,7 +356,7 @@ class _WelcomePage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: kSpacing32),
             Text(
               'Welcome to PesaFlow',
               style: theme.textTheme.headlineMedium?.copyWith(
@@ -364,7 +364,7 @@ class _WelcomePage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Text(
               'Track your finances offline.\n100% private — data never leaves your device.',
               textAlign: TextAlign.center,
@@ -392,14 +392,14 @@ class _SmsPermissionPage extends StatelessWidget {
     return StaggeredFadeSlide(
       index: 0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Stack(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(kSpacing24),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
@@ -415,7 +415,7 @@ class _SmsPermissionPage extends StatelessWidget {
                     right: 0,
                     bottom: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(kSpacing4),
                       decoration: BoxDecoration(
                         color: AppTheme.incomeColor,
                         shape: BoxShape.circle,
@@ -433,7 +433,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: kSpacing32),
             Text(
               'SMS Auto-Tracking',
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -441,7 +441,7 @@ class _SmsPermissionPage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Text(
               'PesaFlow can automatically read M-Pesa, Airtel Money, and bank SMS to log your transactions — no typing needed.',
               textAlign: TextAlign.center,
@@ -449,9 +449,9 @@ class _SmsPermissionPage extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: kSpacing24),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(kSpacing16),
               decoration: BoxDecoration(
                 color: theme.brightness == Brightness.dark
                     ? AppTheme.surfaceContainerDark
@@ -470,7 +470,7 @@ class _SmsPermissionPage extends StatelessWidget {
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                   Expanded(
                     child: Text(
                       'SMS data is processed locally and never sent anywhere.',
@@ -482,7 +482,7 @@ class _SmsPermissionPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -493,7 +493,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   size: 14,
                   color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: kSpacing6),
                 Text(
                   permissionGranted
                       ? 'SMS Permission Granted'
@@ -529,11 +529,11 @@ class _AccountsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 24),
+          const SizedBox(height: kSpacing24),
           StaggeredFadeSlide(
             index: 0,
             child: Text(
@@ -544,7 +544,7 @@ class _AccountsPage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: kSpacing8),
           StaggeredFadeSlide(
             index: 1,
             child: Text(
@@ -554,7 +554,7 @@ class _AccountsPage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: kSpacing24),
           Expanded(
             child: GridView.count(
               crossAxisCount: 2,
@@ -599,12 +599,12 @@ class _AccountsPage extends StatelessWidget {
                               ]
                             : null,
                       ),
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(kSpacing16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(kSpacing10),
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? theme.colorScheme.primary.withValues(
@@ -623,7 +623,7 @@ class _AccountsPage extends StatelessWidget {
                               size: 24,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: kSpacing12),
                           Text(
                             e.key,
                             textAlign: TextAlign.center,
@@ -639,7 +639,7 @@ class _AccountsPage extends StatelessWidget {
                                         : Colors.grey[700]),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: kSpacing8),
                           // Mini check bubble
                           Container(
                             width: 18,
@@ -686,12 +686,12 @@ class _CompletePage extends StatelessWidget {
     return StaggeredFadeSlide(
       index: 0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(kSpacing24),
               decoration: BoxDecoration(
                 color: AppTheme.incomeColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
@@ -702,7 +702,7 @@ class _CompletePage extends StatelessWidget {
                 color: AppTheme.incomeColor,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: kSpacing32),
             Text(
               'You\'re All Set!',
               style: theme.textTheme.headlineMedium?.copyWith(
@@ -710,7 +710,7 @@ class _CompletePage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: kSpacing16),
             Text(
               'Your offline finance tracker is ready.\nStart recording transactions and take control of your money.',
               textAlign: TextAlign.center,

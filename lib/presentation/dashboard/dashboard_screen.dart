@@ -1319,7 +1319,7 @@ class _SummaryNavCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: kSpacing2),
                   Text(
                     label,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -1468,7 +1468,7 @@ class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
           height: height,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: kSpacing8),
             clipBehavior: Clip.none,
             itemCount: insights.length,
             separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),

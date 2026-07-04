@@ -83,7 +83,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                     itemBuilder: (context, index) {
                       final page = _pages[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing32),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -107,7 +107,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                                 color: accentColor,
                               ),
                             ),
-                            const SizedBox(height: 40),
+                            const SizedBox(height: kSpacing40),
                             Text(
                               page.title,
                               style: TextStyle(
@@ -116,7 +116,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                                 color: theme.colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: kSpacing16),
                             Text(
                               page.description,
                               textAlign: TextAlign.center,
@@ -133,7 +133,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 48),
+                  padding: const EdgeInsets.only(bottom: kSpacing48),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -143,7 +143,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                           _pages.length,
                           (i) => AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            margin: const EdgeInsets.symmetric(horizontal: kSpacing4),
                             width: _currentPage == i ? 24 : 8,
                             height: 8,
                             decoration: BoxDecoration(
@@ -155,7 +155,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: kSpacing32),
                       FilledButton(
                         onPressed: _next,
                         style: FilledButton.styleFrom(

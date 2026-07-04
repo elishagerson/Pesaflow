@@ -88,15 +88,15 @@ class BudgetListScreen extends ConsumerWidget {
                       data: (budgets) =>
                           _buildCategoryBudgets(context, ref, budgets, theme),
                       loading: () => const Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(kSpacing16),
                         child: Column(
                           children: [
                             SkeletonCard(height: 120),
-                            SizedBox(height: 10),
+                            SizedBox(height: kSpacing10),
                             SkeletonCard(height: 120),
-                            SizedBox(height: 10),
+                            SizedBox(height: kSpacing10),
                             SkeletonCard(height: 120),
-                            SizedBox(height: 10),
+                            SizedBox(height: kSpacing10),
                             SkeletonCard(height: 120),
                           ],
                         ),
@@ -124,7 +124,7 @@ class BudgetListScreen extends ConsumerWidget {
         top: kSpacing16,
         bottom: kSpacing8,
       ),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(kSpacing3),
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.065),
         borderRadius: BorderRadius.circular(100),
@@ -222,7 +222,7 @@ class BudgetListScreen extends ConsumerWidget {
             context.go('/budgets/add');
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing14),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary,
               borderRadius: BorderRadius.circular(100),
@@ -282,7 +282,7 @@ class BudgetListScreen extends ConsumerWidget {
           children: [
             // Summary Card
             GlassCard(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(kSpacing20),
               borderRadius: 20,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +295,7 @@ class BudgetListScreen extends ConsumerWidget {
                       letterSpacing: 0.3,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: kSpacing12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -373,7 +373,7 @@ class BudgetListScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
 
             // Budget cards list
             StaggeredList(
@@ -396,7 +396,7 @@ class BudgetListScreen extends ConsumerWidget {
                 return Hero(
                   tag: 'budget-${bp.budget.id}',
                   child: Container(
-                    margin: const EdgeInsets.only(bottom: 14),
+                    margin: const EdgeInsets.only(bottom: kSpacing14),
                     child: GlassCard(
                       borderRadius: 20,
                       onTap: () => context.go('/budgets/${bp.budget.id}'),
@@ -410,7 +410,7 @@ class BudgetListScreen extends ConsumerWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(kSpacing8),
                                 decoration: BoxDecoration(
                                   color: mutedCatColor.withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(12),
@@ -421,7 +421,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   size: 22,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: kSpacing12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,7 +649,7 @@ class BudgetListScreen extends ConsumerWidget {
               children: [
                 // Overall Savings Summary Box
                 GlassCard(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   borderRadius: 20,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -761,7 +761,7 @@ class BudgetListScreen extends ConsumerWidget {
                         );
                       },
                       child: Container(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: const EdgeInsets.only(bottom: kSpacing12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
                             AppTheme.radiusCard,
@@ -830,7 +830,7 @@ class BudgetListScreen extends ConsumerWidget {
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(width: 14),
+                                          const SizedBox(width: kSpacing14),
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
@@ -940,7 +940,7 @@ class BudgetListScreen extends ConsumerWidget {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 14),
+                                      const SizedBox(height: kSpacing14),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -1002,15 +1002,15 @@ class BudgetListScreen extends ConsumerWidget {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(kSpacing16),
         child: Column(
           children: [
             SkeletonCard(height: 130),
-            SizedBox(height: 12),
+            SizedBox(height: kSpacing12),
             SkeletonCard(height: 130),
-            SizedBox(height: 12),
+            SizedBox(height: kSpacing12),
             SkeletonCard(height: 130),
-            SizedBox(height: 12),
+            SizedBox(height: kSpacing12),
             SkeletonCard(height: 130),
           ],
         ),

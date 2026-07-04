@@ -74,7 +74,7 @@ class PremiumExtendedFab extends StatelessWidget {
       onTap: onPressed,
       scaleFactor: 0.95,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
           gradient: LinearGradient(
@@ -101,7 +101,7 @@ class PremiumExtendedFab extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, color: theme.colorScheme.onPrimary, size: 20),
-            const SizedBox(width: 8),
+            const SizedBox(width: kSpacing8),
             Text(
               label,
               style: theme.textTheme.labelLarge?.copyWith(

@@ -217,7 +217,7 @@ class _RecurringTransactionFormScreenState
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(kSpacing16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -264,7 +264,7 @@ class _RecurringTransactionFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 1,
                 child: categoriesAsync.when(
@@ -314,7 +314,7 @@ class _RecurringTransactionFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 2,
                 child: TextFormField(
@@ -342,7 +342,7 @@ class _RecurringTransactionFormScreenState
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 3,
                 child: SegmentedButton<String>(
@@ -369,7 +369,7 @@ class _RecurringTransactionFormScreenState
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 4,
                 child: TextField(
@@ -389,7 +389,7 @@ class _RecurringTransactionFormScreenState
                 ),
               ),
               if (_type == 'expense') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 4,
                   child: TextField(
@@ -408,7 +408,7 @@ class _RecurringTransactionFormScreenState
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 5,
                 child: DropdownButtonFormField<String>(
@@ -444,7 +444,7 @@ class _RecurringTransactionFormScreenState
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 6,
                 child: Row(
@@ -472,7 +472,7 @@ class _RecurringTransactionFormScreenState
                         },
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: kSpacing12),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -502,7 +502,7 @@ class _RecurringTransactionFormScreenState
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 7,
                 child: InkWell(
@@ -531,7 +531,7 @@ class _RecurringTransactionFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 8,
                 child: InkWell(
@@ -575,14 +575,14 @@ class _RecurringTransactionFormScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: kSpacing32),
               StaggeredFadeSlide(
                 index: 9,
                 child: TactileSpringContainer(
                   onTap: _isLoading ? null : _submit,
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                     decoration: BoxDecoration(
                       color: _isLoading
                           ? Colors.grey

@@ -186,7 +186,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 ),
                 child: Container(
                   height: 38,
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(kSpacing3),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(100),
@@ -281,7 +281,7 @@ class _OverviewTab extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(kSpacing16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -300,7 +300,7 @@ class _OverviewTab extends StatelessWidget {
               return StaggeredFadeSlide(
                 index: 0,
                 child: GlassCard(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   frosted: true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +316,7 @@ class _OverviewTab extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: kSpacing16),
                       Row(
                         children: [
                           Expanded(
@@ -369,7 +369,7 @@ class _OverviewTab extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       Divider(
                         height: 0.5,
                         thickness: 0.5,
@@ -377,7 +377,7 @@ class _OverviewTab extends StatelessWidget {
                           alpha: 0.06,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: kSpacing8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -407,7 +407,7 @@ class _OverviewTab extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: kSpacing4),
                       Text(
                         'Savings rate: $savingsRate%',
                         style: TextStyle(
@@ -428,7 +428,7 @@ class _OverviewTab extends StatelessWidget {
             ),
             error: (e, _) => Text('Error: $e'),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kSpacing20),
 
           // Savings Goal Bento Box
           ref
@@ -442,7 +442,7 @@ class _OverviewTab extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
                         itemCount: goals.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 12),
+                        separatorBuilder: (_, _) => const SizedBox(width: kSpacing12),
                         itemBuilder: (context, index) {
                           final goal = goals[index];
                           final goalColor = hexToColor(goal.color);
@@ -470,7 +470,7 @@ class _OverviewTab extends StatelessWidget {
                               child: SizedBox(
                                 width: 250,
                                 child: GlassCard(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(kSpacing16),
                                   frosted: true,
                                   child: Row(
                                     children: [
@@ -527,7 +527,7 @@ class _OverviewTab extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      const SizedBox(width: kSpacing16),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -544,7 +544,7 @@ class _OverviewTab extends StatelessWidget {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            const SizedBox(height: 4),
+                                            const SizedBox(height: kSpacing4),
                                             Text(
                                               '$percentInt% Completed',
                                               style: TextStyle(
@@ -553,7 +553,7 @@ class _OverviewTab extends StatelessWidget {
                                                 fontSize: 12,
                                               ),
                                             ),
-                                            const SizedBox(height: 2),
+                                            const SizedBox(height: kSpacing2),
                                             Text(
                                               'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
                                               style: const TextStyle(
@@ -583,7 +583,7 @@ class _OverviewTab extends StatelessWidget {
 
                     return Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(kSpacing20),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.03,
@@ -604,7 +604,7 @@ class _OverviewTab extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(kSpacing8),
                                 decoration: BoxDecoration(
                                   color: AppTheme.transferColorDark.withValues(
                                     alpha: 0.12,
@@ -617,7 +617,7 @@ class _OverviewTab extends StatelessWidget {
                                   size: 20,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: kSpacing12),
                               Expanded(
                                 child: Text(
                                   'SET A SAVINGS GOAL',
@@ -630,7 +630,7 @@ class _OverviewTab extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: kSpacing14),
                           Text(
                             netSavings > 0
                                 ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
@@ -643,7 +643,7 @@ class _OverviewTab extends StatelessWidget {
                               height: 1.4,
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           SizedBox(
                             width: double.infinity,
                             height: 44,
@@ -684,11 +684,11 @@ class _OverviewTab extends StatelessWidget {
                 ),
                 error: (_, _) => const SizedBox(),
               ),
-          const SizedBox(height: 24),
+          const SizedBox(height: kSpacing24),
 
           // Category Donut inside a beautiful GlassCard
           GlassCard(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(kSpacing20),
             frosted: true,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,7 +702,7 @@ class _OverviewTab extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: kSpacing20),
                 categoriesAsync.when(
                   data: (cats) {
                     if (cats.isEmpty) {
@@ -762,7 +762,7 @@ class _OverviewTab extends StatelessWidget {
                                         letterSpacing: 1.0,
                                       ),
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: kSpacing2),
                                     Text(
                                       '${(total / 1000.0).toStringAsFixed(0)}k',
                                       style: theme.textTheme.titleSmall?.copyWith(
@@ -778,7 +778,7 @@ class _OverviewTab extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: kSpacing20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -797,7 +797,7 @@ class _OverviewTab extends StatelessWidget {
                               return StaggeredFadeSlide(
                                 index: i,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  padding: const EdgeInsets.only(bottom: kSpacing10),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -820,7 +820,7 @@ class _OverviewTab extends StatelessWidget {
                                                       BorderRadius.circular(2),
                                                 ),
                                               ),
-                                              const SizedBox(width: 8),
+                                              const SizedBox(width: kSpacing8),
                                               Text(
                                                 cat.categoryName,
                                                 style: const TextStyle(
@@ -841,7 +841,7 @@ class _OverviewTab extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: kSpacing4),
                                       // Curved progress track
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(
@@ -916,7 +916,7 @@ class _TrendsTab extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing6),
         decoration: BoxDecoration(
           color: isSelected ? theme.colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(100),
@@ -942,7 +942,7 @@ class _TrendsTab extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(kSpacing16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -961,7 +961,7 @@ class _TrendsTab extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: kSpacing4),
                       Text(
                         currentRange == TrendRange.days
                             ? 'Curved trend waves over the last 14 days'
@@ -976,7 +976,7 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(kSpacing2),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(100),
@@ -1007,7 +1007,7 @@ class _TrendsTab extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kSpacing20),
           trendPointsAsync.when(
             data: (points) {
               if (points.isEmpty) {
@@ -1037,7 +1037,7 @@ class _TrendsTab extends StatelessWidget {
               return StaggeredFadeSlide(
                 index: 1,
                 child: GlassCard(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   frosted: true,
                   child: Column(
                     children: [
@@ -1135,7 +1135,7 @@ class _TrendsTab extends StatelessWidget {
                                       return const SizedBox();
                                     }
                                     return Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
+                                      padding: const EdgeInsets.only(top: kSpacing8),
                                       child: Text(
                                         points[idx].label,
                                         textAlign: TextAlign.center,
@@ -1226,7 +1226,7 @@ class _TrendsTab extends StatelessWidget {
             ),
             error: (e, _) => Text('Error: $e'),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: kSpacing20),
           StaggeredFadeSlide(
             index: 2,
             child: Row(
@@ -1240,7 +1240,7 @@ class _TrendsTab extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: kSpacing6),
                 const Text(
                   'Income',
                   style: TextStyle(
@@ -1249,7 +1249,7 @@ class _TrendsTab extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 24),
+                const SizedBox(width: kSpacing24),
                 Container(
                   width: 8,
                   height: 8,
@@ -1258,7 +1258,7 @@ class _TrendsTab extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: kSpacing6),
                 const Text(
                   'Expense',
                   style: TextStyle(
@@ -1330,7 +1330,7 @@ class _InsightsTab extends StatelessWidget {
         }
         return ListView.builder(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(kSpacing16),
           itemCount: insights.length,
           itemBuilder: (context, index) {
             final insight = insights[index];
@@ -1339,7 +1339,7 @@ class _InsightsTab extends StatelessWidget {
             return StaggeredFadeSlide(
               index: index,
               child: GlassCard(
-                margin: const EdgeInsets.only(bottom: 14),
+                margin: const EdgeInsets.only(bottom: kSpacing14),
                 frosted: true,
                 child: IntrinsicHeight(
                   child: Row(
@@ -1367,7 +1367,7 @@ class _InsightsTab extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(kSpacing10),
                                 decoration: BoxDecoration(
                                   color: color.withValues(alpha: 0.12),
                                   shape: BoxShape.circle,
@@ -1378,7 +1378,7 @@ class _InsightsTab extends StatelessWidget {
                                   size: 20,
                                 ),
                               ),
-                              const SizedBox(width: 14),
+                              const SizedBox(width: kSpacing14),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1391,7 +1391,7 @@ class _InsightsTab extends StatelessWidget {
                                             letterSpacing: -0.2,
                                           ),
                                     ),
-                                    const SizedBox(height: 6),
+                                    const SizedBox(height: kSpacing6),
                                     Text(
                                       insight.message,
                                       style: theme.textTheme.bodySmall

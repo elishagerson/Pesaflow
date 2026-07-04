@@ -65,7 +65,7 @@ class LoanProgressRing extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: kSpacing16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,7 @@ class LoanProgressRing extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: kSpacing4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,7 +112,7 @@ class LoanProgressRing extends StatelessWidget {
                 ],
               ),
               if (totalInstallments > 0) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: kSpacing4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -165,7 +165,7 @@ class QuickAmountChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: kSpacing10),
           decoration: BoxDecoration(
             color: isActive
                 ? const Color(0xFF10B981).withValues(alpha: 0.15)
@@ -189,7 +189,7 @@ class QuickAmountChip extends StatelessWidget {
                       : onSurface.withValues(alpha: 0.7),
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: kSpacing2),
               Text(
                 CurrencyFormatter.formatCents(amount),
                 style: TextStyle(
@@ -252,7 +252,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: kSpacing10),
                         Container(
                           width: 38,
                           height: 5,
@@ -261,21 +261,21 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: kSpacing16),
                         Expanded(
                           child: RawScrollbar(
                             controller: scrollController,
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                              padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing0, kSpacing20, kSpacing24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(kSpacing10),
                                         decoration: BoxDecoration(
                                           color: const Color(
                                             0xFF609F8A,
@@ -288,7 +288,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           size: 22,
                                         ),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: kSpacing14),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -300,7 +300,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(height: 2),
+                                          const SizedBox(height: kSpacing2),
                                           Text(
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
                                             style: TextStyle(
@@ -314,12 +314,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   LoanProgressRing(
                                     loan: loan,
                                     remainingCents: remainingCents,
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   const Text(
                                     'PAYMENT AMOUNT',
                                     style: TextStyle(
@@ -328,14 +328,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       letterSpacing: 0.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   _buildAmountField(
                                     theme: theme,
                                     amountController: amountController,
                                     paymentAmount: paymentAmount,
                                     setSheetState: setSheetState,
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: kSpacing16),
                                   Row(
                                     children: [
                                       QuickAmountChip(
@@ -360,7 +360,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '50%',
                                         amount: (remainingCents * 0.5).round(),
@@ -383,7 +383,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '75%',
                                         amount: (remainingCents * 0.75).round(),
@@ -406,7 +406,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '100%',
                                         amount: remainingCents,
@@ -429,7 +429,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   const Text(
                                     'MEMO',
                                     style: TextStyle(
@@ -438,7 +438,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       letterSpacing: 0.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
@@ -480,7 +480,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -510,7 +510,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   FutureBuilder<List<Account>>(
                                     future: ref
                                         .read(accountRepositoryProvider)
@@ -519,7 +519,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       final accounts = snapshot.data ?? [];
                                       if (accounts.isEmpty) {
                                         return Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(kSpacing16),
                                           decoration: BoxDecoration(
                                             color: const Color(
                                               0xFFE53935,
@@ -540,7 +540,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 size: 18,
                                                 color: Color(0xFFE53935),
                                               ),
-                                              const SizedBox(width: 10),
+                                              const SizedBox(width: kSpacing10),
                                               Text(
                                                 'No accounts available. Create one first.',
                                                 style: TextStyle(
@@ -563,7 +563,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               balanceCents >= paymentAmount();
                                           return Padding(
                                             padding: const EdgeInsets.only(
-                                              bottom: 8,
+                                              bottom: kSpacing8,
                                             ),
                                             child: GestureDetector(
                                               onTap: () => setSheetState(
@@ -640,7 +640,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   ),
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 12),
+                                                    const SizedBox(width: kSpacing12),
                                                     Expanded(
                                                       child: Column(
                                                         crossAxisAlignment:
@@ -763,7 +763,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       );
                                     },
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   SizedBox(
                                     width: double.infinity,
                                     height: 54,
@@ -867,7 +867,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                     ),
                                                   if (paymentAmount() > 0 &&
                                                       selectedAccountId != null)
-                                                    const SizedBox(width: 8),
+                                                    const SizedBox(width: kSpacing8),
                                                   Text(
                                                     paymentAmount() <= 0
                                                         ? 'Enter an amount'
@@ -917,7 +917,7 @@ Widget _buildAmountField({
       borderRadius: BorderRadius.circular(16),
       border: Border.all(color: onSurface.withValues(alpha: 0.07)),
     ),
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
     child: Row(
       children: [
         Text(
@@ -928,7 +928,7 @@ Widget _buildAmountField({
             color: onSurface.withValues(alpha: 0.55),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: kSpacing12),
         Expanded(
           child: TextField(
             controller: amountController,
@@ -946,7 +946,7 @@ Widget _buildAmountField({
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 12),
+              contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
             ),
             onChanged: (val) {
               setSheetState(() {});
@@ -960,7 +960,7 @@ Widget _buildAmountField({
               setSheetState(() {});
             },
             child: Container(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(kSpacing4),
               decoration: BoxDecoration(
                 color: onSurface.withValues(alpha: 0.07),
                 shape: BoxShape.circle,

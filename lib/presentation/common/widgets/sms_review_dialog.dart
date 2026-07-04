@@ -83,9 +83,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       ),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+      insetPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing40),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(kSpacing20),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -98,7 +98,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     color: theme.colorScheme.primary,
                     size: 22,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: kSpacing8),
                   Text(
                     'New Transaction',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -116,10 +116,10 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(kSpacing14),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHighest.withValues(
                     alpha: 0.3,
@@ -136,7 +136,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: kSpacing6),
                     Text(
                       trans.description.isNotEmpty
                           ? trans.description
@@ -146,7 +146,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: kSpacing4),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
@@ -167,14 +167,14 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               Text(
                 'Assign Category',
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -198,11 +198,11 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                 onChanged: (v) =>
                     setState(() => _searchQuery = v.toLowerCase()),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: kSpacing8),
               if (categories.isEmpty)
                 const Center(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(kSpacing16),
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 )
@@ -211,7 +211,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   height: 180,
                   child: ListView.separated(
                     itemCount: categories.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 2),
+                    separatorBuilder: (_, _) => const SizedBox(height: kSpacing2),
                     itemBuilder: (context, index) {
                       final cat = categories[index];
                       final isSelected = cat.id == _selectedCategoryId;
@@ -230,7 +230,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         leading: Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(kSpacing6),
                           decoration: BoxDecoration(
                             color: hexToColor(
                               cat.color,
@@ -270,7 +270,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     },
                   ),
                 ),
-              const SizedBox(height: 16),
+              const SizedBox(height: kSpacing16),
               Row(
                 children: [
                   Expanded(
@@ -283,21 +283,21 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         side: BorderSide(
                           color: theme.colorScheme.error.withValues(alpha: 0.4),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: _approve,
                       icon: const Icon(Icons.check_rounded, size: 18),
                       label: const Text('Approve'),
                       style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

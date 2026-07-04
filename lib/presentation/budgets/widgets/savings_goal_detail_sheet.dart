@@ -203,7 +203,7 @@ class _SavingsGoalDetailSheetState
                       return Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           Container(
                             width: 38,
                             height: 5,
@@ -212,7 +212,7 @@ class _SavingsGoalDetailSheetState
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Expanded(
                             child: RawScrollbar(
                               controller: scrollController,
@@ -232,7 +232,7 @@ class _SavingsGoalDetailSheetState
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(kSpacing10),
                                           decoration: BoxDecoration(
                                             color: accentColor.withValues(
                                               alpha: 0.12,
@@ -247,7 +247,7 @@ class _SavingsGoalDetailSheetState
                                             size: 22,
                                           ),
                                         ),
-                                        const SizedBox(width: 14),
+                                        const SizedBox(width: kSpacing14),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -262,7 +262,7 @@ class _SavingsGoalDetailSheetState
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              const SizedBox(height: 2),
+                                              const SizedBox(height: kSpacing2),
                                               Text(
                                                 isDeposit
                                                     ? 'Add money to your savings goal'
@@ -279,7 +279,7 @@ class _SavingsGoalDetailSheetState
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 24),
+                                    const SizedBox(height: kSpacing24),
 
                                     // Amount Entry
                                     const Text(
@@ -290,7 +290,7 @@ class _SavingsGoalDetailSheetState
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: kSpacing8),
                                     Container(
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.surface,
@@ -315,7 +315,7 @@ class _SavingsGoalDetailSheetState
                                               color: accentColor,
                                             ),
                                           ),
-                                          const SizedBox(width: 12),
+                                          const SizedBox(width: kSpacing12),
                                           Expanded(
                                             child: TextFormField(
                                               controller: _amountController,
@@ -413,7 +413,7 @@ class _SavingsGoalDetailSheetState
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: kSpacing20),
 
                                     // Note
                                     const Text(
@@ -424,7 +424,7 @@ class _SavingsGoalDetailSheetState
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: kSpacing8),
                                     TextFormField(
                                       controller: _noteController,
                                       textCapitalization:
@@ -485,7 +485,7 @@ class _SavingsGoalDetailSheetState
                                             ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
+                                    const SizedBox(height: kSpacing20),
 
                                     // Wallet deduct toggle
                                     Container(
@@ -524,7 +524,7 @@ class _SavingsGoalDetailSheetState
                                                           color: onSurface,
                                                         ),
                                                       ),
-                                                      const SizedBox(height: 2),
+                                                      const SizedBox(height: kSpacing2),
                                                       Text(
                                                         'Updates real balance & logs a transaction',
                                                         style: TextStyle(
@@ -573,7 +573,7 @@ class _SavingsGoalDetailSheetState
                                                       alpha: 0.38,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10),
+                                                  const SizedBox(width: kSpacing10),
                                                   const Expanded(
                                                     child: Text(
                                                       'Source Account',
@@ -628,7 +628,7 @@ class _SavingsGoalDetailSheetState
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(height: 28),
+                                    const SizedBox(height: kSpacing28),
 
                                     // Action Submit Button
                                     SizedBox(
@@ -699,7 +699,7 @@ class _SavingsGoalDetailSheetState
                                                             alpha: 0.8,
                                                           ),
                                                     ),
-                                                    const SizedBox(width: 8),
+                                                    const SizedBox(width: kSpacing8),
                                                     Text(
                                                       isDeposit
                                                           ? 'Confirm Deposit'
@@ -762,7 +762,7 @@ class _SavingsGoalDetailSheetState
             child: Container(
               width: 36,
               height: 5,
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: kSpacing12),
               decoration: BoxDecoration(
                 color: onSurface.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(2.5),
@@ -772,7 +772,7 @@ class _SavingsGoalDetailSheetState
 
           // Goal Header Details
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
             child: Row(
               children: [
                 // Goal Icon circle
@@ -793,7 +793,7 @@ class _SavingsGoalDetailSheetState
                     size: 26,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: kSpacing16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -807,7 +807,7 @@ class _SavingsGoalDetailSheetState
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: kSpacing4),
                       Text(
                         'Target deadline: ${widget.goal.targetDate.day}/${widget.goal.targetDate.month}/${widget.goal.targetDate.year} ($remainingDays days remaining)',
                         style: TextStyle(
@@ -821,19 +821,19 @@ class _SavingsGoalDetailSheetState
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: kSpacing16),
 
           // Main scrolling body containing dashboard progress and ledger list
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
               child: Column(
                 children: [
                   // Progress Card bento
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(kSpacing20),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(16),
@@ -883,7 +883,7 @@ class _SavingsGoalDetailSheetState
                             ],
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: kSpacing20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -896,7 +896,7 @@ class _SavingsGoalDetailSheetState
                                   letterSpacing: 1.1,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: kSpacing4),
                               Text(
                                 CurrencyFormatter.formatCents(
                                   widget.goal.currentAmount,
@@ -908,7 +908,7 @@ class _SavingsGoalDetailSheetState
                                   color: onSurface,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: kSpacing4),
                               Text(
                                 'Goal target: ${CurrencyFormatter.formatCents(widget.goal.targetAmount)}',
                                 style: const TextStyle(
@@ -922,7 +922,7 @@ class _SavingsGoalDetailSheetState
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: kSpacing16),
 
                   // Deposit and Withdraw buttons row
                   Row(
@@ -950,7 +950,7 @@ class _SavingsGoalDetailSheetState
                                   color: AppTheme.transferColorDark,
                                   size: 18,
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: kSpacing6),
                                 Text(
                                   'Add Money',
                                   style: TextStyle(
@@ -964,7 +964,7 @@ class _SavingsGoalDetailSheetState
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: kSpacing12),
                       Expanded(
                         child: TactileSpringContainer(
                           onTap: () {
@@ -988,7 +988,7 @@ class _SavingsGoalDetailSheetState
                                   color: Color(0xFFFF453A),
                                   size: 18,
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: kSpacing6),
                                 Text(
                                   'Withdraw',
                                   style: TextStyle(
@@ -1004,7 +1004,7 @@ class _SavingsGoalDetailSheetState
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: kSpacing24),
 
                   // Contribution Ledger list
                   Align(
@@ -1018,13 +1018,13 @@ class _SavingsGoalDetailSheetState
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: kSpacing8),
 
                   contributionsAsync.when(
                     data: (logs) {
                       if (logs.isEmpty) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          padding: const EdgeInsets.symmetric(vertical: kSpacing32),
                           alignment: Alignment.center,
                           child: Text(
                             'No deposits or withdrawals logged yet.',
@@ -1051,7 +1051,7 @@ class _SavingsGoalDetailSheetState
                           return StaggeredFadeSlide(
                             index: idx,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              padding: const EdgeInsets.symmetric(vertical: kSpacing12),
                               child: Row(
                                 children: [
                                   // Dot indicator
@@ -1065,7 +1065,7 @@ class _SavingsGoalDetailSheetState
                                       shape: BoxShape.circle,
                                     ),
                                   ),
-                                  const SizedBox(width: 14),
+                                  const SizedBox(width: kSpacing14),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -1081,7 +1081,7 @@ class _SavingsGoalDetailSheetState
                                           ),
                                         ),
                                         if (log.notes != null) ...[
-                                          const SizedBox(height: 3),
+                                          const SizedBox(height: kSpacing4),
                                           Text(
                                             log.notes!,
                                             style: TextStyle(
@@ -1090,7 +1090,7 @@ class _SavingsGoalDetailSheetState
                                             ),
                                           ),
                                         ],
-                                        const SizedBox(height: 2),
+                                        const SizedBox(height: kSpacing2),
                                         Text(
                                           '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
                                           style: TextStyle(
@@ -1118,7 +1118,7 @@ class _SavingsGoalDetailSheetState
                                               : const Color(0xFFFF453A),
                                         ),
                                       ),
-                                      const SizedBox(height: 2),
+                                      const SizedBox(height: kSpacing2),
                                       GestureDetector(
                                         onTap: () async {
                                           final confirm =
@@ -1190,7 +1190,7 @@ class _SavingsGoalDetailSheetState
                         const Center(child: CupertinoActivityIndicator()),
                     error: (e, _) => Text('Error: $e'),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: kSpacing20),
                 ],
               ),
             ),

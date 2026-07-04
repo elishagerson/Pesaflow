@@ -124,7 +124,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         selectedItem.color ?? onSurface.withValues(alpha: 0.78),
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: kSpacing12),
                 ],
                 Expanded(
                   child: Column(
@@ -138,7 +138,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                           color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: kSpacing2),
                       Text(
                         selectedItem.label,
                         style: TextStyle(
@@ -159,9 +159,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
           ),
         ),
         if (errorText != null) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: kSpacing6),
           Padding(
-            padding: const EdgeInsets.only(left: 12.0),
+            padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
               style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
@@ -213,7 +213,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: kSpacing16),
                   // Title
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,12 +231,12 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                         onPressed: () => Navigator.pop(context),
                         style: IconButton.styleFrom(
                           backgroundColor: onSurface.withValues(alpha: 0.11),
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(kSpacing6),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: kSpacing12),
                   Flexible(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
@@ -248,7 +248,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                               item.color ?? theme.colorScheme.primary;
 
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding: const EdgeInsets.only(bottom: kSpacing8),
                             child: Material(
                               color: Colors.transparent,
                               child: InkWell(
@@ -301,7 +301,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                             size: 20,
                                           ),
                                         ),
-                                        const SizedBox(width: 14),
+                                        const SizedBox(width: kSpacing14),
                                       ],
                                       Expanded(
                                         child: Column(
@@ -323,7 +323,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                               ),
                                             ),
                                             if (item.subtitle != null) ...[
-                                              const SizedBox(height: 2),
+                                              const SizedBox(height: kSpacing2),
                                               Text(
                                                 item.subtitle!,
                                                 style: TextStyle(
@@ -353,7 +353,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: kSpacing12),
                 ],
               ),
             ),

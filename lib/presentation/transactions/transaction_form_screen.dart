@@ -283,7 +283,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      const SizedBox(height: 10),
+                      const SizedBox(height: kSpacing10),
                       Container(
                         width: 38,
                         height: 5,
@@ -294,13 +294,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: kSpacing16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(kSpacing8),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.primary.withValues(
                                   alpha: 0.1,
@@ -313,7 +313,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: kSpacing12),
                             Text(
                               'Select Source Account',
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -323,20 +323,20 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       Expanded(
                         child: RawScrollbar(
                           controller: scrollController,
                           child: ListView.builder(
                             controller: scrollController,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
                             itemCount: accounts.length,
                             itemBuilder: (listCtx, index) {
                               final account = accounts[index];
                               final isSelected =
                                   account.id == _selectedAccountId;
                               return Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.only(bottom: kSpacing8),
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(
@@ -347,7 +347,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeOutCubic,
-                                    padding: const EdgeInsets.all(16),
+                                    padding: const EdgeInsets.all(kSpacing16),
                                     decoration: BoxDecoration(
                                       color: isSelected
                                           ? theme.colorScheme.primary
@@ -366,7 +366,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(kSpacing8),
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? theme.colorScheme.primary
@@ -386,7 +386,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                       .withValues(alpha: 0.55),
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -410,7 +410,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                                 ),
                                                     ),
                                               ),
-                                              const SizedBox(height: 1),
+                                              const SizedBox(height: kSpacing2),
                                               Text(
                                                 'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
                                                 style: theme.textTheme.bodySmall
@@ -426,7 +426,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         ),
                                         if (isSelected)
                                           Container(
-                                            padding: const EdgeInsets.all(4),
+                                            padding: const EdgeInsets.all(kSpacing4),
                                             decoration: BoxDecoration(
                                               color: theme.colorScheme.primary
                                                   .withValues(alpha: 0.15),
@@ -489,7 +489,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      const SizedBox(height: 10),
+                      const SizedBox(height: kSpacing10),
                       Container(
                         width: 38,
                         height: 5,
@@ -500,13 +500,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: kSpacing16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(kSpacing8),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.primary.withValues(
                                   alpha: 0.1,
@@ -519,7 +519,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: kSpacing12),
                             Text(
                               'Select Destination Account',
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -529,13 +529,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: kSpacing12),
                       Expanded(
                         child: RawScrollbar(
                           controller: scrollController,
                           child: ListView.builder(
                             controller: scrollController,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
                             itemCount: accounts.length,
                             itemBuilder: (listCtx, index) {
                               final account = accounts[index];
@@ -544,7 +544,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               final isSource = account.id == _selectedAccountId;
                               final isDisabled = isSource;
                               return Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.only(bottom: kSpacing8),
                                 child: GestureDetector(
                                   onTap: isDisabled
                                       ? null
@@ -559,7 +559,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeOutCubic,
-                                    padding: const EdgeInsets.all(16),
+                                    padding: const EdgeInsets.all(kSpacing16),
                                     decoration: BoxDecoration(
                                       color: isSelected
                                           ? theme.colorScheme.primary
@@ -582,7 +582,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(kSpacing8),
                                           decoration: BoxDecoration(
                                             color: isDisabled
                                                 ? Colors.grey.withValues(
@@ -610,7 +610,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                       .withValues(alpha: 0.55),
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -644,7 +644,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                         ),
                                                   ),
                                                   if (isDisabled) ...[
-                                                    const SizedBox(width: 6),
+                                                    const SizedBox(width: kSpacing6),
                                                     Container(
                                                       padding:
                                                           const EdgeInsets.symmetric(
@@ -680,7 +680,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                   ],
                                                 ],
                                               ),
-                                              const SizedBox(height: 1),
+                                              const SizedBox(height: kSpacing2),
                                               Text(
                                                 'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
                                                 style: theme.textTheme.bodySmall
@@ -696,7 +696,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         ),
                                         if (isSelected)
                                           Container(
-                                            padding: const EdgeInsets.all(4),
+                                            padding: const EdgeInsets.all(kSpacing4),
                                             decoration: BoxDecoration(
                                               color: theme.colorScheme.primary
                                                   .withValues(alpha: 0.15),
@@ -772,7 +772,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       child: Container(
                         width: 36,
                         height: 4,
-                        margin: const EdgeInsets.only(bottom: 20.0),
+                        margin: const EdgeInsets.only(bottom: kSpacing20),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.onSurfaceVariant.withValues(
                             alpha: 0.2,
@@ -789,7 +789,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: kSpacing16),
 
                     StaggeredFadeSlide(
                       index: 0,
@@ -804,7 +804,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: kSpacing12),
                           GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -872,7 +872,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                   : Colors.black54),
                                         size: 24,
                                       ),
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: kSpacing6),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 4.0,
@@ -916,7 +916,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: kSpacing20),
 
                     StaggeredFadeSlide(
                       index: 1,
@@ -931,7 +931,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: kSpacing8),
                           TextField(
                             controller: _descriptionController,
                             textCapitalization: TextCapitalization.sentences,
@@ -943,7 +943,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: kSpacing10),
 
                     StaggeredFadeSlide(
                       index: 2,
@@ -960,7 +960,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   .map((suggestion) {
                                     return Padding(
                                       padding: const EdgeInsets.only(
-                                        right: 6.0,
+                                        right: kSpacing6,
                                       ),
                                       child: TactileSpringContainer(
                                         onTap: () {
@@ -1055,7 +1055,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: kSpacing8),
                             TextField(
                               controller: _referenceController,
                               textCapitalization: TextCapitalization.characters,
@@ -1074,7 +1074,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           : CrossFadeState.showFirst,
                       duration: const Duration(milliseconds: 250),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: kSpacing20),
 
                     StaggeredFadeSlide(
                       index: 3,
@@ -1090,7 +1090,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: kSpacing32),
 
                     StaggeredFadeSlide(
                       index: 4,
@@ -1402,7 +1402,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: kSpacing6),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
                           child: FittedBox(
@@ -1422,7 +1422,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         if (spendingPatternAsync.asData?.value
                             case final pattern? when _amountStr == '0')
                           Padding(
-                            padding: const EdgeInsets.only(top: 8),
+                            padding: const EdgeInsets.only(top: kSpacing8),
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -1458,7 +1458,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                         if (_amountError != null)
                           Padding(
-                            padding: const EdgeInsets.only(top: 4),
+                            padding: const EdgeInsets.only(top: kSpacing4),
                             child: Text(
                               _amountError!,
                               style: const TextStyle(
@@ -1467,7 +1467,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               ),
                             ),
                           ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: kSpacing14),
                       ],
                     ),
                   ),
@@ -1503,7 +1503,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     color: onSurface.withValues(alpha: 0.87),
                                   ),
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: kSpacing4),
                                 Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   color: onSurface.withValues(alpha: 0.54),
@@ -1514,7 +1514,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                         ),
                         if (_transactionType == 'Transfer') ...[
-                          const SizedBox(width: 8),
+                          const SizedBox(width: kSpacing8),
                           TactileSpringContainer(
                             onTap: () => _showDestinationAccountPickerSheet(
                               context,
@@ -1548,7 +1548,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       color: onSurface.withValues(alpha: 0.87),
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: kSpacing4),
                                   Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: onSurface.withValues(alpha: 0.54),
@@ -1634,7 +1634,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: kSpacing16),
                 ],
               ),
             ),

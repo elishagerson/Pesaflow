@@ -193,7 +193,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       child: Container(
                         width: 38,
                         height: 5,
-                        margin: const EdgeInsets.only(bottom: 16, top: 4),
+                        margin: const EdgeInsets.only(bottom: kSpacing16, top: kSpacing4),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(100),
@@ -217,7 +217,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
                           child: Container(
-                            padding: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(kSpacing6),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
@@ -231,7 +231,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: kSpacing16),
 
                     // ── Details Section ──
                     Text(
@@ -243,11 +243,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         letterSpacing: 0.3,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     StaggeredFadeSlide(
                       index: 0,
                       child: GlassCard(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(kSpacing16),
                         borderRadius: AppTheme.radiusCard,
                         child: Column(
                           children: [
@@ -267,7 +267,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   ? 'Title is required'
                                   : null,
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: kSpacing12),
                             TextFormField(
                               controller: _amountController,
                               keyboardType: TextInputType.number,
@@ -295,7 +295,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: kSpacing12),
                             ModernDateSelector(
                               labelText: 'Target Date',
                               value: _selectedDate,
@@ -311,7 +311,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: kSpacing20),
 
                     // ── Theme Color Section ──
                     Text(
@@ -323,7 +323,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         letterSpacing: 0.3,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     StaggeredFadeSlide(
                       index: 1,
                       child: GlassCard(
@@ -338,7 +338,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             scrollDirection: Axis.horizontal,
                             itemCount: _colors.length,
                             separatorBuilder: (_, _) =>
-                                const SizedBox(width: 16),
+                                const SizedBox(width: kSpacing16),
                             itemBuilder: (context, index) {
                               final colorHex = _colors[index];
                               final colorVal = hexToColor(colorHex);
@@ -386,7 +386,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: kSpacing16),
 
                     // ── Icon Section ──
                     Text(
@@ -398,7 +398,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         letterSpacing: 0.3,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: kSpacing8),
                     StaggeredFadeSlide(
                       index: 2,
                       child: GlassCard(
@@ -413,7 +413,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             scrollDirection: Axis.horizontal,
                             itemCount: _icons.length,
                             separatorBuilder: (_, _) =>
-                                const SizedBox(width: 14),
+                                const SizedBox(width: kSpacing14),
                             itemBuilder: (context, index) {
                               final item = _icons[index];
                               final isSelected = _selectedIcon == item['name'];
@@ -454,7 +454,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: kSpacing28),
 
                     // ── Action Button ──
                     StaggeredFadeSlide(
@@ -507,7 +507,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: kSpacing12),
                   ],
                 ),
               ),

@@ -206,11 +206,11 @@ class _RecurringTransactionListScreenState
           child: Column(
             children: [
               SkeletonCard(height: 100),
-              SizedBox(height: 8),
+              SizedBox(height: kSpacing8),
               SkeletonCard(height: 100),
-              SizedBox(height: 8),
+              SizedBox(height: kSpacing8),
               SkeletonCard(height: 100),
-              SizedBox(height: 8),
+              SizedBox(height: kSpacing8),
               SkeletonCard(height: 100),
             ],
           ),
@@ -400,7 +400,7 @@ class _RecurringTransactionListScreenState
         horizontal: kSpacing16,
         vertical: kSpacing8,
       ),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(kSpacing3),
       decoration: BoxDecoration(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(100),
@@ -466,7 +466,7 @@ class _RecurringTransactionListScreenState
                 ),
               ),
               if (count > 0) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: kSpacing4),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 5,
@@ -634,7 +634,7 @@ class _RecurringTransactionListScreenState
                                     alpha: 0.4,
                                   ),
                           ),
-                          const SizedBox(width: 3),
+                          const SizedBox(width: kSpacing4),
                           Text(
                             nextDateLabel,
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -739,7 +739,7 @@ class _RecurringTransactionListScreenState
       badges.add(
         Container(
           margin: const EdgeInsets.only(left: kSpacing6),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(6),
@@ -778,7 +778,7 @@ class _RecurringTransactionListScreenState
     badges.add(
       Container(
         margin: const EdgeInsets.only(left: kSpacing4),
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing7, vertical: kSpacing2),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(6),

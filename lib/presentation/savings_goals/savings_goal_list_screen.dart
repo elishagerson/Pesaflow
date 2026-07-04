@@ -83,15 +83,15 @@ class SavingsGoalListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(kSpacing16),
           child: Column(
             children: [
               SkeletonCard(height: 130),
-              SizedBox(height: 12),
+              SizedBox(height: kSpacing12),
               SkeletonCard(height: 130),
-              SizedBox(height: 12),
+              SizedBox(height: kSpacing12),
               SkeletonCard(height: 130),
-              SizedBox(height: 12),
+              SizedBox(height: kSpacing12),
               SkeletonCard(height: 130),
             ],
           ),

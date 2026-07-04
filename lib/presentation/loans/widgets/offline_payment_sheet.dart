@@ -56,7 +56,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: kSpacing10),
                         Container(
                           width: 38,
                           height: 5,
@@ -65,21 +65,21 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: kSpacing16),
                         Expanded(
                           child: RawScrollbar(
                             controller: scrollController,
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                              padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing0, kSpacing20, kSpacing24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(kSpacing10),
                                         decoration: BoxDecoration(
                                           color: const Color(
                                             0xFF609F8A,
@@ -92,7 +92,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           size: 22,
                                         ),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: kSpacing14),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(height: 2),
+                                          const SizedBox(height: kSpacing2),
                                           Text(
                                             'No wallet account will be affected',
                                             style: TextStyle(
@@ -118,7 +118,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   const Text(
                                     'AMOUNT',
                                     style: TextStyle(
@@ -127,7 +127,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       letterSpacing: 0.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
@@ -154,7 +154,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
+                                        const SizedBox(width: kSpacing12),
                                         Expanded(
                                           child: TextField(
                                             controller: amountController,
@@ -194,7 +194,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               setSheetState(() {});
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(4),
+                                              padding: const EdgeInsets.all(kSpacing4),
                                               decoration: BoxDecoration(
                                                 color: onSurface.withValues(
                                                   alpha: 0.07,
@@ -213,7 +213,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: kSpacing16),
                                   Row(
                                     children: [
                                       QuickAmountChip(
@@ -238,7 +238,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '50%',
                                         amount: (remainingCents * 0.5).round(),
@@ -261,7 +261,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '75%',
                                         amount: (remainingCents * 0.75).round(),
@@ -284,7 +284,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           setSheetState(() {});
                                         },
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: kSpacing8),
                                       QuickAmountChip(
                                         label: '100%',
                                         amount: remainingCents,
@@ -307,7 +307,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   const Text(
                                     'MEMO',
                                     style: TextStyle(
@@ -316,7 +316,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       letterSpacing: 0.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: kSpacing8),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
@@ -358,9 +358,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: kSpacing20),
                                   Container(
-                                    padding: const EdgeInsets.all(12),
+                                    padding: const EdgeInsets.all(kSpacing12),
                                     decoration: BoxDecoration(
                                       color: const Color(
                                         0xFF609F8A,
@@ -381,7 +381,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             0xFF609F8A,
                                           ).withValues(alpha: 0.8),
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: kSpacing8),
                                         Expanded(
                                           child: Text(
                                             'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
@@ -397,7 +397,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: kSpacing24),
                                   SizedBox(
                                     width: double.infinity,
                                     height: 54,

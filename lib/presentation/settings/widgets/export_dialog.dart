@@ -30,7 +30,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 4),
+            const SizedBox(height: kSpacing4),
             DropdownButtonFormField<int>(
               initialValue: selectedMonth,
               decoration: InputDecoration(
@@ -70,7 +70,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 if (val != null) setState(() => selectedMonth = val);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             DropdownButtonFormField<int>(
               initialValue: selectedYear,
               decoration: InputDecoration(
@@ -107,7 +107,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 if (val != null) setState(() => selectedYear = val);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: kSpacing12),
             DropdownButtonFormField<ExportFormat>(
               initialValue: format,
               decoration: InputDecoration(
@@ -159,7 +159,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         onPressed: () => Navigator.of(context).pop(),
         style: TextButton.styleFrom(
           foregroundColor: Colors.grey[600],
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
         ),
         child: const Text(
           'Cancel',
@@ -183,7 +183,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           backgroundColor: const Color(0xFF0F4C5C),
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

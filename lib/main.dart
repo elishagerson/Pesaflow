@@ -485,7 +485,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                       Semantics(
                                         label: 'App locked',
                                         child: Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(kSpacing16),
                                           decoration: BoxDecoration(
                                             color: const Color(
                                               0xFF609F8A,
@@ -499,7 +499,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 24),
+                                      const SizedBox(height: kSpacing24),
                                       const Text(
                                         'PesaFlow Locked',
                                         style: TextStyle(
@@ -508,7 +508,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: kSpacing8),
                                       Text(
                                         'Authentication required to access offline data',
                                         style: TextStyle(
@@ -517,7 +517,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
-                                      const SizedBox(height: 32),
+                                      const SizedBox(height: kSpacing32),
                                       FilledButton.icon(
                                         onPressed: _authenticate,
                                         icon: const Icon(

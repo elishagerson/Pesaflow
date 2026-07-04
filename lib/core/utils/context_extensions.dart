@@ -92,14 +92,14 @@ extension PesaFlowContext on BuildContext {
       labelText: labelText,
       prefixIcon: prefixIcon != null
           ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing12),
               child: prefixIcon,
             )
           : null,
       prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       suffixIcon: suffixIcon != null
           ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing12),
               child: suffixIcon,
             )
           : null,
@@ -144,7 +144,7 @@ extension PesaFlowContext on BuildContext {
       ),
       contentPadding:
           contentPadding ??
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
       labelStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
       ),
