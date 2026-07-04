@@ -18,7 +18,9 @@ import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
+
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
@@ -114,9 +116,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(
+      CustomToast.show(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
+        message: 'Please select a category',
+        type: ToastType.error,
+      );
       return;
     }
 
@@ -169,11 +173,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            action: SnackBarAction(label: 'Retry', onPressed: _save),
-          ),
+        CustomToast.show(
+          context,
+          message: 'Error: $e',
+          type: ToastType.error,
         );
       }
       setState(() => _isSaving = false);
