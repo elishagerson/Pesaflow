@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
 
@@ -680,13 +681,17 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                         vertical: kSpacing8,
                                                       ),
                                                   decoration: BoxDecoration(
-                                                    color: theme.colorScheme.outlineVariant,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .outlineVariant,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           100,
                                                         ),
                                                     border: Border.all(
-                                                      color: theme.colorScheme.outlineVariant,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .outlineVariant,
                                                       width: 0.8,
                                                     ),
                                                   ),

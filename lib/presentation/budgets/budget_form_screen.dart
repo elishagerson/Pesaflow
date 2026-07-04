@@ -708,8 +708,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         ),
                                       },
                                       onValueChanged: (v) {
-                                        if (v != null)
+                                        if (v != null) {
                                           setState(() => _rolloverType = v);
+                                        }
                                       },
                                     ),
                                   ),

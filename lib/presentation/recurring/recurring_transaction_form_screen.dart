@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
 
@@ -350,15 +351,24 @@ class _RecurringTransactionFormScreenState
                   segments: [
                     ButtonSegment(
                       value: 'income',
-                      label: Text('Income', style: theme.textTheme.labelMedium!),
+                      label: Text(
+                        'Income',
+                        style: theme.textTheme.labelMedium!,
+                      ),
                     ),
                     ButtonSegment(
                       value: 'expense',
-                      label: Text('Expense', style: theme.textTheme.labelMedium!),
+                      label: Text(
+                        'Expense',
+                        style: theme.textTheme.labelMedium!,
+                      ),
                     ),
                     ButtonSegment(
                       value: 'transfer',
-                      label: Text('Transfer', style: theme.textTheme.labelMedium!),
+                      label: Text(
+                        'Transfer',
+                        style: theme.textTheme.labelMedium!,
+                      ),
                     ),
                   ],
                   selected: {_type},
@@ -604,7 +614,11 @@ class _RecurringTransactionFormScreenState
                         : Text(
                             _isEditing ? 'Update Recurring' : 'Add Recurring',
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                            style: Theme.of(context).textTheme.titleMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                           ),
                   ),
                 ),

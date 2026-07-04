@@ -606,7 +606,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 );
               },
               loading: () => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: kSpacing20,
+                  vertical: kSpacing8,
+                ),
                 child: Column(
                   children: [
                     SkeletonCard(height: 80),

@@ -739,7 +739,10 @@ class _RecurringTransactionListScreenState
       badges.add(
         Container(
           margin: const EdgeInsets.only(left: kSpacing6),
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing6, vertical: kSpacing2),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing6,
+            vertical: kSpacing2,
+          ),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(6),
@@ -778,7 +781,10 @@ class _RecurringTransactionListScreenState
     badges.add(
       Container(
         margin: const EdgeInsets.only(left: kSpacing4),
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing8,
+          vertical: kSpacing2,
+        ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(6),

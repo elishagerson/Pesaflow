@@ -81,7 +81,12 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
         StaggeredFadeSlide(
           index: 0,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(kSpacing4, kSpacing12, kSpacing4, kSpacing12),
+            padding: const EdgeInsets.fromLTRB(
+              kSpacing4,
+              kSpacing12,
+              kSpacing4,
+              kSpacing12,
+            ),
             child: Row(
               children: [
                 Container(
@@ -129,11 +134,15 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing10,
+                      ),
                     ),
                     child: Text(
                       'Reset',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -189,7 +198,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing8,
+                          ),
                           child: Text(
                             '—',
                             style: TextStyle(
@@ -425,7 +436,12 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
         StaggeredFadeSlide(
           index: 5,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing8, kSpacing20, kSpacing24),
+            padding: const EdgeInsets.fromLTRB(
+              kSpacing20,
+              kSpacing8,
+              kSpacing20,
+              kSpacing24,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -496,7 +512,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ),
                     child: Text(
                       'Apply Filters',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -536,7 +554,10 @@ class _CategoryChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing8),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing14,
+          vertical: kSpacing8,
+        ),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(100),
@@ -553,7 +574,10 @@ class _CategoryChip extends StatelessWidget {
             ],
             Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: fg),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: fg,
+              ),
             ),
           ],
         ),
@@ -580,7 +604,10 @@ class _DateButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing12),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing12,
+        ),
         decoration: BoxDecoration(
           color: onSurface.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
@@ -591,13 +618,15 @@ class _DateButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: onSurface.withValues(alpha: 0.38),
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: onSurface.withValues(alpha: 0.38),
               ),
             ),
             const SizedBox(height: kSpacing4),
             Text(
               date != null ? DateFormat('MMM d, yyyy').format(date!) : 'Any',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: date != null
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: date != null
                     ? onSurface
                     : onSurface.withValues(alpha: 0.38),
               ),

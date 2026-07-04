@@ -515,7 +515,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   cat.type.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall!.copyWith(color: Colors.grey),
                 ),
                 trailing: cat.isSystem
                     ? Container(
@@ -529,7 +531,10 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         child: Text(
                           'System',
-                          style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
+                          style: Theme.of(context)
+                              .extension<AppTypographyTheme>()!
+                              .labelMicro
+                              .copyWith(color: Colors.grey),
                         ),
                       )
                     : Row(
@@ -685,7 +690,10 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               Text(
                 'Select Theme Color',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(
@@ -721,7 +729,10 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               Text(
                 'Select Icon',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(
@@ -1035,11 +1046,15 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: theme.textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
+                      style: theme.textTheme.titleSmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? theme.colorScheme.primary : null,
+                      ),
                     ),
                     Text(
                       subtitle,
-                      style: theme.textTheme.labelSmall!.copyWith(color: isSelected
+                      style: theme.textTheme.labelSmall!.copyWith(
+                        color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.7)
                             : Colors.grey,
                       ),
@@ -1381,16 +1396,21 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'PesaFlow v1.0.0',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.brightness == Brightness.dark
                             ? Colors.grey[500]
-                            : Colors.grey[600]),
+                            : Colors.grey[600],
+                      ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: theme.brightness == Brightness.dark
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: theme.brightness == Brightness.dark
                             ? Colors.grey[600]
-                            : Colors.grey[400]),
+                            : Colors.grey[400],
+                      ),
                     ),
                   ],
                 ),

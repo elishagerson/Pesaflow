@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 enum ExportFormat { csv, pdf }
 
 Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
@@ -160,7 +161,10 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         onPressed: () => Navigator.of(context).pop(),
         style: TextButton.styleFrom(
           foregroundColor: Colors.grey[600],
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing20,
+            vertical: kSpacing12,
+          ),
         ),
         child: const Text(
           'Cancel',
@@ -184,7 +188,10 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           backgroundColor: const Color(0xFF0F4C5C),
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing24,
+            vertical: kSpacing12,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
