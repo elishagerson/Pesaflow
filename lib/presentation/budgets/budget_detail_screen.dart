@@ -507,27 +507,18 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           children: [
                                             Text(
                                               '${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
+                                              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                                             ),
                                             Text(
                                               '$pctUsed% used${p.rolledFrom != null && p.rolledFrom != 0 ? " • Rolled: Tsh ${p.rolledFrom! ~/ 100}" : ""}',
-                                              style: const TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.grey,
-                                              ),
+                                              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
                                             ),
                                           ],
                                         ),
                                       ),
                                       AmountText(
                                         amountInCents: p.spent,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -651,16 +642,11 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          Text(label, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey)),
           const SizedBox(height: kSpacing4),
           AmountText(
             amountInCents: amount.abs(),
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 14,
-              color: color,
-              letterSpacing: -0.3,
-            ),
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w900, color: color, letterSpacing: -0.3),
           ),
         ],
       ),

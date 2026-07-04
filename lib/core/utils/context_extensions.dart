@@ -3,6 +3,7 @@ import '../theme/app_colors_theme.dart';
 import '../theme/app_typography_theme.dart';
 import 'responsive.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
 
@@ -11,6 +12,38 @@ extension PesaFlowContext on BuildContext {
       Theme.of(this).extension<AppTypographyTheme>()!;
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
+
+  ThemeData get th => Theme.of(this);
+
+  TextStyle ts(double size, {TextStyle? from, Color? color, FontWeight? fontWeight, double? letterSpacing, double? height, TextDecoration? decoration, FontStyle? fontStyle}) {
+    final t = Theme.of(context).textTheme;
+    final base = switch (size) {
+      10 => Theme.of(context).extension<AppTypographyTheme>()!.labelMicro,
+      11 => t.labelSmall!,
+      12 => t.labelMedium!,
+      13 => t.bodySmall!,
+      14 => t.titleSmall!,
+      15 => t.bodyMedium!,
+      16 => t.titleMedium!,
+      17 => t.bodyLarge!,
+      22 => t.titleLarge!,
+      24 => t.headlineSmall!,
+      28 => t.headlineMedium!,
+      32 => t.headlineLarge!,
+      36 => t.displaySmall!,
+      45 => t.displayMedium!,
+      57 => t.displayLarge!,
+      _ => t.bodyMedium!,
+    };
+    return base.copyWith(
+      color: color,
+      fontWeight: fontWeight,
+      letterSpacing: letterSpacing,
+      height: height,
+      decoration: decoration,
+      fontStyle: fontStyle,
+    );
+  }
 
   bool get isCompactView {
     final s = getScreenSize(this);

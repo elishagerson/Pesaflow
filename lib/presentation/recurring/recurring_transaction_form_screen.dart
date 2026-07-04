@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
 
@@ -349,15 +350,15 @@ class _RecurringTransactionFormScreenState
                   segments: const [
                     ButtonSegment(
                       value: 'income',
-                      label: Text('Income', style: TextStyle(fontSize: 12)),
+                      label: Text('Income', style: Theme.of(context).textTheme.labelMedium!),
                     ),
                     ButtonSegment(
                       value: 'expense',
-                      label: Text('Expense', style: TextStyle(fontSize: 12)),
+                      label: Text('Expense', style: Theme.of(context).textTheme.labelMedium!),
                     ),
                     ButtonSegment(
                       value: 'transfer',
-                      label: Text('Transfer', style: TextStyle(fontSize: 12)),
+                      label: Text('Transfer', style: Theme.of(context).textTheme.labelMedium!),
                     ),
                   ],
                   selected: {_type},
@@ -603,11 +604,7 @@ class _RecurringTransactionFormScreenState
                         : Text(
                             _isEditing ? 'Update Recurring' : 'Add Recurring',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                   ),
                 ),

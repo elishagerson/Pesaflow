@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class IosListSection extends StatelessWidget {
   final String? header;
   final List<Widget> rows;
@@ -29,10 +30,7 @@ class IosListSection extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing16, bottom: kSpacing6, top: kSpacing24),
             child: Text(
               header!,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 letterSpacing: 0.3,
               ),
             ),
@@ -100,24 +98,13 @@ class IosListRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DefaultTextStyle(
-                  style:
-                      theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 17,
-                      ) ??
-                      const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                      ),
+                DefaultTheme.of(context).textTheme.bodyLarge! ??
+                      Theme.of(context).textTheme.bodyLarge!,
                   child: title,
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: kSpacing2),
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  DefaultTheme.of(context).textTheme.bodySmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                     child: subtitle!,
                   ),
@@ -249,9 +236,7 @@ class IosMetricCard extends StatelessWidget {
           const SizedBox(height: kSpacing2),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 11,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
             ),
           ),
         ],

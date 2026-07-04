@@ -565,13 +565,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: isPaid
+                        style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w700, color: isPaid
                               ? AppTheme.incomeColor
-                              : AppTheme.tertiaryLight,
-                        ),
+                              : AppTheme.tertiaryLight),
                       ),
                     ),
                   ],
@@ -633,21 +629,14 @@ class LoanDetailScreen extends ConsumerWidget {
                   children: [
                     Text(
                       description,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(estimatedDate),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
                     ),
                   ],
                 ),
@@ -778,7 +767,7 @@ class LoanDetailScreen extends ConsumerWidget {
           loan.status == 'paid'
               ? 'Remove "${loan.description ?? loan.provider ?? 'Loan'}" from your records? All linked payment transactions will also be deleted.'
               : '"${loan.description ?? loan.provider ?? 'Loan'}" has an outstanding balance of ${CurrencyFormatter.formatCents(loan.remaining)}. Deleting it will also remove all linked payment transactions.',
-          style: const TextStyle(fontSize: 14),
+          style: Theme.of(context).textTheme.titleSmall!,
         ),
         actions: [
           TextButton(

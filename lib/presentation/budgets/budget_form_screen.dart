@@ -389,10 +389,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing6),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.45),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.45),
             letterSpacing: 0.3,
           ),
         ),
@@ -460,11 +457,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   icon: PesaFlowIcons.cash,
                                   keyboardType: TextInputType.number,
                                   errorText: _amountError,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'monospace',
-                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
                                   onChanged: (_) =>
                                       setState(() => _amountError = null),
                                 ),
@@ -599,11 +592,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       hint: 'e.g. 50000',
                                       icon: Icons.upcoming_rounded,
                                       keyboardType: TextInputType.number,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'monospace',
-                                      ),
+                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
                                     ),
                                   ],
                                 ],
@@ -644,10 +633,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         Expanded(
                                           child: Text(
                                             'Notify when spending reaches',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: theme.colorScheme.onSurface
+                                            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface
                                                   .withValues(alpha: 0.7),
                                             ),
                                           ),
@@ -748,11 +734,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       isEditing
                                           ? 'Update Budget'
                                           : 'Create Budget',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
+                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                                     ),
                             ),
                           ),

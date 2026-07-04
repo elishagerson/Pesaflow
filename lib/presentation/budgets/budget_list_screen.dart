@@ -124,7 +124,7 @@ class BudgetListScreen extends ConsumerWidget {
         top: kSpacing16,
         bottom: kSpacing8,
       ),
-      padding: const EdgeInsets.all(kSpacing3),
+      padding: const EdgeInsets.all(kSpacing4),
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.065),
         borderRadius: BorderRadius.circular(100),

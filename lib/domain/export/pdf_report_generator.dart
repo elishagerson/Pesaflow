@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 Future<Uint8List> generateMonthlyPdf(
   int year,
   int month,
@@ -28,17 +29,14 @@ Future<Uint8List> generateMonthlyPdf(
           level: 0,
           child: pw.Text(
             'PesaFlow Monthly Statement - $monthName $year',
-            style: pw.TextStyle(
-              fontSize: 22,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColor.fromInt(0xFF1A1A2E),
+            style: pw.Theme.of(context).textTheme.titleLarge!.copyWith(color: PdfColor.fromInt(0xFF1A1A2E),
             ),
           ),
         ),
         pw.SizedBox(height: kSpacing16),
         pw.Header(
           level: 1,
-          child: pw.Text('Summary', style: pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Summary', style: pw.Theme.of(context).textTheme.titleMedium!),
         ),
         pw.SizedBox(height: kSpacing8),
         pw.Row(
@@ -80,7 +78,7 @@ Future<Uint8List> generateMonthlyPdf(
         pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
-          child: pw.Text('Account Balances', style: pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Account Balances', style: pw.Theme.of(context).textTheme.titleMedium!),
         ),
         pw.SizedBox(height: kSpacing8),
         ...accounts.map(
@@ -88,22 +86,18 @@ Future<Uint8List> generateMonthlyPdf(
             padding: const pw.EdgeInsets.symmetric(vertical: kSpacing2),
             child: pw.Text(
               '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
-              style: pw.TextStyle(fontSize: 11),
+              style: pw.Theme.of(context).textTheme.labelSmall!,
             ),
           ),
         ),
         pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
-          child: pw.Text('Transactions', style: pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Transactions', style: pw.Theme.of(context).textTheme.titleMedium!),
         ),
         pw.SizedBox(height: kSpacing8),
         pw.TableHelper.fromTextArray(
-          headerStyle: pw.TextStyle(
-            fontSize: 10,
-            fontWeight: pw.FontWeight.bold,
-            color: PdfColors.white,
-          ),
+          headerStyle: pw.Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: PdfColors.white),
           headerDecoration: pw.BoxDecoration(
             color: PdfColor.fromInt(0xFF1A1A2E),
           ),
@@ -131,7 +125,7 @@ Future<Uint8List> generateMonthlyPdf(
         pw.SizedBox(height: kSpacing20),
         pw.Header(
           level: 1,
-          child: pw.Text('Notes', style: pw.TextStyle(fontSize: 16)),
+          child: pw.Text('Notes', style: pw.Theme.of(context).textTheme.titleMedium!),
         ),
         pw.SizedBox(height: kSpacing8),
         pw.Text(

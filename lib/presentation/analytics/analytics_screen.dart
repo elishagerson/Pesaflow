@@ -19,6 +19,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:flutter/services.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 enum TrendRange { days, weeks, months }
 
 class TrendDataPoint {
@@ -186,7 +187,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 ),
                 child: Container(
                   height: 38,
-                  padding: const EdgeInsets.all(kSpacing3),
+                  padding: const EdgeInsets.all(kSpacing4),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(100),
@@ -214,14 +215,8 @@ class AnalyticsScreen extends ConsumerWidget {
                     ),
                     labelColor: onSurface,
                     unselectedLabelColor: onSurface.withValues(alpha: 0.6),
-                    labelStyle: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    labelStyle: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w800),
+                    unselectedLabelStyle: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
                     tabs: const [
                       Tab(text: 'Overview'),
                       Tab(text: 'Trends'),
@@ -396,14 +391,9 @@ class _OverviewTab extends StatelessWidget {
                             type: net >= 0
                                 ? AmountType.income
                                 : AmountType.expense,
-                            style: TextStyle(
-                              color: net >= 0
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w900, color: net >= 0
                                   ? incomeColorVal
-                                  : expenseColorVal,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 17,
-                              letterSpacing: -0.2,
-                            ),
+                                  : expenseColorVal, letterSpacing: -0.2),
                           ),
                         ],
                       ),
@@ -537,29 +527,19 @@ class _OverviewTab extends StatelessWidget {
                                           children: [
                                             Text(
                                               goal.name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
+                                              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             const SizedBox(height: kSpacing4),
                                             Text(
                                               '$percentInt% Completed',
-                                              style: TextStyle(
-                                                color: goalColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                              ),
+                                              style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: goalColor),
                                             ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
                                               'Saved ${CurrencyFormatter.formatCents(goal.currentAmount)}',
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 10,
-                                              ),
+                                              style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -663,10 +643,7 @@ class _OverviewTab extends StatelessWidget {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'Set Monthly Savings Goal',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
@@ -823,21 +800,14 @@ class _OverviewTab extends StatelessWidget {
                                               const SizedBox(width: kSpacing8),
                                               Text(
                                                 cat.categoryName,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.w600),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
                                           Text(
                                             '$pct%',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey[400],
-                                            ),
+                                            style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey[400]),
                                           ),
                                         ],
                                       ),
@@ -1243,11 +1213,7 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 const Text(
                   'Income',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
                 const SizedBox(width: kSpacing24),
                 Container(
@@ -1261,11 +1227,7 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 const Text(
                   'Expense',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
               ],
             ),

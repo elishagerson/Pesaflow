@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class ModernDropdownItem<T> {
   final T value;
   final String label;
@@ -132,20 +133,13 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: onSurface.withValues(alpha: 0.6),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w500, color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         selectedItem.label,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: onSurface,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: onSurface),
                       ),
                     ],
                   ),
@@ -164,7 +158,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
             ),
           ),
         ],
@@ -310,27 +304,18 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                           children: [
                                             Text(
                                               item.label,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: isSelected
-                                                    ? FontWeight.bold
-                                                    : FontWeight.normal,
-                                                color: isSelected
+                                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: isSelected
                                                     ? itemColor
                                                     : onSurface.withValues(
-                                                        alpha: 0.78,
-                                                      ),
+                                                        alpha: 0.78),
                                               ),
                                             ),
                                             if (item.subtitle != null) ...[
                                               const SizedBox(height: kSpacing2),
                                               Text(
                                                 item.subtitle!,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.6,
-                                                  ),
+                                                style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(
+                                                    alpha: 0.6),
                                                 ),
                                               ),
                                             ],

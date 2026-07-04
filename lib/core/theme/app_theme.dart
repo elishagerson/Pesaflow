@@ -209,10 +209,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.w700,
-          color: isLight ? onBgLight : const Color(0xFFF0F6FC),
+        titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(color: isLight ? onBgLight : const Color(0xFFF0F6FC),
         ),
         iconTheme: IconThemeData(
           color: isLight ? onBgLight : const Color(0xFFF0F6FC),
@@ -282,7 +279,7 @@ class AppTheme {
           ),
           padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
           minimumSize: const Size(48, 48),
-          textStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+          textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -331,16 +328,9 @@ class AppTheme {
             ? const Color(0xFFF0F1F4)
             : const Color(0xFF161B22),
         headerForegroundColor: isLight ? onBgLight : Colors.white,
-        headerHeadlineStyle: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-        dayStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        weekdayStyle: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: isLight ? Colors.grey[700] : Colors.grey[400],
-        ),
+        headerHeadlineStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
+        dayStyle: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
+        weekdayStyle: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isLight ? Colors.grey[700] : Colors.grey[400]),
         shape: SquircleBorder(
           borderRadius: 24.0,
           side: BorderSide(

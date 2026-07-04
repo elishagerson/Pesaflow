@@ -13,6 +13,7 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
   final int remainingCents;
@@ -57,10 +58,7 @@ class LoanProgressRing extends StatelessWidget {
               ),
               Text(
                 '${(paidFraction * 100).round()}%',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w900,
-                ),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w900),
               ),
             ],
           ),
@@ -75,17 +73,12 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Paid',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: onSurface.withValues(alpha: 0.6),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(paidAmount),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF10B981),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Color(0xFF10B981),
                     ),
                   ),
                 ],
@@ -96,17 +89,12 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Remaining',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: onSurface.withValues(alpha: 0.6),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(remainingCents),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFE53935),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Color(0xFFE53935),
                     ),
                   ),
                 ],
@@ -118,17 +106,12 @@ class LoanProgressRing extends StatelessWidget {
                   children: [
                     Text(
                       'Installments',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: onSurface.withValues(alpha: 0.6),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       '$paidInstallments/$totalInstallments',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -181,10 +164,7 @@ class QuickAmountChip extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: isActive
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w700, color: isActive
                       ? const Color(0xFF10B981)
                       : onSurface.withValues(alpha: 0.7),
                 ),
@@ -268,7 +248,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing0, kSpacing20, kSpacing24),
+                              padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -303,11 +283,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: onSurface.withValues(
-                                                alpha: 0.6,
-                                              ),
+                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: onSurface.withValues(
+                                                alpha: 0.6),
                                             ),
                                           ),
                                         ],
@@ -322,11 +299,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   const Text(
                                     'PAYMENT AMOUNT',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   _buildAmountField(
@@ -432,11 +405,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   const Text(
                                     'MEMO',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -453,10 +422,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       controller: descriptionController,
                                       textCapitalization:
                                           TextCapitalization.sentences,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: onSurface,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: onSurface),
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
@@ -487,11 +453,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     children: [
                                       const Text(
                                         'FROM ACCOUNT',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.5,
-                                        ),
+                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                       ),
                                       if (selectedAccountId != null)
                                         GestureDetector(
@@ -500,11 +462,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           ),
                                           child: Text(
                                             'Clear',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: const Color(
-                                                0xFFE53935,
-                                              ).withValues(alpha: 0.8),
+                                            style: Theme.of(context).textTheme.labelMedium!.copyWith(color: const Color(
+                                                0xFFE53935).withValues(alpha: 0.8),
                                             ),
                                           ),
                                         ),
@@ -543,11 +502,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               const SizedBox(width: kSpacing10),
                                               Text(
                                                 'No accounts available. Create one first.',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: const Color(
-                                                    0xFFE53935,
-                                                  ).withValues(alpha: 0.9),
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: const Color(
+                                                    0xFFE53935).withValues(alpha: 0.9),
                                                 ),
                                               ),
                                             ],
@@ -649,18 +605,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         children: [
                                                           Text(
                                                             account.name,
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  isSelected
-                                                                  ? FontWeight
-                                                                        .w700
-                                                                  : FontWeight
-                                                                        .w500,
-                                                              fontSize: 15,
-                                                              color: isSelected
+                                                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: isSelected
                                                                   ? const Color(
-                                                                      0xFF609F8A,
-                                                                    )
+                                                                      0xFF609F8A)
                                                                   : onSurface,
                                                             ),
                                                           ),
@@ -671,13 +618,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                             children: [
                                                               Text(
                                                                 'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
-                                                                style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: onSurface
+                                                                style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface
                                                                       .withValues(
                                                                         alpha:
-                                                                            0.38,
-                                                                      ),
+                                                                            0.38),
                                                                 ),
                                                               ),
                                                               if (selectedAccountId !=
@@ -711,12 +655,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   ),
                                                                   child: const Text(
                                                                     'Insufficient',
-                                                                    style: TextStyle(
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Color(
-                                                                        0xFFE53935,
-                                                                      ),
+                                                                    style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Color(
+                                                                        0xFFE53935),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600,
@@ -875,11 +815,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               null
                                                         ? 'Select an account'
                                                         : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
+                                                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
@@ -937,12 +873,7 @@ Widget _buildAmountField({
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
             ],
-            style: TextStyle(
-              fontSize: 28,
-              fontFamily: 'monospace',
-              fontWeight: FontWeight.bold,
-              color: onSurface,
-            ),
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,

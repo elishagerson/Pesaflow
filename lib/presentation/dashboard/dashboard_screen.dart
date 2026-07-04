@@ -773,10 +773,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 Expanded(
                                   child: Text(
                                     'Auto-categorized $count message${count == 1 ? '' : 's'} today  ↗',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF0F4C5C),
+                                    style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: const Color(0xFF0F4C5C),
                                     ),
                                   ),
                                 ),
@@ -1609,11 +1606,7 @@ class _QuickActionButton extends StatelessWidget {
               SizedBox(height: kSpacing4),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(color: color),
               ),
             ],
           ),

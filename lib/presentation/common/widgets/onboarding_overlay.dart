@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class OnboardingOverlay extends StatefulWidget {
   final VoidCallback onComplete;
   const OnboardingOverlay({super.key, required this.onComplete});
@@ -120,9 +121,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                             Text(
                               page.description,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 height: 1.5,
                               ),
                             ),
@@ -173,10 +172,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                           _currentPage < _pages.length - 1
                               ? 'Next'
                               : 'Get Started',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],

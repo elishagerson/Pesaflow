@@ -31,6 +31,7 @@ import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: PesaFlowApp()));
@@ -502,19 +503,12 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                       const SizedBox(height: kSpacing24),
                                       const Text(
                                         'PesaFlow Locked',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                                       ),
                                       const SizedBox(height: kSpacing8),
                                       Text(
                                         'Authentication required to access offline data',
-                                        style: TextStyle(
-                                          color: Colors.grey[400],
-                                          fontSize: 13,
-                                        ),
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.grey[400]),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: kSpacing32),

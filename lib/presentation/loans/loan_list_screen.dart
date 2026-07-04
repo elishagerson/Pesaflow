@@ -176,16 +176,12 @@ class LoanListScreen extends ConsumerWidget {
           const SizedBox(width: kSpacing10),
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(width: kSpacing8),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 11,
-              color: accent,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: accent),
           ),
         ],
       ),
@@ -230,18 +226,12 @@ class LoanListScreen extends ConsumerWidget {
               children: [
                 Text(
                   'High Loan Activity',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                    color: onSurface,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w800, color: onSurface),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   '$count active loans taken in the last 3 months. Consider slowing down.',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: onSurface.withValues(alpha: 0.6),
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(color: onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -304,20 +294,13 @@ class LoanListScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Total Outstanding',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: onSurface.withValues(alpha: 0.6),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       CurrencyFormatter.formatCents(total),
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        color: onSurface,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w900, color: onSurface),
                     ),
                   ],
                 ),
@@ -397,21 +380,14 @@ class LoanListScreen extends ConsumerWidget {
                       children: [
                         Text(
                           loan.description ?? loan.sender ?? 'Loan',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                          style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: kSpacing2),
                         Text(
                           'Active',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: progressColor,
-                          ),
+                          style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w700, color: progressColor),
                         ),
                         if (loan.dueAt != null) ...[
                           const SizedBox(height: kSpacing2),
@@ -419,10 +395,7 @@ class LoanListScreen extends ConsumerWidget {
                             loan.dueAt!.isBefore(DateTime.now())
                                 ? 'Overdue by ${DateTime.now().difference(loan.dueAt!).inDays} days'
                                 : 'Due ${DateFormatter.relative(loan.dueAt!)}',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
-                              color: loan.dueAt!.isBefore(DateTime.now())
+                            style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w800, color: loan.dueAt!.isBefore(DateTime.now())
                                   ? const Color(0xFFE53935)
                                   : Colors.grey[500],
                             ),
@@ -436,17 +409,12 @@ class LoanListScreen extends ConsumerWidget {
                     children: [
                       Text(
                         CurrencyFormatter.formatCents(loan.amount),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} left',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: onSurface.withValues(alpha: 0.6),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -502,21 +470,15 @@ class LoanListScreen extends ConsumerWidget {
                   children: [
                     Text(
                       loan.description ?? loan.sender ?? 'Loan',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6),
                       ),
                     ),
                   ],
@@ -524,10 +486,7 @@ class LoanListScreen extends ConsumerWidget {
               ),
               Text(
                 CurrencyFormatter.formatCents(loan.amount),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),

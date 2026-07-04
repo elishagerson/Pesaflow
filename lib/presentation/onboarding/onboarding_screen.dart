@@ -627,10 +627,7 @@ class _AccountsPage extends StatelessWidget {
                           Text(
                             e.key,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: isSelected
+                            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected
                                   ? (theme.brightness == Brightness.dark
                                         ? Colors.white
                                         : theme.colorScheme.primary)

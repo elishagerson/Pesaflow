@@ -238,11 +238,8 @@ class _SavingsGoalDetailScreenState
                                               isDeposit
                                                   ? 'Add money to your savings goal'
                                                   : 'Take money out of your savings goal',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: onSurface.withValues(
-                                                  alpha: 0.6,
-                                                ),
+                                              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(
+                                                  alpha: 0.6),
                                               ),
                                             ),
                                           ],
@@ -253,11 +250,7 @@ class _SavingsGoalDetailScreenState
                                   const SizedBox(height: kSpacing24),
                                   const Text(
                                     'AMOUNT',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -294,12 +287,7 @@ class _SavingsGoalDetailScreenState
                                               FilteringTextInputFormatter
                                                   .digitsOnly,
                                             ],
-                                            style: TextStyle(
-                                              fontSize: 28,
-                                              fontFamily: 'monospace',
-                                              fontWeight: FontWeight.bold,
-                                              color: onSurface,
-                                            ),
+                                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
                                             decoration: InputDecoration(
                                               hintText: '0',
                                               hintStyle: TextStyle(
@@ -375,21 +363,14 @@ class _SavingsGoalDetailScreenState
                                   const SizedBox(height: kSpacing20),
                                   const Text(
                                     'MEMO',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   TextFormField(
                                     controller: _noteController,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: onSurface,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: onSurface),
                                     decoration: InputDecoration(
                                       hintText: 'Add an optional note',
                                       hintStyle: TextStyle(
@@ -464,24 +445,16 @@ class _SavingsGoalDetailScreenState
                                                       isDeposit
                                                           ? 'Deduct from Wallet'
                                                           : 'Refund to Wallet',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 15,
-                                                        color: onSurface,
-                                                      ),
+                                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: onSurface),
                                                     ),
                                                     const SizedBox(
                                                       height: kSpacing2,
                                                     ),
                                                     Text(
                                                       'Updates real balance & logs a transaction',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: onSurface
+                                                      style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface
                                                             .withValues(
-                                                              alpha: 0.38,
-                                                            ),
+                                                              alpha: 0.38),
                                                       ),
                                                     ),
                                                   ],
@@ -528,11 +501,7 @@ class _SavingsGoalDetailScreenState
                                                 const Expanded(
                                                   child: Text(
                                                     'Source Account',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
+                                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
                                                   ),
                                                 ),
                                                 DropdownButton<String>(
@@ -548,11 +517,7 @@ class _SavingsGoalDetailScreenState
                                                       alpha: 0.5,
                                                     ),
                                                   ),
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: onSurface,
-                                                  ),
+                                                  style: Theme.of(context).textTheme.titleSmall!.copyWith(color: onSurface),
                                                   items: accounts.map((acc) {
                                                     return DropdownMenuItem<
                                                       String
@@ -655,10 +620,7 @@ class _SavingsGoalDetailScreenState
                                                   isDeposit
                                                       ? 'Confirm Deposit'
                                                       : 'Confirm Withdrawal',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
+                                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                                                 ),
                                               ],
                                             ),
@@ -815,9 +777,7 @@ class _SavingsGoalDetailScreenState
                           const SizedBox(height: kSpacing4),
                           Text(
                             'Target deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year} ($remainingDays days remaining)',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: onSurface.withValues(alpha: 0.6),
+                            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -872,11 +832,7 @@ class _SavingsGoalDetailScreenState
                               ),
                               Text(
                                 '$percentInt%',
-                                style: TextStyle(
-                                  color: goalColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w900, color: goalColor),
                               ),
                             ],
                           ),
@@ -899,20 +855,12 @@ class _SavingsGoalDetailScreenState
                                 CurrencyFormatter.formatCents(
                                   goal.currentAmount,
                                 ),
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontFamily: 'monospace',
-                                  fontWeight: FontWeight.w900,
-                                  color: onSurface,
-                                ),
+                                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w900, color: onSurface),
                               ),
                               const SizedBox(height: kSpacing4),
                               Text(
                                 'Goal target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 11,
-                                ),
+                                style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
                               ),
                             ],
                           ),
@@ -952,11 +900,7 @@ class _SavingsGoalDetailScreenState
                               const SizedBox(width: kSpacing6),
                               Text(
                                 'Add Money',
-                                style: TextStyle(
-                                  color: context.appColors.incomeColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: context.appColors.incomeColor),
                               ),
                             ],
                           ),
@@ -990,11 +934,7 @@ class _SavingsGoalDetailScreenState
                               const SizedBox(width: kSpacing6),
                               Text(
                                 'Withdraw',
-                                style: TextStyle(
-                                  color: context.appColors.expenseColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: context.appColors.expenseColor),
                               ),
                             ],
                           ),
@@ -1029,10 +969,7 @@ class _SavingsGoalDetailScreenState
                         alignment: Alignment.center,
                         child: Text(
                           'No deposits or withdrawals logged yet.',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 13,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.grey[500]),
                         ),
                       );
                     }
@@ -1077,19 +1014,13 @@ class _SavingsGoalDetailScreenState
                                         isPos
                                             ? 'Savings Deposit'
                                             : 'Savings Withdrawal',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
                                       ),
                                       if (log.notes != null) ...[
                                         const SizedBox(height: kSpacing4),
                                         Text(
                                           log.notes!,
-                                          style: TextStyle(
-                                            color: Colors.grey[500],
-                                            fontSize: 11,
-                                          ),
+                                          style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey[500]),
                                         ),
                                       ],
                                       const SizedBox(height: kSpacing2),
@@ -1111,11 +1042,7 @@ class _SavingsGoalDetailScreenState
                                           CurrencyFormatter.formatCents(
                                             log.amount.abs(),
                                           ),
-                                      style: TextStyle(
-                                        fontFamily: 'monospace',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: isPos
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: isPos
                                             ? AppTheme.transferColorDark
                                             : const Color(0xFFFF453A),
                                       ),

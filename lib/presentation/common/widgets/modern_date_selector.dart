@@ -6,6 +6,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'tactile_spring_container.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class ModernDateSelector extends FormField<DateTime> {
   final String labelText;
   final DateTime value;
@@ -187,22 +188,14 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         formattedDate,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                       ),
                     ],
                   ),
@@ -222,7 +215,7 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
             ),
           ),
         ],

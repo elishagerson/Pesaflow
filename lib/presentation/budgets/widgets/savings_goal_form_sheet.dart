@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
   const SavingsGoalFormSheet({this.existingGoal, super.key});
@@ -236,10 +237,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Details Section ──
                     Text(
                       'GOAL DETAILS',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -254,10 +252,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
                               decoration: inputDeco(
                                 label: 'Goal Title',
                                 hint: 'e.g. Vacation to Zanzibar',
@@ -274,11 +269,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              style: const TextStyle(
-                                fontFamily: 'monospace',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
                               decoration: inputDeco(
                                 label: 'Target Amount (Tsh)',
                                 hint: 'e.g. 1500000',
@@ -316,10 +307,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Theme Color Section ──
                     Text(
                       'THEME COLOR',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -391,10 +379,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Icon Section ──
                     Text(
                       'GOAL ICON',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -498,11 +483,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   widget.existingGoal != null
                                       ? 'Update Goal'
                                       : 'Create Savings Goal',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                         ),
                       ),
