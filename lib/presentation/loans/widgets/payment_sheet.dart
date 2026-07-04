@@ -14,6 +14,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
   final int remainingCents;
@@ -655,7 +656,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   ),
                                                                   child: Text(
                                                                     'Insufficient',
-                                                                    style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Color(
+                                                                     style: theme.extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Color(
                                                                         0xFFE53935),
                                                                       fontWeight:
                                                                           FontWeight
@@ -873,7 +874,7 @@ Widget _buildAmountField({
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
             ],
-            style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
+            style: theme.textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,

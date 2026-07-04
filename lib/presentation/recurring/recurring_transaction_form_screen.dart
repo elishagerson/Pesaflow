@@ -347,18 +347,18 @@ class _RecurringTransactionFormScreenState
               StaggeredFadeSlide(
                 index: 3,
                 child: SegmentedButton<String>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: 'income',
-                      label: Text('Income', style: Theme.of(context).textTheme.labelMedium!),
+                      label: Text('Income', style: theme.textTheme.labelMedium!),
                     ),
                     ButtonSegment(
                       value: 'expense',
-                      label: Text('Expense', style: Theme.of(context).textTheme.labelMedium!),
+                      label: Text('Expense', style: theme.textTheme.labelMedium!),
                     ),
                     ButtonSegment(
                       value: 'transfer',
-                      label: Text('Transfer', style: Theme.of(context).textTheme.labelMedium!),
+                      label: Text('Transfer', style: theme.textTheme.labelMedium!),
                     ),
                   ],
                   selected: {_type},

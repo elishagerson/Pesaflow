@@ -463,7 +463,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ).withValues(alpha: 0.12),
                         padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                         borderRadius: 16,
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(

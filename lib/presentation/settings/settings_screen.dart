@@ -1035,11 +1035,11 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
+                      style: theme.textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
                     ),
                     Text(
                       subtitle,
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: isSelected
+                      style: theme.textTheme.labelSmall!.copyWith(color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.7)
                             : Colors.grey,
                       ),

@@ -498,10 +498,10 @@ class _SavingsGoalDetailScreenState
                                                 const SizedBox(
                                                   width: kSpacing10,
                                                 ),
-                                                const Expanded(
+                                                Expanded(
                                                   child: Text(
                                                     'Source Account',
-                                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
+                                                    style: theme.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
                                                   ),
                                                 ),
                                                 DropdownButton<String>(
