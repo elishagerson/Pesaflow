@@ -16,6 +16,8 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+
 
 
 
@@ -373,14 +375,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             ref.invalidate(recentTransactionsStreamProvider);
                             ref.invalidate(accountsStreamProvider);
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Transaction rejected: ${trans.description}',
-                                  ),
-                                  backgroundColor: theme.colorScheme.error,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
+                              CustomToast.show(
+                                context,
+                                message: 'Transaction rejected: ${trans.description}',
+                                type: ToastType.error,
                               );
                             }
                           },
@@ -392,14 +390,10 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             ref.invalidate(reviewQueueStreamProvider);
                             ref.invalidate(recentTransactionsStreamProvider);
                             if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Transaction approved: ${trans.description}',
-                                  ),
-                                  backgroundColor: theme.colorScheme.primary,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
+                              CustomToast.show(
+                                context,
+                                message: 'Transaction approved: ${trans.description}',
+                                type: ToastType.success,
                               );
                             }
                           },
