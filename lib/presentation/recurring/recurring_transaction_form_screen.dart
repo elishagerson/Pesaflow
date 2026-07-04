@@ -11,7 +11,9 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+
 
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
@@ -160,8 +162,10 @@ class _RecurringTransactionFormScreenState
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update recurring transaction: $e')),
+        CustomToast.show(
+          context,
+          message: 'Failed to update recurring transaction: $e',
+          type: ToastType.error,
         );
       }
     } else {
@@ -197,8 +201,10 @@ class _RecurringTransactionFormScreenState
         context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create recurring transaction: $e')),
+        CustomToast.show(
+          context,
+          message: 'Failed to create recurring transaction: $e',
+          type: ToastType.error,
         );
       }
     }
