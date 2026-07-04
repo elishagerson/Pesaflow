@@ -228,24 +228,14 @@ class _SavingsGoalDetailScreenState
                                               isDeposit
                                                   ? 'Deposit Savings'
                                                   : 'Withdraw Savings',
-                                              style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              style: context.ts(17, fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: kSpacing2),
                                             Text(
                                               isDeposit
                                                   ? 'Add money to your savings goal'
                                                   : 'Take money out of your savings goal',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium!
-                                                  .copyWith(
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.6,
-                                                    ),
-                                                  ),
+                                              style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                                             ),
                                           ],
                                         ),
