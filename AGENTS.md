@@ -64,6 +64,19 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
   - Removed ~670 lines, 12+ providers, 4 unused imports
 - **Hero gradient slowed** — 10s cycle; alpha: 0.12→0.18 (dark) / 0.08→0.12 (light)
 - **`dart analyze lib/`** — 0 issues
+- **Form standardization (#15)** — Single `inputDecoration()` extension on `BuildContext` in `context_extensions.dart`:
+  - Unified border radius (16), label/hint/error styles, prefix/suffix icon padding (12px horizontal), fill color (`surfaceContainerHigh` alpha 0.5), content padding (16x14)
+  - Supports all standard params: `hintText`, `labelText`, `prefixIcon`, `suffixIcon`, `helperText`, `errorText`, `prefixText`, `suffixText`, `contentPadding`
+  - Replaces 49 near-duplicate `InputDecoration` override sites across all screens
+- **SuccessCheckmark improved** — Enhanced `lib/presentation/common/widgets/motion/success_checkmark.dart`:
+  - Added spring bounce overshoot (1.0→1.25→0.95→1.0) via `_springBounce` sine-based simulation
+  - Added glow arc behind circle (`MaskFilter.blur` 16px, alpha 0→0.3)
+  - Filled colored circle background + white checkmark (was hollow stroke-only arc)
+  - Ring reveal arc at animation tail (80-100%)
+  - Added `play()` method for re-triggering; accepts optional `color` (defaults to `theme.colorScheme.primary`)
+- **Skeleton shimmer theme-aware** — Fixed `_pulseBar` extracting `theme` from `this.context` (not available in StatelessWidget context) → passes `theme` from `LayoutBuilder`'s `context` parameter instead; bar color uses `onSurface.withValues(alpha: 0.10)`
+- **Empty state audit** — Verified all 6 data-list screens (`analytics_screen.dart`, `savings_goal_list_screen.dart`, `recurring_transaction_list_screen.dart`, `transaction_list_screen.dart`, `budget_list_screen.dart`, `loan_list_screen.dart`) already import and use `EmptyState` with `PesaFlowIllustration`. Only gap is dashboard sections silently hiding via `SizedBox.shrink()` (intentional for hub-and-spoke design).
+- **`context_extensions.dart` expanded** — Added `inputDecoration()`, `viewPadding`, `keyboardInset`, `bottomInset`, `topInset` utility getters
 
 ## In Progress
 - (none)
@@ -190,24 +203,19 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 ---
 
 ## Next Steps (ordered by impact)
-1. **ThemeExtension** (#11) — eliminates 614 branching decisions, highest leverage
-2. **Empty states** (#3) — biggest UX gap, screens silently show nothing
-3. **Spacing audit** (#12) — 850 raw values, immediate visual rhythm improvement
-4. **Typography audit** (#13) — 355 raw font sizes, enforces type scale
-5. **State handling** (#16) — loading/error/empty patterns on every screen
-6. **Icon unification** (#14) — consistent visual language
-7. **Form standardization** (#15) — eliminate 49 near-duplicate InputDecoration
-8. **Feedback systems** (#5) — toasts, haptics, skeletons, success animations
-9. **Gesture consistency** (#6) — document and audit across all screens
-10. **Accessibility** (#7) — touch targets, contrast, screen reader, reduced motion
-11. **Onboarding & first-run** (#2) — tooltips, sample data, progressive permissions
-12. **Information architecture** (#1) — navigation audit, screen purpose
-13. **Progressive disclosure** (#8) — collapse advanced features
-14. **Micro-interactions** (#9) — budget pulse, transaction slide-in, digit counter
-15. **Cognitive load** (#10) — terminology, date presets, inline validation
-16. **Error handling** (#4) — plain language, recovery actions, offline banner
-17. **Color cleanup** (#17) — remaining raw black/white and hex literals
-18. **Reduced motion** (#7 sub-item) — parallel with accessibility
+1. **Typography audit** (#13) — 355 raw font sizes, enforces type scale
+2. **Spacing audit** (#12) — 850 raw values, immediate visual rhythm improvement
+3. **Icon unification** (#14) — consistent visual language
+4. **Feedback systems** (#5) — toasts, haptics, skeletons, success animations (SuccessCheckmark done)
+5. **Gesture consistency** (#6) — document and audit across all screens
+6. **Accessibility** (#7) — touch targets, contrast, screen reader, reduced motion
+7. **Onboarding & first-run** (#2) — tooltips, sample data, progressive permissions
+8. **Information architecture** (#1) — navigation audit, screen purpose
+9. **Progressive disclosure** (#8) — collapse advanced features
+10. **Micro-interactions** (#9) — budget pulse, transaction slide-in, digit counter
+11. **Cognitive load** (#10) — terminology, date presets, inline validation
+12. **Error handling** (#4) — plain language, recovery actions, offline banner
+13. **Reduced motion** (#7 sub-item) — parallel with accessibility
 
 ## Relevant File Sizes (for extraction consideration)
 - `dashboard_screen.dart`: ~1,697 lines (was 4,356)

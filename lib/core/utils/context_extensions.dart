@@ -81,14 +81,33 @@ extension PesaFlowContext on BuildContext {
     Widget? prefixIcon,
     Widget? suffixIcon,
     String? helperText,
+    String? errorText,
+    String? prefixText,
+    String? suffixText,
+    EdgeInsetsGeometry? contentPadding,
   }) {
     final theme = Theme.of(this);
     return InputDecoration(
       hintText: hintText,
       labelText: labelText,
-      prefixIcon: prefixIcon,
-      suffixIcon: suffixIcon,
+      prefixIcon: prefixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: prefixIcon,
+            )
+          : null,
+      prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+      suffixIcon: suffixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: suffixIcon,
+            )
+          : null,
+      suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       helperText: helperText,
+      errorText: errorText,
+      prefixText: prefixText,
+      suffixText: suffixText,
       filled: true,
       fillColor: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
       border: OutlineInputBorder(
@@ -123,55 +142,9 @@ extension PesaFlowContext on BuildContext {
           width: 1.5,
         ),
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
-      hintStyle: theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
-      ),
-      labelStyle: theme.textTheme.bodyMedium?.copyWith(
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-      ),
-    );
-  }
-
-  EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
-  double get keyboardInset => MediaQuery.viewInsetsOf(this).bottom;
-  double get bottomInset => MediaQuery.paddingOf(this).bottom;
-  double get topInset => MediaQuery.paddingOf(this).top;
-
-  InputDecoration inputDecoration({
-    String? labelText,
-    String? hintText,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    String? errorText,
-    String? prefixText,
-    String? suffixText,
-    EdgeInsetsGeometry? contentPadding,
-  }) {
-    final theme = Theme.of(this);
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      prefixIcon: prefixIcon != null
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: prefixIcon,
-            )
-          : null,
-      prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-      suffixIcon: suffixIcon != null
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: suffixIcon,
-            )
-          : null,
-      suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-      errorText: errorText,
-      prefixText: prefixText,
-      suffixText: suffixText,
+      contentPadding:
+          contentPadding ??
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       labelStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
       ),
@@ -184,11 +157,13 @@ extension PesaFlowContext on BuildContext {
       hintStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
       ),
-      contentPadding:
-          contentPadding ??
-          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
     );
   }
+
+  EdgeInsets get viewPadding => MediaQuery.viewPaddingOf(this);
+  double get keyboardInset => MediaQuery.viewInsetsOf(this).bottom;
+  double get bottomInset => MediaQuery.paddingOf(this).bottom;
+  double get topInset => MediaQuery.paddingOf(this).top;
 }
 
 class PageScaffold extends StatelessWidget {
