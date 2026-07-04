@@ -1251,7 +1251,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         tablet: 400,
                         desktop: 480,
                       ),
-                      padding: const EdgeInsets.all(kSpacing4)),
+                      padding: const EdgeInsets.all(kSpacing4),
                       decoration: BoxDecoration(
                         color: onSurface.withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(100),
@@ -1404,7 +1404,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                         const SizedBox(height: kSpacing6),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing24)),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: KeypadSpringText(

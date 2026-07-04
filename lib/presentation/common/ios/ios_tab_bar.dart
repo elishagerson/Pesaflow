@@ -301,7 +301,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
           SizedBox(height: hasRow ? 12.0 : 16.0),
           if (hasRow)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing16)),
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
               child: SizedBox(
                 height: 44,
                 child: Row(

@@ -479,7 +479,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(kSpacing32)),
+                                  padding: const EdgeInsets.all(kSpacing32),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -501,7 +501,7 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing24),
-                                      const Text(
+                                      Text(
                                         'PesaFlow Locked',
                                         style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                                       ),

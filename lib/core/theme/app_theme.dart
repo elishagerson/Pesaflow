@@ -5,6 +5,7 @@ import 'app_colors_theme.dart';
 import 'app_typography_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
+export 'app_typography_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 class AppTheme {
   // ── "Ocean & Gold" — distinctive fintech palette ──
