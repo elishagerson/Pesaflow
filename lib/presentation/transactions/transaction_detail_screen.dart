@@ -15,8 +15,10 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 
 class TransactionDetailScreen extends ConsumerWidget {
   final String transactionId;
@@ -184,12 +186,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           t.description.isNotEmpty
                               ? t.description
                               : 'No Description',
-                          style: Theme.of(context).textTheme.titleLarge!
-                              .copyWith(
-                                fontWeight: FontWeight.w800,
-                                color: onSurface,
-                                letterSpacing: -0.4,
-                              ),
+                          style: context.ts(22, fontWeight: FontWeight.w800, color: onSurface, letterSpacing: -0.4),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: kSpacing8),
@@ -220,14 +217,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               const SizedBox(width: kSpacing4),
                               Text(
                                 isIncome ? 'INCOME' : 'EXPENSE',
-                                style: Theme.of(context)
-                                    .extension<AppTypographyTheme>()!
-                                    .labelMicro
-                                    .copyWith(
-                                      fontWeight: FontWeight.w800,
-                                      color: amountColor,
-                                      letterSpacing: 1.2,
-                                    ),
+                                style: context.ts(10, fontWeight: FontWeight.w800, color: amountColor, letterSpacing: 1.2),
                               ),
                             ],
                           ),
@@ -237,12 +227,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Text(
                           (isIncome ? '+ ' : '- ') +
                               CurrencyFormatter.formatCents(t.amount),
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.w900,
-                            color: amountColor,
-                            letterSpacing: -1.2,
-                          ),
+                          style: context.ts(36, fontWeight: FontWeight.w900, color: amountColor, letterSpacing: -1.2),
                           textAlign: TextAlign.center,
                         ),
 

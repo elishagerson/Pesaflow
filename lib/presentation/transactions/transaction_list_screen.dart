@@ -26,6 +26,8 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
+
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -212,10 +214,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 isFiltered
                                     ? 'Clear Filters'
                                     : 'Add First Transaction',
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  color: theme.colorScheme.onPrimary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                               ),
                             ],
                           ),
