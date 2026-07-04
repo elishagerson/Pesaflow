@@ -16,9 +16,9 @@ extension PesaFlowContext on BuildContext {
   ThemeData get th => Theme.of(this);
 
   TextStyle ts(double size, {TextStyle? from, Color? color, FontWeight? fontWeight, double? letterSpacing, double? height, TextDecoration? decoration, FontStyle? fontStyle}) {
-    final t = Theme.of(context).textTheme;
+    final t = th.textTheme;
     final base = switch (size) {
-      10 => Theme.of(context).extension<AppTypographyTheme>()!.labelMicro,
+      10 => th.extension<AppTypographyTheme>()!.labelMicro,
       11 => t.labelSmall!,
       12 => t.labelMedium!,
       13 => t.bodySmall!,
