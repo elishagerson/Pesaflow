@@ -1,18 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/app_database.dart';
 import '../database/daos/recurring_transaction_dao.dart';
+import '../database/daos/transaction_dao.dart';
 import '../database/database_providers.dart';
 
 final recurringTransactionRepositoryProvider =
     Provider<RecurringTransactionRepository>((ref) {
       final dao = ref.watch(recurringTransactionDaoProvider);
-      return RecurringTransactionRepository(dao);
+      final transactionDao = ref.watch(transactionDaoProvider);
+      return RecurringTransactionRepository(dao, transactionDao);
     });
 
 class RecurringTransactionRepository {
   final RecurringTransactionDao _recurringTransactionDao;
+  final TransactionDao _transactionDao;
 
-  RecurringTransactionRepository(this._recurringTransactionDao);
+  RecurringTransactionRepository(
+    this._recurringTransactionDao,
+    this._transactionDao,
+  );
 
   Stream<List<RecurringTransaction>> watchAll({String? trackerId}) =>
       _recurringTransactionDao.watchAll(trackerId: trackerId);
@@ -43,4 +49,31 @@ class RecurringTransactionRepository {
 
   Future<void> recordPayment(String id, int amount, DateTime paidAt) =>
       _recurringTransactionDao.recordPayment(id, amount, paidAt);
+
+  Future<void> recordMarkedPayment({
+    required Transaction transaction,
+    required String recurringId,
+    required int amount,
+    required DateTime paidAt,
+    required bool deductBalance,
+  }) async {
+    try {
+      if (deductBalance) {
+        await _transactionDao.writeTransactionWithBalanceAdjustment(
+          transaction,
+        );
+      } else {
+        await _transactionDao.insertTransactionWithoutBalanceAdjustment(
+          transaction,
+        );
+      }
+      await _recurringTransactionDao.recordPayment(
+        recurringId,
+        amount,
+        paidAt,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

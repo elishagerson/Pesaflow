@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_sheet.dart';
 
 /// Filter options for the recurring flows list.
 enum _RecurringFilter { all, expenses, income }
@@ -49,9 +50,12 @@ class _RecurringTransactionListScreenState
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
     final totals = ref.watch(recurringTotalsProvider);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
+    final accountsAsync = ref.watch(accountsStreamProvider);
 
     final dueIds = dueAsync.asData?.value.map((d) => d.id).toSet() ?? {};
     final categories = categoriesAsync.asData?.value ?? [];
+    final accounts = accountsAsync.asData?.value ?? [];
+    final accountNames = {for (final a in accounts) a.id: a.name};
 
     Color? catColor(String? catId) {
       if (catId == null) return null;
