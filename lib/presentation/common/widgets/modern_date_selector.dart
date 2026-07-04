@@ -154,8 +154,8 @@ class _ModernDateSelectorWidget extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 14.0,
+              horizontal: kSpacing16,
+              vertical: kSpacing14,
             ),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHigh,

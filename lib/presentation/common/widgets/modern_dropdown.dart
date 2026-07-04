@@ -96,8 +96,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 14.0,
+              horizontal: kSpacing16,
+              vertical: kSpacing14,
             ),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
@@ -192,8 +192,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                 ),
               ),
               padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 16.0,
+                horizontal: kSpacing20,
+                vertical: kSpacing16,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

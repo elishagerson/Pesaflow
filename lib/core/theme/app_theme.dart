@@ -264,8 +264,8 @@ class AppTheme {
           ),
         ),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 14.0,
+          horizontal: kSpacing16,
+          vertical: kSpacing14,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -277,7 +277,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
-          padding: EdgeInsets.symmetric(horizontal: kSpacing24).0, vertical: 14.0),
+          padding: EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing14),
           minimumSize: const Size(48, 48),
           textStyle: txtTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
         ),

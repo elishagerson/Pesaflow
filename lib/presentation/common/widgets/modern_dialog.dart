@@ -84,8 +84,8 @@ class ModernDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       insetPadding: const EdgeInsets.symmetric(
-        horizontal: 24.0,
-        vertical: 24.0,
+        horizontal: kSpacing24,
+        vertical: kSpacing24,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.0),

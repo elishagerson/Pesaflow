@@ -760,8 +760,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 24.0,
+                  horizontal: kSpacing20,
+                  vertical: kSpacing24,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -875,7 +875,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       const SizedBox(height: kSpacing6),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 4.0,
+                                          horizontal: kSpacing4,
                                         ),
                                         child: Text(
                                           cat.name,
@@ -1271,7 +1271,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               }),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
+                                  vertical: kSpacing10,
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Expense'
@@ -1312,7 +1312,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               }),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
+                                  vertical: kSpacing10,
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Income'
@@ -1353,7 +1353,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               }),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
+                                  vertical: kSpacing10,
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Transfer'
@@ -1480,8 +1480,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               _showAccountPickerSheet(context, accounts),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 8.0,
+                              horizontal: kSpacing16,
+                              vertical: kSpacing8,
                             ),
                             decoration: BoxDecoration(
                               color: onSurface.withValues(alpha: 0.05),
@@ -1520,8 +1520,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             ),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 8.0,
+                                horizontal: kSpacing16,
+                                vertical: kSpacing8,
                               ),
                               decoration: BoxDecoration(
                                 color: onSurface.withValues(alpha: 0.05),
@@ -1592,7 +1592,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: context.spacing,
-                        vertical: 12.0,
+                        vertical: kSpacing12,
                       ),
                       child: PressScale(
                         onTap: () =>
