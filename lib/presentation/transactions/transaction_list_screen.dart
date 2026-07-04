@@ -453,7 +453,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: kSpacing14),
                                       // Content
                                       Expanded(
                                         child: Column(
@@ -606,15 +606,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 );
               },
               loading: () => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing8),
                 child: Column(
                   children: [
                     SkeletonCard(height: 80),
-                    SizedBox(height: 8),
+                    SizedBox(height: kSpacing8),
                     SkeletonCard(height: 80),
-                    SizedBox(height: 8),
+                    SizedBox(height: kSpacing8),
                     SkeletonCard(height: 80),
-                    SizedBox(height: 8),
+                    SizedBox(height: kSpacing8),
                     SkeletonCard(height: 80),
                   ],
                 ),
@@ -770,7 +770,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                             ref,
                                           ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: kSpacing8),
                                     TactileSpringContainer(
                                       onTap: () => ref
                                           .read(
@@ -801,7 +801,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: kSpacing8),
                                     Container(
                                       width: 36,
                                       height: 36,
@@ -830,7 +830,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: kSpacing16),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: kSpacing20,
@@ -882,7 +882,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: kSpacing10),
                           SizedBox(
                             height: 34,
                             child: Row(
@@ -1030,7 +1030,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(kSpacing20),
                   child: Row(
                     children: [
                       Expanded(
@@ -1072,7 +1072,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: kSpacing16),
                       Expanded(
                         flex: 2,
                         child: monthlyTotalsAsync.when(
@@ -1095,7 +1095,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   color: const Color(0xFF10B981),
                                   formatValue: (v) => 'TSh ${_formatKsh(v)}',
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: kSpacing10),
                                 _MiniBar(
                                   label: 'Expense',
                                   value: expense,
@@ -1176,7 +1176,7 @@ class _FilterButton extends StatelessWidget {
               right: 2,
               top: 2,
               child: Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
                   color: Colors.redAccent,
                   shape: BoxShape.circle,

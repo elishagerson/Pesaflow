@@ -80,11 +80,11 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
         StaggeredFadeSlide(
           index: 0,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(4, 12, 4, 12),
+            padding: const EdgeInsets.fromLTRB(kSpacing4, kSpacing12, kSpacing4, kSpacing12),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
@@ -95,7 +95,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     color: theme.colorScheme.primary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 const Text(
                   'Filter Transactions',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -128,7 +128,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing10),
                     ),
                     child: const Text(
                       'Reset',
@@ -191,7 +191,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
                           child: Text(
                             '—',
                             style: TextStyle(
@@ -236,7 +236,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
 
             // Date Range
             StaggeredFadeSlide(
@@ -273,7 +273,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             },
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: kSpacing8),
                         Expanded(
                           child: _DateButton(
                             label: 'To',
@@ -302,7 +302,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
 
             // Account Selector
             StaggeredFadeSlide(
@@ -347,7 +347,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: kSpacing8),
 
             // Category
             StaggeredFadeSlide(
@@ -419,7 +419,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: kSpacing24),
           ],
         ),
 
@@ -427,7 +427,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
         StaggeredFadeSlide(
           index: 5,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing8, kSpacing20, kSpacing24),
             child: Row(
               children: [
                 Expanded(
@@ -440,7 +440,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       side: BorderSide(
                         color: onSurface.withValues(alpha: 0.12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -451,7 +451,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: kSpacing12),
                 Expanded(
                   flex: 2,
                   child: ElevatedButton(
@@ -491,7 +491,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       backgroundColor: theme.colorScheme.primary,
                       foregroundColor: theme.colorScheme.onPrimary,
                       elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -541,7 +541,7 @@ class _CategoryChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing8),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(100),
@@ -554,7 +554,7 @@ class _CategoryChip extends StatelessWidget {
           children: [
             if (icon != null) ...[
               Icon(icon, size: 16, color: iconColor ?? fg),
-              const SizedBox(width: 6),
+              const SizedBox(width: kSpacing6),
             ],
             Text(
               label,
@@ -589,7 +589,7 @@ class _DateButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing12),
         decoration: BoxDecoration(
           color: onSurface.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
@@ -605,7 +605,7 @@ class _DateButton extends StatelessWidget {
                 color: onSurface.withValues(alpha: 0.38),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: kSpacing4),
             Text(
               date != null ? DateFormat('MMM d, yyyy').format(date!) : 'Any',
               style: TextStyle(
