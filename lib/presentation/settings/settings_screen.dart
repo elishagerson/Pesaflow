@@ -22,7 +22,9 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
+
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -403,8 +405,10 @@ class SettingsScreen extends ConsumerWidget {
               }
             } catch (e) {
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to update account: $e')),
+              CustomToast.show(
+                context,
+                message: 'Failed to update account: $e',
+                type: ToastType.error,
               );
             }
           },
@@ -441,14 +445,18 @@ class SettingsScreen extends ConsumerWidget {
               ref.invalidate(netWorthProvider);
               if (context.mounted) {
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('"${acc.name}" deleted')),
+                CustomToast.show(
+                  context,
+                  message: '"${acc.name}" deleted',
+                  type: ToastType.info,
                 );
               }
             } catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to delete account: $e')),
+                CustomToast.show(
+                  context,
+                  message: 'Failed to delete account: $e',
+                  type: ToastType.error,
                 );
               }
             }
@@ -571,12 +579,10 @@ class SettingsScreen extends ConsumerWidget {
                                 }
                               } catch (e) {
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Failed to delete category: $e',
-                                      ),
-                                    ),
+                                  CustomToast.show(
+                                    context,
+                                    message: 'Failed to delete category: $e',
+                                    type: ToastType.error,
                                   );
                                 }
                               }
@@ -828,17 +834,18 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleExportCsv(BuildContext context, WidgetRef ref) async {
     try {
-      ScaffoldMessenger.of(
+      CustomToast.show(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Generating CSV export...')));
+        message: 'Generating CSV export...',
+        type: ToastType.info,
+      );
       await ref.read(backupServiceProvider).exportTransactionsToCsv();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to export CSV: $e'),
-            backgroundColor: Colors.red,
-          ),
+        CustomToast.show(
+          context,
+          message: 'Failed to export CSV: $e',
+          type: ToastType.error,
         );
       }
     }
@@ -846,17 +853,18 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleBackupDb(BuildContext context, WidgetRef ref) async {
     try {
-      ScaffoldMessenger.of(
+      CustomToast.show(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Creating local backup...')));
+        message: 'Creating local backup...',
+        type: ToastType.info,
+      );
       await ref.read(backupServiceProvider).backupDatabase();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Backup failed: $e'),
-            backgroundColor: Colors.red,
-          ),
+        CustomToast.show(
+          context,
+          message: 'Backup failed: $e',
+          type: ToastType.error,
         );
       }
     }
