@@ -772,9 +772,8 @@ class _RecurringTransactionListScreenState
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.4,
                         ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
