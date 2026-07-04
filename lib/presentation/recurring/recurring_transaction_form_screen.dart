@@ -265,7 +265,7 @@ class _RecurringTransactionFormScreenState
                         .deleteRecurringTransaction(widget.recurringId!);
                     ref.invalidate(recurringTransactionsStreamProvider);
                     ref.invalidate(dueRecurringTransactionsProvider);
-                    if (mounted) {
+                    if (context.mounted) {
                       CustomToast.show(
                         context,
                         message: 'Recurring flow deleted',
@@ -274,7 +274,7 @@ class _RecurringTransactionFormScreenState
                       context.pop();
                     }
                   } catch (e) {
-                    if (mounted) {
+                    if (context.mounted) {
                       CustomToast.show(
                         context,
                         message: 'Error: $e',
