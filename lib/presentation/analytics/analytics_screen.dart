@@ -591,7 +591,7 @@ class _OverviewTab extends StatelessWidget {
                                   ),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   PesaFlowIcons.savings,
                                   color: AppTheme.transferColorDark,
                                   size: 20,
@@ -638,7 +638,7 @@ class _OverviewTab extends StatelessWidget {
                                       const SavingsGoalFormSheet(),
                                 );
                               },
-                              icon: const Icon(PesaFlowIcons.add, size: 16),
+                              icon: Icon(PesaFlowIcons.add, size: 16),
                               label: const FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -1211,7 +1211,7 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: kSpacing6),
-                const Text(
+                Text(
                   'Income',
                   style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
@@ -1225,7 +1225,7 @@ class _TrendsTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: kSpacing6),
-                const Text(
+                Text(
                   'Expense',
                   style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),

@@ -280,7 +280,7 @@ class _SavingsGoalDetailSheetState
                                     const SizedBox(height: kSpacing24),
 
                                     // Amount Entry
-                                    const Text(
+                                    Text(
                                       'AMOUNT',
                                       style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                     ),
@@ -405,7 +405,7 @@ class _SavingsGoalDetailSheetState
                                     const SizedBox(height: kSpacing20),
 
                                     // Note
-                                    const Text(
+                                    Text(
                                       'MEMO',
                                       style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                     ),
@@ -892,7 +892,7 @@ class _SavingsGoalDetailSheetState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   PesaFlowIcons.add,
                                   color: AppTheme.transferColorDark,
                                   size: 18,
@@ -926,7 +926,7 @@ class _SavingsGoalDetailSheetState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.remove_rounded,
                                   color: Color(0xFFFF453A),
                                   size: 18,
@@ -1050,12 +1050,12 @@ class _SavingsGoalDetailSheetState
                                           final confirm =
                                               await ModernDialog.show<bool>(
                                                 context: context,
-                                                title: const Text(
+                                                title: Text(
                                                   'Delete Contribution?',
                                                 ),
                                                 titleIcon:
                                                     PesaFlowIcons.warning,
-                                                content: const Text(
+                                                content: Text(
                                                   'This will undo this deposit/withdrawal from this visual savings goal balance.',
                                                 ),
                                                 actions: [
@@ -1064,14 +1064,14 @@ class _SavingsGoalDetailSheetState
                                                         Navigator.of(
                                                           context,
                                                         ).pop(false),
-                                                    child: const Text('Cancel'),
+                                                    child: Text('Cancel'),
                                                   ),
                                                   TextButton(
                                                     onPressed: () =>
                                                         Navigator.of(
                                                           context,
                                                         ).pop(true),
-                                                    child: const Text(
+                                                    child: Text(
                                                       'Delete',
                                                       style: TextStyle(
                                                         color: Colors.red,
