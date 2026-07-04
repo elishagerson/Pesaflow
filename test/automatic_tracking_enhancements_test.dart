@@ -68,7 +68,7 @@ void main() {
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
     notificationService = MockNotificationService();
-    recurringTransactionRepo = RecurringTransactionRepository(RecurringTransactionDao(database));
+    recurringTransactionRepo = RecurringTransactionRepository(RecurringTransactionDao(database), transactionDao);
 
     smsProcessor = SmsProcessor(
       accountRepo: accountRepo,

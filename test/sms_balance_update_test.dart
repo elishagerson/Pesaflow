@@ -63,7 +63,7 @@ void main() {
     settingsRepo = SettingsRepository(settingsDao);
     deduplicator = Deduplicator(transactionRepo);
     categorizer = AutoCategorizer(categoryRepo, transactionDao);
-    recurringTransactionRepo = RecurringTransactionRepository(RecurringTransactionDao(database));
+    recurringTransactionRepo = RecurringTransactionRepository(RecurringTransactionDao(database), transactionDao);
     smsProcessor = SmsProcessor(
       accountRepo: accountRepo,
       categoryRepo: categoryRepo,
