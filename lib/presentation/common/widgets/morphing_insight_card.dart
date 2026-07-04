@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 
 class MorphingInsightCard extends StatefulWidget {
@@ -112,7 +113,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             width: 280,
             margin: const EdgeInsets.only(right: kSpacing12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh,
+              color: context.appColors.surfaceHigh,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: color.withValues(
@@ -170,9 +171,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                             Expanded(
                               child: Text(
                                 widget.data.title,
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                style: context.ts(14, fontWeight: FontWeight.w700),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -200,11 +199,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                   const SizedBox(width: kSpacing4),
                                   Text(
                                     _severityLabel(severity),
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w700,
-                                      color: _severityColor(severity),
-                                    ),
+                                    style: context.ts(9, fontWeight: FontWeight.w700, color: _severityColor(severity)),
                                   ),
                                 ],
                               ),
@@ -214,11 +209,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         const SizedBox(height: kSpacing8),
                         Text(
                           widget.data.subtitle,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.7,
-                            ),
-                          ),
+                          style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                           maxLines: _expanded ? 5 : 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -262,26 +253,20 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   }
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Icon(icon, size: 14, color: Colors.grey),
         const SizedBox(width: kSpacing6),
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall!.copyWith(
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-          ),
+          style: context.ts(11, fontWeight: FontWeight.w500, color: Colors.grey),
         ),
         const SizedBox(width: kSpacing8),
         Expanded(
           child: Text(
             value,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+            style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             textAlign: TextAlign.end,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -391,3 +376,4 @@ class _PulseIconState extends State<PulseIcon>
     );
   }
 }
+

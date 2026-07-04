@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
@@ -44,17 +45,13 @@ class ErrorState extends StatelessWidget {
               const SizedBox(height: kSpacing20),
               Text(
                 title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: context.ts(16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: kSpacing8),
               Text(
                 message,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
                 textAlign: TextAlign.center,
               ),
               if (onRetry != null) ...[
@@ -72,9 +69,7 @@ class ErrorState extends StatelessWidget {
                     ),
                     child: Text(
                       'Retry',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: theme.colorScheme.onPrimary,
-                      ),
+                      style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
                     ),
                   ),
                 ),
@@ -86,3 +81,4 @@ class ErrorState extends StatelessWidget {
     );
   }
 }
+

@@ -50,20 +50,14 @@ class EmptyState extends StatelessWidget {
               header: true,
               child: Text(
                 title,
-                style: context.titleMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-                textAlign: TextAlign.center,
+                style: context.ts(16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
               ),
             ),
             if (subtitle != null) ...[
               SizedBox(height: context.isCompactView ? 8 : 12),
               Text(
                 subtitle!,
-                style: context.bodySmall.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+                style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -144,10 +138,7 @@ class SectionHeader extends StatelessWidget {
             header: true,
             child: Text(
               title,
-              style: context.titleMedium.copyWith(
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: context.ts(16, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface),
             ),
           ),
           const Spacer(),
@@ -160,10 +151,7 @@ class SectionHeader extends StatelessWidget {
                   padding: const EdgeInsets.all(kSpacing8),
                   child: Text(
                     actionLabel!,
-                    style: context.bodySmall.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.primary,
-                    ),
+                    style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                   ),
                 ),
               ),
@@ -173,3 +161,4 @@ class SectionHeader extends StatelessWidget {
     );
   }
 }
+

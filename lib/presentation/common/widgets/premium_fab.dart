@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -109,9 +110,7 @@ class PremiumExtendedFab extends StatelessWidget {
             const SizedBox(width: kSpacing8),
             Text(
               label,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.onPrimary,
-              ),
+              style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
             ),
           ],
         ),
@@ -119,3 +118,4 @@ class PremiumExtendedFab extends StatelessWidget {
     );
   }
 }
+
