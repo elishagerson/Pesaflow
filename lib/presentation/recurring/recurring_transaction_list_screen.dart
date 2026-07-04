@@ -752,7 +752,7 @@ class _RecurringTransactionListScreenState
                 size: 9,
                 color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 2),
+              const SizedBox(width: kSpacing2),
               Text(
                 'Auto',
                 style: TextStyle(
