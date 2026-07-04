@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 enum ScreenSize { smallPhone, phone, smallTablet, largeTablet, desktop }
 
 ScreenSize getScreenSize(BuildContext context) {

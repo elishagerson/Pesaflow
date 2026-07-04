@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class ModernDateSelector extends FormField<DateTime> {
   final String labelText;
   final DateTime value;
@@ -28,7 +29,7 @@ class ModernDateSelector extends FormField<DateTime> {
   }) : super(
          initialValue: value,
          builder: (FormFieldState<DateTime> state) {
-            return _ModernDateSelectorWidget(
+           return _ModernDateSelectorWidget(
              labelText: labelText,
              value: state.value ?? value,
              onChanged: (newVal) {
@@ -85,12 +86,17 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                   height: 300,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
                   ),
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing16,
+                          vertical: kSpacing10,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -140,7 +146,11 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                             onDateTimeChanged: (picked) {
                               onChanged(picked);
                             },
-                            minimumDate: firstDate ?? DateTime.now().subtract(const Duration(days: 365)),
+                            minimumDate:
+                                firstDate ??
+                                DateTime.now().subtract(
+                                  const Duration(days: 365),
+                                ),
                             maximumDate: lastDate ?? DateTime(2035),
                           ),
                         ),
@@ -188,14 +198,20 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         formattedDate,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ],
                   ),
@@ -215,7 +231,9 @@ class _ModernDateSelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
             ),
           ),
         ],

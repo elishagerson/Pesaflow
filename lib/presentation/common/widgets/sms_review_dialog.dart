@@ -13,6 +13,7 @@ import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class SmsReviewDialog extends ConsumerStatefulWidget {
   final TransactionWithCategoryAndAccount item;
 
@@ -84,7 +85,10 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       ),
-      insetPadding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing40),
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: kSpacing16,
+        vertical: kSpacing40,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(kSpacing20),
         child: SingleChildScrollView(
@@ -212,7 +216,8 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   height: 180,
                   child: ListView.separated(
                     itemCount: categories.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: kSpacing2),
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: kSpacing2),
                     itemBuilder: (context, index) {
                       final cat = categories[index];
                       final isSelected = cat.id == _selectedCategoryId;
@@ -284,7 +289,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         side: BorderSide(
                           color: theme.colorScheme.error.withValues(alpha: 0.4),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: kSpacing12),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kSpacing12,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -298,7 +305,9 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                       icon: const Icon(Icons.check_rounded, size: 18),
                       label: const Text('Approve'),
                       style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: kSpacing12),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kSpacing12,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

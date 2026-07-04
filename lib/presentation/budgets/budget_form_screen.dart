@@ -185,7 +185,11 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: kSpacing4, bottom: kSpacing10, top: kSpacing12),
+          padding: const EdgeInsets.only(
+            left: kSpacing4,
+            bottom: kSpacing10,
+            top: kSpacing12,
+          ),
           child: Text(
             'SELECT CATEGORY',
             style: theme.textTheme.labelSmall?.copyWith(
@@ -205,7 +209,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               final cat = categories[index];
               final isSelected = cat.id == _selectedCategoryId;
               final color = hexToColor(cat.color);
-              
+
               return Padding(
                 padding: const EdgeInsets.only(right: kSpacing12),
                 child: TactileSpringContainer(
@@ -246,18 +250,28 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       children: [
                         Icon(
                           getCategoryIcon(cat.icon),
-                          color: isSelected ? color : theme.colorScheme.onSurface,
+                          color: isSelected
+                              ? color
+                              : theme.colorScheme.onSurface,
                           size: 20,
                         ),
                         const SizedBox(height: kSpacing6),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing4,
+                          ),
                           child: Text(
                             cat.name,
                             style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 9,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: isSelected
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.7,
+                                    ),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -355,7 +369,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               const SizedBox(height: kSpacing4),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 350),
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing8,
+                  vertical: kSpacing4,
+                ),
                 decoration: BoxDecoration(
                   color: themeColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(100),
@@ -386,16 +403,22 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
     Widget sectionLabel(String label) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing8, kSpacing16, kSpacing6),
+        padding: const EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing8,
+          kSpacing16,
+          kSpacing6,
+        ),
         child: Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.45),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontWeight: FontWeight.w600,
+            color: onSurface.withValues(alpha: 0.45),
             letterSpacing: 0.3,
           ),
         ),
       );
     }
-
 
     return Scaffold(
       body: SafeArea(
@@ -426,7 +449,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       StaggeredFadeSlide(
                         index: 0,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           child: GlassCard(
                             padding: const EdgeInsets.all(kSpacing16),
                             borderRadius: AppTheme.radiusCard,
@@ -444,7 +469,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                 ),
                                 const SizedBox(height: kSpacing16),
                                 categoriesAsync.when(
-                                  data: (cats) => _buildCategorySelector(cats, theme),
+                                  data: (cats) =>
+                                      _buildCategorySelector(cats, theme),
                                   loading: () =>
                                       const LinearProgressIndicator(),
                                   error: (e, _) => Text('Error: $e'),
@@ -457,7 +483,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   icon: PesaFlowIcons.cash,
                                   keyboardType: TextInputType.number,
                                   errorText: _amountError,
-                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(fontWeight: FontWeight.w500),
                                   onChanged: (_) =>
                                       setState(() => _amountError = null),
                                 ),
@@ -471,7 +500,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       StaggeredFadeSlide(
                         index: 1,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           child: GlassCard(
                             padding: const EdgeInsets.all(kSpacing6),
                             borderRadius: AppTheme.radiusCard,
@@ -479,24 +510,81 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               width: double.infinity,
                               child: CupertinoSlidingSegmentedControl<String>(
                                 groupValue: _period,
-                                backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                backgroundColor: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.05),
                                 thumbColor: theme.colorScheme.surface,
                                 children: {
                                   'weekly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                    child: Text('Week', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'weekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing10,
+                                      vertical: kSpacing8,
+                                    ),
+                                    child: Text(
+                                      'Week',
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: _period == 'weekly'
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                          ),
+                                    ),
                                   ),
                                   'biweekly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                    child: Text('2 Wk', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'biweekly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing10,
+                                      vertical: kSpacing8,
+                                    ),
+                                    child: Text(
+                                      '2 Wk',
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: _period == 'biweekly'
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                          ),
+                                    ),
                                   ),
                                   'monthly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                    child: Text('Month', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'monthly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing10,
+                                      vertical: kSpacing8,
+                                    ),
+                                    child: Text(
+                                      'Month',
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: _period == 'monthly'
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                          ),
+                                    ),
                                   ),
                                   'yearly': Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                    child: Text('Year', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _period == 'yearly' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing10,
+                                      vertical: kSpacing8,
+                                    ),
+                                    child: Text(
+                                      'Year',
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: _period == 'yearly'
+                                                ? theme.colorScheme.primary
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                          ),
+                                    ),
                                   ),
                                 },
                                 onValueChanged: (v) {
@@ -512,7 +600,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       StaggeredFadeSlide(
                         index: 2,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           child: GlassCard(
                             padding: const EdgeInsets.all(kSpacing8),
                             borderRadius: AppTheme.radiusCard,
@@ -557,7 +647,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         StaggeredFadeSlide(
                           index: 3,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
                             child: GlassCard(
                               padding: const EdgeInsets.all(kSpacing6),
                               borderRadius: AppTheme.radiusCard,
@@ -567,20 +659,57 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     width: double.infinity,
                                     child: CupertinoSlidingSegmentedControl<String>(
                                       groupValue: _rolloverType,
-                                      backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                      backgroundColor: theme
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.05),
                                       thumbColor: theme.colorScheme.surface,
                                       children: {
                                         'all': Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
-                                          child: Text('All', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'all' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing12,
+                                            vertical: kSpacing8,
+                                          ),
+                                          child: Text(
+                                            'All',
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: _rolloverType == 'all'
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                ),
+                                          ),
                                         ),
                                         'capped': Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
-                                          child: Text('Capped', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _rolloverType == 'capped' ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant)),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing12,
+                                            vertical: kSpacing8,
+                                          ),
+                                          child: Text(
+                                            'Capped',
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      _rolloverType == 'capped'
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                ),
+                                          ),
                                         ),
                                       },
                                       onValueChanged: (v) {
-                                        if (v != null) setState(() => _rolloverType = v);
+                                        if (v != null)
+                                          setState(() => _rolloverType = v);
                                       },
                                     ),
                                   ),
@@ -592,7 +721,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       hint: 'e.g. 50000',
                                       icon: Icons.upcoming_rounded,
                                       keyboardType: TextInputType.number,
-                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ],
                                 ],
@@ -606,7 +740,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       StaggeredFadeSlide(
                         index: 4,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           child: GlassCard(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -618,7 +754,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               builder: (context) {
                                 final Color thresholdColor = _threshold >= 0.85
                                     ? const Color(0xFFFF453A)
-                                    : (_threshold >= 0.75 ? Colors.amber : const Color(0xFF30D158));
+                                    : (_threshold >= 0.75
+                                          ? Colors.amber
+                                          : const Color(0xFF30D158));
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -633,19 +771,30 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         Expanded(
                                           child: Text(
                                             'Notify when spending reaches',
-                                            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.7),
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.7),
+                                                ),
                                           ),
                                         ),
                                         AnimatedDefaultTextStyle(
-                                          duration: const Duration(milliseconds: 200),
+                                          duration: const Duration(
+                                            milliseconds: 200,
+                                          ),
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w900,
                                             color: thresholdColor,
                                           ),
-                                          child: Text('${(_threshold * 100).round()}%'),
+                                          child: Text(
+                                            '${(_threshold * 100).round()}%',
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -654,22 +803,27 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       data: SliderTheme.of(context).copyWith(
                                         trackHeight: 4,
                                         activeTrackColor: thresholdColor,
-                                        inactiveTrackColor: thresholdColor.withValues(alpha: 0.2),
+                                        inactiveTrackColor: thresholdColor
+                                            .withValues(alpha: 0.2),
                                         thumbColor: thresholdColor,
-                                        overlayColor: thresholdColor.withValues(alpha: 0.1),
+                                        overlayColor: thresholdColor.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         thumbShape: const RoundSliderThumbShape(
                                           enabledThumbRadius: 8,
                                         ),
-                                        overlayShape: const RoundSliderOverlayShape(
-                                          overlayRadius: 16,
-                                        ),
+                                        overlayShape:
+                                            const RoundSliderOverlayShape(
+                                              overlayRadius: 16,
+                                            ),
                                         valueIndicatorShape:
                                             const RectangularSliderValueIndicatorShape(),
                                         valueIndicatorColor: thresholdColor,
-                                        valueIndicatorTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        valueIndicatorTextStyle:
+                                            const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                       child: Slider(
                                         value: _threshold,
@@ -683,7 +837,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ],
                                 );
-                              }
+                              },
                             ),
                           ),
                         ),
@@ -692,7 +846,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                       StaggeredFadeSlide(
                         index: 5,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing16,
+                          ),
                           child: TactileSpringContainer(
                             onTap: _save,
                             child: Container(
@@ -708,9 +864,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                     ),
                                   ],
                                 ),
-                                shape: const SquircleBorder(
-                                  borderRadius: 24.0,
-                                ),
+                                shape: const SquircleBorder(borderRadius: 24.0),
                                 shadows: [
                                   BoxShadow(
                                     color: theme.colorScheme.primary.withValues(
@@ -734,7 +888,13 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       isEditing
                                           ? 'Update Budget'
                                           : 'Create Budget',
-                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                     ),
                             ),
                           ),
@@ -815,7 +975,10 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing6),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing16,
+          vertical: kSpacing6,
+        ),
         decoration: ShapeDecoration(
           color: _isFocused
               ? theme.colorScheme.primary.withValues(alpha: 0.04)
@@ -839,13 +1002,13 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 color: _isFocused
                     ? theme.colorScheme.primary.withValues(alpha: 0.1)
                     : theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                shape: const SquircleBorder(
-                  borderRadius: 14.0,
-                ),
+                shape: const SquircleBorder(borderRadius: 14.0),
               ),
               child: Icon(
                 widget.icon,
-                color: _isFocused ? theme.colorScheme.primary : onSurface.withValues(alpha: 0.6),
+                color: _isFocused
+                    ? theme.colorScheme.primary
+                    : onSurface.withValues(alpha: 0.6),
                 size: 18,
               ),
             ),
@@ -855,10 +1018,12 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 textCapitalization: widget.textCapitalization,
-                style: widget.style ?? theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
+                style:
+                    widget.style ??
+                    theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
                 onChanged: widget.onChanged,
                 decoration: InputDecoration(
                   filled: false,
@@ -881,7 +1046,9 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                   errorBorder: InputBorder.none,
                   focusedErrorBorder: InputBorder.none,
                   errorText: widget.errorText,
-                  contentPadding: const EdgeInsets.symmetric(vertical: kSpacing6),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: kSpacing6,
+                  ),
                 ),
               ),
             ),

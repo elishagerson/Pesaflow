@@ -4,6 +4,7 @@ import '../theme/app_typography_theme.dart';
 import 'responsive.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
 
@@ -15,7 +16,16 @@ extension PesaFlowContext on BuildContext {
 
   ThemeData get th => Theme.of(this);
 
-  TextStyle ts(double size, {TextStyle? from, Color? color, FontWeight? fontWeight, double? letterSpacing, double? height, TextDecoration? decoration, FontStyle? fontStyle}) {
+  TextStyle ts(
+    double size, {
+    TextStyle? from,
+    Color? color,
+    FontWeight? fontWeight,
+    double? letterSpacing,
+    double? height,
+    TextDecoration? decoration,
+    FontStyle? fontStyle,
+  }) {
     final t = th.textTheme;
     final base = switch (size) {
       10 => th.extension<AppTypographyTheme>()!.labelMicro,
@@ -163,21 +173,18 @@ extension PesaFlowContext on BuildContext {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: theme.colorScheme.error,
-          width: 1.0,
-        ),
+        borderSide: BorderSide(color: theme.colorScheme.error, width: 1.0),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: theme.colorScheme.error,
-          width: 1.5,
-        ),
+        borderSide: BorderSide(color: theme.colorScheme.error, width: 1.5),
       ),
       contentPadding:
           contentPadding ??
-          const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing14),
+          const EdgeInsets.symmetric(
+            horizontal: kSpacing16,
+            vertical: kSpacing14,
+          ),
       labelStyle: theme.textTheme.bodyMedium?.copyWith(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
       ),

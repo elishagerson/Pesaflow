@@ -8,6 +8,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class IosTabBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
@@ -118,7 +119,9 @@ class IosTabBar extends StatelessWidget {
                           curve: Curves.easeOutBack,
                           width: minimized ? 36 : 54,
                           height: minimized ? 36 : 54,
-                          margin: const EdgeInsets.symmetric(horizontal: kSpacing8),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: kSpacing8,
+                          ),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: isSelected
@@ -298,36 +301,42 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          SizedBox(height: hasRow ? 12.0 : 16.0),
-          if (hasRow)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-              child: SizedBox(
-                height: 44,
-                child: Row(
-                  children: [
-                    leading ?? const SizedBox(),
-                    const Spacer(),
-                    ...?actions,
-                  ],
+              SizedBox(height: hasRow ? 12.0 : 16.0),
+              if (hasRow)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                  child: SizedBox(
+                    height: 44,
+                    child: Row(
+                      children: [
+                        leading ?? const SizedBox(),
+                        const Spacer(),
+                        ...?actions,
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          if (largeTitle)
-            Padding(
-              padding: const EdgeInsets.only(left: kSpacing16, top: kSpacing8, bottom: kSpacing8),
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
+              if (largeTitle)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kSpacing16,
+                    top: kSpacing8,
+                    bottom: kSpacing8,
+                  ),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          ),
+        ),
       ),
-    ),),);
+    );
   }
 }
 
@@ -351,7 +360,7 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    
+
     _stretchY = Tween<double>(begin: 1.0, end: 1.12).animate(_controller);
     _stretchX = Tween<double>(begin: 1.0, end: 0.92).animate(_controller);
   }
@@ -395,7 +404,11 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
         builder: (context, child) {
           return Transform(
             alignment: Alignment.center,
-            transform: Matrix4.diagonal3Values(_stretchX.value, _stretchY.value, 1.0),
+            transform: Matrix4.diagonal3Values(
+              _stretchX.value,
+              _stretchY.value,
+              1.0,
+            ),
             child: child,
           );
         },

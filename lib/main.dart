@@ -32,6 +32,7 @@ import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: PesaFlowApp()));
@@ -486,7 +487,9 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                       Semantics(
                                         label: 'App locked',
                                         child: Container(
-                                          padding: const EdgeInsets.all(kSpacing16),
+                                          padding: const EdgeInsets.all(
+                                            kSpacing16,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: const Color(
                                               0xFF609F8A,
@@ -503,12 +506,21 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                                       const SizedBox(height: kSpacing24),
                                       Text(
                                         'PesaFlow Locked',
-                                        style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                       ),
                                       const SizedBox(height: kSpacing8),
                                       Text(
                                         'Authentication required to access offline data',
-                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.grey[400]),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(color: Colors.grey[400]),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: kSpacing32),

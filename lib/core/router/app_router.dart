@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'route_params.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
@@ -258,7 +259,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
           const SizedBox(height: kSpacing48),
           // App logo / brand
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing16),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing20,
+              vertical: kSpacing16,
+            ),
             child: Row(
               children: [
                 Container(
@@ -290,7 +294,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
           ...navItems.map((item) {
             final isSelected = widget.navigationShell.currentIndex == item.$3;
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing2),
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing10,
+                vertical: kSpacing2,
+              ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(

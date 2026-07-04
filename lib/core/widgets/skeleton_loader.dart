@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class SkeletonCard extends StatelessWidget {
   final double height;
   final double width;
@@ -33,13 +34,20 @@ class SkeletonCard extends StatelessWidget {
         final theme = Theme.of(context);
         final barHeight = (constraints.maxHeight - 16) / 6.5;
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing16,
+            vertical: kSpacing8,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _pulseBar(width: 120, height: barHeight * 1.5, theme: theme),
               SizedBox(height: barHeight),
-              _pulseBar(width: double.infinity, height: barHeight, theme: theme),
+              _pulseBar(
+                width: double.infinity,
+                height: barHeight,
+                theme: theme,
+              ),
               SizedBox(height: barHeight),
               _pulseBar(width: 180, height: barHeight, theme: theme),
             ],
@@ -49,7 +57,11 @@ class SkeletonCard extends StatelessWidget {
     );
   }
 
-  Widget _pulseBar({double width = 80, double height = 12, required ThemeData theme}) {
+  Widget _pulseBar({
+    double width = 80,
+    double height = 12,
+    required ThemeData theme,
+  }) {
     return Container(
       width: width,
       height: height,
@@ -126,11 +138,7 @@ class _ShimmerEffectState extends State<_ShimmerEffect>
           shaderCallback: (bounds) => LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [
-              Colors.transparent,
-              shimmerColor,
-              Colors.transparent,
-            ],
+            colors: [Colors.transparent, shimmerColor, Colors.transparent],
             stops: [
               _animation.value - 0.3,
               _animation.value,

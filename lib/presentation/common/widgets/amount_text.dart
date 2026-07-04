@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 enum AmountType { income, expense, transfer, neutral }
 
 class AmountText extends ConsumerWidget {

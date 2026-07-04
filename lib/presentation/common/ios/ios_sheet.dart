@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class IosBottomSheet extends StatelessWidget {
   final Widget child;
   final double initialChildSize;
@@ -69,7 +70,9 @@ class IosBottomSheet extends StatelessWidget {
                     child: SingleChildScrollView(
                       controller: scrollController,
                       physics: const ClampingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                      ),
                       child: child,
                     ),
                   ),

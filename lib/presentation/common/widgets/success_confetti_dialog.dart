@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class SuccessConfettiDialog extends StatefulWidget {
   final String goalName;
   final int targetAmount;

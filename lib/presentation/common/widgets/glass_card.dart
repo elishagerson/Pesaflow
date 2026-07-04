@@ -143,10 +143,7 @@ class _GlassCardState extends State<GlassCard>
         color: glassColor,
         gradient: widget.backgroundGradient,
         shape: SquircleBorder(
-          side: BorderSide(
-            color: theme.colorScheme.outlineVariant,
-            width: 0.8,
-          ),
+          side: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.8),
           borderRadius: widget.borderRadius,
         ),
         shadows: shadows,
@@ -164,9 +161,7 @@ class _GlassCardState extends State<GlassCard>
           : null,
       child: ClipPath(
         clipper: ShapeBorderClipper(
-          shape: SquircleBorder(
-            borderRadius: widget.borderRadius,
-          ),
+          shape: SquircleBorder(borderRadius: widget.borderRadius),
         ),
         child: Stack(
           children: [

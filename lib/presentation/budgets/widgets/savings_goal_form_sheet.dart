@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
   const SavingsGoalFormSheet({this.existingGoal, super.key});
@@ -131,7 +132,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final inputFill = theme.inputDecorationTheme.fillColor ?? Colors.transparent;
+    final inputFill =
+        theme.inputDecorationTheme.fillColor ?? Colors.transparent;
 
     InputDecoration inputDeco({
       required String label,
@@ -150,9 +152,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: theme.colorScheme.outlineVariant,
-          ),
+          borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -171,7 +171,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         child: LiquidGlassOverlay(
           child: Container(
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.94),
+              color: theme.colorScheme.surfaceContainerHigh.withValues(
+                alpha: 0.94,
+              ),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
@@ -194,9 +196,14 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                       child: Container(
                         width: 38,
                         height: 5,
-                        margin: const EdgeInsets.only(bottom: kSpacing16, top: kSpacing4),
+                        margin: const EdgeInsets.only(
+                          bottom: kSpacing16,
+                          top: kSpacing4,
+                        ),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(100),
                         ),
                       ),
@@ -220,13 +227,17 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           child: Container(
                             padding: const EdgeInsets.all(kSpacing6),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.08,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               PesaFlowIcons.close,
                               size: 20,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
                             ),
                           ),
                         ),
@@ -237,7 +248,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Details Section ──
                     Text(
                       'GOAL DETAILS',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -252,7 +267,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
+                              style: Theme.of(context).textTheme.titleMedium!
+                                  .copyWith(fontWeight: FontWeight.w500),
                               decoration: inputDeco(
                                 label: 'Goal Title',
                                 hint: 'e.g. Vacation to Zanzibar',
@@ -269,7 +285,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
+                              style: Theme.of(context).textTheme.titleMedium!
+                                  .copyWith(fontWeight: FontWeight.w500),
                               decoration: inputDeco(
                                 label: 'Target Amount (Tsh)',
                                 hint: 'e.g. 1500000',
@@ -307,7 +324,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Theme Color Section ──
                     Text(
                       'THEME COLOR',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -379,7 +400,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                     // ── Icon Section ──
                     Text(
                       'GOAL ICON',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -416,7 +441,9 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? themeCol.withValues(alpha: 0.15)
-                                        : theme.colorScheme.surfaceContainerHigh,
+                                        : theme
+                                              .colorScheme
+                                              .surfaceContainerHigh,
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
                                       color: isSelected
@@ -429,7 +456,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                     item['icon'],
                                     color: isSelected
                                         ? themeCol
-                                        : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                        : theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.6),
                                     size: 22,
                                   ),
                                 ),
@@ -483,7 +511,13 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                                   widget.existingGoal != null
                                       ? 'Update Goal'
                                       : 'Create Savings Goal',
-                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                 ),
                         ),
                       ),

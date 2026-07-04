@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class IosListSection extends StatelessWidget {
   final String? header;
   final List<Widget> rows;
@@ -27,10 +28,16 @@ class IosListSection extends StatelessWidget {
       children: [
         if (header != null)
           Padding(
-            padding: const EdgeInsets.only(left: kSpacing16, bottom: kSpacing6, top: kSpacing24),
+            padding: const EdgeInsets.only(
+              left: kSpacing16,
+              bottom: kSpacing6,
+              top: kSpacing24,
+            ),
             child: Text(
               header!,
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 letterSpacing: 0.3,
               ),
             ),
@@ -90,7 +97,10 @@ class IosListRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: kSpacing16,
+        vertical: kSpacing12,
+      ),
       child: Row(
         children: [
           if (leading != null) ...[leading!, const SizedBox(width: kSpacing14)],
@@ -105,7 +115,9 @@ class IosListRow extends StatelessWidget {
                 if (subtitle != null) ...[
                   const SizedBox(height: kSpacing2),
                   DefaultTextStyle.merge(
-                    style: theme.textTheme.bodySmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                    style: theme.textTheme.bodySmall!.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
                     child: subtitle!,
                   ),
                 ],
@@ -216,7 +228,10 @@ class IosMetricCard extends StatelessWidget {
     final c = color ?? context.appColors.incomeColor;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: kSpacing16, horizontal: kSpacing12),
+      padding: const EdgeInsets.symmetric(
+        vertical: kSpacing16,
+        horizontal: kSpacing12,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -236,7 +251,8 @@ class IosMetricCard extends StatelessWidget {
           const SizedBox(height: kSpacing2),
           Text(
             label,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
             ),
           ),
         ],

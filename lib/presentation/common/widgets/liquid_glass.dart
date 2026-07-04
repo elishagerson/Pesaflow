@@ -32,7 +32,8 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
         _lastElapsed = elapsed;
         return;
       }
-      final double dt = (elapsed.inMicroseconds - _lastElapsed.inMicroseconds) / 1000000.0;
+      final double dt =
+          (elapsed.inMicroseconds - _lastElapsed.inMicroseconds) / 1000000.0;
       _lastElapsed = elapsed;
       setState(() {
         _time += dt * 0.1 * widget.speedFactor;
@@ -59,10 +60,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
-                painter: _LiquidGlassPainter(
-                  time: _time,
-                  baseColor: baseColor,
-                ),
+                painter: _LiquidGlassPainter(time: _time, baseColor: baseColor),
               ),
             ),
           ),

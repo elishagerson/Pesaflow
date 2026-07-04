@@ -6,10 +6,7 @@ class SquircleBorder extends ShapeBorder {
   final BorderSide side;
   final double borderRadius;
 
-  const SquircleBorder({
-    this.side = BorderSide.none,
-    this.borderRadius = 12.0,
-  });
+  const SquircleBorder({this.side = BorderSide.none, this.borderRadius = 12.0});
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
@@ -39,21 +36,35 @@ class SquircleBorder extends ShapeBorder {
 
     // Standard iOS squircle ratio approximate control points.
     // Standard circle uses 0.552, iOS squircle uses custom transition offsets.
-    final double offset = r * 0.44; 
+    final double offset = r * 0.44;
 
     path.moveTo(left + r, top);
-    
+
     // Top-Right Corner
     path.lineTo(right - r, top);
     path.cubicTo(right - offset, top, right, top + offset, right, top + r);
 
     // Bottom-Right Corner
     path.lineTo(right, bottom - r);
-    path.cubicTo(right, bottom - offset, right - offset, bottom, right - r, bottom);
+    path.cubicTo(
+      right,
+      bottom - offset,
+      right - offset,
+      bottom,
+      right - r,
+      bottom,
+    );
 
     // Bottom-Left Corner
     path.lineTo(left + r, bottom);
-    path.cubicTo(left + offset, bottom, left, bottom - offset, left, bottom - r);
+    path.cubicTo(
+      left + offset,
+      bottom,
+      left,
+      bottom - offset,
+      left,
+      bottom - r,
+    );
 
     // Top-Left Corner
     path.lineTo(left, top + r);
@@ -74,10 +85,7 @@ class SquircleBorder extends ShapeBorder {
 
   @override
   ShapeBorder scale(double t) {
-    return SquircleBorder(
-      side: side.scale(t),
-      borderRadius: borderRadius * t,
-    );
+    return SquircleBorder(side: side.scale(t), borderRadius: borderRadius * t);
   }
 
   @override

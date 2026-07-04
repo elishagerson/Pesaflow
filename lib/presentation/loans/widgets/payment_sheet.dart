@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
   final int remainingCents;
@@ -59,7 +60,9 @@ class LoanProgressRing extends StatelessWidget {
               ),
               Text(
                 '${(paidFraction * 100).round()}%',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w900),
               ),
             ],
           ),
@@ -74,12 +77,15 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Paid',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(paidAmount),
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Color(0xFF10B981),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF10B981),
                     ),
                   ),
                 ],
@@ -90,12 +96,15 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Remaining',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      color: onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(remainingCents),
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: Color(0xFFE53935),
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE53935),
                     ),
                   ),
                 ],
@@ -107,12 +116,15 @@ class LoanProgressRing extends StatelessWidget {
                   children: [
                     Text(
                       'Installments',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(alpha: 0.6),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       '$paidInstallments/$totalInstallments',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -165,7 +177,9 @@ class QuickAmountChip extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w700, color: isActive
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isActive
                       ? const Color(0xFF10B981)
                       : onSurface.withValues(alpha: 0.7),
                 ),
@@ -249,14 +263,21 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
+                              padding: const EdgeInsets.fromLTRB(
+                                kSpacing20,
+                                0,
+                                kSpacing20,
+                                kSpacing24,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(kSpacing10),
+                                        padding: const EdgeInsets.all(
+                                          kSpacing10,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: const Color(
                                             0xFF609F8A,
@@ -284,9 +305,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: onSurface.withValues(
-                                                alpha: 0.6),
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.6,
+                                                  ),
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -300,7 +326,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   Text(
                                     'PAYMENT AMOUNT',
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   _buildAmountField(
@@ -406,7 +435,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   Text(
                                     'MEMO',
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -423,7 +455,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       controller: descriptionController,
                                       textCapitalization:
                                           TextCapitalization.sentences,
-                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: onSurface),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(color: onSurface),
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
@@ -454,7 +489,10 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     children: [
                                       Text(
                                         'FROM ACCOUNT',
-                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .copyWith(letterSpacing: 0.5),
                                       ),
                                       if (selectedAccountId != null)
                                         GestureDetector(
@@ -463,9 +501,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           ),
                                           child: Text(
                                             'Clear',
-                                            style: Theme.of(context).textTheme.labelMedium!.copyWith(color: const Color(
-                                                0xFFE53935).withValues(alpha: 0.8),
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .copyWith(
+                                                  color: const Color(
+                                                    0xFFE53935,
+                                                  ).withValues(alpha: 0.8),
+                                                ),
                                           ),
                                         ),
                                     ],
@@ -479,7 +522,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       final accounts = snapshot.data ?? [];
                                       if (accounts.isEmpty) {
                                         return Container(
-                                          padding: const EdgeInsets.all(kSpacing16),
+                                          padding: const EdgeInsets.all(
+                                            kSpacing16,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: const Color(
                                               0xFFE53935,
@@ -503,9 +548,14 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               const SizedBox(width: kSpacing10),
                                               Text(
                                                 'No accounts available. Create one first.',
-                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: const Color(
-                                                    0xFFE53935).withValues(alpha: 0.9),
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall!
+                                                    .copyWith(
+                                                      color: const Color(
+                                                        0xFFE53935,
+                                                      ).withValues(alpha: 0.9),
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -597,7 +647,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   ),
                                                       ),
                                                     ),
-                                                    const SizedBox(width: kSpacing12),
+                                                    const SizedBox(
+                                                      width: kSpacing12,
+                                                    ),
                                                     Expanded(
                                                       child: Column(
                                                         crossAxisAlignment:
@@ -606,11 +658,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         children: [
                                                           Text(
                                                             account.name,
-                                                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: isSelected
-                                                                  ? const Color(
-                                                                      0xFF609F8A)
-                                                                  : onSurface,
-                                                            ),
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .copyWith(
+                                                                  color:
+                                                                      isSelected
+                                                                      ? const Color(
+                                                                          0xFF609F8A,
+                                                                        )
+                                                                      : onSurface,
+                                                                ),
                                                           ),
                                                           const SizedBox(
                                                             height: 2,
@@ -619,11 +677,15 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                             children: [
                                                               Text(
                                                                 'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
-                                                                style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface
-                                                                      .withValues(
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .labelMedium!
+                                                                    .copyWith(
+                                                                      color: onSurface.withValues(
                                                                         alpha:
-                                                                            0.38),
-                                                                ),
+                                                                            0.38,
+                                                                      ),
+                                                                    ),
                                                               ),
                                                               if (selectedAccountId !=
                                                                       null &&
@@ -656,12 +718,18 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   ),
                                                                   child: Text(
                                                                     'Insufficient',
-                                                                     style: theme.extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Color(
-                                                                        0xFFE53935),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                    ),
+                                                                    style: theme
+                                                                        .extension<
+                                                                          AppTypographyTheme
+                                                                        >()!
+                                                                        .labelMicro
+                                                                        .copyWith(
+                                                                          color: Color(
+                                                                            0xFFE53935,
+                                                                          ),
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                        ),
                                                                   ),
                                                                 ),
                                                               ],
@@ -808,7 +876,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                     ),
                                                   if (paymentAmount() > 0 &&
                                                       selectedAccountId != null)
-                                                    const SizedBox(width: kSpacing8),
+                                                    const SizedBox(
+                                                      width: kSpacing8,
+                                                    ),
                                                   Text(
                                                     paymentAmount() <= 0
                                                         ? 'Enter an amount'
@@ -816,7 +886,13 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                               null
                                                         ? 'Select an account'
                                                         : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
@@ -854,7 +930,10 @@ Widget _buildAmountField({
       borderRadius: BorderRadius.circular(16),
       border: Border.all(color: onSurface.withValues(alpha: 0.07)),
     ),
-    padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing4),
+    padding: const EdgeInsets.symmetric(
+      horizontal: kSpacing16,
+      vertical: kSpacing4,
+    ),
     child: Row(
       children: [
         Text(
@@ -874,7 +953,10 @@ Widget _buildAmountField({
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
             ],
-            style: theme.textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
+            style: theme.textTheme.headlineMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: onSurface,
+            ),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,

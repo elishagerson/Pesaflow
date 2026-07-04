@@ -216,7 +216,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           onTap: () => _finish(seedDemo: true),
                           child: Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: kSpacing14),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing14,
+                            ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -251,7 +253,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           onTap: () => _finish(seedDemo: false),
                           child: Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: kSpacing14),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing14,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: theme.colorScheme.outline,
@@ -627,14 +631,17 @@ class _AccountsPage extends StatelessWidget {
                           Text(
                             e.key,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected
-                                  ? (theme.brightness == Brightness.dark
-                                        ? Colors.white
-                                        : theme.colorScheme.primary)
-                                  : (theme.brightness == Brightness.dark
-                                        ? Colors.grey[300]
-                                        : Colors.grey[700]),
-                            ),
+                            style: Theme.of(context).textTheme.titleSmall!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isSelected
+                                      ? (theme.brightness == Brightness.dark
+                                            ? Colors.white
+                                            : theme.colorScheme.primary)
+                                      : (theme.brightness == Brightness.dark
+                                            ? Colors.grey[300]
+                                            : Colors.grey[700]),
+                                ),
                           ),
                           const SizedBox(height: kSpacing8),
                           // Mini check bubble

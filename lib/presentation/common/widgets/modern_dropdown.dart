@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class ModernDropdownItem<T> {
   final T value;
   final String label;
@@ -133,13 +134,18 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     children: [
                       Text(
                         labelText,
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w500, color: onSurface.withValues(alpha: 0.6),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         selectedItem.label,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600, color: onSurface),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: onSurface,
+                        ),
                       ),
                     ],
                   ),
@@ -158,7 +164,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             padding: const EdgeInsets.only(left: kSpacing12),
             child: Text(
               errorText!,
-              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium!.copyWith(color: theme.colorScheme.error),
             ),
           ),
         ],
@@ -274,7 +282,9 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                     children: [
                                       if (item.icon != null) ...[
                                         Container(
-                                          padding: const EdgeInsets.all(kSpacing10),
+                                          padding: const EdgeInsets.all(
+                                            kSpacing10,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? itemColor.withValues(
@@ -304,19 +314,30 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                           children: [
                                             Text(
                                               item.label,
-                                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: isSelected
-                                                    ? itemColor
-                                                    : onSurface.withValues(
-                                                        alpha: 0.78),
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(
+                                                    color: isSelected
+                                                        ? itemColor
+                                                        : onSurface.withValues(
+                                                            alpha: 0.78,
+                                                          ),
+                                                  ),
                                             ),
                                             if (item.subtitle != null) ...[
                                               const SizedBox(height: kSpacing2),
                                               Text(
                                                 item.subtitle!,
-                                                style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(
-                                                    alpha: 0.6),
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium!
+                                                    .copyWith(
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
+                                                    ),
                                               ),
                                             ],
                                           ],

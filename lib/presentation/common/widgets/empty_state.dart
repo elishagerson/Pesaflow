@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class EmptyState extends StatelessWidget {
   final IconData icon;
   final String title;

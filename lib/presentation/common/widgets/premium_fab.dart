@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class PremiumFab extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? accentColor;
@@ -75,7 +76,10 @@ class PremiumExtendedFab extends StatelessWidget {
       onTap: onPressed,
       scaleFactor: 0.95,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing20, vertical: kSpacing12),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing20,
+          vertical: kSpacing12,
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
           gradient: LinearGradient(

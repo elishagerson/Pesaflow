@@ -7,6 +7,7 @@ import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 export 'app_typography_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class AppTheme {
   // ── "Ocean & Gold" — distinctive fintech palette ──
 
@@ -210,7 +211,8 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: txtTheme.titleLarge!.copyWith(color: isLight ? onBgLight : const Color(0xFFF0F6FC),
+        titleTextStyle: txtTheme.titleLarge!.copyWith(
+          color: isLight ? onBgLight : const Color(0xFFF0F6FC),
         ),
         iconTheme: IconThemeData(
           color: isLight ? onBgLight : const Color(0xFFF0F6FC),
@@ -278,9 +280,14 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
-          padding: EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing14),
+          padding: EdgeInsets.symmetric(
+            horizontal: kSpacing24,
+            vertical: kSpacing14,
+          ),
           minimumSize: const Size(48, 48),
-          textStyle: txtTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+          textStyle: txtTheme.titleMedium!.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -329,9 +336,14 @@ class AppTheme {
             ? const Color(0xFFF0F1F4)
             : const Color(0xFF161B22),
         headerForegroundColor: isLight ? onBgLight : Colors.white,
-        headerHeadlineStyle: txtTheme.headlineSmall!.copyWith(fontWeight: FontWeight.bold),
+        headerHeadlineStyle: txtTheme.headlineSmall!.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
         dayStyle: txtTheme.titleMedium!.copyWith(fontWeight: FontWeight.w500),
-        weekdayStyle: txtTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isLight ? Colors.grey[700] : Colors.grey[400]),
+        weekdayStyle: txtTheme.titleSmall!.copyWith(
+          fontWeight: FontWeight.bold,
+          color: isLight ? Colors.grey[700] : Colors.grey[400],
+        ),
         shape: SquircleBorder(
           borderRadius: 24.0,
           side: BorderSide(

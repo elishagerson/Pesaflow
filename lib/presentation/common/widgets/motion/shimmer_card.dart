@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 class ShimmerCard extends StatefulWidget {
   final double height;
   final double width;
@@ -51,7 +52,9 @@ class _ShimmerCardState extends State<ShimmerCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bgColor = theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.55);
+    final bgColor = theme.colorScheme.surfaceContainerHigh.withValues(
+      alpha: 0.55,
+    );
 
     return Container(
       height: widget.height,
@@ -63,7 +66,10 @@ class _ShimmerCardState extends State<ShimmerCard>
       child: _ShimmerEffect(
         animation: _animation,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing16,
+            vertical: kSpacing8,
+          ),
           child: Row(
             children: [
               if (widget.leading != null) ...[

@@ -316,9 +316,10 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _glowAnimation = Tween<double>(begin: 4.0, end: 14.0).animate(
-      CurvedAnimation(parent: _controller!, curve: Curves.easeInOut),
-    );
+    _glowAnimation = Tween<double>(
+      begin: 4.0,
+      end: 14.0,
+    ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
   }
 
   @override
@@ -342,7 +343,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     final chart = PieChart(
       PieChartData(
         startDegreeOffset: -90,
@@ -366,19 +367,20 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
     );
 
     final label = Text(
-      widget.netSavings >= 0 ? '+${widget.savingsPct}%' : '-${widget.savingsPct.abs()}%',
+      widget.netSavings >= 0
+          ? '+${widget.savingsPct}%'
+          : '-${widget.savingsPct.abs()}%',
       style: theme.textTheme.labelMedium?.copyWith(
         fontWeight: FontWeight.w900,
-        color: widget.netSavings >= 0 ? widget.incomeColor : widget.expenseColor,
+        color: widget.netSavings >= 0
+            ? widget.incomeColor
+            : widget.expenseColor,
         fontSize: 10,
       ),
     );
 
     if (!widget.pulse || _glowAnimation == null) {
-      return Stack(
-        alignment: Alignment.center,
-        children: [chart, label],
-      );
+      return Stack(alignment: Alignment.center, children: [chart, label]);
     }
 
     return AnimatedBuilder(
@@ -397,10 +399,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
               ),
             ],
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [chart, label],
-          ),
+          child: Stack(alignment: Alignment.center, children: [chart, label]),
         );
       },
     );

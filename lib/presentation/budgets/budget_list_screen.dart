@@ -222,7 +222,10 @@ class BudgetListScreen extends ConsumerWidget {
             context.go('/budgets/add');
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing24,
+              vertical: kSpacing14,
+            ),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary,
               borderRadius: BorderRadius.circular(100),

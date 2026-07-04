@@ -362,7 +362,10 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                     child: Text(
                       _existingLoan != null ? 'Update Loan' : 'Add Loan',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

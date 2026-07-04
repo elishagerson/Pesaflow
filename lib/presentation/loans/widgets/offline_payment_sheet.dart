@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+
 void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -73,14 +74,21 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                             child: SingleChildScrollView(
                               controller: scrollController,
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(kSpacing20, 0, kSpacing20, kSpacing24),
+                              padding: const EdgeInsets.fromLTRB(
+                                kSpacing20,
+                                0,
+                                kSpacing20,
+                                kSpacing24,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(kSpacing10),
+                                        padding: const EdgeInsets.all(
+                                          kSpacing10,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: const Color(
                                             0xFF609F8A,
@@ -108,9 +116,14 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           const SizedBox(height: kSpacing2),
                                           Text(
                                             'No wallet account will be affected',
-                                            style: Theme.of(context).textTheme.labelMedium!.copyWith(color: onSurface.withValues(
-                                                alpha: 0.6),
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .copyWith(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.6,
+                                                  ),
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -119,7 +132,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   Text(
                                     'AMOUNT',
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -162,7 +178,13 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 RegExp(r'[\d.,]'),
                                               ),
                                             ],
-                                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold, color: onSurface),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: onSurface,
+                                                ),
                                             decoration: const InputDecoration(
                                               hintText: 'Enter amount',
                                               border: InputBorder.none,
@@ -183,7 +205,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               setSheetState(() {});
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.all(kSpacing4),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing4,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: onSurface.withValues(
                                                   alpha: 0.07,
@@ -299,7 +323,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   const SizedBox(height: kSpacing24),
                                   Text(
                                     'MEMO',
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .copyWith(letterSpacing: 0.5),
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   Container(
@@ -316,7 +343,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       controller: descriptionController,
                                       textCapitalization:
                                           TextCapitalization.sentences,
-                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: onSurface),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(color: onSurface),
                                       decoration: InputDecoration(
                                         hintText: 'Add a note (optional)',
                                         hintStyle: TextStyle(
@@ -367,10 +397,15 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         Expanded(
                                           child: Text(
                                             'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: const Color(
-                                                0xFF609F8A).withValues(alpha: 0.8),
-                                              height: 1.3,
-                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .copyWith(
+                                                  color: const Color(
+                                                    0xFF609F8A,
+                                                  ).withValues(alpha: 0.8),
+                                                  height: 1.3,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -444,7 +479,12 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               paymentAmount() <= 0
                                                   ? 'Enter an amount'
                                                   : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                     ),
                                   ),

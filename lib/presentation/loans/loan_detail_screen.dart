@@ -565,9 +565,15 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       child: Text(
                         isPaid ? 'Paid' : 'Pending',
-                        style: theme.extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w700, color: isPaid
-                              ? AppTheme.incomeColor
-                              : AppTheme.tertiaryLight),
+                        style: theme
+                            .extension<AppTypographyTheme>()!
+                            .labelMicro
+                            .copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: isPaid
+                                  ? AppTheme.incomeColor
+                                  : AppTheme.tertiaryLight,
+                            ),
                       ),
                     ),
                   ],
@@ -629,14 +635,19 @@ class LoanDetailScreen extends ConsumerWidget {
                   children: [
                     Text(
                       description,
-                      style: theme.textTheme.labelMedium!.copyWith(color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6),
+                      style: theme.textTheme.labelMedium!.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(estimatedDate),
-                      style: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
+                      style: theme.textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
                   ],
                 ),

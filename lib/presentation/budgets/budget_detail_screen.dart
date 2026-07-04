@@ -400,9 +400,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                             ),
                                           ),
                                         ),
-                                        gridData: const FlGridData(
-                                          show: false,
-                                        ),
+                                        gridData: const FlGridData(show: false),
                                         borderData: FlBorderData(show: false),
                                         barGroups: dailyData.map((entry) {
                                           return BarChartGroupData(
@@ -486,7 +484,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                               return StaggeredFadeSlide(
                                 index: 7 + idx,
                                 child: GlassCard(
-                                  margin: const EdgeInsets.only(bottom: kSpacing8),
+                                  margin: const EdgeInsets.only(
+                                    bottom: kSpacing8,
+                                  ),
                                   padding: const EdgeInsets.all(kSpacing12),
                                   borderRadius: 8,
                                   frosted: false,
@@ -507,18 +507,31 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           children: [
                                             Text(
                                               '${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}',
-                                              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                             Text(
                                               '$pctUsed% used${p.rolledFrom != null && p.rolledFrom != 0 ? " • Rolled: Tsh ${p.rolledFrom! ~/ 100}" : ""}',
-                                              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .copyWith(color: Colors.grey),
                                             ),
                                           ],
                                         ),
                                       ),
                                       AmountText(
                                         amountInCents: p.spent,
-                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -642,11 +655,20 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey)),
+          Text(
+            label,
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall!.copyWith(color: Colors.grey),
+          ),
           const SizedBox(height: kSpacing4),
           AmountText(
             amountInCents: amount.abs(),
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w900, color: color, letterSpacing: -0.3),
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              fontWeight: FontWeight.w900,
+              color: color,
+              letterSpacing: -0.3,
+            ),
           ),
         ],
       ),

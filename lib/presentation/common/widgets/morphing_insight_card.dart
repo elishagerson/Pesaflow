@@ -268,14 +268,19 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
         const SizedBox(width: kSpacing6),
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w500, color: Colors.grey),
+          style: Theme.of(context).textTheme.labelSmall!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
         ),
         const SizedBox(width: kSpacing8),
         Expanded(
           child: Text(
             value,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(
-                context).colorScheme.onSurface.withValues(alpha: 0.6),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.end,
             maxLines: 1,
