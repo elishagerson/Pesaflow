@@ -1447,9 +1447,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 child: Text(
                                   'Usually ${CurrencyFormatter.formatCents(pattern.averageAmountCents)} at this time',
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF0F4C5C),
+                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Color(0xFF0F4C5C),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),

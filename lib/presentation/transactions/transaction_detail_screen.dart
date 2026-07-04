@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:flutter/services.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class TransactionDetailScreen extends ConsumerWidget {
   final String transactionId;
   const TransactionDetailScreen({super.key, required this.transactionId});
@@ -177,12 +178,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           t.description.isNotEmpty
                               ? t.description
                               : 'No Description',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: onSurface,
-                            letterSpacing: -0.4,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w800, color: onSurface, letterSpacing: -0.4),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: kSpacing8),
@@ -213,12 +209,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               const SizedBox(width: kSpacing4),
                               Text(
                                 isIncome ? 'INCOME' : 'EXPENSE',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w800,
-                                  color: amountColor,
-                                  letterSpacing: 1.2,
-                                ),
+                                style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w800, color: amountColor, letterSpacing: 1.2),
                               ),
                             ],
                           ),
@@ -345,7 +336,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                   children: [
                                     const Text(
                                       '📨',
-                                      style: TextStyle(fontSize: 12),
+                                      style: Theme.of(context).textTheme.labelMedium!,
                                     ),
                                     const SizedBox(width: kSpacing6),
                                     Text(
@@ -354,10 +345,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                           : t.source == 'transfer'
                                           ? 'Transfer'
                                           : 'Manual entry',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: const Color(0xFF0F4C5C),
+                                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: const Color(0xFF0F4C5C),
                                       ),
                                     ),
                                   ],
@@ -460,11 +448,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             const SizedBox(width: kSpacing8),
                             Text(
                               'Edit Details',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                color: onSurface,
-                              ),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: onSurface),
                             ),
                           ],
                         ),
@@ -490,10 +474,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             SizedBox(width: kSpacing8),
                             Text(
                               'Delete',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                                color: Color(0xFFFF453A),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: Color(0xFFFF453A),
                               ),
                             ),
                           ],
@@ -524,16 +505,12 @@ class TransactionDetailScreen extends ConsumerWidget {
         const SizedBox(height: kSpacing6),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-          ),
+          style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(fontWeight: FontWeight.w500, color: Colors.grey),
         ),
         const SizedBox(height: kSpacing2),
         Text(
           value,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -619,20 +596,12 @@ class TransactionDetailScreen extends ConsumerWidget {
                     children: [
                       Text(
                         label,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey,
-                        ),
+                        style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         value,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: onSurface,
-                        ),
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: onSurface),
                       ),
                     ],
                   ),
@@ -692,20 +661,12 @@ class TransactionDetailScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey,
-                  ),
+                  style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   value,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: valueColor ?? onSurface,
-                  ),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w700, color: valueColor ?? onSurface),
                 ),
               ],
             ),

@@ -68,7 +68,7 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(
                   acc.type.toUpperCase().replaceAll('_', ' ') +
                       (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
-                  style: const TextStyle(fontSize: 12),
+                  style: Theme.of(context).textTheme.labelMedium!,
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -515,7 +515,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   cat.type.toUpperCase(),
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.grey),
                 ),
                 trailing: cat.isSystem
                     ? Container(
@@ -529,7 +529,7 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         child: const Text(
                           'System',
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                          style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
                         ),
                       )
                     : Row(
@@ -685,11 +685,7 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               const Text(
                 'Select Theme Color',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(
@@ -725,11 +721,7 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               const Text(
                 'Select Icon',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(
@@ -1043,17 +1035,11 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: isSelected ? theme.colorScheme.primary : null,
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
                     ),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: isSelected
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.7)
                             : Colors.grey,
                       ),
@@ -1395,23 +1381,16 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'PesaFlow v1.0.0',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark
                             ? Colors.grey[500]
-                            : Colors.grey[600],
-                      ),
+                            : Colors.grey[600]),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: theme.brightness == Brightness.dark
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: theme.brightness == Brightness.dark
                             ? Colors.grey[600]
-                            : Colors.grey[400],
-                      ),
+                            : Colors.grey[400]),
                     ),
                   ],
                 ),

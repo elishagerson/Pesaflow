@@ -7,6 +7,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
+import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
@@ -132,10 +133,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     ),
                     child: const Text(
                       'Reset',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -440,7 +438,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       side: BorderSide(
                         color: onSurface.withValues(alpha: 0.12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing15),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -491,17 +489,14 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       backgroundColor: theme.colorScheme.primary,
                       foregroundColor: theme.colorScheme.onPrimary,
                       elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing15),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
                     child: const Text(
                       'Apply Filters',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -558,11 +553,7 @@ class _CategoryChip extends StatelessWidget {
             ],
             Text(
               label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: fg,
-              ),
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: fg),
             ),
           ],
         ),
@@ -600,18 +591,13 @@ class _DateButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 11,
-                color: onSurface.withValues(alpha: 0.38),
+              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: onSurface.withValues(alpha: 0.38),
               ),
             ),
             const SizedBox(height: kSpacing4),
             Text(
               date != null ? DateFormat('MMM d, yyyy').format(date!) : 'Any',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: date != null
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: date != null
                     ? onSurface
                     : onSurface.withValues(alpha: 0.38),
               ),

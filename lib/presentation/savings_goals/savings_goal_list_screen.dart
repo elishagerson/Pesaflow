@@ -64,10 +64,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                   const SizedBox(height: kSpacing20),
                   Text(
                     'ACTIVE GOALS',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       letterSpacing: 0.3,
                     ),
                   ),
