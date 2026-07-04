@@ -22,9 +22,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
-
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
@@ -482,26 +480,34 @@ class SettingsScreen extends ConsumerWidget {
                 TextButton.icon(
                   icon: const Icon(PesaFlowIcons.add),
                   label: const Text('Add Custom'),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: kSpacing16),
-            child: Text(
-              'Manage Categories',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showAddCategoryDialog(context, ref);
+                  },
+                ),
+              ],
             ),
           ),
           if (categories.isEmpty)
             const Center(
               child: Padding(
                 padding: EdgeInsets.all(kSpacing32),
-                child: Text('No categories available.'),
+                child: Text('No categories seeded.'),
               ),
             )
           else
             ...categories.map(
               (cat) => IosListRow(
-                leading: Icon(
-                  getCategoryIcon(cat.icon),
-                  color: hexToColor(cat.color),
+                leading: Container(
+                  padding: const EdgeInsets.all(kSpacing8),
+                  decoration: BoxDecoration(
+                    color: hexToColor(cat.color).withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    getCategoryIcon(cat.icon),
+                    color: hexToColor(cat.color),
+                  ),
                 ),
                 title: Text(
                   cat.name,
@@ -509,13 +515,19 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   cat.type.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelMedium!,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall!.copyWith(color: Colors.grey),
                 ),
                 trailing: cat.isSystem
-                    ? Padding(
+                    ? Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing12,
-                          vertical: kSpacing4,
+                          horizontal: kSpacing8,
+                          vertical: kSpacing2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Text(
                           'System',
@@ -559,10 +571,12 @@ class SettingsScreen extends ConsumerWidget {
                                 }
                               } catch (e) {
                                 if (context.mounted) {
-                                  CustomToast.show(
-                                    context,
-                                    message: 'Failed to delete category: $e',
-                                    type: ToastType.error,
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to delete category: $e',
+                                      ),
+                                    ),
                                   );
                                 }
                               }
