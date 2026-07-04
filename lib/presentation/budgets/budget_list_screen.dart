@@ -22,6 +22,8 @@ import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
+
 
 class BudgetActiveTabNotifier extends Notifier<int> {
   @override
@@ -151,14 +153,7 @@ class BudgetListScreen extends ConsumerWidget {
                 child: Text(
                   'Category Budgets',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: activeTab == 0
-                        ? FontWeight.bold
-                        : FontWeight.w500,
-                    color: activeTab == 0
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
+                  style: context.ts(12, fontWeight: activeTab == 0 ? FontWeight.bold : FontWeight.w500, color: activeTab == 0 ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
               ),
             ),
@@ -183,14 +178,7 @@ class BudgetListScreen extends ConsumerWidget {
                 child: Text(
                   'Savings Goals',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: activeTab == 1
-                        ? FontWeight.bold
-                        : FontWeight.w500,
-                    color: activeTab == 1
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
+                  style: context.ts(12, fontWeight: activeTab == 1 ? FontWeight.bold : FontWeight.w500, color: activeTab == 1 ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                 ),
               ),
             ),
