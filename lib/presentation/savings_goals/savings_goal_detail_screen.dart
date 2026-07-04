@@ -22,7 +22,9 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
   final String goalId;
@@ -598,14 +600,10 @@ class _SavingsGoalDetailScreenState
                                                   sheetIsContributing = false;
                                                 });
                                                 if (context.mounted) {
-                                                  ScaffoldMessenger.of(
+                                                  CustomToast.show(
                                                     context,
-                                                  ).showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        'Error: $e',
-                                                      ),
-                                                    ),
+                                                    message: 'Error: $e',
+                                                    type: ToastType.error,
                                                   );
                                                 }
                                               }
