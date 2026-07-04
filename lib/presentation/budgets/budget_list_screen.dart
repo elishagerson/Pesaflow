@@ -276,7 +276,7 @@ class BudgetListScreen extends ConsumerWidget {
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(kSpacing16).0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -403,7 +403,7 @@ class BudgetListScreen extends ConsumerWidget {
                       backgroundColor: theme.colorScheme.surface,
                       accentColor: mutedCatColor,
                       accentWidth: 2.5,
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(kSpacing16).0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -643,7 +643,7 @@ class BudgetListScreen extends ConsumerWidget {
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(kSpacing16).0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -777,7 +777,7 @@ class BudgetListScreen extends ConsumerWidget {
                               Container(width: 4, color: goalColor),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(kSpacing16).0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

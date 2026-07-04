@@ -255,7 +255,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                   AppTheme.radiusCard,
                                 ),
                                 child: Container(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(kSpacing16).0),
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? itemColor.withValues(alpha: 0.08)
@@ -274,7 +274,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                     children: [
                                       if (item.icon != null) ...[
                                         Container(
-                                          padding: const EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.all(kSpacing10).0),
                                           decoration: BoxDecoration(
                                             color: isSelected
                                                 ? itemColor.withValues(

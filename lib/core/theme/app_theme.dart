@@ -5,6 +5,7 @@ import 'app_colors_theme.dart';
 import 'app_typography_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
+import 'package:pesaflow/core/utils/spacing.dart';
 class AppTheme {
   // ── "Ocean & Gold" — distinctive fintech palette ──
 
@@ -276,7 +277,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+          padding: EdgeInsets.symmetric(horizontal: kSpacing24).0, vertical: 14.0),
           minimumSize: const Size(48, 48),
           textStyle: txtTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
         ),

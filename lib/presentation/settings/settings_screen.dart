@@ -1077,7 +1077,7 @@ class SettingsScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16.0),
+              const SizedBox(height: kSpacing16).0),
 
               // Privacy section
               StaggeredFadeSlide(

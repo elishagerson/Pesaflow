@@ -153,7 +153,7 @@ class ModernDialog extends StatelessWidget {
                   Flexible(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing24).0),
                       child: DefaultTextStyle(
                         style:
                             (theme.textTheme.bodyMedium ??
@@ -187,7 +187,7 @@ class ModernDialog extends StatelessWidget {
                       ),
                     ),
                   ] else ...[
-                    const SizedBox(height: 24.0),
+                    const SizedBox(height: kSpacing24).0),
                   ],
                 ],
               ),

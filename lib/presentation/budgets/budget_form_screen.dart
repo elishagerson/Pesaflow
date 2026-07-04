@@ -251,7 +251,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         ),
                         const SizedBox(height: kSpacing6),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing4).0),
                           child: Text(
                             cat.name,
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -339,7 +339,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing12).0),
                   child: Text(
                     'Tsh $formattedVal',
                     style: theme.textTheme.headlineMedium?.copyWith(
@@ -893,7 +893,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                   if (widget.onChanged != null) widget.onChanged!('');
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(6.0),
+                  padding: const EdgeInsets.all(kSpacing6).0),
                   child: Icon(
                     Icons.cancel_rounded,
                     color: onSurface.withValues(alpha: 0.3),
