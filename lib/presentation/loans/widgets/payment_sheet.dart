@@ -297,7 +297,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     remainingCents: remainingCents,
                                   ),
                                   const SizedBox(height: kSpacing24),
-                                  const Text(
+                                  Text(
                                     'PAYMENT AMOUNT',
                                     style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
@@ -403,7 +403,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     ],
                                   ),
                                   const SizedBox(height: kSpacing24),
-                                  const Text(
+                                  Text(
                                     'MEMO',
                                     style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
@@ -451,7 +451,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'FROM ACCOUNT',
                                         style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                       ),
@@ -653,7 +653,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                           4,
                                                                         ),
                                                                   ),
-                                                                  child: const Text(
+                                                                  child: Text(
                                                                     'Insufficient',
                                                                     style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Color(
                                                                         0xFFE53935),

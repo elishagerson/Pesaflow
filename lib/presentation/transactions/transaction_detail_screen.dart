@@ -334,7 +334,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text(
+                                    Text(
                                       '📨',
                                       style: Theme.of(context).textTheme.labelMedium!,
                                     ),

@@ -248,7 +248,7 @@ class _SavingsGoalDetailScreenState
                                     ],
                                   ),
                                   const SizedBox(height: kSpacing24),
-                                  const Text(
+                                  Text(
                                     'AMOUNT',
                                     style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),
@@ -361,7 +361,7 @@ class _SavingsGoalDetailScreenState
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing20),
-                                  const Text(
+                                  Text(
                                     'MEMO',
                                     style: Theme.of(context).textTheme.labelSmall!.copyWith(letterSpacing: 0.5),
                                   ),

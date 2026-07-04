@@ -639,7 +639,7 @@ class _OverviewTab extends StatelessWidget {
                                 );
                               },
                               icon: Icon(PesaFlowIcons.add, size: 16),
-                              label: const FittedBox(
+                              label: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'Set Monthly Savings Goal',

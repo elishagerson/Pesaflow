@@ -527,7 +527,7 @@ class SettingsScreen extends ConsumerWidget {
                           color: Colors.grey.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        child: const Text(
+                        child: Text(
                           'System',
                           style: Theme.of(context).extension<AppTypographyTheme>()!.labelMicro.copyWith(color: Colors.grey),
                         ),
@@ -683,7 +683,7 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: kSpacing20),
-              const Text(
+              Text(
                 'Select Theme Color',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -719,7 +719,7 @@ class SettingsScreen extends ConsumerWidget {
                 }).toList(),
               ),
               const SizedBox(height: kSpacing20),
-              const Text(
+              Text(
                 'Select Icon',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
