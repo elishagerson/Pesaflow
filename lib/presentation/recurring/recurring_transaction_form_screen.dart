@@ -14,7 +14,6 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
-
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
 
@@ -230,10 +229,7 @@ class _RecurringTransactionFormScreenState
         actions: [
           if (_isEditing)
             IconButton(
-              icon: Icon(
-                PesaFlowIcons.delete,
-                color: theme.colorScheme.error,
-              ),
+              icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.error),
               onPressed: () async {
                 final confirm = await showDialog<bool>(
                   context: context,

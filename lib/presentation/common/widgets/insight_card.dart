@@ -54,7 +54,10 @@ class InsightCard extends StatelessWidget {
               const SizedBox(height: kSpacing8),
               Text(
                 data.subtitle,
-                style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                style: context.ts(
+                  13,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -65,4 +68,3 @@ class InsightCard extends StatelessWidget {
     );
   }
 }
-

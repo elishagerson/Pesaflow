@@ -64,7 +64,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
                   const SizedBox(height: kSpacing20),
                   Text(
                     'ACTIVE GOALS',
-                    style: context.ts(13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5), letterSpacing: 0.3),
+                    style: context.ts(
+                      13,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      letterSpacing: 0.3,
+                    ),
                   ),
                   const SizedBox(height: kSpacing12),
                   StaggeredList(

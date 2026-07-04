@@ -20,8 +20,6 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 
-
-
 class TransactionDetailScreen extends ConsumerWidget {
   final String transactionId;
   const TransactionDetailScreen({super.key, required this.transactionId});
@@ -191,7 +189,12 @@ class TransactionDetailScreen extends ConsumerWidget {
                           t.description.isNotEmpty
                               ? t.description
                               : 'No Description',
-                          style: context.ts(22, fontWeight: FontWeight.w800, color: onSurface, letterSpacing: -0.4),
+                          style: context.ts(
+                            22,
+                            fontWeight: FontWeight.w800,
+                            color: onSurface,
+                            letterSpacing: -0.4,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: kSpacing8),
@@ -222,7 +225,12 @@ class TransactionDetailScreen extends ConsumerWidget {
                               const SizedBox(width: kSpacing4),
                               Text(
                                 isIncome ? 'INCOME' : 'EXPENSE',
-                                style: context.ts(10, fontWeight: FontWeight.w800, color: amountColor, letterSpacing: 1.2),
+                                style: context.ts(
+                                  10,
+                                  fontWeight: FontWeight.w800,
+                                  color: amountColor,
+                                  letterSpacing: 1.2,
+                                ),
                               ),
                             ],
                           ),
@@ -232,7 +240,12 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Text(
                           (isIncome ? '+ ' : '- ') +
                               CurrencyFormatter.formatCents(t.amount),
-                          style: context.ts(36, fontWeight: FontWeight.w900, color: amountColor, letterSpacing: -1.2),
+                          style: context.ts(
+                            36,
+                            fontWeight: FontWeight.w900,
+                            color: amountColor,
+                            letterSpacing: -1.2,
+                          ),
                           textAlign: TextAlign.center,
                         ),
 

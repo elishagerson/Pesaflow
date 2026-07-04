@@ -696,7 +696,11 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               Text(
                 'Select Theme Color',
-                style: context.ts(11, fontWeight: FontWeight.bold, color: Colors.grey),
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(
@@ -732,7 +736,11 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing20),
               Text(
                 'Select Icon',
-                style: context.ts(11, fontWeight: FontWeight.bold, color: Colors.grey),
+                style: context.ts(
+                  11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: kSpacing10),
               Wrap(

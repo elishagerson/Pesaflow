@@ -14,7 +14,6 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-
 class LoanFormScreen extends ConsumerStatefulWidget {
   final String? loanId;
   const LoanFormScreen({this.loanId, super.key});

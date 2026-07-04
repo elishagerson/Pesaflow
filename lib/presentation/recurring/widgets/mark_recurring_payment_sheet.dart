@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
+
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -106,7 +106,8 @@ Future<void> showMarkRecurringPaymentSheet({
                           _buildSummaryRow(
                             theme: theme,
                             label: 'Description',
-                            value: recurring.description ??
+                            value:
+                                recurring.description ??
                                 'Recurring ${recurring.type}',
                           ),
                           const SizedBox(height: kSpacing14),
@@ -127,7 +128,8 @@ Future<void> showMarkRecurringPaymentSheet({
                           _buildSummaryRow(
                             theme: theme,
                             label: 'Next occurrence',
-                            value: '${recurring.nextDate.day}/'
+                            value:
+                                '${recurring.nextDate.day}/'
                                 '${recurring.nextDate.month}/'
                                 '${recurring.nextDate.year}',
                           ),
@@ -151,23 +153,22 @@ Future<void> showMarkRecurringPaymentSheet({
                                       children: [
                                         Text(
                                           'Deduct from balance',
-                                          style: theme
-                                              .textTheme.bodyMedium
+                                          style: theme.textTheme.bodyMedium
                                               ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Record as a regular transaction'
                                           ' and adjust account balance',
-                                          style: theme
-                                              .textTheme.labelSmall
+                                          style: theme.textTheme.labelSmall
                                               ?.copyWith(
-                                            color: theme
-                                                .colorScheme.onSurface
-                                                .withValues(alpha: 0.5),
-                                          ),
+                                                color: theme
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.5),
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -208,9 +209,7 @@ Future<void> showMarkRecurringPaymentSheet({
                               onPressed: isProcessing
                                   ? null
                                   : () async {
-                                      setSheetState(
-                                        () => isProcessing = true,
-                                      );
+                                      setSheetState(() => isProcessing = true);
                                       try {
                                         await _confirmMarkPaid(
                                           context: context,
@@ -254,8 +253,9 @@ Future<void> showMarkRecurringPaymentSheet({
                             width: double.infinity,
                             height: 48,
                             child: OutlinedButton(
-                              onPressed:
-                                  isProcessing ? null : () => Navigator.pop(context),
+                              onPressed: isProcessing
+                                  ? null
+                                  : () => Navigator.pop(context),
                               child: const Text('Cancel'),
                             ),
                           ),
@@ -292,10 +292,7 @@ Widget _buildSummaryRow({
         ),
       ),
       Expanded(
-        child: Text(
-          value,
-          style: valueStyle ?? theme.textTheme.bodyMedium,
-        ),
+        child: Text(value, style: valueStyle ?? theme.textTheme.bodyMedium),
       ),
     ],
   );

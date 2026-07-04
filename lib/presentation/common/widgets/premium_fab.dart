@@ -110,7 +110,11 @@ class PremiumExtendedFab extends StatelessWidget {
             const SizedBox(width: kSpacing8),
             Text(
               label,
-              style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
+              style: context.ts(
+                14,
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
           ],
         ),
@@ -118,4 +122,3 @@ class PremiumExtendedFab extends StatelessWidget {
     );
   }
 }
-

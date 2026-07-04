@@ -21,7 +21,6 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
-
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
   const BudgetFormScreen({this.budgetId, super.key});
@@ -173,11 +172,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
-        CustomToast.show(
-          context,
-          message: 'Error: $e',
-          type: ToastType.error,
-        );
+        CustomToast.show(context, message: 'Error: $e', type: ToastType.error);
       }
       setState(() => _isSaving = false);
     }

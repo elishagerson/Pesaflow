@@ -18,9 +18,6 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
-
-
-
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
 
@@ -377,7 +374,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             if (context.mounted) {
                               CustomToast.show(
                                 context,
-                                message: 'Transaction rejected: ${trans.description}',
+                                message:
+                                    'Transaction rejected: ${trans.description}',
                                 type: ToastType.error,
                               );
                             }
@@ -392,7 +390,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             if (context.mounted) {
                               CustomToast.show(
                                 context,
-                                message: 'Transaction approved: ${trans.description}',
+                                message:
+                                    'Transaction approved: ${trans.description}',
                                 type: ToastType.success,
                               );
                             }

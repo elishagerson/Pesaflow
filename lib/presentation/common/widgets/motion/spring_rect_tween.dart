@@ -7,7 +7,7 @@ class SpringRectTween extends RectTween {
   Rect evaluate(Animation<double> animation) {
     // Custom spring overshoot curve
     final double t = Curves.elasticOut.transform(animation.value);
-    
+
     final double? left = lerpDouble(begin?.left, end?.left, t);
     final double? top = lerpDouble(begin?.top, end?.top, t);
     final double? right = lerpDouble(begin?.right, end?.right, t);

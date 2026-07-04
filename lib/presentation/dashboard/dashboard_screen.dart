@@ -27,7 +27,6 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
@@ -1433,14 +1432,21 @@ class _SummaryNavCard extends StatelessWidget {
                 children: [
                   Text(
                     metric,
-                    style: context.ts(12, fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface),
+                    style: context.ts(
+                      12,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: kSpacing2),
                   Text(
                     label,
-                    style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
+                    style: context.ts(
+                      10,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

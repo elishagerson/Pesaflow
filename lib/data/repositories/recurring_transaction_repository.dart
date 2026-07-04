@@ -67,11 +67,7 @@ class RecurringTransactionRepository {
           transaction,
         );
       }
-      await _recurringTransactionDao.recordPayment(
-        recurringId,
-        amount,
-        paidAt,
-      );
+      await _recurringTransactionDao.recordPayment(recurringId, amount, paidAt);
     } catch (e) {
       rethrow;
     }

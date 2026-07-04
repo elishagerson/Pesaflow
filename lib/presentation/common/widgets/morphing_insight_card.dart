@@ -171,7 +171,10 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                             Expanded(
                               child: Text(
                                 widget.data.title,
-                                style: context.ts(14, fontWeight: FontWeight.w700),
+                                style: context.ts(
+                                  14,
+                                  fontWeight: FontWeight.w700,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -199,7 +202,11 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                   const SizedBox(width: kSpacing4),
                                   Text(
                                     _severityLabel(severity),
-                                    style: context.ts(9, fontWeight: FontWeight.w700, color: _severityColor(severity)),
+                                    style: context.ts(
+                                      9,
+                                      fontWeight: FontWeight.w700,
+                                      color: _severityColor(severity),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -209,7 +216,12 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                         const SizedBox(height: kSpacing8),
                         Text(
                           widget.data.subtitle,
-                          style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                          style: context.ts(
+                            13,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
+                          ),
                           maxLines: _expanded ? 5 : 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -260,13 +272,20 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
         const SizedBox(width: kSpacing6),
         Text(
           label,
-          style: context.ts(11, fontWeight: FontWeight.w500, color: Colors.grey),
+          style: context.ts(
+            11,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey,
+          ),
         ),
         const SizedBox(width: kSpacing8),
         Expanded(
           child: Text(
             value,
-            style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+            style: context.ts(
+              11,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
             textAlign: TextAlign.end,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -376,4 +395,3 @@ class _PulseIconState extends State<PulseIcon>
     );
   }
 }
-

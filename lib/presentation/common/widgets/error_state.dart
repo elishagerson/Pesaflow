@@ -51,7 +51,10 @@ class ErrorState extends StatelessWidget {
               const SizedBox(height: kSpacing8),
               Text(
                 message,
-                style: context.ts(15, color: theme.colorScheme.onSurfaceVariant),
+                style: context.ts(
+                  15,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
               if (onRetry != null) ...[
@@ -69,7 +72,11 @@ class ErrorState extends StatelessWidget {
                     ),
                     child: Text(
                       'Retry',
-                      style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
+                      style: context.ts(
+                        14,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ),
@@ -81,4 +88,3 @@ class ErrorState extends StatelessWidget {
     );
   }
 }
-

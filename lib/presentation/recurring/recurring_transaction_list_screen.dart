@@ -195,8 +195,8 @@ class _RecurringTransactionListScreenState
                                       context: context,
                                       ref: ref,
                                       recurring: sorted[i],
-                                      accountName: accountNames[
-                                              sorted[i].accountId] ??
+                                      accountName:
+                                          accountNames[sorted[i].accountId] ??
                                           'Unknown',
                                     );
                                     return false;
@@ -229,9 +229,9 @@ class _RecurringTransactionListScreenState
                                           'Mark Paid',
                                           style: theme.textTheme.labelSmall
                                               ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -772,9 +772,9 @@ class _RecurringTransactionListScreenState
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.4,
                         ),
-                    ],
-                  ),
-                ),
+                      ),
+                    ),
+                ],
               ),
             ],
             // Mark Paid action for due items
@@ -793,8 +793,7 @@ class _RecurringTransactionListScreenState
                     context: context,
                     ref: ref,
                     recurring: recurring,
-                    accountName:
-                        accountNames[recurring.accountId] ?? 'Unknown',
+                    accountName: accountNames[recurring.accountId] ?? 'Unknown',
                   );
                 },
                 child: Container(
@@ -831,9 +830,8 @@ class _RecurringTransactionListScreenState
           ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   List<Widget> _buildBadges(
     RecurringTransaction recurring,

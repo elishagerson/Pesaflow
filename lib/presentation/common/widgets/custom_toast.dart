@@ -6,8 +6,6 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 enum ToastType { success, error, info }
 
-
-
 class CustomToast {
   static void show(
     BuildContext context, {

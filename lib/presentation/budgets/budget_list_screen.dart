@@ -24,7 +24,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-
 class BudgetActiveTabNotifier extends Notifier<int> {
   @override
   int build() => 0;
@@ -153,7 +152,15 @@ class BudgetListScreen extends ConsumerWidget {
                 child: Text(
                   'Category Budgets',
                   textAlign: TextAlign.center,
-                  style: context.ts(12, fontWeight: activeTab == 0 ? FontWeight.bold : FontWeight.w500, color: activeTab == 0 ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                  style: context.ts(
+                    12,
+                    fontWeight: activeTab == 0
+                        ? FontWeight.bold
+                        : FontWeight.w500,
+                    color: activeTab == 0
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ),
             ),
@@ -178,7 +185,15 @@ class BudgetListScreen extends ConsumerWidget {
                 child: Text(
                   'Savings Goals',
                   textAlign: TextAlign.center,
-                  style: context.ts(12, fontWeight: activeTab == 1 ? FontWeight.bold : FontWeight.w500, color: activeTab == 1 ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                  style: context.ts(
+                    12,
+                    fontWeight: activeTab == 1
+                        ? FontWeight.bold
+                        : FontWeight.w500,
+                    color: activeTab == 1
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ),
             ),

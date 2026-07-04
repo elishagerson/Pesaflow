@@ -16,7 +16,6 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
-
 class SavingsGoalFormScreen extends ConsumerStatefulWidget {
   final String? goalId;
   const SavingsGoalFormScreen({this.goalId, super.key});

@@ -24,7 +24,6 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
-
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
   const SavingsGoalDetailSheet({required this.goal, super.key});
@@ -149,11 +148,7 @@ class _SavingsGoalDetailSheetState
       }
     } catch (e) {
       if (mounted) {
-        CustomToast.show(
-          context,
-          message: 'Error: $e',
-          type: ToastType.error,
-        );
+        CustomToast.show(context, message: 'Error: $e', type: ToastType.error);
       }
     } finally {
       if (mounted) setState(() => _isOperationLoading = false);
