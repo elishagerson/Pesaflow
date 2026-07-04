@@ -187,12 +187,62 @@ class _RecurringTransactionListScreenState
                                   });
                               return StaggeredFadeSlide(
                                 index: i + 2,
-                                child: _buildRecurringTile(
-                                  context,
-                                  sorted[i],
-                                  theme,
-                                  dueIds.contains(sorted[i].id),
-                                  catColor(sorted[i].categoryId),
+                                child: Dismissible(
+                                  key: ValueKey(sorted[i].id),
+                                  direction: DismissDirection.endToStart,
+                                  confirmDismiss: (_) async {
+                                    showMarkRecurringPaymentSheet(
+                                      context: context,
+                                      ref: ref,
+                                      recurring: sorted[i],
+                                      accountName: accountNames[
+                                              sorted[i].accountId] ??
+                                          'Unknown',
+                                    );
+                                    return false;
+                                  },
+                                  background: Container(
+                                    margin: const EdgeInsets.only(
+                                      bottom: kSpacing10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.incomeColor,
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
+                                    ),
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(
+                                      right: kSpacing24,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.success,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
+                                        const SizedBox(height: kSpacing4),
+                                        Text(
+                                          'Mark Paid',
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  child: _buildRecurringTile(
+                                    context,
+                                    sorted[i],
+                                    theme,
+                                    dueIds.contains(sorted[i].id),
+                                    catColor(sorted[i].categoryId),
+                                  ),
                                 ),
                               );
                             },
