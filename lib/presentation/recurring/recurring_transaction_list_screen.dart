@@ -242,6 +242,7 @@ class _RecurringTransactionListScreenState
                                     theme,
                                     dueIds.contains(sorted[i].id),
                                     catColor(sorted[i].categoryId),
+                                    accountNames,
                                   ),
                                 ),
                               );
@@ -576,6 +577,7 @@ class _RecurringTransactionListScreenState
     ThemeData theme,
     bool isDue,
     Color? categoryColor,
+    Map<String, String> accountNames,
   ) {
     final isExpense = recurring.type == 'expense';
     final accentColor = isDue
@@ -772,14 +774,67 @@ class _RecurringTransactionListScreenState
                         ),
                       ),
                     ),
-                ],
+                  ],
+                ),
+              ),
+            ],
+            // Mark Paid action for due items
+            if (isDue) ...[
+              const SizedBox(height: kSpacing10),
+              if (isExpense && recurring.paymentCount > 0)
+                Divider(
+                  height: 0.5,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                ),
+              const SizedBox(height: kSpacing10),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  showMarkRecurringPaymentSheet(
+                    context: context,
+                    ref: ref,
+                    recurring: recurring,
+                    accountName:
+                        accountNames[recurring.accountId] ?? 'Unknown',
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing12,
+                    vertical: kSpacing6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.incomeColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PesaFlowIcons.success,
+                        size: 14,
+                        color: AppTheme.incomeColor,
+                      ),
+                      const SizedBox(width: kSpacing6),
+                      Text(
+                        'Mark Paid',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.incomeColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   List<Widget> _buildBadges(
     RecurringTransaction recurring,
