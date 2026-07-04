@@ -15,6 +15,8 @@ import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
+
 
 class LoanListScreen extends ConsumerWidget {
   const LoanListScreen({super.key});
@@ -176,16 +178,12 @@ class LoanListScreen extends ConsumerWidget {
           const SizedBox(width: kSpacing10),
           Text(
             title,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w800),
+            style: context.ts(15, fontWeight: FontWeight.w800),
           ),
           const SizedBox(width: kSpacing8),
           Text(
             subtitle,
-            style: Theme.of(
-              context,
-            ).textTheme.labelSmall!.copyWith(color: accent),
+            style: context.ts(11, fontWeight: FontWeight.w600, color: accent),
           ),
         ],
       ),
@@ -230,17 +228,12 @@ class LoanListScreen extends ConsumerWidget {
               children: [
                 Text(
                   'High Loan Activity',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: onSurface,
-                  ),
+                  style: context.ts(13, fontWeight: FontWeight.w800, color: onSurface),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   '$count active loans taken in the last 3 months. Consider slowing down.',
-                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                    color: onSurface.withValues(alpha: 0.6),
-                  ),
+                  style: context.ts(11, color: onSurface.withValues(alpha: 0.6)),
                 ),
               ],
             ),
