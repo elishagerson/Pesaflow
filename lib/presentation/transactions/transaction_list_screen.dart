@@ -231,6 +231,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   );
                 }
 
+                // Track new transactions for highlight animation
+                final Set<String> currentIds =
+                    transactionsList.map((t) => t.transaction.id).toSet();
+                final Set<String> newIds = _isFirstBuild
+                    ? <String>{}
+                    : currentIds.difference(_previousTransactionIds);
+                _previousTransactionIds = currentIds;
+                _isFirstBuild = false;
+
                 // Group items by calendar day
                 final Map<String, List<TransactionWithCategoryAndAccount>>
                 grouped = {};
@@ -342,8 +351,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                             final formattedTime = DateFormat(
                               'HH:mm',
                             ).format(trans.createdAt);
+                            final isNewRow = newIds.contains(trans.id);
 
-                            return Dismissible(
+                            final Widget row = Dismissible(
                               key: Key(trans.id),
                               direction: DismissDirection.endToStart,
                               background: Container(
