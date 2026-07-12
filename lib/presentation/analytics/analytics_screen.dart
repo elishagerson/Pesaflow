@@ -1247,8 +1247,8 @@ class _TrendsTab extends StatelessWidget {
                   width: 8,
                   height: 8,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF10B981),
-                    shape: BoxShape.circle,
+                    color: context.appColors.incomeColor,
+                     shape: BoxShape.circle,
                   ),
                 ),
                 const SizedBox(width: kSpacing6),
@@ -1316,11 +1316,11 @@ class _InsightsTab extends StatelessWidget {
       case InsightSeverity.positive:
         return AppTheme.incomeColor;
       case InsightSeverity.warning:
-        return Colors.orange;
+        return AppTheme.transferColor;
       case InsightSeverity.critical:
         return AppTheme.expenseColor;
       case InsightSeverity.neutral:
-        return Colors.blueGrey;
+        return theme.colorScheme.onSurfaceVariant;
     }
   }
 
