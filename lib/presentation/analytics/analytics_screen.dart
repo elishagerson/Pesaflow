@@ -1169,25 +1169,20 @@ class _TrendsTab extends StatelessWidget {
                               LineChartBarData(
                                 spots: incomeSpots,
                                 isCurved: true,
-                                 gradient: LinearGradient(
-                                   colors: [
-                                     context.appColors.incomeColor,
-                                     context.appColors.incomeColor,
-                                  ],
-                                ),
-                                barWidth: 3,
-                                isStrokeCapRound: true,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
+                                   gradient: LinearGradient(
                                     colors: [
-                                      const Color(
-                                        0xFF609F8A,
-                                      ).withValues(alpha: 0.24),
-                                      const Color(
-                                        0xFF609F8A,
-                                      ).withValues(alpha: 0.0),
+                                      context.appColors.incomeColor,
+                                   ],
+                                 ),
+                                 barWidth: 3,
+                                 isStrokeCapRound: true,
+                                 dotData: const FlDotData(show: false),
+                                 belowBarData: BarAreaData(
+                                   show: true,
+                                   gradient: LinearGradient(
+                                     colors: [
+                                       context.appColors.incomeColor.withValues(alpha: 0.24),
+                                       context.appColors.incomeColor.withValues(alpha: 0.0),
                                     ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,

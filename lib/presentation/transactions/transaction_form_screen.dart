@@ -854,13 +854,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
                                   decoration: BoxDecoration(
-                                    color: isSel
+                                      color: isSel
                                         ? catColor.withValues(alpha: 0.15)
-                                        : (theme.brightness == Brightness.dark
-                                              ? const Color(0xFF1B1B1D)
-                                              : Colors.grey.withValues(
-                                                  alpha: 0.05,
-                                                )),
+                                        : theme.colorScheme.surface,
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                       color: isSel
@@ -1290,14 +1286,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Expense'
-                                      ? const Color(
-                                          0xFFFF453A,
-                                        ).withValues(alpha: 0.15)
+                                      ? context.appColors.expenseColor
+                                            .withValues(alpha: 0.15)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(100),
                                   border: _transactionType == 'Expense'
                                       ? Border.all(
-                                          color: const Color(0xFFFF453A),
+                                          color: context.appColors.expenseColor,
                                           width: 1.2,
                                         )
                                       : null,
@@ -1308,7 +1303,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     style: context.ts(13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Expense'
-                                          ? const Color(0xFFFF453A)
+                                          ? context.appColors.expenseColor
                                           : theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),

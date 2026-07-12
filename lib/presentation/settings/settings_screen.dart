@@ -522,7 +522,7 @@ class SettingsScreen extends ConsumerWidget {
                   cat.type.toUpperCase(),
                   style: Theme.of(
                     context,
-                  ).textTheme.labelSmall!.copyWith(color: Colors.grey),
+                  ).textTheme.labelSmall!.copyWith(color: context.appColors.textMedium),
                 ),
                 trailing: cat.isSystem
                     ? Container(
@@ -531,7 +531,7 @@ class SettingsScreen extends ConsumerWidget {
                           vertical: kSpacing2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.2),
+                          color: context.appColors.textMedium.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Text(
@@ -539,7 +539,7 @@ class SettingsScreen extends ConsumerWidget {
                           style: Theme.of(context)
                               .extension<AppTypographyTheme>()!
                               .labelMicro
-                              .copyWith(color: Colors.grey),
+                              .copyWith(color: context.appColors.textMedium),
                         ),
                       )
                     : Row(
@@ -696,7 +696,7 @@ class SettingsScreen extends ConsumerWidget {
                 style: context.ts(
                   11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: context.appColors.textMedium,
                 ),
               ),
               const SizedBox(height: kSpacing10),
@@ -736,7 +736,7 @@ class SettingsScreen extends ConsumerWidget {
                 style: context.ts(
                   11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: context.appColors.textMedium,
                 ),
               ),
               const SizedBox(height: kSpacing10),
@@ -770,7 +770,7 @@ class SettingsScreen extends ConsumerWidget {
                         size: 24,
                         color: isSelected
                             ? theme.colorScheme.primary
-                            : Colors.grey,
+                            : context.appColors.textMedium,
                       ),
                     ),
                   );
@@ -1036,12 +1036,12 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                      : Colors.grey.withValues(alpha: 0.1),
+                      : context.appColors.textMedium.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
-                  color: isSelected ? theme.colorScheme.primary : Colors.grey,
+                  color: isSelected ? theme.colorScheme.primary : context.appColors.textMedium,
                   size: 20,
                 ),
               ),
@@ -1062,7 +1062,7 @@ class SettingsScreen extends ConsumerWidget {
                       style: theme.textTheme.labelSmall!.copyWith(
                         color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.7)
-                            : Colors.grey,
+                            : context.appColors.textMedium,
                       ),
                     ),
                   ],
