@@ -1169,6 +1169,7 @@ class _TrendsTab extends StatelessWidget {
                                 gradient: LinearGradient(
                                   colors: [
                                     context.appColors.incomeColor,
+                                    context.appColors.incomeColor,
                                   ],
                                 ),
                                 barWidth: 3.5,
@@ -1191,6 +1192,7 @@ class _TrendsTab extends StatelessWidget {
                                 isCurved: true,
                                 gradient: LinearGradient(
                                   colors: [
+                                    context.appColors.expenseColor,
                                     context.appColors.expenseColor,
                                   ],
                                 ),
