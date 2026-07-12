@@ -278,8 +278,8 @@ class _SavingsGoalDetailScreenState
                                       children: [
                                         Text(
                                           'TSh',
-                                          style: TextStyle(
-                                            fontSize: 18,
+                                          style: theme.textTheme.titleMedium!
+                                              .copyWith(
                                             fontWeight: FontWeight.w900,
                                             color: accentColor,
                                           ),
@@ -811,8 +811,7 @@ class _SavingsGoalDetailScreenState
                         children: [
                           Text(
                             goal.name,
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: theme.textTheme.titleLarge!.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                             maxLines: 1,

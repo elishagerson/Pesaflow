@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
   final String loanId;

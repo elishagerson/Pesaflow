@@ -958,9 +958,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const Text(
+              Text(
                 'App Theme',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: context.ts(22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: kSpacing16),
               _themeOption(
