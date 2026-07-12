@@ -59,31 +59,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return value.toStringAsFixed(0);
   }
 
-  Widget _buildEmvChip() {
-    return Container(
-      width: 36,
-      height: 26,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFFE5A93B),
-            Color(0xFFF7D070),
-            Color(0xFFC4861A),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.15),
-          width: 0.5,
-        ),
-      ),
-      child: CustomPaint(
-        painter: _ChipContactPainter(),
-      ),
-    );
-  }
+
 
   Widget _buildCardNetworkLogo(Color trackerColor) {
     return SizedBox(
@@ -398,209 +374,218 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             glareOpacity: 0.12,
                             child: AspectRatio(
                               aspectRatio: 1.58,
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(kSpacing20),
-                                decoration: BoxDecoration(
-                                  gradient: cardGradient,
-                                  borderRadius: BorderRadius.circular(
-                                    AppTheme.radiusCard,
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: CustomPaint(
+                                      painter: _GlossyWavesPainter(
+                                        accentColor: trackerColor,
+                                      ),
+                                    ),
                                   ),
-                                  border: Border.all(
-                                    color: trackerColor.withValues(alpha: 0.18),
-                                    width: 0.8,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Top Row: PesaFlow Brand + DEBIT
-                                    Row(
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(kSpacing20),
+                                    decoration: BoxDecoration(
+                                      gradient: cardGradient,
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
+                                      border: Border.all(
+                                        color: trackerColor.withValues(alpha: 0.18),
+                                        width: 0.8,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
+                                        // Top Row: PesaFlow Brand + DEBIT
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'pesa',
+                                                  style: theme.textTheme.titleMedium?.copyWith(
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 18,
+                                                    color: Colors.white.withValues(alpha: 0.95),
+                                                    letterSpacing: -0.5,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'flow',
+                                                  style: theme.textTheme.titleMedium?.copyWith(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 18,
+                                                    color: heroTextColor,
+                                                    letterSpacing: -0.5,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                // Dynamic Spent Progress Badge
+                                                Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: kSpacing8,
+                                                    vertical: 3,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white.withValues(alpha: 0.12),
+                                                    borderRadius: BorderRadius.circular(100),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 10,
+                                                        width: 10,
+                                                        child: CircularProgressIndicator(
+                                                          value: overallPct,
+                                                          strokeWidth: 1.8,
+                                                          backgroundColor: Colors.white24,
+                                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                                            overallPct > 0.9
+                                                                ? context.appColors.expenseColor
+                                                                : Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: kSpacing4),
+                                                      Text(
+                                                        '${(overallPct * 100).round()}%',
+                                                        style: theme.textTheme.labelSmall?.copyWith(
+                                                          fontSize: 8,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: heroTextColor,
+                                                          letterSpacing: 0.2,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(width: kSpacing8),
+                                                Text(
+                                                  'PREMIUM',
+                                                  style: context.ts(
+                                                    9,
+                                                    fontWeight: FontWeight.w900,
+                                                    letterSpacing: 1.5,
+                                                    color: Colors.white.withValues(alpha: 0.65),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+
+                                        // Middle Row: Contactless Icon
                                         Row(
                                           children: [
+                                            Icon(
+                                              Icons.wifi_rounded,
+                                              color: Colors.white.withValues(alpha: 0.6),
+                                              size: 24,
+                                            ),
+                                          ],
+                                        ),
+
+                                        // Balance Section
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
                                             Text(
-                                              'pesa',
-                                              style: theme.textTheme.titleMedium?.copyWith(
+                                              _selectedAccountId != null
+                                                  ? 'ACCOUNT BALANCE'
+                                                  : 'TOTAL NET WORTH',
+                                              style: context.ts(
+                                                9,
                                                 fontWeight: FontWeight.w900,
-                                                fontSize: 18,
-                                                color: Colors.white.withValues(alpha: 0.95),
-                                                letterSpacing: -0.5,
+                                                letterSpacing: 1.2,
+                                                color: Colors.white.withValues(alpha: 0.5),
                                               ),
                                             ),
-                                            Text(
-                                              'flow',
-                                              style: theme.textTheme.titleMedium?.copyWith(
-                                                fontWeight: FontWeight.w300,
-                                                fontSize: 18,
+                                            const SizedBox(height: kSpacing4),
+                                            AmountText(
+                                              amountInCents: _selectedAccountId != null
+                                                  ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                                                  : netWorth,
+                                              useMonospace: false,
+                                              animate: true,
+                                              style: theme.textTheme.headlineMedium?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 30,
                                                 color: heroTextColor,
                                                 letterSpacing: -0.5,
                                               ),
                                             ),
                                           ],
                                         ),
+
+                                        // Bottom Row: Cardholder Name, Expiry, Logo
                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
-                                            // Dynamic Spent Progress Badge
-                                            Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: kSpacing8,
-                                                vertical: 3,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white.withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(100),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  SizedBox(
-                                                    height: 10,
-                                                    width: 10,
-                                                    child: CircularProgressIndicator(
-                                                      value: overallPct,
-                                                      strokeWidth: 1.8,
-                                                      backgroundColor: Colors.white24,
-                                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                                        overallPct > 0.9
-                                                            ? context.appColors.expenseColor
-                                                            : Colors.white,
-                                                      ),
-                                                    ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'CARDHOLDER',
+                                                  style: context.ts(
+                                                    7,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white.withValues(alpha: 0.4),
                                                   ),
-                                                  const SizedBox(width: kSpacing4),
-                                                  Text(
-                                                    '${(overallPct * 100).round()}%',
-                                                    style: theme.textTheme.labelSmall?.copyWith(
-                                                      fontSize: 8,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: heroTextColor,
-                                                      letterSpacing: 0.2,
-                                                    ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  _selectedAccountId != null
+                                                      ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
+                                                      : 'TOTAL NET WORTH',
+                                                  style: context.ts(
+                                                    11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white.withValues(alpha: 0.85),
+                                                    letterSpacing: 0.5,
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                            const SizedBox(width: kSpacing8),
-                                            Text(
-                                              'PREMIUM',
-                                              style: context.ts(
-                                                9,
-                                                fontWeight: FontWeight.w900,
-                                                letterSpacing: 1.5,
-                                                color: Colors.white.withValues(alpha: 0.65),
-                                              ),
+                                            // Expiry
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'VALID THRU',
+                                                  style: context.ts(
+                                                    7,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white.withValues(alpha: 0.4),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  '12/30',
+                                                  style: context.ts(
+                                                    11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white.withValues(alpha: 0.85),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
+                                            // Card network logo
+                                            _buildCardNetworkLogo(trackerColor),
                                           ],
                                         ),
                                       ],
                                     ),
-
-                                    // Middle Row: EMV Chip & Contactless
-                                    Row(
-                                      children: [
-                                        _buildEmvChip(),
-                                        const SizedBox(width: kSpacing12),
-                                        Icon(
-                                          Icons.wifi_rounded,
-                                          color: Colors.white.withValues(alpha: 0.5),
-                                          size: 20,
-                                        ),
-                                      ],
-                                    ),
-
-                                    // Balance Section
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _selectedAccountId != null
-                                              ? 'ACCOUNT BALANCE'
-                                              : 'TOTAL NET WORTH',
-                                          style: context.ts(
-                                            9,
-                                            fontWeight: FontWeight.w900,
-                                            letterSpacing: 1.2,
-                                            color: Colors.white.withValues(alpha: 0.5),
-                                          ),
-                                        ),
-                                        const SizedBox(height: kSpacing4),
-                                        AmountText(
-                                          amountInCents: _selectedAccountId != null
-                                              ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
-                                              : netWorth,
-                                          useMonospace: false,
-                                          animate: true,
-                                          style: theme.textTheme.headlineMedium?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 30,
-                                            color: heroTextColor,
-                                            letterSpacing: -0.5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    // Bottom Row: Cardholder Name, Expiry, Logo
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'CARDHOLDER',
-                                              style: context.ts(
-                                                7,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white.withValues(alpha: 0.4),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              _selectedAccountId != null
-                                                  ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
-                                                  : 'TOTAL NET WORTH',
-                                              style: context.ts(
-                                                11,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white.withValues(alpha: 0.85),
-                                                letterSpacing: 0.5,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Expiry
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'VALID THRU',
-                                              style: context.ts(
-                                                7,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white.withValues(alpha: 0.4),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              '12/30',
-                                              style: context.ts(
-                                                11,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white.withValues(alpha: 0.85),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Card network logo
-                                        _buildCardNetworkLogo(trackerColor),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -1779,36 +1764,69 @@ class _QuickActionButton extends StatelessWidget {
   }
 }
 
-class _ChipContactPainter extends CustomPainter {
+class _GlossyWavesPainter extends CustomPainter {
+  final Color accentColor;
+
+  _GlossyWavesPainter({required this.accentColor});
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.25)
-      ..strokeWidth = 0.6
-      ..style = PaintingStyle.stroke;
+    // Wave 1: Accent color glow wave
+    final path1 = Path();
+    path1.moveTo(0, size.height * 0.7);
+    path1.quadraticBezierTo(size.width * 0.4, size.height * 0.45, size.width * 0.8, size.height * 0.85);
+    path1.quadraticBezierTo(size.width * 0.9, size.height * 0.9, size.width, size.height * 0.6);
+    path1.lineTo(size.width, size.height);
+    path1.lineTo(0, size.height);
+    path1.close();
 
-    // Draw chip contact grid lines
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-    
-    // Vertical center line
-    canvas.drawLine(Offset(size.width * 0.5, 0), Offset(size.width * 0.5, size.height), paint);
-    
-    // Horizontal center line
-    canvas.drawLine(Offset(0, size.height * 0.5), Offset(size.width, size.height * 0.5), paint);
-    
-    // Left vertical contact line
-    canvas.drawLine(Offset(size.width * 0.25, size.height * 0.25), Offset(size.width * 0.25, size.height * 0.75), paint);
-    
-    // Right vertical contact line
-    canvas.drawLine(Offset(size.width * 0.75, size.height * 0.25), Offset(size.width * 0.75, size.height * 0.75), paint);
+    final paint1 = Paint()
+      ..gradient = LinearGradient(
+        colors: [
+          accentColor.withValues(alpha: 0.28),
+          accentColor.withValues(alpha: 0.0),
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      );
+    canvas.drawPath(path1, paint1);
 
-    // Inner center details
-    final centerRect = Rect.fromCenter(
-      center: Offset(size.width * 0.5, size.height * 0.5),
-      width: size.width * 0.25,
-      height: size.height * 0.3,
-    );
-    canvas.drawRRect(RRect.fromRectAndRadius(centerRect, const Radius.circular(2)), paint);
+    // Wave 2: Glossy white highlight wave
+    final path2 = Path();
+    path2.moveTo(0, size.height * 0.85);
+    path2.quadraticBezierTo(size.width * 0.5, size.height * 0.4, size.width, size.height * 0.75);
+    path2.lineTo(size.width, size.height);
+    path2.lineTo(0, size.height);
+    path2.close();
+
+    final paint2 = Paint()
+      ..gradient = LinearGradient(
+        colors: [
+          Colors.white.withValues(alpha: 0.08),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    canvas.drawPath(path2, paint2);
+
+    // Wave 3: Deep contrast wave
+    final path3 = Path();
+    path3.moveTo(size.width * 0.25, size.height);
+    path3.quadraticBezierTo(size.width * 0.65, size.height * 0.55, size.width, size.height * 0.85);
+    path3.lineTo(size.width, size.height);
+    path3.close();
+
+    final paint3 = Paint()
+      ..gradient = LinearGradient(
+        colors: [
+          accentColor.withValues(alpha: 0.15),
+          accentColor.withValues(alpha: 0.0),
+        ],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
+      );
+    canvas.drawPath(path3, paint3);
   }
 
   @override
