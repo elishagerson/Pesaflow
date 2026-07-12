@@ -27,6 +27,12 @@ import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
+
+final cardholderNameProvider = StreamProvider<String>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('cardholder_name').map((val) => val ?? 'TOTAL NET WORTH');
+});
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -100,6 +106,61 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return const MonthlyOverviewSection();
   }
 
+  void _showEditCardholderDialog(BuildContext context, String currentName) {
+    final controller = TextEditingController(
+      text: currentName == 'TOTAL NET WORTH' ? '' : currentName,
+    );
+    showDialog(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return AlertDialog(
+          backgroundColor: theme.colorScheme.surface,
+          title: Text(
+            'Edit Cardholder Name',
+            style: context.ts(18, fontWeight: FontWeight.bold),
+          ),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: context.inputDecoration().copyWith(
+              hintText: 'Enter name (e.g. JOHN DOE)',
+            ),
+            textCapitalization: TextCapitalization.characters,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: context.ts(14, color: theme.colorScheme.primary),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                final name = controller.text.trim();
+                final repo = ref.read(settingsRepositoryProvider);
+                await repo.setSetting(
+                  'cardholder_name',
+                  name.isNotEmpty ? name.toUpperCase() : 'TOTAL NET WORTH',
+                );
+                if (context.mounted) Navigator.pop(context);
+              },
+              child: Text(
+                'Save',
+                style: context.ts(
+                  14,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showWorkspaceSelectorSheet(BuildContext context) {
     showWorkspaceSelectorSheet(context, ref);
   }
@@ -115,6 +176,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
+    final cardholderName = ref.watch(cardholderNameProvider).value ?? 'TOTAL NET WORTH';
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -530,30 +592,49 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'CARDHOLDER',
-                                                  style: context.ts(
-                                                    7,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white.withValues(alpha: 0.4),
+                                            GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: _selectedAccountId == null
+                                                  ? () => _showEditCardholderDialog(context, cardholderName)
+                                                  : null,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'CARDHOLDER',
+                                                        style: context.ts(
+                                                          7,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white.withValues(alpha: 0.4),
+                                                        ),
+                                                      ),
+                                                      if (_selectedAccountId == null) ...[
+                                                        const SizedBox(width: kSpacing4),
+                                                        Icon(
+                                                          Icons.edit,
+                                                          size: 8,
+                                                          color: Colors.white.withValues(alpha: 0.4),
+                                                        ),
+                                                      ],
+                                                    ],
                                                   ),
-                                                ),
-                                                const SizedBox(height: 2),
-                                                Text(
-                                                  _selectedAccountId != null
-                                                      ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
-                                                      : 'TOTAL NET WORTH',
-                                                  style: context.ts(
-                                                    11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white.withValues(alpha: 0.85),
-                                                    letterSpacing: 0.5,
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    _selectedAccountId != null
+                                                        ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
+                                                        : cardholderName.toUpperCase(),
+                                                    style: context.ts(
+                                                      11,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white.withValues(alpha: 0.85),
+                                                      letterSpacing: 0.5,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                             // Expiry
                                             Column(
@@ -569,7 +650,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 ),
                                                 const SizedBox(height: 2),
                                                 Text(
-                                                  '12/30',
+                                                  '∞/∞',
                                                   style: context.ts(
                                                     11,
                                                     fontWeight: FontWeight.bold,
