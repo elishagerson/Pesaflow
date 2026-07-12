@@ -8,9 +8,14 @@ import 'package:pesaflow/core/utils/spacing.dart';
 extension PesaFlowContext on BuildContext {
   ScreenSize get screenSize => getScreenSize(this);
 
-  AppColorsTheme get appColors => Theme.of(this).extension<AppColorsTheme>()!;
+  AppColorsTheme get appColors =>
+      Theme.of(this).extension<AppColorsTheme>() ??
+      (Theme.of(this).brightness == Brightness.dark
+          ? AppColorsTheme.dark()
+          : AppColorsTheme.light());
   AppTypographyTheme get appTypography =>
-      Theme.of(this).extension<AppTypographyTheme>()!;
+      Theme.of(this).extension<AppTypographyTheme>() ??
+      AppTypographyTheme.base(Theme.of(this).textTheme);
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 

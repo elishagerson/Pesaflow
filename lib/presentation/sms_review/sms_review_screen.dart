@@ -143,8 +143,50 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final reviewAsync = ref.watch(reviewQueueStreamProvider);
     final theme = Theme.of(context);
+
+    ref.listen<AsyncValue<List<TransactionWithCategoryAndAccount>>>(
+      reviewQueueStreamProvider,
+      (previous, next) {
+        final prevItems = previous?.value;
+        final nextItems = next.value;
+        if (prevItems != null &&
+            prevItems.isNotEmpty &&
+            nextItems != null &&
+            nextItems.isEmpty) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              barrierColor: Colors.transparent,
+              builder: (dialogContext) {
+                Future.delayed(
+                  const Duration(milliseconds: 1200),
+                  () {
+                    if (dialogContext.mounted) {
+                      Navigator.of(dialogContext).pop();
+                    }
+                  },
+                );
+                return PopScope(
+                  canPop: false,
+                  child: SuccessCheckmark(
+                    color: theme.colorScheme.primary,
+                  ),
+                );
+              },
+            );
+            CustomToast.show(
+              context,
+              message: 'All transactions reviewed!',
+              type: ToastType.success,
+            );
+          }
+        }
+      },
+    );
+
+    final reviewAsync = ref.watch(reviewQueueStreamProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -385,30 +427,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             ref.invalidate(reviewQueueStreamProvider);
                             ref.invalidate(recentTransactionsStreamProvider);
                             if (context.mounted) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                barrierColor: Colors.transparent,
-                                builder: (_) => PopScope(
-                                  canPop: false,
-                                  child: SuccessCheckmark(
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                              );
-                              Future.delayed(
-                                const Duration(milliseconds: 1200),
-                                () {
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                    CustomToast.show(
-                                      context,
-                                      message:
-                                          'Transaction approved: ${trans.description}',
-                                      type: ToastType.success,
-                                    );
-                                  }
-                                },
+                              CustomToast.show(
+                                context,
+                                message:
+                                    'Transaction approved: ${trans.description}',
+                                type: ToastType.success,
                               );
                             }
                           },
@@ -760,38 +783,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     recentTransactionsStreamProvider,
                                                   );
                                                   if (context.mounted) {
-                                                    showDialog(
-                                                      context: context,
-                                                      barrierDismissible: false,
-                                                      barrierColor:
-                                                          Colors.transparent,
-                                                       builder: (_) => PopScope(
-                                                        canPop: false,
-                                                        child: SuccessCheckmark(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .primary,
-                                                        ),
-                                                      ),
-                                                    );
-                                                    Future.delayed(
-                                                      const Duration(
-                                                        milliseconds: 1200,
-                                                      ),
-                                                      () {
-                                                        if (context.mounted) {
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop();
-                                                          CustomToast.show(
-                                                            context,
-                                                            message:
-                                                                'Transaction approved',
-                                                            type: ToastType
-                                                                .success,
-                                                          );
-                                                        }
-                                                      },
+                                                    CustomToast.show(
+                                                      context,
+                                                      message:
+                                                          'Transaction approved',
+                                                      type: ToastType.success,
                                                     );
                                                   }
                                                 },

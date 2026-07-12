@@ -765,7 +765,15 @@ class _OverviewTab extends StatelessWidget {
                                     ),
                                     const SizedBox(height: kSpacing2),
                                     Text(
-                                      '${(total / 1000.0).toStringAsFixed(0)}k',
+                                      (() {
+                                        final double val = total / 100.0;
+                                        if (val >= 1000000) {
+                                          return '${(val / 1000000).toStringAsFixed(1)}M';
+                                        } else if (val >= 1000) {
+                                          return '${(val / 1000).toStringAsFixed(0)}k';
+                                        }
+                                        return val.toStringAsFixed(0);
+                                      })(),
                                       style: context.ts(
                                         12,
                                         fontWeight: FontWeight.bold,

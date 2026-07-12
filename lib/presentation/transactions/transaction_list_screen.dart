@@ -290,7 +290,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   return SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 195.0,
+                      top: MediaQuery.of(context).padding.top + 176.0,
                       bottom: 110.0,
                     ),
                     child: StaggeredList(
