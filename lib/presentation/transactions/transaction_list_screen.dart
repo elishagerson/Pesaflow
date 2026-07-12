@@ -41,6 +41,8 @@ class TransactionListScreen extends ConsumerStatefulWidget {
 class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   Timer? _searchDebounce;
   late TextEditingController _searchController;
+  Set<String> _previousTransactionIds = {};
+  bool _isFirstBuild = true;
 
   @override
   void initState() {
