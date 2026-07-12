@@ -64,10 +64,13 @@ class _RecurringTransactionListScreenState
       return cat != null ? hexToColor(cat.color) : null;
     }
 
+    final canPop = Navigator.of(context).canPop();
+
     return Scaffold(
       appBar: IosNavBar(
         title: 'Recurring Flows',
         largeTitle: true,
+        canPop: canPop,
         actions: [
           IconButton(
             icon: const Icon(PesaFlowIcons.add, size: 28),

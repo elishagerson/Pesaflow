@@ -27,9 +27,10 @@ class LoanListScreen extends ConsumerWidget {
     final paidLoansAsync = ref.watch(paidLoansStreamProvider);
     final totalOutstandingAsync = ref.watch(totalOutstandingLoanProvider);
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
+    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
-      appBar: const IosNavBar(title: 'Loans', largeTitle: true),
+      appBar: IosNavBar(title: 'Loans', largeTitle: true, canPop: canPop),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/loans/add'),
         label: 'Add Loan',

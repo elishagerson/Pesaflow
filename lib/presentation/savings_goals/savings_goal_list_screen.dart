@@ -23,6 +23,11 @@ import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.d
 class SavingsGoalListScreen extends ConsumerWidget {
   const SavingsGoalListScreen({super.key});
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
+    final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
     final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
