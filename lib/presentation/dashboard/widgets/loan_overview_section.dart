@@ -74,7 +74,7 @@ class LoanOverviewSection extends ConsumerWidget {
                         child: TactileSpringContainer(
                           onTap: () => context.go('/loans'),
                           child: GlassCard(
-                            frosted: false,
+    
                             elevation: CardElevation.low,
                             padding: const EdgeInsets.all(kSpacing12),
                             child: Row(

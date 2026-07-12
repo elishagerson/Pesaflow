@@ -59,8 +59,7 @@ class RecurringSection extends ConsumerWidget {
           return TactileSpringContainer(
             onTap: () => context.push('/recurring'),
             child: GlassCard(
-              frosted: false,
-              borderRadius: AppTheme.radiusCard,
+                      borderRadius: AppTheme.radiusCard,
               elevation: CardElevation.low,
               padding: const EdgeInsets.all(kSpacing20),
               child: Row(

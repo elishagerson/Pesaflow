@@ -424,7 +424,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 onTap: () =>
                                     context.go('/transactions/${trans.id}'),
                                 child: GlassCard(
-                                  frosted: false,
                                   elevation: CardElevation.low,
                                   margin: const EdgeInsets.symmetric(
                                     horizontal: kSpacing20,
@@ -962,10 +961,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          floatingActionButton: Padding(
+        ),
+        floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
         child: PremiumFab(onPressed: () => context.go('/transactions/add')),
       ),

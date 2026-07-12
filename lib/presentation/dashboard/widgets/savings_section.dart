@@ -39,7 +39,7 @@ class SavingsSection extends ConsumerWidget {
             context.push('/savings-goals/${goal.id}');
           },
           child: GlassCard(
-            frosted: false,
+
             elevation: CardElevation.low,
             padding: const EdgeInsets.all(kSpacing16),
             child: Row(

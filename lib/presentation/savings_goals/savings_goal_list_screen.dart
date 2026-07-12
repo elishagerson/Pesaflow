@@ -243,7 +243,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
       child: Hero(
         tag: 'goal-${goal.id}',
         child: GlassCard(
-          frosted: false,
+
           elevation: CardElevation.none,
           margin: const EdgeInsets.only(bottom: kSpacing12),
           backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),

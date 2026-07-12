@@ -190,7 +190,6 @@ class LoanListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     return GlassCard(
-      frosted: false,
       elevation: CardElevation.none,
       padding: const EdgeInsets.all(kSpacing14),
       accentColor: const Color(0xFFFF6B35),
@@ -262,7 +261,6 @@ class LoanListScreen extends ConsumerWidget {
         : const Color(0xFFFF9F0A);
 
     return GlassCard(
-      frosted: false,
       elevation: CardElevation.none,
       padding: const EdgeInsets.all(kSpacing16),
       accentColor: severityColor,
