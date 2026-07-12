@@ -9,6 +9,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 Future<void> showMarkRecurringPaymentSheet({
   required BuildContext context,
@@ -23,10 +24,9 @@ Future<void> showMarkRecurringPaymentSheet({
   bool deductBalance = true;
   bool isProcessing = false;
 
-  await showModalBottomSheet(
-    context: context,
+  await showSpringSheet(
+    context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
     builder: (sheetContext) {
       return StatefulBuilder(
         builder: (context, setSheetState) {
