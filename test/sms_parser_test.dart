@@ -452,6 +452,177 @@ void main() {
       expect(result, isNotNull);
       expect(result!.reference, '26394529507543');
     });
+
+    // ── New Mixx By Yas patterns ──
+
+    test('SWAHILI: parses Umehamisha (transfer sent)', () {
+      const sms =
+          'Umehamisha TZS 10,000 kwenda 0712345678. Kumbukumbu: MX789012. Salio: TZS 50,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 1000000);
+      expect(result.senderOrRecipient, '0712345678');
+      expect(result.reference, 'MX789012');
+      expect(result.balanceAfter, 5000000);
+    });
+
+    test('SWAHILI: parses Umewekwa (deposit)', () {
+      const sms =
+          'Umewekwa TZS 50,000.00 na JOHN DOE. Kumbukumbu: MX789012. Salio: TZS 200,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'JOHN DOE');
+      expect(result.reference, 'MX789012');
+      expect(result.balanceAfter, 20000000);
+    });
+
+    test('SWAHILI: parses Zimewekwa (money deposited)', () {
+      const sms =
+          'Zimewekwa TZS 30,000.00 na 0712345678. Kumbukumbu: MX789012. Salio: TZS 180,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 3000000);
+      expect(result.senderOrRecipient, '0712345678');
+    });
+
+    test('SWAHILI: parses Umenunua airtime (airtime purchase)', () {
+      const sms =
+          'Umenunua airtime TZS 5,000. Salio: TZS 195,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'airtime');
+      expect(result.amount, 500000);
+      expect(result.balanceAfter, 19500000);
+    });
+
+    test('SWAHILI: parses Tumekutoa (fee deduction)', () {
+      const sms =
+          'Tumekutoa TZS 2,000 kwa ada ya huduma. Salio: TZS 198,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'fee');
+      expect(result.amount, 200000);
+      expect(result.senderOrRecipient, 'Tigo Pesa Service Fee');
+      expect(result.balanceAfter, 19800000);
+    });
+
+    test('SWAHILI: parses Umekopeshwa (loan received)', () {
+      const sms =
+          'Umekopeshwa TZS 100,000. Maliza ndani ya siku 30. Rej: MX789012. Salio: TZS 200,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'loan');
+      expect(result.amount, 10000000);
+      expect(result.reference, 'MX789012');
+      expect(result.balanceAfter, 20000000);
+    });
+
+    test('ENGLISH: Confirmed prefix received money', () {
+      const sms =
+          'ABC123DF Confirmed. You have received TZS 25,000.00 from JOHN DOE on 15/06/26. New balance is TZS 150,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 2500000);
+      expect(result.senderOrRecipient, 'JOHN DOE');
+      expect(result.reference, 'ABC123DF');
+      expect(result.balanceAfter, 15000000);
+    });
+
+    test('ENGLISH: Confirmed prefix sent money (modern format)', () {
+      const sms =
+          'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Total fee Tsh 3,500. Balance is Tsh 2,561.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 15000000);
+      expect(result.senderOrRecipient, 'TIPS-Mixx By Yas');
+      expect(result.reference, 'ABC123DF');
+    });
+
+    test('ENGLISH: Confirmed prefix you have sent', () {
+      const sms =
+          'ABC123DF Confirmed. You have sent TSh 20,000 to STEPHAN MWAKALASYA on 3/6/26. New balance is TSh 311,708.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2000000);
+      expect(result.senderOrRecipient, 'STEPHAN MWAKALASYA');
+      expect(result.balanceAfter, 31170800);
+    });
+
+    test('ENGLISH: parses You have paid (payment to merchant)', () {
+      const sms =
+          'You have paid TSh 30,000 to Merchant XYZ. New balance is TSh 120,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 3000000);
+      expect(result.senderOrRecipient, 'Merchant XYZ');
+      expect(result.balanceAfter, 12000000);
+    });
+
+    test('ENGLISH: parses credited with (wallet deposit)', () {
+      const sms =
+          'Your Mixx wallet has been credited with TZS 500,000.00 from 0712345678 on 15/06/26.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 50000000);
+      expect(result.senderOrRecipient, '0712345678');
+    });
+
+    test('ENGLISH: parses withdrawal from agent', () {
+      const sms =
+          'Withdrawal of TSh 50,000 from Agent - JANE DOE is successful. New balance is TSh 100,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 5000000);
+      expect(result.senderOrRecipient, 'Agent - JANE DOE');
+      expect(result.balanceAfter, 10000000);
+    });
+
+    test('ENGLISH: Confirmed prefix airtime purchase', () {
+      const sms =
+          'ABC123DF Confirmed. You have bought airtime of TSh 5,000 on 15/06/26. New balance is TSh 195,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'airtime');
+      expect(result.amount, 500000);
+      expect(result.reference, 'ABC123DF');
+      expect(result.balanceAfter, 19500000);
+    });
+
+    test('ENGLISH: Money sent successfully to (modern Mixx balance-first format)', () {
+      const sms =
+          'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 750000);
+      expect(result.senderOrRecipient, 'Sporty Bet');
+      expect(result.reference, '26693868497442');
+      expect(result.balanceAfter, 20000);
+    });
   });
 
   // ===========================================================================

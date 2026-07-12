@@ -663,6 +663,157 @@ final List<SmsCorpusEntry> smsCorpus = [
   ),
 
   // =========================================================================
+  // Mixx By Yas — new patterns
+  // =========================================================================
+  SmsCorpusEntry(
+    label: 'mixx_umehamisha_sw',
+    sender: 'MIXX',
+    body: 'Umehamisha TZS 10,000 kwenda 0712345678. Kumbukumbu: MX789012. Salio: TZS 50,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 1000000,
+      type: 'expense',
+      senderOrRecipient: '0712345678',
+      reference: 'MX789012',
+      balanceAfter: 5000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_umewekwa_sw',
+    sender: 'MIXX',
+    body: 'Umewekwa TZS 50,000.00 na JOHN DOE. Kumbukumbu: MX789012. Salio: TZS 200,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 5000000,
+      type: 'income',
+      senderOrRecipient: 'JOHN DOE',
+      reference: 'MX789012',
+      balanceAfter: 20000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_airtime_umenunua_sw',
+    sender: 'MIXX',
+    body: 'Umenunua airtime TZS 5,000. Salio: TZS 195,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 500000,
+      type: 'airtime',
+      senderOrRecipient: 'Tigo Pesa Airtime',
+      balanceAfter: 19500000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_tumekutoa_fee_sw',
+    sender: 'MIXX',
+    body: 'Tumekutoa TZS 2,000 kwa ada ya huduma. Salio: TZS 198,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 200000,
+      type: 'fee',
+      balanceAfter: 19800000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_loan_umekopeshwa_sw',
+    sender: 'MIXX',
+    body: 'Umekopeshwa TZS 100,000. Maliza ndani ya siku 30. Rej: MX789012. Salio: TZS 200,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 10000000,
+      type: 'loan',
+      reference: 'MX789012',
+      balanceAfter: 20000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_confirmed_received_en',
+    sender: 'MIXX',
+    body: 'ABC123DF Confirmed. You have received TZS 25,000.00 from JOHN DOE on 15/06/26. New balance is TZS 150,000.00',
+    timestamp: DateTime(2026, 5, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 2500000,
+      type: 'income',
+      senderOrRecipient: 'JOHN DOE',
+      reference: 'ABC123DF',
+      balanceAfter: 15000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_confirmed_sent_modern_en',
+    sender: 'MIXX',
+    body: 'ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26. Total fee Tsh 3,500. Balance is Tsh 2,561.00',
+    timestamp: DateTime(2026, 6, 3, 14, 4),
+    expect: SmsExpectation(
+      amount: 15000000,
+      type: 'expense',
+      senderOrRecipient: 'TIPS-Mixx By Yas',
+      reference: 'ABC123DF',
+      balanceAfter: 256100,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_confirmed_sent_you_have_sent_en',
+    sender: 'MIXX',
+    body: 'ABC123DF Confirmed. You have sent TSh 20,000 to STEPHAN MWAKALASYA on 3/6/26. New balance is TSh 311,708.',
+    timestamp: DateTime(2026, 6, 3, 14, 4),
+    expect: SmsExpectation(
+      amount: 2000000,
+      type: 'expense',
+      senderOrRecipient: 'STEPHAN MWAKALASYA',
+      reference: 'ABC123DF',
+      balanceAfter: 31170800,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_you_have_paid_en',
+    sender: 'MIXX',
+    body: 'You have paid TSh 30,000 to Merchant XYZ. New balance is TSh 120,000.00',
+    timestamp: DateTime(2026, 6, 3, 14, 4),
+    expect: SmsExpectation(
+      amount: 3000000,
+      type: 'expense',
+      senderOrRecipient: 'Merchant XYZ',
+      balanceAfter: 12000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_credited_wallet_en',
+    sender: 'MIXX',
+    body: 'Your Mixx wallet has been credited with TZS 500,000.00 from 0712345678 on 15/06/26.',
+    timestamp: DateTime(2026, 6, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 50000000,
+      type: 'income',
+      senderOrRecipient: '0712345678',
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_withdrawal_agent_en',
+    sender: 'MIXX',
+    body: 'Withdrawal of TSh 50,000 from Agent - JANE DOE is successful. New balance is TSh 100,000.00',
+    timestamp: DateTime(2026, 6, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 5000000,
+      type: 'expense',
+      senderOrRecipient: 'Agent - JANE DOE',
+      balanceAfter: 10000000,
+    ),
+  ),
+  SmsCorpusEntry(
+    label: 'mixx_confirmed_airtime_en',
+    sender: 'MIXX',
+    body: 'ABC123DF Confirmed. You have bought airtime of TSh 5,000 on 15/06/26. New balance is TSh 195,000.00',
+    timestamp: DateTime(2026, 6, 15, 14, 30),
+    expect: SmsExpectation(
+      amount: 500000,
+      type: 'airtime',
+      reference: 'ABC123DF',
+      balanceAfter: 19500000,
+    ),
+  ),
+
+  // =========================================================================
   // Halopesa (Halotel)
   // =========================================================================
   SmsCorpusEntry(
