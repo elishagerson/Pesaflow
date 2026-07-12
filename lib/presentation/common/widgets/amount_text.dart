@@ -9,7 +9,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 
 enum AmountType { income, expense, transfer, neutral }
 
-class AmountText extends ConsumerWidget {
+class AmountText extends ConsumerStatefulWidget {
   final int amountInCents;
   final AmountType type;
   final TextStyle? style;
@@ -28,12 +28,18 @@ class AmountText extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AmountText> createState() => _AmountTextState();
+}
+
+class _AmountTextState extends ConsumerState<AmountText> {
+  int _renderedAmount = 0;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Resolve color based on type and dark/light settings
     Color resolveColor() {
-      switch (type) {
+      switch (widget.type) {
         case AmountType.income:
           return context.appColors.incomeColor;
         case AmountType.expense:
@@ -46,8 +52,8 @@ class AmountText extends ConsumerWidget {
     }
 
     final TextStyle baseStyle =
-        style ?? theme.textTheme.bodyMedium ?? const TextStyle();
-    final TextStyle customStyle = useMonospace
+        widget.style ?? theme.textTheme.bodyMedium ?? const TextStyle();
+    final TextStyle customStyle = widget.useMonospace
         ? AppTheme.getMonospaceStyle(baseStyle).copyWith(color: resolveColor())
         : baseStyle.copyWith(
             color: resolveColor(),
@@ -56,7 +62,7 @@ class AmountText extends ConsumerWidget {
 
     final globalShowDecimals =
         ref.watch(currencyShowDecimalsProvider).value ?? false;
-    final finalShowDecimals = showDecimals || globalShowDecimals;
+    final finalShowDecimals = widget.showDecimals || globalShowDecimals;
 
     Widget buildText(double val) {
       String displayString = CurrencyFormatter.formatCents(
@@ -64,13 +70,13 @@ class AmountText extends ConsumerWidget {
         showDecimals: finalShowDecimals,
       );
 
-      if (type == AmountType.income) {
+      if (widget.type == AmountType.income) {
         displayString = '+ $displayString';
-      } else if (type == AmountType.expense) {
+      } else if (widget.type == AmountType.expense) {
         displayString = '- $displayString';
       }
 
-      if (useMonospace) {
+      if (widget.useMonospace) {
         displayString = '$displayString\u200A';
       }
 
@@ -85,15 +91,20 @@ class AmountText extends ConsumerWidget {
       );
     }
 
-    if (animate) {
+    if (widget.animate) {
+      final begin = _renderedAmount;
+      _renderedAmount = widget.amountInCents;
+
       return TweenAnimationBuilder<double>(
+        key: ValueKey(widget.amountInCents),
         duration: const Duration(milliseconds: 1200),
         curve: Curves.easeOutCubic,
-        tween: Tween<double>(begin: 0, end: amountInCents.toDouble()),
+        tween: Tween<double>(begin: begin.toDouble(), end: widget.amountInCents.toDouble()),
         builder: (context, val, child) => buildText(val),
       );
     }
 
-    return buildText(amountInCents.toDouble());
+    _renderedAmount = widget.amountInCents;
+    return buildText(widget.amountInCents.toDouble());
   }
 }

@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
@@ -34,14 +35,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
     final categories = categoriesAsync.value ?? [];
     if (categories.isEmpty) return null;
 
-    return showModalBottomSheet<String>(
-      context: context,
+    return showSpringSheet<String>(
+      context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppTheme.radiusCard),
-        ),
-      ),
       builder: (context) {
         final theme = Theme.of(context);
         return DraggableScrollableSheet(
