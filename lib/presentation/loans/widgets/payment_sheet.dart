@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
@@ -54,8 +55,8 @@ class LoanProgressRing extends StatelessWidget {
                   value: paidFraction,
                   strokeWidth: 5,
                   backgroundColor: onSurface.withValues(alpha: 0.07),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF10B981),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    context.appColors.incomeColor,
                   ),
                 ),
               ),
@@ -86,7 +87,7 @@ class LoanProgressRing extends StatelessWidget {
                     CurrencyFormatter.formatCents(paidAmount),
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF10B981),
+                      color: context.appColors.incomeColor,
                     ),
                   ),
                 ],
@@ -105,7 +106,7 @@ class LoanProgressRing extends StatelessWidget {
                     CurrencyFormatter.formatCents(remainingCents),
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFE53935),
+                      color: context.appColors.expenseColor,
                     ),
                   ),
                 ],
@@ -165,12 +166,12 @@ class QuickAmountChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: kSpacing10),
           decoration: BoxDecoration(
             color: isActive
-                ? const Color(0xFF10B981).withValues(alpha: 0.15)
+                ? context.appColors.incomeColor.withValues(alpha: 0.15)
                 : onSurface.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isActive
-                  ? const Color(0xFF10B981).withValues(alpha: 0.5)
+                  ? context.appColors.incomeColor.withValues(alpha: 0.5)
                   : onSurface.withValues(alpha: 0.07),
             ),
           ),
@@ -181,7 +182,7 @@ class QuickAmountChip extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.w700,
                   color: isActive
-                      ? const Color(0xFF10B981)
+                      ? context.appColors.incomeColor
                       : onSurface.withValues(alpha: 0.7),
                 ),
               ),
@@ -279,14 +280,12 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           kSpacing10,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF609F8A,
-                                          ).withValues(alpha: 0.12),
+                                          color: context.appColors.incomeColor.withValues(alpha: 0.12),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(
-                                          PesaFlowIcons.cash,
-                                          color: Color(0xFF10B981),
+                                         child: Icon(
+                                           PesaFlowIcons.cash,
+                                           color: context.appColors.incomeColor,
                                           size: 22,
                                         ),
                                       ),
@@ -505,9 +504,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 .textTheme
                                                 .labelMedium!
                                                 .copyWith(
-                                                  color: const Color(
-                                                    0xFFE53935,
-                                                  ).withValues(alpha: 0.8),
+                                                  color: context.appColors.expenseColor.withValues(alpha: 0.8),
                                                 ),
                                           ),
                                         ),
@@ -526,24 +523,20 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             kSpacing16,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: const Color(
-                                              0xFFE53935,
-                                            ).withValues(alpha: 0.08),
+                                            color: context.appColors.expenseColor.withValues(alpha: 0.08),
                                             borderRadius: BorderRadius.circular(
                                               14,
                                             ),
                                             border: Border.all(
-                                              color: const Color(
-                                                0xFFE53935,
-                                              ).withValues(alpha: 0.2),
+                                              color: context.appColors.expenseColor.withValues(alpha: 0.2),
                                             ),
                                           ),
                                           child: Row(
                                             children: [
-                                              const Icon(
-                                                PesaFlowIcons.warning,
-                                                size: 18,
-                                                color: Color(0xFFE53935),
+                                               Icon(
+                                                 PesaFlowIcons.warning,
+                                                 size: 18,
+                                                 color: context.appColors.expenseColor,
                                               ),
                                               const SizedBox(width: kSpacing10),
                                               Text(
@@ -552,9 +545,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                     .textTheme
                                                     .bodySmall!
                                                     .copyWith(
-                                                      color: const Color(
-                                                        0xFFE53935,
-                                                      ).withValues(alpha: 0.9),
+                                                      color: context.appColors.expenseColor.withValues(alpha: 0.9),
                                                     ),
                                               ),
                                             ],
@@ -587,9 +578,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 ),
                                                 decoration: BoxDecoration(
                                                   color: isSelected
-                                                      ? const Color(
-                                                          0xFF609F8A,
-                                                        ).withValues(
+                                                      ? context.appColors.incomeColor.withValues(
                                                           alpha: 0.12,
                                                         )
                                                       : theme
@@ -599,9 +588,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                       BorderRadius.circular(14),
                                                   border: Border.all(
                                                     color: isSelected
-                                                        ? const Color(
-                                                            0xFF609F8A,
-                                                          ).withValues(
+                                                        ? context.appColors.incomeColor.withValues(
                                                             alpha: 0.5,
                                                           )
                                                         : onSurface.withValues(
@@ -619,9 +606,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                           ),
                                                       decoration: BoxDecoration(
                                                         color: isSelected
-                                                            ? const Color(
-                                                                0xFF609F8A,
-                                                              ).withValues(
+                                                            ? context.appColors.incomeColor.withValues(
                                                                 alpha: 0.2,
                                                               )
                                                             : onSurface
@@ -638,9 +623,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                   .wallet,
                                                         size: 20,
                                                         color: isSelected
-                                                            ? const Color(
-                                                                0xFF609F8A,
-                                                              )
+                                                            ? context.appColors.incomeColor
                                                             : onSurface
                                                                   .withValues(
                                                                     alpha: 0.55,
@@ -664,9 +647,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                 .copyWith(
                                                                   color:
                                                                       isSelected
-                                                                      ? const Color(
-                                                                          0xFF609F8A,
-                                                                        )
+                                                                      ? context.appColors.incomeColor
                                                                       : onSurface,
                                                                 ),
                                                           ),
@@ -705,9 +686,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                                       ),
                                                                   decoration: BoxDecoration(
                                                                     color:
-                                                                        const Color(
-                                                                          0xFFE53935,
-                                                                        ).withValues(
+                                                                        context.appColors.expenseColor.withValues(
                                                                           alpha:
                                                                               0.12,
                                                                         ),
@@ -747,9 +726,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         decoration:
                                                             BoxDecoration(
                                                               color:
-                                                                  const Color(
-                                                                    0xFF609F8A,
-                                                                  ).withValues(
+                                                                  context.appColors.incomeColor.withValues(
                                                                     alpha: 0.15,
                                                                   ),
                                                               shape: BoxShape
@@ -786,9 +763,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         boxShadow: canSubmit
                                             ? [
                                                 BoxShadow(
-                                                  color: const Color(
-                                                    0xFF609F8A,
-                                                  ).withValues(alpha: 0.3),
+                                                  color: context.appColors.incomeColor.withValues(alpha: 0.3),
                                                   blurRadius: 12,
                                                   offset: const Offset(0, 4),
                                                 ),
@@ -832,9 +807,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               }
                                             : null,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(
-                                            0xFF609F8A,
-                                          ),
+                                          backgroundColor: context.appColors.incomeColor,
                                           foregroundColor: Colors.white,
                                           disabledBackgroundColor: onSurface
                                               .withValues(alpha: 0.05),
@@ -1039,7 +1012,7 @@ Future<bool> processPayment({
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Payment failed: $e'),
-          backgroundColor: const Color(0xFFE53935),
+          backgroundColor: context.appColors.expenseColor,
         ),
       );
     }

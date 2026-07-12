@@ -626,8 +626,8 @@ class _OverviewTab extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'SET A SAVINGS GOAL',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: Colors.grey[500],
+                                   style: theme.textTheme.labelSmall?.copyWith(
+                                     color: context.appColors.textMedium,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.1,
                                   ),
@@ -1166,12 +1166,12 @@ class _TrendsTab extends StatelessWidget {
                             minY: 0,
                             maxY: maxVal * 1.15,
                             lineBarsData: [
-                              LineChartBarData(
-                                spots: incomeSpots,
-                                isCurved: true,
-                                   gradient: LinearGradient(
-                                    colors: [
-                                      context.appColors.incomeColor,
+                               LineChartBarData(
+                                 spots: incomeSpots,
+                                 isCurved: true,
+                                 gradient: LinearGradient(
+                                   colors: [
+                                     context.appColors.incomeColor,
                                    ],
                                  ),
                                  barWidth: 3,
@@ -1183,41 +1183,36 @@ class _TrendsTab extends StatelessWidget {
                                      colors: [
                                        context.appColors.incomeColor.withValues(alpha: 0.24),
                                        context.appColors.incomeColor.withValues(alpha: 0.0),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                              ),
-                              LineChartBarData(
-                                spots: expenseSpots,
-                                isCurved: true,
+                                     ],
+                                     begin: Alignment.topCenter,
+                                     end: Alignment.bottomCenter,
+                                   ),
+                                 ),
+                               ),
+                               LineChartBarData(
+                                 spots: expenseSpots,
+                                 isCurved: true,
+                                 gradient: LinearGradient(
+                                   colors: [
+                                     context.appColors.expenseColor,
+                                   ],
+                                 ),
+                                 barWidth: 3,
+                                 isStrokeCapRound: true,
+                                 dotData: const FlDotData(show: false),
+                                 belowBarData: BarAreaData(
+                                   show: true,
                                    gradient: LinearGradient(
                                      colors: [
-                                       context.appColors.incomeColor,
-                                       context.appColors.incomeColor,
+                                       context.appColors.expenseColor.withValues(alpha: 0.24),
+                                       context.appColors.expenseColor.withValues(alpha: 0.0),
                                      ],
-                                ),
-                                barWidth: 3,
-                                isStrokeCapRound: true,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      const Color(
-                                        0xFFFF453A,
-                                      ).withValues(alpha: 0.24),
-                                      const Color(
-                                        0xFFFF453A,
-                                      ).withValues(alpha: 0.0),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                              ),
-                            ],
+                                     begin: Alignment.topCenter,
+                                     end: Alignment.bottomCenter,
+                                   ),
+                                 ),
+                               ),
+                             ],
                           ),
                         ),
                       ),

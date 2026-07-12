@@ -199,9 +199,9 @@ class RecurringSection extends ConsumerWidget {
                               height: 6,
                               decoration: BoxDecoration(
                                 color: due.any((d) => d.id == sub.id)
-                                    ? const Color(0xFFFF6B35)
+                                    ? context.appColors.transferColor
                                     : (catColor(sub.categoryId) ??
-                                          const Color(0xFF609F8A)),
+                                          context.appColors.incomeColor),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -255,7 +255,7 @@ class RecurringSection extends ConsumerWidget {
                             decoration: BoxDecoration(
                               color: desaturateColor(
                                 catColor(sub.categoryId) ??
-                                    const Color(0xFF609F8A),
+                                    context.appColors.incomeColor,
                               ).withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
@@ -264,7 +264,7 @@ class RecurringSection extends ConsumerWidget {
                               size: 14,
                               color:
                                   catColor(sub.categoryId) ??
-                                  const Color(0xFF609F8A),
+                                  context.appColors.incomeColor,
                             ),
                           ),
                           const SizedBox(width: kSpacing12),

@@ -174,8 +174,8 @@ class _SavingsGoalDetailSheetState
         final theme = Theme.of(ctx);
         final onSurface = theme.colorScheme.onSurface;
         final accentColor = isDeposit
-            ? const Color(0xFF10B981)
-            : const Color(0xFFFF453A);
+            ? context.appColors.incomeColor
+            : context.appColors.expenseColor;
 
         return DraggableScrollableSheet(
           initialChildSize: 0.65,
@@ -987,9 +987,8 @@ class _SavingsGoalDetailSheetState
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFFF453A,
-                              ).withValues(alpha: 0.15),
+                              color: context.appColors.expenseColor
+                                  .withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
@@ -998,7 +997,7 @@ class _SavingsGoalDetailSheetState
                               children: [
                                 Icon(
                                   Icons.remove_rounded,
-                                  color: Color(0xFFFF453A),
+                                  color: context.appColors.expenseColor,
                                   size: 18,
                                 ),
                                 const SizedBox(width: kSpacing6),
@@ -1076,7 +1075,7 @@ class _SavingsGoalDetailSheetState
                                     decoration: BoxDecoration(
                                       color: isPos
                                           ? AppTheme.transferColorDark
-                                          : const Color(0xFFFF453A),
+                                          : context.appColors.expenseColor,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -1135,7 +1134,7 @@ class _SavingsGoalDetailSheetState
                                               fontWeight: FontWeight.bold,
                                               color: isPos
                                                   ? AppTheme.transferColorDark
-                                                  : const Color(0xFFFF453A),
+                                                  : context.appColors.expenseColor,
                                             ),
                                       ),
                                       const SizedBox(height: kSpacing2),

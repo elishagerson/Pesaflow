@@ -321,7 +321,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               child: _gridItem(
                                 context,
                                 icon: PesaFlowIcons.calendar,
-                                iconColor: Colors.blueAccent,
+                                iconColor: theme.colorScheme.primary,
                                 label: 'Date',
                                 value:
                                     '${t.createdAt.day}/${t.createdAt.month}/${t.createdAt.year}',
@@ -769,6 +769,7 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     HapticFeedback.mediumImpact();
     ModernDialog.show(
       context: context,

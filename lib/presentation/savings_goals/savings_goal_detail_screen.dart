@@ -975,18 +975,17 @@ class _SavingsGoalDetailScreenState
                         child: Container(
                           height: kSpacing48,
                           decoration: BoxDecoration(
-                            color: const Color(
-                              0xFFFF453A,
-                            ).withValues(alpha: 0.15),
+                            color: context.appColors.expenseColor
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.remove_rounded,
-                                color: Color(0xFFFF453A),
+                                color: context.appColors.expenseColor,
                                 size: 18,
                               ),
                               const SizedBox(width: kSpacing6),
@@ -1061,9 +1060,9 @@ class _SavingsGoalDetailScreenState
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isPos
+                                      color: isPos
                                         ? AppTheme.transferColorDark
-                                        : const Color(0xFFFF453A),
+                                        : context.appColors.expenseColor,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -1122,7 +1121,7 @@ class _SavingsGoalDetailScreenState
                                             fontWeight: FontWeight.bold,
                                             color: isPos
                                                 ? AppTheme.transferColorDark
-                                                : const Color(0xFFFF453A),
+                                                : context.appColors.expenseColor,
                                           ),
                                     ),
                                     const SizedBox(height: kSpacing2),

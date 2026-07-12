@@ -33,9 +33,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
           child: LiquidGlassOverlay(
             child: Container(
               decoration: BoxDecoration(
-                color: theme.brightness == Brightness.dark
-                    ? const Color(0xF01C1C1E)
-                    : const Color(0xF0F2F2F7),
+                color: theme.colorScheme.surface.withValues(alpha: 0.94),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24.0),
                 ),
@@ -115,9 +113,8 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                                 border: Border.all(
                                   color: isSelected
                                       ? mutedItemColor.withValues(alpha: 0.3)
-                                      : (theme.brightness == Brightness.dark
-                                            ? const Color(0x1FFFFFFF)
-                                            : const Color(0x1F000000)),
+                                      : theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.12),
                                 ),
                               ),
                               child: Row(
@@ -250,9 +247,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
                 hintText: 'e.g. Side Gig, Paris Trip',
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                 filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1C1C1E)
-                    : const Color(0xFFF2F2F7),
+                fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -446,9 +441,7 @@ void showManageTrackerDialog(
                 hintText: 'e.g. Side Gig, Paris Trip',
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                 filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1C1C1E)
-                    : const Color(0xFFF2F2F7),
+                fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,

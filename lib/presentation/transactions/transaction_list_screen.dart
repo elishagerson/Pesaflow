@@ -398,8 +398,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           ),
                                         ),
                                       ),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 );
@@ -680,11 +678,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         dateFrom != null ||
                                         dateTo != null)
                                       IconButton(
-                icon: Icon(
-                                  Icons.clear_all_rounded,
-                                  color: theme.colorScheme.error,
-                                  size: 20,
-                                ),
+                                        icon: Icon(
+                                          Icons.clear_all_rounded,
+                                          color: theme.colorScheme.error,
+                                          size: 20,
+                                        ),
                                         tooltip: 'Clear Filters',
                                         onPressed: () {
                                           ref
@@ -1022,14 +1020,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(23),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF0C1911), Color(0xFF070B08)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.surfaceContainer, theme.colorScheme.surface],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                     ),
-                  ),
                   padding: const EdgeInsets.all(kSpacing20),
                   child: Row(
                     children: [

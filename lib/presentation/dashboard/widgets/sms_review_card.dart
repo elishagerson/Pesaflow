@@ -31,7 +31,7 @@ class ActiveParserBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(PesaFlowIcons.success, size: 10, color: const Color(0xFF609F8A)),
+          Icon(PesaFlowIcons.success, size: 10, color: context.appColors.incomeColor),
           const SizedBox(width: kSpacing4),
           Text(
             label,
@@ -78,7 +78,7 @@ class SmsReviewCard extends StatelessWidget {
                   Icon(
                     Icons.message_rounded,
                     size: 14,
-                    color: const Color(0xFF609F8A),
+                    color: context.appColors.incomeColor,
                   ),
                   const SizedBox(width: kSpacing6),
                   Text(
@@ -94,7 +94,7 @@ class SmsReviewCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: pendingReviewCount > 0
-                      ? const Color(0xFFFF9F0A).withValues(alpha: 0.12)
+                      ? context.appColors.transferColor.withValues(alpha: 0.12)
                       : theme.colorScheme.onSurface.withValues(alpha: 0.11),
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -106,7 +106,7 @@ class SmsReviewCard extends StatelessWidget {
                     fontSize: 8,
                     fontWeight: FontWeight.w900,
                     color: pendingReviewCount > 0
-                        ? const Color(0xFFFF9F0A)
+                        ? context.appColors.transferColor
                         : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),

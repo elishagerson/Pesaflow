@@ -24,6 +24,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
     titleIcon: PesaFlowIcons.wallet,
     content: StatefulBuilder(
       builder: (context, setState) {
+        final theme = Theme.of(context);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [

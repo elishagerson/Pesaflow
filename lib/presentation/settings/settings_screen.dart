@@ -137,6 +137,7 @@ class SettingsScreen extends ConsumerWidget {
       titleIcon: PesaFlowIcons.edit,
       content: StatefulBuilder(
         builder: (context, setState) {
+          final theme = Theme.of(context);
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -147,7 +148,7 @@ class SettingsScreen extends ConsumerWidget {
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                   prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).colorScheme.surface,
+                  fillColor: theme.colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -177,7 +178,7 @@ class SettingsScreen extends ConsumerWidget {
                 labelText: 'Account Type',
                 value: accountType,
                 prefixIcon: Icons.wallet_rounded,
-                items: const [
+                items: [
                   ModernDropdownItem(
                     value: 'Cash',
                     label: 'Cash Wallet',
@@ -277,7 +278,7 @@ class SettingsScreen extends ConsumerWidget {
                   labelText: 'Bank Brand',
                   value: provider ?? 'NMB',
                   prefixIcon: PesaFlowIcons.loans,
-                  items: const [
+                  items: [
                     ModernDropdownItem(
                       value: 'NMB',
                       label: 'NMB Bank',
@@ -416,6 +417,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
+    final theme = Theme.of(context);
     ModernDialog.show(
       context: context,
       title: const Text('Delete Account'),
@@ -466,6 +468,7 @@ class SettingsScreen extends ConsumerWidget {
 
   void _showCategoriesManager(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
+    final theme = Theme.of(context);
     IosBottomSheet.show(
       context: context,
       initialChildSize: 0.6,
@@ -554,10 +557,10 @@ class SettingsScreen extends ConsumerWidget {
                                 existing: cat,
                               );
                             },
-                            child: const Icon(
+                            child: Icon(
                               PesaFlowIcons.edit,
                               size: 20,
-                              color: Colors.blue,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
@@ -876,6 +879,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _handleRestoreDb(BuildContext context, WidgetRef ref) async {
+    final theme = Theme.of(context);
     try {
       final success = await ref.read(backupServiceProvider).restoreDatabase();
       if (!success || !context.mounted) return;
@@ -1036,12 +1040,12 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.colorScheme.primary.withValues(alpha: 0.12)
-                      : context.appColors.textMedium.withValues(alpha: 0.1),
+                      : ctx.appColors.textMedium.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
-                  color: isSelected ? theme.colorScheme.primary : context.appColors.textMedium,
+                  color: isSelected ? theme.colorScheme.primary : ctx.appColors.textMedium,
                   size: 20,
                 ),
               ),
@@ -1062,7 +1066,7 @@ class SettingsScreen extends ConsumerWidget {
                       style: theme.textTheme.labelSmall!.copyWith(
                         color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.7)
-                            : context.appColors.textMedium,
+                            : ctx.appColors.textMedium,
                       ),
                     ),
                   ],
