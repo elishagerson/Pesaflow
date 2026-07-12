@@ -499,8 +499,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 const SizedBox(width: kSpacing12),
                 Text(
                   '${(ratio * 100).round()}%',
-                  style: TextStyle(
-                    fontSize: 18,
+                  style: theme.textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w900,
                     color: Color.lerp(
                       AppTheme.expenseColor,
@@ -657,8 +656,7 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
               Text(
                 '${daysLeft}d',
-                style: TextStyle(
-                  fontSize: 20,
+                style: theme.textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w900,
                   color: const Color(0xFFFF9F0A),
                 ),
@@ -753,9 +751,9 @@ class LoanDetailScreen extends ConsumerWidget {
                 ),
                 label: Text(
                   'Record Offline Payment',
-                  style: TextStyle(
+                  style: context.ts(
+                    13,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    fontSize: 13,
                   ),
                 ),
                 style: TextButton.styleFrom(

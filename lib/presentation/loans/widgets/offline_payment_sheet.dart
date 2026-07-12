@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
@@ -106,10 +107,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             'Record Offline Payment',
-                                            style: TextStyle(
-                                              fontSize: 20,
+                                            style: theme.textTheme.titleLarge!
+                                                .copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -156,8 +157,8 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       children: [
                                         Text(
                                           'TSh',
-                                          style: TextStyle(
-                                            fontSize: 18,
+                                          style: theme.textTheme.titleMedium!
+                                              .copyWith(
                                             fontWeight: FontWeight.w900,
                                             color: onSurface.withValues(
                                               alpha: 0.55,
