@@ -33,9 +33,26 @@ class NotificationService {
         linux: linuxInit,
       );
       await _plugin.initialize(settings: initSettings);
+
+      final androidImplementation = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      if (androidImplementation != null) {
+        await androidImplementation.requestNotificationsPermission();
+      }
+
+      final iosImplementation = _plugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+      if (iosImplementation != null) {
+        await iosImplementation.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+
       _initCompleter!.complete();
       developer.log(
-        'Notification plugin initialized',
+        'Notification plugin initialized and permissions requested',
         name: 'NotificationService',
       );
     } catch (e) {
