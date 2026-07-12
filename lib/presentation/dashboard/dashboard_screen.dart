@@ -1771,6 +1771,8 @@ class _GlossyWavesPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+
     // Wave 1: Accent color glow wave
     final path1 = Path();
     path1.moveTo(0, size.height * 0.7);
@@ -1781,14 +1783,14 @@ class _GlossyWavesPainter extends CustomPainter {
     path1.close();
 
     final paint1 = Paint()
-      ..gradient = LinearGradient(
+      ..shader = LinearGradient(
         colors: [
           accentColor.withValues(alpha: 0.28),
           accentColor.withValues(alpha: 0.0),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-      );
+      ).createShader(rect);
     canvas.drawPath(path1, paint1);
 
     // Wave 2: Glossy white highlight wave
@@ -1800,14 +1802,14 @@ class _GlossyWavesPainter extends CustomPainter {
     path2.close();
 
     final paint2 = Paint()
-      ..gradient = LinearGradient(
+      ..shader = LinearGradient(
         colors: [
           Colors.white.withValues(alpha: 0.08),
           Colors.white.withValues(alpha: 0.0),
         ],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-      );
+      ).createShader(rect);
     canvas.drawPath(path2, paint2);
 
     // Wave 3: Deep contrast wave
@@ -1818,14 +1820,14 @@ class _GlossyWavesPainter extends CustomPainter {
     path3.close();
 
     final paint3 = Paint()
-      ..gradient = LinearGradient(
+      ..shader = LinearGradient(
         colors: [
           accentColor.withValues(alpha: 0.15),
           accentColor.withValues(alpha: 0.0),
         ],
         begin: Alignment.bottomLeft,
         end: Alignment.topRight,
-      );
+      ).createShader(rect);
     canvas.drawPath(path3, paint3);
   }
 
