@@ -639,7 +639,7 @@ class BudgetListScreen extends ConsumerWidget {
             : 0.0;
 
         return RefreshIndicator(
-          color: const Color(0xFF0F4C5C),
+          color: theme.colorScheme.primary,
           backgroundColor: theme.scaffoldBackgroundColor,
           onRefresh: () async {
             ref.invalidate(budgetProgressProvider);

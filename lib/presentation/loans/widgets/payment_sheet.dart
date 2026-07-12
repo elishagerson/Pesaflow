@@ -62,9 +62,7 @@ class LoanProgressRing extends StatelessWidget {
               ),
               Text(
                 '${(paidFraction * 100).round()}%',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w900),
+                style: context.ts(13, fontWeight: FontWeight.w900),
               ),
             ],
           ),
@@ -79,16 +77,11 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Paid',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: onSurface.withValues(alpha: 0.6),
-                    ),
+                    style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(paidAmount),
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.appColors.incomeColor,
-                    ),
+                    style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.incomeColor),
                   ),
                 ],
               ),
@@ -98,16 +91,11 @@ class LoanProgressRing extends StatelessWidget {
                 children: [
                   Text(
                     'Remaining',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: onSurface.withValues(alpha: 0.6),
-                    ),
+                    style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                   ),
                   Text(
                     CurrencyFormatter.formatCents(remainingCents),
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.appColors.expenseColor,
-                    ),
+                    style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.expenseColor),
                   ),
                 ],
               ),
@@ -118,15 +106,11 @@ class LoanProgressRing extends StatelessWidget {
                   children: [
                     Text(
                       'Installments',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: onSurface.withValues(alpha: 0.6),
-                      ),
+                      style: context.ts(12, color: onSurface.withValues(alpha: 0.6)),
                     ),
                     Text(
                       '$paidInstallments/$totalInstallments',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.ts(12, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -179,21 +163,12 @@ class QuickAmountChip extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: isActive
-                      ? context.appColors.incomeColor
-                      : onSurface.withValues(alpha: 0.7),
-                ),
+                style: context.ts(13, fontWeight: FontWeight.w700, color: isActive ? context.appColors.incomeColor : onSurface.withValues(alpha: 0.7)),
               ),
               const SizedBox(height: kSpacing2),
               Text(
                 CurrencyFormatter.formatCents(amount),
-                style: theme.textTheme.labelSmall!.copyWith(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w500,
-                  color: onSurface.withValues(alpha: 0.38),
-                ),
+                style: context.ts(10, fontWeight: FontWeight.w500, color: onSurface.withValues(alpha: 0.38)),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
