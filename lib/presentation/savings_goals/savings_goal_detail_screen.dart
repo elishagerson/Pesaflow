@@ -147,8 +147,8 @@ class _SavingsGoalDetailScreenState
         final theme = Theme.of(ctx);
         final onSurface = theme.colorScheme.onSurface;
         final accentColor = isDeposit
-            ? const Color(0xFF0F4C5C)
-            : const Color(0xFFFF453A);
+            ? context.appColors.incomeColor
+            : context.appColors.expenseColor;
         bool sheetIsContributing = false;
 
         return DraggableScrollableSheet(
