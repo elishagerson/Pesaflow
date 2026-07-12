@@ -82,24 +82,20 @@ class IosTabBar extends StatelessWidget {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              height: height,
-              padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: theme.colorScheme.surface.withValues(alpha: 0.45),
-                border: Border.all(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
-                  width: 0.8,
-                ),
-              ),
-              child: Row(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: height,
+          padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+            border: Border.all(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
+              width: 0.8,
+            ),
+          ),
+          child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: visualTabs.map((tab) {
                   final isSelected = tab.routeIndex == selectedIndex;

@@ -45,7 +45,6 @@ class IosListSection extends StatelessWidget {
         GlassCard(
           margin: margin ?? const EdgeInsets.symmetric(horizontal: kSpacing16),
           padding: EdgeInsets.zero,
-          frosted: true,
           borderRadius: AppTheme.radiusCard,
           child: Column(
             children: List.generate(rows.length, (index) {

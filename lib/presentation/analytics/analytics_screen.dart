@@ -301,7 +301,6 @@ class _OverviewTab extends StatelessWidget {
                 index: 0,
                 child: GlassCard(
                   padding: const EdgeInsets.all(kSpacing20),
-                  frosted: true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -471,7 +470,6 @@ class _OverviewTab extends StatelessWidget {
                                 width: 250,
                                 child: GlassCard(
                                   padding: const EdgeInsets.all(kSpacing16),
-                                  frosted: true,
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -692,7 +690,6 @@ class _OverviewTab extends StatelessWidget {
           // Category Donut inside a beautiful GlassCard
           GlassCard(
             padding: const EdgeInsets.all(kSpacing20),
-            frosted: true,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1056,7 +1053,6 @@ class _TrendsTab extends StatelessWidget {
                 index: 1,
                 child: GlassCard(
                   padding: const EdgeInsets.all(kSpacing20),
-                  frosted: true,
                   child: Column(
                     children: [
                       SizedBox(
@@ -1356,7 +1352,6 @@ class _InsightsTab extends StatelessWidget {
               index: index,
               child: GlassCard(
                 margin: const EdgeInsets.only(bottom: kSpacing14),
-                frosted: true,
                 child: IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

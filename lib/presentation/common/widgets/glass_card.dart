@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 enum CardElevation { none, low, medium, high }
@@ -18,9 +16,6 @@ class GlassCard extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final VoidCallback? onTap;
-  final double blurSigma;
-  final bool frosted;
-  final bool liquidOverlay;
   final bool showAccentStrip;
 
   const GlassCard({
@@ -36,9 +31,6 @@ class GlassCard extends StatefulWidget {
     this.margin,
     this.padding,
     this.onTap,
-    this.blurSigma = 15,
-    this.frosted = false,
-    this.liquidOverlay = false,
     this.showAccentStrip = true,
   });
 
@@ -165,16 +157,6 @@ class _GlassCardState extends State<GlassCard>
         ),
         child: Stack(
           children: [
-            if (widget.frosted)
-              Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: widget.blurSigma,
-                    sigmaY: widget.blurSigma,
-                  ),
-                  child: Container(color: Colors.transparent),
-                ),
-              ),
             if (widget.accentColor != null &&
                 widget.onTap != null &&
                 widget.showAccentStrip)
@@ -207,10 +189,6 @@ class _GlassCardState extends State<GlassCard>
         ),
       ),
     );
-
-    if (widget.liquidOverlay) {
-      body = LiquidGlassOverlay(child: body);
-    }
 
     if (widget.margin != null) {
       body = Padding(padding: widget.margin!, child: body);

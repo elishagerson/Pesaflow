@@ -395,7 +395,6 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           child: GlassCard(
                             margin: const EdgeInsets.only(bottom: kSpacing10),
                             padding: EdgeInsets.zero,
-                            frosted: true,
                             child: IntrinsicHeight(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,

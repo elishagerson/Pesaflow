@@ -637,10 +637,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               right: 0,
               child: StaggeredFadeSlide(
                 index: 0,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                    child: Container(
+                child: Container(
                       padding: EdgeInsets.only(
                         top: MediaQuery.of(context).padding.top + 16,
                         bottom: 12,
