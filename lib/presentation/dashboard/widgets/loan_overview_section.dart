@@ -36,14 +36,12 @@ class LoanOverviewSection extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
-                          color: const Color(
-                            0xFF609F8A,
-                          ).withValues(alpha: 0.12),
+                          color: context.appColors.incomeColor.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           PesaFlowIcons.success,
-                          color: Color(0xFF609F8A),
+                          color: context.appColors.incomeColor,
                           size: 22,
                         ),
                       ),
@@ -54,10 +52,10 @@ class LoanOverviewSection extends ConsumerWidget {
                           style: context.ts(13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right_rounded,
                         size: 18,
-                        color: Colors.grey,
+                        color: context.appColors.textMedium,
                       ),
                     ],
                   ),
@@ -78,7 +76,7 @@ class LoanOverviewSection extends ConsumerWidget {
                                 Icon(
                                   Icons.history_rounded,
                                   size: 16,
-                                  color: const Color(0xFF609F8A),
+                                  color: context.appColors.incomeColor,
                                 ),
                                 const SizedBox(width: kSpacing8),
                                 Text(
@@ -92,7 +90,7 @@ class LoanOverviewSection extends ConsumerWidget {
                                 Icon(
                                   Icons.chevron_right_rounded,
                                   size: 16,
-                                  color: Colors.grey,
+                                  color: context.appColors.textMedium,
                                 ),
                               ],
                             ),
@@ -120,12 +118,12 @@ class LoanOverviewSection extends ConsumerWidget {
             ? 'MODERATE'
             : 'LOW';
         final severityColor = debtRatio > 1.0
-            ? const Color(0xFFE53935)
+            ? context.appColors.expenseColor
             : debtRatio > 0.5
-            ? const Color(0xFFFF6B35)
+            ? context.appColors.transferColor
             : debtRatio > 0.2
-            ? const Color(0xFFFF9F0A)
-            : const Color(0xFF609F8A);
+            ? context.appColors.transferColor
+            : context.appColors.incomeColor;
 
         return Column(
           children: [
@@ -273,8 +271,8 @@ class LoanOverviewSection extends ConsumerWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              const Color(0xFFFF6B35).withValues(alpha: 0.1),
-                              const Color(0xFFFF6B35).withValues(alpha: 0.02),
+                              context.appColors.transferColor.withValues(alpha: 0.1),
+                              context.appColors.transferColor.withValues(alpha: 0.02),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -283,9 +281,7 @@ class LoanOverviewSection extends ConsumerWidget {
                             AppTheme.radiusCard,
                           ),
                           border: Border.all(
-                            color: const Color(
-                              0xFFFF6B35,
-                            ).withValues(alpha: 0.2),
+                            color: context.appColors.transferColor.withValues(alpha: 0.2),
                             width: 0.5,
                           ),
                         ),
@@ -294,14 +290,12 @@ class LoanOverviewSection extends ConsumerWidget {
                             Container(
                               padding: const EdgeInsets.all(kSpacing6),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFFF6B35,
-                                ).withValues(alpha: 0.15),
+                                color: context.appColors.transferColor.withValues(alpha: 0.15),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.speed_rounded,
-                                color: Color(0xFFFF6B35),
+                                color: context.appColors.transferColor,
                                 size: 16,
                               ),
                             ),
@@ -325,10 +319,10 @@ class LoanOverviewSection extends ConsumerWidget {
                   ? loan.remaining / loan.amount
                   : 1.0;
               final loanSeverity = ratio > 0.7
-                  ? const Color(0xFFE53935)
+                  ? context.appColors.expenseColor
                   : ratio > 0.4
-                  ? const Color(0xFFFF9F0A)
-                  : const Color(0xFF609F8A);
+                  ? context.appColors.transferColor
+                  : context.appColors.incomeColor;
               return TactileSpringContainer(
                 onTap: () => context.go('/loans/${loan.id}'),
                 child: GlassCard(

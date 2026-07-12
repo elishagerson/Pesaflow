@@ -66,7 +66,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         title: top.key,
         subtitle: 'Visited ${top.value} times this month',
         icon: PesaFlowIcons.transactions,
-        color: const Color(0xFF0F4C5C),
+        color: AppTheme.primaryLight,
       ),
     );
   }
@@ -106,8 +106,8 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
               : '${pct.abs()}% lower than last month',
           icon: curr > prev ? PesaFlowIcons.income : PesaFlowIcons.expense,
           color: curr > prev
-              ? const Color(0xFFEF4444)
-              : const Color(0xFF10B981),
+              ? AppTheme.expenseColor
+              : AppTheme.incomeColor,
         ),
       );
     }
@@ -131,7 +131,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
           subtitle:
               '${CurrencyFormatter.formatCents(lastTotal)} \u2192 ${CurrencyFormatter.formatCents(thisTotal)}',
           icon: pct > 0 ? PesaFlowIcons.income : PesaFlowIcons.expense,
-          color: pct > 0 ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+          color: pct > 0 ? AppTheme.expenseColor : AppTheme.incomeColor,
         ),
       );
     }
@@ -141,7 +141,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         title: CurrencyFormatter.formatCents(thisTotal),
         subtitle: 'Total spending this month',
         icon: PesaFlowIcons.expense,
-        color: const Color(0xFF0F4C5C),
+        color: AppTheme.primaryLight,
       ),
     );
   }
@@ -155,7 +155,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         title: '${CurrencyFormatter.formatCents(daily)} / day',
         subtitle: 'Average daily spending this month',
         icon: PesaFlowIcons.calendar,
-        color: const Color(0xFF6366F1),
+        color: AppTheme.transferColor,
       ),
     );
   }
@@ -170,7 +170,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
         subtitle:
             '${CurrencyFormatter.formatCents(top.value)} \u2014 $pct% of spending',
         icon: PesaFlowIcons.target,
-        color: const Color(0xFF0F4C5C),
+        color: AppTheme.primaryLight,
       ),
     );
   }

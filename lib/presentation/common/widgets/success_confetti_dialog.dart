@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
@@ -27,13 +28,13 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
   final Random _rand = Random();
 
   final List<Color> _colors = [
-    const Color(0xFFFF2D55), // Red
-    const Color(0xFFFF9500), // Orange
-    const Color(0xFFFFCC00), // Yellow
-    const Color(0xFF34C759), // Green
-    const Color(0xFF007AFF), // Blue
-    const Color(0xFF5856D6), // Purple
-    const Color(0xFFAF52DE), // Violet
+    AppTheme.expenseColor,
+    AppTheme.transferColorDark,
+    AppTheme.incomeColorDark,
+    AppTheme.incomeColor,
+    AppTheme.transferColor,
+    AppTheme.primaryLight,
+    AppTheme.expenseColorDark,
   ];
 
   @override

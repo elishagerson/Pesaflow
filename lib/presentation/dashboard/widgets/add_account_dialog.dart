@@ -34,8 +34,8 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                 filled: true,
                 fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1C1C1E)
-                    : const Color(0xFFF2F2F7),
+                    ? theme.colorScheme.surface
+                    : theme.colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -65,7 +65,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
               labelText: 'Account Type',
               value: accountType,
               prefixIcon: Icons.wallet_rounded,
-              items: const [
+              items: [
                 ModernDropdownItem(
                   value: 'Cash',
                   label: 'Cash Wallet',
@@ -77,14 +77,14 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                   value: 'Mobile Money',
                   label: 'Mobile Money',
                   icon: PesaFlowIcons.cash,
-                  color: Color(0xFF609F8A),
+                  color: context.appColors.incomeColor,
                   subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                 ),
                 ModernDropdownItem(
                   value: 'Bank',
                   label: 'Bank Account',
                   icon: PesaFlowIcons.loans,
-                  color: Color(0xFFFF9F0A),
+                  color: context.appColors.transferColor,
                   subtitle: 'NMB, CRDB, NBC, and other banks',
                 ),
               ],
@@ -154,8 +154,8 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                   prefixIcon: Icon(Icons.phone_rounded, size: 18),
                   filled: true,
                   fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1C1C1E)
-                      : const Color(0xFFF2F2F7),
+                      ? theme.colorScheme.surface
+                      : theme.colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -225,14 +225,14 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: InputDecoration(
-                labelText: 'Initial Balance (Tsh)',
-                hintText: 'e.g. 150,000',
-                prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
-                filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1C1C1E)
-                    : const Color(0xFFF2F2F7),
+                decoration: InputDecoration(
+                  labelText: 'Initial Balance (Tsh)',
+                  hintText: 'e.g. 150,000',
+                  prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
+                  filled: true,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? theme.colorScheme.surface
+                      : theme.colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,

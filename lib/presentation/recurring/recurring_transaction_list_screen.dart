@@ -132,7 +132,7 @@ class _RecurringTransactionListScreenState
                                 Icon(
                                   PesaFlowIcons.calendar,
                                   size: 12,
-                                  color: const Color(0xFFFF6B35),
+                                  color: context.appColors.transferColor,
                                 ),
                                 const SizedBox(width: kSpacing6),
                                 Text(
@@ -140,7 +140,7 @@ class _RecurringTransactionListScreenState
                                   style: context.ts(
                                     10,
                                     fontWeight: FontWeight.w800,
-                                    color: const Color(0xFFFF6B35),
+                                    color: context.appColors.transferColor,
                                   ).copyWith(letterSpacing: 1.2),
                                 ),
                               ],
@@ -363,14 +363,14 @@ class _RecurringTransactionListScreenState
                     theme,
                     '${paused.length}',
                     'Paused',
-                    const Color(0xFFFF9F0A),
+                    context.appColors.transferColor,
                   ),
                 if (dueIds.isNotEmpty)
                   _statPill(
                     theme,
                     '${dueIds.length}',
                     'Due',
-                    const Color(0xFFFF6B35),
+                    context.appColors.transferColor,
                   ),
               ],
             ),
@@ -577,9 +577,9 @@ class _RecurringTransactionListScreenState
   ) {
     final isExpense = recurring.type == 'expense';
     final accentColor = isDue
-        ? const Color(0xFFFF6B35)
+        ? context.appColors.transferColor
         : recurring.status == 'paused'
-        ? const Color(0xFFFF9F0A)
+        ? context.appColors.transferColor
         : recurring.status != 'active'
         ? Colors.grey
         : categoryColor ??
@@ -681,7 +681,7 @@ class _RecurringTransactionListScreenState
                             PesaFlowIcons.calendar,
                             size: 11,
                             color: isDue
-                                ? const Color(0xFFFF6B35)
+                                ? context.appColors.transferColor
                                 : theme.colorScheme.onSurface.withValues(
                                     alpha: 0.4,
                                   ),
@@ -695,7 +695,7 @@ class _RecurringTransactionListScreenState
                                   ? FontWeight.w700
                                   : FontWeight.w500,
                               color: isDue
-                                  ? const Color(0xFFFF6B35)
+                                  ? context.appColors.transferColor
                                   : theme.colorScheme.onSurface.withValues(
                                       alpha: 0.5,
                                     ),
@@ -878,10 +878,10 @@ class _RecurringTransactionListScreenState
 
     // Status badge
     final (label, color) = switch (recurring.status) {
-      'active' => ('Active', const Color(0xFF10B981)),
-      'paused' => ('Paused', const Color(0xFFFF9F0A)),
-      'cancelled' => ('Cancelled', Colors.grey),
-      _ => (recurring.status, Colors.grey),
+      'active' => ('Active', context.appColors.incomeColor),
+      'paused' => ('Paused', context.appColors.transferColor),
+      'cancelled' => ('Cancelled', context.appColors.textMedium),
+      _ => (recurring.status, context.appColors.textMedium),
     };
 
     badges.add(

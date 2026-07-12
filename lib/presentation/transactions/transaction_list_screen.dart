@@ -100,7 +100,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
     return Scaffold(
       body: RefreshIndicator(
-        color: const Color(0xFF0F4C5C),
+        color: theme.colorScheme.primary,
         backgroundColor: theme.colorScheme.surface,
         onRefresh: () async {
           ref.invalidate(filteredTransactionsStreamProvider);
@@ -391,11 +391,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, true),
-                                        child: const Text(
+                                        child: Text(
                                           'Delete',
                                           style: TextStyle(
-                                            color: Color(0xFFEF4444),
+                                            color: context.appColors.expenseColor,
                                           ),
+                                        ),
+                                      ),
                                         ),
                                       ),
                                     ],
@@ -541,9 +543,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                                           vertical: kSpacing2,
                                                         ),
                                                     decoration: BoxDecoration(
-                                                      color: const Color(
-                                                        0xFF0F4C5C,
-                                                      ).withValues(alpha: 0.08),
+                                                      color: theme.colorScheme.primary.withValues(alpha: 0.08),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                             kSpacing6,
@@ -680,11 +680,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         dateFrom != null ||
                                         dateTo != null)
                                       IconButton(
-                                        icon: const Icon(
-                                          Icons.clear_all_rounded,
-                                          color: Colors.redAccent,
-                                          size: 20,
-                                        ),
+                icon: Icon(
+                                  Icons.clear_all_rounded,
+                                  color: theme.colorScheme.error,
+                                  size: 20,
+                                ),
                                         tooltip: 'Clear Filters',
                                         onPressed: () {
                                           ref
@@ -995,10 +995,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         }
 
         final Color accentColor = switch (severity) {
-          InsightSeverity.positive => const Color(0xFF10B981),
-          InsightSeverity.neutral => const Color(0xFFFF9F0A),
-          InsightSeverity.warning => const Color(0xFFFF453A),
-          InsightSeverity.critical => const Color(0xFFFF453A),
+          InsightSeverity.positive => context.appColors.incomeColor,
+          InsightSeverity.neutral => context.appColors.transferColor,
+          InsightSeverity.warning => context.appColors.expenseColor,
+          InsightSeverity.critical => context.appColors.expenseColor,
         };
 
         return Padding(
@@ -1092,7 +1092,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   label: 'Income',
                                   value: income,
                                   maxValue: maxVal,
-                                  color: const Color(0xFF10B981),
+                                   color: context.appColors.incomeColor,
                                   formatValue: (v) => 'TSh ${_formatKsh(v)}',
                                 ),
                                 const SizedBox(height: kSpacing10),
@@ -1178,7 +1178,7 @@ class _FilterButton extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent,
+                  color: theme.colorScheme.error,
                   shape: BoxShape.circle,
                 ),
                 constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
