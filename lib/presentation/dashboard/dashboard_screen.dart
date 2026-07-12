@@ -204,9 +204,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
 
     const Color heroTextColor = Colors.white;
-    final Color heroSubColor = Colors.white.withValues(alpha: 0.7);
-    final Color pillBg = Colors.white.withValues(alpha: 0.10);
-    final Color pillBorder = Colors.white.withValues(alpha: 0.15);
 
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -1780,4 +1777,40 @@ class _QuickActionButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ChipContactPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.25)
+      ..strokeWidth = 0.6
+      ..style = PaintingStyle.stroke;
+
+    // Draw chip contact grid lines
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
+    
+    // Vertical center line
+    canvas.drawLine(Offset(size.width * 0.5, 0), Offset(size.width * 0.5, size.height), paint);
+    
+    // Horizontal center line
+    canvas.drawLine(Offset(0, size.height * 0.5), Offset(size.width, size.height * 0.5), paint);
+    
+    // Left vertical contact line
+    canvas.drawLine(Offset(size.width * 0.25, size.height * 0.25), Offset(size.width * 0.25, size.height * 0.75), paint);
+    
+    // Right vertical contact line
+    canvas.drawLine(Offset(size.width * 0.75, size.height * 0.25), Offset(size.width * 0.75, size.height * 0.75), paint);
+
+    // Inner center details
+    final centerRect = Rect.fromCenter(
+      center: Offset(size.width * 0.5, size.height * 0.5),
+      width: size.width * 0.25,
+      height: size.height * 0.3,
+    );
+    canvas.drawRRect(RRect.fromRectAndRadius(centerRect, const Radius.circular(2)), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
