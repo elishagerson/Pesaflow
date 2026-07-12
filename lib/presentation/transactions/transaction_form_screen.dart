@@ -793,284 +793,163 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   horizontal: kSpacing20,
                   vertical: kSpacing24,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 36,
-                        height: 4,
-                        margin: const EdgeInsets.only(bottom: kSpacing20),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurfaceVariant.withValues(
-                            alpha: 0.2,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 36,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: kSpacing20),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          borderRadius: BorderRadius.circular(100),
                         ),
                       ),
-                    ),
-                    Text(
-                      'Transaction details'.toUpperCase(),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing16),
-
-                    StaggeredFadeSlide(
-                      index: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Category',
-                            style: context.ts(13,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(height: kSpacing12),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 1.0,
-                                ),
-                            itemCount: filteredCategories.length,
-                            itemBuilder: (context, index) {
-                              final cat = filteredCategories[index];
-                              final isSel = cat.id == _selectedCategoryId;
-                              final catColor = hexToColor(cat.color);
-
-                              return TactileSpringContainer(
-                                onTap: () {
-                                  _lastCategoryByType[_transactionType] =
-                                      cat.id;
-                                  setSheetState(
-                                    () => _selectedCategoryId = cat.id,
-                                  );
-                                  setState(() => _selectedCategoryId = cat.id);
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  decoration: BoxDecoration(
-                                      color: isSel
-                                        ? catColor.withValues(alpha: 0.15)
-                                        : theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: isSel
-                                          ? catColor
-                                          : Colors.transparent,
-                                      width: 2,
-                                    ),
-                                    boxShadow: isSel
-                                        ? [
-                                            BoxShadow(
-                                              color: catColor.withValues(
-                                                alpha: 0.25,
-                                              ),
-                                              blurRadius: 8,
-                                              spreadRadius: 1,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        getCategoryIcon(cat.icon),
-                                        color: isSel
-                                            ? catColor
-                                            : (theme.brightness ==
-                                                      Brightness.dark
-                                                  ? Colors.white60
-                                                  : Colors.black54),
-                                        size: 24,
-                                      ),
-                                      const SizedBox(height: kSpacing6),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: kSpacing4,
-                                        ),
-                                          child: Text(
-                                            cat.name,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: context.ts(11,
-                                              color: isSel
-                                                  ? (theme.brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : catColor)
-                                                  : (theme.brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.7,
-                                                              )
-                                                        : theme
-                                                              .colorScheme
-                                                              .onSurface
-                                                              .withValues(
-                                                                alpha: 0.87,
-                                                              )),
-                                              fontWeight: isSel
-                                                  ? FontWeight.bold
-                                                  : FontWeight.normal,
-                                            ),
-                                          ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing20),
-
-                    StaggeredFadeSlide(
-                      index: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Description',
-                            style: context.ts(13,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(height: kSpacing8),
-                          TextField(
-                            controller: _descriptionController,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: context.inputDecoration(
-                              hintText: 'e.g. Lunch, taxi, data bundle',
-                            ),
-                            onChanged: (val) => setState(() {}),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: kSpacing10),
-
-                    StaggeredFadeSlide(
-                      index: 2,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        child: Row(
-                          children:
-                              (_transactionType == 'Expense'
-                                      ? _expenseSuggestions
-                                      : (_transactionType == 'Income'
-                                            ? _incomeSuggestions
-                                            : _transferSuggestions))
-                                  .map((suggestion) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        right: kSpacing6,
-                                      ),
-                                      child: TactileSpringContainer(
-                                        onTap: () {
-                                          setSheetState(() {
-                                            _descriptionController.text =
-                                                suggestion;
-                                          });
-                                          setState(() {
-                                            _descriptionController.text =
-                                                suggestion;
-                                          });
-                                        },
-                                        child: ActionChip(
-                                          label: Text(
-                                            suggestion,
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.87,
-                                                  ),
-                                                ),
-                                          ),
-                                          backgroundColor: onSurface.withValues(
-                                            alpha: 0.05,
-                                          ),
-                                          side: BorderSide(
-                                            color: onSurface.withValues(
-                                              alpha: 0.08,
-                                            ),
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              100,
-                                            ),
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ),
-                                    );
-                                  })
-                                  .toList(),
+                      Text(
+                        'Transaction details'.toUpperCase(),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                    ),
-                    // Progressive Disclosure: Collapsible details
-                    const SizedBox(height: kSpacing12),
-                    InkWell(
-                      onTap: () {
-                        setSheetState(() => _showAdvanced = !_showAdvanced);
-                        setState(() => _showAdvanced = !_showAdvanced);
-                      },
-                      borderRadius: BorderRadius.circular(8),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: kSpacing8,
-                          horizontal: kSpacing4,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'ADDITIONAL DETAILS',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            Icon(
-                              _showAdvanced
-                                  ? Icons.keyboard_arrow_up_rounded
-                                  : Icons.keyboard_arrow_down_rounded,
-                              color: theme.colorScheme.primary,
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    AnimatedCrossFade(
-                      firstChild: const SizedBox.shrink(),
-                      secondChild: Padding(
-                        padding: const EdgeInsets.only(top: kSpacing12),
+                      const SizedBox(height: kSpacing16),
+
+                      StaggeredFadeSlide(
+                        index: 0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Carrier Reference (Optional)',
+                              'Category',
+                              style: context.ts(13,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing12),
+                            GridView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 1.0,
+                                  ),
+                              itemCount: filteredCategories.length,
+                              itemBuilder: (context, index) {
+                                final cat = filteredCategories[index];
+                                final isSel = cat.id == _selectedCategoryId;
+                                final catColor = hexToColor(cat.color);
+
+                                return TactileSpringContainer(
+                                  onTap: () {
+                                    _lastCategoryByType[_transactionType] =
+                                        cat.id;
+                                    setSheetState(
+                                      () => _selectedCategoryId = cat.id,
+                                    );
+                                    setState(() => _selectedCategoryId = cat.id);
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    decoration: BoxDecoration(
+                                        color: isSel
+                                          ? catColor.withValues(alpha: 0.15)
+                                          : theme.colorScheme.surface,
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: isSel
+                                            ? catColor
+                                            : Colors.transparent,
+                                        width: 2,
+                                      ),
+                                      boxShadow: isSel
+                                          ? [
+                                              BoxShadow(
+                                                color: catColor.withValues(
+                                                  alpha: 0.25,
+                                                ),
+                                                blurRadius: 8,
+                                                spreadRadius: 1,
+                                              ),
+                                            ]
+                                          : null,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          getCategoryIcon(cat.icon),
+                                          color: isSel
+                                              ? catColor
+                                              : (theme.brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white60
+                                                    : Colors.black54),
+                                          size: 24,
+                                        ),
+                                        const SizedBox(height: kSpacing6),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing4,
+                                          ),
+                                            child: Text(
+                                              cat.name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: context.ts(11,
+                                                color: isSel
+                                                    ? (theme.brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : catColor)
+                                                    : (theme.brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.7,
+                                                                )
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withValues(
+                                                                  alpha: 0.87,
+                                                                )),
+                                                fontWeight: isSel
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing20),
+
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Description',
                               style: context.ts(13,
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.onSurfaceVariant,
@@ -1078,85 +957,209 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             ),
                             const SizedBox(height: kSpacing8),
                             TextField(
-                              controller: _referenceController,
-                              textCapitalization: TextCapitalization.characters,
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color: onSurface.withValues(alpha: 0.87),
-                              ),
+                              controller: _descriptionController,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: context.inputDecoration(
-                                hintText: 'e.g. PP230489A1',
+                                hintText: 'e.g. Lunch, taxi, data bundle',
                               ),
+                              onChanged: (val) => setState(() {}),
                             ),
                           ],
                         ),
                       ),
-                      crossFadeState: _showAdvanced
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      duration: const Duration(milliseconds: 250),
-                    ),
-                    const SizedBox(height: kSpacing20),
+                      const SizedBox(height: kSpacing10),
 
-                    StaggeredFadeSlide(
-                      index: 3,
-                      child: ModernDateSelector(
-                        labelText: 'Transaction Date',
-                        value: _selectedDate,
-                        prefixIcon: PesaFlowIcons.calendar,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2101),
-                        onChanged: (picked) {
-                          setSheetState(() => _selectedDate = picked);
-                          setState(() => _selectedDate = picked);
-                        },
+                      StaggeredFadeSlide(
+                        index: 2,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          child: Row(
+                            children:
+                                (_transactionType == 'Expense'
+                                        ? _expenseSuggestions
+                                        : (_transactionType == 'Income'
+                                              ? _incomeSuggestions
+                                              : _transferSuggestions))
+                                    .map((suggestion) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: kSpacing6,
+                                        ),
+                                        child: TactileSpringContainer(
+                                          onTap: () {
+                                            setSheetState(() {
+                                              _descriptionController.text =
+                                                  suggestion;
+                                            });
+                                            setState(() {
+                                              _descriptionController.text =
+                                                  suggestion;
+                                            });
+                                          },
+                                          child: ActionChip(
+                                            label: Text(
+                                              suggestion,
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.87,
+                                                    ),
+                                                  ),
+                                            ),
+                                            backgroundColor: onSurface.withValues(
+                                              alpha: 0.05,
+                                            ),
+                                            side: BorderSide(
+                                              color: onSurface.withValues(
+                                                alpha: 0.08,
+                                              ),
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                100,
+                                              ),
+                                            ),
+                                            onPressed: () {},
+                                          ),
+                                        ),
+                                      );
+                                    })
+                                    .toList(),
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: kSpacing32),
-
-                    StaggeredFadeSlide(
-                      index: 4,
-                      child: TactileSpringContainer(
+                      // Progressive Disclosure: Collapsible details
+                      const SizedBox(height: kSpacing12),
+                      InkWell(
                         onTap: () {
-                          Navigator.pop(context);
-                          _saveTransaction();
+                          setSheetState(() => _showAdvanced = !_showAdvanced);
+                          setState(() => _showAdvanced = !_showAdvanced);
                         },
-                        child: Container(
-                          width: double.infinity,
-                          height: 50,
-                          alignment: Alignment.center,
-                          decoration: ShapeDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primary,
-                                theme.colorScheme.primary.withValues(
-                                  alpha: 0.8,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: kSpacing8,
+                            horizontal: kSpacing4,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'ADDITIONAL DETAILS',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
                                 ),
-                              ],
-                            ),
-                            shape: const SquircleBorder(borderRadius: 24.0),
-                            shadows: [
-                              BoxShadow(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.3,
-                                ),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                              ),
+                              Icon(
+                                _showAdvanced
+                                    ? Icons.keyboard_arrow_up_rounded
+                                    : Icons.keyboard_arrow_down_rounded,
+                                color: theme.colorScheme.primary,
+                                size: 20,
                               ),
                             ],
                           ),
-                          child: Text(
-                            _isEditMode
-                                ? 'Update Transaction'
-                                : 'Record Transaction',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      AnimatedCrossFade(
+                        firstChild: const SizedBox.shrink(),
+                        secondChild: Padding(
+                          padding: const EdgeInsets.only(top: kSpacing12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Carrier Reference (Optional)',
+                                style: context.ts(13,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing8),
+                              TextField(
+                                controller: _referenceController,
+                                textCapitalization: TextCapitalization.characters,
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: onSurface.withValues(alpha: 0.87),
+                                ),
+                                decoration: context.inputDecoration(
+                                  hintText: 'e.g. PP230489A1',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        crossFadeState: _showAdvanced
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        duration: const Duration(milliseconds: 250),
+                      ),
+                      const SizedBox(height: kSpacing20),
+
+                      StaggeredFadeSlide(
+                        index: 3,
+                        child: ModernDateSelector(
+                          labelText: 'Transaction Date',
+                          value: _selectedDate,
+                          prefixIcon: PesaFlowIcons.calendar,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2101),
+                          onChanged: (picked) {
+                            setSheetState(() => _selectedDate = picked);
+                            setState(() => _selectedDate = picked);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing32),
+
+                      StaggeredFadeSlide(
+                        index: 4,
+                        child: TactileSpringContainer(
+                          onTap: () {
+                            Navigator.pop(context);
+                            _saveTransaction();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: ShapeDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  theme.colorScheme.primary.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ],
+                              ),
+                              shape: const SquircleBorder(borderRadius: 24.0),
+                              shadows: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              _isEditMode
+                                  ? 'Update Transaction'
+                                  : 'Record Transaction',
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

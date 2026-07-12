@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class LiquidGlassOverlay extends StatefulWidget {
   final Widget child;
@@ -20,32 +19,20 @@ class LiquidGlassOverlay extends StatefulWidget {
 
 class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     with SingleTickerProviderStateMixin {
-  late Ticker _ticker;
-  double _time = 0.0;
-  Duration _lastElapsed = Duration.zero;
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _ticker = createTicker((elapsed) {
-      if (_lastElapsed == Duration.zero) {
-        _lastElapsed = elapsed;
-        return;
-      }
-      final double dt =
-          (elapsed.inMicroseconds - _lastElapsed.inMicroseconds) / 1000000.0;
-      _lastElapsed = elapsed;
-      setState(() {
-        _time += dt * 0.1 * widget.speedFactor;
-        if (_time > 100000.0) _time = 0.0;
-      });
-    });
-    _ticker.start();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3600),
+    )..repeat();
   }
 
   @override
   void dispose() {
-    _ticker.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -60,7 +47,11 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
-                painter: _LiquidGlassPainter(time: _time, baseColor: baseColor),
+                painter: _LiquidGlassPainter(
+                  animation: _controller,
+                  speedFactor: widget.speedFactor,
+                  baseColor: baseColor,
+                ),
               ),
             ),
           ),
@@ -71,16 +62,26 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
 }
 
 class _LiquidGlassPainter extends CustomPainter {
-  final double time;
+  final Animation<double> animation;
+  final double speedFactor;
   final Color baseColor;
 
-  _LiquidGlassPainter({required this.time, required this.baseColor});
+  _LiquidGlassPainter({
+    required this.animation,
+    required this.speedFactor,
+    required this.baseColor,
+  }) : super(repaint: animation);
 
   @override
   void paint(Canvas canvas, Size size) {
     if (size.width <= 0.0 || size.height <= 0.0) {
       return;
     }
+
+    // Original rate of change: 0.1 per second.
+    // Animation value goes 0.0 -> 1.0 over 3600 seconds.
+    // So time = value * 3600 * 0.1 = value * 360.
+    final time = animation.value * 360.0 * speedFactor;
 
     // -- Highlight 1: drifting radial pool --
     final px1 = 0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15));
@@ -144,5 +145,7 @@ class _LiquidGlassPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LiquidGlassPainter oldDelegate) =>
-      oldDelegate.time != time;
+      oldDelegate.animation.value != animation.value ||
+      oldDelegate.speedFactor != speedFactor ||
+      oldDelegate.baseColor != baseColor;
 }
