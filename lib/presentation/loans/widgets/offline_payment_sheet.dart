@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -22,10 +23,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final onSurface = theme.colorScheme.onSurface;
   final remainingCents = loan.remaining;
 
-  showModalBottomSheet(
-    context: context,
+  showSpringSheet(
+    context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
     builder: (sheetContext) {
       bool sheetIsProcessing = false;
 
