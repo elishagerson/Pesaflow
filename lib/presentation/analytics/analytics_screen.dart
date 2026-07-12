@@ -1057,8 +1057,8 @@ class _TrendsTab extends StatelessWidget {
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (touchedSpot) {
-                                  return theme.colorScheme.surface.withValues(
-                                    alpha: 0.95,
+                                  return theme.colorScheme.surfaceContainerHigh.withValues(
+                                    alpha: 0.96,
                                   );
                                 },
                                 tooltipBorderRadius: BorderRadius.circular(12),
@@ -1163,52 +1163,52 @@ class _TrendsTab extends StatelessWidget {
                             minY: 0,
                             maxY: maxVal * 1.15,
                             lineBarsData: [
-                               LineChartBarData(
-                                 spots: incomeSpots,
-                                 isCurved: true,
-                                 gradient: LinearGradient(
-                                   colors: [
-                                     context.appColors.incomeColor,
-                                   ],
-                                 ),
-                                 barWidth: 3,
-                                 isStrokeCapRound: true,
-                                 dotData: const FlDotData(show: false),
-                                 belowBarData: BarAreaData(
-                                   show: true,
-                                   gradient: LinearGradient(
-                                     colors: [
-                                       context.appColors.incomeColor.withValues(alpha: 0.24),
-                                       context.appColors.incomeColor.withValues(alpha: 0.0),
-                                     ],
-                                     begin: Alignment.topCenter,
-                                     end: Alignment.bottomCenter,
-                                   ),
-                                 ),
-                               ),
-                               LineChartBarData(
-                                 spots: expenseSpots,
-                                 isCurved: true,
-                                 gradient: LinearGradient(
-                                   colors: [
-                                     context.appColors.expenseColor,
-                                   ],
-                                 ),
-                                 barWidth: 3,
-                                 isStrokeCapRound: true,
-                                 dotData: const FlDotData(show: false),
-                                 belowBarData: BarAreaData(
-                                   show: true,
-                                   gradient: LinearGradient(
-                                     colors: [
-                                       context.appColors.expenseColor.withValues(alpha: 0.24),
-                                       context.appColors.expenseColor.withValues(alpha: 0.0),
-                                     ],
-                                     begin: Alignment.topCenter,
-                                     end: Alignment.bottomCenter,
-                                   ),
-                                 ),
-                               ),
+                                                            LineChartBarData(
+                                spots: incomeSpots,
+                                isCurved: true,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    context.appColors.incomeColor,
+                                  ],
+                                ),
+                                barWidth: 3.5,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.appColors.incomeColor.withValues(alpha: 0.16),
+                                      context.appColors.incomeColor.withValues(alpha: 0.0),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                              ),
+                              LineChartBarData(
+                                spots: expenseSpots,
+                                isCurved: true,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    context.appColors.expenseColor,
+                                  ],
+                                ),
+                                barWidth: 3.5,
+                                isStrokeCapRound: true,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      context.appColors.expenseColor.withValues(alpha: 0.16),
+                                      context.appColors.expenseColor.withValues(alpha: 0.0),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                              ),
                              ],
                           ),
                         ),

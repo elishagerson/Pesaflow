@@ -3,6 +3,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class MorphingInsightCard extends StatefulWidget {
   final InsightData data;
@@ -92,7 +93,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
     final color = widget.data.color;
     final severity = _computeSeverity();
 
-    return GestureDetector(
+    return TactileSpringContainer(
       onTap: () {
         if (widget.onTap != null) {
           widget.onTap!();
