@@ -1708,9 +1708,9 @@ class _KeypadButtonState extends State<KeypadButton>
     super.initState();
     _pressController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 80),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.90).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.94).animate(
       CurvedAnimation(parent: _pressController, curve: Curves.easeOutCubic),
     );
   }
@@ -1741,12 +1741,12 @@ class _KeypadButtonState extends State<KeypadButton>
     final isSpecialKey = widget.text == '<' || widget.text == '.';
 
     final Color baseBg = isSpecialKey
-        ? theme.colorScheme.primary.withValues(alpha: 0.08)
-        : theme.colorScheme.onSurface.withValues(alpha: 0.04);
+        ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.8)
+        : theme.colorScheme.surfaceContainerHigh;
 
     final Color activeBg = isSpecialKey
-        ? theme.colorScheme.primary.withValues(alpha: 0.24)
-        : theme.colorScheme.onSurface.withValues(alpha: 0.12);
+        ? theme.colorScheme.primary.withValues(alpha: 0.16)
+        : theme.colorScheme.surfaceContainerHighest;
 
     return AnimatedBuilder(
       animation: _pressController,
@@ -1769,18 +1769,18 @@ class _KeypadButtonState extends State<KeypadButton>
                   color: bg,
                   shape: SquircleBorder(
                     side: BorderSide(
-                      color: theme.colorScheme.outlineVariant,
-                      width: 0.8,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                      width: 0.6,
                     ),
-                    borderRadius: 16.0,
+                    borderRadius: 14.0,
                   ),
                   shadows: [
                     BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(
-                        alpha: 0.04 * (1.0 - _pressController.value),
+                      color: Colors.black.withValues(
+                        alpha: 0.03 * (1.0 - _pressController.value),
                       ),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+                      blurRadius: 3,
+                      offset: const Offset(0, 1.5),
                     ),
                   ],
                 ),
