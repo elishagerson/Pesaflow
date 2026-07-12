@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class IosBottomSheet extends StatelessWidget {
   final Widget child;
@@ -20,9 +21,8 @@ class IosBottomSheet extends StatelessWidget {
     double initialChildSize = 0.5,
     double maxChildSize = 0.9,
   }) {
-    return showModalBottomSheet<T>(
-      context: context,
-      backgroundColor: Colors.transparent,
+    return showSpringSheet<T>(
+      context,
       isScrollControlled: true,
       builder: (context) => IosBottomSheet(
         initialChildSize: initialChildSize,
