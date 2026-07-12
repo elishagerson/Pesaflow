@@ -1184,9 +1184,9 @@ class _FilterButton extends StatelessWidget {
                 constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                 child: Text(
                   '$activeCount',
-                  style: theme.textTheme.labelSmall?.copyWith(
+                  style: context.ts(
+                    10,
                     color: Colors.white,
-                    fontSize: 8,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

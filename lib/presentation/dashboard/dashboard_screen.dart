@@ -180,13 +180,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(width: kSpacing8),
-                Text(
+                  Text(
                   trackerName,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: onSurface,
-                  ),
+                  style: context.ts(13, fontWeight: FontWeight.bold, color: onSurface),
                 ),
                 const SizedBox(width: kSpacing4),
                 Icon(
@@ -463,9 +459,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   .name
                                                   .toUpperCase())
                                             : 'TOTAL NET WORTH',
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                              fontSize: 10,
+                                        style: context.ts(
+                                              10,
                                               fontWeight: FontWeight.w900,
                                               letterSpacing: 1.5,
                                               color: heroSubColor,
@@ -1229,10 +1224,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     amountInCents: trans.amount,
                                                     type: amtType,
                                                     showDecimals: true,
-                                                    style: theme.textTheme.titleSmall?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 16,
+                                                    style: context.ts(
+                                                      16,
+                                                      fontWeight: FontWeight.w800,
                                                       color:
                                                           amtType ==
                                                               AmountType.income

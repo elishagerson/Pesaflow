@@ -8,6 +8,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanOverviewSection extends ConsumerWidget {
   const LoanOverviewSection({super.key});
@@ -50,11 +51,7 @@ class LoanOverviewSection extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           'No active debt. Keep it that way.',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                          style: context.ts(13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                         ),
                       ),
                       const Icon(
@@ -252,22 +249,13 @@ class LoanOverviewSection extends ConsumerWidget {
                     children: [
                       Text(
                         '${(debtRatio * 100).round()}% of net worth',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: severityColor,
-                        ),
+                        style: context.ts(10, fontWeight: FontWeight.w700, color: severityColor),
                       ),
                       Text(
                         netWorth > 0
                             ? 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}'
                             : 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
+                        style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                       ),
                     ],
                   ),
@@ -321,12 +309,7 @@ class LoanOverviewSection extends ConsumerWidget {
                             Expanded(
                               child: Text(
                                 '$count active loans in 3 months — consider reducing new borrowing',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  fontSize: 11,
-                                  color: theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.6,
-                                  ),
-                                ),
+                                style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                               ),
                             ),
                           ],
@@ -378,31 +361,20 @@ class LoanOverviewSection extends ConsumerWidget {
                               children: [
                                 Text(
                                   loan.description ?? 'Loan',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
+                                  style: context.ts(13, fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   '${(ratio * 100).round()}% unpaid',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w700,
-                                    color: loanSeverity,
-                                  ),
+                                  style: context.ts(10, fontWeight: FontWeight.w700, color: loanSeverity),
                                 ),
                               ],
                             ),
                           ),
                           Text(
                             CurrencyFormatter.formatCents(loan.remaining),
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 14,
-                              color: loanSeverity,
-                            ),
+                            style: context.ts(14, fontWeight: FontWeight.w900, color: loanSeverity),
                           ),
                         ],
                       ),

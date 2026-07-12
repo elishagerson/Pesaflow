@@ -255,8 +255,9 @@ class _SavingsGoalDetailSheetState
                                                 isDeposit
                                                     ? 'Deposit Savings'
                                                     : 'Withdraw Savings',
-                                                style: const TextStyle(
-                                                  fontSize: 20,
+                                                style: theme
+                                                    .textTheme.titleLarge!
+                                                    .copyWith(
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -309,8 +310,8 @@ class _SavingsGoalDetailSheetState
                                         children: [
                                           Text(
                                             'TSh',
-                                            style: TextStyle(
-                                              fontSize: 18,
+                                            style: theme.textTheme.titleMedium!
+                                                .copyWith(
                                               fontWeight: FontWeight.w900,
                                               color: accentColor,
                                             ),
@@ -815,8 +816,7 @@ class _SavingsGoalDetailSheetState
                     children: [
                       Text(
                         widget.goal.name,
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: theme.textTheme.titleLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 1,

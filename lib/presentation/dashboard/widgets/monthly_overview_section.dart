@@ -9,6 +9,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class MonthlyOverviewSection extends ConsumerWidget {
   const MonthlyOverviewSection({super.key});
@@ -166,10 +167,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                               amountInCents: income,
                               type: AmountType.income,
                               useMonospace: true,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
+                              style: context.ts(13, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -201,10 +199,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                               amountInCents: expense,
                               type: AmountType.expense,
                               useMonospace: true,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
+                              style: context.ts(13, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -233,11 +228,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                 const SizedBox(width: kSpacing8),
                                 Text(
                                   netSavings >= 0 ? 'Saved' : 'Deficit',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
+                                  style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant),
                                 ),
                               ],
                             ),
@@ -247,10 +238,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                                   ? AmountType.income
                                   : AmountType.expense,
                               useMonospace: true,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
+                              style: context.ts(13, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -342,8 +330,6 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final chart = PieChart(
       PieChartData(
         startDegreeOffset: -90,
@@ -370,13 +356,9 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
       widget.netSavings >= 0
           ? '+${widget.savingsPct}%'
           : '-${widget.savingsPct.abs()}%',
-      style: theme.textTheme.labelMedium?.copyWith(
-        fontWeight: FontWeight.w900,
-        color: widget.netSavings >= 0
+      style: context.ts(10, fontWeight: FontWeight.w900, color: widget.netSavings >= 0
             ? widget.incomeColor
-            : widget.expenseColor,
-        fontSize: 10,
-      ),
+            : widget.expenseColor),
     );
 
     if (!widget.pulse || _glowAnimation == null) {

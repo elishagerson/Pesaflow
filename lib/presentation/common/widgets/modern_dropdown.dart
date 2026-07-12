@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class ModernDropdownItem<T> {
@@ -222,8 +223,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                     children: [
                       Text(
                         'Select $labelText',
-                        style: TextStyle(
-                          fontSize: 18,
+                        style: context.ts(
+                          18,
                           fontWeight: FontWeight.bold,
                           color: onSurface,
                         ),

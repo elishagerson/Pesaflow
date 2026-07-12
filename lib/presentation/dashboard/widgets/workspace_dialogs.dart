@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
   showSpringSheet(
@@ -279,10 +280,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
             const SizedBox(height: kSpacing20),
             Text(
               'Select Icon',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing8),
             Row(
@@ -317,10 +315,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
             const SizedBox(height: kSpacing20),
             Text(
               'Select Color',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing8),
             Row(
@@ -481,10 +476,7 @@ void showManageTrackerDialog(
             const SizedBox(height: kSpacing20),
             Text(
               'Select Icon',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing8),
             Row(
@@ -519,10 +511,7 @@ void showManageTrackerDialog(
             const SizedBox(height: kSpacing20),
             Text(
               'Select Color',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
+              style: context.ts(13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing8),
             Row(

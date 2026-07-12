@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class OnboardingOverlay extends StatefulWidget {
   final VoidCallback onComplete;
@@ -112,8 +113,8 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
                             const SizedBox(height: kSpacing40),
                             Text(
                               page.title,
-                              style: TextStyle(
-                                fontSize: 26,
+                              style: context.ts(
+                                26,
                                 fontWeight: FontWeight.w700,
                                 color: theme.colorScheme.onSurface,
                               ),

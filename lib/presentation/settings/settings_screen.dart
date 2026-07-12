@@ -43,11 +43,11 @@ class SettingsScreen extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: kSpacing16),
-            child: Text(
+              child: Text(
               'Manage Accounts',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: context.ts(22, fontWeight: FontWeight.bold),
             ),
           ),
           if (accounts.isEmpty)
@@ -482,9 +482,9 @@ class SettingsScreen extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Manage Categories',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: context.ts(22, fontWeight: FontWeight.bold),
                 ),
                 TextButton.icon(
                   icon: const Icon(PesaFlowIcons.add),

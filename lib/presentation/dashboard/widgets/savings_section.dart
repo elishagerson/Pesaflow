@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class SavingsSection extends ConsumerWidget {
   const SavingsSection({super.key});
@@ -126,19 +127,12 @@ class SavingsSection extends ConsumerWidget {
                   children: [
                     Text(
                       '$percentInt%',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: goalColor,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 16,
-                      ),
+                      style: context.ts(16, fontWeight: FontWeight.w900, color: goalColor),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Completed',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 10,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                      style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),

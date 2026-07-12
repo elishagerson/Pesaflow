@@ -241,9 +241,9 @@ class IosMetricCard extends StatelessWidget {
           const SizedBox(height: kSpacing8),
           Text(
             value,
-            style: TextStyle(
+            style: context.ts(
+              18,
               fontWeight: FontWeight.w900,
-              fontSize: 18,
               color: theme.colorScheme.onSurface,
             ),
           ),

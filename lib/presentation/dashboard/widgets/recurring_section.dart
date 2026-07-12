@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class _CycleChip extends StatelessWidget {
   final String text;
@@ -217,12 +218,7 @@ class RecurringSection extends ConsumerWidget {
                             ),
                             Text(
                               _formatDate(sub.nextDate),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontSize: 10,
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.6,
-                                ),
-                              ),
+                              style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                             ),
                             const SizedBox(width: kSpacing8),
                             AmountText(
@@ -292,11 +288,7 @@ class RecurringSection extends ConsumerWidget {
                                     Expanded(
                                       child: Text(
                                         sub.description ?? 'Recurring Expense',
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                            ),
+                                        style: context.ts(13, fontWeight: FontWeight.bold),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -309,11 +301,7 @@ class RecurringSection extends ConsumerWidget {
                                     sub.frequency,
                                     sub.intervalValue,
                                   ),
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    fontSize: 10,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
+                                  style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                                 ),
                               ],
                             ),
@@ -322,10 +310,7 @@ class RecurringSection extends ConsumerWidget {
                             amountInCents: sub.amount,
                             type: AmountType.expense,
                             useMonospace: true,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
+                              style: context.ts(13, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),

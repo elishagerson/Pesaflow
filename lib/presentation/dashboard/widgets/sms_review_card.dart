@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class ActiveParserBadge extends StatelessWidget {
   final String label;
@@ -82,12 +83,7 @@ class SmsReviewCard extends StatelessWidget {
                   const SizedBox(width: kSpacing6),
                   Text(
                     'SMS AUTO-TRACKING',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                      letterSpacing: 1.2,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
+                    style: context.ts(10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                   ),
                 ],
               ),
@@ -120,12 +116,7 @@ class SmsReviewCard extends StatelessWidget {
           const SizedBox(height: kSpacing10),
           Text(
             'Review parsed mobile money & bank transactions from your SMS.',
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontSize: 11,
-              height: 1.3,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              fontWeight: FontWeight.w500,
-            ),
+            style: context.ts(11, height: 1.3, color: theme.colorScheme.onSurface.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: kSpacing14),
           Divider(
@@ -166,11 +157,7 @@ class SmsReviewCard extends StatelessWidget {
                     children: [
                       Text(
                         "Let's go",
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
+                        style: context.ts(11, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(width: kSpacing2),
                       Icon(

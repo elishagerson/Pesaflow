@@ -8,6 +8,7 @@ import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
@@ -102,9 +103,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: kSpacing12),
-                const Text(
+                Text(
                   'Filter Transactions',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: context.ts(20, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
                 SizedBox(
@@ -203,8 +204,8 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           ),
                           child: Text(
                             '—',
-                            style: TextStyle(
-                              fontSize: 18,
+                            style: context.ts(
+                              18,
                               color: onSurface.withValues(alpha: 0.32),
                             ),
                           ),
@@ -372,9 +373,9 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     child: categories.isEmpty
                         ? Text(
                             'No categories for selected type',
-                            style: TextStyle(
+                            style: context.ts(
+                              13,
                               color: onSurface.withValues(alpha: 0.38),
-                              fontSize: 13,
                             ),
                           )
                         : Wrap(

@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -220,8 +221,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           widget.existingGoal != null
                               ? 'Edit Savings Goal'
                               : 'New Savings Goal',
-                          style: const TextStyle(
-                            fontSize: 20,
+                          style: context.ts(
+                            22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
   final String? budgetId;
@@ -354,11 +355,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing12),
                   child: Text(
                     'Tsh $formattedVal',
-                    style: theme.textTheme.headlineMedium?.copyWith(
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: theme.colorScheme.onSurface,
                       fontFamily: 'monospace',
-                      fontSize: 24,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -786,8 +786,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           duration: const Duration(
                                             milliseconds: 200,
                                           ),
-                                          style: TextStyle(
-                                            fontSize: 18,
+                                          style: theme.textTheme.titleMedium!
+                                              .copyWith(
                                             fontWeight: FontWeight.w900,
                                             color: thresholdColor,
                                           ),
@@ -1019,25 +1019,22 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 textCapitalization: widget.textCapitalization,
                 style:
                     widget.style ??
-                    theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
+                    context.ts(15, fontWeight: FontWeight.w600),
                 onChanged: widget.onChanged,
                 decoration: InputDecoration(
                   filled: false,
                   labelText: widget.label,
-                  labelStyle: TextStyle(
+                  labelStyle: context.ts(
+                    12,
                     color: _isFocused
                         ? theme.colorScheme.primary
                         : onSurface.withValues(alpha: 0.5),
-                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                   hintText: widget.hint,
-                  hintStyle: TextStyle(
+                  hintStyle: context.ts(
+                    14,
                     color: onSurface.withValues(alpha: 0.3),
-                    fontSize: 14,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,

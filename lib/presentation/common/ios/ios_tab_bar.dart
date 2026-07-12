@@ -7,6 +7,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class IosTabBar extends StatelessWidget {
   final int selectedIndex;
@@ -206,8 +207,8 @@ class IosTabBar extends StatelessWidget {
                                 const SizedBox(height: kSpacing2),
                                 Text(
                                   tab.label,
-                                  style: TextStyle(
-                                    fontSize: 9,
+                                  style: context.ts(
+                                    10,
                                     letterSpacing: 0.3,
                                     fontWeight: isSelected
                                         ? FontWeight.w700
@@ -318,8 +319,8 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                   child: Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 34,
+                    style: context.ts(
+                      34,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),

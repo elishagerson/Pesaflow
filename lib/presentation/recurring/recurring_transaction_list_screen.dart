@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/frequency_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -636,9 +637,9 @@ class _RecurringTransactionListScreenState
                             child: Text(
                               recurring.description ??
                                   'Recurring ${recurring.type}',
-                              style: theme.textTheme.bodyMedium?.copyWith(
+                              style: context.ts(
+                                14,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -656,8 +657,8 @@ class _RecurringTransactionListScreenState
                               recurring.frequency,
                               recurring.intervalValue,
                             ),
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontSize: 11,
+                            style: context.ts(
+                              11,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.5,
                               ),
@@ -688,8 +689,8 @@ class _RecurringTransactionListScreenState
                           const SizedBox(width: kSpacing4),
                           Text(
                             nextDateLabel,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontSize: 11,
+                            style: context.ts(
+                              11,
                               fontWeight: isDue
                                   ? FontWeight.w700
                                   : FontWeight.w500,
@@ -711,9 +712,9 @@ class _RecurringTransactionListScreenState
                   amountInCents: recurring.amount,
                   type: isExpense ? AmountType.expense : AmountType.income,
                   useMonospace: true,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: context.ts(
+                    14,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
                   ),
                 ),
               ],
@@ -736,8 +737,8 @@ class _RecurringTransactionListScreenState
                   const SizedBox(width: kSpacing6),
                   Text(
                     'Paid ${CurrencyFormatter.formatCents(recurring.totalPaid)}',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 11,
+                    style: context.ts(
+                      11,
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
@@ -753,8 +754,8 @@ class _RecurringTransactionListScreenState
                   ),
                   Text(
                     '${recurring.paymentCount} payment${recurring.paymentCount > 1 ? 's' : ''}',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 11,
+                    style: context.ts(
+                      11,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -762,8 +763,8 @@ class _RecurringTransactionListScreenState
                   if (recurring.lastPaidAt != null)
                     Text(
                       'Last: ${recurring.lastPaidAt!.day}/${recurring.lastPaidAt!.month}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 10,
+                      style: context.ts(
+                        10,
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.4,
                         ),
@@ -811,8 +812,8 @@ class _RecurringTransactionListScreenState
                       const SizedBox(width: kSpacing6),
                       Text(
                         'Mark Paid',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 11,
+                        style: context.ts(
+                          11,
                           fontWeight: FontWeight.w700,
                           color: AppTheme.incomeColor,
                         ),
@@ -864,8 +865,7 @@ class _RecurringTransactionListScreenState
               const SizedBox(width: kSpacing2),
               Text(
                 'Auto',
-                style: TextStyle(
-                  fontSize: 9,
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.primary,
                 ),
@@ -897,8 +897,7 @@ class _RecurringTransactionListScreenState
         ),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 9,
+          style: theme.textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: color,
           ),

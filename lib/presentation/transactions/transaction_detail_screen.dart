@@ -447,7 +447,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           child: _divider(onSurface),
                         ),
                         const SizedBox(height: kSpacing24),
-                        _buildBarcode(t.id, onSurface),
+                        _buildBarcode(context, t.id, onSurface),
                       ],
                     ),
                   ),
@@ -738,7 +738,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBarcode(String id, Color onSurface) {
+  Widget _buildBarcode(BuildContext context, String id, Color onSurface) {
     final random = id.hashCode;
     final barColor = onSurface.withValues(alpha: 0.225);
     return Column(
@@ -763,8 +763,8 @@ class TransactionDetailScreen extends ConsumerWidget {
         const SizedBox(height: kSpacing6),
         Text(
           'PESAFLOW-TXN-${id.length > 8 ? id.substring(0, 8).toUpperCase() : id.toUpperCase()}',
-          style: TextStyle(
-            fontSize: 9,
+          style: context.ts(
+            10,
             fontWeight: FontWeight.w600,
             color: onSurface.withValues(alpha: 0.38),
             letterSpacing: 2,

@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class ModernDateSelector extends FormField<DateTime> {
@@ -134,10 +135,10 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                           data: CupertinoThemeData(
                             brightness: theme.brightness,
                             textTheme: CupertinoTextThemeData(
-                              dateTimePickerTextStyle: TextStyle(
-                                color: theme.colorScheme.onSurface,
-                                fontSize: 18,
-                              ),
+                          dateTimePickerTextStyle: context.ts(
+                            18,
+                            color: theme.colorScheme.onSurface,
+                          ),
                             ),
                           ),
                           child: CupertinoDatePicker(
