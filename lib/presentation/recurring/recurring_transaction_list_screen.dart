@@ -601,7 +601,7 @@ class _RecurringTransactionListScreenState
         ? '${daysUntil.abs()}d overdue'
         : 'in $daysUntil days';
 
-    return GlassCard(
+    final Widget card = GlassCard(
       margin: const EdgeInsets.only(bottom: kSpacing10),
       borderRadius: AppTheme.radiusCard,
       elevation: isDue ? CardElevation.medium : CardElevation.low,
