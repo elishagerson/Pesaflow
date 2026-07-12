@@ -71,7 +71,7 @@ class BudgetDetailScreen extends ConsumerWidget {
           data: (bp) {
             if (bp == null) {
               return Scaffold(
-                appBar: AppBar(title: const Text('Budget Details')),
+                appBar: const IosNavBar(title: 'Budget Details', largeTitle: false),
                 body: EmptyState(
                   icon: PesaFlowIcons.budgets,
                   title: 'Budget Not Found',

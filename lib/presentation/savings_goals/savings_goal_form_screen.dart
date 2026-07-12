@@ -3,6 +3,7 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -175,9 +176,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.goalId != null ? 'Edit Goal' : 'New Goal'),
-        centerTitle: true,
+      appBar: IosNavBar(
+        title: widget.goalId != null ? 'Edit Goal' : 'New Goal',
+        largeTitle: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(kSpacing16),
