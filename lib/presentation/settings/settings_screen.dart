@@ -420,7 +420,7 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       title: const Text('Delete Account'),
       titleIcon: PesaFlowIcons.delete,
-      iconColor: Colors.red,
+      iconColor: theme.colorScheme.error,
       content: Text(
         'Delete "${acc.name}" and all its transactions? This cannot be undone.',
       ),
@@ -431,7 +431,7 @@ class SettingsScreen extends ConsumerWidget {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: theme.colorScheme.error,
             foregroundColor: Colors.white,
           ),
           onPressed: () async {
@@ -584,10 +584,10 @@ class SettingsScreen extends ConsumerWidget {
                                 }
                               }
                             },
-                            child: const Icon(
+                            child: Icon(
                               PesaFlowIcons.delete,
                               size: 20,
-                              color: Colors.red,
+                              color: theme.colorScheme.error,
                             ),
                           ),
                         ],
@@ -904,7 +904,7 @@ class SettingsScreen extends ConsumerWidget {
           context: context,
           title: const Text('Restore Failed'),
           titleIcon: PesaFlowIcons.error,
-          iconColor: Colors.red,
+          iconColor: theme.colorScheme.error,
           content: Text(
             e is FormatException
                 ? e.message
