@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction tx;
@@ -110,8 +111,8 @@ class _OfflineBadge extends StatelessWidget {
       ),
       child: Text(
         'Offline',
-        style: theme.textTheme.labelSmall!.copyWith(
-          fontSize: 9,
+        style: context.ts(
+          9,
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
