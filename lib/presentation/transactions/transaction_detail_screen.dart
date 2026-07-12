@@ -52,13 +52,13 @@ class TransactionDetailScreen extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFF453A).withValues(alpha: 0.12),
+                color: context.appColors.expenseColor.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 PesaFlowIcons.delete,
                 size: 18,
-                color: Color(0xFFFF453A),
+                color: context.appColors.expenseColor,
               ),
             ),
           ),
@@ -100,8 +100,8 @@ class TransactionDetailScreen extends ConsumerWidget {
     final mutedCatColor = desaturateColor(catColor);
     final isIncome = t.type == 'income';
     final amountColor = isIncome
-        ? const Color(0xFF10B981)
-        : const Color(0xFFFF453A);
+        ? context.appColors.incomeColor
+        : context.appColors.expenseColor;
 
     final hasExtraDetails =
         (t.reference != null && t.reference!.isNotEmpty) ||
@@ -338,20 +338,16 @@ class TransactionDetailScreen extends ConsumerWidget {
                             child: InkWell(
                               onTap: () {},
                               borderRadius: BorderRadius.circular(8),
-                              child: Container(
+                                child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                   vertical: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFF0F4C5C,
-                                  ).withValues(alpha: 0.08),
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: const Color(
-                                      0xFF0F4C5C,
-                                    ).withValues(alpha: 0.15),
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.15),
                                   ),
                                 ),
                                 child: Row(
@@ -374,7 +370,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                           .textTheme
                                           .labelSmall!
                                           .copyWith(
-                                            color: const Color(0xFF0F4C5C),
+                                            color: theme.colorScheme.primary,
                                           ),
                                     ),
                                   ],

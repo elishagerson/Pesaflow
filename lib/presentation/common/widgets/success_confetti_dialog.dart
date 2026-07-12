@@ -143,7 +143,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Celebration Checkmark animation
-                    SuccessCheckmark(size: 80, color: const Color(0xFFFFCC00)),
+                    SuccessCheckmark(size: 80, color: AppTheme.incomeColorDark),
                     const SizedBox(height: kSpacing20),
 
                     // Celebration Swahili & English Headers
