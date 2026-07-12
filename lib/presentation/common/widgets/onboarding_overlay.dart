@@ -56,7 +56,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accentColor = const Color(0xFF0F4C5C);
+    final accentColor = theme.colorScheme.primary;
 
     return Positioned.fill(
       child: Material(

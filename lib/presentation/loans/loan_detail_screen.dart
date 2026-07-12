@@ -184,7 +184,7 @@ class LoanDetailScreen extends ConsumerWidget {
     final isPaid = loan.status == 'paid';
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
     final statusColor = isActive
-        ? (ratio > 0.5 ? AppTheme.expenseColor : const Color(0xFFFF9F0A))
+        ? (ratio > 0.5 ? AppTheme.expenseColor : theme.colorScheme.tertiary)
         : AppTheme.incomeColor;
 
     return Hero(
@@ -658,7 +658,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 '${daysLeft}d',
                 style: theme.textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFFFF9F0A),
+                  color: theme.colorScheme.tertiary,
                 ),
               ),
             ],

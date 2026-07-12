@@ -752,10 +752,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                             child: Builder(
                               builder: (context) {
                                 final Color thresholdColor = _threshold >= 0.85
-                                    ? const Color(0xFFFF453A)
+                                    ? context.appColors.expenseColor
                                     : (_threshold >= 0.75
                                           ? Colors.amber
-                                          : const Color(0xFF30D158));
+                                          : context.appColors.incomeColor);
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -273,7 +273,7 @@ class BudgetListScreen extends ConsumerWidget {
     final onSurface = theme.colorScheme.onSurface;
 
     return RefreshIndicator(
-      color: const Color(0xFF0F4C5C),
+      color: theme.colorScheme.primary,
       backgroundColor: theme.scaffoldBackgroundColor,
       onRefresh: () async {
         ref.invalidate(budgetProgressProvider);
@@ -482,7 +482,7 @@ class BudgetListScreen extends ConsumerWidget {
                                             fontSize: 9,
                                             fontWeight: FontWeight.bold,
                                             color: status.isOverBudget
-                                                ? const Color(0xFFFF453A)
+                                                ? context.appColors.expenseColor
                                                 : status.isOnTrack
                                                 ? AppTheme.transferColorDark
                                                 : Colors.orange,
