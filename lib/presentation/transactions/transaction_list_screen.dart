@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -110,7 +111,28 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         child: Stack(
           children: [
             // ── TRANSACTIONS LIST LAYER ──
-            transactionsAsync.when(
+            SkeletonCrossfade(
+              isLoading:
+                  transactionsAsync is AsyncLoading &&
+                  !transactionsAsync.hasValue,
+              skeleton: const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: kSpacing20,
+                  vertical: kSpacing8,
+                ),
+                child: Column(
+                  children: [
+                    SkeletonCard(height: 80),
+                    SizedBox(height: kSpacing8),
+                    SkeletonCard(height: 80),
+                    SizedBox(height: kSpacing8),
+                    SkeletonCard(height: 80),
+                    SizedBox(height: kSpacing8),
+                    SkeletonCard(height: 80),
+                  ],
+                ),
+              ),
+              child: transactionsAsync.when(
               data: (transactionsList) {
                 if (transactionsList.isEmpty) {
                   final isFiltered =
@@ -605,25 +627,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   ),
                 );
               },
-              loading: () => const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: kSpacing20,
-                  vertical: kSpacing8,
-                ),
-                child: Column(
-                  children: [
-                    SkeletonCard(height: 80),
-                    SizedBox(height: kSpacing8),
-                    SkeletonCard(height: 80),
-                    SizedBox(height: kSpacing8),
-                    SkeletonCard(height: 80),
-                    SizedBox(height: kSpacing8),
-                    SkeletonCard(height: 80),
-                  ],
-                ),
-              ),
+              loading: () => const SizedBox.shrink(),
               error: (err, _) =>
                   Center(child: Text('Error loading transactions: $err')),
+            ),
             ),
 
             // ── GLASS HEADER ──

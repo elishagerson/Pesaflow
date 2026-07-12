@@ -90,9 +90,7 @@ class ModernDialog extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.0),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: LiquidGlassOverlay(
+        child: LiquidGlassOverlay(
             child: Container(
               constraints: const BoxConstraints(maxWidth: 400),
               decoration: BoxDecoration(

@@ -523,9 +523,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   cat.type.toUpperCase(),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall!.copyWith(color: context.appColors.textMedium),
+                  style: context.ts(11, color: context.appColors.textMedium),
                 ),
                 trailing: cat.isSystem
                     ? Container(
@@ -1056,18 +1054,11 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: theme.textTheme.titleSmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? theme.colorScheme.primary : null,
-                      ),
+                      style: ctx.ts(14, fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
                     ),
                     Text(
                       subtitle,
-                      style: theme.textTheme.labelSmall!.copyWith(
-                        color: isSelected
-                            ? theme.colorScheme.primary.withValues(alpha: 0.7)
-                            : ctx.appColors.textMedium,
-                      ),
+                      style: ctx.ts(11, color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.7) : ctx.appColors.textMedium),
                     ),
                   ],
                 ),
@@ -1406,21 +1397,12 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'PesaFlow v1.0.0',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.brightness == Brightness.dark
-                            ? context.appColors.textMedium
-                            : context.appColors.textMedium,
-                      ),
+                      style: context.ts(12, fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark ? context.appColors.textMedium : context.appColors.textMedium),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                        color: theme.brightness == Brightness.dark
-                            ? context.appColors.textLow
-                            : context.appColors.textLow,
-                      ),
+                      style: context.ts(11, color: theme.brightness == Brightness.dark ? context.appColors.textLow : context.appColors.textLow),
                     ),
                   ],
                 ),

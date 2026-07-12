@@ -13,6 +13,7 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -210,9 +211,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: LiquidGlassOverlay(
+              child: LiquidGlassOverlay(
                   child: Container(
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surface.withValues(alpha: 0.94),
@@ -768,9 +767,30 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                     );
                                                 if (success) {
                                                   if (sheetContext.mounted) {
-                                                    Navigator.of(
-                                                      sheetContext,
-                                                    ).pop();
+                                                    showDialog(
+                                                      context: sheetContext,
+                                                      barrierDismissible: false,
+                                                      barrierColor:
+                                                          Colors.transparent,
+                                                      builder: (_) => PopScope(
+                                                        canPop: false,
+                                                        child: SuccessCheckmark(
+                                                          color: context
+                                                              .appColors
+                                                              .incomeColor,
+                                                        )..play(),
+                                                      ),
+                                                    );
+                                                    await Future.delayed(
+                                                      const Duration(
+                                                        milliseconds: 1200,
+                                                      ),
+                                                    );
+                                                    if (sheetContext.mounted) {
+                                                      Navigator.of(
+                                                        sheetContext,
+                                                      ).pop();
+                                                    }
                                                   }
                                                 } else {
                                                   setSheetState(() {

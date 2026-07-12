@@ -24,6 +24,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -245,8 +246,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       updatedAt: DateTime.now(),
     );
 
-    if (mounted) context.pop();
-
     try {
       if (existingTransaction != null) {
         await repo.deleteTransaction(existingTransaction.id);
@@ -259,6 +258,22 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(recentTransactionsStreamProvider);
       ref.invalidate(filteredTransactionsStreamProvider);
       ref.invalidate(netWorthProvider);
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          barrierColor: Colors.transparent,
+          builder: (_) => PopScope(
+            canPop: false,
+            child: SuccessCheckmark(
+              color: theme.colorScheme.primary,
+            )..play(),
+          ),
+        );
+        await Future.delayed(const Duration(milliseconds: 1200));
+        if (mounted) context.pop();
+      }
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
@@ -284,47 +299,45 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           expand: false,
           builder: (context, scrollController) => ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: LiquidGlassOverlay(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
+            child: LiquidGlassOverlay(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(height: kSpacing10),
-                      Container(
-                        width: 38,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.17,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(height: kSpacing10),
+                    Container(
+                      width: 38,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.17,
                         ),
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      const SizedBox(height: kSpacing16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing20,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(kSpacing8),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.1,
-                                ),
-                                shape: BoxShape.circle,
+                    ),
+                    const SizedBox(height: kSpacing16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
                               ),
-                              child: Icon(
-                                PesaFlowIcons.wallet,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              PesaFlowIcons.wallet,
                                 size: 18,
                                 color: theme.colorScheme.primary,
                               ),
@@ -497,47 +510,45 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           expand: false,
           builder: (context, scrollController) => ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: LiquidGlassOverlay(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
+            child: LiquidGlassOverlay(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(height: kSpacing10),
-                      Container(
-                        width: 38,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.17,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(height: kSpacing10),
+                    Container(
+                      width: 38,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.17,
                         ),
+                        borderRadius: BorderRadius.circular(100),
                       ),
-                      const SizedBox(height: kSpacing16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing20,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(kSpacing8),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.1,
-                                ),
-                                shape: BoxShape.circle,
+                    ),
+                    const SizedBox(height: kSpacing16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
                               ),
-                              child: Icon(
-                                Icons.arrow_forward_rounded,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_rounded,
                                 size: 18,
                                 color: theme.colorScheme.primary,
                               ),

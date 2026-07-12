@@ -428,6 +428,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                     t.recipient!.isNotEmpty))
                               const SizedBox(height: kSpacing12),
                             _detailRow(
+                              context,
                               theme,
                               PesaFlowIcons.loans,
                               'Balance After',
@@ -666,6 +667,7 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   Widget _detailRow(
+    BuildContext context,
     ThemeData theme,
     IconData icon,
     String label,

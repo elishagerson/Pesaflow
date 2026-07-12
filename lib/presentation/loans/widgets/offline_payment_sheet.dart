@@ -46,9 +46,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(24),
               ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: LiquidGlassOverlay(
+              child: LiquidGlassOverlay(
                   child: Container(
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surface.withValues(alpha: 0.94),

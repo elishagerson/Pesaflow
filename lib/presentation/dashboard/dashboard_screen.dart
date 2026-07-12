@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -934,7 +935,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 const SizedBox(height: kSpacing4),
                               ],
 
-                              recentTransAsync.when(
+                              SkeletonCrossfade(
+                                isLoading:
+                                    recentTransAsync is AsyncLoading &&
+                                    !recentTransAsync.hasValue,
+                                skeleton: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: kSpacing16,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SkeletonCard(height: 80),
+                                      SizedBox(height: kSpacing8),
+                                      SkeletonCard(height: 80),
+                                    ],
+                                  ),
+                                ),
+                                child: recentTransAsync.when(
                                 data: (transactions) {
                                   // Client-side dynamic filtering of recent transactions by account
                                   final filteredTransactions =
@@ -1248,16 +1265,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     },
                                   );
                                 },
-                                loading: () => Column(
-                                  children: const [
-                                    SkeletonCard(height: 80),
-                                    SizedBox(height: kSpacing8),
-                                    SkeletonCard(height: 80),
-                                  ],
-                                ),
+                                loading: () => const SizedBox.shrink(),
                                 error: (err, _) => Center(
                                   child: Text('Error loading activity: $err'),
                                 ),
+                              ),
                               ),
                             ],
                           ),
