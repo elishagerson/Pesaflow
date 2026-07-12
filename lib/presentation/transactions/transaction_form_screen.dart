@@ -267,8 +267,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           builder: (_) => PopScope(
             canPop: false,
             child: SuccessCheckmark(
-              color: theme.colorScheme.primary,
-            )..play(),
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         );
         await Future.delayed(const Duration(milliseconds: 1200));

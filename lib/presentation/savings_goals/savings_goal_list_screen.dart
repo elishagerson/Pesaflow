@@ -17,6 +17,7 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 
 class SavingsGoalListScreen extends ConsumerWidget {
   const SavingsGoalListScreen({super.key});
@@ -29,60 +30,10 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Savings Goals'), centerTitle: true),
-      body: savingsGoalsAsync.when(
-        data: (goals) {
-          if (goals.isEmpty) {
-            return _buildEmptyState(context, theme);
-          }
-
-          int totalTarget = 0;
-          for (final goal in goals) {
-            totalTarget += goal.targetAmount;
-          }
-          final overallPct = totalTarget > 0
-              ? (totalSaved / totalTarget).clamp(0.0, 1.0)
-              : 0.0;
-
-          return RefreshIndicator(
-            color: theme.colorScheme.primary,
-            backgroundColor: theme.colorScheme.surfaceContainerHigh,
-            onRefresh: () async {
-              ref.invalidate(savingsGoalsStreamProvider);
-              ref.invalidate(savingsGoalsTotalSavedProvider);
-            },
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(kSpacing16),
-              child: Column(
-                children: [
-                  _buildSummaryCard(
-                    context,
-                    theme,
-                    totalSaved,
-                    totalTarget,
-                    overallPct,
-                  ),
-                  const SizedBox(height: kSpacing20),
-                  Text(
-                    'ACTIVE GOALS',
-                    style: context.ts(
-                      13,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                  const SizedBox(height: kSpacing12),
-                  StaggeredList(
-                    itemCount: goals.length,
-                    itemBuilder: (context, index) =>
-                        _buildGoalCard(context, ref, goals[index], theme),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-        loading: () => const Padding(
+      body: SkeletonCrossfade(
+        isLoading:
+            savingsGoalsAsync is AsyncLoading && !savingsGoalsAsync.hasValue,
+        skeleton: const Padding(
           padding: EdgeInsets.all(kSpacing16),
           child: Column(
             children: [
@@ -96,8 +47,65 @@ class SavingsGoalListScreen extends ConsumerWidget {
             ],
           ),
         ),
-        error: (err, _) =>
-            Center(child: Text('Error loading savings goals: $err')),
+        child: savingsGoalsAsync.when(
+          data: (goals) {
+            if (goals.isEmpty) {
+              return _buildEmptyState(context, theme);
+            }
+
+            int totalTarget = 0;
+            for (final goal in goals) {
+              totalTarget += goal.targetAmount;
+            }
+            final overallPct = totalTarget > 0
+                ? (totalSaved / totalTarget).clamp(0.0, 1.0)
+                : 0.0;
+
+            return RefreshIndicator(
+              color: theme.colorScheme.primary,
+              backgroundColor: theme.colorScheme.surfaceContainerHigh,
+              onRefresh: () async {
+                ref.invalidate(savingsGoalsStreamProvider);
+                ref.invalidate(savingsGoalsTotalSavedProvider);
+              },
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(kSpacing16),
+                child: Column(
+                  children: [
+                    _buildSummaryCard(
+                      context,
+                      theme,
+                      totalSaved,
+                      totalTarget,
+                      overallPct,
+                    ),
+                    const SizedBox(height: kSpacing20),
+                    Text(
+                      'ACTIVE GOALS',
+                      style: context.ts(
+                        13,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: kSpacing12),
+                    StaggeredList(
+                      itemCount: goals.length,
+                      itemBuilder: (context, index) =>
+                          _buildGoalCard(context, ref, goals[index], theme),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (err, _) =>
+              Center(child: Text('Error loading savings goals: $err')),
+        ),
       ),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/savings-goals/add'),
@@ -338,10 +346,11 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       'COMPLETED',
-                                        style: theme.textTheme.labelSmall!.copyWith(
-                                          fontSize: 9,
-                                          color: theme.colorScheme.primary,
-                                        ),
+                                      style: theme.textTheme.labelSmall!
+                                          .copyWith(
+                                            fontSize: 9,
+                                            color: theme.colorScheme.primary,
+                                          ),
                                     ),
                                   )
                                 else

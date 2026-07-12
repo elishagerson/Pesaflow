@@ -389,9 +389,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 context: context,
                                 barrierDismissible: false,
                                 barrierColor: Colors.transparent,
-                                builder: (_) => const PopScope(
+                                builder: (_) => PopScope(
                                   canPop: false,
-                                  child: SuccessCheckmark(),
+                                  child: SuccessCheckmark(
+                                    color: theme.colorScheme.primary,
+                                  ),
                                 ),
                               );
                               Future.delayed(

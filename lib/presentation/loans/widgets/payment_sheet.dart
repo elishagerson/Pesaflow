@@ -772,13 +772,13 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                       barrierDismissible: false,
                                                       barrierColor:
                                                           Colors.transparent,
-                                                      builder: (_) => PopScope(
+                                                       builder: (_) => PopScope(
                                                         canPop: false,
                                                         child: SuccessCheckmark(
                                                           color: context
                                                               .appColors
                                                               .incomeColor,
-                                                        )..play(),
+                                                        ),
                                                       ),
                                                     );
                                                     await Future.delayed(

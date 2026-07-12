@@ -181,9 +181,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(width: kSpacing8),
-                  Text(
+                Text(
                   trackerName,
-                  style: context.ts(13, fontWeight: FontWeight.bold, color: onSurface),
+                  style: context.ts(
+                    13,
+                    fontWeight: FontWeight.bold,
+                    color: onSurface,
+                  ),
                 ),
                 const SizedBox(width: kSpacing4),
                 Icon(
@@ -411,7 +415,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       Color
                                                     >(
                                                       overallPct > 0.9
-                                                                 ? context.appColors.expenseColor
+                                                          ? context
+                                                                .appColors
+                                                                .expenseColor
                                                           : Colors.white,
                                                     ),
                                               ),
@@ -459,11 +465,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   .toUpperCase())
                                             : 'TOTAL NET WORTH',
                                         style: context.ts(
-                                              10,
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: 1.5,
-                                              color: heroSubColor,
-                                            ),
+                                          10,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 1.5,
+                                          color: heroSubColor,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -749,35 +755,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.expense,
                                   label: 'Expense',
-                                   color: context.appColors.expenseColor,
-                                   onTap: () => context.go(
-                                     '/transactions/add?type=Expense',
+                                  color: context.appColors.expenseColor,
+                                  onTap: () => context.go(
+                                    '/transactions/add?type=Expense',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.income,
                                   label: 'Income',
-                                   color: context.appColors.incomeColor,
-                                   onTap: () => context.go(
-                                     '/transactions/add?type=Income',
+                                  color: context.appColors.incomeColor,
+                                  onTap: () => context.go(
+                                    '/transactions/add?type=Income',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.transfer,
                                   label: 'Transfer',
-                                   color: context.appColors.transferColor,
-                                   onTap: () => context.go(
-                                     '/transactions/add?type=Transfer',
+                                  color: context.appColors.transferColor,
+                                  onTap: () => context.go(
+                                    '/transactions/add?type=Transfer',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.goal,
                                   label: 'Goal',
-                                   color: context.appColors.transferColor,
-                                   onTap: () => context.go('/savings-goals/add'),
+                                  color: context.appColors.transferColor,
+                                  onTap: () => context.go('/savings-goals/add'),
                                 ),
                               ],
                             ),
@@ -806,12 +812,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       vertical: kSpacing12,
                                     ),
                                     decoration: BoxDecoration(
-                                       color: Theme.of(context).colorScheme.primary,
-                                       ).withValues(alpha: 0.08),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withValues(alpha: 0.08),
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: Theme.of(context).colorScheme.primary,
-                                       ).withValues(alpha: 0.15),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withValues(alpha: 0.15),
                                       ),
                                     ),
                                     child: Row(
@@ -819,7 +829,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         Icon(
                                           Icons.message_rounded,
                                           size: 18,
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
                                         ),
                                         SizedBox(width: kSpacing10),
                                         Expanded(
@@ -830,9 +842,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 .bodySmall!
                                                 .copyWith(
                                                   fontWeight: FontWeight.w600,
-                                                  color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
                                                 ),
                                           ),
                                         ),
@@ -952,324 +964,336 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                                 child: recentTransAsync.when(
-                                data: (transactions) {
-                                  // Client-side dynamic filtering of recent transactions by account
-                                  final filteredTransactions =
-                                      _selectedAccountId == null
-                                      ? transactions
-                                      : transactions
-                                            .where(
-                                              (t) =>
-                                                  t.transaction.accountId ==
-                                                  _selectedAccountId,
-                                            )
-                                            .toList();
+                                  data: (transactions) {
+                                    // Client-side dynamic filtering of recent transactions by account
+                                    final filteredTransactions =
+                                        _selectedAccountId == null
+                                        ? transactions
+                                        : transactions
+                                              .where(
+                                                (t) =>
+                                                    t.transaction.accountId ==
+                                                    _selectedAccountId,
+                                              )
+                                              .toList();
 
-                                  if (filteredTransactions.isEmpty) {
-                                    return Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: kSpacing40,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusCard,
+                                    if (filteredTransactions.isEmpty) {
+                                      return Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: kSpacing40,
                                         ),
-                                        border: Border.all(
-                                          color: onSurface.withValues(
-                                            alpha: 0.08,
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.surface,
+                                          borderRadius: BorderRadius.circular(
+                                            AppTheme.radiusCard,
                                           ),
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            PesaFlowIcons.transactions,
-                                            size: 40,
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant
-                                                .withValues(alpha: 0.4),
-                                          ),
-                                          const SizedBox(height: kSpacing12),
-                                          Text(
-                                            'No transactions found.',
-                                            style: theme.textTheme.titleSmall
-                                                ?.copyWith(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                          const SizedBox(height: kSpacing4),
-                                          Text(
-                                            _selectedAccountId == null
-                                                ? 'Your offline financial logs will display here.'
-                                                : 'No activity recorded for this specific account.',
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: filteredTransactions.length,
-                                    itemBuilder: (context, index) {
-                                      final item = filteredTransactions[index];
-                                      final trans = item.transaction;
-
-                                      AmountType amtType = AmountType.neutral;
-                                      if (trans.type.toLowerCase() ==
-                                          'income') {
-                                        amtType = AmountType.income;
-                                      } else if (trans.type.toLowerCase() ==
-                                              'expense' ||
-                                          trans.type.toLowerCase() ==
-                                              'airtime' ||
-                                          trans.type.toLowerCase() == 'fee') {
-                                        amtType = AmountType.expense;
-                                      }
-
-                                      return StaggeredFadeSlide(
-                                        index: index,
-                                        child: Dismissible(
-                                          key: Key(trans.id),
-                                          direction:
-                                              DismissDirection.endToStart,
-                                          background: Container(
-                                            alignment: Alignment.centerRight,
-                                            padding: const EdgeInsets.only(
-                                              right: kSpacing20,
+                                          border: Border.all(
+                                            color: onSurface.withValues(
+                                              alpha: 0.08,
                                             ),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.error,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppTheme.radiusCard,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              PesaFlowIcons.transactions,
+                                              size: 40,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant
+                                                  .withValues(alpha: 0.4),
+                                            ),
+                                            const SizedBox(height: kSpacing12),
+                                            Text(
+                                              'No transactions found.',
+                                              style: theme.textTheme.titleSmall
+                                                  ?.copyWith(
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                             ),
-                                            child: const Icon(
-                                              PesaFlowIcons.delete,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          onDismissed: (_) async {
-                                            await ref
-                                                .read(
-                                                  transactionRepositoryProvider,
-                                                )
-                                                .deleteTransaction(trans.id);
-                                            ref.invalidate(
-                                              recentTransactionsStreamProvider,
-                                            );
-                                            ref.invalidate(
-                                              accountsStreamProvider,
-                                            );
-                                            ref.invalidate(netWorthProvider);
-                                            ref.invalidate(
-                                              monthlyTotalsProvider,
-                                            );
-                                          },
-                                          child: TactileSpringContainer(
-                                            onTap: () => context.push(
-                                              '/transactions/${trans.id}',
-                                            ),
-                                            child: Container(
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: kSpacing6,
+                                            const SizedBox(height: kSpacing4),
+                                            Text(
+                                              _selectedAccountId == null
+                                                  ? 'Your offline financial logs will display here.'
+                                                  : 'No activity recorded for this specific account.',
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
                                                   ),
-                                              padding: const EdgeInsets.all(
-                                                kSpacing16,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: filteredTransactions.length,
+                                      itemBuilder: (context, index) {
+                                        final item =
+                                            filteredTransactions[index];
+                                        final trans = item.transaction;
+
+                                        AmountType amtType = AmountType.neutral;
+                                        if (trans.type.toLowerCase() ==
+                                            'income') {
+                                          amtType = AmountType.income;
+                                        } else if (trans.type.toLowerCase() ==
+                                                'expense' ||
+                                            trans.type.toLowerCase() ==
+                                                'airtime' ||
+                                            trans.type.toLowerCase() == 'fee') {
+                                          amtType = AmountType.expense;
+                                        }
+
+                                        return StaggeredFadeSlide(
+                                          index: index,
+                                          child: Dismissible(
+                                            key: Key(trans.id),
+                                            direction:
+                                                DismissDirection.endToStart,
+                                            background: Container(
+                                              alignment: Alignment.centerRight,
+                                              padding: const EdgeInsets.only(
+                                                right: kSpacing20,
                                               ),
                                               decoration: BoxDecoration(
-                                                color:
-                                                    theme.colorScheme.surface,
+                                                color: theme.colorScheme.error,
                                                 borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.08,
-                                                  ),
-                                                  width: 0.5,
+                                                    BorderRadius.circular(
+                                                      AppTheme.radiusCard,
+                                                    ),
+                                              ),
+                                              child: const Icon(
+                                                PesaFlowIcons.delete,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            onDismissed: (_) async {
+                                              await ref
+                                                  .read(
+                                                    transactionRepositoryProvider,
+                                                  )
+                                                  .deleteTransaction(trans.id);
+                                              ref.invalidate(
+                                                recentTransactionsStreamProvider,
+                                              );
+                                              ref.invalidate(
+                                                accountsStreamProvider,
+                                              );
+                                              ref.invalidate(netWorthProvider);
+                                              ref.invalidate(
+                                                monthlyTotalsProvider,
+                                              );
+                                            },
+                                            child: TactileSpringContainer(
+                                              onTap: () => context.push(
+                                                '/transactions/${trans.id}',
+                                              ),
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: kSpacing6,
+                                                    ),
+                                                padding: const EdgeInsets.all(
+                                                  kSpacing16,
                                                 ),
-                                                boxShadow: [
-                                                  BoxShadow(
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      theme.colorScheme.surface,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
                                                     color: onSurface.withValues(
                                                       alpha: 0.08,
                                                     ),
-                                                    blurRadius: 8,
-                                                    offset: const Offset(0, 4),
+                                                    width: 0.5,
                                                   ),
-                                                ],
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  // Category Icon Container (Squircle Style)
-                                                  Container(
-                                                    width: 46,
-                                                    height: 46,
-                                                    decoration: BoxDecoration(
-                                                      color: desaturateColor(
-                                                        hexToColor(
-                                                          item.category.color,
-                                                        ),
-                                                      ).withValues(alpha: 0.15),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            14,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.08,
                                                           ),
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        getCategoryIcon(
-                                                          item.category.icon,
-                                                        ),
-                                                        color: hexToColor(
-                                                          item.category.color,
-                                                        ),
-                                                        size: 22,
+                                                      blurRadius: 8,
+                                                      offset: const Offset(
+                                                        0,
+                                                        4,
                                                       ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing14,
-                                                  ),
-                                                  // Content
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          trans
-                                                                  .description
-                                                                  .isNotEmpty
-                                                              ? trans
-                                                                    .description
-                                                              : item
+                                                  ],
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    // Category Icon Container (Squircle Style)
+                                                    Container(
+                                                      width: 46,
+                                                      height: 46,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            desaturateColor(
+                                                              hexToColor(
+                                                                item
                                                                     .category
-                                                                    .name,
-                                                          style: theme
-                                                              .textTheme
-                                                              .titleMedium
-                                                              ?.copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color:
-                                                                    onSurface,
+                                                                    .color,
                                                               ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: kSpacing4,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              item
-                                                                      .account
-                                                                      ?.name ??
-                                                                  'Offline',
-                                                              style: theme
-                                                                  .textTheme
-                                                                  .labelSmall
-                                                                  ?.copyWith(
-                                                                    color: theme
-                                                                        .colorScheme
-                                                                        .onSurface
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.6,
-                                                                        ),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
+                                                            ).withValues(
+                                                              alpha: 0.15,
                                                             ),
-                                                            const SizedBox(
-                                                              width: kSpacing8,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              14,
                                                             ),
-                                                            Text(
-                                                              trans.createdAt
-                                                                  .toString()
-                                                                  .substring(
-                                                                    0,
-                                                                    10,
-                                                                  ),
-                                                              style: theme
-                                                                  .textTheme
-                                                                  .labelSmall
-                                                                  ?.copyWith(
-                                                                    color: theme
-                                                                        .colorScheme
-                                                                        .onSurfaceVariant,
-                                                                  ),
-                                                            ),
-                                                          ],
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          getCategoryIcon(
+                                                            item.category.icon,
+                                                          ),
+                                                          color: hexToColor(
+                                                            item.category.color,
+                                                          ),
+                                                          size: 22,
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: kSpacing12,
-                                                  ),
-                                                  // Amount
-                                                  AmountText(
-                                                    amountInCents: trans.amount,
-                                                    type: amtType,
-                                                    showDecimals: true,
-                                                    style: context.ts(
-                                                      16,
-                                                      fontWeight: FontWeight.w800,
-                                                      color:
-                                                          amtType ==
-                                                              AmountType.income
-                                                          ? AppTheme
-                                                                .transferColorDark
-                                                          : (amtType ==
-                                                                    AmountType
-                                                                        .expense
-                                                                ? const Color(
-                                                                    0xFFFF453A,
-                                                                  )
-                                                                : theme
+                                                    const SizedBox(
+                                                      width: kSpacing14,
+                                                    ),
+                                                    // Content
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            trans
+                                                                    .description
+                                                                    .isNotEmpty
+                                                                ? trans
+                                                                      .description
+                                                                : item
+                                                                      .category
+                                                                      .name,
+                                                            style: theme
+                                                                .textTheme
+                                                                .titleMedium
+                                                                ?.copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color:
+                                                                      onSurface,
+                                                                ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: kSpacing4,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                item
+                                                                        .account
+                                                                        ?.name ??
+                                                                    'Offline',
+                                                                style: theme.textTheme.labelSmall?.copyWith(
+                                                                  color: theme
                                                                       .colorScheme
-                                                                      .onSurfaceVariant),
+                                                                      .onSurface
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.6,
+                                                                      ),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width:
+                                                                    kSpacing8,
+                                                              ),
+                                                              Text(
+                                                                trans.createdAt
+                                                                    .toString()
+                                                                    .substring(
+                                                                      0,
+                                                                      10,
+                                                                    ),
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .labelSmall
+                                                                    ?.copyWith(
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .onSurfaceVariant,
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    const SizedBox(
+                                                      width: kSpacing12,
+                                                    ),
+                                                    // Amount
+                                                    AmountText(
+                                                      amountInCents:
+                                                          trans.amount,
+                                                      type: amtType,
+                                                      showDecimals: true,
+                                                      style: context.ts(
+                                                        16,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color:
+                                                            amtType ==
+                                                                AmountType
+                                                                    .income
+                                                            ? AppTheme
+                                                                  .transferColorDark
+                                                            : (amtType ==
+                                                                      AmountType
+                                                                          .expense
+                                                                  ? const Color(
+                                                                      0xFFFF453A,
+                                                                    )
+                                                                  : theme
+                                                                        .colorScheme
+                                                                        .onSurfaceVariant),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                loading: () => const SizedBox.shrink(),
-                                error: (err, _) => Center(
-                                  child: Text('Error loading activity: $err'),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  loading: () => const SizedBox.shrink(),
+                                  error: (err, _) => Center(
+                                    child: Text('Error loading activity: $err'),
+                                  ),
                                 ),
-                              ),
                               ),
                             ],
                           ),
@@ -1353,8 +1377,8 @@ class _SummaryNavCardRow extends StatelessWidget {
                 metric:
                     '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
                 label: 'Emergency vault',
-              color: context.appColors.incomeColor,
-               onTap: () => context.go('/savings-goals'),
+                color: context.appColors.incomeColor,
+                onTap: () => context.go('/savings-goals'),
               ),
             _SummaryNavCard(
               icon: PesaFlowIcons.calendar,
@@ -1363,14 +1387,14 @@ class _SummaryNavCardRow extends StatelessWidget {
                   : '$activeRecurringCount active',
               label: 'Recurring',
               color: context.appColors.transferColor,
-               onTap: () => context.go('/recurring'),
+              onTap: () => context.go('/recurring'),
             ),
             _SummaryNavCard(
               icon: Icons.credit_score_rounded,
               metric: 'Loans',
               label: 'Debt overview',
               color: context.appColors.transferColor,
-               onTap: () => context.go('/loans'),
+              onTap: () => context.go('/loans'),
             ),
             if (pendingReviewCount > 0)
               _SummaryNavCard(
@@ -1378,7 +1402,7 @@ class _SummaryNavCardRow extends StatelessWidget {
                 metric: '$pendingReviewCount pending',
                 label: 'SMS review',
                 color: theme.colorScheme.primary,
-                 onTap: () => context.go('/sms-review'),
+                onTap: () => context.go('/sms-review'),
               ),
           ],
         ),
