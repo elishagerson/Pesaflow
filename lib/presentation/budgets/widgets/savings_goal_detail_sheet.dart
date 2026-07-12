@@ -12,6 +12,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/savings_goal_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -166,10 +167,9 @@ class _SavingsGoalDetailSheetState
       _selectedAccountId = accounts.first.id;
     }
 
-    showModalBottomSheet(
-      context: context,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (ctx) {
         final theme = Theme.of(ctx);
         final onSurface = theme.colorScheme.onSurface;
