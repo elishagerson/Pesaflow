@@ -110,7 +110,7 @@ class _OfflineBadge extends StatelessWidget {
       ),
       child: Text(
         'Offline',
-        style: TextStyle(
+        style: theme.textTheme.labelSmall!.copyWith(
           fontSize: 9,
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),

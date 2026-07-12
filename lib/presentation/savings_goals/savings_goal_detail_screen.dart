@@ -280,9 +280,9 @@ class _SavingsGoalDetailScreenState
                                           'TSh',
                                           style: theme.textTheme.titleMedium!
                                               .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: accentColor,
-                                          ),
+                                                fontWeight: FontWeight.w900,
+                                                color: accentColor,
+                                              ),
                                         ),
                                         const SizedBox(width: kSpacing12),
                                         Expanded(
@@ -1099,9 +1099,9 @@ class _SavingsGoalDetailScreenState
                                       const SizedBox(height: kSpacing2),
                                       Text(
                                         '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
-                                        style: TextStyle(
-                                          color: Colors.grey[500],
+                                        style: theme.textTheme.labelSmall!.copyWith(
                                           fontSize: 9,
+                                          color: Colors.grey[500],
                                         ),
                                       ),
                                     ],

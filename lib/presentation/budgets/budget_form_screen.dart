@@ -788,9 +788,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                           ),
                                           style: theme.textTheme.titleMedium!
                                               .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: thresholdColor,
-                                          ),
+                                                fontWeight: FontWeight.w900,
+                                                color: thresholdColor,
+                                              ),
                                           child: Text(
                                             '${(_threshold * 100).round()}%',
                                           ),
@@ -1018,8 +1018,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 keyboardType: widget.keyboardType,
                 textCapitalization: widget.textCapitalization,
                 style:
-                    widget.style ??
-                    context.ts(15, fontWeight: FontWeight.w600),
+                    widget.style ?? context.ts(15, fontWeight: FontWeight.w600),
                 onChanged: widget.onChanged,
                 decoration: InputDecoration(
                   filled: false,

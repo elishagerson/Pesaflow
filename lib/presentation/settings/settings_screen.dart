@@ -45,7 +45,7 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: kSpacing16),
-              child: Text(
+            child: Text(
               'Manage Accounts',
               style: context.ts(22, fontWeight: FontWeight.bold),
             ),

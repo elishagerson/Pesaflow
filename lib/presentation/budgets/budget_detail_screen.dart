@@ -390,7 +390,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                       ),
                                                   child: Text(
                                                     '${value.toInt()}',
-                                                    style: const TextStyle(
+                                                    style: theme.textTheme.labelSmall!.copyWith(
                                                       fontSize: 9,
                                                     ),
                                                   ),
@@ -489,7 +489,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   ),
                                   padding: const EdgeInsets.all(kSpacing12),
                                   borderRadius: 8,
-      
+
                                   child: Row(
                                     children: [
                                       Icon(

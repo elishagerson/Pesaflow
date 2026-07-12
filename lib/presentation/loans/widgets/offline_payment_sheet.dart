@@ -15,7 +15,6 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
@@ -111,8 +110,8 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'Record Offline Payment',
                                             style: theme.textTheme.titleLarge!
                                                 .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                           const SizedBox(height: kSpacing2),
                                           Text(
@@ -159,11 +158,11 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           'TSh',
                                           style: theme.textTheme.titleMedium!
                                               .copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: onSurface.withValues(
-                                              alpha: 0.55,
-                                            ),
-                                          ),
+                                                fontWeight: FontWeight.w900,
+                                                color: onSurface.withValues(
+                                                  alpha: 0.55,
+                                                ),
+                                              ),
                                         ),
                                         const SizedBox(width: kSpacing12),
                                         Expanded(

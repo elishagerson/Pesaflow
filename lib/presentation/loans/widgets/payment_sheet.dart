@@ -16,7 +16,6 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanProgressRing extends StatelessWidget {
   final Loan loan;
@@ -189,7 +188,7 @@ class QuickAmountChip extends StatelessWidget {
               const SizedBox(height: kSpacing2),
               Text(
                 CurrencyFormatter.formatCents(amount),
-                style: TextStyle(
+                style: theme.textTheme.labelSmall!.copyWith(
                   fontSize: 9,
                   fontWeight: FontWeight.w500,
                   color: onSurface.withValues(alpha: 0.38),
@@ -300,8 +299,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             'Make a Payment',
                                             style: theme.textTheme.titleLarge!
                                                 .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                           const SizedBox(height: kSpacing2),
                                           Text(

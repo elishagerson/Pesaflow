@@ -181,10 +181,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
           const SizedBox(height: kSpacing16),
           Text(
             CurrencyFormatter.formatCents(totalSaved),
-            style: context.appTypography.monospace.copyWith(
-              fontSize: 28,
-              color: onSurface,
-            ),
+            style: context.ts(28, color: onSurface),
           ),
           const SizedBox(height: kSpacing4),
           Text(
@@ -243,7 +240,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
       child: Hero(
         tag: 'goal-${goal.id}',
         child: GlassCard(
-
           elevation: CardElevation.none,
           margin: const EdgeInsets.only(bottom: kSpacing12),
           backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),
@@ -342,11 +338,10 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       'COMPLETED',
-                                      style: context.appTypography.labelMicro
-                                          .copyWith(
-                                            fontSize: 9,
-                                            color: theme.colorScheme.primary,
-                                          ),
+                                        style: theme.textTheme.labelSmall!.copyWith(
+                                          fontSize: 9,
+                                          color: theme.colorScheme.primary,
+                                        ),
                                     ),
                                   )
                                 else

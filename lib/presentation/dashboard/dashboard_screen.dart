@@ -361,7 +361,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         children: [
                                           Text(
                                             'pesa',
-                                            style: theme.textTheme.titleLarge
+                                            style: theme.textTheme.titleMedium
                                                 ?.copyWith(
                                                   fontWeight: FontWeight.w900,
                                                   fontSize: 19,
@@ -372,7 +372,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           ),
                                           Text(
                                             'flow',
-                                            style: theme.textTheme.titleLarge
+                                            style: theme.textTheme.titleMedium
                                                 ?.copyWith(
                                                   fontWeight: FontWeight.w300,
                                                   fontSize: 19,

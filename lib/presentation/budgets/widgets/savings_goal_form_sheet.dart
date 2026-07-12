@@ -221,10 +221,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           widget.existingGoal != null
                               ? 'Edit Savings Goal'
                               : 'New Savings Goal',
-                          style: context.ts(
-                            22,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: context.ts(22, fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
