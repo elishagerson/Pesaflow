@@ -254,6 +254,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   final Widget? leading;
   final List<Widget>? actions;
   final bool largeTitle;
+  final bool? canPop;
 
   const IosNavBar({
     super.key,
@@ -261,12 +262,13 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
     this.leading,
     this.actions,
     this.largeTitle = true,
+    this.canPop,
   });
 
   @override
   Size get preferredSize {
     if (!largeTitle) return const Size.fromHeight(56.0);
-    if (leading != null) return const Size.fromHeight(120.0);
+    if (leading != null || (canPop ?? false)) return const Size.fromHeight(120.0);
     return const Size.fromHeight(72.0);
   }
 
@@ -276,8 +278,8 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
     final top = MediaQuery.of(context).padding.top;
     final speedFactor = ref.watch(scrollSpeedProvider);
 
-    final canPop = Navigator.of(context).canPop();
-    final effectiveLeading = leading ?? (canPop ? IconButton(
+    final effectiveCanPop = canPop ?? Navigator.of(context).canPop();
+    final effectiveLeading = leading ?? (effectiveCanPop ? IconButton(
       icon: const Icon(PesaFlowIcons.back, size: 20),
       onPressed: () => Navigator.of(context).maybePop(),
     ) : null);

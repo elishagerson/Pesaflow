@@ -388,12 +388,13 @@ class _PulseIconState extends State<PulseIcon>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _pulse,
-      builder: (context, _) {
+      builder: (context, child) {
         return Transform.scale(
           scale: _pulse.value,
-          child: Icon(widget.icon, size: widget.size, color: widget.color),
+          child: child,
         );
       },
+      child: Icon(widget.icon, size: widget.size, color: widget.color),
     );
   }
 }

@@ -773,11 +773,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                           Colors.transparent,
                                                        builder: (_) => PopScope(
                                                         canPop: false,
-                                                        child: SuccessCheckmark(
-                                                          color: context
-                                                              .appColors
-                                                              .incomeColor,
-                                                        ),
+                                                        child: const SuccessCheckmark(),
                                                       ),
                                                     );
                                                     await Future.delayed(

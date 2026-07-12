@@ -170,9 +170,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                 );
                 return PopScope(
                   canPop: false,
-                  child: SuccessCheckmark(
-                    color: theme.colorScheme.primary,
-                  ),
+                  child: const SuccessCheckmark(),
                 );
               },
             );
@@ -945,17 +943,12 @@ class _ConfidenceRingState extends State<ConfidenceRing>
     return SizedBox(
       width: widget.size,
       height: widget.size,
-      child: AnimatedBuilder(
-        animation: _pulseController,
-        builder: (context, child) {
-          return CustomPaint(
-            painter: _ConfidenceRingPainter(
-              score: widget.score,
-              color: widget.color,
-              pulseValue: _pulseController.value,
-            ),
-          );
-        },
+      child: CustomPaint(
+        painter: _ConfidenceRingPainter(
+          score: widget.score,
+          color: widget.color,
+          pulseAnimation: _pulseController,
+        ),
       ),
     );
   }
@@ -964,13 +957,13 @@ class _ConfidenceRingState extends State<ConfidenceRing>
 class _ConfidenceRingPainter extends CustomPainter {
   final double score;
   final Color color;
-  final double pulseValue;
+  final Animation<double> pulseAnimation;
 
   _ConfidenceRingPainter({
     required this.score,
     required this.color,
-    required this.pulseValue,
-  });
+    required this.pulseAnimation,
+  }) : super(repaint: pulseAnimation);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -979,6 +972,7 @@ class _ConfidenceRingPainter extends CustomPainter {
     }
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 1;
+    final pulseValue = pulseAnimation.value;
 
     final bgPaint = Paint()
       ..color = color.withValues(alpha: 0.18)
@@ -1020,7 +1014,7 @@ class _ConfidenceRingPainter extends CustomPainter {
   bool shouldRepaint(covariant _ConfidenceRingPainter oldDelegate) {
     return oldDelegate.score != score ||
         oldDelegate.color != color ||
-        oldDelegate.pulseValue != pulseValue;
+        oldDelegate.pulseAnimation.value != pulseAnimation.value;
   }
 }
 

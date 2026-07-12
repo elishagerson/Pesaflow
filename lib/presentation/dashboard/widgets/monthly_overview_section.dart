@@ -391,6 +391,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
 
     return AnimatedBuilder(
       animation: _glowAnimation!,
+      child: Stack(alignment: Alignment.center, children: [chart, label]),
       builder: (context, child) {
         return Container(
           width: 84,
@@ -405,7 +406,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
               ),
             ],
           ),
-          child: Stack(alignment: Alignment.center, children: [chart, label]),
+          child: child,
         );
       },
     );
