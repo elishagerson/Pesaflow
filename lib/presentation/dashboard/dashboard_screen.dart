@@ -1433,26 +1433,47 @@ class _SummaryNavCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(right: kSpacing12),
-      child: GestureDetector(
+      child: TactileSpringContainer(
         onTap: onTap,
         child: Container(
           width: 130,
-          height: 88,
-          padding: const EdgeInsets.all(kSpacing14),
+          height: 96,
+          padding: const EdgeInsets.all(kSpacing12),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.06),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color.withValues(alpha: 0.10),
+                theme.colorScheme.surfaceContainerHigh,
+              ],
+            ),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
-              color: color.withValues(alpha: 0.12),
-              width: 0.5,
+              color: color.withValues(alpha: 0.18),
+              width: 0.6,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Icon(icon, size: 20, color: color),
+              Container(
+                padding: const EdgeInsets.all(kSpacing6),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.14),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 16, color: color),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -1472,7 +1493,7 @@ class _SummaryNavCard extends StatelessWidget {
                     label,
                     style: context.ts(
                       10,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

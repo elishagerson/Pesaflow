@@ -266,8 +266,8 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     if (!largeTitle) return const Size.fromHeight(56.0);
-    final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
-    return Size.fromHeight(hasRow ? 126.0 : 96.0);
+    if (leading != null) return const Size.fromHeight(110.0);
+    return const Size.fromHeight(64.0);
   }
 
   @override
@@ -282,7 +282,12 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
       onPressed: () => Navigator.of(context).maybePop(),
     ) : null);
 
-    final showRow = !largeTitle || effectiveLeading != null || (actions != null && actions!.isNotEmpty);
+    final titleStyle = context.ts(
+      28,
+      fontWeight: FontWeight.w900,
+      letterSpacing: -0.8,
+      color: theme.colorScheme.onSurface,
+    );
 
     return ClipRect(
       child: LiquidGlassOverlay(
@@ -298,28 +303,25 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: showRow ? 12.0 : 16.0),
-              if (showRow)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+          child: Builder(
+            builder: (context) {
+              if (!largeTitle) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: 6),
                   child: SizedBox(
                     height: 44,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        if (!largeTitle)
-                          Text(
-                            title,
-                            style: context.ts(
-                              17,
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            textAlign: TextAlign.center,
+                        Text(
+                          title,
+                          style: context.ts(
+                            17,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
                           ),
+                          textAlign: TextAlign.center,
+                        ),
                         if (effectiveLeading != null)
                           Positioned(
                             left: 0,
@@ -336,24 +338,75 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                ),
-              if (largeTitle)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kSpacing16,
-                    top: kSpacing8,
-                    bottom: kSpacing8,
+                );
+              }
+
+              // Large title
+              if (effectiveLeading != null) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 12.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                      child: SizedBox(
+                        height: 44,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            effectiveLeading,
+                            if (actions != null && actions!.isNotEmpty)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: actions!,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: kSpacing16,
+                        top: kSpacing8,
+                        bottom: kSpacing12,
+                      ),
+                      child: Text(
+                        title,
+                        style: titleStyle,
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    kSpacing16,
+                    kSpacing12,
+                    kSpacing16,
+                    kSpacing12,
                   ),
-                  child: Text(
-                    title,
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                  child: SizedBox(
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: titleStyle,
+                        ),
+                        if (actions != null && actions!.isNotEmpty)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: actions!,
+                          ),
+                      ],
                     ),
                   ),
-                ),
-            ],
+                );
+              }
+            },
           ),
         ),
       ),
