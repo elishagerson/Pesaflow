@@ -914,3 +914,50 @@ class _RecurringTransactionListScreenState
     return badges;
   }
 }
+
+class _DueItemPulse extends StatefulWidget {
+  final Widget child;
+  const _DueItemPulse({required this.child});
+
+  @override
+  State<_DueItemPulse> createState() => _DueItemPulseState();
+}
+
+class _DueItemPulseState extends State<_DueItemPulse>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _animation = _controller.drive(
+      Tween<double>(begin: 1.0, end: 1.015).chain(
+        CurveTween(curve: Curves.easeInOut),
+      ),
+    );
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (_, child) => Transform.scale(
+        scale: _animation.value,
+        child: child,
+      ),
+      child: widget.child,
+    );
+  }
+}
