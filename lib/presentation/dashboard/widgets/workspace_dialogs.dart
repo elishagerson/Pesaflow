@@ -199,9 +199,9 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    },
   );
 }
 

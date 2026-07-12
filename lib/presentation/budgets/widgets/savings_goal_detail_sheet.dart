@@ -743,10 +743,10 @@ class _SavingsGoalDetailSheetState
                 ),
               ),
             ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
   }
 
   @override
