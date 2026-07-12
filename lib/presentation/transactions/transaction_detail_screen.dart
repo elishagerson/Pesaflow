@@ -489,9 +489,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                     Expanded(
                       child: GlassCard(
                         onTap: () => _confirmDelete(context, ref),
-                        backgroundColor: const Color(
-                          0xFFFF453A,
-                        ).withValues(alpha: 0.12),
+                        backgroundColor: context.appColors.expenseColor.withValues(alpha: 0.12),
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing14,
                         ),
@@ -502,7 +500,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             Icon(
                               PesaFlowIcons.delete,
                               size: 16,
-                              color: Color(0xFFFF453A),
+                              color: context.appColors.expenseColor,
                             ),
                             SizedBox(width: kSpacing8),
                             Text(
@@ -510,7 +508,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               style: Theme.of(context).textTheme.titleSmall!
                                   .copyWith(
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xFFFF453A),
+                                    color: context.appColors.expenseColor,
                                   ),
                             ),
                           ],
@@ -544,7 +542,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           style: Theme.of(context)
               .extension<AppTypographyTheme>()!
               .labelMicro
-              .copyWith(fontWeight: FontWeight.w500, color: Colors.grey),
+              .copyWith(fontWeight: FontWeight.w500, color: context.appColors.textMedium),
         ),
         const SizedBox(height: kSpacing2),
         Text(
@@ -643,7 +641,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         style: Theme.of(context)
                             .extension<AppTypographyTheme>()!
                             .labelMicro
-                            .copyWith(color: Colors.grey),
+                            .copyWith(color: context.appColors.textMedium),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
@@ -715,7 +713,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 Text(
                   label,
                   style: theme.textTheme.bodySmall!.copyWith(
-                    color: Colors.grey,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: kSpacing2),
@@ -776,7 +774,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       context: context,
       title: const Text('Delete Transaction'),
       titleIcon: PesaFlowIcons.delete,
-      iconColor: Colors.red,
+      iconColor: theme.colorScheme.error,
       content: const Text(
         'Are you sure you want to delete this transaction? This cannot be undone.',
       ),
@@ -787,7 +785,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: theme.colorScheme.error,
             foregroundColor: Colors.white,
           ),
           onPressed: () async {

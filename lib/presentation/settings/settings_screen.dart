@@ -147,9 +147,7 @@ class SettingsScreen extends ConsumerWidget {
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                   prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1C1C1E)
-                      : const Color(0xFFF2F2F7),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -191,14 +189,14 @@ class SettingsScreen extends ConsumerWidget {
                     value: 'Mobile Money',
                     label: 'Mobile Money',
                     icon: PesaFlowIcons.cash,
-                    color: Color(0xFF0F4C5C),
+                    color: theme.colorScheme.primary,
                     subtitle: 'M-Pesa, Tigo Pesa, Airtel Money, etc.',
                   ),
                   ModernDropdownItem(
                     value: 'Bank',
                     label: 'Bank Account',
                     icon: PesaFlowIcons.loans,
-                    color: Color(0xFFFF9F0A),
+                    color: context.appColors.transferColor,
                     subtitle: 'NMB, CRDB, NBC, and other banks',
                   ),
                 ],
@@ -320,9 +318,7 @@ class SettingsScreen extends ConsumerWidget {
                   hintText: 'e.g. 150,000',
                   prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1C1C1E)
-                      : const Color(0xFFF2F2F7),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -671,13 +667,13 @@ class SettingsScreen extends ConsumerWidget {
                 value: categoryType,
                 prefixIcon: PesaFlowIcons.sort,
                 items: const [
-                  ModernDropdownItem(
-                    value: 'Expense',
-                    label: 'Expense',
-                    icon: PesaFlowIcons.expense,
-                    color: Color(0xFFFF453A),
-                    subtitle: 'Money going out',
-                  ),
+                    ModernDropdownItem(
+                      value: 'Expense',
+                      label: 'Expense',
+                      icon: PesaFlowIcons.expense,
+                      color: AppTheme.expenseColor,
+                      subtitle: 'Money going out',
+                    ),
                   ModernDropdownItem(
                     value: 'Income',
                     label: 'Income',
@@ -937,9 +933,9 @@ class SettingsScreen extends ConsumerWidget {
             horizontal: kSpacing20,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xF01C1C1E)
-                : const Color(0xF0F2F2F7),
+            color: Theme.of(context).colorScheme.surface.withValues(
+              alpha: 0.94,
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

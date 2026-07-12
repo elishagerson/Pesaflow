@@ -35,7 +35,7 @@ class LoanListScreen extends ConsumerWidget {
         label: 'Add Loan',
       ),
       body: RefreshIndicator(
-        color: const Color(0xFF0F4C5C),
+        color: theme.colorScheme.primary,
         backgroundColor: theme.colorScheme.surface,
         onRefresh: () => Future.wait([
           ref.refresh(activeLoansStreamProvider.future),
@@ -84,7 +84,7 @@ class LoanListScreen extends ConsumerWidget {
                         context,
                         'Active Loans',
                         '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
-                        Colors.redAccent,
+                        context.appColors.expenseColor,
                       ),
                       const SizedBox(height: kSpacing4),
                       StaggeredList(
@@ -127,7 +127,7 @@ class LoanListScreen extends ConsumerWidget {
                         context,
                         'Paid Loans',
                         '${paidLoans.length} paid',
-                        const Color(0xFF10B981),
+                        context.appColors.incomeColor,
                       ),
                       const SizedBox(height: kSpacing4),
                       StaggeredList(
@@ -192,12 +192,12 @@ class LoanListScreen extends ConsumerWidget {
     return GlassCard(
       elevation: CardElevation.none,
       padding: const EdgeInsets.all(kSpacing14),
-      accentColor: const Color(0xFFFF6B35),
+      accentColor: context.appColors.transferColor,
       margin: const EdgeInsets.only(bottom: kSpacing12),
       backgroundGradient: LinearGradient(
         colors: [
-          const Color(0xFFFF6B35).withValues(alpha: 0.12),
-          const Color(0xFFFF6B35).withValues(alpha: 0.03),
+          context.appColors.transferColor.withValues(alpha: 0.12),
+          context.appColors.transferColor.withValues(alpha: 0.03),
         ],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -207,12 +207,12 @@ class LoanListScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(kSpacing8),
             decoration: BoxDecoration(
-              color: const Color(0xFFFF6B35).withValues(alpha: 0.15),
+              color: context.appColors.transferColor.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.speed_rounded,
-              color: Color(0xFFFF6B35),
+              color: context.appColors.transferColor,
               size: 20,
             ),
           ),
@@ -255,10 +255,10 @@ class LoanListScreen extends ConsumerWidget {
     final netWorth = ref.watch(netWorthProvider);
     final debtRatio = netWorth > 0 ? total / netWorth : 999.0;
     final severityColor = debtRatio > 1.0
-        ? const Color(0xFFE53935)
+        ? context.appColors.expenseColor
         : debtRatio > 0.5
-        ? const Color(0xFFFF6B35)
-        : const Color(0xFFFF9F0A);
+        ? context.appColors.transferColor
+        : context.appColors.transferColor;
 
     return GlassCard(
       elevation: CardElevation.none,
@@ -350,8 +350,8 @@ class LoanListScreen extends ConsumerWidget {
     final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
-        ? const Color(0xFFE53935)
-        : const Color(0xFFFF9F0A);
+        ? context.appColors.expenseColor
+        : context.appColors.transferColor;
 
     return Hero(
       tag: 'loan-${loan.id}',
@@ -413,8 +413,8 @@ class LoanListScreen extends ConsumerWidget {
                                 .copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: loan.dueAt!.isBefore(DateTime.now())
-                                      ? const Color(0xFFE53935)
-                                      : Colors.grey[500],
+                                      ? context.appColors.expenseColor
+                                      : context.appColors.textMedium,
                                 ),
                           ),
                         ],
@@ -465,7 +465,7 @@ class LoanListScreen extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: kSpacing10),
         borderRadius: AppTheme.radiusCard,
         elevation: CardElevation.low,
-        accentColor: const Color(0xFF10B981),
+        accentColor: context.appColors.incomeColor,
         onTap: () => context.push('/loans/${loan.id}'),
         child: Padding(
           padding: const EdgeInsets.all(kSpacing14),
@@ -474,12 +474,12 @@ class LoanListScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(kSpacing8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                  color: context.appColors.incomeColor.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   PesaFlowIcons.success,
-                  color: Color(0xFF10B981),
+                  color: context.appColors.incomeColor,
                   size: 18,
                 ),
               ),

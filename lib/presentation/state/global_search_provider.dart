@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 
 class SearchResult {
@@ -51,9 +52,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         _ => Icons.receipt_rounded,
       };
       final color = switch (t.type) {
-        'income' => const Color(0xFF4CAF50),
-        'expense' => const Color(0xFFF44336),
-        _ => const Color(0xFF2196F3),
+        'income' => AppTheme.incomeColor,
+        'expense' => AppTheme.expenseColor,
+        _ => AppTheme.transferColor,
       };
       final amount = (t.amount / 100).toStringAsFixed(0);
       results.add(

@@ -134,8 +134,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       colors: [
         trackerColor.withValues(alpha: 0.35),
         theme.brightness == Brightness.dark
-            ? const Color(0xFF05080C)
-            : const Color(0xFF062028),
+            ? theme.colorScheme.surface
+            : theme.colorScheme.surface,
       ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -144,7 +144,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     const Color heroTextColor = Colors.white;
     final Color heroSubColor = Colors.white.withValues(alpha: 0.7);
     final Color pillBg = Colors.white.withValues(alpha: 0.10);
-    final Color pillBorder = const Color(0x26FFFFFF);
+    final Color pillBorder = Colors.white.withValues(alpha: 0.15);
 
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -262,7 +262,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         vertical: kSpacing2,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF453A),
+                        color: context.appColors.expenseColor,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
                           color: theme.colorScheme.surface,
@@ -299,8 +299,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             return false;
           },
           child: RefreshIndicator(
-            color: const Color(0xFF0F4C5C),
-            backgroundColor: const Color(0xFFF5F6F8),
+            color: theme.colorScheme.primary,
+            backgroundColor: theme.colorScheme.surface,
             onRefresh: () async {
               ref.invalidate(monthlyTotalsProvider);
               ref.invalidate(netWorthProvider);
@@ -410,9 +410,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       Color
                                                     >(
                                                       overallPct > 0.9
-                                                          ? const Color(
-                                                              0xFFFF453A,
-                                                            )
+                                                                 ? context.appColors.expenseColor
                                                           : Colors.white,
                                                     ),
                                               ),
@@ -750,35 +748,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.expense,
                                   label: 'Expense',
-                                  color: const Color(0xFFEF4444),
-                                  onTap: () => context.go(
-                                    '/transactions/add?type=Expense',
+                                   color: context.appColors.expenseColor,
+                                   onTap: () => context.go(
+                                     '/transactions/add?type=Expense',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.income,
                                   label: 'Income',
-                                  color: const Color(0xFF10B981),
-                                  onTap: () => context.go(
-                                    '/transactions/add?type=Income',
+                                   color: context.appColors.incomeColor,
+                                   onTap: () => context.go(
+                                     '/transactions/add?type=Income',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.transfer,
                                   label: 'Transfer',
-                                  color: const Color(0xFF6366F1),
-                                  onTap: () => context.go(
-                                    '/transactions/add?type=Transfer',
+                                   color: context.appColors.transferColor,
+                                   onTap: () => context.go(
+                                     '/transactions/add?type=Transfer',
                                   ),
                                 ),
                                 const SizedBox(width: kSpacing10),
                                 _QuickActionButton(
                                   icon: PesaFlowIcons.goal,
                                   label: 'Goal',
-                                  color: const Color(0xFFD4942D),
-                                  onTap: () => context.go('/savings-goals/add'),
+                                   color: context.appColors.transferColor,
+                                   onTap: () => context.go('/savings-goals/add'),
                                 ),
                               ],
                             ),
@@ -807,14 +805,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       vertical: kSpacing12,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFF0F4C5C,
-                                      ).withValues(alpha: 0.08),
+                                       color: Theme.of(context).colorScheme.primary,
+                                       ).withValues(alpha: 0.08),
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: const Color(
-                                          0xFF0F4C5C,
-                                        ).withValues(alpha: 0.15),
+                                        color: Theme.of(context).colorScheme.primary,
+                                       ).withValues(alpha: 0.15),
                                       ),
                                     ),
                                     child: Row(
@@ -822,7 +818,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         Icon(
                                           Icons.message_rounded,
                                           size: 18,
-                                          color: const Color(0xFF0F4C5C),
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                         SizedBox(width: kSpacing10),
                                         Expanded(
@@ -833,9 +829,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 .bodySmall!
                                                 .copyWith(
                                                   fontWeight: FontWeight.w600,
-                                                  color: const Color(
-                                                    0xFF0F4C5C,
-                                                  ),
+                                                  color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                                 ),
                                           ),
                                         ),
@@ -1345,8 +1341,8 @@ class _SummaryNavCardRow extends StatelessWidget {
                 metric:
                     '${savingsGoals.length} goal${savingsGoals.length == 1 ? '' : 's'}',
                 label: 'Emergency vault',
-                color: const Color(0xFF609F8A),
-                onTap: () => context.go('/savings-goals'),
+              color: context.appColors.incomeColor,
+               onTap: () => context.go('/savings-goals'),
               ),
             _SummaryNavCard(
               icon: PesaFlowIcons.calendar,
@@ -1354,23 +1350,23 @@ class _SummaryNavCardRow extends StatelessWidget {
                   ? '$dueCount due'
                   : '$activeRecurringCount active',
               label: 'Recurring',
-              color: const Color(0xFFFF6B35),
-              onTap: () => context.go('/recurring'),
+              color: context.appColors.transferColor,
+               onTap: () => context.go('/recurring'),
             ),
             _SummaryNavCard(
               icon: Icons.credit_score_rounded,
               metric: 'Loans',
               label: 'Debt overview',
-              color: const Color(0xFF6366F1),
-              onTap: () => context.go('/loans'),
+              color: context.appColors.transferColor,
+               onTap: () => context.go('/loans'),
             ),
             if (pendingReviewCount > 0)
               _SummaryNavCard(
                 icon: Icons.message_rounded,
                 metric: '$pendingReviewCount pending',
                 label: 'SMS review',
-                color: const Color(0xFF0F4C5C),
-                onTap: () => context.go('/sms-review'),
+                color: theme.colorScheme.primary,
+                 onTap: () => context.go('/sms-review'),
               ),
           ],
         ),
@@ -1667,7 +1663,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
                   ? LinearGradient(
                       colors: [
                         widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
-                        const Color(0xFF0F1013),
+                        Theme.of(context).colorScheme.surface,
                       ],
                       begin: shiftedBegin,
                       end: shiftedEnd,
@@ -1675,7 +1671,7 @@ class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
                   : LinearGradient(
                       colors: [
                         widget.trackerColor.withValues(alpha: 0.08 + t * 0.04),
-                        const Color(0xFFF5F3F0),
+                        Theme.of(context).colorScheme.surface,
                       ],
                       begin: shiftedBegin,
                       end: shiftedEnd,
