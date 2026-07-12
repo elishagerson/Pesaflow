@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -743,7 +742,6 @@ class _SavingsGoalDetailSheetState
                 ),
               ),
             ),
-          ),
         );
       },
     );
