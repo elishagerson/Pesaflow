@@ -494,9 +494,7 @@ class LoanListScreen extends ConsumerWidget {
               ),
               Text(
                 CurrencyFormatter.formatCents(loan.amount),
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+                style: context.ts(14, fontWeight: FontWeight.bold),
               ),
             ],
           ),

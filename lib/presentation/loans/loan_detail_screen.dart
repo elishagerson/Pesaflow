@@ -85,12 +85,12 @@ class LoanDetailScreen extends ConsumerWidget {
                 const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 3,
-                  child: _buildInstallmentSchedule(loan, theme),
+                  child: _buildInstallmentSchedule(context, loan, theme),
                 ),
               ],
               StaggeredFadeSlide(
                 index: 4,
-                child: _buildPayoffProjection(loan, theme),
+                child: _buildPayoffProjection(context, loan, theme),
               ),
               if (loan.status == 'active') ...[
                 const SizedBox(height: kSpacing16),
@@ -445,7 +445,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInstallmentSchedule(Loan loan, ThemeData theme) {
+  Widget _buildInstallmentSchedule(BuildContext context, Loan loan, ThemeData theme) {
     final total = loan.totalInstallments ?? 0;
     final paid = loan.paidInstallments ?? 0;
     final amount = loan.installmentAmount ?? 0;
@@ -499,14 +499,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 const SizedBox(width: kSpacing12),
                 Text(
                   '${(ratio * 100).round()}%',
-                  style: theme.textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: Color.lerp(
-                      AppTheme.expenseColor,
-                      AppTheme.incomeColor,
-                      ratio,
-                    ),
-                  ),
+                  style: context.ts(16, fontWeight: FontWeight.w900, color: Color.lerp(AppTheme.expenseColor, AppTheme.incomeColor, ratio)),
                 ),
               ],
             ),
@@ -588,7 +581,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPayoffProjection(Loan loan, ThemeData theme) {
+  Widget _buildPayoffProjection(BuildContext context, Loan loan, ThemeData theme) {
     if (loan.status == 'paid') return const SizedBox.shrink();
 
     DateTime? estimatedDate;
@@ -637,29 +630,19 @@ class LoanDetailScreen extends ConsumerWidget {
                   children: [
                     Text(
                       description,
-                      style: theme.textTheme.labelMedium!.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
+                      style: context.ts(12, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       DateFormatter.shortDate(estimatedDate),
-                      style: theme.textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      style: context.ts(16, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface),
                     ),
                   ],
                 ),
               ),
               Text(
                 '${daysLeft}d',
-                style: theme.textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.tertiary,
-                ),
+                style: context.ts(22, fontWeight: FontWeight.w900, color: theme.colorScheme.tertiary),
               ),
             ],
           ),
