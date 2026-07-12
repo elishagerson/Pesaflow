@@ -527,7 +527,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
               ),
             ),
           ),
-        ),
+        );
       ),
     );
   }

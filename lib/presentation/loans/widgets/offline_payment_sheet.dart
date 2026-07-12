@@ -493,7 +493,6 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         ),
                       ],
                     ),
-                  ),
                 ),
               ),
             ),

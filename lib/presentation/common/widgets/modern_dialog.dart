@@ -194,8 +194,7 @@ class ModernDialog extends StatelessWidget {
               ),
             ), // Container
           ), // LiquidGlassOverlay
-        ), // BackdropFilter
-      ), // ClipRRect
+        ), // ClipRRect
     );
   }
 }

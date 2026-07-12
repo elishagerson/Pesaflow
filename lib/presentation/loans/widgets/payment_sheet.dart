@@ -872,7 +872,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         ),
                       ],
                     ),
-                  ),
                 ),
               ),
             ),

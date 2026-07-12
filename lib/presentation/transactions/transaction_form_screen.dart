@@ -487,8 +487,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 ),
               ),
             ),
-          ),
-        );
+          );
       },
     );
   }
@@ -756,8 +755,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 ),
               ),
             ),
-          ),
-        );
+          );
       },
     );
   }
