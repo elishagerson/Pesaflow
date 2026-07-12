@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'tactile_spring_container.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class ModernDateSelector extends FormField<DateTime> {
   final String labelText;
@@ -77,9 +78,8 @@ class _ModernDateSelectorWidget extends StatelessWidget {
         TactileSpringContainer(
           onTap: () {
             HapticFeedback.mediumImpact();
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
+            showSpringSheet(
+              context,
               builder: (ctx) {
                 final theme = Theme.of(context);
                 return Container(

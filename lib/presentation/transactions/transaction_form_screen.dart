@@ -28,6 +28,7 @@ import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
@@ -270,9 +271,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   void _showAccountPickerSheet(BuildContext context, List<Account> accounts) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
       builder: (ctx) {
         final theme = Theme.of(ctx);

@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 
 import 'package:pesaflow/services/backup_service.dart';
@@ -926,9 +927,8 @@ class SettingsScreen extends ConsumerWidget {
 
   void _showThemePicker(BuildContext context, WidgetRef ref) {
     final current = ref.watch(themeModeProvider);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
+    showSpringSheet(
+      context,
       builder: (ctx) => ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: Container(

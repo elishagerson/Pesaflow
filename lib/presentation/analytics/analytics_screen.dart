@@ -20,6 +20,7 @@ import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:flutter/services.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 enum TrendRange { days, weeks, months }
 
@@ -459,10 +460,9 @@ class _OverviewTab extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 HapticFeedback.mediumImpact();
-                                showModalBottomSheet(
-                                  context: context,
+                                showSpringSheet(
+                                  context,
                                   isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
                                   builder: (context) =>
                                       SavingsGoalDetailSheet(goal: goal),
                                 );
@@ -656,10 +656,9 @@ class _OverviewTab extends StatelessWidget {
                             child: ElevatedButton.icon(
                               onPressed: () {
                                 HapticFeedback.lightImpact();
-                                showModalBottomSheet(
-                                  context: context,
+                                showSpringSheet(
+                                  context,
                                   isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
                                   builder: (context) =>
                                       const SavingsGoalFormSheet(),
                                 );

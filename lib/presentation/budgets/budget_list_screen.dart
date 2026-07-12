@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -64,10 +65,9 @@ class BudgetListScreen extends ConsumerWidget {
               if (activeTab == 0) {
                 context.go('/budgets/add');
               } else {
-                showModalBottomSheet(
-                  context: context,
+                showSpringSheet(
+                  context,
                   isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
                   builder: (context) => const SavingsGoalFormSheet(),
                 );
               }
@@ -583,10 +583,9 @@ class BudgetListScreen extends ConsumerWidget {
             action: TactileSpringContainer(
               onTap: () {
                 HapticFeedback.lightImpact();
-                showModalBottomSheet(
-                  context: context,
+                showSpringSheet(
+                  context,
                   isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
                   builder: (context) => const SavingsGoalFormSheet(),
                 );
               },
@@ -758,10 +757,9 @@ class BudgetListScreen extends ConsumerWidget {
 
                     return TactileSpringContainer(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
+                        showSpringSheet(
+                          context,
                           isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
                           builder: (context) =>
                               SavingsGoalDetailSheet(goal: goal),
                         );
@@ -917,11 +915,9 @@ class BudgetListScreen extends ConsumerWidget {
                                               const SizedBox(height: kSpacing4),
                                               GestureDetector(
                                                 onTap: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
+                                                  showSpringSheet(
+                                                    context,
                                                     isScrollControlled: true,
-                                                    backgroundColor:
-                                                        Colors.transparent,
                                                     builder: (context) =>
                                                         SavingsGoalFormSheet(
                                                           existingGoal: goal,

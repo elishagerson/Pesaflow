@@ -14,11 +14,11 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
+  showSpringSheet(
+    context,
     isScrollControlled: true,
     builder: (context) {
       final theme = Theme.of(context);
