@@ -812,6 +812,19 @@ final List<SmsCorpusEntry> smsCorpus = [
       balanceAfter: 19500000,
     ),
   ),
+  SmsCorpusEntry(
+    label: 'mixx_money_sent_merchant_en',
+    sender: 'MIXX',
+    body: 'New Bal TSh 200. Money sent successfully to Sporty Bet, Biller Code: 190190, Ref No: 255675259341.Amt TSh 7,500, Total Charges TSh 300.(Fees TSh 0, Levy TSh 0), VAT TSh 46.TxnID: 26693868497442.11/07/26 20:32. The transaction has been submitted successfully..',
+    timestamp: DateTime(2026, 7, 11, 20, 32),
+    expect: SmsExpectation(
+      amount: 750000,
+      type: 'expense',
+      senderOrRecipient: 'Sporty Bet',
+      reference: '26693868497442',
+      balanceAfter: 20000,
+    ),
+  ),
 
   // =========================================================================
   // Halopesa (Halotel)
