@@ -229,8 +229,6 @@ class IosTabBar extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 }
