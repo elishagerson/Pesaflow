@@ -83,7 +83,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
           title: b.name,
           subtitle: 'Budget · TZS $amount/${b.period}',
           icon: Icons.pie_chart_rounded,
-          color: const Color(0xFF4CAF50),
+          color: AppTheme.incomeColor,
           route: '/budgets/${b.id}',
         ),
       );
@@ -130,8 +130,8 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
           subtitle: 'Loan · TZS $amount · ${l.status}',
           icon: Icons.credit_score_rounded,
           color: l.status == 'paid'
-              ? const Color(0xFF4CAF50)
-              : const Color(0xFFFF9800),
+              ? AppTheme.incomeColor
+              : AppTheme.transferColor,
           route: '/loans/${l.id}',
         ),
       );

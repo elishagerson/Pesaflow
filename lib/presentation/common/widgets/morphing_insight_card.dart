@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
@@ -298,22 +299,22 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   List<Color> _severityGradient(Severity s) {
     switch (s) {
       case Severity.good:
-        return [const Color(0xFF10B981), const Color(0xFF34D399)];
+        return [AppTheme.incomeColor, AppTheme.incomeColorDark];
       case Severity.warning:
-        return [const Color(0xFFF59E0B), const Color(0xFFFBBF24)];
+        return [AppTheme.expenseColor, AppTheme.expenseColorDark];
       case Severity.neutral:
-        return [const Color(0xFF6366F1), const Color(0xFF818CF8)];
+        return [AppTheme.transferColor, AppTheme.transferColorDark];
     }
   }
 
   Color _severityColor(Severity s) {
     switch (s) {
       case Severity.good:
-        return const Color(0xFF10B981);
+        return AppTheme.incomeColor;
       case Severity.warning:
-        return const Color(0xFFF59E0B);
+        return AppTheme.expenseColor;
       case Severity.neutral:
-        return const Color(0xFF6366F1);
+        return AppTheme.transferColor;
     }
   }
 

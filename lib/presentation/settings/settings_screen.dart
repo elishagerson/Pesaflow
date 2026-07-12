@@ -92,10 +92,10 @@ class SettingsScreen extends ConsumerWidget {
                     const SizedBox(width: kSpacing4),
                     GestureDetector(
                       onTap: () => _confirmDeleteAccount(context, ref, acc),
-                      child: const Icon(
+                      child: Icon(
                         PesaFlowIcons.delete,
                         size: 20,
-                        color: Colors.red,
+                        color: theme.colorScheme.error,
                       ),
                     ),
                   ],
@@ -1242,10 +1242,10 @@ class SettingsScreen extends ConsumerWidget {
                         ThemeMode.dark => 'Dark',
                         _ => 'System default',
                       }),
-                      trailing: const Icon(
+                      trailing: Icon(
                         PesaFlowIcons.chevronRight,
                         size: 18,
-                        color: Colors.grey,
+                        color: context.appColors.textMedium,
                       ),
                       onTap: () => _showThemePicker(context, ref),
                     ),
@@ -1405,8 +1405,8 @@ class SettingsScreen extends ConsumerWidget {
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.brightness == Brightness.dark
-                            ? Colors.grey[500]
-                            : Colors.grey[600],
+                            ? context.appColors.textMedium
+                            : context.appColors.textMedium,
                       ),
                     ),
                     const SizedBox(height: kSpacing2),
@@ -1414,8 +1414,8 @@ class SettingsScreen extends ConsumerWidget {
                       'Built Offline for privacy in Tanzania',
                       style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         color: theme.brightness == Brightness.dark
-                            ? Colors.grey[600]
-                            : Colors.grey[400],
+                            ? context.appColors.textLow
+                            : context.appColors.textLow,
                       ),
                     ),
                   ],
