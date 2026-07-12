@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
@@ -1256,10 +1255,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   IosNavBar(
                     title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
                     largeTitle: false,
-                    leading: IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      onPressed: () => context.pop(),
-                    ),
                   ),
                   SizedBox(height: context.isCompactView ? 8 : 16),
                   StaggeredFadeSlide(

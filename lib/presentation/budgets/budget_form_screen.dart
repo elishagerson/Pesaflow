@@ -401,10 +401,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
             IosNavBar(
               title: isEditing ? 'Edit Budget' : 'New Budget',
               largeTitle: false,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
-                onPressed: () => context.pop(),
-              ),
             ),
             Expanded(
               child: SingleChildScrollView(

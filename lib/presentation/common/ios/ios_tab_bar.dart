@@ -276,7 +276,13 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
     final top = MediaQuery.of(context).padding.top;
     final speedFactor = ref.watch(scrollSpeedProvider);
 
-    final hasRow = leading != null || (actions != null && actions!.isNotEmpty);
+    final canPop = Navigator.of(context).canPop();
+    final effectiveLeading = leading ?? (canPop ? IconButton(
+      icon: const Icon(PesaFlowIcons.back, size: 20),
+      onPressed: () => Navigator.of(context).maybePop(),
+    ) : null);
+
+    final showRow = !largeTitle || effectiveLeading != null || (actions != null && actions!.isNotEmpty);
 
     return ClipRect(
       child: LiquidGlassOverlay(
@@ -295,17 +301,38 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: hasRow ? 12.0 : 16.0),
-              if (hasRow)
+              SizedBox(height: showRow ? 12.0 : 16.0),
+              if (showRow)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                   child: SizedBox(
                     height: 44,
-                    child: Row(
+                    child: Stack(
+                      alignment: Alignment.center,
                       children: [
-                        leading ?? const SizedBox(),
-                        const Spacer(),
-                        ...?actions,
+                        if (!largeTitle)
+                          Text(
+                            title,
+                            style: context.ts(
+                              17,
+                              fontWeight: FontWeight.semibold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        if (effectiveLeading != null)
+                          Positioned(
+                            left: 0,
+                            child: effectiveLeading,
+                          ),
+                        if (actions != null && actions!.isNotEmpty)
+                          Positioned(
+                            right: 0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: actions!,
+                            ),
+                          ),
                       ],
                     ),
                   ),
