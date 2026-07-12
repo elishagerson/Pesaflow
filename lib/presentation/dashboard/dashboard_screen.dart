@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
+import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -56,6 +57,67 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return '${(value / 1000).toStringAsFixed(0)}k';
     }
     return value.toStringAsFixed(0);
+  }
+
+  Widget _buildEmvChip() {
+    return Container(
+      width: 36,
+      height: 26,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFE5A93B),
+            Color(0xFFF7D070),
+            Color(0xFFC4861A),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.15),
+          width: 0.5,
+        ),
+      ),
+      child: CustomPaint(
+        painter: _ChipContactPainter(),
+      ),
+    );
+  }
+
+  Widget _buildCardNetworkLogo(Color trackerColor) {
+    return SizedBox(
+      width: 32,
+      height: 22,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            right: 12,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.35),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            left: 12,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: trackerColor.withValues(alpha: 0.65),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildMonthlyOverview(ThemeData theme) {
@@ -331,314 +393,323 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── 2. Balance Hero Card — "Your Money" ──
                         StaggeredFadeSlide(
                           index: 0,
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(kSpacing24),
-                            decoration: BoxDecoration(
-                              gradient: cardGradient,
-                              borderRadius: BorderRadius.circular(
-                                AppTheme.radiusCard,
-                              ),
-                              border: Border.all(
-                                color: trackerColor.withValues(alpha: 0.18),
-                                width: 0.8,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: trackerColor.withValues(alpha: 0.18),
-                                  blurRadius: 40,
-                                  offset: const Offset(0, 12),
+                          child: Interactive3DCard(
+                            borderRadius: AppTheme.radiusCard,
+                            shadowColor: trackerColor,
+                            maxTiltX: 0.08,
+                            maxTiltY: 0.08,
+                            glareOpacity: 0.12,
+                            child: AspectRatio(
+                              aspectRatio: 1.58,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(kSpacing20),
+                                decoration: BoxDecoration(
+                                  gradient: cardGradient,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusCard,
+                                  ),
+                                  border: Border.all(
+                                    color: trackerColor.withValues(alpha: 0.18),
+                                    width: 0.8,
+                                  ),
                                 ),
-                              ],
-                            ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Brand & Budget Gauge Row
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'pesa',
-                                            style: theme.textTheme.titleMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                  fontSize: 19,
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.85),
-                                                  letterSpacing: -0.5,
-                                                ),
-                                          ),
-                                          Text(
-                                            'flow',
-                                            style: theme.textTheme.titleMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 19,
-                                                  color: heroTextColor,
-                                                  letterSpacing: -0.5,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      // Dynamic Spent Progress Badge
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: kSpacing10,
-                                          vertical: kSpacing4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.15,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                        ),
-                                        child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Top Row: PesaFlow Brand + DEBIT
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
                                           children: [
-                                            SizedBox(
-                                              height: kSpacing12,
-                                              width: kSpacing12,
-                                              child: CircularProgressIndicator(
-                                                value: overallPct,
-                                                strokeWidth: 2,
-                                                backgroundColor: Colors.white24,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                      Color
-                                                    >(
-                                                      overallPct > 0.9
-                                                          ? context
-                                                                .appColors
-                                                                .expenseColor
-                                                          : Colors.white,
-                                                    ),
+                                            Text(
+                                              'pesa',
+                                              style: theme.textTheme.titleMedium?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 18,
+                                                color: Colors.white.withValues(alpha: 0.95),
+                                                letterSpacing: -0.5,
                                               ),
                                             ),
-                                            const SizedBox(width: kSpacing6),
                                             Text(
-                                              '${(overallPct * 100).round()}% SPENT',
-                                              style: theme.textTheme.labelSmall
-                                                  ?.copyWith(
-                                                    fontSize: 9,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: heroTextColor,
-                                                    letterSpacing: 0.5,
-                                                  ),
+                                              'flow',
+                                              style: theme.textTheme.titleMedium?.copyWith(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 18,
+                                                color: heroTextColor,
+                                                letterSpacing: -0.5,
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kSpacing24),
-                                  // Title Label & Main Value
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 4,
-                                        height: 4,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      const SizedBox(width: kSpacing6),
-                                      Text(
-                                        _selectedAccountId != null
-                                            ? (accounts
-                                                  .firstWhere(
-                                                    (a) =>
-                                                        a.id ==
-                                                        _selectedAccountId,
-                                                    orElse: () =>
-                                                        accounts.first,
-                                                  )
-                                                  .name
-                                                  .toUpperCase())
-                                            : 'TOTAL NET WORTH',
-                                        style: context.ts(
-                                          10,
-                                          fontWeight: FontWeight.w900,
-                                          letterSpacing: 1.5,
-                                          color: heroSubColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kSpacing8),
-                                  AmountText(
-                                    amountInCents: _selectedAccountId != null
-                                        ? (accounts
-                                              .firstWhere(
-                                                (a) =>
-                                                    a.id == _selectedAccountId,
-                                                orElse: () => accounts.first,
-                                              )
-                                              .balance)
-                                        : netWorth,
-                                    useMonospace: false,
-                                    animate: true,
-                                    style: theme.textTheme.displaySmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 42,
-                                          color: heroTextColor,
-                                          letterSpacing: -1.0,
-                                        ),
-                                  ),
-                                  const SizedBox(height: kSpacing24),
-                                  Divider(
-                                    height: 0.5,
-                                    thickness: 0.5,
-                                    color: pillBorder,
-                                  ),
-
-                                  // Dynamic scrolling Account Pills in the Balance Hero Card
-                                  if (accounts.isNotEmpty) ...[
-                                    const SizedBox(height: kSpacing18),
-                                    SizedBox(
-                                      height: 36,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        physics: const BouncingScrollPhysics(),
-                                        itemCount: accounts.length,
-                                        itemBuilder: (context, index) {
-                                          final account = accounts[index];
-                                          final isSelected =
-                                              _selectedAccountId == account.id;
-
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              right: kSpacing8,
-                                              left: index == 0
-                                                  ? kSpacing2
-                                                  : 0.0,
-                                            ),
-                                            child: TactileSpringContainer(
-                                              onTap: () {
-                                                setState(() {
-                                                  if (_selectedAccountId ==
-                                                      account.id) {
-                                                    _selectedAccountId =
-                                                        null; // Clear filter
-                                                  } else {
-                                                    _selectedAccountId = account
-                                                        .id; // Apply filter
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: kSpacing14,
-                                                      vertical: kSpacing6,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: isSelected
-                                                      ? Colors.white.withValues(
-                                                          alpha: 0.25,
-                                                        )
-                                                      : pillBg,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        100,
+                                        Row(
+                                          children: [
+                                            // Dynamic Spent Progress Badge
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: kSpacing8,
+                                                vertical: 3,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white.withValues(alpha: 0.12),
+                                                borderRadius: BorderRadius.circular(100),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 10,
+                                                    width: 10,
+                                                    child: CircularProgressIndicator(
+                                                      value: overallPct,
+                                                      strokeWidth: 1.8,
+                                                      backgroundColor: Colors.white24,
+                                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                                        overallPct > 0.9
+                                                            ? context.appColors.expenseColor
+                                                            : Colors.white,
                                                       ),
-                                                  border: Border.all(
-                                                    color: isSelected
-                                                        ? Colors.white
-                                                              .withValues(
-                                                                alpha: 0.6,
-                                                              )
-                                                        : pillBorder,
-                                                    width: isSelected
-                                                        ? 1.5
-                                                        : 0.8,
+                                                    ),
                                                   ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      getAccountIcon(
-                                                        account.icon,
-                                                      ),
-                                                      size: 14,
-                                                      color: isSelected
-                                                          ? Colors.white
-                                                          : heroTextColor,
+                                                  const SizedBox(width: kSpacing4),
+                                                  Text(
+                                                    '${(overallPct * 100).round()}%',
+                                                    style: theme.textTheme.labelSmall?.copyWith(
+                                                      fontSize: 8,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: heroTextColor,
+                                                      letterSpacing: 0.2,
                                                     ),
-                                                    const SizedBox(
-                                                      width: kSpacing6,
-                                                    ),
-                                                    Text(
-                                                      account.name,
-                                                      style: theme
-                                                          .textTheme
-                                                          .bodySmall
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: isSelected
-                                                                ? Colors.white
-                                                                : heroTextColor,
-                                                          ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: kSpacing8,
-                                                    ),
-                                                    Text(
-                                                      _formatCompact(
-                                                        account.balance,
-                                                      ),
-                                                      style: theme
-                                                          .textTheme
-                                                          .labelSmall
-                                                          ?.copyWith(
-                                                            fontFamily:
-                                                                'monospace',
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: isSelected
-                                                                ? Colors.white
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.9,
-                                                                      )
-                                                                : heroTextColor
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.8,
-                                                                      ),
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
+                                            const SizedBox(width: kSpacing8),
+                                            Text(
+                                              'PREMIUM',
+                                              style: context.ts(
+                                                9,
+                                                fontWeight: FontWeight.w900,
+                                                letterSpacing: 1.5,
+                                                color: Colors.white.withValues(alpha: 0.65),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ] else ...[
-                                    const SizedBox(height: kSpacing18),
-                                    Center(
-                                      child: Text(
-                                        'No active accounts. Tap Add Account below to start.',
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(color: heroSubColor),
-                                      ),
+
+                                    // Middle Row: EMV Chip & Contactless
+                                    Row(
+                                      children: [
+                                        _buildEmvChip(),
+                                        const SizedBox(width: kSpacing12),
+                                        Icon(
+                                          Icons.wifi_rounded,
+                                          color: Colors.white.withValues(alpha: 0.5),
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
+
+                                    // Balance Section
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _selectedAccountId != null
+                                              ? 'ACCOUNT BALANCE'
+                                              : 'TOTAL NET WORTH',
+                                          style: context.ts(
+                                            9,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1.2,
+                                            color: Colors.white.withValues(alpha: 0.5),
+                                          ),
+                                        ),
+                                        const SizedBox(height: kSpacing4),
+                                        AmountText(
+                                          amountInCents: _selectedAccountId != null
+                                              ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                                              : netWorth,
+                                          useMonospace: false,
+                                          animate: true,
+                                          style: theme.textTheme.headlineMedium?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 30,
+                                            color: heroTextColor,
+                                            letterSpacing: -0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    // Bottom Row: Cardholder Name, Expiry, Logo
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'CARDHOLDER',
+                                              style: context.ts(
+                                                7,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white.withValues(alpha: 0.4),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              _selectedAccountId != null
+                                                  ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
+                                                  : 'TOTAL NET WORTH',
+                                              style: context.ts(
+                                                11,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white.withValues(alpha: 0.85),
+                                                letterSpacing: 0.5,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Expiry
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'VALID THRU',
+                                              style: context.ts(
+                                                7,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white.withValues(alpha: 0.4),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              '12/30',
+                                              style: context.ts(
+                                                11,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white.withValues(alpha: 0.85),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Card network logo
+                                        _buildCardNetworkLogo(trackerColor),
+                                      ],
                                     ),
                                   ],
-                                ],
+                                ),
                               ),
+                            ),
                           ),
                         ),
+
+                        // ── 2b. Account Pills (Below Card) ──
+                        if (accounts.isNotEmpty) ...[
+                          const SizedBox(height: kSpacing16),
+                          SizedBox(
+                            height: 36,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: accounts.length,
+                              itemBuilder: (context, index) {
+                                final account = accounts[index];
+                                final isSelected = _selectedAccountId == account.id;
+
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    right: kSpacing8,
+                                    left: index == 0 ? kSpacing2 : 0.0,
+                                  ),
+                                  child: TactileSpringContainer(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_selectedAccountId == account.id) {
+                                          _selectedAccountId = null; // Clear filter
+                                        } else {
+                                          _selectedAccountId = account.id; // Apply filter
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing14,
+                                        vertical: kSpacing6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? theme.colorScheme.primary.withValues(
+                                                alpha: 0.25,
+                                              )
+                                            : theme.colorScheme.surfaceContainerHigh,
+                                        borderRadius: BorderRadius.circular(100),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary.withValues(
+                                                  alpha: 0.6,
+                                                )
+                                              : theme.colorScheme.onSurface.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                          width: isSelected ? 1.5 : 0.8,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            getAccountIcon(account.icon),
+                                            size: 14,
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
+                                                : theme.colorScheme.onSurface,
+                                          ),
+                                          const SizedBox(width: kSpacing6),
+                                          Text(
+                                            account.name,
+                                            style: theme.textTheme.bodySmall?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme.onSurface,
+                                            ),
+                                          ),
+                                          const SizedBox(width: kSpacing8),
+                                          Text(
+                                            _formatCompact(account.balance),
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              fontFamily: 'monospace',
+                                              fontWeight: FontWeight.bold,
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary.withValues(alpha: 0.9)
+                                                  : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ] else ...[
+                          const SizedBox(height: kSpacing16),
+                          Center(
+                            child: Text(
+                              'No active accounts. Tap Add Account below to start.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: kSpacing16),
 
                         // ── 3. High-Contrast Action Buttons ──
