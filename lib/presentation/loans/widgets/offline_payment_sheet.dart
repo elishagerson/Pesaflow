@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
   final amountController = TextEditingController();
@@ -90,14 +91,13 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           kSpacing10,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF609F8A,
-                                          ).withValues(alpha: 0.12),
+                                          color: context.appColors.incomeColor
+                                              .withValues(alpha: 0.12),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           PesaFlowIcons.transactions,
-                                          color: Color(0xFF10B981),
+                                          color: context.appColors.incomeColor,
                                           size: 22,
                                         ),
                                       ),
@@ -554,7 +554,7 @@ Future<bool> processOfflinePayment({
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Payment failed: $e'),
-          backgroundColor: const Color(0xFFE53935),
+          backgroundColor: context.appColors.expenseColor,
         ),
       );
     }
