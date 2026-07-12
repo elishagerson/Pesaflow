@@ -581,7 +581,7 @@ class _RecurringTransactionListScreenState
         : recurring.status == 'paused'
         ? context.appColors.transferColor
         : recurring.status != 'active'
-        ? Colors.grey
+        ? context.appColors.textMedium
         : categoryColor ??
               (isExpense ? AppTheme.expenseColor : AppTheme.incomeColor);
     final mutedAccent = categoryColor != null
