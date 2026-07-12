@@ -1449,16 +1449,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFF0F4C5C,
-                                  ).withValues(alpha: 0.1),
+                                  color: theme.colorScheme.primary
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   'Usually ${CurrencyFormatter.formatCents(pattern.averageAmountCents)} at this time',
                                   style: Theme.of(context).textTheme.bodySmall!
                                       .copyWith(
-                                        color: Color(0xFF0F4C5C),
+                                        color: theme.colorScheme.primary,
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),

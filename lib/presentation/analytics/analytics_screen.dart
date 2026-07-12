@@ -1241,9 +1241,9 @@ class _TrendsTab extends StatelessWidget {
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: context.appColors.incomeColor,
-                     shape: BoxShape.circle,
+                    shape: BoxShape.circle,
                   ),
                 ),
                 const SizedBox(width: kSpacing6),
@@ -1251,15 +1251,15 @@ class _TrendsTab extends StatelessWidget {
                   'Income',
                   style: Theme.of(context).textTheme.labelMedium!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: context.appColors.textLow,
                   ),
                 ),
                 const SizedBox(width: kSpacing24),
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFF453A),
+                  decoration: BoxDecoration(
+                    color: context.appColors.expenseColor,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -1268,7 +1268,7 @@ class _TrendsTab extends StatelessWidget {
                   'Expense',
                   style: Theme.of(context).textTheme.labelMedium!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                    color: context.appColors.textLow,
                   ),
                 ),
               ],
