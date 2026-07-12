@@ -26,7 +26,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
   await ModernDialog.show(
     context: context,
     titleIcon: Icons.file_download_rounded,
-    iconColor: context.appColors.transferColor,
+    iconColor: Theme.of(context).colorScheme.primary,
     title: const Text('Export Monthly Statement'),
     content: StatefulBuilder(
       builder: (ctx, setState) {
