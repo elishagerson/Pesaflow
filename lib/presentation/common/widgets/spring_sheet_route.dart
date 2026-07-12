@@ -105,23 +105,23 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: Container(
-            width: double.infinity,
-            constraints: BoxConstraints(
-              maxHeight: widget.isScrollControlled
-                  ? MediaQuery.of(context).size.height * 0.9
-                  : MediaQuery.of(context).size.height * 0.5,
+          child: Material(
+            color: bgColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+            child: Container(
+              width: double.infinity,
+              constraints: BoxConstraints(
+                maxHeight: widget.isScrollControlled
+                    ? MediaQuery.of(context).size.height * 0.9
+                    : MediaQuery.of(context).size.height * 0.5,
               ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: bottomInset),
-              child: widget.builder,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: bottomInset),
+                child: widget.builder,
+              ),
             ),
           ),
         ),

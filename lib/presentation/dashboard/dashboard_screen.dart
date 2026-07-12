@@ -23,7 +23,6 @@ import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
@@ -133,10 +132,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     // Dynamic Balance card color properties matching HIG/M3 design brief
     final cardGradient = LinearGradient(
       colors: [
-        trackerColor.withValues(alpha: 0.35),
+        trackerColor.withValues(alpha: 0.22),
         theme.brightness == Brightness.dark
-            ? theme.colorScheme.surface
-            : theme.colorScheme.surface,
+            ? const Color(0xFF1E2429)
+            : const Color(0xFF1A1F24),
       ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -332,28 +331,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── 2. Balance Hero Card — "Your Money" ──
                         StaggeredFadeSlide(
                           index: 0,
-                          child: _AnimatedHeroGradient(
-                            trackerColor: trackerColor,
-                            cardGradient: cardGradient,
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(kSpacing24),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusCard,
-                                ),
-                                border: Border.all(
-                                  color: trackerColor.withValues(alpha: 0.18),
-                                  width: 0.8,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: trackerColor.withValues(alpha: 0.18),
-                                    blurRadius: 40,
-                                    offset: const Offset(0, 12),
-                                  ),
-                                ],
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(kSpacing24),
+                            decoration: BoxDecoration(
+                              gradient: cardGradient,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
                               ),
+                              border: Border.all(
+                                color: trackerColor.withValues(alpha: 0.18),
+                                width: 0.8,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: trackerColor.withValues(alpha: 0.18),
+                                  blurRadius: 40,
+                                  offset: const Offset(0, 12),
+                                ),
+                              ],
+                            ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -640,7 +637,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ],
                                 ],
                               ),
-                            ),
                           ),
                         ),
                         const SizedBox(height: kSpacing16),
@@ -1665,82 +1661,7 @@ class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, _) => const SizedBox.shrink(),
-    );
-  }
-}
-
-class _AnimatedHeroGradient extends StatefulWidget {
-  final Color trackerColor;
-  final LinearGradient cardGradient;
-  final Widget child;
-
-  const _AnimatedHeroGradient({
-    required this.trackerColor,
-    required this.cardGradient,
-    required this.child,
-  });
-
-  @override
-  State<_AnimatedHeroGradient> createState() => _AnimatedHeroGradientState();
-}
-
-class _AnimatedHeroGradientState extends State<_AnimatedHeroGradient>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final t = _controller.value;
-        final shiftedBegin = Alignment(-0.3 + t * 0.6, -0.3 + t * 0.6);
-        final shiftedEnd = Alignment(0.3 - t * 0.6, 0.3 - t * 0.6);
-        return LiquidGlassOverlay(
-          accentColor: widget.trackerColor,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: Theme.of(context).brightness == Brightness.dark
-                  ? LinearGradient(
-                      colors: [
-                        widget.trackerColor.withValues(alpha: 0.12 + t * 0.06),
-                        Theme.of(context).colorScheme.surface,
-                      ],
-                      begin: shiftedBegin,
-                      end: shiftedEnd,
-                    )
-                  : LinearGradient(
-                      colors: [
-                        widget.trackerColor.withValues(alpha: 0.08 + t * 0.04),
-                        Theme.of(context).colorScheme.surface,
-                      ],
-                      begin: shiftedBegin,
-                      end: shiftedEnd,
-                    ),
-              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-            ),
-            child: child,
-          ),
-        );
-      },
-      child: widget.child,
+      error: (e, stack) => const SizedBox.shrink(),
     );
   }
 }
