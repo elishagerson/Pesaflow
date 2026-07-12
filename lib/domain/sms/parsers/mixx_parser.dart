@@ -5,7 +5,14 @@ import 'sms_parser_interface.dart';
 
 class MixxParser implements SmsParser {
   // Known TigoPesa/Mixx loan product names (lowercase for matching)
-  static const _loanProducts = {'bustisha', 'nivushe', 'nivushe plus', 'mkopo wa mixx', 'mixx mkopo', 'mkopo'};
+  static const _loanProducts = {
+    'bustisha',
+    'nivushe',
+    'nivushe plus',
+    'mkopo wa mixx',
+    'mixx mkopo',
+    'mkopo',
+  };
 
   static bool _isLoanProduct(String name) {
     final lower = name.toLowerCase();
@@ -22,9 +29,7 @@ class MixxParser implements SmsParser {
     if (match != null) return match.group(1) ?? '';
 
     // Reference code before "Confirmed." or "confirmed." (English)
-    final confirmedRegex = RegExp(
-      r'([A-Z0-9]{6,})\s+[Cc]onfirmed\.?',
-    );
+    final confirmedRegex = RegExp(r'([A-Z0-9]{6,})\s+[Cc]onfirmed\.?');
     match = confirmedRegex.firstMatch(text);
     if (match != null) return match.group(1) ?? '';
 
@@ -471,7 +476,12 @@ class MixxParser implements SmsParser {
     );
   }
 
-  SmsParsed _buildAirtime(Match match, String text, DateTime timestamp, String label) {
+  SmsParsed _buildAirtime(
+    Match match,
+    String text,
+    DateTime timestamp,
+    String label,
+  ) {
     final amt = parseAmount(match.group(1) ?? '');
     final ref = _extractReference(text);
     final bal = _extractBalance(text);

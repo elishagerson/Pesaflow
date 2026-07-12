@@ -78,7 +78,9 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bgColor = widget.backgroundColor ?? theme.colorScheme.surface;
-    final bottomInset = widget.useSafeArea ? MediaQuery.of(context).viewInsets.bottom : 0.0;
+    final bottomInset = widget.useSafeArea
+        ? MediaQuery.of(context).viewInsets.bottom
+        : 0.0;
 
     return AnimatedBuilder(
       animation: _animation,
@@ -92,10 +94,7 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
           offset: Offset(0, translateY),
           child: Opacity(
             opacity: opacity,
-            child: Transform.scale(
-              scale: scale,
-              child: child,
-            ),
+            child: Transform.scale(scale: scale, child: child),
           ),
         );
       },

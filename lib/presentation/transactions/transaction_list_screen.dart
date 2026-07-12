@@ -232,8 +232,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 }
 
                 // Track new transactions for highlight animation
-                final Set<String> currentIds =
-                    transactionsList.map((t) => t.transaction.id).toSet();
+                final Set<String> currentIds = transactionsList
+                    .map((t) => t.transaction.id)
+                    .toSet();
                 final Set<String> newIds = _isFirstBuild
                     ? <String>{}
                     : currentIds.difference(_previousTransactionIds);

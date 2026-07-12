@@ -194,16 +194,23 @@ class SavingsGoalListScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: kSpacing12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: overallPct,
-              backgroundColor: theme.colorScheme.primary.withValues(
-                alpha: 0.12,
-              ),
-              color: theme.colorScheme.primary,
-              minHeight: 8,
-            ),
+          TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 1000),
+            curve: Curves.easeOutCubic,
+            tween: Tween<double>(begin: 0, end: overallPct),
+            builder: (context, value, child) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: value,
+                  backgroundColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.12,
+                  ),
+                  color: theme.colorScheme.primary,
+                  minHeight: 8,
+                ),
+              );
+            },
           ),
           const SizedBox(height: kSpacing6),
           Text(
@@ -383,14 +390,23 @@ class SavingsGoalListScreen extends ConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: kSpacing8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: LinearProgressIndicator(
-                            value: goalPct,
-                            backgroundColor: goalColor.withValues(alpha: 0.12),
-                            color: goalColor,
-                            minHeight: 6,
-                          ),
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 800),
+                          curve: Curves.easeOutCubic,
+                          tween: Tween<double>(begin: 0, end: goalPct),
+                          builder: (context, value, child) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: LinearProgressIndicator(
+                                value: value,
+                                backgroundColor: goalColor.withValues(
+                                  alpha: 0.12,
+                                ),
+                                color: goalColor,
+                                minHeight: 6,
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: kSpacing4),
                         Text(

@@ -936,9 +936,10 @@ class _DueItemPulseState extends State<_DueItemPulse>
       duration: const Duration(milliseconds: 2000),
     );
     _animation = _controller.drive(
-      Tween<double>(begin: 1.0, end: 1.015).chain(
-        CurveTween(curve: Curves.easeInOut),
-      ),
+      Tween<double>(
+        begin: 1.0,
+        end: 1.015,
+      ).chain(CurveTween(curve: Curves.easeInOut)),
     );
     _controller.repeat(reverse: true);
   }
@@ -953,10 +954,8 @@ class _DueItemPulseState extends State<_DueItemPulse>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (_, child) => Transform.scale(
-        scale: _animation.value,
-        child: child,
-      ),
+      builder: (_, child) =>
+          Transform.scale(scale: _animation.value, child: child),
       child: widget.child,
     );
   }

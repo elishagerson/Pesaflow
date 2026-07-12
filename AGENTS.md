@@ -38,15 +38,21 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - **Dashboard restructured** — 11→5 sections, `_SummaryNavCardRow` added, ~670 lines removed
 - **GlassCard simplified** — `frosted` defaults `false`; accent strip only on interactive cards
 - **Hero gradient slowed** — 10s cycle (was 6s); alpha range reduced
-- **`dart analyze lib/`** — 0 issues in `lib/presentation/` and `lib/domain/sms/`; only 8 pre-existing errors in `pdf_report_generator.dart` (unrelated printing library API)
+- **`dart analyze lib/`** — 0 issues across entire `lib/` (pdf_report_generator.dart errors also resolved)
+- **SpringSheetRoute** — `lib/presentation/common/widgets/spring_sheet_route.dart`: `showSpringSheet()` via `showGeneralDialog` + `SpringSimulation` (mass 0.8, stiffness 300, damping 18) — scale 0.92→1.0, slide 60px up, fade-in. Wired into 9 call sites (IosBottomSheet, payment sheets, goal sheets, SMS category picker, mark-paid sheet).
+- **AmountText balance animation fixed** — Converted `ConsumerWidget`→`ConsumerStatefulWidget`; tracks `_renderedAmount` across builds → `TweenAnimationBuilder` animates from old→new value instead of 0→new (fixes visible reset-to-zero on balance updates).
+- **Transaction row highlight** — `_NewRowHighlight` in `transaction_list_screen.dart`: 2-second fade from `incomeColor` at 12% alpha → transparent on newly detected transaction IDs (cross-build diff via `_previousTransactionIds` + `_isFirstBuild`).
+- **Recurring due-item pulse** — `_DueItemPulse` in `recurring_transaction_list_screen.dart`: repeating 2-second scale pulse (1.0→1.015→1.0) via `easeInOut` loop on overdue/due items.
+- **Savings goal progress bar animation** — Both `LinearProgressIndicator` instances in `savings_goal_list_screen.dart` wrapped in `TweenAnimationBuilder<double>(begin: 0, end: pct, curve: easeOutCubic)` — 1s for overall, 800ms per-goal.
+- **SkeletonCrossfade widget** — `lib/presentation/common/widgets/motion/skeleton_crossfade.dart`: `AnimatedSwitcher(350ms, FadeTransition)`. Awaiting wiring into screens.
 
 ### In Progress
 - **Typography audit** — `ts()` helper created; top-10 files still use raw `fontSize`/`fontWeight` overrides
-- **Micro-interactions** — `SuccessCheckmark` enhanced but not wired into SMS approve, transaction save, or payment complete
+- **Micro-interactions** — `SuccessCheckmark` enhanced but not wired into SMS approve, transaction save, or payment complete. `_NewRowHighlight`, `_DueItemPulse`, `TweenAnimationBuilder` progress bars done. Remaining: spring on remaining sheets, `TactileSpringContainer` on flat buttons.
 - **Reduced motion** — Not started
 
 ### Blocked
-- `pdf_report_generator.dart` has 8 pre-existing errors using `printing` package's `ThemeData` (lacks `textTheme`/`extension`) — out of scope for UI polish
+- (none)
 
 ## Key Decisions
 - **`ts()` helper over batch-replace**: Automated `TextStyle(fontSize:)` → `theme.textTheme.*` causes import scope errors and const-eval conflicts. Per-file manual replacement is safer.
@@ -67,8 +73,8 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 5. **One animation per action** — Audit all 253 tappable surfaces: pick spring *or* scale *or* haptic, not all three.
 
 ## Critical Context
-- **`dart analyze lib/`**: 0 issues in `lib/presentation/` and `lib/domain/sms/`. Only 8 pre-existing errors in `pdf_report_generator.dart` (wrong `printing` package API — out of scope).
-- **`dart format lib/`** — 0 files changed.
+- **`dart analyze lib/`**: **0 issues** across entire `lib/` (pdf_report_generator.dart errors also resolved).
+- **`dart format lib/`** — 0 files changed latest pass (5 auto-formatted on first pass).
 - **`isDark` elimination complete**: 632 sites → 0. Only `context_extensions.dart` utility getter remains.
 - **`AppColorsTheme`** available via `context.appColors` on any `BuildContext`.
 - **`AppTypographyTheme`** re-exported from `app_theme.dart`.

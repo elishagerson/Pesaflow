@@ -99,7 +99,10 @@ class _AmountTextState extends ConsumerState<AmountText> {
         key: ValueKey(widget.amountInCents),
         duration: const Duration(milliseconds: 1200),
         curve: Curves.easeOutCubic,
-        tween: Tween<double>(begin: begin.toDouble(), end: widget.amountInCents.toDouble()),
+        tween: Tween<double>(
+          begin: begin.toDouble(),
+          end: widget.amountInCents.toDouble(),
+        ),
         builder: (context, val, child) => buildText(val),
       );
     }
