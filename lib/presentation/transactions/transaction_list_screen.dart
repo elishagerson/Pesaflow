@@ -597,6 +597,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 ),
                               ),
                             );
+                            if (isNewRow) {
+                              return _NewRowHighlight(child: row);
+                            }
+                            return row;
                           }),
                         ],
                       );
@@ -1273,6 +1277,61 @@ class _MiniBar extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NewRowHighlight extends StatefulWidget {
+  final Widget child;
+  const _NewRowHighlight({required this.child});
+
+  @override
+  State<_NewRowHighlight> createState() => _NewRowHighlightState();
+}
+
+class _NewRowHighlightState extends State<_NewRowHighlight>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _animation = _controller.drive(Tween<double>(begin: 0.12, end: 0));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final highlightColor = context.appColors.incomeColor;
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (_, child) {
+        final alpha = _animation.value;
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: kSpacing20,
+            vertical: kSpacing6,
+          ),
+          decoration: BoxDecoration(
+            color: highlightColor.withValues(alpha: alpha),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: child,
+        );
+      },
+      child: widget.child,
     );
   }
 }
