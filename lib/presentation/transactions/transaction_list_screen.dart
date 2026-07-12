@@ -960,15 +960,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                           ),
                         ],
                       ),
-                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: Padding(
+          ),
+          floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
         child: PremiumFab(onPressed: () => context.go('/transactions/add')),
       ),
