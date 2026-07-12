@@ -275,7 +275,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                           index: 2,
                           child: GlassCard(
                             padding: const EdgeInsets.all(kSpacing16),
-                            frosted: false,
+
                             child: Row(
                               children: [
                                 Icon(
@@ -489,7 +489,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   ),
                                   padding: const EdgeInsets.all(kSpacing12),
                                   borderRadius: 8,
-                                  frosted: false,
+      
                                   child: Row(
                                     children: [
                                       Icon(
@@ -651,7 +651,7 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GlassCard(
       padding: const EdgeInsets.all(kSpacing12),
-      frosted: false,
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
