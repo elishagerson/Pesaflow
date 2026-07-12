@@ -136,12 +136,11 @@ class _RecurringTransactionListScreenState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   '${dueIds.length} DUE NOW',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    fontSize: 10,
+                                  style: context.ts(
+                                    10,
                                     fontWeight: FontWeight.w800,
-                                    letterSpacing: 1.2,
                                     color: const Color(0xFFFF6B35),
-                                  ),
+                                  ).copyWith(letterSpacing: 1.2),
                                 ),
                               ],
                             ),
@@ -309,7 +308,6 @@ class _RecurringTransactionListScreenState
               Text(
                 'COMMITTED MONTHLY',
                 style: theme.textTheme.labelSmall?.copyWith(
-                  fontSize: 9,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.5,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -405,7 +403,6 @@ class _RecurringTransactionListScreenState
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
-            fontSize: 9,
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
@@ -427,7 +424,6 @@ class _RecurringTransactionListScreenState
       child: Text(
         text,
         style: theme.textTheme.labelSmall?.copyWith(
-          fontSize: 9,
           fontWeight: FontWeight.w700,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
@@ -536,7 +532,6 @@ class _RecurringTransactionListScreenState
                   child: Text(
                     '$count',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 9,
                       fontWeight: FontWeight.w800,
                       color: isActive
                           ? theme.colorScheme.primary

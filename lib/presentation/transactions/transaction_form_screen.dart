@@ -416,21 +416,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             children: [
                                               Text(
                                                 account.name,
-                                                style: theme.textTheme.bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 15,
-                                                      fontWeight: isSelected
-                                                          ? FontWeight.w700
-                                                          : FontWeight.w500,
-                                                      color: isSelected
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : onSurface
-                                                                .withValues(
-                                                                  alpha: 0.87,
-                                                                ),
-                                                    ),
+                                                style: context.ts(15,
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w500,
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : onSurface
+                                                            .withValues(
+                                                              alpha: 0.87,
+                                                            ),
+                                                ),
                                               ),
                                               const SizedBox(height: kSpacing2),
                                               Text(
@@ -651,28 +649,23 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 children: [
                                                   Text(
                                                     account.name,
-                                                    style: theme
-                                                        .textTheme
-                                                        .bodyLarge
-                                                        ?.copyWith(
-                                                          fontSize: 15,
-                                                          fontWeight: isSelected
-                                                              ? FontWeight.w700
-                                                              : FontWeight.w500,
-                                                          color: isDisabled
-                                                              ? theme
-                                                                    .colorScheme
-                                                                    .onSurfaceVariant
-                                                              : isSelected
-                                                              ? theme
-                                                                    .colorScheme
-                                                                    .primary
-                                                              : onSurface
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.87,
-                                                                    ),
-                                                        ),
+                                                    style: context.ts(15,
+                                                      fontWeight: isSelected
+                                                          ? FontWeight.w700
+                                                          : FontWeight.w500,
+                                                      color: isDisabled
+                                                          ? theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant
+                                                          : isSelected
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : onSurface
+                                                                .withValues(
+                                                                  alpha: 0.87,
+                                                                ),
+                                                    ),
                                                   ),
                                                   if (isDisabled) ...[
                                                     const SizedBox(
@@ -696,18 +689,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                       ),
                                                       child: Text(
                                                         'source',
-                                                        style: theme
-                                                            .textTheme
-                                                            .bodySmall
-                                                            ?.copyWith(
-                                                              fontSize: 10,
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
+                                                        style: context.ts(10,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -832,8 +820,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         children: [
                           Text(
                             'Category',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 13,
+                            style: context.ts(13,
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -911,35 +898,33 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: kSpacing4,
                                         ),
-                                        child: Text(
-                                          cat.name,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                                fontSize: 11,
-                                                color: isSel
-                                                    ? (theme.brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : catColor)
-                                                    : (theme.brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.7,
-                                                                )
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                                .withValues(
-                                                                  alpha: 0.87,
-                                                                )),
-                                                fontWeight: isSel
-                                                    ? FontWeight.bold
-                                                    : FontWeight.normal,
-                                              ),
-                                        ),
+                                          child: Text(
+                                            cat.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: context.ts(11,
+                                              color: isSel
+                                                  ? (theme.brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : catColor)
+                                                  : (theme.brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                              .withValues(
+                                                                alpha: 0.7,
+                                                              )
+                                                        : theme
+                                                              .colorScheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha: 0.87,
+                                                              )),
+                                              fontWeight: isSel
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
+                                          ),
                                       ),
                                     ],
                                   ),
@@ -959,8 +944,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         children: [
                           Text(
                             'Description',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 13,
+                            style: context.ts(13,
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -1083,8 +1067,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           children: [
                             Text(
                               'Carrier Reference (Optional)',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontSize: 13,
+                              style: context.ts(13,
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -1322,8 +1305,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Expense',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontSize: 13,
+                                    style: context.ts(13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Expense'
                                           ? const Color(0xFFFF453A)
@@ -1363,8 +1345,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Income',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontSize: 13,
+                                    style: context.ts(13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Income'
                                           ? AppTheme.transferColorDark
@@ -1404,8 +1385,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Transfer',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontSize: 13,
+                                    style: context.ts(13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Transfer'
                                           ? AppTheme.transferColorDark
@@ -1495,10 +1475,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             padding: const EdgeInsets.only(top: kSpacing4),
                             child: Text(
                               _amountError!,
-                              style: const TextStyle(
-                                color: Color(0xFFEF4444),
-                                fontSize: 12,
-                              ),
+                              style: context.ts(12, color: Color(0xFFEF4444)),
                             ),
                           ),
                         const SizedBox(height: kSpacing14),
@@ -1531,8 +1508,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               children: [
                                 Text(
                                   'From ${activeAccount.name}',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 13,
+                                  style: context.ts(13,
                                     fontWeight: FontWeight.bold,
                                     color: onSurface.withValues(alpha: 0.87),
                                   ),
@@ -1576,8 +1552,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             orElse: () => Account(id: '', name: 'Unknown', type: '', balance: 0, icon: '', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
                                           ).name}'
                                         : 'To',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontSize: 13,
+                                    style: context.ts(13,
                                       fontWeight: FontWeight.bold,
                                       color: onSurface.withValues(alpha: 0.87),
                                     ),
@@ -1822,9 +1797,8 @@ class _KeypadButtonState extends State<KeypadButton>
             ? Icon(Icons.backspace_outlined, color: widget.textColor, size: 20)
             : Text(
                 widget.text,
-                style: theme.textTheme.headlineMedium?.copyWith(
+                style: context.ts(22,
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
                   color: widget.textColor,
                 ),
               ),

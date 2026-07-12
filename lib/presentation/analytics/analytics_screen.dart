@@ -19,6 +19,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
 import 'package:flutter/services.dart';
 
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 
@@ -306,11 +307,11 @@ class _OverviewTab extends StatelessWidget {
                     children: [
                       Text(
                         'THIS MONTH',
-                        style: TextStyle(
+                        style: context.ts(
+                          11,
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.6,
                           ),
-                          fontSize: 11,
                           letterSpacing: 1.2,
                           fontWeight: FontWeight.bold,
                         ),
@@ -324,18 +325,18 @@ class _OverviewTab extends StatelessWidget {
                               children: [
                                 Text(
                                   'Income',
-                                  style: TextStyle(
+                                  style: context.ts(
+                                    12,
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.6),
-                                    fontSize: 12,
                                   ),
                                 ),
                                 AmountText(
                                   amountInCents: income,
-                                  style: TextStyle(
+                                  style: context.ts(
+                                    20,
                                     color: incomeColorVal,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: 20,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
@@ -348,18 +349,18 @@ class _OverviewTab extends StatelessWidget {
                               children: [
                                 Text(
                                   'Expense',
-                                  style: TextStyle(
+                                  style: context.ts(
+                                    12,
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.6),
-                                    fontSize: 12,
                                   ),
                                 ),
                                 AmountText(
                                   amountInCents: expense,
-                                  style: TextStyle(
+                                  style: context.ts(
+                                    20,
                                     color: expenseColorVal,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: 20,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
@@ -382,11 +383,11 @@ class _OverviewTab extends StatelessWidget {
                         children: [
                           Text(
                             net >= 0 ? 'Net Savings' : 'Net Deficit',
-                            style: TextStyle(
+                            style: context.ts(
+                              13,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.7,
                               ),
-                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -409,11 +410,11 @@ class _OverviewTab extends StatelessWidget {
                       const SizedBox(height: kSpacing4),
                       Text(
                         'Savings rate: $savingsRate%',
-                        style: TextStyle(
+                        style: context.ts(
+                          11,
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.6,
                           ),
-                          fontSize: 11,
                         ),
                       ),
                     ],
@@ -639,11 +640,11 @@ class _OverviewTab extends StatelessWidget {
                             netSavings > 0
                                 ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
                                 : 'Set a visual savings goal target to build a structured emergency safety vault.',
-                            style: TextStyle(
+                            style: context.ts(
+                              12,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.78,
                               ),
-                              fontSize: 12,
                               height: 1.4,
                             ),
                           ),
@@ -695,9 +696,9 @@ class _OverviewTab extends StatelessWidget {
               children: [
                 Text(
                   'TOP SPENDING CATEGORIES',
-                  style: TextStyle(
+                  style: context.ts(
+                    11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    fontSize: 11,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.bold,
                   ),
@@ -757,25 +758,22 @@ class _OverviewTab extends StatelessWidget {
                                   children: [
                                     Text(
                                       'SPENT',
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w900,
-                                            color: theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.4),
-                                            letterSpacing: 1.0,
-                                          ),
+                                      style: context.ts(
+                                        8,
+                                        fontWeight: FontWeight.w900,
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.4),
+                                        letterSpacing: 1.0,
+                                      ),
                                     ),
                                     const SizedBox(height: kSpacing2),
                                     Text(
                                       '${(total / 1000.0).toStringAsFixed(0)}k',
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            fontFamily: 'monospace',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
+                                      style: context.ts(
+                                        12,
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.colorScheme.onSurface,
+                                      ).copyWith(fontFamily: 'monospace'),
                                     ),
                                   ],
                                 ),
@@ -938,12 +936,11 @@ class _TrendsTab extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
+          style: theme.textTheme.labelMedium?.copyWith(
             color: isSelected
                 ? theme.colorScheme.onPrimary
                 : theme.colorScheme.onSurface.withValues(alpha: 0.62),
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            fontSize: 12,
           ),
         ),
       ),
@@ -1079,12 +1076,12 @@ class _TrendsTab extends StatelessWidget {
                                     final isIncome = spot.barIndex == 0;
                                     return LineTooltipItem(
                                       '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
-                                      TextStyle(
+                                      context.ts(
+                                        12,
                                         color: isIncome
                                             ? const Color(0xFF10B981)
                                             : const Color(0xFFFF453A),
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 12,
                                       ),
                                     );
                                   }).toList();
@@ -1153,9 +1150,9 @@ class _TrendsTab extends StatelessWidget {
                                       child: Text(
                                         points[idx].label,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: context.ts(
+                                          10,
                                           color: Colors.grey[500],
-                                          fontSize: 9,
                                         ),
                                       ),
                                     );
@@ -1405,15 +1402,14 @@ class _InsightsTab extends StatelessWidget {
                                     const SizedBox(height: kSpacing6),
                                     Text(
                                       insight.message,
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant
-                                                .withValues(alpha: 0.85),
-                                            height: 1.4,
-                                            fontSize: 12,
-                                          ),
+                                      style: context.ts(
+                                        12,
+                                        color: theme
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                            .withValues(alpha: 0.85),
+                                        height: 1.4,
+                                      ),
                                     ),
                                   ],
                                 ),
