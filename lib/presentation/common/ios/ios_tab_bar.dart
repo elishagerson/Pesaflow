@@ -266,8 +266,8 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     if (!largeTitle) return const Size.fromHeight(56.0);
-    if (leading != null) return const Size.fromHeight(110.0);
-    return const Size.fromHeight(64.0);
+    if (leading != null) return const Size.fromHeight(120.0);
+    return const Size.fromHeight(72.0);
   }
 
   @override
@@ -310,31 +310,29 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: 6),
                   child: SizedBox(
                     height: 44,
-                    child: Stack(
-                      alignment: Alignment.center,
+                    child: Row(
                       children: [
-                        Text(
-                          title,
-                          style: context.ts(
-                            17,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        if (effectiveLeading != null)
-                          Positioned(
-                            left: 0,
-                            child: effectiveLeading,
-                          ),
-                        if (actions != null && actions!.isNotEmpty)
-                          Positioned(
-                            right: 0,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: actions!,
+                        effectiveLeading ?? const SizedBox(width: 48),
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: context.ts(
+                              17,
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onSurface,
                             ),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                        ),
+                        if (actions != null && actions!.isNotEmpty)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: actions!,
+                          )
+                        else
+                          const SizedBox(width: 48),
                       ],
                     ),
                   ),
@@ -369,7 +367,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                       padding: const EdgeInsets.only(
                         left: kSpacing16,
                         top: kSpacing8,
-                        bottom: kSpacing12,
+                        bottom: kSpacing16,
                       ),
                       child: Text(
                         title,
@@ -382,9 +380,9 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(
                     kSpacing16,
-                    kSpacing12,
                     kSpacing16,
-                    kSpacing12,
+                    kSpacing16,
+                    kSpacing16,
                   ),
                   child: SizedBox(
                     height: 40,

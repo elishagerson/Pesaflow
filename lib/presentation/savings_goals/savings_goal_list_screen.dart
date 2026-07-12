@@ -347,11 +347,11 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       'COMPLETED',
-                                      style: theme.textTheme.labelSmall!
-                                          .copyWith(
-                                            fontSize: 9,
-                                            color: theme.colorScheme.primary,
-                                          ),
+                                      style: context.ts(
+                                        9,
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   )
                                 else
