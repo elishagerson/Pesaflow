@@ -9,6 +9,7 @@ import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 void showAddAccountDialog(BuildContext context, WidgetRef ref) {
   final nameController = TextEditingController();
