@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -733,7 +734,7 @@ class _SavingsGoalDetailScreenState
         final goal = goals.where((g) => g.id == widget.goalId).firstOrNull;
         if (goal == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Goal Details')),
+            appBar: const IosNavBar(title: 'Goal Details', largeTitle: false),
             body: EmptyState(
               icon: PesaFlowIcons.savings,
               title: 'Goal Not Found',
@@ -755,9 +756,9 @@ class _SavingsGoalDetailScreenState
         final percentInt = (pct * 100).round();
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text(goal.name),
-            centerTitle: true,
+          appBar: IosNavBar(
+            title: goal.name,
+            largeTitle: false,
             actions: [
               IconButton(
                 icon: const Icon(PesaFlowIcons.edit, size: 20),
@@ -1201,9 +1202,9 @@ class _SavingsGoalDetailScreenState
           ),
         );
       },
-      loading: () => Scaffold(
-        appBar: AppBar(title: const Text('Goal Details')),
-        body: const Padding(
+      loading: () => const Scaffold(
+        appBar: IosNavBar(title: 'Goal Details', largeTitle: false),
+        body: Padding(
           padding: EdgeInsets.all(kSpacing20),
           child: Column(
             children: [
@@ -1215,7 +1216,7 @@ class _SavingsGoalDetailScreenState
         ),
       ),
       error: (err, _) => Scaffold(
-        appBar: AppBar(title: const Text('Goal Details')),
+        appBar: const IosNavBar(title: 'Goal Details', largeTitle: false),
         body: ErrorState(
           title: 'Failed to Load Goal Details',
           message: err.toString(),

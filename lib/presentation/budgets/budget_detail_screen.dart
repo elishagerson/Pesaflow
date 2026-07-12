@@ -96,10 +96,6 @@ class BudgetDetailScreen extends ConsumerWidget {
                 IosNavBar(
                   title: bp.budget.name,
                   largeTitle: false,
-                  leading: IconButton(
-                    icon: const Icon(Icons.chevron_left_rounded),
-                    onPressed: () => context.pop(),
-                  ),
                   actions: [
                     IconButton(
                       icon: const Icon(PesaFlowIcons.edit),
