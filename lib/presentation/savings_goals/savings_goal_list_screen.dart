@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -29,7 +30,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Savings Goals'), centerTitle: true),
+      appBar: const IosNavBar(title: 'Savings Goals'),
       body: SkeletonCrossfade(
         isLoading:
             savingsGoalsAsync is AsyncLoading && !savingsGoalsAsync.hasValue,

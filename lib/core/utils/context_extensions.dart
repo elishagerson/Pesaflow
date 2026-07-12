@@ -46,6 +46,7 @@ extension PesaFlowContext on BuildContext {
       _ => t.bodyMedium!,
     };
     return base.copyWith(
+      fontSize: size,
       color: color,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,

@@ -315,7 +315,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                             title,
                             style: context.ts(
                               17,
-                              fontWeight: FontWeight.semibold,
+                              fontWeight: FontWeight.w600,
                               color: theme.colorScheme.onSurface,
                             ),
                             textAlign: TextAlign.center,

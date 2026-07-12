@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -223,9 +224,9 @@ class _RecurringTransactionFormScreenState
     final categoriesAsync = ref.watch(categoriesFutureProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Recurring' : 'Add Recurring'),
-        centerTitle: true,
+      appBar: IosNavBar(
+        title: _isEditing ? 'Edit Recurring' : 'Add Recurring',
+        largeTitle: false,
         actions: [
           if (_isEditing)
             IconButton(

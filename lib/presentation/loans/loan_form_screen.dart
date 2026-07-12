@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -214,9 +215,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     final onSurface = theme.colorScheme.onSurface;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_existingLoan != null ? 'Edit Loan' : 'Add Loan'),
-        centerTitle: true,
+      appBar: IosNavBar(
+        title: _existingLoan != null ? 'Edit Loan' : 'Add Loan',
+        largeTitle: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(kSpacing16),

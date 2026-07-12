@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -38,7 +39,7 @@ class LoanDetailScreen extends ConsumerWidget {
         final loan = loans.where((l) => l.id == loanId).firstOrNull;
         if (loan == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Loan Details')),
+            appBar: const IosNavBar(title: 'Loan Details', largeTitle: false),
             body: EmptyState(
               icon: PesaFlowIcons.loans,
               title: 'Loan Not Found',
@@ -47,9 +48,9 @@ class LoanDetailScreen extends ConsumerWidget {
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Loan Details'),
-            centerTitle: true,
+          appBar: IosNavBar(
+            title: 'Loan Details',
+            largeTitle: false,
             actions: [
               IconButton(
                 icon: const Icon(PesaFlowIcons.edit),
@@ -158,6 +159,7 @@ class LoanDetailScreen extends ConsumerWidget {
         );
       },
       loading: () => const Scaffold(
+        appBar: IosNavBar(title: 'Loan Details', largeTitle: false),
         body: Padding(
           padding: EdgeInsets.all(kSpacing20),
           child: Column(
@@ -170,6 +172,7 @@ class LoanDetailScreen extends ConsumerWidget {
         ),
       ),
       error: (e, _) => Scaffold(
+        appBar: const IosNavBar(title: 'Loan Details', largeTitle: false),
         body: ErrorState(
           title: 'Failed to Load Loan Details',
           message: e.toString(),
