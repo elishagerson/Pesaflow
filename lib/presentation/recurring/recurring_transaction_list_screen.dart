@@ -831,6 +831,11 @@ class _RecurringTransactionListScreenState
         ),
       ),
     );
+
+    if (isDue) {
+      return _DueItemPulse(child: card);
+    }
+    return card;
   }
 
   List<Widget> _buildBadges(
