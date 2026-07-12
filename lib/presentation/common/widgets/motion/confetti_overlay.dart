@@ -19,13 +19,13 @@ class ConfettiOverlay extends StatefulWidget {
   });
 
   static const List<Color> _defaultColors = [
-    Color(0xFFFF2D55),
-    Color(0xFFFF9500),
-    Color(0xFFFFCC00),
-    Color(0xFF34C759),
-    Color(0xFF007AFF),
-    Color(0xFF5856D6),
-    Color(0xFFAF52DE),
+    AppTheme.expenseColor,
+    AppTheme.transferColorDark,
+    AppTheme.incomeColorDark,
+    AppTheme.incomeColor,
+    AppTheme.transferColor,
+    AppTheme.primaryLight,
+    AppTheme.expenseColorDark,
   ];
 
   @override
