@@ -140,10 +140,9 @@ class _SavingsGoalDetailScreenState
       _selectedAccountId = accounts.first.id;
     }
 
-    showModalBottomSheet(
-      context: context,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (ctx) {
         final theme = Theme.of(ctx);
         final onSurface = theme.colorScheme.onSurface;
