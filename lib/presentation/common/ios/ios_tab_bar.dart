@@ -161,7 +161,7 @@ class IosTabBar extends StatelessWidget {
                             horizontal: 4,
                           ),
                           padding: EdgeInsets.symmetric(
-                            vertical: minimized ? 8 : 6,
+                            vertical: minimized ? 8 : 4,
                             horizontal: minimized ? 8 : 10,
                           ),
                           decoration: BoxDecoration(
@@ -205,18 +205,21 @@ class IosTabBar extends StatelessWidget {
                               ),
                               if (!minimized) ...[
                                 const SizedBox(height: kSpacing2),
-                                Text(
-                                  tab.label,
-                                  style: context.ts(
-                                    10,
-                                    letterSpacing: 0.3,
-                                    fontWeight: isSelected
-                                        ? FontWeight.w700
-                                        : FontWeight.w500,
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.4),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    tab.label,
+                                    style: context.ts(
+                                      10,
+                                      letterSpacing: 0.3,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.4),
+                                    ),
                                   ),
                                 ),
                               ],
