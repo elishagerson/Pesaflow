@@ -180,9 +180,8 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
       builder: (context) {
         return ClipRRect(

@@ -486,9 +486,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     BuildContext context,
     List<Account> accounts,
   ) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
       builder: (ctx) {
         final theme = Theme.of(ctx);
@@ -776,9 +775,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       _selectedCategoryId = filteredCategories.first.id;
     }
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
+    showSpringSheet(
+      context,
       isScrollControlled: true,
       builder: (context) {
         final theme = Theme.of(context);
