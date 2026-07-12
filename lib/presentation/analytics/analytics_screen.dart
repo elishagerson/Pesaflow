@@ -218,11 +218,8 @@ class AnalyticsScreen extends ConsumerWidget {
                     ),
                     labelColor: onSurface,
                     unselectedLabelColor: onSurface.withValues(alpha: 0.6),
-                    labelStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                    unselectedLabelStyle: Theme.of(context).textTheme.bodySmall!
-                        .copyWith(fontWeight: FontWeight.w600),
+                    labelStyle: context.ts(13, fontWeight: FontWeight.w800),
+                    unselectedLabelStyle: context.ts(13, fontWeight: FontWeight.w600),
                     tabs: const [
                       Tab(text: 'Overview'),
                       Tab(text: 'Trends'),
@@ -1244,10 +1241,7 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 Text(
                   'Income',
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.appColors.textLow,
-                  ),
+                  style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.textLow),
                 ),
                 const SizedBox(width: kSpacing24),
                 Container(
@@ -1261,10 +1255,7 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 Text(
                   'Expense',
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.appColors.textLow,
-                  ),
+                  style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.textLow),
                 ),
               ],
             ),

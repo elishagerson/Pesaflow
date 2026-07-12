@@ -296,18 +296,12 @@ class LoanListScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Total Outstanding',
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: onSurface.withValues(alpha: 0.6),
-                      ),
+                      style: context.ts(12, fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.6)),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       CurrencyFormatter.formatCents(total),
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: onSurface,
-                      ),
+                      style: context.ts(22, fontWeight: FontWeight.w900, color: onSurface),
                     ),
                   ],
                 ),
@@ -426,16 +420,12 @@ class LoanListScreen extends ConsumerWidget {
                     children: [
                       Text(
                         CurrencyFormatter.formatCents(loan.amount),
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.ts(14, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: kSpacing2),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} left',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                          color: onSurface.withValues(alpha: 0.6),
-                        ),
+                        style: context.ts(11, color: onSurface.withValues(alpha: 0.6)),
                       ),
                     ],
                   ),
@@ -490,20 +480,14 @@ class LoanListScreen extends ConsumerWidget {
                   children: [
                     Text(
                       loan.description ?? loan.sender ?? 'Loan',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.ts(14, fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
+                      style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                     ),
                   ],
                 ),

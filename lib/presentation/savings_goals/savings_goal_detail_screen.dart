@@ -811,9 +811,7 @@ class _SavingsGoalDetailScreenState
                         children: [
                           Text(
                             goal.name,
-                            style: theme.textTheme.titleLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: context.ts(22, fontWeight: FontWeight.bold),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1098,10 +1096,7 @@ class _SavingsGoalDetailScreenState
                                       const SizedBox(height: kSpacing2),
                                       Text(
                                         '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
-                                        style: theme.textTheme.labelSmall!.copyWith(
-                                          fontSize: 9,
-                                          color: Colors.grey[500],
-                                        ),
+                                        style: context.ts(10, color: Colors.grey[500]),
                                       ),
                                     ],
                                   ),

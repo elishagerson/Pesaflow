@@ -547,9 +547,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         const SizedBox(height: kSpacing2),
         Text(
           value,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
+          style: context.ts(13, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -646,10 +644,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       const SizedBox(height: kSpacing2),
                       Text(
                         value,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: onSurface,
-                        ),
+                        style: context.ts(14, fontWeight: FontWeight.w700, color: onSurface),
                       ),
                     ],
                   ),
@@ -712,17 +707,12 @@ class TransactionDetailScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
+                  style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   value,
-                  style: theme.textTheme.titleSmall!.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: valueColor ?? onSurface,
-                  ),
+                  style: context.ts(14, fontWeight: FontWeight.w700, color: valueColor ?? onSurface),
                 ),
               ],
             ),

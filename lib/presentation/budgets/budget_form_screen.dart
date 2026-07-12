@@ -261,17 +261,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                           child: Text(
                             cat.name,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontSize: 9,
-                              fontWeight: isSelected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: isSelected
-                                  ? theme.colorScheme.onSurface
-                                  : theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.7,
-                                    ),
-                            ),
+                            style: context.ts(10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -341,12 +331,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 _nameController.text.isEmpty
                     ? 'NEW BUDGET'
                     : _nameController.text.toUpperCase(),
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                  letterSpacing: 1.5,
-                  fontSize: 9,
-                ),
+                style: context.ts(10, fontWeight: FontWeight.w900, color: theme.colorScheme.onSurface.withValues(alpha: 0.4), letterSpacing: 1.5),
               ),
               const SizedBox(height: kSpacing4),
               FittedBox(
@@ -377,12 +362,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 ),
                 child: Text(
                   _period.toUpperCase(),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: themeColor,
-                    fontSize: 8,
-                    letterSpacing: 0.5,
-                  ),
+                  style: context.ts(10, fontWeight: FontWeight.w900, color: themeColor, letterSpacing: 0.5),
                 ),
               ),
             ],
@@ -409,11 +389,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         ),
         child: Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.45),
-            letterSpacing: 0.3,
-          ),
+          style: context.ts(13, fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.45), letterSpacing: 0.3),
         ),
       );
     }

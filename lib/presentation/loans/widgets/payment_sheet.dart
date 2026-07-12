@@ -271,10 +271,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         children: [
                                           Text(
                                             'Make a Payment',
-                                            style: theme.textTheme.titleLarge!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            style: context.ts(22, fontWeight: FontWeight.bold),
                                           ),
                                           const SizedBox(height: kSpacing2),
                                           Text(
@@ -307,6 +304,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   ),
                                   const SizedBox(height: kSpacing8),
                                   _buildAmountField(
+                                    context: context,
                                     theme: theme,
                                     amountController: amountController,
                                     paymentAmount: paymentAmount,
@@ -866,6 +864,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
 }
 
 Widget _buildAmountField({
+  required BuildContext context,
   required ThemeData theme,
   required TextEditingController amountController,
   required int Function() paymentAmount,
@@ -886,10 +885,7 @@ Widget _buildAmountField({
       children: [
         Text(
           'TSh',
-          style: theme.textTheme.titleMedium!.copyWith(
-            fontWeight: FontWeight.w900,
-            color: onSurface.withValues(alpha: 0.55),
-          ),
+          style: context.ts(16, fontWeight: FontWeight.w900, color: onSurface.withValues(alpha: 0.55)),
         ),
         const SizedBox(width: kSpacing12),
         Expanded(
@@ -900,10 +896,7 @@ Widget _buildAmountField({
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
             ],
-            style: theme.textTheme.headlineMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: onSurface,
-            ),
+            style: context.ts(28, fontWeight: FontWeight.bold, color: onSurface),
             decoration: const InputDecoration(
               hintText: 'Enter amount',
               border: InputBorder.none,
