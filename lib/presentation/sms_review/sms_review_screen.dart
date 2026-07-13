@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
@@ -31,75 +32,109 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
   bool _selectAll = false;
 
   Future<String?> _showCategorySheet({String? title}) async {
-    final categoriesAsync = ref.read(categoriesFutureProvider);
-    final categories = categoriesAsync.value ?? [];
-    if (categories.isEmpty) return null;
-
     return showSpringSheet<String>(
       context,
       isScrollControlled: true,
       builder: (context) {
         final theme = Theme.of(context);
-        return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          minChildSize: 0.3,
-          maxChildSize: 0.8,
-          expand: false,
-          builder: (context, scrollController) {
-            return Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: kSpacing12),
-                  width: kSpacing40,
-                  height: kSpacing4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(kSpacing16),
-                  child: Text(
-                    title ?? 'Assign Category',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+        return Consumer(
+          builder: (context, ref, _) {
+            final categoriesAsync = ref.watch(categoriesFutureProvider);
+            final categories = categoriesAsync.value ?? [];
+            return DraggableScrollableSheet(
+              initialChildSize: 0.5,
+              minChildSize: 0.3,
+              maxChildSize: 0.8,
+              expand: false,
+              builder: (context, scrollController) {
+                return Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: kSpacing12),
+                      width: kSpacing40,
+                      height: kSpacing4,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.outlineVariant,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    controller: scrollController,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final cat = categories[index];
-                      return ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(kSpacing8),
-                          decoration: BoxDecoration(
-                            color: hexToColor(
-                              cat.color,
-                            ).withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            getCategoryIcon(cat.icon),
-                            color: hexToColor(cat.color),
-                            size: 20,
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.all(kSpacing16),
+                      child: Text(
+                        title ?? 'Assign Category',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
-                        title: Text(cat.name),
-                        subtitle: Text(
-                          cat.type.toUpperCase(),
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        onTap: () => Navigator.of(context).pop(cat.id),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: categories.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == categories.length) {
+                            return ListTile(
+                              leading: Container(
+                                padding: const EdgeInsets.all(kSpacing8),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.add,
+                                  color: theme.colorScheme.primary,
+                                  size: 20,
+                                ),
+                              ),
+                              title: Text(
+                                'Add Custom Category',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () async {
+                                final newCat = await showAddCategoryDialog(
+                                  context,
+                                  ref,
+                                );
+                                if (newCat != null && context.mounted) {
+                                  Navigator.of(context).pop(newCat.id);
+                                }
+                              },
+                            );
+                          }
+                          final cat = categories[index];
+                          return ListTile(
+                            leading: Container(
+                              padding: const EdgeInsets.all(kSpacing8),
+                              decoration: BoxDecoration(
+                                color: hexToColor(
+                                  cat.color,
+                                ).withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                getCategoryIcon(cat.icon),
+                                color: hexToColor(cat.color),
+                                size: 20,
+                              ),
+                            ),
+                            title: Text(cat.name),
+                            subtitle: Text(
+                              cat.type.toUpperCase(),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).pop(cat.id),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         );

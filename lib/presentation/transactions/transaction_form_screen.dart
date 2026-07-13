@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
+import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -751,93 +752,143 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
-  void _showSecondaryDetailsSheet(
-    BuildContext context,
-    List<Category> categories,
-  ) {
-    final filteredCategories = categories.where((cat) {
-      return cat.type.toLowerCase() == _transactionType.toLowerCase();
-    }).toList();
-
-    if (_selectedCategoryId == null && filteredCategories.isNotEmpty) {
-      _selectedCategoryId = filteredCategories.first.id;
-    }
-
+  void _showSecondaryDetailsSheet(BuildContext context) {
     showSpringSheet(
       context,
       isScrollControlled: true,
       builder: (context) {
         final theme = Theme.of(context);
         final onSurface = theme.colorScheme.onSurface;
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return Container(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24.0),
+        return Consumer(
+          builder: (context, ref, _) {
+            final categories = ref.watch(categoriesFutureProvider).value ?? [];
+            final filteredCategories = categories.where((cat) {
+              return cat.type.toLowerCase() == _transactionType.toLowerCase();
+            }).toList();
+
+            if (_selectedCategoryId == null && filteredCategories.isNotEmpty) {
+              _selectedCategoryId = filteredCategories.first.id;
+            }
+
+            return StatefulBuilder(
+              builder: (context, setSheetState) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24.0),
+                    ),
                   ),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing20,
-                  vertical: kSpacing24,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: 36,
-                          height: 4,
-                          margin: const EdgeInsets.only(bottom: kSpacing20),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onSurfaceVariant.withValues(
-                              alpha: 0.2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing20,
+                    vertical: kSpacing24,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 36,
+                            height: 4,
+                            margin: const EdgeInsets.only(bottom: kSpacing20),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.2,
+                              ),
+                              borderRadius: BorderRadius.circular(100),
                             ),
-                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                      ),
-                      Text(
-                        'Transaction details'.toUpperCase(),
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
+                        Text(
+                          'Transaction details'.toUpperCase(),
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: kSpacing16),
+                        const SizedBox(height: kSpacing16),
 
-                      StaggeredFadeSlide(
-                        index: 0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Category',
-                              style: context.ts(13,
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurfaceVariant,
+                        StaggeredFadeSlide(
+                          index: 0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Category',
+                                style: context.ts(13,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: kSpacing12),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: 1.0,
-                                  ),
-                              itemCount: filteredCategories.length,
-                              itemBuilder: (context, index) {
-                                final cat = filteredCategories[index];
+                              const SizedBox(height: kSpacing12),
+                              GridView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 1.0,
+                                    ),
+                                itemCount: filteredCategories.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index == filteredCategories.length) {
+                                    return TactileSpringContainer(
+                                      onTap: () async {
+                                        final newCat = await showAddCategoryDialog(
+                                          context,
+                                          ref,
+                                          initialType: _transactionType,
+                                        );
+                                        if (newCat != null) {
+                                          _lastCategoryByType[_transactionType] = newCat.id;
+                                          setSheetState(() {
+                                            _selectedCategoryId = newCat.id;
+                                          });
+                                          setState(() {
+                                            _selectedCategoryId = newCat.id;
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: theme.colorScheme.outlineVariant,
+                                            style: BorderStyle.solid,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.add_circle_outline_rounded,
+                                              color: theme.colorScheme.primary,
+                                              size: 24,
+                                            ),
+                                            const SizedBox(height: kSpacing6),
+                                            Text(
+                                              'Custom',
+                                              style: context.ts(11,
+                                                fontWeight: FontWeight.bold,
+                                                color: theme.colorScheme.primary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  final cat = filteredCategories[index];
                                 final isSel = cat.id == _selectedCategoryId;
                                 final catColor = hexToColor(cat.color);
 
@@ -1152,17 +1203,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 ),
               );
             },
-        );
-      },
-    );
-  }
+          );
+        },
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
-    final categories = ref.watch(categoriesFutureProvider).value ?? [];
 
     final spendingPatternAsync = ref.watch(currentSpendingPatternProvider);
 
@@ -1596,7 +1648,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                       child: PressScale(
                         onTap: () =>
-                            _showSecondaryDetailsSheet(context, categories),
+                            _showSecondaryDetailsSheet(context),
                         child: Container(
                           width: double.infinity,
                           height: context.isCompactView ? 44 : 50,

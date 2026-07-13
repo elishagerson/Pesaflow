@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -51,8 +53,6 @@ class _ToastWidget extends StatefulWidget {
 class _ToastWidgetState extends State<_ToastWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _slideAnimation;
-  late Animation<double> _fadeAnimation;
   Timer? _timer;
 
   @override
@@ -60,20 +60,17 @@ class _ToastWidgetState extends State<_ToastWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 600),
     );
 
-    _slideAnimation = Tween<double>(
-      begin: 80.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    _controller.forward();
+    // Physics-based spring simulation for premium entry feel
+    final spring = SpringDescription(
+      mass: 0.6,      // lightweight
+      stiffness: 180, // snappy
+      damping: 14,    // smooth bounce
+    );
+    final simulation = SpringSimulation(spring, 0.0, 1.0, 0.0);
+    _controller.animateWith(simulation);
 
     _timer = Timer(widget.duration, () {
       _dismiss();
@@ -82,7 +79,8 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   void _dismiss() {
     if (mounted) {
-      _controller.reverse().then((_) {
+      // Snappy slide-out transition
+      _controller.animateTo(0.0, duration: const Duration(milliseconds: 250), curve: Curves.easeInCubic).then((_) {
         widget.onDismiss();
       });
     }
@@ -105,65 +103,98 @@ class _ToastWidgetState extends State<_ToastWidget>
       ToastType.info => PesaFlowIcons.info,
     };
 
-    final Color iconColor = switch (widget.type) {
+    final Color brandColor = switch (widget.type) {
       ToastType.success => context.appColors.incomeColor,
       ToastType.error => context.appColors.expenseColor,
       ToastType.info => theme.colorScheme.primary,
     };
 
     return Positioned(
-      bottom: MediaQuery.paddingOf(context).bottom + kSpacing24,
+      bottom: MediaQuery.paddingOf(context).bottom + kSpacing32,
       left: kSpacing24,
       right: kSpacing24,
       child: SafeArea(
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
+            final t = _controller.value;
+            // Spring-based translate & scale curves
+            final translateY = (1.0 - t) * 64.0;
+            final scale = 0.85 + (0.15 * t);
+            final opacity = t.clamp(0.0, 1.0);
+
             return Transform.translate(
-              offset: Offset(0.0, _slideAnimation.value),
-              child: Opacity(
-                opacity: _fadeAnimation.value,
-                child: Center(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing20,
-                        vertical: kSpacing14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHigh,
+              offset: Offset(0.0, translateY),
+              child: Transform.scale(
+                scale: scale,
+                child: Opacity(
+                  opacity: opacity,
+                  child: Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: theme.colorScheme.outlineVariant,
-                          width: 0.8,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 24,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(icon, color: iconColor, size: 20),
-                          const SizedBox(width: kSpacing12),
-                          Flexible(
-                            child: Text(
-                              widget.message,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurface,
-                                fontWeight: FontWeight.bold,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing20,
+                              vertical: kSpacing12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHigh.withValues(
+                                alpha: theme.brightness == Brightness.dark ? 0.70 : 0.85,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(
+                                color: brandColor.withValues(alpha: 0.15),
+                                width: 1.0,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: brandColor.withValues(alpha: 0.08),
+                                  blurRadius: 24,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Snappy spring-scaled icon reveal
+                                Transform.scale(
+                                  scale: t.clamp(0.0, 1.0),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: brandColor.withValues(alpha: 0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      icon,
+                                      color: brandColor,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing10),
+                                Flexible(
+                                  child: Text(
+                                    widget.message,
+                                    style: theme.textTheme.labelMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

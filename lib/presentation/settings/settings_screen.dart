@@ -4,7 +4,6 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
@@ -29,7 +28,6 @@ import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
