@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanFormScreen extends ConsumerStatefulWidget {
@@ -36,6 +37,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   String? _descriptionError;
   String? _amountError;
   String? _interestRateError;
+  String? _selectedCategory;
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         }
         _disbursedAt = loan.disbursedAt;
         _dueAt = loan.dueAt;
+        _selectedCategory = loan.category;
         if (loan.interestRate != null) {
           _interestRateController.text = loan.interestRate.toString();
         }
@@ -77,6 +80,143 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     _referenceController.dispose();
     _interestRateController.dispose();
     super.dispose();
+  }
+
+  static const _loanCategories = [
+    'Personal',
+    'Business',
+    'Mortgage',
+    'Car',
+    'Education',
+    'Medical',
+    'Debt Consolidation',
+    'Other',
+  ];
+
+  static const _categoryIcons = {
+    'Personal': Icons.person_rounded,
+    'Business': Icons.business_rounded,
+    'Mortgage': Icons.home_rounded,
+    'Car': Icons.directions_car_rounded,
+    'Education': Icons.school_rounded,
+    'Medical': Icons.local_hospital_rounded,
+    'Debt Consolidation': Icons.account_balance_rounded,
+    'Other': Icons.more_horiz_rounded,
+  };
+
+  Future<void> _pickCategory() async {
+    final selected = await showSpringSheet<String>(
+      context,
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return Container(
+          padding: const EdgeInsets.fromLTRB(
+            kSpacing16,
+            kSpacing12,
+            kSpacing16,
+            kSpacing24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: kSpacing16),
+              Text(
+                'Loan Category',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: kSpacing4),
+              Text(
+                'Select a category for this loan',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: kSpacing16),
+              ...(_loanCategories.map((cat) {
+                final isSelected = _selectedCategory == cat;
+                final icon = _categoryIcons[cat] ?? Icons.more_horiz_rounded;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: kSpacing6),
+                  child: TactileSpringContainer(
+                    onTap: () => Navigator.of(context).pop(cat),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing14,
+                        vertical: kSpacing12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.08)
+                            : theme.colorScheme.surfaceContainerHighest
+                                .withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(12),
+                        border: isSelected
+                            ? Border.all(
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.3),
+                              )
+                            : null,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            icon,
+                            size: 20,
+                            color: isSelected
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.6),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Expanded(
+                            child: Text(
+                              cat,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight:
+                                    isSelected ? FontWeight.w600 : FontWeight.w400,
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          if (isSelected)
+                            Icon(
+                              Icons.check_rounded,
+                              size: 18,
+                              color: theme.colorScheme.primary,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              })),
+            ],
+          ),
+        );
+      },
+    );
+    if (selected != null && mounted) {
+      setState(() {
+        _selectedCategory = selected == 'Other' ? null : selected;
+      });
+    }
   }
 
   Future<void> _pickDate({required bool dueDate}) async {
@@ -157,6 +297,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         interestRate: double.tryParse(_interestRateController.text) != null
             ? Value(double.tryParse(_interestRateController.text))
             : const Value(null),
+        category: _selectedCategory != null
+            ? Value(_selectedCategory)
+            : const Value(null),
         updatedAt: DateTime.now(),
       );
       try {
@@ -190,6 +333,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
         disbursedAt: _disbursedAt,
         dueAt: _dueAt,
         interestRate: double.tryParse(_interestRateController.text),
+        category: _selectedCategory,
         trackerId: activeTrackerId,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -353,9 +497,44 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: kSpacing32),
+              const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 7,
+                child: InkWell(
+                  onTap: _pickCategory,
+                  borderRadius: BorderRadius.circular(12),
+                  child: InputDecorator(
+                    decoration: context.inputDecoration(
+                      labelText: 'Category (optional)',
+                      prefixIcon: const Icon(
+                        PesaFlowIcons.category,
+                        size: 18,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedCategory ?? 'Select category',
+                          style: TextStyle(
+                            color: _selectedCategory != null
+                                ? onSurface
+                                : onSurface.withValues(alpha: 0.6),
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          size: 18,
+                          color: onSurface.withValues(alpha: 0.4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: kSpacing32),
+              StaggeredFadeSlide(
+                index: 8,
                 child: TactileSpringContainer(
                   onTap: _submit,
                   child: Container(

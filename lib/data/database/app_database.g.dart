@@ -6549,6 +6549,17 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, Loan> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -6592,6 +6603,7 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, Loan> {
     totalInstallments,
     paidInstallments,
     frequencyInDays,
+    category,
     createdAt,
     updatedAt,
   ];
@@ -6737,6 +6749,12 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, Loan> {
         ),
       );
     }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6826,6 +6844,10 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, Loan> {
         DriftSqlType.int,
         data['${effectivePrefix}frequency_in_days'],
       ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6861,6 +6883,7 @@ class Loan extends DataClass implements Insertable<Loan> {
   final int? totalInstallments;
   final int? paidInstallments;
   final int? frequencyInDays;
+  final String? category;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Loan({
@@ -6881,6 +6904,7 @@ class Loan extends DataClass implements Insertable<Loan> {
     this.totalInstallments,
     this.paidInstallments,
     this.frequencyInDays,
+    this.category,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -6927,6 +6951,9 @@ class Loan extends DataClass implements Insertable<Loan> {
     }
     if (!nullToAbsent || frequencyInDays != null) {
       map['frequency_in_days'] = Variable<int>(frequencyInDays);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -6976,6 +7003,9 @@ class Loan extends DataClass implements Insertable<Loan> {
       frequencyInDays: frequencyInDays == null && nullToAbsent
           ? const Value.absent()
           : Value(frequencyInDays),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -7004,6 +7034,7 @@ class Loan extends DataClass implements Insertable<Loan> {
       totalInstallments: serializer.fromJson<int?>(json['totalInstallments']),
       paidInstallments: serializer.fromJson<int?>(json['paidInstallments']),
       frequencyInDays: serializer.fromJson<int?>(json['frequencyInDays']),
+      category: serializer.fromJson<String?>(json['category']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -7029,6 +7060,7 @@ class Loan extends DataClass implements Insertable<Loan> {
       'totalInstallments': serializer.toJson<int?>(totalInstallments),
       'paidInstallments': serializer.toJson<int?>(paidInstallments),
       'frequencyInDays': serializer.toJson<int?>(frequencyInDays),
+      'category': serializer.toJson<String?>(category),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -7052,6 +7084,7 @@ class Loan extends DataClass implements Insertable<Loan> {
     Value<int?> totalInstallments = const Value.absent(),
     Value<int?> paidInstallments = const Value.absent(),
     Value<int?> frequencyInDays = const Value.absent(),
+    Value<String?> category = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Loan(
@@ -7080,6 +7113,7 @@ class Loan extends DataClass implements Insertable<Loan> {
     frequencyInDays: frequencyInDays.present
         ? frequencyInDays.value
         : this.frequencyInDays,
+    category: category.present ? category.value : this.category,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -7116,6 +7150,7 @@ class Loan extends DataClass implements Insertable<Loan> {
       frequencyInDays: data.frequencyInDays.present
           ? data.frequencyInDays.value
           : this.frequencyInDays,
+      category: data.category.present ? data.category.value : this.category,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -7141,6 +7176,7 @@ class Loan extends DataClass implements Insertable<Loan> {
           ..write('totalInstallments: $totalInstallments, ')
           ..write('paidInstallments: $paidInstallments, ')
           ..write('frequencyInDays: $frequencyInDays, ')
+          ..write('category: $category, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -7166,6 +7202,7 @@ class Loan extends DataClass implements Insertable<Loan> {
     totalInstallments,
     paidInstallments,
     frequencyInDays,
+    category,
     createdAt,
     updatedAt,
   );
@@ -7190,6 +7227,7 @@ class Loan extends DataClass implements Insertable<Loan> {
           other.totalInstallments == this.totalInstallments &&
           other.paidInstallments == this.paidInstallments &&
           other.frequencyInDays == this.frequencyInDays &&
+          other.category == this.category &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -7212,6 +7250,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
   final Value<int?> totalInstallments;
   final Value<int?> paidInstallments;
   final Value<int?> frequencyInDays;
+  final Value<String?> category;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -7233,6 +7272,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
     this.totalInstallments = const Value.absent(),
     this.paidInstallments = const Value.absent(),
     this.frequencyInDays = const Value.absent(),
+    this.category = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -7255,6 +7295,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
     this.totalInstallments = const Value.absent(),
     this.paidInstallments = const Value.absent(),
     this.frequencyInDays = const Value.absent(),
+    this.category = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -7281,6 +7322,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
     Expression<int>? totalInstallments,
     Expression<int>? paidInstallments,
     Expression<int>? frequencyInDays,
+    Expression<String>? category,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -7303,6 +7345,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
       if (totalInstallments != null) 'total_installments': totalInstallments,
       if (paidInstallments != null) 'paid_installments': paidInstallments,
       if (frequencyInDays != null) 'frequency_in_days': frequencyInDays,
+      if (category != null) 'category': category,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -7327,6 +7370,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
     Value<int?>? totalInstallments,
     Value<int?>? paidInstallments,
     Value<int?>? frequencyInDays,
+    Value<String?>? category,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -7349,6 +7393,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
       totalInstallments: totalInstallments ?? this.totalInstallments,
       paidInstallments: paidInstallments ?? this.paidInstallments,
       frequencyInDays: frequencyInDays ?? this.frequencyInDays,
+      category: category ?? this.category,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -7409,6 +7454,9 @@ class LoansCompanion extends UpdateCompanion<Loan> {
     if (frequencyInDays.present) {
       map['frequency_in_days'] = Variable<int>(frequencyInDays.value);
     }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -7441,6 +7489,7 @@ class LoansCompanion extends UpdateCompanion<Loan> {
           ..write('totalInstallments: $totalInstallments, ')
           ..write('paidInstallments: $paidInstallments, ')
           ..write('frequencyInDays: $frequencyInDays, ')
+          ..write('category: $category, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -11678,6 +11727,7 @@ typedef $$LoansTableCreateCompanionBuilder =
       Value<int?> totalInstallments,
       Value<int?> paidInstallments,
       Value<int?> frequencyInDays,
+      Value<String?> category,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -11701,6 +11751,7 @@ typedef $$LoansTableUpdateCompanionBuilder =
       Value<int?> totalInstallments,
       Value<int?> paidInstallments,
       Value<int?> frequencyInDays,
+      Value<String?> category,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -11796,6 +11847,11 @@ class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
 
   ColumnFilters<int> get frequencyInDays => $composableBuilder(
     column: $table.frequencyInDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11904,6 +11960,11 @@ class $$LoansTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -11989,6 +12050,9 @@ class $$LoansTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -12041,6 +12105,7 @@ class $$LoansTableTableManager
                 Value<int?> totalInstallments = const Value.absent(),
                 Value<int?> paidInstallments = const Value.absent(),
                 Value<int?> frequencyInDays = const Value.absent(),
+                Value<String?> category = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -12062,6 +12127,7 @@ class $$LoansTableTableManager
                 totalInstallments: totalInstallments,
                 paidInstallments: paidInstallments,
                 frequencyInDays: frequencyInDays,
+                category: category,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -12085,6 +12151,7 @@ class $$LoansTableTableManager
                 Value<int?> totalInstallments = const Value.absent(),
                 Value<int?> paidInstallments = const Value.absent(),
                 Value<int?> frequencyInDays = const Value.absent(),
+                Value<String?> category = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -12106,6 +12173,7 @@ class $$LoansTableTableManager
                 totalInstallments: totalInstallments,
                 paidInstallments: paidInstallments,
                 frequencyInDays: frequencyInDays,
+                category: category,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

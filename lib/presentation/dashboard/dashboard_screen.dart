@@ -934,7 +934,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                   child: Center(
                                     child: TactileSpringContainer(
-                                      onTap: () => context.go('/sms-review'),
+                                      onTap: () => context.push('/sms-review'),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: kSpacing16,

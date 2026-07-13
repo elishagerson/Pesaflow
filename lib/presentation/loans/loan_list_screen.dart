@@ -387,14 +387,39 @@ class LoanListScreen extends ConsumerWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: kSpacing2),
-                        Text(
-                          'Active',
-                          style: Theme.of(context).textTheme.labelSmall!
-                              .copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: progressColor,
+                        const SizedBox(height: kSpacing4),
+                        Row(
+                          children: [
+                            if (loan.category != null) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  loan.category!,
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 11,
+                                  ),
+                                ),
                               ),
+                              const SizedBox(width: kSpacing6),
+                            ],
+                            Text(
+                              'Active',
+                              style: Theme.of(context).textTheme.labelSmall!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: progressColor,
+                                  ),
+                            ),
+                          ],
                         ),
                         if (loan.dueAt != null) ...[
                           const SizedBox(height: kSpacing2),
@@ -485,10 +510,35 @@ class LoanListScreen extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: kSpacing2),
-                    Text(
-                      'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
-                      style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                    const SizedBox(height: kSpacing4),
+                    Row(
+                      children: [
+                        if (loan.category != null) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing8,
+                              vertical: kSpacing2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: context.appColors.incomeColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              loan.category!,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: context.appColors.incomeColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing6),
+                        ],
+                        Text(
+                          'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
+                          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                        ),
+                      ],
                     ),
                   ],
                 ),

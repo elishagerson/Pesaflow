@@ -279,6 +279,8 @@ class LoanDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(height: kSpacing12),
             CopyableInfoRow(label: 'Provider', value: loan.provider ?? 'N/A'),
+            if (loan.category != null)
+              CopyableInfoRow(label: 'Category', value: loan.category!),
             if (loan.interestRate != null)
               InfoRow(
                 label: 'APR',

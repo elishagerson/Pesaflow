@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration {
@@ -157,11 +157,20 @@ class AppDatabase extends _$AppDatabase {
           ),
           _cat(
             uuid.v4(),
+            'Loans',
+            'credit-card',
+            '#9C27B0',
+            'expense',
+            15,
+            true,
+          ),
+          _cat(
+            uuid.v4(),
             'Other',
             'more-horizontal',
             '#9E9E9E',
             'expense',
-            15,
+            16,
             true,
           ),
 
@@ -326,6 +335,11 @@ class AppDatabase extends _$AppDatabase {
         // Migration from schema version 8 → 9: make accountId nullable in transactions
         if (from < 9) {
           await m.alterTable(TableMigration(transactions));
+        }
+
+        // Migration from schema version 10 → 11: add category column to loans
+        if (from < 11) {
+          await m.addColumn(loans, loans.category);
         }
 
         // Migration from schema version 9 → 10: consolidate subscriptions into recurring transactions

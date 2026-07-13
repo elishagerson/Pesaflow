@@ -12,7 +12,6 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -321,554 +320,522 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                     );
                   }
 
-                  return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kSpacing16,
-                      vertical: kSpacing12,
-                    ),
-                    itemCount: items.length + 1, // +1 for header
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        // Header
-                        return StaggeredFadeSlide(
-                          index: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: kSpacing16),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusCard,
-                                ),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    theme.colorScheme.tertiary.withValues(
-                                      alpha: 0.15,
-                                    ),
-                                    theme.colorScheme.tertiary.withValues(
-                                      alpha: 0.05,
-                                    ),
-                                  ],
-                                ),
-                                border: Border.all(
-                                  color: theme.colorScheme.tertiary.withValues(
-                                    alpha: 0.3,
+                  final isSelecting = _selectedIds.isNotEmpty;
+
+                  return Stack(
+                    children: [
+                      ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.fromLTRB(
+                          kSpacing16,
+                          kSpacing12,
+                          kSpacing16,
+                          isSelecting ? 80 : kSpacing24,
+                        ),
+                        itemCount: items.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return StaggeredFadeSlide(
+                              index: 0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: kSpacing16),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing16,
+                                    vertical: kSpacing12,
                                   ),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    PesaFlowIcons.sms,
-                                    color: theme.colorScheme.tertiary,
-                                    size: 28,
-                                  ),
-                                  const SizedBox(width: kSpacing12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${items.length} transaction${items.length == 1 ? '' : 's'} to review',
-                                          style: theme.textTheme.titleSmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        const SizedBox(height: kSpacing2),
-                                        Text(
-                                          'Swipe right to approve, left to reject',
-                                          style: theme.textTheme.labelMedium
-                                              ?.copyWith(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSurfaceVariant
-                                                    .withValues(alpha: 0.6),
-                                              ),
-                                        ),
-                                      ],
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: theme.colorScheme.primary.withValues(alpha: 0.15),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      final item = items[index - 1];
-                      final trans = item.transaction;
-
-                      AmountType amtType = AmountType.neutral;
-                      if (trans.type.toLowerCase() == 'income') {
-                        amtType = AmountType.income;
-                      } else if (trans.type.toLowerCase() == 'expense' ||
-                          trans.type.toLowerCase() == 'airtime' ||
-                          trans.type.toLowerCase() == 'fee') {
-                        amtType = AmountType.expense;
-                      }
-
-                      return StaggeredFadeSlide(
-                        index: index,
-                        child: SwipeableCard(
-                          onSwipeLeft: () async {
-                            // Reject: delete the transaction
-                            await ref
-                                .read(transactionRepositoryProvider)
-                                .deleteTransaction(trans.id);
-                            ref.invalidate(reviewQueueStreamProvider);
-                            ref.invalidate(recentTransactionsStreamProvider);
-                            ref.invalidate(accountsStreamProvider);
-                            if (context.mounted) {
-                              CustomToast.show(
-                                context,
-                                message:
-                                    'Transaction rejected: ${trans.description}',
-                                type: ToastType.error,
-                              );
-                            }
-                          },
-                          onSwipeRight: () async {
-                            // Approve: mark as sms_auto
-                            await ref
-                                .read(transactionRepositoryProvider)
-                                .approveReviewedTransaction(trans.id);
-                            ref.invalidate(reviewQueueStreamProvider);
-                            ref.invalidate(recentTransactionsStreamProvider);
-                            if (context.mounted) {
-                              CustomToast.show(
-                                context,
-                                message:
-                                    'Transaction approved: ${trans.description}',
-                                type: ToastType.success,
-                              );
-                            }
-                          },
-                          child: GlassCard(
-                            margin: const EdgeInsets.only(bottom: kSpacing10),
-                            padding: EdgeInsets.zero,
-                            child: IntrinsicHeight(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  // Checkbox for batch selection
-                                  SizedBox(
-                                    width: kSpacing40,
-                                    child: Center(
-                                      child: Checkbox(
-                                        value: _selectedIds.contains(trans.id),
-                                        onChanged: (checked) {
-                                          setState(() {
-                                            if (checked == true) {
-                                              _selectedIds.add(trans.id);
-                                            } else {
-                                              _selectedIds.remove(trans.id);
-                                              _selectAll = false;
-                                            }
-                                          });
-                                        },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        PesaFlowIcons.sms,
+                                        color: theme.colorScheme.primary,
+                                        size: 18,
                                       ),
+                                      const SizedBox(width: kSpacing10),
+                                      Text(
+                                        '${items.length} transaction${items.length == 1 ? '' : 's'}',
+                                        style: theme.textTheme.labelMedium?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(width: kSpacing6),
+                                      Icon(
+                                        Icons.arrow_forward_rounded,
+                                        size: 14,
+                                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          final item = items[index - 1];
+                          final trans = item.transaction;
+                          final isSelected = _selectedIds.contains(trans.id);
+
+                          AmountType amtType = AmountType.neutral;
+                          if (trans.type.toLowerCase() == 'income') {
+                            amtType = AmountType.income;
+                          } else if (trans.type.toLowerCase() == 'expense' ||
+                              trans.type.toLowerCase() == 'airtime' ||
+                              trans.type.toLowerCase() == 'fee') {
+                            amtType = AmountType.expense;
+                          }
+
+                          return StaggeredFadeSlide(
+                            index: index,
+                            child: SwipeableCard(
+                              onSwipeLeft: () async {
+                                await ref
+                                    .read(transactionRepositoryProvider)
+                                    .deleteTransaction(trans.id);
+                                ref.invalidate(reviewQueueStreamProvider);
+                                ref.invalidate(recentTransactionsStreamProvider);
+                                ref.invalidate(accountsStreamProvider);
+                                if (context.mounted) {
+                                  CustomToast.show(
+                                    context,
+                                    message: 'Transaction rejected: ${trans.description}',
+                                    type: ToastType.error,
+                                  );
+                                }
+                              },
+                              onSwipeRight: () async {
+                                await ref
+                                    .read(transactionRepositoryProvider)
+                                    .approveReviewedTransaction(trans.id);
+                                ref.invalidate(reviewQueueStreamProvider);
+                                ref.invalidate(recentTransactionsStreamProvider);
+                                if (context.mounted) {
+                                  CustomToast.show(
+                                    context,
+                                    message: 'Transaction approved: ${trans.description}',
+                                    type: ToastType.success,
+                                  );
+                                }
+                              },
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      _selectedIds.remove(trans.id);
+                                    } else {
+                                      _selectedIds.add(trans.id);
+                                    }
+                                    _selectAll = false;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeOut,
+                                  margin: const EdgeInsets.only(bottom: kSpacing10),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? theme.colorScheme.primary.withValues(alpha: 0.06)
+                                        : theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? theme.colorScheme.primary.withValues(alpha: 0.25)
+                                          : theme.colorScheme.onSurface.withValues(alpha: 0.06),
                                     ),
                                   ),
-                                  // Left Accent Border strip (dynamic category colored)
-                                  Container(
-                                    width: kSpacing4,
-                                    color: hexToColor(item.category.color),
-                                  ),
-                                  // Main content
-                                  Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      kSpacing14,
+                                      kSpacing14,
+                                      kSpacing16,
+                                      kSpacing14,
+                                    ),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // Top section: provider badge + amount
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                            kSpacing16,
-                                            kSpacing14,
-                                            kSpacing16,
-                                            kSpacing8,
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            AnimatedContainer(
+                                              duration: const Duration(milliseconds: 200),
+                                              width: 22,
+                                              height: 22,
+                                              margin: const EdgeInsets.only(top: 2, right: kSpacing12),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: isSelected
+                                                    ? theme.colorScheme.primary
+                                                    : Colors.transparent,
+                                                border: Border.all(
+                                                  color: isSelected
+                                                      ? theme.colorScheme.primary
+                                                      : theme.colorScheme.onSurface.withValues(alpha: 0.25),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: isSelected
+                                                  ? const Icon(Icons.check_rounded, size: 14, color: Colors.white)
+                                                  : null,
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.all(kSpacing10),
+                                              decoration: BoxDecoration(
+                                                color: hexToColor(item.category.color).withValues(alpha: 0.12),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                getCategoryIcon(item.category.icon),
+                                                color: hexToColor(item.category.color),
+                                                size: 20,
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    trans.description.isNotEmpty
+                                                        ? trans.description
+                                                        : item.category.name,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: theme.textTheme.titleSmall?.copyWith(
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: kSpacing4),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        padding: const EdgeInsets.symmetric(
+                                                          horizontal: kSpacing8,
+                                                          vertical: kSpacing2,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                                          borderRadius: BorderRadius.circular(6),
+                                                        ),
+                                                        child: Text(
+                                                          item.account!.name,
+                                                          style: theme.textTheme.labelSmall?.copyWith(
+                                                            color: theme.colorScheme.primary,
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 11,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing8),
+                                            AmountText(
+                                              amountInCents: trans.amount,
+                                              type: amtType,
+                                              style: theme.textTheme.titleMedium?.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        // Raw SMS preview
+                                        if (trans.rawSms != null && trans.rawSms!.isNotEmpty) ...[
+                                          const SizedBox(height: kSpacing10),
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.all(kSpacing10),
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Text(
+                                              trans.rawSms!,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: theme.textTheme.labelSmall?.copyWith(
+                                                fontFamily: 'monospace',
+                                                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                                                fontSize: 11,
+                                              ),
+                                            ),
                                           ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.all(
-                                                  kSpacing10,
+                                        ],
+
+                                        // Action buttons
+                                        const SizedBox(height: kSpacing10),
+                                        Row(
+                                          children: [
+                                            TactileSpringContainer(
+                                              onTap: () => _showCategoryPicker(item),
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing12,
+                                                  vertical: kSpacing8,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  color: hexToColor(
-                                                    item.category.color,
-                                                  ).withValues(alpha: 0.15),
-                                                  shape: BoxShape.circle,
+                                                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                                                  borderRadius: BorderRadius.circular(8),
                                                 ),
-                                                child: Icon(
-                                                  getCategoryIcon(
-                                                    item.category.icon,
-                                                  ),
-                                                  color: hexToColor(
-                                                    item.category.color,
-                                                  ),
-                                                  size: 22,
-                                                ),
-                                              ),
-                                              const SizedBox(width: kSpacing12),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
                                                   children: [
+                                                    Icon(
+                                                      PesaFlowIcons.category,
+                                                      size: 13,
+                                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                    ),
+                                                    const SizedBox(width: kSpacing6),
                                                     Text(
-                                                      trans
-                                                              .description
-                                                              .isNotEmpty
-                                                          ? trans.description
-                                                          : item.category.name,
-                                                      style: theme
-                                                          .textTheme
-                                                          .titleSmall
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: kSpacing4,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    kSpacing8,
-                                                                vertical:
-                                                                    kSpacing2,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color: theme
-                                                                .colorScheme
-                                                                .primary
-                                                                .withValues(
-                                                                  alpha: 0.1,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  AppTheme
-                                                                      .radiusInput,
-                                                                ),
-                                                          ),
-                                                          child: Text(
-                                                            item.account!.name,
-                                                            style: theme
-                                                                .textTheme
-                                                                .labelSmall
-                                                                ?.copyWith(
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .primary,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing8,
-                                                        ),
-                                                        // High-fidelity confidence score badge
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    kSpacing8,
-                                                                vertical:
-                                                                    kSpacing4,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color: AppTheme
-                                                                .incomeColor
-                                                                .withValues(
-                                                                  alpha: 0.1,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  100,
-                                                                ),
-                                                            border: Border.all(
-                                                              color: AppTheme
-                                                                  .incomeColor
-                                                                  .withValues(
-                                                                    alpha: 0.25,
-                                                                  ),
-                                                              width: 1,
-                                                            ),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              ConfidenceRing(
-                                                                score: 0.94,
-                                                                color: AppTheme
-                                                                    .incomeColor,
-                                                                size: 12,
-                                                              ),
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing6,
-                                                              ),
-                                                              Text(
-                                                                '94% MATCH',
-                                                                style: theme
-                                                                    .textTheme
-                                                                    .labelSmall
-                                                                    ?.copyWith(
-                                                                      color: AppTheme
-                                                                          .incomeColor,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      letterSpacing:
-                                                                          0.5,
-                                                                    ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      'Category',
+                                                      style: theme.textTheme.labelSmall?.copyWith(
+                                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              AmountText(
-                                                amountInCents: trans.amount,
-                                                type: amtType,
-                                                style: theme
-                                                    .textTheme
-                                                    .titleMedium
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                        // Raw SMS preview
-                                        if (trans.rawSms != null &&
-                                            trans.rawSms!.isNotEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                              kSpacing16,
-                                              0,
-                                              kSpacing16,
-                                              kSpacing8,
                                             ),
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: const EdgeInsets.all(
-                                                kSpacing10,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: theme
-                                                    .colorScheme
-                                                    .surfaceContainerHighest
-                                                    .withValues(alpha: 0.3),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      kSpacing8,
+                                            const SizedBox(width: kSpacing8),
+                                            TactileSpringContainer(
+                                              onTap: () async {
+                                                await ref
+                                                    .read(transactionRepositoryProvider)
+                                                    .approveReviewedTransaction(trans.id);
+                                                ref.invalidate(reviewQueueStreamProvider);
+                                                ref.invalidate(recentTransactionsStreamProvider);
+                                                if (context.mounted) {
+                                                  CustomToast.show(
+                                                    context,
+                                                    message: 'Transaction approved',
+                                                    type: ToastType.success,
+                                                  );
+                                                }
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing14,
+                                                  vertical: kSpacing8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.incomeColor.withValues(alpha: 0.12),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.check_rounded,
+                                                      size: 14,
+                                                      color: AppTheme.incomeColor,
                                                     ),
-                                              ),
-                                              child: Text(
-                                                trans.rawSms!,
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme
-                                                    .textTheme
-                                                    .labelSmall
-                                                    ?.copyWith(
-                                                      fontFamily: 'monospace',
-                                                      color: theme
-                                                          .colorScheme
-                                                          .onSurfaceVariant
-                                                          .withValues(
-                                                            alpha: 0.7,
-                                                          ),
+                                                    const SizedBox(width: kSpacing6),
+                                                    Text(
+                                                      'Approve',
+                                                      style: theme.textTheme.labelSmall?.copyWith(
+                                                        color: AppTheme.incomeColor,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
                                                     ),
-                                              ),
-                                            ),
-                                          ),
-
-                                        // Action buttons
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                            kSpacing8,
-                                            0,
-                                            kSpacing8,
-                                            kSpacing8,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              TactileSpringContainer(
-                                                onTap: () =>
-                                                    _showCategoryPicker(item),
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: kSpacing12,
-                                                        vertical: kSpacing8,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .outlineVariant,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          100,
-                                                        ),
-                                                    border: Border.all(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .outlineVariant,
-                                                      width: 0.8,
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(
-                                                        PesaFlowIcons.category,
-                                                        size: 14,
-                                                        color: theme
-                                                            .colorScheme
-                                                            .onSurface
-                                                            .withValues(
-                                                              alpha: 0.6,
-                                                            ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: kSpacing6,
-                                                      ),
-                                                      Text(
-                                                        'Category',
-                                                        style: theme
-                                                            .textTheme
-                                                            .labelSmall
-                                                            ?.copyWith(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurface
-                                                                  .withValues(
-                                                                    alpha: 0.7,
-                                                                  ),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
-                                              const Spacer(),
-                                              TactileSpringContainer(
-                                                onTap: () async {
-                                                  await ref
-                                                      .read(
-                                                        transactionRepositoryProvider,
-                                                      )
-                                                      .approveReviewedTransaction(
-                                                        trans.id,
-                                                      );
-                                                  ref.invalidate(
-                                                    reviewQueueStreamProvider,
+                                            ),
+                                            const Spacer(),
+                                            TactileSpringContainer(
+                                              onTap: () async {
+                                                await ref
+                                                    .read(transactionRepositoryProvider)
+                                                    .deleteTransaction(trans.id);
+                                                ref.invalidate(reviewQueueStreamProvider);
+                                                ref.invalidate(recentTransactionsStreamProvider);
+                                                ref.invalidate(accountsStreamProvider);
+                                                if (context.mounted) {
+                                                  CustomToast.show(
+                                                    context,
+                                                    message: 'Transaction rejected',
+                                                    type: ToastType.error,
                                                   );
-                                                  ref.invalidate(
-                                                    recentTransactionsStreamProvider,
-                                                  );
-                                                  if (context.mounted) {
-                                                    CustomToast.show(
-                                                      context,
-                                                      message:
-                                                          'Transaction approved',
-                                                      type: ToastType.success,
-                                                    );
-                                                  }
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: kSpacing14,
-                                                        vertical: kSpacing8,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: AppTheme.incomeColor
-                                                        .withValues(
-                                                          alpha: 0.12,
-                                                        ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          100,
-                                                        ),
-                                                    border: Border.all(
-                                                      color: AppTheme
-                                                          .incomeColor
-                                                          .withValues(
-                                                            alpha: 0.3,
-                                                          ),
-                                                      width: 0.8,
+                                                }
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing12,
+                                                  vertical: kSpacing8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.expenseColor.withValues(alpha: 0.08),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.close_rounded,
+                                                      size: 14,
+                                                      color: AppTheme.expenseColor,
                                                     ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.check_rounded,
-                                                        size: 14,
-                                                        color: AppTheme
-                                                            .incomeColor,
+                                                    const SizedBox(width: kSpacing6),
+                                                    Text(
+                                                      'Reject',
+                                                      style: theme.textTheme.labelSmall?.copyWith(
+                                                        color: AppTheme.expenseColor,
+                                                        fontWeight: FontWeight.w500,
                                                       ),
-                                                      const SizedBox(
-                                                        width: kSpacing6,
-                                                      ),
-                                                      Text(
-                                                        'Approve',
-                                                        style: theme
-                                                            .textTheme
-                                                            .labelSmall
-                                                            ?.copyWith(
-                                                              color: AppTheme
-                                                                  .incomeColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      // Floating batch action bar
+                      if (isSelecting)
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(
+                              kSpacing16,
+                              kSpacing12,
+                              kSpacing16,
+                              MediaQuery.of(context).padding.bottom + kSpacing12,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  theme.colorScheme.surface.withValues(alpha: 0),
+                                  theme.colorScheme.surface,
+                                  theme.colorScheme.surface,
                                 ],
                               ),
                             ),
+                            child: Row(
+                              children: [
+                                TactileSpringContainer(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedIds.clear();
+                                      _selectAll = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing14,
+                                      vertical: kSpacing10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: theme.textTheme.labelMedium?.copyWith(
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing10),
+                                Expanded(
+                                  child: TactileSpringContainer(
+                                    onTap: _showBatchCategoryPicker,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: kSpacing10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primary,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Categorize (${_selectedIds.length})',
+                                          style: theme.textTheme.labelMedium?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing10),
+                                Expanded(
+                                  child: TactileSpringContainer(
+                                    onTap: () async {
+                                      for (final id in _selectedIds) {
+                                        await ref
+                                            .read(transactionRepositoryProvider)
+                                            .approveReviewedTransaction(id);
+                                      }
+                                      ref.invalidate(reviewQueueStreamProvider);
+                                      ref.invalidate(recentTransactionsStreamProvider);
+                                      setState(() {
+                                        _selectedIds.clear();
+                                        _selectAll = false;
+                                      });
+                                      if (context.mounted) {
+                                        CustomToast.show(
+                                          context,
+                                          message: '${_selectedIds.length} transactions approved',
+                                          type: ToastType.success,
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: kSpacing10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.incomeColor,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Approve',
+                                          style: theme.textTheme.labelMedium?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    },
+                    ],
                   );
                 },
                 loading: () => const Center(
