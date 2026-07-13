@@ -23,7 +23,6 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -259,12 +258,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(netWorthProvider);
 
       if (mounted) {
-        await SuccessCheckmark.show(
+        CustomToast.show(
           context,
           message: 'Transaction saved!',
-          hapticFeedback: false,
+          type: ToastType.success,
         );
-        if (mounted) context.pop();
+        context.pop();
       }
     } catch (e) {
       HapticFeedback.heavyImpact();
@@ -772,10 +771,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         final onSurface = theme.colorScheme.onSurface;
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            return AnimatedPadding(
-              padding: MediaQuery.of(context).viewInsets,
-              duration: const Duration(milliseconds: 100),
-              child: Container(
+            return Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
                   borderRadius: const BorderRadius.vertical(
@@ -1154,9 +1150,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ],
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
         );
       },
     );

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -666,21 +667,24 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               right: 0,
               child: StaggeredFadeSlide(
                 index: 0,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 16,
-                    bottom: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: onSurface.withValues(alpha: 0.25),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: onSurface.withValues(alpha: 0.06),
-                        width: 0.5,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top + 16,
+                        bottom: 12,
                       ),
-                    ),
-                  ),
-                  child: Column(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface.withValues(alpha: 0.75),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: onSurface.withValues(alpha: 0.06),
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -960,6 +964,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
                   ),
                 ),
               ),

@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -37,15 +38,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
   late DateTime _selectedDate;
   bool _isLoading = false;
 
-  final List<String> _colors = [
-    '#30D158', // Emerald
-    '#0A84FF', // Sapphire
-    '#BF5AF2', // Amethyst
-    '#FF9F0A', // Amber
-    '#FF453A', // Ruby
-    '#64D2FF', // Turquoise
-    '#FFD60A', // Gold
-  ];
+
 
   final List<Map<String, dynamic>> _icons = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings},
@@ -69,7 +62,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       _selectedIcon = widget.existingGoal!.icon;
       _selectedDate = widget.existingGoal!.targetDate;
     } else {
-      _selectedColor = _colors.isNotEmpty ? _colors.first : '#30D158';
+      _selectedColor = '#30D158';
       _selectedIcon = _icons.isNotEmpty ? _icons.first['name'] : 'savings';
       _selectedDate = DateTime.now().add(
         const Duration(days: 90),
@@ -179,8 +172,8 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                 top: Radius.circular(24),
               ),
             ),
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            padding: const EdgeInsets.only(
+              bottom: kSpacing24,
               left: 16,
               right: 16,
               top: 8,
@@ -339,57 +332,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           vertical: 14,
                         ),
                         borderRadius: AppTheme.radiusCard,
-                        child: SizedBox(
-                          height: 44,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _colors.length,
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(width: kSpacing16),
-                            itemBuilder: (context, index) {
-                              final colorHex = _colors[index];
-                              final colorVal = hexToColor(colorHex);
-                              final isSelected = _selectedColor == colorHex;
-                              return GestureDetector(
-                                onTap: () {
-                                  HapticFeedback.selectionClick();
-                                  setState(() => _selectedColor = colorHex);
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 250),
-                                  curve: Curves.easeInOut,
-                                  width: isSelected ? 44 : 38,
-                                  height: isSelected ? 44 : 38,
-                                  decoration: BoxDecoration(
-                                    color: colorVal,
-                                    shape: BoxShape.circle,
-                                    border: isSelected
-                                        ? Border.all(
-                                            color: theme.colorScheme.onSurface,
-                                            width: 3,
-                                          )
-                                        : Border.all(
-                                            color: colorVal.withValues(
-                                              alpha: 0.3,
-                                            ),
-                                            width: 1,
-                                          ),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: colorVal.withValues(
-                                                alpha: 0.5,
-                                              ),
-                                              blurRadius: 10,
-                                              spreadRadius: 1,
-                                            ),
-                                          ]
-                                        : [],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        child: ModernColorPicker(
+                          selectedColorHex: _selectedColor,
+                          onColorChanged: (hex) {
+                            setState(() => _selectedColor = hex);
+                          },
                         ),
                       ),
                     ),

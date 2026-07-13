@@ -29,6 +29,8 @@ import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
+import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -490,7 +492,7 @@ class SettingsScreen extends ConsumerWidget {
                   label: const Text('Add Custom'),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _showAddCategoryDialog(context, ref);
+                    showAddCategoryDialog(context, ref);
                   },
                 ),
               ],
@@ -549,7 +551,7 @@ class SettingsScreen extends ConsumerWidget {
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).pop();
-                              _showAddCategoryDialog(
+                              showAddCategoryDialog(
                                 context,
                                 ref,
                                 existing: cat,
@@ -601,242 +603,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showAddCategoryDialog(
-    BuildContext context,
-    WidgetRef ref, {
-    Category? existing,
-  }) {
-    final isEditing = existing != null;
-    final nameController = TextEditingController(text: existing?.name ?? '');
-    String categoryType = existing?.type == 'income' ? 'Income' : 'Expense';
-    String selectedHexColor = existing?.color ?? '#FF9800';
-    String selectedIcon = existing?.icon ?? 'cart';
 
-    final hexColors = [
-      '#F44336',
-      '#E91E63',
-      '#9C27B0',
-      '#673AB7',
-      '#2196F3',
-      '#00BCD4',
-      '#009688',
-      '#4CAF50',
-      '#FFC107',
-      '#FF9800',
-      '#795548',
-      '#607D8B',
-    ];
-    final icons = [
-      'cart',
-      'briefcase',
-      'store',
-      'bus',
-      'home',
-      'zap',
-      'phone',
-      'heart',
-      'book',
-      'film',
-      'coffee',
-      'send',
-      'piggy-bank',
-    ];
-
-    ModernDialog.show(
-      context: context,
-      title: Text(isEditing ? 'Edit Category' : 'Add Custom Category'),
-      titleIcon: PesaFlowIcons.category,
-      content: StatefulBuilder(
-        builder: (context, setState) {
-          final theme = Theme.of(context);
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: context.inputDecoration(
-                  labelText: 'Category Name',
-                  hintText: 'e.g. Subscriptions, Laundry',
-                  prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                ),
-                textCapitalization: TextCapitalization.words,
-              ),
-              const SizedBox(height: kSpacing16),
-              ModernDropdown<String>(
-                labelText: 'Category Type',
-                value: categoryType,
-                prefixIcon: PesaFlowIcons.sort,
-                items: const [
-                    ModernDropdownItem(
-                      value: 'Expense',
-                      label: 'Expense',
-                      icon: PesaFlowIcons.expense,
-                      color: AppTheme.expenseColor,
-                      subtitle: 'Money going out',
-                    ),
-                  ModernDropdownItem(
-                    value: 'Income',
-                    label: 'Income',
-                    icon: PesaFlowIcons.income,
-                    color: AppTheme.transferColorDark,
-                    subtitle: 'Money coming in',
-                  ),
-                ],
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {
-                      categoryType = val;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: kSpacing20),
-              Text(
-                'Select Theme Color',
-                style: context.ts(
-                  11,
-                  fontWeight: FontWeight.bold,
-                  color: context.appColors.textMedium,
-                ),
-              ),
-              const SizedBox(height: kSpacing10),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: hexColors.map((hex) {
-                  final isSelected = selectedHexColor == hex;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedHexColor = hex;
-                      });
-                    },
-                    child: Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: hexToColor(hex),
-                        shape: BoxShape.circle,
-                        border: isSelected
-                            ? Border.all(
-                                color: theme.brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                width: 2,
-                              )
-                            : null,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: kSpacing20),
-              Text(
-                'Select Icon',
-                style: context.ts(
-                  11,
-                  fontWeight: FontWeight.bold,
-                  color: context.appColors.textMedium,
-                ),
-              ),
-              const SizedBox(height: kSpacing10),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: icons.map((icName) {
-                  final isSelected = selectedIcon == icName;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIcon = icName;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing8),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? theme.colorScheme.primary.withValues(alpha: 0.15)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: isSelected
-                            ? Border.all(
-                                color: theme.colorScheme.primary,
-                                width: 1.5,
-                              )
-                            : null,
-                      ),
-                      child: Icon(
-                        getCategoryIcon(icName),
-                        size: 24,
-                        color: isSelected
-                            ? theme.colorScheme.primary
-                            : context.appColors.textMedium,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          );
-        },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: kSpacing20,
-              vertical: kSpacing12,
-            ),
-          ),
-          onPressed: () async {
-            if (nameController.text.trim().isEmpty) return;
-
-            if (isEditing) {
-              final updated = existing.copyWith(
-                name: nameController.text.trim(),
-                icon: selectedIcon,
-                color: selectedHexColor,
-                type: categoryType.toLowerCase(),
-              );
-              await ref
-                  .read(categoryRepositoryProvider)
-                  .updateCategory(updated);
-            } else {
-              final newCategory = Category(
-                id: const Uuid().v4(),
-                name: nameController.text.trim(),
-                icon: selectedIcon,
-                color: selectedHexColor,
-                type: categoryType.toLowerCase(),
-                isSystem: false,
-                sortOrder: 100,
-                createdAt: DateTime.now(),
-              );
-              await ref
-                  .read(categoryRepositoryProvider)
-                  .createCategory(newCategory);
-            }
-            ref.invalidate(categoriesFutureProvider);
-            ref.invalidate(filteredTransactionsStreamProvider);
-            if (context.mounted) {
-              Navigator.of(context, rootNavigator: true).pop();
-            }
-          },
-          child: Text(isEditing ? 'Save' : 'Create'),
-        ),
-      ],
-    );
-  }
 
   Future<void> _handleExportCsv(BuildContext context, WidgetRef ref) async {
     try {

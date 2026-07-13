@@ -43,7 +43,6 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     return RepaintBoundary(
       child: Stack(
         children: [
-          widget.child,
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
@@ -55,6 +54,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
               ),
             ),
           ),
+          widget.child,
         ],
       ),
     );

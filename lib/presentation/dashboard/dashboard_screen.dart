@@ -922,61 +922,58 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── SMS auto-categorization count ──
                         Consumer(
                           builder: (context, ref, _) {
-                            final smsCountAsync = ref.watch(
-                              todaySmsCountProvider,
-                            );
+                            final smsCountAsync = ref.watch(todaySmsCountProvider);
                             return smsCountAsync.when(
                               data: (count) {
                                 if (count == 0) return const SizedBox.shrink();
                                 return Padding(
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                     top: kSpacing12,
                                     left: kSpacing20,
                                     right: kSpacing20,
                                   ),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: kSpacing16,
-                                      vertical: kSpacing12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary
-                                            .withValues(alpha: 0.15),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.message_rounded,
-                                          size: 18,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
+                                  child: Center(
+                                    child: TactileSpringContainer(
+                                      onTap: () => context.go('/sms-review'),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing16,
+                                          vertical: kSpacing10,
                                         ),
-                                        SizedBox(width: kSpacing10),
-                                        Expanded(
-                                          child: Text(
-                                            'Auto-categorized $count message${count == 1 ? '' : 's'} today  ↗',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Theme.of(
-                                                    context,
-                                                  ).colorScheme.primary,
-                                                ),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                          borderRadius: BorderRadius.circular(100),
+                                          border: Border.all(
+                                            color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                            width: 0.8,
                                           ),
                                         ),
-                                      ],
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.message_rounded,
+                                              size: 14,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                            const SizedBox(width: kSpacing8),
+                                            Text(
+                                              'Auto-categorized $count message${count == 1 ? '' : 's'} today',
+                                              style: theme.textTheme.labelMedium?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: theme.colorScheme.primary,
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing6),
+                                            Icon(
+                                              Icons.arrow_outward_rounded,
+                                              size: 12,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 );

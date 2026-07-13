@@ -18,7 +18,6 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
@@ -154,17 +153,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
             prevItems.isNotEmpty &&
             nextItems != null &&
             nextItems.isEmpty) {
-          if (context.mounted) {
-            SuccessCheckmark.show(
-              context,
-              message: 'All transactions reviewed!',
-            );
             CustomToast.show(
               context,
               message: 'All transactions reviewed!',
               type: ToastType.success,
             );
-          }
         }
       },
     );
