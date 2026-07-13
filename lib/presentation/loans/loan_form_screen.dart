@@ -163,12 +163,13 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                         color: isSelected
                             ? theme.colorScheme.primary.withValues(alpha: 0.08)
                             : theme.colorScheme.surfaceContainerHighest
-                                .withValues(alpha: 0.3),
+                                  .withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(12),
                         border: isSelected
                             ? Border.all(
-                                color: theme.colorScheme.primary
-                                    .withValues(alpha: 0.3),
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
                               )
                             : null,
                       ),
@@ -179,16 +180,18 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                             size: 20,
                             color: isSelected
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.6),
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                           ),
                           const SizedBox(width: kSpacing12),
                           Expanded(
                             child: Text(
                               cat,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight:
-                                    isSelected ? FontWeight.w600 : FontWeight.w400,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
                                 color: isSelected
                                     ? theme.colorScheme.primary
                                     : theme.colorScheme.onSurface,
@@ -506,10 +509,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   child: InputDecorator(
                     decoration: context.inputDecoration(
                       labelText: 'Category (optional)',
-                      prefixIcon: const Icon(
-                        PesaFlowIcons.category,
-                        size: 18,
-                      ),
+                      prefixIcon: const Icon(PesaFlowIcons.category, size: 18),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

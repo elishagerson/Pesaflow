@@ -297,12 +297,20 @@ class LoanListScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Total Outstanding',
-                      style: context.ts(12, fontWeight: FontWeight.w600, color: onSurface.withValues(alpha: 0.6)),
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w600,
+                        color: onSurface.withValues(alpha: 0.6),
+                      ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       CurrencyFormatter.formatCents(total),
-                      style: context.ts(22, fontWeight: FontWeight.w900, color: onSurface),
+                      style: context.ts(
+                        22,
+                        fontWeight: FontWeight.w900,
+                        color: onSurface,
+                      ),
                     ),
                   ],
                 ),
@@ -397,7 +405,9 @@ class LoanListScreen extends ConsumerWidget {
                                   vertical: kSpacing2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -451,7 +461,10 @@ class LoanListScreen extends ConsumerWidget {
                       const SizedBox(height: kSpacing2),
                       Text(
                         '${CurrencyFormatter.formatCents(loan.remaining)} left',
-                        style: context.ts(11, color: onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          11,
+                          color: onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
                     ],
                   ),
@@ -520,7 +533,9 @@ class LoanListScreen extends ConsumerWidget {
                               vertical: kSpacing2,
                             ),
                             decoration: BoxDecoration(
-                              color: context.appColors.incomeColor.withValues(alpha: 0.1),
+                              color: context.appColors.incomeColor.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -536,7 +551,12 @@ class LoanListScreen extends ConsumerWidget {
                         ],
                         Text(
                           'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
-                          style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                          style: context.ts(
+                            11,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
+                          ),
                         ),
                       ],
                     ),
