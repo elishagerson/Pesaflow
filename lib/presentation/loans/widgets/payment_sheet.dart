@@ -766,20 +766,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                     );
                                                 if (success) {
                                                   if (sheetContext.mounted) {
-                                                    showDialog(
-                                                      context: sheetContext,
-                                                      barrierDismissible: false,
-                                                      barrierColor:
-                                                          Colors.transparent,
-                                                       builder: (_) => PopScope(
-                                                        canPop: false,
-                                                        child: const SuccessCheckmark(),
-                                                      ),
-                                                    );
-                                                    await Future.delayed(
-                                                      const Duration(
-                                                        milliseconds: 1200,
-                                                      ),
+                                                    await SuccessCheckmark.show(
+                                                      sheetContext,
+                                                      message: 'Payment recorded!',
                                                     );
                                                     if (sheetContext.mounted) {
                                                       Navigator.of(

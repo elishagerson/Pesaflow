@@ -155,24 +155,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
             nextItems != null &&
             nextItems.isEmpty) {
           if (context.mounted) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              barrierColor: Colors.transparent,
-              builder: (dialogContext) {
-                Future.delayed(
-                  const Duration(milliseconds: 1200),
-                  () {
-                    if (dialogContext.mounted) {
-                      Navigator.of(dialogContext).pop();
-                    }
-                  },
-                );
-                return PopScope(
-                  canPop: false,
-                  child: const SuccessCheckmark(),
-                );
-              },
+            SuccessCheckmark.show(
+              context,
+              message: 'All transactions reviewed!',
             );
             CustomToast.show(
               context,

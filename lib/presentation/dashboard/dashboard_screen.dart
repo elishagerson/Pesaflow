@@ -233,9 +233,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final cardGradient = LinearGradient(
       colors: [
         trackerColor.withValues(alpha: 0.22),
-        theme.brightness == Brightness.dark
-            ? const Color(0xFF1E2429)
-            : const Color(0xFF1A1F24),
+        theme.colorScheme.surfaceContainerHigh,
       ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,

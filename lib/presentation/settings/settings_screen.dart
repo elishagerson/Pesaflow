@@ -1026,9 +1026,7 @@ class SettingsScreen extends ConsumerWidget {
             border: Border.all(
               color: isSelected
                   ? theme.colorScheme.primary.withValues(alpha: 0.3)
-                  : (theme.brightness == Brightness.dark
-                        ? const Color(0x1FFFFFFF)
-                        : const Color(0x1F000000)),
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.06),
             ),
           ),
           child: Row(

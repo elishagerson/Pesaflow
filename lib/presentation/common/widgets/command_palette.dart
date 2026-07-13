@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
@@ -257,15 +256,12 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
           type: MaterialType.transparency,
           child: GestureDetector(
             onTap: _dismiss,
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.35),
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: LiquidGlassOverlay(
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.35),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: LiquidGlassOverlay(
                         child: Container(
                           constraints: const BoxConstraints(
                             maxWidth: 480,
@@ -534,9 +530,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                   ),
                 ),
               ),
-            ),
           ),
-        ),
       ),
     );
   }

@@ -586,9 +586,7 @@ class _AccountsPage extends StatelessWidget {
                         border: Border.all(
                           color: isSelected
                               ? theme.colorScheme.primary
-                              : (theme.brightness == Brightness.dark
-                                    ? const Color(0x1DFFFFFF)
-                                    : const Color(0x15000000)),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.08),
                           width: isSelected ? 1.5 : 0.8,
                         ),
                         boxShadow: isSelected

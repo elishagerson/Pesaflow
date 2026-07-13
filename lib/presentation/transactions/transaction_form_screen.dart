@@ -259,16 +259,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(netWorthProvider);
 
       if (mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          barrierColor: Colors.transparent,
-          builder: (_) => PopScope(
-            canPop: false,
-            child: const SuccessCheckmark(),
-          ),
+        await SuccessCheckmark.show(
+          context,
+          message: 'Transaction saved!',
+          hapticFeedback: false,
         );
-        await Future.delayed(const Duration(milliseconds: 1200));
         if (mounted) context.pop();
       }
     } catch (e) {
