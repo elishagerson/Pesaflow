@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class StaggeredList extends StatelessWidget {
@@ -54,6 +56,7 @@ class _StaggeredItemState extends State<_StaggeredItem>
   late AnimationController _controller;
   late Animation<double> _fade;
   late Animation<Offset> _slide;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -71,7 +74,7 @@ class _StaggeredItemState extends State<_StaggeredItem>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    Future.delayed(
+    _timer = Timer(
       Duration(milliseconds: (widget.index * widget.staggerDelay).round()),
       () {
         if (mounted) _controller.forward();
@@ -81,6 +84,7 @@ class _StaggeredItemState extends State<_StaggeredItem>
 
   @override
   void dispose() {
+    _timer?.cancel();
     _controller.dispose();
     super.dispose();
   }

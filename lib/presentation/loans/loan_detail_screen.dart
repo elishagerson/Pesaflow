@@ -187,7 +187,9 @@ class LoanDetailScreen extends ConsumerWidget {
     final isPaid = loan.status == 'paid';
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
     final statusColor = isActive
-        ? (ratio > 0.5 ? context.appColors.expenseColor : theme.colorScheme.tertiary)
+        ? (ratio > 0.5
+              ? context.appColors.expenseColor
+              : theme.colorScheme.tertiary)
         : context.appColors.incomeColor;
 
     return Hero(
@@ -311,7 +313,11 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusTimeline(BuildContext context, Loan loan, ThemeData theme) {
+  Widget _buildStatusTimeline(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+  ) {
     final events = <_TimelineEvent>[
       _TimelineEvent(
         title: 'Loan Disbursed',
@@ -377,7 +383,11 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTimelineRow(BuildContext context, _TimelineEvent event, ThemeData theme) {
+  Widget _buildTimelineRow(
+    BuildContext context,
+    _TimelineEvent event,
+    ThemeData theme,
+  ) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -532,7 +542,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       height: 20,
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? context.appColors.incomeColor.withValues(alpha: 0.15)
+                            ? context.appColors.incomeColor.withValues(
+                                alpha: 0.15,
+                              )
                             : theme.colorScheme.onSurface.withValues(
                                 alpha: 0.08,
                               ),
@@ -571,7 +583,9 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? context.appColors.incomeColor.withValues(alpha: 0.12)
+                            ? context.appColors.incomeColor.withValues(
+                                alpha: 0.12,
+                              )
                             : AppTheme.tertiaryLight.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(kSpacing8),
                       ),
@@ -705,7 +719,9 @@ class LoanDetailScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
-                    color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                    color: context.appColors.incomeColor.withValues(
+                      alpha: 0.12,
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

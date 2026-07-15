@@ -289,16 +289,16 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 PesaFlowIcons.category,
                                 size: 16,
-                                color: Colors.white,
+                                color: theme.colorScheme.onPrimary,
                               ),
                               const SizedBox(width: kSpacing6),
                               Text(
                                 'Categorize (${_selectedIds.length})',
                                 style: theme.textTheme.labelMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: theme.colorScheme.onPrimary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -518,10 +518,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 ),
                                               ),
                                               child: isSelected
-                                                  ? const Icon(
+                                                  ? Icon(
                                                       Icons.check_rounded,
                                                       size: 14,
-                                                      color: Colors.white,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onPrimary,
                                                     )
                                                   : null,
                                             ),
@@ -748,7 +750,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       vertical: kSpacing8,
                                                     ),
                                                 decoration: BoxDecoration(
-                                                  color: context.appColors.incomeColor
+                                                  color: context
+                                                      .appColors
+                                                      .incomeColor
                                                       .withValues(alpha: 0.12),
                                                   borderRadius:
                                                       BorderRadius.circular(8),
@@ -760,8 +764,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     Icon(
                                                       Icons.check_rounded,
                                                       size: 14,
-                                                      color:
-                                                          context.appColors.incomeColor,
+                                                      color: context
+                                                          .appColors
+                                                          .incomeColor,
                                                     ),
                                                     const SizedBox(
                                                       width: kSpacing6,
@@ -817,7 +822,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       vertical: kSpacing8,
                                                     ),
                                                 decoration: BoxDecoration(
-                                                  color: context.appColors.expenseColor
+                                                  color: context
+                                                      .appColors
+                                                      .expenseColor
                                                       .withValues(alpha: 0.08),
                                                   borderRadius:
                                                       BorderRadius.circular(8),
@@ -829,8 +836,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     Icon(
                                                       Icons.close_rounded,
                                                       size: 14,
-                                                      color:
-                                                          context.appColors.expenseColor,
+                                                      color: context
+                                                          .appColors
+                                                          .expenseColor,
                                                     ),
                                                     const SizedBox(
                                                       width: kSpacing6,
@@ -841,7 +849,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                           .textTheme
                                                           .labelSmall
                                                           ?.copyWith(
-                                                            color: context.appColors
+                                                            color: context
+                                                                .appColors
                                                                 .expenseColor,
                                                             fontWeight:
                                                                 FontWeight.w500,
@@ -943,7 +952,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           'Categorize (${_selectedIds.length})',
                                           style: theme.textTheme.labelMedium
                                               ?.copyWith(
-                                                color: Colors.white,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                         ),
@@ -1361,8 +1371,12 @@ class _SwipeableCardState extends State<SwipeableCard>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              context.appColors.incomeColor.withValues(alpha: 0.24),
-                              context.appColors.incomeColor.withValues(alpha: 0.0),
+                              context.appColors.incomeColor.withValues(
+                                alpha: 0.24,
+                              ),
+                              context.appColors.incomeColor.withValues(
+                                alpha: 0.0,
+                              ),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(
@@ -1380,9 +1394,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                               borderRadius: BorderRadius.circular(kSpacing12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: context.appColors.incomeColor.withValues(
-                                    alpha: 0.4,
-                                  ),
+                                  color: context.appColors.incomeColor
+                                      .withValues(alpha: 0.4),
                                   blurRadius: 15,
                                 ),
                               ],
@@ -1412,8 +1425,12 @@ class _SwipeableCardState extends State<SwipeableCard>
                             begin: Alignment.centerRight,
                             end: Alignment.centerLeft,
                             colors: [
-                              context.appColors.expenseColor.withValues(alpha: 0.24),
-                              context.appColors.expenseColor.withValues(alpha: 0.0),
+                              context.appColors.expenseColor.withValues(
+                                alpha: 0.24,
+                              ),
+                              context.appColors.expenseColor.withValues(
+                                alpha: 0.0,
+                              ),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(
@@ -1431,9 +1448,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                               borderRadius: BorderRadius.circular(kSpacing12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: context.appColors.expenseColor.withValues(
-                                    alpha: 0.4,
-                                  ),
+                                  color: context.appColors.expenseColor
+                                      .withValues(alpha: 0.4),
                                   blurRadius: 15,
                                 ),
                               ],

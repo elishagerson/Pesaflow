@@ -496,7 +496,9 @@ class _SmsPermissionPage extends StatelessWidget {
                       ? PesaFlowIcons.success
                       : PesaFlowIcons.info,
                   size: 14,
-                  color: permissionGranted ? context.appColors.incomeColor : Colors.grey,
+                  color: permissionGranted
+                      ? context.appColors.incomeColor
+                      : Colors.grey,
                 ),
                 const SizedBox(width: kSpacing6),
                 Text(

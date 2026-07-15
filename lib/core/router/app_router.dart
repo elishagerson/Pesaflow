@@ -316,7 +316,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF0F4C5C).withValues(alpha: 0.1)
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -326,7 +326,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                           item.$1,
                           size: 20,
                           color: isSelected
-                              ? const Color(0xFF0F4C5C)
+                              ? theme.colorScheme.primary
                               : theme.colorScheme.onSurface.withValues(
                                   alpha: 0.6,
                                 ),
@@ -339,7 +339,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                                 ? FontWeight.w700
                                 : FontWeight.w500,
                             color: isSelected
-                                ? const Color(0xFF0F4C5C)
+                                ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurface.withValues(
                                     alpha: 0.6,
                                   ),

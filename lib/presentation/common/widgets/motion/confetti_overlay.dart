@@ -29,15 +29,17 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   final List<_ConfettiParticle> _particles = [];
   final Random _rand = Random();
 
-  List<Color> get _effectiveColors => widget.colors ?? [
-    context.appColors.expenseColor,
-    AppTheme.transferColorDark,
-    AppTheme.incomeColorDark,
-    context.appColors.incomeColor,
-    AppTheme.transferColor,
-    AppTheme.primaryLight,
-    AppTheme.expenseColorDark,
-  ];
+  List<Color> get _effectiveColors =>
+      widget.colors ??
+      [
+        context.appColors.expenseColor,
+        AppTheme.transferColorDark,
+        AppTheme.incomeColorDark,
+        context.appColors.incomeColor,
+        AppTheme.transferColor,
+        AppTheme.primaryLight,
+        AppTheme.expenseColorDark,
+      ];
 
   @override
   void initState() {

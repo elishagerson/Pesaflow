@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -615,7 +614,8 @@ class _SavingsGoalDetailScreenState
                                             },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: accentColor,
-                                        foregroundColor: Colors.white,
+                                        foregroundColor:
+                                            theme.colorScheme.onPrimary,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
@@ -627,12 +627,13 @@ class _SavingsGoalDetailScreenState
                                         ),
                                       ),
                                       child: sheetIsContributing
-                                          ? const SizedBox(
+                                          ? SizedBox(
                                               width: 20,
                                               height: 20,
                                               child: CircularProgressIndicator(
                                                 strokeWidth: 2,
-                                                color: Colors.white,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
                                               ),
                                             )
                                           : Row(
@@ -646,7 +647,9 @@ class _SavingsGoalDetailScreenState
                                                       : Icons
                                                             .remove_circle_outline_rounded,
                                                   size: 18,
-                                                  color: Colors.white
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onPrimary
                                                       .withValues(alpha: 0.8),
                                                 ),
                                                 const SizedBox(
@@ -931,7 +934,7 @@ class _SavingsGoalDetailScreenState
                         child: Container(
                           height: kSpacing48,
                           decoration: BoxDecoration(
-                            color: AppTheme.transferColorDark.withValues(
+                            color: context.appColors.incomeColor.withValues(
                               alpha: 0.15,
                             ),
                             borderRadius: BorderRadius.circular(12),
@@ -940,9 +943,9 @@ class _SavingsGoalDetailScreenState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 PesaFlowIcons.add,
-                                color: AppTheme.transferColorDark,
+                                color: context.appColors.incomeColor,
                                 size: 18,
                               ),
                               const SizedBox(width: kSpacing6),
@@ -1055,7 +1058,7 @@ class _SavingsGoalDetailScreenState
                                   height: 8,
                                   decoration: BoxDecoration(
                                     color: isPos
-                                        ? AppTheme.transferColorDark
+                                        ? context.appColors.incomeColor
                                         : context.appColors.expenseColor,
                                     shape: BoxShape.circle,
                                   ),
@@ -1108,7 +1111,7 @@ class _SavingsGoalDetailScreenState
                                           .copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: isPos
-                                                ? AppTheme.transferColorDark
+                                                ? context.appColors.incomeColor
                                                 : context
                                                       .appColors
                                                       .expenseColor,

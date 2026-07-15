@@ -52,6 +52,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.listen(transactionSearchQueryProvider, (prev, next) {
+      if (_searchController.text != next) {
+        _searchController.text = next;
+        _searchController.selection = TextSelection.fromPosition(
+          TextPosition(offset: next.length),
+        );
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _searchDebounce?.cancel();
     _searchController.dispose();
@@ -92,13 +105,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
     // Watch streams/futures
     final transactionsAsync = ref.watch(filteredTransactionsStreamProvider);
-
-    if (_searchController.text != searchQuery) {
-      _searchController.text = searchQuery;
-      _searchController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _searchController.text.length),
-      );
-    }
 
     return Scaffold(
       body: RefreshIndicator(

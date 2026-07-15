@@ -798,7 +798,7 @@ class TransactionDetailScreen extends ConsumerWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.error,
-            foregroundColor: Colors.white,
+            foregroundColor: theme.colorScheme.onPrimary,
           ),
           onPressed: () async {
             try {

@@ -4,7 +4,6 @@ import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -911,7 +910,7 @@ class _SavingsGoalDetailSheetState
                           child: Container(
                             height: 44,
                             decoration: BoxDecoration(
-                              color: AppTheme.transferColorDark.withValues(
+                              color: context.appColors.incomeColor.withValues(
                                 alpha: 0.15,
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -922,7 +921,7 @@ class _SavingsGoalDetailSheetState
                               children: [
                                 Icon(
                                   PesaFlowIcons.add,
-                                  color: AppTheme.transferColorDark,
+                                  color: context.appColors.incomeColor,
                                   size: 18,
                                 ),
                                 const SizedBox(width: kSpacing6),
@@ -1037,7 +1036,7 @@ class _SavingsGoalDetailSheetState
                                     height: 8,
                                     decoration: BoxDecoration(
                                       color: isPos
-                                          ? AppTheme.transferColorDark
+                                          ? context.appColors.incomeColor
                                           : context.appColors.expenseColor,
                                       shape: BoxShape.circle,
                                     ),
@@ -1097,7 +1096,9 @@ class _SavingsGoalDetailSheetState
                                             .copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: isPos
-                                                  ? AppTheme.transferColorDark
+                                                  ? context
+                                                        .appColors
+                                                        .incomeColor
                                                   : context
                                                         .appColors
                                                         .expenseColor,

@@ -31,7 +31,7 @@ class GlassCard extends StatefulWidget {
     this.margin,
     this.padding,
     this.onTap,
-    this.showAccentStrip = true,
+    this.showAccentStrip = false,
   });
 
   @override

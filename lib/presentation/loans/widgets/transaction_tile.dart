@@ -16,7 +16,9 @@ class TransactionTile extends StatelessWidget {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final isCredit = tx.type == 'income';
-    final amountColor = isCredit ? context.appColors.incomeColor : context.appColors.expenseColor;
+    final amountColor = isCredit
+        ? context.appColors.incomeColor
+        : context.appColors.expenseColor;
     return Container(
       margin: const EdgeInsets.only(bottom: kSpacing8),
       padding: const EdgeInsets.all(kSpacing12),

@@ -585,7 +585,9 @@ class _RecurringTransactionListScreenState
         : recurring.status != 'active'
         ? context.appColors.textMedium
         : categoryColor ??
-              (isExpense ? context.appColors.expenseColor : context.appColors.incomeColor);
+              (isExpense
+                  ? context.appColors.expenseColor
+                  : context.appColors.incomeColor);
     final mutedAccent = categoryColor != null
         ? desaturateColor(accentColor)
         : accentColor;
@@ -797,7 +799,9 @@ class _RecurringTransactionListScreenState
                     vertical: kSpacing6,
                   ),
                   decoration: BoxDecoration(
-                    color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                    color: context.appColors.incomeColor.withValues(
+                      alpha: 0.12,
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

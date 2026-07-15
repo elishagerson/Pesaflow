@@ -823,7 +823,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:
                                             context.appColors.incomeColor,
-                                        foregroundColor: Colors.white,
+                                        foregroundColor:
+                                            theme.colorScheme.onPrimary,
                                         disabledBackgroundColor: onSurface
                                             .withValues(alpha: 0.05),
                                         disabledForegroundColor: onSurface
@@ -835,16 +836,17 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           ),
                                         ),
                                         padding: const EdgeInsets.symmetric(
-                                          vertical: 14,
+                                          vertical: kSpacing14,
                                         ),
                                       ),
                                       child: sheetIsProcessing
-                                          ? const SizedBox(
+                                          ? SizedBox(
                                               width: 20,
                                               height: 20,
                                               child: CircularProgressIndicator(
                                                 strokeWidth: 2,
-                                                color: Colors.white,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
                                               ),
                                             )
                                           : Row(

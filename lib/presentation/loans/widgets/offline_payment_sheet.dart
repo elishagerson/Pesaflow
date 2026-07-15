@@ -139,8 +139,8 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     ),
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 4,
+                                    horizontal: kSpacing16,
+                                    vertical: kSpacing4,
                                   ),
                                   child: Row(
                                     children: [
@@ -431,7 +431,8 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         : null,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF609F8A),
-                                      foregroundColor: Colors.white,
+                                      foregroundColor:
+                                          theme.colorScheme.onPrimary,
                                       disabledBackgroundColor: onSurface
                                           .withValues(alpha: 0.05),
                                       disabledForegroundColor: onSurface
@@ -445,12 +446,13 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       ),
                                     ),
                                     child: sheetIsProcessing
-                                        ? const SizedBox(
+                                        ? SizedBox(
                                             width: 20,
                                             height: 20,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
-                                              color: Colors.white,
+                                              color:
+                                                  theme.colorScheme.onPrimary,
                                             ),
                                           )
                                         : Text(

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -140,69 +140,65 @@ class _ToastWidgetState extends State<_ToastWidget>
                       color: Colors.transparent,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                              vertical: kSpacing12,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing20,
+                            vertical: kSpacing12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHigh
+                                .withValues(
+                                  alpha: theme.brightness == Brightness.dark
+                                      ? 0.70
+                                      : 0.85,
+                                ),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: brandColor.withValues(alpha: 0.15),
+                              width: 1.0,
                             ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHigh
-                                  .withValues(
-                                    alpha: theme.brightness == Brightness.dark
-                                        ? 0.70
-                                        : 0.85,
-                                  ),
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: brandColor.withValues(alpha: 0.15),
-                                width: 1.0,
+                            boxShadow: [
+                              BoxShadow(
+                                color: brandColor.withValues(alpha: 0.08),
+                                blurRadius: 24,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 8),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: brandColor.withValues(alpha: 0.08),
-                                  blurRadius: 24,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Snappy spring-scaled icon reveal
-                                Transform.scale(
-                                  scale: t.clamp(0.0, 1.0),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: brandColor.withValues(alpha: 0.12),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      icon,
-                                      color: brandColor,
-                                      size: 16,
-                                    ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Snappy spring-scaled icon reveal
+                              Transform.scale(
+                                scale: t.clamp(0.0, 1.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: brandColor.withValues(alpha: 0.12),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    icon,
+                                    color: brandColor,
+                                    size: 16,
                                   ),
                                 ),
-                                const SizedBox(width: kSpacing10),
-                                Flexible(
-                                  child: Text(
-                                    widget.message,
-                                    style: theme.textTheme.labelMedium
-                                        ?.copyWith(
-                                          color: theme.colorScheme.onSurface,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.2,
-                                        ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                              ),
+                              const SizedBox(width: kSpacing10),
+                              Flexible(
+                                child: Text(
+                                  widget.message,
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.2,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
