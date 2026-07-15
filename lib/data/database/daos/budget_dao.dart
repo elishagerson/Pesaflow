@@ -171,9 +171,9 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   /// Watches for changes to the transactions table.
   /// Fires on every insert, update, or delete of any transaction.
   Stream<int> watchTransactionChanges() {
-    return select(
-      transactions,
-    ).watch().map((_) => DateTime.now().microsecondsSinceEpoch);
+    return tableUpdates(
+      TableUpdateQuery.onTable(transactions),
+    ).map((_) => DateTime.now().microsecondsSinceEpoch);
   }
 
   /// Gets all active budgets with their category, current period, and spent amount in a single query.

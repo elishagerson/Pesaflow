@@ -183,20 +183,20 @@ class _RecurringTransactionListScreenState
                             100,
                           ),
                           sliver: SliverList.builder(
-                            itemCount: _sortedRecurring.length,
+                            itemCount: sorted.length,
                             itemBuilder: (_, i) {
                               return StaggeredFadeSlide(
                                 index: i + 2,
                                 child: Dismissible(
-                                  key: ValueKey(_sortedRecurring[i].id),
+                                  key: ValueKey(sorted[i].id),
                                   direction: DismissDirection.endToStart,
                                   confirmDismiss: (_) async {
                                     showMarkRecurringPaymentSheet(
                                       context: context,
                                       ref: ref,
-                                      recurring: filtered[i],
+                                      recurring: sorted[i],
                                       accountName:
-                                          accountNames[filtered[i].accountId] ??
+                                          accountNames[sorted[i].accountId] ??
                                           'Unknown',
                                     );
                                     return false;
