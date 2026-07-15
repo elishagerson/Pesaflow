@@ -84,6 +84,13 @@ class _RecurringTransactionListScreenState
       body: recurringAsync.when(
         data: (recurring) {
           final filtered = _applyFilter(recurring);
+          final sorted = List<RecurringTransaction>.from(filtered)
+            ..sort((a, b) {
+              final aDue = dueIds.contains(a.id) ? 0 : 1;
+              final bDue = dueIds.contains(b.id) ? 0 : 1;
+              if (aDue != bDue) return aDue - bDue;
+              return a.nextDate.compareTo(b.nextDate);
+            });
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -176,30 +183,20 @@ class _RecurringTransactionListScreenState
                             100,
                           ),
                           sliver: SliverList.builder(
-                            itemCount: filtered.length,
+                            itemCount: _sortedRecurring.length,
                             itemBuilder: (_, i) {
-                              // Sort: due items first, then by nextDate
-                              final sorted =
-                                  List<RecurringTransaction>.from(
-                                    filtered,
-                                  )..sort((a, b) {
-                                    final aDue = dueIds.contains(a.id) ? 0 : 1;
-                                    final bDue = dueIds.contains(b.id) ? 0 : 1;
-                                    if (aDue != bDue) return aDue - bDue;
-                                    return a.nextDate.compareTo(b.nextDate);
-                                  });
                               return StaggeredFadeSlide(
                                 index: i + 2,
                                 child: Dismissible(
-                                  key: ValueKey(sorted[i].id),
+                                  key: ValueKey(_sortedRecurring[i].id),
                                   direction: DismissDirection.endToStart,
                                   confirmDismiss: (_) async {
                                     showMarkRecurringPaymentSheet(
                                       context: context,
                                       ref: ref,
-                                      recurring: sorted[i],
+                                      recurring: filtered[i],
                                       accountName:
-                                          accountNames[sorted[i].accountId] ??
+                                          accountNames[filtered[i].accountId] ??
                                           'Unknown',
                                     );
                                     return false;

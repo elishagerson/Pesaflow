@@ -1908,5 +1908,6 @@ class _GlossyWavesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _GlossyWavesPainter oldDelegate) =>
+      oldDelegate.accentColor != accentColor;
 }
