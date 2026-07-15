@@ -34,14 +34,18 @@ class NotificationService {
       );
       await _plugin.initialize(settings: initSettings);
 
-      final androidImplementation = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final androidImplementation = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       if (androidImplementation != null) {
         await androidImplementation.requestNotificationsPermission();
       }
 
-      final iosImplementation = _plugin.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
+      final iosImplementation = _plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
       if (iosImplementation != null) {
         await iosImplementation.requestPermissions(
           alert: true,

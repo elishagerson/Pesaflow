@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -76,7 +77,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               leading: Container(
                                 padding: const EdgeInsets.all(kSpacing8),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -187,11 +190,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
             prevItems.isNotEmpty &&
             nextItems != null &&
             nextItems.isEmpty) {
-            CustomToast.show(
-              context,
-              message: 'All transactions reviewed!',
-              type: ToastType.success,
-            );
+          CustomToast.show(
+            context,
+            message: 'All transactions reviewed!',
+            type: ToastType.success,
+          );
         }
       },
     );
@@ -338,17 +341,22 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             return StaggeredFadeSlide(
                               index: 0,
                               child: Padding(
-                                padding: const EdgeInsets.only(bottom: kSpacing16),
+                                padding: const EdgeInsets.only(
+                                  bottom: kSpacing16,
+                                ),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: kSpacing16,
                                     vertical: kSpacing12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                    color: theme.colorScheme.primary.withValues(
+                                      alpha: 0.08,
+                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     border: Border.all(
-                                      color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.15),
                                     ),
                                   ),
                                   child: Row(
@@ -362,16 +370,18 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       const SizedBox(width: kSpacing10),
                                       Text(
                                         '${items.length} transaction${items.length == 1 ? '' : 's'}',
-                                        style: theme.textTheme.labelMedium?.copyWith(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              color: theme.colorScheme.primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                       const SizedBox(width: kSpacing6),
                                       Icon(
                                         Icons.arrow_forward_rounded,
                                         size: 14,
-                                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                                        color: theme.colorScheme.primary
+                                            .withValues(alpha: 0.6),
                                       ),
                                     ],
                                   ),
@@ -401,12 +411,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     .read(transactionRepositoryProvider)
                                     .deleteTransaction(trans.id);
                                 ref.invalidate(reviewQueueStreamProvider);
-                                ref.invalidate(recentTransactionsStreamProvider);
+                                ref.invalidate(
+                                  recentTransactionsStreamProvider,
+                                );
                                 ref.invalidate(accountsStreamProvider);
                                 if (context.mounted) {
                                   CustomToast.show(
                                     context,
-                                    message: 'Transaction rejected: ${trans.description}',
+                                    message:
+                                        'Transaction rejected: ${trans.description}',
                                     type: ToastType.error,
                                   );
                                 }
@@ -416,11 +429,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     .read(transactionRepositoryProvider)
                                     .approveReviewedTransaction(trans.id);
                                 ref.invalidate(reviewQueueStreamProvider);
-                                ref.invalidate(recentTransactionsStreamProvider);
+                                ref.invalidate(
+                                  recentTransactionsStreamProvider,
+                                );
                                 if (context.mounted) {
                                   CustomToast.show(
                                     context,
-                                    message: 'Transaction approved: ${trans.description}',
+                                    message:
+                                        'Transaction approved: ${trans.description}',
                                     type: ToastType.success,
                                   );
                                 }
@@ -439,16 +455,22 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
                                   curve: Curves.easeOut,
-                                  margin: const EdgeInsets.only(bottom: kSpacing10),
+                                  margin: const EdgeInsets.only(
+                                    bottom: kSpacing10,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? theme.colorScheme.primary.withValues(alpha: 0.06)
+                                        ? theme.colorScheme.primary.withValues(
+                                            alpha: 0.06,
+                                          )
                                         : theme.colorScheme.surface,
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                       color: isSelected
-                                          ? theme.colorScheme.primary.withValues(alpha: 0.25)
-                                          : theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                                          ? theme.colorScheme.primary
+                                                .withValues(alpha: 0.25)
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.06),
                                     ),
                                   ),
                                   child: Padding(
@@ -459,16 +481,23 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       kSpacing14,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             AnimatedContainer(
-                                              duration: const Duration(milliseconds: 200),
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
                                               width: 22,
                                               height: 22,
-                                              margin: const EdgeInsets.only(top: 2, right: kSpacing12),
+                                              margin: const EdgeInsets.only(
+                                                top: 2,
+                                                right: kSpacing12,
+                                              ),
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: isSelected
@@ -476,61 +505,106 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                     : Colors.transparent,
                                                 border: Border.all(
                                                   color: isSelected
-                                                      ? theme.colorScheme.primary
-                                                      : theme.colorScheme.onSurface.withValues(alpha: 0.25),
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.25,
+                                                            ),
                                                   width: 2,
                                                 ),
                                               ),
                                               child: isSelected
-                                                  ? const Icon(Icons.check_rounded, size: 14, color: Colors.white)
+                                                  ? const Icon(
+                                                      Icons.check_rounded,
+                                                      size: 14,
+                                                      color: Colors.white,
+                                                    )
                                                   : null,
                                             ),
                                             Container(
-                                              padding: const EdgeInsets.all(kSpacing10),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing10,
+                                              ),
                                               decoration: BoxDecoration(
-                                                color: hexToColor(item.category.color).withValues(alpha: 0.12),
+                                                color: hexToColor(
+                                                  item.category.color,
+                                                ).withValues(alpha: 0.12),
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(
-                                                getCategoryIcon(item.category.icon),
-                                                color: hexToColor(item.category.color),
+                                                getCategoryIcon(
+                                                  item.category.icon,
+                                                ),
+                                                color: hexToColor(
+                                                  item.category.color,
+                                                ),
                                                 size: 20,
                                               ),
                                             ),
                                             const SizedBox(width: kSpacing12),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     trans.description.isNotEmpty
                                                         ? trans.description
                                                         : item.category.name,
                                                     maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: theme.textTheme.titleSmall?.copyWith(
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: theme
+                                                        .textTheme
+                                                        .titleSmall
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                   ),
-                                                  const SizedBox(height: kSpacing4),
+                                                  const SizedBox(
+                                                    height: kSpacing4,
+                                                  ),
                                                   Row(
                                                     children: [
                                                       Container(
-                                                        padding: const EdgeInsets.symmetric(
-                                                          horizontal: kSpacing8,
-                                                          vertical: kSpacing2,
-                                                        ),
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  kSpacing8,
+                                                              vertical:
+                                                                  kSpacing2,
+                                                            ),
                                                         decoration: BoxDecoration(
-                                                          color: theme.colorScheme.primary.withValues(alpha: 0.08),
-                                                          borderRadius: BorderRadius.circular(6),
+                                                          color: theme
+                                                              .colorScheme
+                                                              .primary
+                                                              .withValues(
+                                                                alpha: 0.08,
+                                                              ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                6,
+                                                              ),
                                                         ),
                                                         child: Text(
                                                           item.account!.name,
-                                                          style: theme.textTheme.labelSmall?.copyWith(
-                                                            color: theme.colorScheme.primary,
-                                                            fontWeight: FontWeight.w600,
-                                                            fontSize: 11,
-                                                          ),
+                                                          style: theme
+                                                              .textTheme
+                                                              .labelSmall
+                                                              ?.copyWith(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 11,
+                                                              ),
                                                         ),
                                                       ),
                                                     ],
@@ -542,32 +616,44 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             AmountText(
                                               amountInCents: trans.amount,
                                               type: amtType,
-                                              style: theme.textTheme.titleMedium?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                              ),
+                                              style: theme.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                             ),
                                           ],
                                         ),
 
                                         // Raw SMS preview
-                                        if (trans.rawSms != null && trans.rawSms!.isNotEmpty) ...[
+                                        if (trans.rawSms != null &&
+                                            trans.rawSms!.isNotEmpty) ...[
                                           const SizedBox(height: kSpacing10),
                                           Container(
                                             width: double.infinity,
-                                            padding: const EdgeInsets.all(kSpacing10),
+                                            padding: const EdgeInsets.all(
+                                              kSpacing10,
+                                            ),
                                             decoration: BoxDecoration(
-                                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
-                                              borderRadius: BorderRadius.circular(10),
+                                              color: theme
+                                                  .colorScheme
+                                                  .surfaceContainerHighest
+                                                  .withValues(alpha: 0.25),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                             child: Text(
                                               trans.rawSms!,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: theme.textTheme.labelSmall?.copyWith(
-                                                fontFamily: 'monospace',
-                                                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                                                fontSize: 11,
-                                              ),
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    fontFamily: 'monospace',
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant
+                                                        .withValues(alpha: 0.6),
+                                                    fontSize: 11,
+                                                  ),
                                             ),
                                           ),
                                         ],
@@ -577,31 +663,54 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         Row(
                                           children: [
                                             TactileSpringContainer(
-                                              onTap: () => _showCategoryPicker(item),
+                                              onTap: () =>
+                                                  _showCategoryPicker(item),
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: kSpacing12,
-                                                  vertical: kSpacing8,
-                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing12,
+                                                      vertical: kSpacing8,
+                                                    ),
                                                 decoration: BoxDecoration(
-                                                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  color: theme
+                                                      .colorScheme
+                                                      .surfaceContainerHighest
+                                                      .withValues(alpha: 0.4),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Icon(
                                                       PesaFlowIcons.category,
                                                       size: 13,
-                                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
                                                     ),
-                                                    const SizedBox(width: kSpacing6),
+                                                    const SizedBox(
+                                                      width: kSpacing6,
+                                                    ),
                                                     Text(
                                                       'Category',
-                                                      style: theme.textTheme.labelSmall?.copyWith(
-                                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withValues(
+                                                                  alpha: 0.6,
+                                                                ),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
@@ -611,42 +720,63 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             TactileSpringContainer(
                                               onTap: () async {
                                                 await ref
-                                                    .read(transactionRepositoryProvider)
-                                                    .approveReviewedTransaction(trans.id);
-                                                ref.invalidate(reviewQueueStreamProvider);
-                                                ref.invalidate(recentTransactionsStreamProvider);
+                                                    .read(
+                                                      transactionRepositoryProvider,
+                                                    )
+                                                    .approveReviewedTransaction(
+                                                      trans.id,
+                                                    );
+                                                ref.invalidate(
+                                                  reviewQueueStreamProvider,
+                                                );
+                                                ref.invalidate(
+                                                  recentTransactionsStreamProvider,
+                                                );
                                                 if (context.mounted) {
                                                   CustomToast.show(
                                                     context,
-                                                    message: 'Transaction approved',
+                                                    message:
+                                                        'Transaction approved',
                                                     type: ToastType.success,
                                                   );
                                                 }
                                               },
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: kSpacing14,
-                                                  vertical: kSpacing8,
-                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing14,
+                                                      vertical: kSpacing8,
+                                                    ),
                                                 decoration: BoxDecoration(
-                                                  color: AppTheme.incomeColor.withValues(alpha: 0.12),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  color: context.appColors.incomeColor
+                                                      .withValues(alpha: 0.12),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Icon(
                                                       Icons.check_rounded,
                                                       size: 14,
-                                                      color: AppTheme.incomeColor,
+                                                      color:
+                                                          context.appColors.incomeColor,
                                                     ),
-                                                    const SizedBox(width: kSpacing6),
+                                                    const SizedBox(
+                                                      width: kSpacing6,
+                                                    ),
                                                     Text(
                                                       'Approve',
-                                                      style: theme.textTheme.labelSmall?.copyWith(
-                                                        color: AppTheme.incomeColor,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: AppTheme
+                                                                .incomeColor,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
@@ -656,43 +786,66 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             TactileSpringContainer(
                                               onTap: () async {
                                                 await ref
-                                                    .read(transactionRepositoryProvider)
-                                                    .deleteTransaction(trans.id);
-                                                ref.invalidate(reviewQueueStreamProvider);
-                                                ref.invalidate(recentTransactionsStreamProvider);
-                                                ref.invalidate(accountsStreamProvider);
+                                                    .read(
+                                                      transactionRepositoryProvider,
+                                                    )
+                                                    .deleteTransaction(
+                                                      trans.id,
+                                                    );
+                                                ref.invalidate(
+                                                  reviewQueueStreamProvider,
+                                                );
+                                                ref.invalidate(
+                                                  recentTransactionsStreamProvider,
+                                                );
+                                                ref.invalidate(
+                                                  accountsStreamProvider,
+                                                );
                                                 if (context.mounted) {
                                                   CustomToast.show(
                                                     context,
-                                                    message: 'Transaction rejected',
+                                                    message:
+                                                        'Transaction rejected',
                                                     type: ToastType.error,
                                                   );
                                                 }
                                               },
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: kSpacing12,
-                                                  vertical: kSpacing8,
-                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing12,
+                                                      vertical: kSpacing8,
+                                                    ),
                                                 decoration: BoxDecoration(
-                                                  color: AppTheme.expenseColor.withValues(alpha: 0.08),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  color: context.appColors.expenseColor
+                                                      .withValues(alpha: 0.08),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Icon(
                                                       Icons.close_rounded,
                                                       size: 14,
-                                                      color: AppTheme.expenseColor,
+                                                      color:
+                                                          context.appColors.expenseColor,
                                                     ),
-                                                    const SizedBox(width: kSpacing6),
+                                                    const SizedBox(
+                                                      width: kSpacing6,
+                                                    ),
                                                     Text(
                                                       'Reject',
-                                                      style: theme.textTheme.labelSmall?.copyWith(
-                                                        color: AppTheme.expenseColor,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: context.appColors
+                                                                .expenseColor,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
@@ -721,14 +874,17 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               kSpacing16,
                               kSpacing12,
                               kSpacing16,
-                              MediaQuery.of(context).padding.bottom + kSpacing12,
+                              MediaQuery.of(context).padding.bottom +
+                                  kSpacing12,
                             ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  theme.colorScheme.surface.withValues(alpha: 0),
+                                  theme.colorScheme.surface.withValues(
+                                    alpha: 0,
+                                  ),
                                   theme.colorScheme.surface,
                                   theme.colorScheme.surface,
                                 ],
@@ -749,18 +905,24 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       vertical: kSpacing10,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                                      color: theme
+                                          .colorScheme
+                                          .surfaceContainerHighest
+                                          .withValues(alpha: 0.6),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.1),
                                       ),
                                     ),
                                     child: Text(
                                       'Cancel',
-                                      style: theme.textTheme.labelMedium?.copyWith(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.7),
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -779,10 +941,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       child: Center(
                                         child: Text(
                                           'Categorize (${_selectedIds.length})',
-                                          style: theme.textTheme.labelMedium?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -798,7 +961,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             .approveReviewedTransaction(id);
                                       }
                                       ref.invalidate(reviewQueueStreamProvider);
-                                      ref.invalidate(recentTransactionsStreamProvider);
+                                      ref.invalidate(
+                                        recentTransactionsStreamProvider,
+                                      );
                                       setState(() {
                                         _selectedIds.clear();
                                         _selectAll = false;
@@ -806,7 +971,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       if (context.mounted) {
                                         CustomToast.show(
                                           context,
-                                          message: '${_selectedIds.length} transactions approved',
+                                          message:
+                                              '${_selectedIds.length} transactions approved',
                                           type: ToastType.success,
                                         );
                                       }
@@ -816,16 +982,17 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         vertical: kSpacing10,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppTheme.incomeColor,
+                                        color: context.appColors.incomeColor,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Center(
                                         child: Text(
                                           'Approve',
-                                          style: theme.textTheme.labelMedium?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -1169,10 +1336,10 @@ class _SwipeableCardState extends State<SwipeableCard>
                         boxShadow: [
                           BoxShadow(
                             color: dx > 0
-                                ? AppTheme.incomeColor.withValues(
+                                ? context.appColors.incomeColor.withValues(
                                     alpha: 0.25 * approveOpacity,
                                   )
-                                : AppTheme.expenseColor.withValues(
+                                : context.appColors.expenseColor.withValues(
                                     alpha: 0.25 * rejectOpacity,
                                   ),
                             blurRadius: 24,
@@ -1194,8 +1361,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              AppTheme.incomeColor.withValues(alpha: 0.24),
-                              AppTheme.incomeColor.withValues(alpha: 0.0),
+                              context.appColors.incomeColor.withValues(alpha: 0.24),
+                              context.appColors.incomeColor.withValues(alpha: 0.0),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(
@@ -1209,11 +1376,11 @@ class _SwipeableCardState extends State<SwipeableCard>
                               vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.incomeColor,
+                              color: context.appColors.incomeColor,
                               borderRadius: BorderRadius.circular(kSpacing12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.incomeColor.withValues(
+                                  color: context.appColors.incomeColor.withValues(
                                     alpha: 0.4,
                                   ),
                                   blurRadius: 15,
@@ -1245,8 +1412,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                             begin: Alignment.centerRight,
                             end: Alignment.centerLeft,
                             colors: [
-                              AppTheme.expenseColor.withValues(alpha: 0.24),
-                              AppTheme.expenseColor.withValues(alpha: 0.0),
+                              context.appColors.expenseColor.withValues(alpha: 0.24),
+                              context.appColors.expenseColor.withValues(alpha: 0.0),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(
@@ -1260,11 +1427,11 @@ class _SwipeableCardState extends State<SwipeableCard>
                               vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.expenseColor,
+                              color: context.appColors.expenseColor,
                               borderRadius: BorderRadius.circular(kSpacing12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.expenseColor.withValues(
+                                  color: context.appColors.expenseColor.withValues(
                                     alpha: 0.4,
                                   ),
                                   blurRadius: 15,

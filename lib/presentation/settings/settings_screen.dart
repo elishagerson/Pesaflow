@@ -71,7 +71,7 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(
                   acc.type.toUpperCase().replaceAll('_', ' ') +
                       (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
-                  style: Theme.of(context).textTheme.labelMedium!,
+                  style: theme.textTheme.labelMedium!,
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -143,33 +143,10 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(
+                decoration: context.inputDecoration(
                   labelText: 'Account Name',
                   hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                   prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.5),
-                      width: 1.5,
-                    ),
-                  ),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -314,33 +291,10 @@ class SettingsScreen extends ConsumerWidget {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: InputDecoration(
+                decoration: context.inputDecoration(
                   labelText: 'Balance (Tsh)',
                   hintText: 'e.g. 150,000',
                   prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.5),
-                      width: 1.5,
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -532,12 +486,14 @@ class SettingsScreen extends ConsumerWidget {
                           vertical: kSpacing2,
                         ),
                         decoration: BoxDecoration(
-                          color: context.appColors.textMedium.withValues(alpha: 0.2),
+                          color: context.appColors.textMedium.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Text(
                           'System',
-                          style: Theme.of(context)
+                          style: theme
                               .extension<AppTypographyTheme>()!
                               .labelMicro
                               .copyWith(color: context.appColors.textMedium),
@@ -558,7 +514,7 @@ class SettingsScreen extends ConsumerWidget {
                             child: Icon(
                               PesaFlowIcons.edit,
                               size: 20,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
@@ -600,8 +556,6 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
   }
-
-
 
   Future<void> _handleExportCsv(BuildContext context, WidgetRef ref) async {
     try {
@@ -653,7 +607,7 @@ class SettingsScreen extends ConsumerWidget {
         barrierDismissible: false,
         title: const Text('Profile Restored'),
         titleIcon: PesaFlowIcons.success,
-        iconColor: AppTheme.incomeColor,
+        iconColor: context.appColors.incomeColor,
         content: const Text(
           'Your offline database backup has been successfully restored.\n\n'
           'To cleanly load your transactions, budgets, and settings, PesaFlow needs to relaunch.',
@@ -700,9 +654,9 @@ class SettingsScreen extends ConsumerWidget {
             horizontal: kSpacing20,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withValues(
-              alpha: 0.94,
-            ),
+            color: Theme.of(
+              context,
+            ).colorScheme.surface.withValues(alpha: 0.94),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -806,7 +760,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 child: Icon(
                   icon,
-                  color: isSelected ? theme.colorScheme.primary : ctx.appColors.textMedium,
+                  color: isSelected
+                      ? theme.colorScheme.primary
+                      : ctx.appColors.textMedium,
                   size: 20,
                 ),
               ),
@@ -817,11 +773,20 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       label,
-                      style: ctx.ts(14, fontWeight: FontWeight.bold, color: isSelected ? theme.colorScheme.primary : null),
+                      style: ctx.ts(
+                        14,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? theme.colorScheme.primary : null,
+                      ),
                     ),
                     Text(
                       subtitle,
-                      style: ctx.ts(11, color: isSelected ? theme.colorScheme.primary.withValues(alpha: 0.7) : ctx.appColors.textMedium),
+                      style: ctx.ts(
+                        11,
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                            : ctx.appColors.textMedium,
+                      ),
                     ),
                   ],
                 ),
@@ -1160,12 +1125,23 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'PesaFlow v1.0.0',
-                      style: context.ts(12, fontWeight: FontWeight.bold, color: theme.brightness == Brightness.dark ? context.appColors.textMedium : context.appColors.textMedium),
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.bold,
+                        color: theme.brightness == Brightness.dark
+                            ? context.appColors.textMedium
+                            : context.appColors.textMedium,
+                      ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Built Offline for privacy in Tanzania',
-                      style: context.ts(11, color: theme.brightness == Brightness.dark ? context.appColors.textLow : context.appColors.textLow),
+                      style: context.ts(
+                        11,
+                        color: theme.brightness == Brightness.dark
+                            ? context.appColors.textLow
+                            : context.appColors.textLow,
+                      ),
                     ),
                   ],
                 ),

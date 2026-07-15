@@ -39,8 +39,6 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   late DateTime _selectedDate;
   bool _isLoading = false;
 
-
-
   final List<Map<String, dynamic>> _icons = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings},
     {'name': 'laptop', 'icon': Icons.laptop_chromebook_rounded},
@@ -182,7 +180,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
             children: [
               Text(
                 'GOAL DETAILS',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
@@ -199,8 +197,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                       TextFormField(
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(fontWeight: FontWeight.w500),
+                        style: theme.textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: inputDeco(
                           label: 'Goal Title',
                           hint: 'e.g. Vacation to Zanzibar',
@@ -215,8 +214,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(fontWeight: FontWeight.w500),
+                        style: theme.textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                         decoration: inputDeco(
                           label: 'Target Amount (Tsh)',
                           hint: 'e.g. 1500000',
@@ -243,7 +243,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
 
               Text(
                 'THEME COLOR',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
@@ -270,7 +270,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
 
               Text(
                 'GOAL ICON',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: onSurface.withValues(alpha: 0.45),
                   letterSpacing: 0.3,
@@ -374,11 +374,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                               widget.goalId != null
                                   ? 'Update Goal'
                                   : 'Create Savings Goal',
-                              style: Theme.of(context).textTheme.titleMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
+                              style: theme.textTheme.titleMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                     ),
                   ),

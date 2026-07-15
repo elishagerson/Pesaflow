@@ -25,16 +25,15 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
   final startOfMonth = DateTime(now.year, now.month, 1);
   final startOfLastMonth = DateTime(now.year, now.month - 1, 1);
 
-  final thisMonthTxns = await transactionDao
-      .watchFilteredTransactions(startDate: startOfMonth, endDate: now)
-      .first;
+  final thisMonthTxns = await transactionDao.getFilteredTransactions(
+    startDate: startOfMonth,
+    endDate: now,
+  );
 
-  final lastMonthTxns = await transactionDao
-      .watchFilteredTransactions(
-        startDate: startOfLastMonth,
-        endDate: startOfMonth,
-      )
-      .first;
+  final lastMonthTxns = await transactionDao.getFilteredTransactions(
+    startDate: startOfLastMonth,
+    endDate: startOfMonth,
+  );
 
   if (thisMonthTxns.isEmpty && lastMonthTxns.isEmpty) {
     return [];
@@ -105,9 +104,7 @@ final dynamicInsightsProvider = FutureProvider<List<InsightData>>((ref) async {
               ? '$pct% higher than last month'
               : '${pct.abs()}% lower than last month',
           icon: curr > prev ? PesaFlowIcons.income : PesaFlowIcons.expense,
-          color: curr > prev
-              ? AppTheme.expenseColor
-              : AppTheme.incomeColor,
+          color: curr > prev ? AppTheme.expenseColor : AppTheme.incomeColor,
         ),
       );
     }

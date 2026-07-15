@@ -147,11 +147,13 @@ class _RecurringTransactionListScreenState
                                 const SizedBox(width: kSpacing6),
                                 Text(
                                   '${dueIds.length} DUE NOW',
-                                  style: context.ts(
-                                    10,
-                                    fontWeight: FontWeight.w800,
-                                    color: context.appColors.transferColor,
-                                  ).copyWith(letterSpacing: 1.2),
+                                  style: context
+                                      .ts(
+                                        10,
+                                        fontWeight: FontWeight.w800,
+                                        color: context.appColors.transferColor,
+                                      )
+                                      .copyWith(letterSpacing: 1.2),
                                 ),
                               ],
                             ),
@@ -206,7 +208,7 @@ class _RecurringTransactionListScreenState
                                       bottom: kSpacing10,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppTheme.incomeColor,
+                                      color: context.appColors.incomeColor,
                                       borderRadius: BorderRadius.circular(
                                         AppTheme.radiusCard,
                                       ),
@@ -350,13 +352,13 @@ class _RecurringTransactionListScreenState
                   theme,
                   '${activeExpenses.length}',
                   'Expenses',
-                  AppTheme.expenseColor,
+                  context.appColors.expenseColor,
                 ),
                 _statPill(
                   theme,
                   '${activeIncome.length}',
                   'Income',
-                  AppTheme.incomeColor,
+                  context.appColors.incomeColor,
                 ),
                 if (paused.isNotEmpty)
                   _statPill(
@@ -583,7 +585,7 @@ class _RecurringTransactionListScreenState
         : recurring.status != 'active'
         ? context.appColors.textMedium
         : categoryColor ??
-              (isExpense ? AppTheme.expenseColor : AppTheme.incomeColor);
+              (isExpense ? context.appColors.expenseColor : context.appColors.incomeColor);
     final mutedAccent = categoryColor != null
         ? desaturateColor(accentColor)
         : accentColor;
@@ -712,10 +714,7 @@ class _RecurringTransactionListScreenState
                   amountInCents: recurring.amount,
                   type: isExpense ? AmountType.expense : AmountType.income,
                   useMonospace: true,
-                  style: context.ts(
-                    14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: context.ts(14, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -798,7 +797,7 @@ class _RecurringTransactionListScreenState
                     vertical: kSpacing6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.incomeColor.withValues(alpha: 0.12),
+                    color: context.appColors.incomeColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -807,7 +806,7 @@ class _RecurringTransactionListScreenState
                       Icon(
                         PesaFlowIcons.success,
                         size: 14,
-                        color: AppTheme.incomeColor,
+                        color: context.appColors.incomeColor,
                       ),
                       const SizedBox(width: kSpacing6),
                       Text(
@@ -815,7 +814,7 @@ class _RecurringTransactionListScreenState
                         style: context.ts(
                           11,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.incomeColor,
+                          color: context.appColors.incomeColor,
                         ),
                       ),
                     ],

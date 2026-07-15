@@ -338,16 +338,20 @@ class TransactionDetailScreen extends ConsumerWidget {
                             child: InkWell(
                               onTap: () {},
                               borderRadius: BorderRadius.circular(8),
-                                child: Container(
+                              child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                   vertical: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.08,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                    color: theme.colorScheme.primary.withValues(
+                                      alpha: 0.15,
+                                    ),
                                   ),
                                 ),
                                 child: Row(
@@ -490,7 +494,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                     Expanded(
                       child: GlassCard(
                         onTap: () => _confirmDelete(context, ref),
-                        backgroundColor: context.appColors.expenseColor.withValues(alpha: 0.12),
+                        backgroundColor: context.appColors.expenseColor
+                            .withValues(alpha: 0.12),
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing14,
                         ),
@@ -543,7 +548,10 @@ class TransactionDetailScreen extends ConsumerWidget {
           style: Theme.of(context)
               .extension<AppTypographyTheme>()!
               .labelMicro
-              .copyWith(fontWeight: FontWeight.w500, color: context.appColors.textMedium),
+              .copyWith(
+                fontWeight: FontWeight.w500,
+                color: context.appColors.textMedium,
+              ),
         ),
         const SizedBox(height: kSpacing2),
         Text(
@@ -645,7 +653,11 @@ class TransactionDetailScreen extends ConsumerWidget {
                       const SizedBox(height: kSpacing2),
                       Text(
                         value,
-                        style: context.ts(14, fontWeight: FontWeight.w700, color: onSurface),
+                        style: context.ts(
+                          14,
+                          fontWeight: FontWeight.w700,
+                          color: onSurface,
+                        ),
                       ),
                     ],
                   ),
@@ -709,12 +721,19 @@ class TransactionDetailScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: context.ts(13, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                  style: context.ts(
+                    13,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
                 const SizedBox(height: kSpacing2),
                 Text(
                   value,
-                  style: context.ts(14, fontWeight: FontWeight.w700, color: valueColor ?? onSurface),
+                  style: context.ts(
+                    14,
+                    fontWeight: FontWeight.w700,
+                    color: valueColor ?? onSurface,
+                  ),
                 ),
               ],
             ),

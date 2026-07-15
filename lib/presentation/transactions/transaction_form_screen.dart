@@ -22,7 +22,6 @@ import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
-import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
@@ -330,156 +329,151 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             ),
                             child: Icon(
                               PesaFlowIcons.wallet,
-                                size: 18,
-                                color: theme.colorScheme.primary,
-                              ),
+                              size: 18,
+                              color: theme.colorScheme.primary,
                             ),
-                            const SizedBox(width: kSpacing12),
-                            Text(
-                              'Select Source Account',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Text(
+                            'Select Source Account',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: kSpacing12),
-                      Expanded(
-                        child: RawScrollbar(
+                    ),
+                    const SizedBox(height: kSpacing12),
+                    Expanded(
+                      child: RawScrollbar(
+                        controller: scrollController,
+                        child: ListView.builder(
                           controller: scrollController,
-                          child: ListView.builder(
-                            controller: scrollController,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                            ),
-                            itemCount: accounts.length,
-                            itemBuilder: (listCtx, index) {
-                              final account = accounts[index];
-                              final isSelected =
-                                  account.id == _selectedAccountId;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: kSpacing8,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(
-                                      () => _selectedAccountId = account.id,
-                                    );
-                                    Navigator.pop(ctx);
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeOutCubic,
-                                    padding: const EdgeInsets.all(kSpacing16),
-                                    decoration: BoxDecoration(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing20,
+                          ),
+                          itemCount: accounts.length,
+                          itemBuilder: (listCtx, index) {
+                            final account = accounts[index];
+                            final isSelected = account.id == _selectedAccountId;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: kSpacing8),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(
+                                    () => _selectedAccountId = account.id,
+                                  );
+                                  Navigator.pop(ctx);
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeOutCubic,
+                                  padding: const EdgeInsets.all(kSpacing16),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? theme.colorScheme.primary.withValues(
+                                            alpha: 0.08,
+                                          )
+                                        : theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
                                       color: isSelected
                                           ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.08)
-                                          : theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? theme.colorScheme.primary
-                                                  .withValues(alpha: 0.4)
-                                            : theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.07),
-                                        width: isSelected ? 1.5 : 1,
-                                      ),
+                                                .withValues(alpha: 0.4)
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.07),
+                                      width: isSelected ? 1.5 : 1,
                                     ),
-                                    child: Row(
-                                      children: [
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(
+                                          kSpacing8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                                    .withValues(alpha: 0.15)
+                                              : theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.05),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          isSelected
+                                              ? PesaFlowIcons.success
+                                              : PesaFlowIcons.wallet,
+                                          size: 20,
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                              : theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.55),
+                                        ),
+                                      ),
+                                      const SizedBox(width: kSpacing12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              account.name,
+                                              style: context.ts(
+                                                15,
+                                                fontWeight: isSelected
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
+                                                color: isSelected
+                                                    ? theme.colorScheme.primary
+                                                    : onSurface.withValues(
+                                                        alpha: 0.87,
+                                                      ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: kSpacing2),
+                                            Text(
+                                              'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.38,
+                                                    ),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (isSelected)
                                         Container(
                                           padding: const EdgeInsets.all(
-                                            kSpacing8,
+                                            kSpacing4,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.15)
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.05),
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.15),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            isSelected
-                                                ? PesaFlowIcons.success
-                                                : PesaFlowIcons.wallet,
-                                            size: 20,
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.55),
+                                            Icons.check_rounded,
+                                            size: 16,
+                                            color: theme.colorScheme.primary,
                                           ),
                                         ),
-                                        const SizedBox(width: kSpacing12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                account.name,
-                                                style: context.ts(15,
-                                                  fontWeight: isSelected
-                                                      ? FontWeight.w700
-                                                      : FontWeight.w500,
-                                                  color: isSelected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : onSurface
-                                                            .withValues(
-                                                              alpha: 0.87,
-                                                            ),
-                                                ),
-                                              ),
-                                              const SizedBox(height: kSpacing2),
-                                              Text(
-                                                'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.38,
-                                                          ),
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (isSelected)
-                                          Container(
-                                            padding: const EdgeInsets.all(
-                                              kSpacing4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.primary
-                                                  .withValues(alpha: 0.15),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              size: 16,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
+          ),
+        );
       },
     );
   }
@@ -540,214 +534,210 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             ),
                             child: Icon(
                               Icons.arrow_forward_rounded,
-                                size: 18,
-                                color: theme.colorScheme.primary,
-                              ),
+                              size: 18,
+                              color: theme.colorScheme.primary,
                             ),
-                            const SizedBox(width: kSpacing12),
-                            Text(
-                              'Select Destination Account',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Text(
+                            'Select Destination Account',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: kSpacing12),
-                      Expanded(
-                        child: RawScrollbar(
+                    ),
+                    const SizedBox(height: kSpacing12),
+                    Expanded(
+                      child: RawScrollbar(
+                        controller: scrollController,
+                        child: ListView.builder(
                           controller: scrollController,
-                          child: ListView.builder(
-                            controller: scrollController,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                            ),
-                            itemCount: accounts.length,
-                            itemBuilder: (listCtx, index) {
-                              final account = accounts[index];
-                              final isSelected =
-                                  account.id == _selectedDestinationAccountId;
-                              final isSource = account.id == _selectedAccountId;
-                              final isDisabled = isSource;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: kSpacing8,
-                                ),
-                                child: GestureDetector(
-                                  onTap: isDisabled
-                                      ? null
-                                      : () {
-                                          setState(
-                                            () =>
-                                                _selectedDestinationAccountId =
-                                                    account.id,
-                                          );
-                                          Navigator.pop(ctx);
-                                        },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeOutCubic,
-                                    padding: const EdgeInsets.all(kSpacing16),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing20,
+                          ),
+                          itemCount: accounts.length,
+                          itemBuilder: (listCtx, index) {
+                            final account = accounts[index];
+                            final isSelected =
+                                account.id == _selectedDestinationAccountId;
+                            final isSource = account.id == _selectedAccountId;
+                            final isDisabled = isSource;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: kSpacing8),
+                              child: GestureDetector(
+                                onTap: isDisabled
+                                    ? null
+                                    : () {
+                                        setState(
+                                          () => _selectedDestinationAccountId =
+                                              account.id,
+                                        );
+                                        Navigator.pop(ctx);
+                                      },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeOutCubic,
+                                  padding: const EdgeInsets.all(kSpacing16),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? theme.colorScheme.primary.withValues(
+                                            alpha: 0.08,
+                                          )
+                                        : theme.colorScheme.surface,
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: isDisabled
+                                          ? Colors.grey.withValues(alpha: 0.15)
+                                          : isSelected
                                           ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.08)
-                                          : theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: isDisabled
-                                            ? Colors.grey.withValues(
-                                                alpha: 0.15,
-                                              )
-                                            : isSelected
-                                            ? theme.colorScheme.primary
-                                                  .withValues(alpha: 0.4)
-                                            : theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.07),
-                                        width: isSelected ? 1.5 : 1,
-                                      ),
+                                                .withValues(alpha: 0.4)
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.07),
+                                      width: isSelected ? 1.5 : 1,
                                     ),
-                                    child: Row(
-                                      children: [
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(
+                                          kSpacing8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: isDisabled
+                                              ? Colors.grey.withValues(
+                                                  alpha: 0.1,
+                                                )
+                                              : isSelected
+                                              ? theme.colorScheme.primary
+                                                    .withValues(alpha: 0.15)
+                                              : theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.05),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          isDisabled
+                                              ? Icons.block_rounded
+                                              : isSelected
+                                              ? PesaFlowIcons.success
+                                              : Icons.arrow_forward_rounded,
+                                          size: 20,
+                                          color: isDisabled
+                                              ? Colors.grey
+                                              : isSelected
+                                              ? theme.colorScheme.primary
+                                              : theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.55),
+                                        ),
+                                      ),
+                                      const SizedBox(width: kSpacing12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  account.name,
+                                                  style: context.ts(
+                                                    15,
+                                                    fontWeight: isSelected
+                                                        ? FontWeight.w700
+                                                        : FontWeight.w500,
+                                                    color: isDisabled
+                                                        ? theme
+                                                              .colorScheme
+                                                              .onSurfaceVariant
+                                                        : isSelected
+                                                        ? theme
+                                                              .colorScheme
+                                                              .primary
+                                                        : onSurface.withValues(
+                                                            alpha: 0.87,
+                                                          ),
+                                                  ),
+                                                ),
+                                                if (isDisabled) ...[
+                                                  const SizedBox(
+                                                    width: kSpacing6,
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 6,
+                                                          vertical: 2,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey
+                                                          .withValues(
+                                                            alpha: 0.15,
+                                                          ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      'source',
+                                                      style: context.ts(
+                                                        10,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                            const SizedBox(height: kSpacing2),
+                                            Text(
+                                              'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.38,
+                                                    ),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (isSelected)
                                         Container(
                                           padding: const EdgeInsets.all(
-                                            kSpacing8,
+                                            kSpacing4,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isDisabled
-                                                ? Colors.grey.withValues(
-                                                    alpha: 0.1,
-                                                  )
-                                                : isSelected
-                                                ? theme.colorScheme.primary
-                                                      .withValues(alpha: 0.15)
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.05),
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.15),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            isDisabled
-                                                ? Icons.block_rounded
-                                                : isSelected
-                                                ? PesaFlowIcons.success
-                                                : Icons.arrow_forward_rounded,
-                                            size: 20,
-                                            color: isDisabled
-                                                ? Colors.grey
-                                                : isSelected
-                                                ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurface
-                                                      .withValues(alpha: 0.55),
+                                            Icons.check_rounded,
+                                            size: 16,
+                                            color: theme.colorScheme.primary,
                                           ),
                                         ),
-                                        const SizedBox(width: kSpacing12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    account.name,
-                                                    style: context.ts(15,
-                                                      fontWeight: isSelected
-                                                          ? FontWeight.w700
-                                                          : FontWeight.w500,
-                                                      color: isDisabled
-                                                          ? theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant
-                                                          : isSelected
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : onSurface
-                                                                .withValues(
-                                                                  alpha: 0.87,
-                                                                ),
-                                                    ),
-                                                  ),
-                                                  if (isDisabled) ...[
-                                                    const SizedBox(
-                                                      width: kSpacing6,
-                                                    ),
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 6,
-                                                            vertical: 2,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey
-                                                            .withValues(
-                                                              alpha: 0.15,
-                                                            ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              4,
-                                                            ),
-                                                      ),
-                                                      child: Text(
-                                                        'source',
-                                                        style: context.ts(10,
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ],
-                                              ),
-                                              const SizedBox(height: kSpacing2),
-                                              Text(
-                                                'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.38,
-                                                          ),
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (isSelected)
-                                          Container(
-                                            padding: const EdgeInsets.all(
-                                              kSpacing4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.primary
-                                                  .withValues(alpha: 0.15),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.check_rounded,
-                                              size: 16,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
+          ),
+        );
       },
     );
   }
@@ -795,9 +785,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             height: 4,
                             margin: const EdgeInsets.only(bottom: kSpacing20),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurfaceVariant.withValues(
-                                alpha: 0.2,
-                              ),
+                              color: theme.colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
@@ -819,7 +808,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             children: [
                               Text(
                                 'Category',
-                                style: context.ts(13,
+                                style: context.ts(
+                                  13,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
@@ -841,13 +831,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   if (index == filteredCategories.length) {
                                     return TactileSpringContainer(
                                       onTap: () async {
-                                        final newCat = await showAddCategoryDialog(
-                                          context,
-                                          ref,
-                                          initialType: _transactionType,
-                                        );
+                                        final newCat =
+                                            await showAddCategoryDialog(
+                                              context,
+                                              ref,
+                                              initialType: _transactionType,
+                                            );
                                         if (newCat != null) {
-                                          _lastCategoryByType[_transactionType] = newCat.id;
+                                          _lastCategoryByType[_transactionType] =
+                                              newCat.id;
                                           setSheetState(() {
                                             _selectedCategoryId = newCat.id;
                                           });
@@ -859,15 +851,20 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.transparent,
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           border: Border.all(
-                                            color: theme.colorScheme.outlineVariant,
+                                            color: theme
+                                                .colorScheme
+                                                .outlineVariant,
                                             style: BorderStyle.solid,
                                             width: 1.5,
                                           ),
                                         ),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.add_circle_outline_rounded,
@@ -877,9 +874,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             const SizedBox(height: kSpacing6),
                                             Text(
                                               'Custom',
-                                              style: context.ts(11,
+                                              style: context.ts(
+                                                11,
                                                 fontWeight: FontWeight.bold,
-                                                color: theme.colorScheme.primary,
+                                                color:
+                                                    theme.colorScheme.primary,
                                               ),
                                             ),
                                           ],
@@ -889,66 +888,72 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   }
 
                                   final cat = filteredCategories[index];
-                                final isSel = cat.id == _selectedCategoryId;
-                                final catColor = hexToColor(cat.color);
+                                  final isSel = cat.id == _selectedCategoryId;
+                                  final catColor = hexToColor(cat.color);
 
-                                return TactileSpringContainer(
-                                  onTap: () {
-                                    _lastCategoryByType[_transactionType] =
-                                        cat.id;
-                                    setSheetState(
-                                      () => _selectedCategoryId = cat.id,
-                                    );
-                                    setState(() => _selectedCategoryId = cat.id);
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    decoration: BoxDecoration(
-                                        color: isSel
-                                          ? catColor.withValues(alpha: 0.15)
-                                          : theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: isSel
-                                            ? catColor
-                                            : Colors.transparent,
-                                        width: 2,
+                                  return TactileSpringContainer(
+                                    onTap: () {
+                                      _lastCategoryByType[_transactionType] =
+                                          cat.id;
+                                      setSheetState(
+                                        () => _selectedCategoryId = cat.id,
+                                      );
+                                      setState(
+                                        () => _selectedCategoryId = cat.id,
+                                      );
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 200,
                                       ),
-                                      boxShadow: isSel
-                                          ? [
-                                              BoxShadow(
-                                                color: catColor.withValues(
-                                                  alpha: 0.25,
-                                                ),
-                                                blurRadius: 8,
-                                                spreadRadius: 1,
-                                              ),
-                                            ]
-                                          : null,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          getCategoryIcon(cat.icon),
+                                      decoration: BoxDecoration(
+                                        color: isSel
+                                            ? catColor.withValues(alpha: 0.15)
+                                            : theme.colorScheme.surface,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
                                           color: isSel
                                               ? catColor
-                                              : (theme.brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white60
-                                                    : Colors.black54),
-                                          size: 24,
+                                              : Colors.transparent,
+                                          width: 2,
                                         ),
-                                        const SizedBox(height: kSpacing6),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing4,
+                                        boxShadow: isSel
+                                            ? [
+                                                BoxShadow(
+                                                  color: catColor.withValues(
+                                                    alpha: 0.25,
+                                                  ),
+                                                  blurRadius: 8,
+                                                  spreadRadius: 1,
+                                                ),
+                                              ]
+                                            : null,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            getCategoryIcon(cat.icon),
+                                            color: isSel
+                                                ? catColor
+                                                : (theme.brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white60
+                                                      : Colors.black54),
+                                            size: 24,
                                           ),
+                                          const SizedBox(height: kSpacing6),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing4,
+                                            ),
                                             child: Text(
                                               cat.name,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: context.ts(11,
+                                              style: context.ts(
+                                                11,
                                                 color: isSel
                                                     ? (theme.brightness ==
                                                               Brightness.dark
@@ -971,244 +976,247 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                     : FontWeight.normal,
                                               ),
                                             ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing20),
-
-                      StaggeredFadeSlide(
-                        index: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Description',
-                              style: context.ts(13,
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing8),
-                            TextField(
-                              controller: _descriptionController,
-                              textCapitalization: TextCapitalization.sentences,
-                              decoration: context.inputDecoration(
-                                hintText: 'e.g. Lunch, taxi, data bundle',
-                              ),
-                              onChanged: (val) => setState(() {}),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing10),
-
-                      StaggeredFadeSlide(
-                        index: 2,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          child: Row(
-                            children:
-                                (_transactionType == 'Expense'
-                                        ? _expenseSuggestions
-                                        : (_transactionType == 'Income'
-                                              ? _incomeSuggestions
-                                              : _transferSuggestions))
-                                    .map((suggestion) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: kSpacing6,
-                                        ),
-                                        child: TactileSpringContainer(
-                                          onTap: () {
-                                            setSheetState(() {
-                                              _descriptionController.text =
-                                                  suggestion;
-                                            });
-                                            setState(() {
-                                              _descriptionController.text =
-                                                  suggestion;
-                                            });
-                                          },
-                                          child: ActionChip(
-                                            label: Text(
-                                              suggestion,
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.87,
-                                                    ),
-                                                  ),
-                                            ),
-                                            backgroundColor: onSurface.withValues(
-                                              alpha: 0.05,
-                                            ),
-                                            side: BorderSide(
-                                              color: onSurface.withValues(
-                                                alpha: 0.08,
-                                              ),
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(
-                                                100,
-                                              ),
-                                            ),
-                                            onPressed: () {},
                                           ),
-                                        ),
-                                      );
-                                    })
-                                    .toList(),
-                          ),
-                        ),
-                      ),
-                      // Progressive Disclosure: Collapsible details
-                      const SizedBox(height: kSpacing12),
-                      InkWell(
-                        onTap: () {
-                          setSheetState(() => _showAdvanced = !_showAdvanced);
-                          setState(() => _showAdvanced = !_showAdvanced);
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: kSpacing8,
-                            horizontal: kSpacing4,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'ADDITIONAL DETAILS',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                              Icon(
-                                _showAdvanced
-                                    ? Icons.keyboard_arrow_up_rounded
-                                    : Icons.keyboard_arrow_down_rounded,
-                                color: theme.colorScheme.primary,
-                                size: 20,
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      AnimatedCrossFade(
-                        firstChild: const SizedBox.shrink(),
-                        secondChild: Padding(
-                          padding: const EdgeInsets.only(top: kSpacing12),
+                        const SizedBox(height: kSpacing20),
+
+                        StaggeredFadeSlide(
+                          index: 1,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Carrier Reference (Optional)',
-                                style: context.ts(13,
+                                'Description',
+                                style: context.ts(
+                                  13,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               const SizedBox(height: kSpacing8),
                               TextField(
-                                controller: _referenceController,
-                                textCapitalization: TextCapitalization.characters,
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: onSurface.withValues(alpha: 0.87),
-                                ),
+                                controller: _descriptionController,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 decoration: context.inputDecoration(
-                                  hintText: 'e.g. PP230489A1',
+                                  hintText: 'e.g. Lunch, taxi, data bundle',
                                 ),
+                                onChanged: (val) => setState(() {}),
                               ),
                             ],
                           ),
                         ),
-                        crossFadeState: _showAdvanced
-                            ? CrossFadeState.showSecond
-                            : CrossFadeState.showFirst,
-                        duration: const Duration(milliseconds: 250),
-                      ),
-                      const SizedBox(height: kSpacing20),
+                        const SizedBox(height: kSpacing10),
 
-                      StaggeredFadeSlide(
-                        index: 3,
-                        child: ModernDateSelector(
-                          labelText: 'Transaction Date',
-                          value: _selectedDate,
-                          prefixIcon: PesaFlowIcons.calendar,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime(2101),
-                          onChanged: (picked) {
-                            setSheetState(() => _selectedDate = picked);
-                            setState(() => _selectedDate = picked);
-                          },
+                        StaggeredFadeSlide(
+                          index: 2,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            child: Row(
+                              children:
+                                  (_transactionType == 'Expense'
+                                          ? _expenseSuggestions
+                                          : (_transactionType == 'Income'
+                                                ? _incomeSuggestions
+                                                : _transferSuggestions))
+                                      .map((suggestion) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: kSpacing6,
+                                          ),
+                                          child: TactileSpringContainer(
+                                            onTap: () {
+                                              setSheetState(() {
+                                                _descriptionController.text =
+                                                    suggestion;
+                                              });
+                                              setState(() {
+                                                _descriptionController.text =
+                                                    suggestion;
+                                              });
+                                            },
+                                            child: ActionChip(
+                                              label: Text(
+                                                suggestion,
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.87,
+                                                          ),
+                                                    ),
+                                              ),
+                                              backgroundColor: onSurface
+                                                  .withValues(alpha: 0.05),
+                                              side: BorderSide(
+                                                color: onSurface.withValues(
+                                                  alpha: 0.08,
+                                                ),
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                        );
+                                      })
+                                      .toList(),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: kSpacing32),
-
-                      StaggeredFadeSlide(
-                        index: 4,
-                        child: TactileSpringContainer(
+                        // Progressive Disclosure: Collapsible details
+                        const SizedBox(height: kSpacing12),
+                        InkWell(
                           onTap: () {
-                            Navigator.pop(context);
-                            _saveTransaction();
+                            setSheetState(() => _showAdvanced = !_showAdvanced);
+                            setState(() => _showAdvanced = !_showAdvanced);
                           },
-                          child: Container(
-                            width: double.infinity,
-                            height: 50,
-                            alignment: Alignment.center,
-                            decoration: ShapeDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  theme.colorScheme.primary,
-                                  theme.colorScheme.primary.withValues(
-                                    alpha: 0.8,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing8,
+                              horizontal: kSpacing4,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'ADDITIONAL DETAILS',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
                                   ),
-                                ],
-                              ),
-                              shape: const SquircleBorder(borderRadius: 24.0),
-                              shadows: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
+                                ),
+                                Icon(
+                                  _showAdvanced
+                                      ? Icons.keyboard_arrow_up_rounded
+                                      : Icons.keyboard_arrow_down_rounded,
+                                  color: theme.colorScheme.primary,
+                                  size: 20,
                                 ),
                               ],
                             ),
-                            child: Text(
-                              _isEditMode
-                                  ? 'Update Transaction'
-                                  : 'Record Transaction',
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        AnimatedCrossFade(
+                          firstChild: const SizedBox.shrink(),
+                          secondChild: Padding(
+                            padding: const EdgeInsets.only(top: kSpacing12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Carrier Reference (Optional)',
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(height: kSpacing8),
+                                TextField(
+                                  controller: _referenceController,
+                                  textCapitalization:
+                                      TextCapitalization.characters,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: onSurface.withValues(alpha: 0.87),
+                                  ),
+                                  decoration: context.inputDecoration(
+                                    hintText: 'e.g. PP230489A1',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          crossFadeState: _showAdvanced
+                              ? CrossFadeState.showSecond
+                              : CrossFadeState.showFirst,
+                          duration: const Duration(milliseconds: 250),
+                        ),
+                        const SizedBox(height: kSpacing20),
+
+                        StaggeredFadeSlide(
+                          index: 3,
+                          child: ModernDateSelector(
+                            labelText: 'Transaction Date',
+                            value: _selectedDate,
+                            prefixIcon: PesaFlowIcons.calendar,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2101),
+                            onChanged: (picked) {
+                              setSheetState(() => _selectedDate = picked);
+                              setState(() => _selectedDate = picked);
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing32),
+
+                        StaggeredFadeSlide(
+                          index: 4,
+                          child: TactileSpringContainer(
+                            onTap: () {
+                              Navigator.pop(context);
+                              _saveTransaction();
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              alignment: Alignment.center,
+                              decoration: ShapeDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    theme.colorScheme.primary,
+                                    theme.colorScheme.primary.withValues(
+                                      alpha: 0.8,
+                                    ),
+                                  ],
+                                ),
+                                shape: const SquircleBorder(borderRadius: 24.0),
+                                shadows: [
+                                  BoxShadow(
+                                    color: theme.colorScheme.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                _isEditMode
+                                    ? 'Update Transaction'
+                                    : 'Record Transaction',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1347,7 +1355,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Expense',
-                                    style: context.ts(13,
+                                    style: context.ts(
+                                      13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Expense'
                                           ? context.appColors.expenseColor
@@ -1387,7 +1396,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Income',
-                                    style: context.ts(13,
+                                    style: context.ts(
+                                      13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Income'
                                           ? AppTheme.transferColorDark
@@ -1427,7 +1437,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 child: Center(
                                   child: Text(
                                     'Transfer',
-                                    style: context.ts(13,
+                                    style: context.ts(
+                                      13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Transfer'
                                           ? AppTheme.transferColorDark
@@ -1496,8 +1507,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary
-                                      .withValues(alpha: 0.1),
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
@@ -1516,7 +1528,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             padding: const EdgeInsets.only(top: kSpacing4),
                             child: Text(
                               _amountError!,
-                              style: context.ts(12, color: context.appColors.expenseColor),
+                              style: context.ts(
+                                12,
+                                color: context.appColors.expenseColor,
+                              ),
                             ),
                           ),
                         const SizedBox(height: kSpacing14),
@@ -1549,7 +1564,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               children: [
                                 Text(
                                   'From ${activeAccount.name}',
-                                  style: context.ts(13,
+                                  style: context.ts(
+                                    13,
                                     fontWeight: FontWeight.bold,
                                     color: onSurface.withValues(alpha: 0.87),
                                   ),
@@ -1593,7 +1609,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             orElse: () => Account(id: '', name: 'Unknown', type: '', balance: 0, icon: '', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
                                           ).name}'
                                         : 'To',
-                                    style: context.ts(13,
+                                    style: context.ts(
+                                      13,
                                       fontWeight: FontWeight.bold,
                                       color: onSurface.withValues(alpha: 0.87),
                                     ),
@@ -1646,9 +1663,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         horizontal: context.spacing,
                         vertical: kSpacing12,
                       ),
-                      child: PressScale(
-                        onTap: () =>
-                            _showSecondaryDetailsSheet(context),
+                      child: TactileSpringContainer(
+                        onTap: () => _showSecondaryDetailsSheet(context),
                         child: Container(
                           width: double.infinity,
                           height: context.isCompactView ? 44 : 50,
@@ -1812,7 +1828,9 @@ class _KeypadButtonState extends State<KeypadButton>
                   color: bg,
                   shape: SquircleBorder(
                     side: BorderSide(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.05,
+                      ),
                       width: 0.6,
                     ),
                     borderRadius: 14.0,
@@ -1838,7 +1856,8 @@ class _KeypadButtonState extends State<KeypadButton>
             ? Icon(Icons.backspace_outlined, color: widget.textColor, size: 20)
             : Text(
                 widget.text,
-                style: context.ts(22,
+                style: context.ts(
+                  22,
                   fontWeight: FontWeight.bold,
                   color: widget.textColor,
                 ),

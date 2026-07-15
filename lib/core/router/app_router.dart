@@ -193,7 +193,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
       },
       labelType: NavigationRailLabelType.all,
       backgroundColor: appColors.surfaceContainer,
-      indicatorColor: const Color(0xFF0F4C5C).withValues(alpha: 0.15),
+      indicatorColor: theme.colorScheme.primary.withValues(alpha: 0.15),
       leading: Padding(
         padding: const EdgeInsets.symmetric(vertical: kSpacing12),
         child: Column(
