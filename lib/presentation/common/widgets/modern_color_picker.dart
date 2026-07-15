@@ -67,7 +67,8 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
   void didUpdateWidget(covariant ModernColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.selectedColorHex != widget.selectedColorHex) {
-      if (_hexController.text.toUpperCase() != widget.selectedColorHex.toUpperCase()) {
+      if (_hexController.text.toUpperCase() !=
+          widget.selectedColorHex.toUpperCase()) {
         _hexController.text = widget.selectedColorHex;
       }
       _parseCurrentColor();
@@ -113,7 +114,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isSelectedCustom = !presetColors.contains(widget.selectedColorHex.toUpperCase());
+    final isSelectedCustom = !presetColors.contains(
+      widget.selectedColorHex.toUpperCase(),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +129,8 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
           children: [
             ...presetColors.map((hex) {
               final color = hexToColor(hex);
-              final isSelected = widget.selectedColorHex.toUpperCase() == hex.toUpperCase();
+              final isSelected =
+                  widget.selectedColorHex.toUpperCase() == hex.toUpperCase();
               return TactileSpringContainer(
                 onTap: () {
                   HapticFeedback.selectionClick();
@@ -144,12 +148,14 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                               color: color.withValues(alpha: 0.4),
                               blurRadius: 8,
                               spreadRadius: 2,
-                            )
+                            ),
                           ]
                         : null,
                     border: Border.all(
                       color: isSelected
-                          ? (theme.brightness == Brightness.dark ? Colors.white : Colors.black)
+                          ? (theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black)
                           : Colors.transparent,
                       width: 2,
                     ),
@@ -176,11 +182,15 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: isSelectedCustom ? hexToColor(widget.selectedColorHex) : Colors.transparent,
+                  color: isSelectedCustom
+                      ? hexToColor(widget.selectedColorHex)
+                      : Colors.transparent,
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: isSelectedCustom
-                        ? (theme.brightness == Brightness.dark ? Colors.white : Colors.black)
+                        ? (theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black)
                         : theme.colorScheme.outlineVariant,
                     width: 2,
                   ),
@@ -240,12 +250,12 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                           onChanged: _updateFromHex,
                           textCapitalization: TextCapitalization.characters,
                           style: context.ts(14, fontWeight: FontWeight.bold),
-                          decoration: context.inputDecoration(
-                            labelText: 'Hex Code',
-                            hintText: '#HEXCODE',
-                          ).copyWith(
-                            counterText: '',
-                          ),
+                          decoration: context
+                              .inputDecoration(
+                                labelText: 'Hex Code',
+                                hintText: '#HEXCODE',
+                              )
+                              .copyWith(counterText: ''),
                         ),
                       ),
                     ],
@@ -261,8 +271,12 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     data: SliderThemeData(
                       trackHeight: 12,
                       trackShape: const RoundedRectSliderTrackShape(),
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 10,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 18,
+                      ),
                       activeTrackColor: Colors.transparent,
                       inactiveTrackColor: Colors.transparent,
                     ),
@@ -307,8 +321,12 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     data: SliderThemeData(
                       trackHeight: 12,
                       trackShape: const RoundedRectSliderTrackShape(),
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 10,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 18,
+                      ),
                       activeTrackColor: Colors.transparent,
                       inactiveTrackColor: Colors.transparent,
                     ),
@@ -348,8 +366,12 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                     data: SliderThemeData(
                       trackHeight: 12,
                       trackShape: const RoundedRectSliderTrackShape(),
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 10,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 18,
+                      ),
                       activeTrackColor: Colors.transparent,
                       inactiveTrackColor: Colors.transparent,
                     ),
@@ -361,7 +383,12 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                         gradient: LinearGradient(
                           colors: [
                             Colors.black,
-                            HSVColor.fromAHSV(1.0, _hue, _saturation, 1.0).toColor(),
+                            HSVColor.fromAHSV(
+                              1.0,
+                              _hue,
+                              _saturation,
+                              1.0,
+                            ).toColor(),
                           ],
                         ),
                       ),
@@ -382,7 +409,9 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
               ),
             ),
           ),
-          crossFadeState: _showCustom ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: _showCustom
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 250),
         ),
       ],

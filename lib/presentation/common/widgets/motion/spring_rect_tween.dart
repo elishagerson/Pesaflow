@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 class SpringRectTween extends RectTween {
@@ -8,19 +10,14 @@ class SpringRectTween extends RectTween {
     // Custom spring overshoot curve
     final double t = Curves.elasticOut.transform(animation.value);
 
-    final double? left = lerpDouble(begin?.left, end?.left, t);
-    final double? top = lerpDouble(begin?.top, end?.top, t);
-    final double? right = lerpDouble(begin?.right, end?.right, t);
-    final double? bottom = lerpDouble(begin?.bottom, end?.bottom, t);
+    final double? left = ui.lerpDouble(begin?.left, end?.left, t);
+    final double? top = ui.lerpDouble(begin?.top, end?.top, t);
+    final double? right = ui.lerpDouble(begin?.right, end?.right, t);
+    final double? bottom = ui.lerpDouble(begin?.bottom, end?.bottom, t);
 
     if (left == null || top == null || right == null || bottom == null) {
       return Rect.zero;
     }
     return Rect.fromLTRB(left, top, right, bottom);
-  }
-
-  double? lerpDouble(double? a, double? b, double t) {
-    if (a == null || b == null) return null;
-    return a + (b - a) * t;
   }
 }

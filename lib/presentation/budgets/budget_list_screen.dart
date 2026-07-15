@@ -354,7 +354,7 @@ class BudgetListScreen extends ConsumerWidget {
                           : 0,
                       backgroundColor: onSurface.withValues(alpha: 0.07),
                       color: totalSpent > totalAllocated
-                          ? AppTheme.expenseColor
+                          ? context.appColors.expenseColor
                           : theme.colorScheme.primary,
                       minHeight: 8,
                     ),
@@ -511,7 +511,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: status.isOverBudget
-                                      ? AppTheme.expenseColor
+                                      ? context.appColors.expenseColor
                                       : onSurface,
                                 ),
                               ),
@@ -533,7 +533,7 @@ class BudgetListScreen extends ConsumerWidget {
                                 alpha: 0.05,
                               ),
                               color: status.isOverBudget
-                                  ? AppTheme.expenseColor
+                                  ? context.appColors.expenseColor
                                   : mutedCatColor,
                               minHeight: 6,
                             ),

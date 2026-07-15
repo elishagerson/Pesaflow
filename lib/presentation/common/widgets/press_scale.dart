@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@Deprecated('Use TactileSpringContainer instead')
 class PressScale extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;

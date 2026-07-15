@@ -89,113 +89,128 @@ class IosTabBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+            color: theme.colorScheme.surfaceContainerHigh.withValues(
+              alpha: 0.85,
+            ),
             border: Border.all(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
               width: 0.8,
             ),
           ),
           child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: visualTabs.map((tab) {
-                  final isSelected = tab.routeIndex == selectedIndex;
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: visualTabs.map((tab) {
+              final isSelected = tab.routeIndex == selectedIndex;
 
-                  if (tab.isCenter) {
-                    return Semantics(
-                      label: tab.label,
-                      button: true,
-                      child: GestureDetector(
-                        onTap: () {
-                          HapticFeedback.mediumImpact();
-                          onDestinationSelected(tab.routeIndex);
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutBack,
-                          width: minimized ? 36 : 54,
-                          height: minimized ? 36 : 54,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: kSpacing8,
-                          ),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isSelected
-                                ? theme.colorScheme.primary.withValues(
-                                    alpha: 0.20,
-                                  )
-                                : theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.05,
-                                  ),
-                          ),
-                          child: Center(
+              if (tab.isCenter) {
+                return Semantics(
+                  label: tab.label,
+                  button: true,
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      onDestinationSelected(tab.routeIndex);
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOutBack,
+                      width: minimized ? 36 : 54,
+                      height: minimized ? 36 : 54,
+                      margin: const EdgeInsets.symmetric(horizontal: kSpacing8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.20)
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.05,
+                              ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          tab.icon,
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.4,
+                                ),
+                          size: minimized ? 18 : 26,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return Expanded(
+                child: Semantics(
+                  label: tab.label,
+                  button: true,
+                  child: _ElasticTabButton(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      onDestinationSelected(tab.routeIndex);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 4,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: minimized ? 8 : 4,
+                        horizontal: minimized ? 8 : 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.125)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: isSelected
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.175,
+                                )
+                              : Colors.transparent,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
                             child: Icon(
-                              tab.icon,
+                              isSelected ? tab.activeIcon : tab.icon,
+                              key: ValueKey(isSelected),
+                              size: minimized ? 20 : 22,
                               color: isSelected
                                   ? theme.colorScheme.primary
                                   : theme.colorScheme.onSurface.withValues(
                                       alpha: 0.4,
                                     ),
-                              size: minimized ? 18 : 26,
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Semantics(
-                      label: tab.label,
-                      button: true,
-                      child: _ElasticTabButton(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          onDestinationSelected(tab.routeIndex);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeInOut,
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 4,
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: minimized ? 8 : 4,
-                            horizontal: minimized ? 8 : 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? theme.colorScheme.primary.withValues(
-                                    alpha: 0.125,
-                                  )
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: isSelected
-                                  ? theme.colorScheme.primary.withValues(
-                                      alpha: 0.175,
-                                    )
-                                  : Colors.transparent,
-                              width: 0.5,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 200),
-                                transitionBuilder: (child, animation) {
-                                  return ScaleTransition(
-                                    scale: animation,
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  isSelected ? tab.activeIcon : tab.icon,
-                                  key: ValueKey(isSelected),
-                                  size: minimized ? 20 : 22,
+                          if (!minimized) ...[
+                            const SizedBox(height: kSpacing2),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                tab.label,
+                                style: context.ts(
+                                  10,
+                                  letterSpacing: 0.3,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: isSelected
                                       ? theme.colorScheme.primary
                                       : theme.colorScheme.onSurface.withValues(
@@ -203,36 +218,18 @@ class IosTabBar extends StatelessWidget {
                                         ),
                                 ),
                               ),
-                              if (!minimized) ...[
-                                const SizedBox(height: kSpacing2),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    tab.label,
-                                    style: context.ts(
-                                      10,
-                                      letterSpacing: 0.3,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w700
-                                          : FontWeight.w500,
-                                      color: isSelected
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.4),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
+        ),
+      ),
     );
   }
 }
@@ -271,7 +268,9 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     if (!largeTitle) return const Size.fromHeight(56.0);
-    if (leading != null || (canPop ?? false)) return const Size.fromHeight(120.0);
+    if (leading != null || (canPop ?? false)) {
+      return const Size.fromHeight(120.0);
+    }
     return const Size.fromHeight(72.0);
   }
 
@@ -282,10 +281,14 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
     final speedFactor = ref.watch(scrollSpeedProvider);
 
     final effectiveCanPop = canPop ?? Navigator.of(context).canPop();
-    final effectiveLeading = leading ?? (effectiveCanPop ? IconButton(
-      icon: const Icon(PesaFlowIcons.back, size: 20),
-      onPressed: () => Navigator.of(context).maybePop(),
-    ) : null);
+    final effectiveLeading =
+        leading ??
+        (effectiveCanPop
+            ? IconButton(
+                icon: const Icon(PesaFlowIcons.back, size: 20),
+                onPressed: () => Navigator.of(context).maybePop(),
+              )
+            : null);
 
     final titleStyle = context.ts(
       28,
@@ -312,7 +315,10 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
             builder: (context) {
               if (!largeTitle) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kSpacing16,
+                    vertical: 6,
+                  ),
                   child: SizedBox(
                     height: 44,
                     child: Row(
@@ -352,7 +358,9 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                   children: [
                     const SizedBox(height: 12.0),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing16,
+                      ),
                       child: SizedBox(
                         height: 44,
                         child: Row(
@@ -374,10 +382,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                         top: kSpacing8,
                         bottom: kSpacing16,
                       ),
-                      child: Text(
-                        title,
-                        style: titleStyle,
-                      ),
+                      child: Text(title, style: titleStyle),
                     ),
                   ],
                 );
@@ -395,10 +400,7 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          title,
-                          style: titleStyle,
-                        ),
+                        Text(title, style: titleStyle),
                         if (actions != null && actions!.isNotEmpty)
                           Row(
                             mainAxisSize: MainAxisSize.min,

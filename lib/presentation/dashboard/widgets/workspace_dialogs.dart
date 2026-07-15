@@ -28,177 +28,176 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: LiquidGlassOverlay(
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withValues(alpha: 0.94),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24.0),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing20,
-                vertical: kSpacing24,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: kSpacing20),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.2,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Workspaces',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          showAddTrackerDialog(context, ref);
-                        },
-                        icon: const Icon(PesaFlowIcons.add, size: 18),
-                        label: const Text('New'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: kSpacing16),
-                  trackersAsync.when(
-                    data: (trackersList) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: trackersList.length,
-                        itemBuilder: (context, index) {
-                          final item = trackersList[index];
-                          final isSelected = item.id == activeTrackerId;
-                          final itemColor = hexToColor(item.color);
-                          final mutedItemColor = desaturateColor(itemColor);
-
-                          return TactileSpringContainer(
-                            onTap: () {
-                              ref
-                                  .read(activeTrackerIdProvider.notifier)
-                                  .setTrackerId(item.id);
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: kSpacing8),
-                              padding: const EdgeInsets.all(kSpacing16),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? mutedItemColor.withValues(alpha: 0.08)
-                                    : (theme.brightness == Brightness.dark
-                                          ? AppTheme.surfaceContainerDark
-                                          : AppTheme.surfaceLight),
-                                borderRadius: BorderRadius.circular(
-                                  AppTheme.radiusCard,
-                                ),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? mutedItemColor.withValues(alpha: 0.3)
-                                      : theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.12),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(kSpacing10),
-                                    decoration: BoxDecoration(
-                                      color: mutedItemColor.withValues(
-                                        alpha: 0.12,
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      getTrackerIcon(item.icon),
-                                      color: itemColor,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(width: kSpacing14),
-                                  Expanded(
-                                    child: Text(
-                                      item.name,
-                                      style: theme.textTheme.titleMedium
-                                          ?.copyWith(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                            color: isSelected
-                                                ? itemColor
-                                                : null,
-                                          ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      PesaFlowIcons.edit,
-                                      size: 18,
-                                    ),
-                                    color: isSelected
-                                        ? itemColor
-                                        : theme.colorScheme.onSurfaceVariant
-                                              .withValues(alpha: 0.6),
-                                    onPressed: () {
-                                      showManageTrackerDialog(
-                                        context,
-                                        ref,
-                                        item,
-                                        activeTrackerId,
-                                        trackersList,
-                                      );
-                                    },
-                                  ),
-                                  if (isSelected) ...[
-                                    const SizedBox(width: kSpacing8),
-                                    Icon(
-                                      PesaFlowIcons.success,
-                                      color: itemColor,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    loading: () => Padding(
-                      padding: EdgeInsets.symmetric(vertical: kSpacing16),
-                      child: Column(
-                        children: [
-                          SkeletonCard(height: 80),
-                          SizedBox(height: kSpacing8),
-                          SkeletonCard(height: 80),
-                          SizedBox(height: kSpacing8),
-                          SkeletonCard(height: 80),
-                        ],
-                      ),
-                    ),
-                    error: (err, _) => Text('Error loading workspaces: $err'),
-                  ),
-                  const SizedBox(height: kSpacing20),
-                ],
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface.withValues(alpha: 0.94),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24.0),
               ),
             ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSpacing20,
+              vertical: kSpacing24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: kSpacing20),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.2,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Workspaces',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        showAddTrackerDialog(context, ref);
+                      },
+                      icon: const Icon(PesaFlowIcons.add, size: 18),
+                      label: const Text('New'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing16),
+                trackersAsync.when(
+                  data: (trackersList) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: trackersList.length,
+                      itemBuilder: (context, index) {
+                        final item = trackersList[index];
+                        final isSelected = item.id == activeTrackerId;
+                        final itemColor = hexToColor(item.color);
+                        final mutedItemColor = desaturateColor(itemColor);
+
+                        return TactileSpringContainer(
+                          onTap: () {
+                            ref
+                                .read(activeTrackerIdProvider.notifier)
+                                .setTrackerId(item.id);
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: kSpacing8),
+                            padding: const EdgeInsets.all(kSpacing16),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? mutedItemColor.withValues(alpha: 0.08)
+                                  : (theme.brightness == Brightness.dark
+                                        ? AppTheme.surfaceContainerDark
+                                        : AppTheme.surfaceLight),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCard,
+                              ),
+                              border: Border.all(
+                                color: isSelected
+                                    ? mutedItemColor.withValues(alpha: 0.3)
+                                    : theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.12,
+                                      ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing10),
+                                  decoration: BoxDecoration(
+                                    color: mutedItemColor.withValues(
+                                      alpha: 0.12,
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    getTrackerIcon(item.icon),
+                                    color: itemColor,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing14),
+                                Expanded(
+                                  child: Text(
+                                    item.name,
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: isSelected ? itemColor : null,
+                                        ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    PesaFlowIcons.edit,
+                                    size: 18,
+                                  ),
+                                  color: isSelected
+                                      ? itemColor
+                                      : theme.colorScheme.onSurfaceVariant
+                                            .withValues(alpha: 0.6),
+                                  onPressed: () {
+                                    showManageTrackerDialog(
+                                      context,
+                                      ref,
+                                      item,
+                                      activeTrackerId,
+                                      trackersList,
+                                    );
+                                  },
+                                ),
+                                if (isSelected) ...[
+                                  const SizedBox(width: kSpacing8),
+                                  Icon(
+                                    PesaFlowIcons.success,
+                                    color: itemColor,
+                                    size: 20,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  loading: () => Padding(
+                    padding: EdgeInsets.symmetric(vertical: kSpacing16),
+                    child: Column(
+                      children: [
+                        SkeletonCard(height: 80),
+                        SizedBox(height: kSpacing8),
+                        SkeletonCard(height: 80),
+                        SizedBox(height: kSpacing8),
+                        SkeletonCard(height: 80),
+                      ],
+                    ),
+                  ),
+                  error: (err, _) => Text('Error loading workspaces: $err'),
+                ),
+                const SizedBox(height: kSpacing20),
+              ],
+            ),
           ),
-        );
+        ),
+      );
     },
   );
 }
@@ -238,33 +237,10 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: context.inputDecoration(
                 labelText: 'Workspace Name',
                 hintText: 'e.g. Side Gig, Paris Trip',
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.surface,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.06),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -432,33 +408,10 @@ void showManageTrackerDialog(
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: context.inputDecoration(
                 labelText: 'Workspace Name',
                 hintText: 'e.g. Side Gig, Paris Trip',
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.surface,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.06),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
               ),
               textCapitalization: TextCapitalization.words,
             ),

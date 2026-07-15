@@ -60,7 +60,7 @@ class RecurringSection extends ConsumerWidget {
           return TactileSpringContainer(
             onTap: () => context.push('/recurring'),
             child: GlassCard(
-                      borderRadius: AppTheme.radiusCard,
+              borderRadius: AppTheme.radiusCard,
               elevation: CardElevation.low,
               padding: const EdgeInsets.all(kSpacing20),
               child: Row(
@@ -218,7 +218,12 @@ class RecurringSection extends ConsumerWidget {
                             ),
                             Text(
                               _formatDate(sub.nextDate),
-                              style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                              style: context.ts(
+                                10,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
+                              ),
                             ),
                             const SizedBox(width: kSpacing8),
                             AmountText(
@@ -288,7 +293,10 @@ class RecurringSection extends ConsumerWidget {
                                     Expanded(
                                       child: Text(
                                         sub.description ?? 'Recurring Expense',
-                                        style: context.ts(13, fontWeight: FontWeight.bold),
+                                        style: context.ts(
+                                          13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -301,7 +309,11 @@ class RecurringSection extends ConsumerWidget {
                                     sub.frequency,
                                     sub.intervalValue,
                                   ),
-                                  style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                                  style: context.ts(
+                                    10,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
                                 ),
                               ],
                             ),
@@ -310,7 +322,7 @@ class RecurringSection extends ConsumerWidget {
                             amountInCents: sub.amount,
                             type: AmountType.expense,
                             useMonospace: true,
-                              style: context.ts(13, fontWeight: FontWeight.bold),
+                            style: context.ts(13, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),

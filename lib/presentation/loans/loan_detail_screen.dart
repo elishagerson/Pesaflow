@@ -70,7 +70,7 @@ class LoanDetailScreen extends ConsumerWidget {
             children: [
               StaggeredFadeSlide(
                 index: 0,
-                child: _buildLoanHeader(loan, theme),
+                child: _buildLoanHeader(context, loan, theme),
               ),
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
@@ -80,7 +80,7 @@ class LoanDetailScreen extends ConsumerWidget {
               const SizedBox(height: kSpacing16),
               StaggeredFadeSlide(
                 index: 2,
-                child: _buildStatusTimeline(loan, theme),
+                child: _buildStatusTimeline(context, loan, theme),
               ),
               if (loan.installmentAmount != null) ...[
                 const SizedBox(height: kSpacing16),
@@ -182,13 +182,13 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanHeader(Loan loan, ThemeData theme) {
+  Widget _buildLoanHeader(BuildContext context, Loan loan, ThemeData theme) {
     final isActive = loan.status == 'active';
     final isPaid = loan.status == 'paid';
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 0.0;
     final statusColor = isActive
-        ? (ratio > 0.5 ? AppTheme.expenseColor : theme.colorScheme.tertiary)
-        : AppTheme.incomeColor;
+        ? (ratio > 0.5 ? context.appColors.expenseColor : theme.colorScheme.tertiary)
+        : context.appColors.incomeColor;
 
     return Hero(
       tag: 'loan-${loan.id}',
@@ -311,7 +311,7 @@ class LoanDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusTimeline(Loan loan, ThemeData theme) {
+  Widget _buildStatusTimeline(BuildContext context, Loan loan, ThemeData theme) {
     final events = <_TimelineEvent>[
       _TimelineEvent(
         title: 'Loan Disbursed',
@@ -370,14 +370,14 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: kSpacing16),
-            ...events.map((e) => _buildTimelineRow(e, theme)),
+            ...events.map((e) => _buildTimelineRow(context, e, theme)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTimelineRow(_TimelineEvent event, ThemeData theme) {
+  Widget _buildTimelineRow(BuildContext context, _TimelineEvent event, ThemeData theme) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,9 +391,9 @@ class LoanDetailScreen extends ConsumerWidget {
                   height: 12,
                   decoration: BoxDecoration(
                     color: event.isWarning
-                        ? AppTheme.expenseColor
+                        ? context.appColors.expenseColor
                         : event.isCompleted
-                        ? AppTheme.incomeColor
+                        ? context.appColors.incomeColor
                         : Colors.grey[400],
                     shape: BoxShape.circle,
                   ),
@@ -403,7 +403,7 @@ class LoanDetailScreen extends ConsumerWidget {
                     child: Container(
                       width: 2,
                       color: event.isCompleted
-                          ? AppTheme.incomeColor.withValues(alpha: 0.3)
+                          ? context.appColors.incomeColor.withValues(alpha: 0.3)
                           : theme.colorScheme.onSurface.withValues(alpha: 0.15),
                     ),
                   ),
@@ -497,7 +497,7 @@ class LoanDetailScreen extends ConsumerWidget {
                           backgroundColor: theme.colorScheme.onSurface
                               .withValues(alpha: 0.1),
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            AppTheme.incomeColor,
+                            context.appColors.incomeColor,
                           ),
                           minHeight: 6,
                         ),
@@ -512,8 +512,8 @@ class LoanDetailScreen extends ConsumerWidget {
                     16,
                     fontWeight: FontWeight.w900,
                     color: Color.lerp(
-                      AppTheme.expenseColor,
-                      AppTheme.incomeColor,
+                      context.appColors.expenseColor,
+                      context.appColors.incomeColor,
                       ratio,
                     ),
                   ),
@@ -532,7 +532,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       height: 20,
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? AppTheme.incomeColor.withValues(alpha: 0.15)
+                            ? context.appColors.incomeColor.withValues(alpha: 0.15)
                             : theme.colorScheme.onSurface.withValues(
                                 alpha: 0.08,
                               ),
@@ -542,7 +542,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         isPaid ? Icons.check_rounded : Icons.schedule_rounded,
                         size: 12,
                         color: isPaid
-                            ? AppTheme.incomeColor
+                            ? context.appColors.incomeColor
                             : theme.colorScheme.onSurface.withValues(
                                 alpha: 0.4,
                               ),
@@ -571,7 +571,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isPaid
-                            ? AppTheme.incomeColor.withValues(alpha: 0.12)
+                            ? context.appColors.incomeColor.withValues(alpha: 0.12)
                             : AppTheme.tertiaryLight.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(kSpacing8),
                       ),
@@ -583,7 +583,7 @@ class LoanDetailScreen extends ConsumerWidget {
                             .copyWith(
                               fontWeight: FontWeight.w700,
                               color: isPaid
-                                  ? AppTheme.incomeColor
+                                  ? context.appColors.incomeColor
                                   : AppTheme.tertiaryLight,
                             ),
                       ),
@@ -694,7 +694,7 @@ class LoanDetailScreen extends ConsumerWidget {
     return GlassCard(
       borderRadius: AppTheme.radiusCard,
       elevation: CardElevation.low,
-      accentColor: AppTheme.incomeColor,
+      accentColor: context.appColors.incomeColor,
       child: Padding(
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -705,13 +705,13 @@ class LoanDetailScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(kSpacing8),
                   decoration: BoxDecoration(
-                    color: AppTheme.incomeColor.withValues(alpha: 0.12),
+                    color: context.appColors.incomeColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     PesaFlowIcons.cash,
                     size: 20,
-                    color: AppTheme.incomeColor,
+                    color: context.appColors.incomeColor,
                   ),
                 ),
                 const SizedBox(width: kSpacing12),
@@ -746,7 +746,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 icon: const Icon(Icons.payment_rounded, size: 18),
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.incomeColor,
+                  backgroundColor: context.appColors.incomeColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: kSpacing14),
                   shape: RoundedRectangleBorder(

@@ -79,10 +79,7 @@ class _SuccessCheckmarkState extends State<SuccessCheckmark>
       builder: (context, _) {
         return CustomPaint(
           size: Size(widget.size, widget.size),
-          painter: _CheckmarkPainter(
-            progress: _progress.value,
-            color: color,
-          ),
+          painter: _CheckmarkPainter(progress: _progress.value, color: color),
         );
       },
     );
@@ -161,8 +158,9 @@ class _SuccessOverlayState extends State<_SuccessOverlay>
 
         final textFade = ((t - 0.50) / 0.15).clamp(0.0, 1.0);
 
-        final endFade =
-            t > 0.85 ? (1.0 - (t - 0.85) / 0.15).clamp(0.0, 1.0) : 1.0;
+        final endFade = t > 0.85
+            ? (1.0 - (t - 0.85) / 0.15).clamp(0.0, 1.0)
+            : 1.0;
 
         return Opacity(
           opacity: bgFade * endFade,
@@ -238,8 +236,7 @@ class _SuccessOverlayState extends State<_SuccessOverlay>
     if (t <= 0) return 0;
     if (t >= 1) return 1;
     return 1 -
-        math.pow(math.e, -t * 6) *
-            (math.cos(t * 12) + 0.12 * math.sin(t * 12));
+        math.pow(math.e, -t * 6) * (math.cos(t * 12) + 0.12 * math.sin(t * 12));
   }
 }
 
@@ -247,10 +244,7 @@ class _CirclePainter extends CustomPainter {
   final double ringProgress;
   final Color ringColor;
 
-  _CirclePainter({
-    required this.ringProgress,
-    required this.ringColor,
-  });
+  _CirclePainter({required this.ringProgress, required this.ringColor});
 
   @override
   void paint(Canvas canvas, Size size) {

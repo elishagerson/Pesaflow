@@ -24,41 +24,15 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
     titleIcon: PesaFlowIcons.wallet,
     content: StatefulBuilder(
       builder: (context, setState) {
-        final theme = Theme.of(context);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: context.inputDecoration(
                 labelText: 'Account Name',
                 hintText: 'e.g. M-Pesa, Cash Wallet, NMB Savings',
                 prefixIcon: Icon(PesaFlowIcons.edit, size: 18),
-                filled: true,
-                fillColor: Theme.of(context).brightness == Brightness.dark
-                    ? theme.colorScheme.surface
-                    : theme.colorScheme.surface,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.06),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -150,35 +124,10 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
               const SizedBox(height: kSpacing16),
               TextField(
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
+                decoration: context.inputDecoration(
                   labelText: 'Phone Number',
                   hintText: 'e.g. 076XXXXXXX',
                   prefixIcon: Icon(Icons.phone_rounded, size: 18),
-                  filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? theme.colorScheme.surface
-                      : theme.colorScheme.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.06),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.5),
-                      width: 1.5,
-                    ),
-                  ),
                 ),
                 onChanged: (val) {
                   phoneNumber = val;
@@ -227,35 +176,10 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-                decoration: InputDecoration(
-                  labelText: 'Initial Balance (Tsh)',
-                  hintText: 'e.g. 150,000',
-                  prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
-                  filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? theme.colorScheme.surface
-                      : theme.colorScheme.surface,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.06),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.5),
-                    width: 1.5,
-                  ),
-                ),
+              decoration: context.inputDecoration(
+                labelText: 'Initial Balance (Tsh)',
+                hintText: 'e.g. 150,000',
+                prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
               ),
             ),
           ],

@@ -61,10 +61,10 @@ class _SpringButtonState extends State<SpringButton>
   void _springBack() {
     if (widget.onTap == null) return;
     if (widget.haptic != null) triggerHaptic(widget.haptic!);
-    const spring = SpringDescription(
-      mass: 0.8,
-      stiffness: 350.0,
-      damping: 14.0,
+    final spring = SpringDescription(
+      mass: widget.springMass,
+      stiffness: widget.springStiffness,
+      damping: widget.springDamping,
     );
     final simulation = SpringSimulation(spring, _controller.value, 0.0, 0.0);
     _controller.animateWith(simulation);

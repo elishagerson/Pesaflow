@@ -40,7 +40,6 @@ class SavingsSection extends ConsumerWidget {
             context.push('/savings-goals/${goal.id}');
           },
           child: GlassCard(
-
             elevation: CardElevation.low,
             padding: const EdgeInsets.all(kSpacing16),
             child: Row(
@@ -127,12 +126,19 @@ class SavingsSection extends ConsumerWidget {
                   children: [
                     Text(
                       '$percentInt%',
-                      style: context.ts(16, fontWeight: FontWeight.w900, color: goalColor),
+                      style: context.ts(
+                        16,
+                        fontWeight: FontWeight.w900,
+                        color: goalColor,
+                      ),
                     ),
                     const SizedBox(height: kSpacing2),
                     Text(
                       'Completed',
-                      style: context.ts(10, color: theme.colorScheme.onSurfaceVariant),
+                      style: context.ts(
+                        10,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),

@@ -70,12 +70,12 @@ Future<Category?> showAddCategoryDialog(
               labelText: 'Category Type',
               value: categoryType,
               prefixIcon: PesaFlowIcons.sort,
-              items: const [
+              items: [
                 ModernDropdownItem(
                   value: 'Expense',
                   label: 'Expense',
                   icon: PesaFlowIcons.expense,
-                  color: AppTheme.expenseColor,
+                  color: context.appColors.expenseColor,
                   subtitle: 'Money going out',
                 ),
                 ModernDropdownItem(
@@ -189,9 +189,7 @@ Future<Category?> showAddCategoryDialog(
               color: selectedHexColor,
               type: categoryType.toLowerCase(),
             );
-            await ref
-                .read(categoryRepositoryProvider)
-                .updateCategory(updated);
+            await ref.read(categoryRepositoryProvider).updateCategory(updated);
             result = updated;
           } else {
             final newCategory = Category(

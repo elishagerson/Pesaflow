@@ -136,12 +136,12 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     AmountText(
                       amountInCents: transactedCents,
                       type: amountType,
-                      style: context.ts(
-                        28,
-                        fontWeight: FontWeight.bold,
-                      ).copyWith(
-                        fontFamily: context.appTypography.monospace.fontFamily,
-                      ),
+                      style: context
+                          .ts(28, fontWeight: FontWeight.bold)
+                          .copyWith(
+                            fontFamily:
+                                context.appTypography.monospace.fontFamily,
+                          ),
                     ),
                     const SizedBox(height: kSpacing6),
                     Text(

@@ -262,275 +262,266 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                 child: GestureDetector(
                   onTap: () {},
                   child: LiquidGlassOverlay(
-                        child: Container(
-                          constraints: const BoxConstraints(
-                            maxWidth: 480,
-                            maxHeight: 560,
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 480,
+                        maxHeight: 560,
+                      ),
+                      margin: const EdgeInsets.all(kSpacing24),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.09,
                           ),
-                          margin: const EdgeInsets.all(kSpacing24),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surface,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.09,
-                              ),
-                              width: 1.5,
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.25),
+                            blurRadius: 40,
+                            offset: const Offset(0, 12),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              kSpacing16,
+                              kSpacing16,
+                              kSpacing16,
+                              kSpacing12,
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.25),
-                                blurRadius: 40,
-                                offset: const Offset(0, 12),
+                            child: Semantics(
+                              label: 'Search actions',
+                              child: TextField(
+                                controller: _searchController,
+                                focusNode: _focusNode,
+                                autofocus: true,
+                                onChanged: (v) {
+                                  ref
+                                      .read(paletteQueryProvider.notifier)
+                                      .update(v);
+                                  setState(() => _selectedIndex = 0);
+                                },
+                                onSubmitted: (_) {
+                                  if (results.isNotEmpty) {
+                                    _select(results[_selectedIndex]);
+                                  }
+                                },
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Search actions...',
+                                  prefixIcon: Icon(
+                                    PesaFlowIcons.search,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                    onTap: _dismiss,
+                                    child: Icon(
+                                      PesaFlowIcons.close,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor:
+                                      theme.colorScheme.surfaceContainerHigh,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
                               ),
-                            ],
+                            ),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  kSpacing16,
-                                  kSpacing16,
-                                  kSpacing16,
-                                  kSpacing12,
-                                ),
-                                child: Semantics(
-                                  label: 'Search actions',
-                                  child: TextField(
-                                    controller: _searchController,
-                                    focusNode: _focusNode,
-                                    autofocus: true,
-                                    onChanged: (v) {
-                                      ref
-                                          .read(paletteQueryProvider.notifier)
-                                          .update(v);
-                                      setState(() => _selectedIndex = 0);
-                                    },
-                                    onSubmitted: (_) {
-                                      if (results.isNotEmpty) {
-                                        _select(results[_selectedIndex]);
-                                      }
-                                    },
-                                    style: theme.textTheme.bodyLarge?.copyWith(
-                                      color: theme.colorScheme.onSurface,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: 'Search actions...',
-                                      prefixIcon: Icon(
-                                        PesaFlowIcons.search,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.5),
-                                      ),
-                                      suffixIcon: GestureDetector(
-                                        onTap: _dismiss,
-                                        child: Icon(
-                                          PesaFlowIcons.close,
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.5),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: theme
-                                          .colorScheme
-                                          .surfaceContainerHigh,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
-                                      ),
+                          if (results.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(kSpacing24),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    query.trim().length >= 2
+                                        ? 'No results found'
+                                        : 'No matching actions',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(height: kSpacing8),
+                                  Text(
+                                    query.trim().length >= 2
+                                        ? 'Try searching transactions, budgets, goals, or loans'
+                                        : 'Try: "Groceries", "Income", "MPESA"',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.3),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              if (results.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.all(kSpacing24),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        query.trim().length >= 2
-                                            ? 'No results found'
-                                            : 'No matching actions',
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.5),
+                            )
+                          else
+                            Flexible(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.fromLTRB(
+                                  kSpacing8,
+                                  0,
+                                  kSpacing8,
+                                  kSpacing8,
+                                ),
+                                itemCount: results.length,
+                                itemBuilder: (_, i) {
+                                  final action = results[i];
+                                  final selected = i == _selectedIndex;
+                                  return StaggeredFadeSlide(
+                                    index: i,
+                                    child: Semantics(
+                                      button: true,
+                                      label: action.label,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          onTap: () => _select(action),
+                                          onHover: (_) => setState(
+                                            () => _selectedIndex = i,
+                                          ),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing12,
+                                              vertical: kSpacing10,
                                             ),
-                                      ),
-                                      const SizedBox(height: kSpacing8),
-                                      Text(
-                                        query.trim().length >= 2
-                                            ? 'Try searching transactions, budgets, goals, or loans'
-                                            : 'Try: "Groceries", "Income", "MPESA"',
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.3),
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else
-                                Flexible(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.fromLTRB(
-                                      kSpacing8,
-                                      0,
-                                      kSpacing8,
-                                      kSpacing8,
-                                    ),
-                                    itemCount: results.length,
-                                    itemBuilder: (_, i) {
-                                      final action = results[i];
-                                      final selected = i == _selectedIndex;
-                                      return StaggeredFadeSlide(
-                                        index: i,
-                                        child: Semantics(
-                                          button: true,
-                                          label: action.label,
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
+                                            decoration: BoxDecoration(
+                                              color: selected
+                                                  ? theme.colorScheme.primary
+                                                        .withValues(alpha: 0.15)
+                                                  : Colors.transparent,
                                               borderRadius:
                                                   BorderRadius.circular(12),
-                                              onTap: () => _select(action),
-                                              onHover: (_) => setState(
-                                                () => _selectedIndex = i,
-                                              ),
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: kSpacing12,
-                                                      vertical: kSpacing10,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: selected
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  action.icon,
+                                                  size: 20,
+                                                  color: action.isDataResult
+                                                      ? theme
+                                                            .colorScheme
+                                                            .secondary
+                                                      : selected
                                                       ? theme
                                                             .colorScheme
                                                             .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface
                                                             .withValues(
-                                                              alpha: 0.15,
-                                                            )
-                                                      : Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
+                                                              alpha: 0.6,
+                                                            ),
                                                 ),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      action.icon,
-                                                      size: 20,
-                                                      color: action.isDataResult
-                                                          ? theme
-                                                                .colorScheme
-                                                                .secondary
-                                                          : selected
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurface
-                                                                .withValues(
-                                                                  alpha: 0.6,
-                                                                ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: kSpacing12,
-                                                    ),
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            action.label,
-                                                            style: theme
-                                                                .textTheme
-                                                                .bodyMedium
-                                                                ?.copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .onSurface,
-                                                                ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                          if (action.subtitle !=
-                                                              null) ...[
-                                                            const SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              action.subtitle!,
-                                                              style: theme
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                    color: theme
-                                                                        .colorScheme
-                                                                        .onSurface
-                                                                        .withValues(
-                                                                          alpha:
-                                                                              0.5,
-                                                                        ),
-                                                                  ),
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                          ],
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    if (!action.isDataResult)
+                                                const SizedBox(
+                                                  width: kSpacing12,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
                                                       Text(
-                                                        '/>',
+                                                        action.label,
                                                         style: theme
                                                             .textTheme
-                                                            .bodySmall
+                                                            .bodyMedium
                                                             ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
                                                               color: theme
                                                                   .colorScheme
-                                                                  .onSurface
-                                                                  .withValues(
-                                                                    alpha: 0.3,
-                                                                  ),
-                                                              fontFamily:
-                                                                  'monospace',
+                                                                  .onSurface,
                                                             ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                  ],
+                                                      if (action.subtitle !=
+                                                          null) ...[
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
+                                                        Text(
+                                                          action.subtitle!,
+                                                          style: theme
+                                                              .textTheme
+                                                              .bodySmall
+                                                              ?.copyWith(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurface
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.5,
+                                                                    ),
+                                                              ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
+                                                if (!action.isDataResult)
+                                                  Text(
+                                                    '/>',
+                                                    style: theme
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha: 0.3,
+                                                              ),
+                                                          fontFamily:
+                                                              'monospace',
+                                                        ),
+                                                  ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
           ),
+        ),
       ),
     );
   }

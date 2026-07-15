@@ -135,10 +135,10 @@ class _ModernDateSelectorWidget extends StatelessWidget {
                           data: CupertinoThemeData(
                             brightness: theme.brightness,
                             textTheme: CupertinoTextThemeData(
-                          dateTimePickerTextStyle: context.ts(
-                            18,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                              dateTimePickerTextStyle: context.ts(
+                                18,
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                           child: CupertinoDatePicker(

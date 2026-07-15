@@ -111,9 +111,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'No wallet account will be affected',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium!
+                                          style: theme.textTheme.labelMedium!
                                               .copyWith(
                                                 color: onSurface.withValues(
                                                   alpha: 0.6,
@@ -127,8 +125,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 const SizedBox(height: kSpacing24),
                                 Text(
                                   'AMOUNT',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: theme.textTheme.labelSmall!.copyWith(
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 Container(
@@ -169,9 +168,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                               RegExp(r'[\d.,]'),
                                             ),
                                           ],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineMedium!
+                                          style: theme.textTheme.headlineMedium!
                                               .copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: onSurface,
@@ -314,8 +311,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 const SizedBox(height: kSpacing24),
                                 Text(
                                   'MEMO',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: theme.textTheme.labelSmall!.copyWith(
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 Container(
@@ -330,10 +328,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     controller: descriptionController,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(color: onSurface),
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      color: onSurface,
+                                    ),
                                     decoration: InputDecoration(
                                       hintText: 'Add a note (optional)',
                                       hintStyle: TextStyle(
@@ -384,9 +381,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       Expanded(
                                         child: Text(
                                           'This records the payment without deducting from any wallet account. Use this for cash or external payments.',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelSmall!
+                                          style: theme.textTheme.labelSmall!
                                               .copyWith(
                                                 color: const Color(
                                                   0xFF609F8A,
@@ -462,9 +457,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             paymentAmount() <= 0
                                                 ? 'Enter an amount'
                                                 : 'Record ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
+                                            style: theme.textTheme.titleMedium!
                                                 .copyWith(
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -504,15 +497,23 @@ Future<bool> processOfflinePayment({
     final categories = await ref
         .read(categoryRepositoryProvider)
         .getAllCategories();
-    final expenseCat = categories.firstWhere(
-      (c) => c.type == 'expense',
-      orElse: () => categories.first,
-    );
+    final loanCat = loan.category != null
+        ? categories.firstWhere(
+            (c) => c.name == loan.category,
+            orElse: () => categories.firstWhere(
+              (c) => c.type == 'expense',
+              orElse: () => categories.first,
+            ),
+          )
+        : categories.firstWhere(
+            (c) => c.type == 'expense',
+            orElse: () => categories.first,
+          );
 
     final txn = Transaction(
       id: const Uuid().v4(),
       accountId: null,
-      categoryId: expenseCat.id,
+      categoryId: loanCat.id,
       trackerId: activeTrackerId,
       loanId: loan.id,
       amount: amount,

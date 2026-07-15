@@ -65,9 +65,9 @@ class _ToastWidgetState extends State<_ToastWidget>
 
     // Physics-based spring simulation for premium entry feel
     final spring = SpringDescription(
-      mass: 0.6,      // lightweight
+      mass: 0.6, // lightweight
       stiffness: 180, // snappy
-      damping: 14,    // smooth bounce
+      damping: 14, // smooth bounce
     );
     final simulation = SpringSimulation(spring, 0.0, 1.0, 0.0);
     _controller.animateWith(simulation);
@@ -80,9 +80,15 @@ class _ToastWidgetState extends State<_ToastWidget>
   void _dismiss() {
     if (mounted) {
       // Snappy slide-out transition
-      _controller.animateTo(0.0, duration: const Duration(milliseconds: 250), curve: Curves.easeInCubic).then((_) {
-        widget.onDismiss();
-      });
+      _controller
+          .animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInCubic,
+          )
+          .then((_) {
+            widget.onDismiss();
+          });
     }
   }
 
@@ -142,9 +148,12 @@ class _ToastWidgetState extends State<_ToastWidget>
                               vertical: kSpacing12,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHigh.withValues(
-                                alpha: theme.brightness == Brightness.dark ? 0.70 : 0.85,
-                              ),
+                              color: theme.colorScheme.surfaceContainerHigh
+                                  .withValues(
+                                    alpha: theme.brightness == Brightness.dark
+                                        ? 0.70
+                                        : 0.85,
+                                  ),
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
                                 color: brandColor.withValues(alpha: 0.15),
@@ -182,11 +191,12 @@ class _ToastWidgetState extends State<_ToastWidget>
                                 Flexible(
                                   child: Text(
                                     widget.message,
-                                    style: theme.textTheme.labelMedium?.copyWith(
-                                      color: theme.colorScheme.onSurface,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.2,
-                                    ),
+                                    style: theme.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color: theme.colorScheme.onSurface,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.2,
+                                        ),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                   ),

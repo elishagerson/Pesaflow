@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class ConfettiOverlay extends StatefulWidget {
   final Widget child;
   final bool show;
   final int particleCount;
-  final List<Color> colors;
+  final List<Color>? colors;
   final Duration duration;
 
   const ConfettiOverlay({
@@ -14,19 +15,9 @@ class ConfettiOverlay extends StatefulWidget {
     required this.child,
     this.show = true,
     this.particleCount = 80,
-    this.colors = _defaultColors,
+    this.colors,
     this.duration = const Duration(seconds: 4),
   });
-
-  static const List<Color> _defaultColors = [
-    AppTheme.expenseColor,
-    AppTheme.transferColorDark,
-    AppTheme.incomeColorDark,
-    AppTheme.incomeColor,
-    AppTheme.transferColor,
-    AppTheme.primaryLight,
-    AppTheme.expenseColorDark,
-  ];
 
   @override
   State<ConfettiOverlay> createState() => _ConfettiOverlayState();
@@ -37,6 +28,16 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   late AnimationController _controller;
   final List<_ConfettiParticle> _particles = [];
   final Random _rand = Random();
+
+  List<Color> get _effectiveColors => widget.colors ?? [
+    context.appColors.expenseColor,
+    AppTheme.transferColorDark,
+    AppTheme.incomeColorDark,
+    context.appColors.incomeColor,
+    AppTheme.transferColor,
+    AppTheme.primaryLight,
+    AppTheme.expenseColorDark,
+  ];
 
   @override
   void initState() {
@@ -74,7 +75,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
           x: _rand.nextDouble() * 400,
           y: -_rand.nextDouble() * 300 - 20,
           size: _rand.nextDouble() * 10 + 6,
-          color: widget.colors[_rand.nextInt(widget.colors.length)],
+          color: _effectiveColors[_rand.nextInt(_effectiveColors.length)],
           vx: (_rand.nextDouble() - 0.5) * 4,
           vy: _rand.nextDouble() * 5 + 3,
           rotation: _rand.nextDouble() * 2 * pi,

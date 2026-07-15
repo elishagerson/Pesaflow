@@ -8,7 +8,6 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
-import 'package:pesaflow/presentation/common/widgets/press_scale.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/state/sms_stats_provider.dart';
@@ -31,7 +30,9 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting('cardholder_name').map((val) => val ?? 'TOTAL NET WORTH');
+  return repo
+      .watchSetting('cardholder_name')
+      .map((val) => val ?? 'TOTAL NET WORTH');
 });
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -64,8 +65,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
     return value.toStringAsFixed(0);
   }
-
-
 
   Widget _buildCardNetworkLogo(Color trackerColor) {
     return SizedBox(
@@ -176,7 +175,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
-    final cardholderName = ref.watch(cardholderNameProvider).value ?? 'TOTAL NET WORTH';
+    final cardholderName =
+        ref.watch(cardholderNameProvider).value ?? 'TOTAL NET WORTH';
 
     // Active tracker properties for dynamic aesthetic blending
     final activeTrackerAsync = ref.watch(activeTrackerProvider);
@@ -452,37 +452,53 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         AppTheme.radiusCard,
                                       ),
                                       border: Border.all(
-                                        color: trackerColor.withValues(alpha: 0.18),
+                                        color: trackerColor.withValues(
+                                          alpha: 0.18,
+                                        ),
                                         width: 0.8,
                                       ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         // Top Row: PesaFlow Brand + DEBIT
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               children: [
                                                 Text(
                                                   'pesa',
-                                                  style: theme.textTheme.titleMedium?.copyWith(
-                                                    fontWeight: FontWeight.w900,
-                                                    fontSize: 18,
-                                                    color: Colors.white.withValues(alpha: 0.95),
-                                                    letterSpacing: -0.5,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .titleMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        fontSize: 18,
+                                                        color: Colors.white
+                                                            .withValues(
+                                                              alpha: 0.95,
+                                                            ),
+                                                        letterSpacing: -0.5,
+                                                      ),
                                                 ),
                                                 Text(
                                                   'flow',
-                                                  style: theme.textTheme.titleMedium?.copyWith(
-                                                    fontWeight: FontWeight.w300,
-                                                    fontSize: 18,
-                                                    color: heroTextColor,
-                                                    letterSpacing: -0.5,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .titleMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        fontSize: 18,
+                                                        color: heroTextColor,
+                                                        letterSpacing: -0.5,
+                                                      ),
                                                 ),
                                               ],
                                             ),
@@ -490,13 +506,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               children: [
                                                 // Dynamic Spent Progress Badge
                                                 Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: kSpacing8,
-                                                    vertical: 3,
-                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing8,
+                                                        vertical: 3,
+                                                      ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.white.withValues(alpha: 0.12),
-                                                    borderRadius: BorderRadius.circular(100),
+                                                    color: Colors.white
+                                                        .withValues(
+                                                          alpha: 0.12,
+                                                        ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
                                                   ),
                                                   child: Row(
                                                     children: [
@@ -506,35 +529,56 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         child: CircularProgressIndicator(
                                                           value: overallPct,
                                                           strokeWidth: 1.8,
-                                                          backgroundColor: Colors.white24,
-                                                          valueColor: AlwaysStoppedAnimation<Color>(
-                                                            overallPct > 0.9
-                                                                ? context.appColors.expenseColor
-                                                                : Colors.white,
-                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white24,
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                Color
+                                                              >(
+                                                                overallPct > 0.9
+                                                                    ? context
+                                                                          .appColors
+                                                                          .expenseColor
+                                                                    : Colors
+                                                                          .white,
+                                                              ),
                                                         ),
                                                       ),
-                                                      const SizedBox(width: kSpacing4),
+                                                      const SizedBox(
+                                                        width: kSpacing4,
+                                                      ),
                                                       Text(
                                                         '${(overallPct * 100).round()}%',
-                                                        style: theme.textTheme.labelSmall?.copyWith(
-                                                          fontSize: 8,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: heroTextColor,
-                                                          letterSpacing: 0.2,
-                                                        ),
+                                                        style: theme
+                                                            .textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                              fontSize: 8,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  heroTextColor,
+                                                              letterSpacing:
+                                                                  0.2,
+                                                            ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(width: kSpacing8),
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
                                                 Text(
                                                   'PREMIUM',
                                                   style: context.ts(
                                                     9,
                                                     fontWeight: FontWeight.w900,
                                                     letterSpacing: 1.5,
-                                                    color: Colors.white.withValues(alpha: 0.65),
+                                                    color: Colors.white
+                                                        .withValues(
+                                                          alpha: 0.65,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -547,7 +591,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           children: [
                                             Icon(
                                               Icons.wifi_rounded,
-                                              color: Colors.white.withValues(alpha: 0.6),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.6,
+                                              ),
                                               size: 24,
                                             ),
                                           ],
@@ -555,7 +601,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                                         // Balance Section
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               _selectedAccountId != null
@@ -565,56 +612,88 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 9,
                                                 fontWeight: FontWeight.w900,
                                                 letterSpacing: 1.2,
-                                                color: Colors.white.withValues(alpha: 0.5),
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.5,
+                                                ),
                                               ),
                                             ),
                                             const SizedBox(height: kSpacing4),
                                             AmountText(
-                                              amountInCents: _selectedAccountId != null
-                                                  ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                                              amountInCents:
+                                                  _selectedAccountId != null
+                                                  ? (accounts
+                                                        .firstWhere(
+                                                          (a) =>
+                                                              a.id ==
+                                                              _selectedAccountId,
+                                                          orElse: () =>
+                                                              accounts.first,
+                                                        )
+                                                        .balance)
                                                   : netWorth,
                                               useMonospace: false,
                                               animate: true,
-                                              style: theme.textTheme.headlineMedium?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 30,
-                                                color: heroTextColor,
-                                                letterSpacing: -0.5,
-                                              ),
+                                              style: theme
+                                                  .textTheme
+                                                  .headlineMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: 30,
+                                                    color: heroTextColor,
+                                                    letterSpacing: -0.5,
+                                                  ),
                                             ),
                                           ],
                                         ),
 
                                         // Bottom Row: Cardholder Name, Expiry, Logo
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             GestureDetector(
                                               behavior: HitTestBehavior.opaque,
                                               onTap: _selectedAccountId == null
-                                                  ? () => _showEditCardholderDialog(context, cardholderName)
+                                                  ? () =>
+                                                        _showEditCardholderDialog(
+                                                          context,
+                                                          cardholderName,
+                                                        )
                                                   : null,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
-                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
                                                       Text(
                                                         'CARDHOLDER',
                                                         style: context.ts(
                                                           7,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white.withValues(alpha: 0.4),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white
+                                                              .withValues(
+                                                                alpha: 0.4,
+                                                              ),
                                                         ),
                                                       ),
-                                                      if (_selectedAccountId == null) ...[
-                                                        const SizedBox(width: kSpacing4),
+                                                      if (_selectedAccountId ==
+                                                          null) ...[
+                                                        const SizedBox(
+                                                          width: kSpacing4,
+                                                        ),
                                                         Icon(
                                                           Icons.edit,
                                                           size: 8,
-                                                          color: Colors.white.withValues(alpha: 0.4),
+                                                          color: Colors.white
+                                                              .withValues(
+                                                                alpha: 0.4,
+                                                              ),
                                                         ),
                                                       ],
                                                     ],
@@ -622,12 +701,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   const SizedBox(height: 2),
                                                   Text(
                                                     _selectedAccountId != null
-                                                        ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).name.toUpperCase())
-                                                        : cardholderName.toUpperCase(),
+                                                        ? (accounts
+                                                              .firstWhere(
+                                                                (a) =>
+                                                                    a.id ==
+                                                                    _selectedAccountId,
+                                                                orElse: () =>
+                                                                    accounts
+                                                                        .first,
+                                                              )
+                                                              .name
+                                                              .toUpperCase())
+                                                        : cardholderName
+                                                              .toUpperCase(),
                                                     style: context.ts(
                                                       11,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white.withValues(alpha: 0.85),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.85,
+                                                          ),
                                                       letterSpacing: 0.5,
                                                     ),
                                                   ),
@@ -636,14 +730,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             ),
                                             // Expiry
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   'VALID THRU',
                                                   style: context.ts(
                                                     7,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.white.withValues(alpha: 0.4),
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.4),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 2),
@@ -652,7 +748,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   style: context.ts(
                                                     11,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.white.withValues(alpha: 0.85),
+                                                    color: Colors.white
+                                                        .withValues(
+                                                          alpha: 0.85,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -681,7 +780,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               itemCount: accounts.length,
                               itemBuilder: (context, index) {
                                 final account = accounts[index];
-                                final isSelected = _selectedAccountId == account.id;
+                                final isSelected =
+                                    _selectedAccountId == account.id;
 
                                 return Padding(
                                   padding: EdgeInsets.only(
@@ -692,9 +792,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     onTap: () {
                                       setState(() {
                                         if (_selectedAccountId == account.id) {
-                                          _selectedAccountId = null; // Clear filter
+                                          _selectedAccountId =
+                                              null; // Clear filter
                                         } else {
-                                          _selectedAccountId = account.id; // Apply filter
+                                          _selectedAccountId =
+                                              account.id; // Apply filter
                                         }
                                       });
                                     },
@@ -705,19 +807,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? theme.colorScheme.primary.withValues(
-                                                alpha: 0.25,
-                                              )
-                                            : theme.colorScheme.surfaceContainerHigh,
-                                        borderRadius: BorderRadius.circular(100),
+                                            ? theme.colorScheme.primary
+                                                  .withValues(alpha: 0.25)
+                                            : theme
+                                                  .colorScheme
+                                                  .surfaceContainerHigh,
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
                                         border: Border.all(
                                           color: isSelected
-                                              ? theme.colorScheme.primary.withValues(
-                                                  alpha: 0.6,
-                                                )
-                                              : theme.colorScheme.onSurface.withValues(
-                                                  alpha: 0.1,
-                                                ),
+                                              ? theme.colorScheme.primary
+                                                    .withValues(alpha: 0.6)
+                                              : theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.1),
                                           width: isSelected ? 1.5 : 0.8,
                                         ),
                                       ),
@@ -734,23 +837,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           const SizedBox(width: kSpacing6),
                                           Text(
                                             account.name,
-                                            style: theme.textTheme.bodySmall?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary
-                                                  : theme.colorScheme.onSurface,
-                                            ),
+                                            style: theme.textTheme.bodySmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface,
+                                                ),
                                           ),
                                           const SizedBox(width: kSpacing8),
                                           Text(
                                             _formatCompact(account.balance),
-                                            style: theme.textTheme.labelSmall?.copyWith(
-                                              fontFamily: 'monospace',
-                                              fontWeight: FontWeight.bold,
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary.withValues(alpha: 0.9)
-                                                  : theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                                            ),
+                                            style: theme.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  fontFamily: 'monospace',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isSelected
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                            .withValues(
+                                                              alpha: 0.9,
+                                                            )
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.8,
+                                                            ),
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -766,7 +885,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: Text(
                               'No active accounts. Tap Add Account below to start.',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
                               ),
                             ),
                           ),
@@ -779,7 +900,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: PressScale(
+                                child: TactileSpringContainer(
                                   onTap: () => context.go('/transactions/add'),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -922,7 +1043,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── SMS auto-categorization count ──
                         Consumer(
                           builder: (context, ref, _) {
-                            final smsCountAsync = ref.watch(todaySmsCountProvider);
+                            final smsCountAsync = ref.watch(
+                              todaySmsCountProvider,
+                            );
                             return smsCountAsync.when(
                               data: (count) {
                                 if (count == 0) return const SizedBox.shrink();
@@ -941,16 +1064,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           vertical: kSpacing10,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary.withValues(alpha: 0.08),
-                                          borderRadius: BorderRadius.circular(100),
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.08),
+                                          borderRadius: BorderRadius.circular(
+                                            100,
+                                          ),
                                           border: Border.all(
-                                            color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.15),
                                             width: 0.8,
                                           ),
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.message_rounded,
@@ -960,10 +1088,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             const SizedBox(width: kSpacing8),
                                             Text(
                                               'Auto-categorized $count message${count == 1 ? '' : 's'} today',
-                                              style: theme.textTheme.labelMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: theme.colorScheme.primary,
-                                              ),
+                                              style: theme.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
                                             ),
                                             const SizedBox(width: kSpacing6),
                                             Icon(
@@ -1618,7 +1749,9 @@ class _SummaryNavCard extends StatelessWidget {
                     label,
                     style: context.ts(
                       10,
-                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.8,
+                      ),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1852,8 +1985,18 @@ class _GlossyWavesPainter extends CustomPainter {
     // Wave 1: Accent color glow wave
     final path1 = Path();
     path1.moveTo(0, size.height * 0.7);
-    path1.quadraticBezierTo(size.width * 0.4, size.height * 0.45, size.width * 0.8, size.height * 0.85);
-    path1.quadraticBezierTo(size.width * 0.9, size.height * 0.9, size.width, size.height * 0.6);
+    path1.quadraticBezierTo(
+      size.width * 0.4,
+      size.height * 0.45,
+      size.width * 0.8,
+      size.height * 0.85,
+    );
+    path1.quadraticBezierTo(
+      size.width * 0.9,
+      size.height * 0.9,
+      size.width,
+      size.height * 0.6,
+    );
     path1.lineTo(size.width, size.height);
     path1.lineTo(0, size.height);
     path1.close();
@@ -1872,7 +2015,12 @@ class _GlossyWavesPainter extends CustomPainter {
     // Wave 2: Glossy white highlight wave
     final path2 = Path();
     path2.moveTo(0, size.height * 0.85);
-    path2.quadraticBezierTo(size.width * 0.5, size.height * 0.4, size.width, size.height * 0.75);
+    path2.quadraticBezierTo(
+      size.width * 0.5,
+      size.height * 0.4,
+      size.width,
+      size.height * 0.75,
+    );
     path2.lineTo(size.width, size.height);
     path2.lineTo(0, size.height);
     path2.close();
@@ -1891,7 +2039,12 @@ class _GlossyWavesPainter extends CustomPainter {
     // Wave 3: Deep contrast wave
     final path3 = Path();
     path3.moveTo(size.width * 0.25, size.height);
-    path3.quadraticBezierTo(size.width * 0.65, size.height * 0.55, size.width, size.height * 0.85);
+    path3.quadraticBezierTo(
+      size.width * 0.65,
+      size.height * 0.55,
+      size.width,
+      size.height * 0.85,
+    );
     path3.lineTo(size.width, size.height);
     path3.close();
 

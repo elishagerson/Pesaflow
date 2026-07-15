@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
@@ -421,7 +422,7 @@ class _SmsPermissionPage extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(kSpacing4),
                       decoration: BoxDecoration(
-                        color: AppTheme.incomeColor,
+                        color: context.appColors.incomeColor,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: theme.scaffoldBackgroundColor,
@@ -495,7 +496,7 @@ class _SmsPermissionPage extends StatelessWidget {
                       ? PesaFlowIcons.success
                       : PesaFlowIcons.info,
                   size: 14,
-                  color: permissionGranted ? AppTheme.incomeColor : Colors.grey,
+                  color: permissionGranted ? context.appColors.incomeColor : Colors.grey,
                 ),
                 const SizedBox(width: kSpacing6),
                 Text(
@@ -504,7 +505,7 @@ class _SmsPermissionPage extends StatelessWidget {
                       : 'You can skip this and add transactions manually.',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: permissionGranted
-                        ? AppTheme.incomeColor
+                        ? context.appColors.incomeColor
                         : Colors.grey,
                   ),
                 ),
@@ -586,7 +587,9 @@ class _AccountsPage extends StatelessWidget {
                         border: Border.all(
                           color: isSelected
                               ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.08,
+                                ),
                           width: isSelected ? 1.5 : 0.8,
                         ),
                         boxShadow: isSelected
@@ -695,13 +698,13 @@ class _CompletePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(kSpacing24),
               decoration: BoxDecoration(
-                color: AppTheme.incomeColor.withValues(alpha: 0.15),
+                color: context.appColors.incomeColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 PesaFlowIcons.success,
                 size: 64,
-                color: AppTheme.incomeColor,
+                color: context.appColors.incomeColor,
               ),
             ),
             const SizedBox(height: kSpacing32),

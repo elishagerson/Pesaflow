@@ -5,6 +5,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class SuccessConfettiDialog extends StatefulWidget {
@@ -27,11 +28,13 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
   final List<_ConfettiParticle> _particles = [];
   final Random _rand = Random();
 
-  final List<Color> _colors = [
-    AppTheme.expenseColor,
+  bool _initialized = false;
+
+  List<Color> get _colors => [
+    context.appColors.expenseColor,
     AppTheme.transferColorDark,
     AppTheme.incomeColorDark,
-    AppTheme.incomeColor,
+    context.appColors.incomeColor,
     AppTheme.transferColor,
     AppTheme.primaryLight,
     AppTheme.expenseColorDark,
@@ -40,17 +43,21 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
   @override
   void initState() {
     super.initState();
-
-    // Ticker running at 60 FPS
     _tickerController =
         AnimationController(vsync: this, duration: const Duration(seconds: 4))
           ..addListener(() {
             _updateParticles();
           });
+  }
 
-    // Generate initial batch of particles
-    _spawnParticles(120);
-    _tickerController.forward();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      _spawnParticles(120);
+      _tickerController.forward();
+    }
   }
 
   void _spawnParticles(int count) {

@@ -71,7 +71,10 @@ class BudgetDetailScreen extends ConsumerWidget {
           data: (bp) {
             if (bp == null) {
               return Scaffold(
-                appBar: const IosNavBar(title: 'Budget Details', largeTitle: false),
+                appBar: const IosNavBar(
+                  title: 'Budget Details',
+                  largeTitle: false,
+                ),
                 body: EmptyState(
                   icon: PesaFlowIcons.budgets,
                   title: 'Budget Not Found',
@@ -386,9 +389,10 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                       ),
                                                   child: Text(
                                                     '${value.toInt()}',
-                                                    style: theme.textTheme.labelSmall!.copyWith(
-                                                      fontSize: 9,
-                                                    ),
+                                                    style: theme
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(fontSize: 9),
                                                   ),
                                                 );
                                               },

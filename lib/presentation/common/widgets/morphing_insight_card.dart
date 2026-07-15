@@ -300,9 +300,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   List<Color> _severityGradient(Severity s) {
     switch (s) {
       case Severity.good:
-        return [AppTheme.incomeColor, AppTheme.incomeColorDark];
+        return [context.appColors.incomeColor, AppTheme.incomeColorDark];
       case Severity.warning:
-        return [AppTheme.expenseColor, AppTheme.expenseColorDark];
+        return [context.appColors.expenseColor, AppTheme.expenseColorDark];
       case Severity.neutral:
         return [AppTheme.transferColor, AppTheme.transferColorDark];
     }
@@ -311,9 +311,9 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   Color _severityColor(Severity s) {
     switch (s) {
       case Severity.good:
-        return AppTheme.incomeColor;
+        return context.appColors.incomeColor;
       case Severity.warning:
-        return AppTheme.expenseColor;
+        return context.appColors.expenseColor;
       case Severity.neutral:
         return AppTheme.transferColor;
     }
@@ -389,10 +389,7 @@ class _PulseIconState extends State<PulseIcon>
     return AnimatedBuilder(
       animation: _pulse,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _pulse.value,
-          child: child,
-        );
+        return Transform.scale(scale: _pulse.value, child: child);
       },
       child: Icon(widget.icon, size: widget.size, color: widget.color),
     );

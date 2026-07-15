@@ -303,9 +303,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           'Remaining: ${CurrencyFormatter.formatCents(remainingCents)}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
+                                          style: theme.textTheme.bodySmall!
                                               .copyWith(
                                                 color: onSurface.withValues(
                                                   alpha: 0.6,
@@ -324,8 +322,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 const SizedBox(height: kSpacing24),
                                 Text(
                                   'PAYMENT AMOUNT',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: theme.textTheme.labelSmall!.copyWith(
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 _buildAmountField(
@@ -432,8 +431,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 const SizedBox(height: kSpacing24),
                                 Text(
                                   'MEMO',
-                                  style: Theme.of(context).textTheme.labelSmall!
-                                      .copyWith(letterSpacing: 0.5),
+                                  style: theme.textTheme.labelSmall!.copyWith(
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 Container(
@@ -448,10 +448,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     controller: descriptionController,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(color: onSurface),
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      color: onSurface,
+                                    ),
                                     decoration: InputDecoration(
                                       hintText: 'Add a note (optional)',
                                       hintStyle: TextStyle(
@@ -482,9 +481,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   children: [
                                     Text(
                                       'FROM ACCOUNT',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
+                                      style: theme.textTheme.labelSmall!
                                           .copyWith(letterSpacing: 0.5),
                                     ),
                                     if (selectedAccountId != null)
@@ -494,9 +491,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         ),
                                         child: Text(
                                           'Clear',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium!
+                                          style: theme.textTheme.labelMedium!
                                               .copyWith(
                                                 color: context
                                                     .appColors
@@ -544,9 +539,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                             const SizedBox(width: kSpacing10),
                                             Text(
                                               'No accounts available. Create one first.',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
+                                              style: theme.textTheme.bodySmall!
                                                   .copyWith(
                                                     color: context
                                                         .appColors
@@ -652,7 +645,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                       children: [
                                                         Text(
                                                           account.name,
-                                                          style: Theme.of(context)
+                                                          style: theme
                                                               .textTheme
                                                               .bodyMedium!
                                                               .copyWith(
@@ -671,7 +664,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                           children: [
                                                             Text(
                                                               'Balance: ${CurrencyFormatter.formatCents(balanceCents)}',
-                                                              style: Theme.of(context)
+                                                              style: theme
                                                                   .textTheme
                                                                   .labelMedium!
                                                                   .copyWith(
@@ -878,7 +871,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                             null
                                                       ? 'Select an account'
                                                       : 'Pay ${CurrencyFormatter.formatCents(paymentAmount())}',
-                                                  style: Theme.of(context)
+                                                  style: theme
                                                       .textTheme
                                                       .titleMedium!
                                                       .copyWith(
@@ -1001,15 +994,23 @@ Future<bool> processPayment({
     final categories = await ref
         .read(categoryRepositoryProvider)
         .getAllCategories();
-    final expenseCat = categories.firstWhere(
-      (c) => c.type == 'expense',
-      orElse: () => categories.first,
-    );
+    final loanCat = loan.category != null
+        ? categories.firstWhere(
+            (c) => c.name == loan.category,
+            orElse: () => categories.firstWhere(
+              (c) => c.type == 'expense',
+              orElse: () => categories.first,
+            ),
+          )
+        : categories.firstWhere(
+            (c) => c.type == 'expense',
+            orElse: () => categories.first,
+          );
 
     final txn = Transaction(
       id: const Uuid().v4(),
       accountId: accountId,
-      categoryId: expenseCat.id,
+      categoryId: loanCat.id,
       trackerId: activeTrackerId,
       loanId: loan.id,
       amount: amount,

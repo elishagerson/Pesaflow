@@ -36,7 +36,9 @@ class LoanOverviewSection extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(kSpacing10),
                         decoration: BoxDecoration(
-                          color: context.appColors.incomeColor.withValues(alpha: 0.12),
+                          color: context.appColors.incomeColor.withValues(
+                            alpha: 0.12,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -49,7 +51,11 @@ class LoanOverviewSection extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           'No active debt. Keep it that way.',
-                          style: context.ts(13, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
+                          style: context.ts(
+                            13,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
                       ),
                       Icon(
@@ -68,7 +74,6 @@ class LoanOverviewSection extends ConsumerWidget {
                         child: TactileSpringContainer(
                           onTap: () => context.go('/loans'),
                           child: GlassCard(
-    
                             elevation: CardElevation.low,
                             padding: const EdgeInsets.all(kSpacing12),
                             child: Row(
@@ -247,13 +252,22 @@ class LoanOverviewSection extends ConsumerWidget {
                     children: [
                       Text(
                         '${(debtRatio * 100).round()}% of net worth',
-                        style: context.ts(10, fontWeight: FontWeight.w700, color: severityColor),
+                        style: context.ts(
+                          10,
+                          fontWeight: FontWeight.w700,
+                          color: severityColor,
+                        ),
                       ),
                       Text(
                         netWorth > 0
                             ? 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}'
                             : 'Net worth: ${CurrencyFormatter.formatCents(netWorth)}',
-                        style: context.ts(10, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                        style: context.ts(
+                          10,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -271,8 +285,12 @@ class LoanOverviewSection extends ConsumerWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              context.appColors.transferColor.withValues(alpha: 0.1),
-                              context.appColors.transferColor.withValues(alpha: 0.02),
+                              context.appColors.transferColor.withValues(
+                                alpha: 0.1,
+                              ),
+                              context.appColors.transferColor.withValues(
+                                alpha: 0.02,
+                              ),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -281,7 +299,9 @@ class LoanOverviewSection extends ConsumerWidget {
                             AppTheme.radiusCard,
                           ),
                           border: Border.all(
-                            color: context.appColors.transferColor.withValues(alpha: 0.2),
+                            color: context.appColors.transferColor.withValues(
+                              alpha: 0.2,
+                            ),
                             width: 0.5,
                           ),
                         ),
@@ -290,7 +310,8 @@ class LoanOverviewSection extends ConsumerWidget {
                             Container(
                               padding: const EdgeInsets.all(kSpacing6),
                               decoration: BoxDecoration(
-                                color: context.appColors.transferColor.withValues(alpha: 0.15),
+                                color: context.appColors.transferColor
+                                    .withValues(alpha: 0.15),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -303,7 +324,12 @@ class LoanOverviewSection extends ConsumerWidget {
                             Expanded(
                               child: Text(
                                 '$count active loans in 3 months — consider reducing new borrowing',
-                                style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+                                style: context.ts(
+                                  11,
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -355,20 +381,31 @@ class LoanOverviewSection extends ConsumerWidget {
                               children: [
                                 Text(
                                   loan.description ?? 'Loan',
-                                  style: context.ts(13, fontWeight: FontWeight.bold),
+                                  style: context.ts(
+                                    13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   '${(ratio * 100).round()}% unpaid',
-                                  style: context.ts(10, fontWeight: FontWeight.w700, color: loanSeverity),
+                                  style: context.ts(
+                                    10,
+                                    fontWeight: FontWeight.w700,
+                                    color: loanSeverity,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           Text(
                             CurrencyFormatter.formatCents(loan.remaining),
-                            style: context.ts(14, fontWeight: FontWeight.w900, color: loanSeverity),
+                            style: context.ts(
+                              14,
+                              fontWeight: FontWeight.w900,
+                              color: loanSeverity,
+                            ),
                           ),
                         ],
                       ),

@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration {
@@ -340,6 +340,42 @@ class AppDatabase extends _$AppDatabase {
         // Migration from schema version 10 → 11: add category column to loans
         if (from < 11) {
           await m.addColumn(loans, loans.category);
+        }
+
+        // Migration from schema version 11 → 12: add performance indexes
+        if (from < 12) {
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_trans_tracker_created '
+            'ON transactions (tracker_id, created_at);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_trans_type '
+            'ON transactions (type);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_trans_source '
+            'ON transactions (source);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_trans_category '
+            'ON transactions (category_id);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_trans_account '
+            'ON transactions (account_id);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_budget_periods_budget '
+            'ON budget_periods (budget_id);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_savings_contrib_goal '
+            'ON savings_goal_contributions (savings_goal_id);',
+          );
+          await m.database.customStatement(
+            'CREATE INDEX IF NOT EXISTS idx_recurring_tracker '
+            'ON recurring_transactions (tracker_id);',
+          );
         }
 
         // Migration from schema version 9 → 10: consolidate subscriptions into recurring transactions

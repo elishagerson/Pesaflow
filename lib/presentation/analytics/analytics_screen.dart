@@ -219,7 +219,10 @@ class AnalyticsScreen extends ConsumerWidget {
                     labelColor: onSurface,
                     unselectedLabelColor: onSurface.withValues(alpha: 0.6),
                     labelStyle: context.ts(13, fontWeight: FontWeight.w800),
-                    unselectedLabelStyle: context.ts(13, fontWeight: FontWeight.w600),
+                    unselectedLabelStyle: context.ts(
+                      13,
+                      fontWeight: FontWeight.w600,
+                    ),
                     tabs: const [
                       Tab(text: 'Overview'),
                       Tab(text: 'Trends'),
@@ -293,7 +296,7 @@ class _OverviewTab extends StatelessWidget {
                   ? ((net / income) * 100).round()
                   : 0;
               final incomeColorVal = context.appColors.incomeColor;
-              final expenseColorVal = AppTheme.expenseColor;
+              final expenseColorVal = context.appColors.expenseColor;
 
               return StaggeredFadeSlide(
                 index: 0,
@@ -561,7 +564,11 @@ class _OverviewTab extends StatelessWidget {
                                                     AppTypographyTheme
                                                   >()!
                                                   .labelMicro
-                                                  .copyWith(color: context.appColors.textLow),
+                                                  .copyWith(
+                                                    color: context
+                                                        .appColors
+                                                        .textLow,
+                                                  ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -623,8 +630,8 @@ class _OverviewTab extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'SET A SAVINGS GOAL',
-                                   style: theme.textTheme.labelSmall?.copyWith(
-                                     color: context.appColors.textMedium,
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: context.appColors.textMedium,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.1,
                                   ),
@@ -774,11 +781,13 @@ class _OverviewTab extends StatelessWidget {
                                         }
                                         return val.toStringAsFixed(0);
                                       })(),
-                                      style: context.ts(
-                                        12,
-                                        fontWeight: FontWeight.bold,
-                                        color: theme.colorScheme.onSurface,
-                                      ).copyWith(fontFamily: 'monospace'),
+                                      style: context
+                                          .ts(
+                                            12,
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.onSurface,
+                                          )
+                                          .copyWith(fontFamily: 'monospace'),
                                     ),
                                   ],
                                 ),
@@ -851,7 +860,8 @@ class _OverviewTab extends StatelessWidget {
                                                 .labelSmall!
                                                 .copyWith(
                                                   fontWeight: FontWeight.bold,
-                                                  color: context.appColors.textLow,
+                                                  color:
+                                                      context.appColors.textLow,
                                                 ),
                                           ),
                                         ],
@@ -1065,9 +1075,8 @@ class _TrendsTab extends StatelessWidget {
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (touchedSpot) {
-                                  return theme.colorScheme.surfaceContainerHigh.withValues(
-                                    alpha: 0.96,
-                                  );
+                                  return theme.colorScheme.surfaceContainerHigh
+                                      .withValues(alpha: 0.96);
                                 },
                                 tooltipBorderRadius: BorderRadius.circular(12),
                                 tooltipBorder: BorderSide(
@@ -1101,8 +1110,10 @@ class _TrendsTab extends StatelessWidget {
                                       return TouchedSpotIndicatorData(
                                         FlLine(
                                           color:
-                                        (barData.gradient?.colors.first ??
-                                                       context.appColors.textMedium)
+                                              (barData.gradient?.colors.first ??
+                                                      context
+                                                          .appColors
+                                                          .textMedium)
                                                   .withValues(alpha: 0.3),
                                           strokeWidth: 2,
                                           dashArray: [4, 4],
@@ -1114,11 +1125,13 @@ class _TrendsTab extends StatelessWidget {
                                                 return FlDotCirclePainter(
                                                   radius: 6,
                                                   color:
-                                                   barData
-                                                           .gradient
-                                                           ?.colors
-                                                           .first ??
-                                                       context.appColors.textMedium,
+                                                      barData
+                                                          .gradient
+                                                          ?.colors
+                                                          .first ??
+                                                      context
+                                                          .appColors
+                                                          .textMedium,
                                                   strokeWidth: 2,
                                                   strokeColor: Colors.white,
                                                 );
@@ -1157,7 +1170,7 @@ class _TrendsTab extends StatelessWidget {
                                         textAlign: TextAlign.center,
                                         style: context.ts(
                                           10,
-                                    color: context.appColors.textMedium,
+                                          color: context.appColors.textMedium,
                                         ),
                                       ),
                                     );
@@ -1171,7 +1184,7 @@ class _TrendsTab extends StatelessWidget {
                             minY: 0,
                             maxY: maxVal * 1.15,
                             lineBarsData: [
-                                                            LineChartBarData(
+                              LineChartBarData(
                                 spots: incomeSpots,
                                 isCurved: true,
                                 gradient: LinearGradient(
@@ -1187,8 +1200,12 @@ class _TrendsTab extends StatelessWidget {
                                   show: true,
                                   gradient: LinearGradient(
                                     colors: [
-                                      context.appColors.incomeColor.withValues(alpha: 0.16),
-                                      context.appColors.incomeColor.withValues(alpha: 0.0),
+                                      context.appColors.incomeColor.withValues(
+                                        alpha: 0.16,
+                                      ),
+                                      context.appColors.incomeColor.withValues(
+                                        alpha: 0.0,
+                                      ),
                                     ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -1211,15 +1228,19 @@ class _TrendsTab extends StatelessWidget {
                                   show: true,
                                   gradient: LinearGradient(
                                     colors: [
-                                      context.appColors.expenseColor.withValues(alpha: 0.16),
-                                      context.appColors.expenseColor.withValues(alpha: 0.0),
+                                      context.appColors.expenseColor.withValues(
+                                        alpha: 0.16,
+                                      ),
+                                      context.appColors.expenseColor.withValues(
+                                        alpha: 0.0,
+                                      ),
                                     ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                   ),
                                 ),
                               ),
-                             ],
+                            ],
                           ),
                         ),
                       ),
@@ -1251,7 +1272,11 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 Text(
                   'Income',
-                  style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.textLow),
+                  style: context.ts(
+                    12,
+                    fontWeight: FontWeight.bold,
+                    color: context.appColors.textLow,
+                  ),
                 ),
                 const SizedBox(width: kSpacing24),
                 Container(
@@ -1265,7 +1290,11 @@ class _TrendsTab extends StatelessWidget {
                 const SizedBox(width: kSpacing6),
                 Text(
                   'Expense',
-                  style: context.ts(12, fontWeight: FontWeight.bold, color: context.appColors.textLow),
+                  style: context.ts(
+                    12,
+                    fontWeight: FontWeight.bold,
+                    color: context.appColors.textLow,
+                  ),
                 ),
               ],
             ),
@@ -1302,14 +1331,14 @@ class _InsightsTab extends StatelessWidget {
     }
   }
 
-  Color _getSeverityColor(InsightSeverity severity) {
+  Color _getSeverityColor(BuildContext context, InsightSeverity severity) {
     switch (severity) {
       case InsightSeverity.positive:
-        return AppTheme.incomeColor;
+        return context.appColors.incomeColor;
       case InsightSeverity.warning:
-        return AppTheme.transferColor;
+        return context.appColors.transferColor;
       case InsightSeverity.critical:
-        return AppTheme.expenseColor;
+        return context.appColors.expenseColor;
       case InsightSeverity.neutral:
         return theme.colorScheme.onSurfaceVariant;
     }
@@ -1334,7 +1363,7 @@ class _InsightsTab extends StatelessWidget {
           itemCount: insights.length,
           itemBuilder: (context, index) {
             final insight = insights[index];
-            final color = _getSeverityColor(insight.severity);
+            final color = _getSeverityColor(context, insight.severity);
 
             return StaggeredFadeSlide(
               index: index,

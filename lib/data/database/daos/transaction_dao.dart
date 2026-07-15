@@ -23,6 +23,68 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionDaoMixin {
   TransactionDao(super.db);
 
+  /// One-shot version of [watchFilteredTransactions] — no stream overhead.
+  Future<List<TransactionWithCategoryAndAccount>> getFilteredTransactions({
+    String? accountId,
+    String? categoryId,
+    String? type,
+    String? searchQuery,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? trackerId,
+    int? amountMin,
+    int? amountMax,
+  }) async {
+    final query = select(transactions).join([
+      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
+      leftOuterJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+    ]);
+
+    if (accountId != null) {
+      query.where(transactions.accountId.equals(accountId));
+    }
+    if (categoryId != null) {
+      query.where(transactions.categoryId.equals(categoryId));
+    }
+    if (type != null && type != 'All') {
+      query.where(transactions.type.equals(type.toLowerCase()));
+    }
+    if (trackerId != null) {
+      query.where(transactions.trackerId.equals(trackerId));
+    }
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      query.where(
+        transactions.description.like('%$searchQuery%') |
+            transactions.sender.like('%$searchQuery%') |
+            transactions.recipient.like('%$searchQuery%') |
+            transactions.reference.like('%$searchQuery%'),
+      );
+    }
+    if (startDate != null) {
+      query.where(transactions.createdAt.isBiggerOrEqual(Constant(startDate)));
+    }
+    if (endDate != null) {
+      query.where(transactions.createdAt.isSmallerOrEqual(Constant(endDate)));
+    }
+    if (amountMin != null) {
+      query.where(transactions.amount.isBiggerOrEqual(Constant(amountMin)));
+    }
+    if (amountMax != null) {
+      query.where(transactions.amount.isSmallerOrEqual(Constant(amountMax)));
+    }
+
+    query.orderBy([OrderingTerm.desc(transactions.createdAt)]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      return TransactionWithCategoryAndAccount(
+        transaction: row.readTable(transactions),
+        category: row.readTable(categories),
+        account: row.readTableOrNull(accounts),
+      );
+    }).toList();
+  }
+
   /// Streams filtered transactions with full category and account details.
   Stream<List<TransactionWithCategoryAndAccount>> watchFilteredTransactions({
     String? accountId,
