@@ -202,7 +202,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFF0F4C5C),
+                color: theme.colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -269,7 +269,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F4C5C),
+                    color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
