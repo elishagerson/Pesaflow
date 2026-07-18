@@ -45,6 +45,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   late TextEditingController _searchController;
   Set<String> _previousTransactionIds = {};
   bool _isFirstBuild = true;
+  final Set<String> _pendingDeleteIds = {};
 
   @override
   void initState() {
@@ -142,7 +143,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               ),
               child: transactionsAsync.when(
                 data: (transactionsList) {
-                  if (transactionsList.isEmpty) {
+                  final visibleTransactions = transactionsList
+                      .where((t) => !_pendingDeleteIds.contains(t.transaction.id))
+                      .toList();
+                  if (visibleTransactions.isEmpty) {
                     final isFiltered =
                         activeAccount != null ||
                         activeCategory != null ||
