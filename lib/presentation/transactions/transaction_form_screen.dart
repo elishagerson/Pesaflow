@@ -1215,14 +1215,16 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _saveAsTemplate
-                                      ? theme.colorScheme.primary
-                                            .withValues(alpha: 0.08)
+                                      ? theme.colorScheme.primary.withValues(
+                                          alpha: 0.08,
+                                        )
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: _saveAsTemplate
-                                        ? theme.colorScheme.primary
-                                              .withValues(alpha: 0.3)
+                                        ? theme.colorScheme.primary.withValues(
+                                            alpha: 0.3,
+                                          )
                                         : onSurface.withValues(alpha: 0.1),
                                   ),
                                 ),
@@ -1253,7 +1255,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       ),
                                     ),
                                     AnimatedContainer(
-                                      duration: const Duration(milliseconds: 200),
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
                                       width: 22,
                                       height: 22,
                                       decoration: BoxDecoration(
@@ -1264,7 +1268,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         border: Border.all(
                                           color: _saveAsTemplate
                                               ? theme.colorScheme.primary
-                                              : onSurface.withValues(alpha: 0.3),
+                                              : onSurface.withValues(
+                                                  alpha: 0.3,
+                                                ),
                                           width: 1.5,
                                         ),
                                       ),
@@ -1348,18 +1354,25 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           'Save as Template',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: TextField(
           controller: nameController,
           autofocus: true,
           textCapitalization: TextCapitalization.sentences,
-          decoration: context.inputDecoration(hintText: 'e.g. Daily lunch 5000'),
+          decoration: context.inputDecoration(
+            hintText: 'e.g. Daily lunch 5000',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -1386,7 +1399,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 );
               }
             },
-            child: Text('Save', style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Save',
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -1531,24 +1550,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               itemCount: templates.length,
                               itemBuilder: (listCtx, index) {
                                 final t = templates[index];
-                                final type =
-                                    t['type'] as String? ?? 'expense';
-                                final amount =
-                                    t['amountCents'] as int? ?? 0;
-                                final name =
-                                    t['name'] as String? ?? 'Untitled';
-                                final typeIcon =
-                                    type == 'income'
-                                        ? PesaFlowIcons.income
-                                        : type == 'transfer'
-                                        ? PesaFlowIcons.transfer
-                                        : PesaFlowIcons.expense;
-                                final typeColor =
-                                    type == 'income'
-                                        ? context.appColors.incomeColor
-                                        : type == 'transfer'
-                                        ? AppTheme.transferColorDark
-                                        : context.appColors.expenseColor;
+                                final type = t['type'] as String? ?? 'expense';
+                                final amount = t['amountCents'] as int? ?? 0;
+                                final name = t['name'] as String? ?? 'Untitled';
+                                final typeIcon = type == 'income'
+                                    ? PesaFlowIcons.income
+                                    : type == 'transfer'
+                                    ? PesaFlowIcons.transfer
+                                    : PesaFlowIcons.expense;
+                                final typeColor = type == 'income'
+                                    ? context.appColors.incomeColor
+                                    : type == 'transfer'
+                                    ? AppTheme.transferColorDark
+                                    : context.appColors.expenseColor;
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: kSpacing8,
@@ -1562,9 +1576,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         right: kSpacing20,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: context
-                                            .appColors
-                                            .expenseColor
+                                        color: context.appColors.expenseColor
                                             .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(14),
                                       ),
@@ -1591,8 +1603,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.surface,
-                                          borderRadius:
-                                              BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                           border: Border.all(
                                             color: onSurface.withValues(
                                               alpha: 0.07,
@@ -1602,10 +1615,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         child: Row(
                                           children: [
                                             Container(
-                                              padding:
-                                                  const EdgeInsets.all(
-                                                    kSpacing8,
-                                                  ),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing8,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: typeColor.withValues(
                                                   alpha: 0.12,
@@ -1646,17 +1658,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                         t['description']
                                                             as String,
                                                         maxLines: 1,
-                                                        overflow:
-                                                            TextOverflow
-                                                                .ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: theme
                                                             .textTheme
                                                             .bodySmall
                                                             ?.copyWith(
                                                               color: onSurface
                                                                   .withValues(
-                                                                    alpha:
-                                                                        0.4,
+                                                                    alpha: 0.4,
                                                                   ),
                                                             ),
                                                       ),

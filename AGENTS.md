@@ -45,6 +45,7 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - **Recurring due-item pulse** — `_DueItemPulse` in `recurring_transaction_list_screen.dart`: repeating 2-second scale pulse (1.0→1.015→1.0) via `easeInOut` loop on overdue/due items.
 - **Savings goal progress bar animation** — Both `LinearProgressIndicator` instances in `savings_goal_list_screen.dart` wrapped in `TweenAnimationBuilder<double>(begin: 0, end: pct, curve: easeOutCubic)` — 1s for overall, 800ms per-goal.
 - **SkeletonCrossfade widget** — `lib/presentation/common/widgets/motion/skeleton_crossfade.dart`: `AnimatedSwitcher(350ms, FadeTransition)`. Awaiting wiring into screens.
+- **Transaction templates** — `settings_repository.dart`: `getTransactionTemplates()`, `saveTransactionTemplate()`, `deleteTransactionTemplate()` via JSON in `app_settings` table (key: `transaction_templates`). `transaction_form_screen.dart`: "Templates" button opens picker sheet with swipe-to-delete; "Save as template" toggle in secondary details sheet saves config with name dialog after transaction save.
 
 ### In Progress
 - **Typography audit** — `ts()` helper created; top-10 files still use raw `fontSize`/`fontWeight` overrides
