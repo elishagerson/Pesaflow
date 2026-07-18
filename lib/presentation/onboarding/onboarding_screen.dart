@@ -700,8 +700,7 @@ class _AccountsPage extends StatelessWidget {
           ),
       ],
     ),
-  ),
-);
+  );
   }
 }
 

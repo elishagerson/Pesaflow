@@ -710,10 +710,41 @@ class _SavingsGoalDetailScreenState
     );
 
     if (confirm == true) {
-      await ref.read(savingsGoalRepositoryProvider).deleteSavingsGoal(id);
-      ref.invalidate(savingsGoalsStreamProvider);
-      ref.invalidate(savingsGoalsTotalSavedProvider);
-      if (mounted) context.pop();
+      final goalsAsync = ref.read(savingsGoalsStreamProvider);
+      final goal = goalsAsync.value?.where((g) => g.id == id).firstOrNull;
+      if (goal == null) return;
+      final goalName = goal.name;
+      final trackerId = goal.trackerId;
+
+      UndoDelete.show(
+        context: context,
+        entityName: 'Savings Goal',
+        message: '"$goalName" deleted',
+        onUndo: () async {
+          await ref.read(savingsGoalRepositoryProvider).createSavingsGoal(
+                name: goal.name,
+                targetAmount: goal.targetAmount,
+                targetDate: goal.targetDate,
+                color: goal.color,
+                icon: goal.icon,
+                trackerId: trackerId,
+              );
+          if (mounted) {
+            ref.invalidate(savingsGoalsStreamProvider);
+            ref.invalidate(savingsGoalsTotalSavedProvider);
+          }
+        },
+        onDelete: () async {
+          await ref
+              .read(savingsGoalRepositoryProvider)
+              .deleteSavingsGoal(id);
+          if (mounted) {
+            ref.invalidate(savingsGoalsStreamProvider);
+            ref.invalidate(savingsGoalsTotalSavedProvider);
+            context.pop();
+          }
+        },
+      );
     }
   }
 
