@@ -1199,6 +1199,89 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         ),
                         const SizedBox(height: kSpacing32),
 
+                        if (!_isEditMode)
+                          StaggeredFadeSlide(
+                            index: 3,
+                            child: GestureDetector(
+                              onTap: () => setSheetState(
+                                () => _saveAsTemplate = !_saveAsTemplate,
+                              ),
+                              behavior: HitTestBehavior.opaque,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing16,
+                                  vertical: kSpacing12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _saveAsTemplate
+                                      ? theme.colorScheme.primary
+                                            .withValues(alpha: 0.08)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: _saveAsTemplate
+                                        ? theme.colorScheme.primary
+                                              .withValues(alpha: 0.3)
+                                        : onSurface.withValues(alpha: 0.1),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      _saveAsTemplate
+                                          ? Icons.bookmark_rounded
+                                          : Icons.bookmark_border_rounded,
+                                      size: 20,
+                                      color: _saveAsTemplate
+                                          ? theme.colorScheme.primary
+                                          : onSurface.withValues(alpha: 0.4),
+                                    ),
+                                    const SizedBox(width: kSpacing12),
+                                    Expanded(
+                                      child: Text(
+                                        'Save as template',
+                                        style: context.ts(
+                                          14,
+                                          fontWeight: FontWeight.w500,
+                                          color: _saveAsTemplate
+                                              ? theme.colorScheme.primary
+                                              : onSurface.withValues(
+                                                  alpha: 0.6,
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 200),
+                                      width: 22,
+                                      height: 22,
+                                      decoration: BoxDecoration(
+                                        color: _saveAsTemplate
+                                            ? theme.colorScheme.primary
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          color: _saveAsTemplate
+                                              ? theme.colorScheme.primary
+                                              : onSurface.withValues(alpha: 0.3),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: _saveAsTemplate
+                                          ? const Icon(
+                                              Icons.check_rounded,
+                                              size: 16,
+                                              color: Colors.white,
+                                            )
+                                          : null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (!_isEditMode) const SizedBox(height: kSpacing12),
+
                         StaggeredFadeSlide(
                           index: 4,
                           child: TactileSpringContainer(
@@ -2137,6 +2220,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       ),
                     ),
                   const SizedBox(height: kSpacing16),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget _buildKeypadRow(List<String> keys) {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final textColor = onSurface;
