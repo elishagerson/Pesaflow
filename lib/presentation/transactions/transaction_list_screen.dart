@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -703,315 +702,286 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     ),
                   ),
                   child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing20,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Transactions',
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.8,
+                                color: onSurface,
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Row(
                               children: [
-                                Text(
-                                  'Transactions',
-                                  style: theme.textTheme.headlineMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: -0.8,
-                                        color: onSurface,
-                                      ),
+                                if (activeAccount != null ||
+                                    activeCategory != null ||
+                                    searchQuery.isNotEmpty ||
+                                    activeType != 'All' ||
+                                    amountMin != null ||
+                                    amountMax != null ||
+                                    dateFrom != null ||
+                                    dateTo != null)
+                                  IconButton(
+                                    icon: Icon(
+                                      PesaFlowIcons.clearAll,
+                                      color: theme.colorScheme.error,
+                                      size: 20,
+                                    ),
+                                    tooltip: 'Clear Filters',
+                                    onPressed: () {
+                                      ref
+                                              .read(
+                                                transactionTypeFilterProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          'All';
+                                      ref
+                                              .read(
+                                                transactionAccountFilterProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                      ref
+                                              .read(
+                                                transactionCategoryFilterProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                      ref
+                                              .read(
+                                                transactionSearchQueryProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          '';
+                                      ref
+                                              .read(
+                                                transactionAmountMinProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                      ref
+                                              .read(
+                                                transactionAmountMaxProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                      ref
+                                              .read(
+                                                transactionDateFromProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                      ref
+                                              .read(
+                                                transactionDateToProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          null;
+                                    },
+                                  ),
+                                _FilterButton(
+                                  isActive:
+                                      activeAccount != null ||
+                                      activeCategory != null ||
+                                      amountMin != null ||
+                                      amountMax != null ||
+                                      dateFrom != null ||
+                                      dateTo != null ||
+                                      searchQuery.isNotEmpty ||
+                                      activeType != 'All',
+                                  activeCount: [
+                                    if (activeType != 'All') 1,
+                                    if (activeAccount != null) 1,
+                                    if (activeCategory != null) 1,
+                                    if (searchQuery.isNotEmpty) 1,
+                                    if (amountMin != null || amountMax != null)
+                                      1,
+                                    if (dateFrom != null || dateTo != null) 1,
+                                  ].length,
+                                  onPressed: () =>
+                                      showTransactionFilterSheet(context, ref),
                                 ),
-                                Row(
-                                  children: [
-                                    if (activeAccount != null ||
-                                        activeCategory != null ||
-                                        searchQuery.isNotEmpty ||
-                                        activeType != 'All' ||
-                                        amountMin != null ||
-                                        amountMax != null ||
-                                        dateFrom != null ||
-                                        dateTo != null)
-                                      IconButton(
-                                        icon: Icon(
-                                          PesaFlowIcons.clearAll,
-                                          color: theme.colorScheme.error,
-                                          size: 20,
-                                        ),
-                                        tooltip: 'Clear Filters',
-                                        onPressed: () {
-                                          ref
-                                                  .read(
-                                                    transactionTypeFilterProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              'All';
-                                          ref
-                                                  .read(
-                                                    transactionAccountFilterProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                          ref
-                                                  .read(
-                                                    transactionCategoryFilterProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                          ref
-                                                  .read(
-                                                    transactionSearchQueryProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              '';
-                                          ref
-                                                  .read(
-                                                    transactionAmountMinProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                          ref
-                                                  .read(
-                                                    transactionAmountMaxProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                          ref
-                                                  .read(
-                                                    transactionDateFromProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                          ref
-                                                  .read(
-                                                    transactionDateToProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              null;
-                                        },
-                                      ),
-                                    _FilterButton(
-                                      isActive:
-                                          activeAccount != null ||
-                                          activeCategory != null ||
-                                          amountMin != null ||
-                                          amountMax != null ||
-                                          dateFrom != null ||
-                                          dateTo != null ||
-                                          searchQuery.isNotEmpty ||
-                                          activeType != 'All',
-                                      activeCount: [
-                                        if (activeType != 'All') 1,
-                                        if (activeAccount != null) 1,
-                                        if (activeCategory != null) 1,
-                                        if (searchQuery.isNotEmpty) 1,
-                                        if (amountMin != null ||
-                                            amountMax != null)
-                                          1,
-                                        if (dateFrom != null || dateTo != null)
-                                          1,
-                                      ].length,
-                                      onPressed: () =>
-                                          showTransactionFilterSheet(
-                                            context,
-                                            ref,
-                                          ),
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    TactileSpringContainer(
-                                      onTap: () => ref
-                                          .read(
-                                            paletteVisibilityProvider.notifier,
-                                          )
-                                          .toggle(),
-                                      child: Container(
-                                        width: 36,
-                                        height: 36,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: onSurface.withValues(
-                                            alpha: 0.04,
-                                          ),
-                                          border: Border.all(
-                                            color: onSurface.withValues(
-                                              alpha: 0.08,
-                                            ),
-                                            width: 0.8,
-                                          ),
-                                        ),
-                                        child: Icon(
-                                          PesaFlowIcons.search,
-                                          size: 18,
-                                          color: onSurface.withValues(
-                                            alpha: 0.62,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: kSpacing8),
-                                    Container(
-                                      width: 36,
-                                      height: 36,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
+                                const SizedBox(width: kSpacing8),
+                                TactileSpringContainer(
+                                  onTap: () => ref
+                                      .read(paletteVisibilityProvider.notifier)
+                                      .toggle(),
+                                  child: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: onSurface.withValues(alpha: 0.04),
+                                      border: Border.all(
                                         color: onSurface.withValues(
-                                          alpha: 0.04,
+                                          alpha: 0.08,
                                         ),
-                                        border: Border.all(
-                                          color: onSurface.withValues(
-                                            alpha: 0.08,
-                                          ),
-                                          width: 0.8,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        PesaFlowIcons.personOutline,
-                                        size: 18,
-                                        color: onSurface.withValues(
-                                          alpha: 0.62,
-                                        ),
+                                        width: 0.8,
                                       ),
                                     ),
-                                  ],
+                                    child: Icon(
+                                      PesaFlowIcons.search,
+                                      size: 18,
+                                      color: onSurface.withValues(alpha: 0.62),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing8),
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: onSurface.withValues(alpha: 0.04),
+                                    border: Border.all(
+                                      color: onSurface.withValues(alpha: 0.08),
+                                      width: 0.8,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    PesaFlowIcons.personOutline,
+                                    size: 18,
+                                    color: onSurface.withValues(alpha: 0.62),
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: kSpacing16),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                            ),
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: (val) {
-                                _searchDebounce?.cancel();
-                                _searchDebounce = Timer(
-                                  const Duration(milliseconds: 300),
-                                  () {
-                                    ref
-                                        .read(
-                                          transactionSearchQueryProvider
-                                              .notifier,
-                                        )
-                                        .state = val
-                                        .trim();
-                                  },
-                                );
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Search transactions...',
-                                prefixIcon: Icon(
-                                  PesaFlowIcons.search,
-                                  size: 20,
-                                ),
-                                suffixIcon: searchQuery.isNotEmpty
-                                    ? IconButton(
-                                        icon: Icon(
-                                          PesaFlowIcons.clear,
-                                          size: 16,
-                                          color: onSurface.withValues(
-                                            alpha: 0.54,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          ref
-                                                  .read(
-                                                    transactionSearchQueryProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              '';
-                                        },
-                                      )
-                                    : null,
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: kSpacing10),
-                          SizedBox(
-                            height: 34,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: ['All', 'Income', 'Expense', 'Transfer']
-                                  .map((type) {
-                                    final isSelected = activeType == type;
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing4,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          ref
-                                                  .read(
-                                                    transactionTypeFilterProvider
-                                                        .notifier,
-                                                  )
-                                                  .state =
-                                              type;
-                                        },
-                                        child: AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 200,
-                                          ),
-                                          curve: Curves.easeOutCubic,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                : onSurface.withValues(
-                                                    alpha: 0.04,
-                                                  ),
-                                            borderRadius: BorderRadius.circular(
-                                              100,
-                                            ),
-                                            border: Border.all(
-                                              color: isSelected
-                                                  ? theme.colorScheme.primary
-                                                  : onSurface.withValues(
-                                                      alpha: 0.06,
-                                                    ),
-                                              width: 0.8,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            type,
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                  color: isSelected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .onPrimary
-                                                      : onSurface.withValues(
-                                                          alpha: 0.52,
-                                                        ),
-                                                  fontWeight: isSelected
-                                                      ? FontWeight.bold
-                                                      : FontWeight.w500,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  })
-                                  .toList(),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: kSpacing16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing20,
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (val) {
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(
+                              const Duration(milliseconds: 300),
+                              () {
+                                ref
+                                    .read(
+                                      transactionSearchQueryProvider.notifier,
+                                    )
+                                    .state = val
+                                    .trim();
+                              },
+                            );
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Search transactions...',
+                            prefixIcon: Icon(PesaFlowIcons.search, size: 20),
+                            suffixIcon: searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: Icon(
+                                      PesaFlowIcons.clear,
+                                      size: 16,
+                                      color: onSurface.withValues(alpha: 0.54),
+                                    ),
+                                    onPressed: () {
+                                      ref
+                                              .read(
+                                                transactionSearchQueryProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          '';
+                                    },
+                                  )
+                                : null,
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing10),
+                      SizedBox(
+                        height: 34,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: ['All', 'Income', 'Expense', 'Transfer']
+                              .map((type) {
+                                final isSelected = activeType == type;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing4,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      ref
+                                              .read(
+                                                transactionTypeFilterProvider
+                                                    .notifier,
+                                              )
+                                              .state =
+                                          type;
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 200,
+                                      ),
+                                      curve: Curves.easeOutCubic,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? theme.colorScheme.primary
+                                            : onSurface.withValues(alpha: 0.04),
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                              : onSurface.withValues(
+                                                  alpha: 0.06,
+                                                ),
+                                          width: 0.8,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        type,
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              color: isSelected
+                                                  ? theme.colorScheme.onPrimary
+                                                  : onSurface.withValues(
+                                                      alpha: 0.52,
+                                                    ),
+                                              fontWeight: isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.w500,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

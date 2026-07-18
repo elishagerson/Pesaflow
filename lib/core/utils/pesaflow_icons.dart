@@ -152,5 +152,4 @@ class PesaFlowIcons {
   static const IconData compareArrows = Icons.compare_arrows_rounded;
   static const IconData folder = Icons.folder_rounded;
   static const IconData title = Icons.title_rounded;
-
 }
