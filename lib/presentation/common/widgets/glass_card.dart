@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 
 enum CardElevation { none, low, medium, high }
@@ -195,16 +196,17 @@ class _GlassCardState extends State<GlassCard>
     }
 
     if (widget.onTap != null) {
+      final reducedMotion = context.isReducedMotion;
       return Semantics(
         container: true,
         label: 'Card',
         button: true,
         child: GestureDetector(
-          onTapDown: (_) => _controller.forward(),
-          onTapUp: (_) => _controller.reverse(),
-          onTapCancel: () => _controller.reverse(),
+          onTapDown: reducedMotion ? null : (_) => _controller.forward(),
+          onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
+          onTapCancel: reducedMotion ? null : () => _controller.reverse(),
           onTap: widget.onTap,
-          child: ScaleTransition(scale: _scaleAnimation, child: body),
+          child: reducedMotion ? body : ScaleTransition(scale: _scaleAnimation, child: body),
         ),
       );
     }

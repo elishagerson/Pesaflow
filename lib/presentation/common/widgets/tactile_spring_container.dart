@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class TactileSpringContainer extends StatefulWidget {
   final Widget child;
@@ -41,6 +42,10 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _pressDown() {
     if (widget.onTap == null) return;
+    if (context.isReducedMotion) {
+      _controller.value = 1.0;
+      return;
+    }
     _controller.animateTo(
       1.0,
       duration: const Duration(milliseconds: 100),
@@ -50,6 +55,10 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _springBack() {
     if (widget.onTap == null) return;
+    if (context.isReducedMotion) {
+      _controller.value = 0.0;
+      return;
+    }
     const spring = SpringDescription(
       mass: 0.8,
       stiffness: 350.0,

@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
@@ -84,7 +85,7 @@ class SettingsScreen extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: kSpacing4),
-                    GestureDetector(
+                    TactileSpringContainer(
                       onTap: () => _showEditAccountDialog(context, ref, acc),
                       child: Icon(
                         PesaFlowIcons.edit,
@@ -93,7 +94,7 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: kSpacing4),
-                    GestureDetector(
+                    TactileSpringContainer(
                       onTap: () => _confirmDeleteAccount(context, ref, acc),
                       child: Icon(
                         PesaFlowIcons.delete,
@@ -514,7 +515,7 @@ class SettingsScreen extends ConsumerWidget {
                     : Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          GestureDetector(
+                          TactileSpringContainer(
                             onTap: () {
                               Navigator.of(context).pop();
                               showAddCategoryDialog(
@@ -530,7 +531,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
-                          GestureDetector(
+                          TactileSpringContainer(
                             onTap: () async {
                               final categoryData = cat;
                               UndoDelete.show(

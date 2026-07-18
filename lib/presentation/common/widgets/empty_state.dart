@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
 class EmptyState extends StatelessWidget {
   final IconData icon;
@@ -156,7 +157,7 @@ class SectionHeader extends StatelessWidget {
           if (actionLabel != null && onAction != null)
             Semantics(
               button: true,
-              child: GestureDetector(
+              child: TactileSpringContainer(
                 onTap: onAction,
                 child: Padding(
                   padding: const EdgeInsets.all(kSpacing8),
