@@ -206,7 +206,9 @@ class _GlassCardState extends State<GlassCard>
           onTapUp: reducedMotion ? null : (_) => _controller.reverse(),
           onTapCancel: reducedMotion ? null : () => _controller.reverse(),
           onTap: widget.onTap,
-          child: reducedMotion ? body : ScaleTransition(scale: _scaleAnimation, child: body),
+          child: reducedMotion
+              ? body
+              : ScaleTransition(scale: _scaleAnimation, child: body),
         ),
       );
     }

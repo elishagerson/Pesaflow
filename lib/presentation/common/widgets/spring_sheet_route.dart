@@ -59,7 +59,8 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
 
     _animation = _controller.drive(Tween<double>(begin: 0, end: 1));
 
-    final reducedMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (reducedMotion) {
       _controller.value = 1.0;
     } else {

@@ -623,9 +623,7 @@ class _RecurringTransactionListScreenState
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    isExpense
-                        ? PesaFlowIcons.arrowUp
-                        : PesaFlowIcons.arrowDown,
+                    isExpense ? PesaFlowIcons.arrowUp : PesaFlowIcons.arrowDown,
                     color: accentColor,
                     size: 18,
                   ),
