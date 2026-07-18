@@ -826,25 +826,33 @@ class LoanDetailScreen extends ConsumerWidget {
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
-              try {
-                await ref.read(loanRepositoryProvider).deleteLoan(loan.id);
-                ref.invalidate(loansStreamProvider);
-                ref.invalidate(activeLoansStreamProvider);
-                ref.invalidate(paidLoansStreamProvider);
-                if (context.mounted) {
-                  Navigator.of(ctx, rootNavigator: true).pop();
-                  context.pop();
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  Navigator.of(ctx, rootNavigator: true).pop();
-                  CustomToast.show(
-                    context,
-                    message: 'Failed: $e',
-                    type: ToastType.error,
-                  );
-                }
-              }
+              Navigator.of(ctx, rootNavigator: true).pop();
+              final savedLoan = loan;
+              UndoDelete.show(
+                context: context,
+                entityName: 'Loan',
+                message:
+                    '"${savedLoan.description ?? savedLoan.provider ?? 'Loan'}" deleted',
+                onUndo: () async {
+                  await ref.read(loanRepositoryProvider).createLoan(savedLoan);
+                },
+                onDelete: () async {
+                  try {
+                    await ref
+                        .read(loanRepositoryProvider)
+                        .deleteLoan(savedLoan.id);
+                    if (context.mounted) context.pop();
+                  } catch (e) {
+                    if (context.mounted) {
+                      CustomToast.show(
+                        context,
+                        message: 'Failed: $e',
+                        type: ToastType.error,
+                      );
+                    }
+                  }
+                },
+              );
             },
             child: const Text('Delete'),
           ),
