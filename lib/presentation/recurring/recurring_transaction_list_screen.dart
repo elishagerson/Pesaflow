@@ -624,8 +624,8 @@ class _RecurringTransactionListScreenState
                   ),
                   child: Icon(
                     isExpense
-                        ? Icons.arrow_upward_rounded
-                        : Icons.arrow_downward_rounded,
+                        ? PesaFlowIcons.arrowUp
+                        : PesaFlowIcons.arrowDown,
                     color: accentColor,
                     size: 18,
                   ),
@@ -862,7 +862,7 @@ class _RecurringTransactionListScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.bolt_rounded,
+                PesaFlowIcons.bolt,
                 size: 9,
                 color: theme.colorScheme.primary,
               ),
