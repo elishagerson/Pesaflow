@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.dart';
+import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -859,6 +860,11 @@ class TransactionDetailScreen extends ConsumerWidget {
   void _confirmDelete(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     HapticFeedback.mediumImpact();
+    final txAsync = ref.read(transactionDetailProvider(transactionId));
+    final txData = txAsync.value;
+    if (txData == null) return;
+    final tx = txData.transaction;
+
     ModernDialog.show(
       context: context,
       title: const Text('Delete Transaction'),
@@ -878,25 +884,30 @@ class TransactionDetailScreen extends ConsumerWidget {
             foregroundColor: theme.colorScheme.onPrimary,
           ),
           onPressed: () async {
-            try {
-              await ref
-                  .read(transactionRepositoryProvider)
-                  .deleteTransaction(transactionId);
-              ref.invalidate(recentTransactionsStreamProvider);
-              ref.invalidate(accountsStreamProvider);
-              ref.invalidate(netWorthProvider);
-              ref.invalidate(monthlyTotalsProvider);
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.pop();
-              }
-            } catch (e) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Failed to delete: $e')));
-              }
-            }
+            Navigator.of(context, rootNavigator: true).pop();
+            UndoDelete.show(
+              context: context,
+              entityName: 'Transaction',
+              onUndo: () async {
+                await ref
+                    .read(transactionRepositoryProvider)
+                    .createTransaction(tx);
+              },
+              onDelete: () async {
+                try {
+                  await ref
+                      .read(transactionRepositoryProvider)
+                      .deleteTransaction(transactionId);
+                  if (context.mounted) context.pop();
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to delete: $e')),
+                    );
+                  }
+                }
+              },
+            );
           },
           child: const Text('Delete'),
         ),

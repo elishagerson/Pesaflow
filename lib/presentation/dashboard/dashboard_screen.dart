@@ -1227,15 +1227,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   data: (transactions) {
                                     // Client-side dynamic filtering of recent transactions by account
                                     final filteredTransactions =
-                                        _selectedAccountId == null
-                                        ? transactions
-                                        : transactions
-                                              .where(
-                                                (t) =>
-                                                    t.transaction.accountId ==
-                                                    _selectedAccountId,
-                                              )
-                                              .toList();
+                                        (_selectedAccountId == null
+                                            ? transactions
+                                            : transactions
+                                                  .where(
+                                                    (t) =>
+                                                        t.transaction.accountId ==
+                                                        _selectedAccountId,
+                                                  )
+                                                  .toList())
+                                            .where((t) =>
+                                                !_pendingDeleteIds.contains(
+                                                  t.transaction.id,
+                                                ))
+                                            .toList();
 
                                     if (filteredTransactions.isEmpty) {
                                       final isNewUser =
@@ -1451,20 +1456,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               ),
                                             ),
                                             onDismissed: (_) async {
-                                              await ref
-                                                  .read(
-                                                    transactionRepositoryProvider,
-                                                  )
-                                                  .deleteTransaction(trans.id);
-                                              ref.invalidate(
-                                                recentTransactionsStreamProvider,
-                                              );
-                                              ref.invalidate(
-                                                accountsStreamProvider,
-                                              );
-                                              ref.invalidate(netWorthProvider);
-                                              ref.invalidate(
-                                                monthlyTotalsProvider,
+                                              final tx = trans;
+                                              setState(() {
+                                                _pendingDeleteIds.add(tx.id);
+                                              });
+                                              UndoDelete.show(
+                                                context: context,
+                                                entityName: 'Transaction',
+                                                onUndo: () async {
+                                                  setState(() {
+                                                    _pendingDeleteIds.remove(
+                                                      tx.id,
+                                                    );
+                                                  });
+                                                  await ref
+                                                      .read(
+                                                        transactionRepositoryProvider,
+                                                      )
+                                                      .createTransaction(tx);
+                                                },
+                                                onDelete: () async {
+                                                  setState(() {
+                                                    _pendingDeleteIds.remove(
+                                                      tx.id,
+                                                    );
+                                                  });
+                                                  await ref
+                                                      .read(
+                                                        transactionRepositoryProvider,
+                                                      )
+                                                      .deleteTransaction(
+                                                        tx.id,
+                                                      );
+                                                },
                                               );
                                             },
                                             child: TactileSpringContainer(

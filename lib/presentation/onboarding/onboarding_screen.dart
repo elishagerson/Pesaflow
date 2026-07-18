@@ -346,7 +346,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
       ],
       ),
-    );
+    ),
+  ),
+);
   }
 }
 
@@ -703,6 +705,7 @@ class _AccountsPage extends StatelessWidget {
 );
   }
 }
+
 
 class _CompletePage extends StatelessWidget {
   final ThemeData theme;
