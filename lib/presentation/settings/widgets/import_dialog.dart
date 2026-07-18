@@ -242,14 +242,16 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                   ),
                 ),
                 const SizedBox(height: kSpacing4),
-                ...result.errors.take(3).map(
-                  (e) => Text(
-                    e,
-                    style: context.ts(12, color: theme.colorScheme.error),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                ...result.errors
+                    .take(3)
+                    .map(
+                      (e) => Text(
+                        e,
+                        style: context.ts(12, color: theme.colorScheme.error),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 if (result.errors.length > 3)
                   Text(
                     '...and ${result.errors.length - 3} more',
@@ -436,9 +438,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.file_download_rounded, size: 18),
-              label: Text(
-                'Import ${result.transactions.length} Transactions',
-              ),
+              label: Text('Import ${result.transactions.length} Transactions'),
               onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,

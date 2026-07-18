@@ -580,8 +580,9 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleImportCsv(BuildContext context, WidgetRef ref) async {
     final accounts = ref.read(accountsStreamProvider).value ?? [];
-    final categories =
-        await ref.read(categoryRepositoryProvider).getAllCategories();
+    final categories = await ref
+        .read(categoryRepositoryProvider)
+        .getAllCategories();
 
     if (!context.mounted) return;
 

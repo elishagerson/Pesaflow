@@ -57,9 +57,7 @@ class CsvParser {
     if (headerIndex == null) {
       return CsvParseResult(
         transactions: [],
-        errors: [
-          'Unrecognized CSV headers. Found: ${headerFields.join(", ")}',
-        ],
+        errors: ['Unrecognized CSV headers. Found: ${headerFields.join(", ")}'],
         skippedRows: 0,
       );
     }
@@ -164,31 +162,67 @@ class CsvParser {
     }
 
     // Generic format: look for date + amount + description
-    final dateIdx = _findColumn(lower, ['date', 'transaction date', 'txn date', 'posting date']);
-    final amountIdx = _findColumn(lower, ['amount', 'value', 'txn amount', 'transaction amount', 'money']);
-    final descIdx = _findColumn(lower, ['description', 'details', 'narrative', 'remarks', 'transaction details', 'particulars']);
+    final dateIdx = _findColumn(lower, [
+      'date',
+      'transaction date',
+      'txn date',
+      'posting date',
+    ]);
+    final amountIdx = _findColumn(lower, [
+      'amount',
+      'value',
+      'txn amount',
+      'transaction amount',
+      'money',
+    ]);
+    final descIdx = _findColumn(lower, [
+      'description',
+      'details',
+      'narrative',
+      'remarks',
+      'transaction details',
+      'particulars',
+    ]);
 
     if (dateIdx == null || amountIdx == null) {
       return null;
     }
 
-    final map = <String, int>{
-      'date': dateIdx,
-      'amount': amountIdx,
-    };
+    final map = <String, int>{'date': dateIdx, 'amount': amountIdx};
 
     if (descIdx != null) map['description'] = descIdx;
 
-    final typeIdx = _findColumn(lower, ['type', 'transaction type', 'txn type', 'debit/credit', 'd/c']);
+    final typeIdx = _findColumn(lower, [
+      'type',
+      'transaction type',
+      'txn type',
+      'debit/credit',
+      'd/c',
+    ]);
     if (typeIdx != null) map['type'] = typeIdx;
 
-    final refIdx = _findColumn(lower, ['reference', 'ref', 'transaction ref', 'txn ref']);
+    final refIdx = _findColumn(lower, [
+      'reference',
+      'ref',
+      'transaction ref',
+      'txn ref',
+    ]);
     if (refIdx != null) map['reference'] = refIdx;
 
-    final senderIdx = _findColumn(lower, ['sender', 'from', 'payee', 'beneficiary']);
+    final senderIdx = _findColumn(lower, [
+      'sender',
+      'from',
+      'payee',
+      'beneficiary',
+    ]);
     if (senderIdx != null) map['sender'] = senderIdx;
 
-    final recipientIdx = _findColumn(lower, ['recipient', 'to', 'payer', 'remitter']);
+    final recipientIdx = _findColumn(lower, [
+      'recipient',
+      'to',
+      'payer',
+      'remitter',
+    ]);
     if (recipientIdx != null) map['recipient'] = recipientIdx;
 
     return map;
