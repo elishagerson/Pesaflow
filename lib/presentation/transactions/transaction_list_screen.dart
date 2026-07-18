@@ -173,7 +173,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         illustration: PesaFlowIllustration.emptyTransactions(),
                         action: TactileSpringContainer(
                           onTap: () {
-                            HapticFeedback.lightImpact();
                             if (isFiltered) {
                               ref
                                       .read(

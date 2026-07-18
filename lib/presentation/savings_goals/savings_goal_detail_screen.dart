@@ -962,7 +962,6 @@ class _SavingsGoalDetailScreenState
                     Expanded(
                       child: TactileSpringContainer(
                         onTap: () {
-                          HapticFeedback.mediumImpact();
                           _showAddMoneySheet(context, goal, true);
                         },
                         child: Container(
@@ -999,7 +998,6 @@ class _SavingsGoalDetailScreenState
                     Expanded(
                       child: TactileSpringContainer(
                         onTap: () {
-                          HapticFeedback.mediumImpact();
                           _showAddMoneySheet(context, goal, false);
                         },
                         child: Container(

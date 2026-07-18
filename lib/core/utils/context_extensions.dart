@@ -19,6 +19,9 @@ extension PesaFlowContext on BuildContext {
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 
+  bool get isReducedMotion =>
+      MediaQuery.maybeOf(this)?.disableAnimations ?? false;
+
   TextStyle ts(
     double size, {
     TextStyle? from,

@@ -1101,8 +1101,29 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                           padding: const EdgeInsets.only(
                                             right: kSpacing6,
                                           ),
-                                          child: TactileSpringContainer(
-                                            onTap: () {
+                                          child: ActionChip(
+                                            label: Text(
+                                              suggestion,
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: onSurface
+                                                        .withValues(
+                                                          alpha: 0.87,
+                                                        ),
+                                                  ),
+                                            ),
+                                            backgroundColor: onSurface
+                                                .withValues(alpha: 0.05),
+                                            side: BorderSide(
+                                              color: onSurface.withValues(
+                                                alpha: 0.08,
+                                              ),
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            onPressed: () {
                                               setSheetState(() {
                                                 _descriptionController.text =
                                                     suggestion;
@@ -1112,30 +1133,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                     suggestion;
                                               });
                                             },
-                                            child: ActionChip(
-                                              label: Text(
-                                                suggestion,
-                                                style: theme.textTheme.bodySmall
-                                                    ?.copyWith(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.87,
-                                                          ),
-                                                    ),
-                                              ),
-                                              backgroundColor: onSurface
-                                                  .withValues(alpha: 0.05),
-                                              side: BorderSide(
-                                                color: onSurface.withValues(
-                                                  alpha: 0.08,
-                                                ),
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                              ),
-                                              onPressed: () {},
-                                            ),
                                           ),
                                         );
                                       })
