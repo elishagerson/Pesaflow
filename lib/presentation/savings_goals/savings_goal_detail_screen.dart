@@ -710,6 +710,7 @@ class _SavingsGoalDetailScreenState
     );
 
     if (confirm == true) {
+      if (!mounted) return;
       final goalsAsync = ref.read(savingsGoalsStreamProvider);
       final goal = goalsAsync.value?.where((g) => g.id == id).firstOrNull;
       if (goal == null) return;
