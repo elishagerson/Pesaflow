@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
@@ -783,6 +781,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   void _showSecondaryDetailsSheet(BuildContext context) {
     showSpringSheet(
+      context,
+      isScrollControlled: true,
+      builder: (context) {
         final theme = Theme.of(context);
         final onSurface = theme.colorScheme.onSurface;
         return Consumer(
@@ -1538,10 +1539,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     t['name'] as String? ?? 'Untitled';
                                 final typeIcon =
                                     type == 'income'
-                                        ? PesaFlowIcons.arrowDown
+                                        ? PesaFlowIcons.income
                                         : type == 'transfer'
-                                        ? Icons.swap_horiz_rounded
-                                        : PesaFlowIcons.arrowUp;
+                                        ? PesaFlowIcons.transfer
+                                        : PesaFlowIcons.expense;
                                 final typeColor =
                                     type == 'income'
                                         ? context.appColors.incomeColor
