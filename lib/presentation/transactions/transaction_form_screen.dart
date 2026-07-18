@@ -1616,11 +1616,29 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       ),
                                     ),
                                     onDismissed: (_) async {
-                                      await ref
-                                          .read(settingsRepositoryProvider)
-                                          .deleteTransactionTemplate(
-                                            t['id'] as String,
-                                          );
+                                      final templateData = t;
+                                      UndoDelete.show(
+                                        context: context,
+                                        entityName: 'Template',
+                                        onUndo: () async {
+                                          await ref
+                                              .read(
+                                                settingsRepositoryProvider,
+                                              )
+                                              .saveTransactionTemplate(
+                                                templateData,
+                                              );
+                                        },
+                                        onDelete: () async {
+                                          await ref
+                                              .read(
+                                                settingsRepositoryProvider,
+                                              )
+                                              .deleteTransactionTemplate(
+                                                templateData['id'] as String,
+                                              );
+                                        },
+                                      );
                                     },
                                     child: GestureDetector(
                                       onTap: () {

@@ -13,6 +13,7 @@ import 'package:pesaflow/domain/sms/pending_review_notifier.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 
 class SmsReviewDialog extends ConsumerStatefulWidget {
   final TransactionWithCategoryAndAccount item;
@@ -54,14 +55,24 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
   }
 
   Future<void> _reject() async {
-    await ref
-        .read(transactionRepositoryProvider)
-        .deleteTransaction(widget.item.transaction.id);
-    ref.invalidate(reviewQueueStreamProvider);
-    ref.invalidate(recentTransactionsStreamProvider);
-    ref.invalidate(accountsStreamProvider);
+    final txData = widget.item;
     ref.read(pendingReviewProvider.notifier).clear();
     if (mounted) Navigator.of(context).pop();
+    UndoDelete.show(
+      context: context,
+      entityName: 'Transaction',
+      message: 'Transaction rejected',
+      onUndo: () async {
+        await ref
+            .read(transactionRepositoryProvider)
+            .createTransaction(txData.transaction);
+      },
+      onDelete: () async {
+        await ref
+            .read(transactionRepositoryProvider)
+            .deleteTransaction(txData.transaction.id);
+      },
+    );
   }
 
   @override
