@@ -158,3 +158,138 @@ Future<Uint8List> generateMonthlyPdf(
 
   return pdf.save();
 }
+
+Future<Uint8List> generateRangePdf({
+  required String title,
+  required DateTime startDate,
+  required DateTime endDate,
+  required List<TransactionWithCategoryAndAccount> transactions,
+  required List<Account> accounts,
+  required Map<String, int> totals,
+}) async {
+  final pdf = pw.Document();
+  final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+  final income = totals['income'] ?? 0;
+  final expense = totals['expense'] ?? 0;
+  final netSavings = income - expense;
+
+  pdf.addPage(
+    pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(kSpacing32),
+      build: (context) => [
+        pw.Header(
+          level: 0,
+          child: pw.Text(
+            'PesaFlow $title',
+            style: _titleLargeStyle,
+          ),
+        ),
+        pw.SizedBox(height: kSpacing8),
+        pw.Text(
+          '${DateFormat('MMM d, yyyy').format(startDate)} — ${DateFormat('MMM d, yyyy').format(endDate)}',
+          style: pw.TextStyle(fontSize: 11, color: PdfColors.grey),
+        ),
+        pw.SizedBox(height: kSpacing16),
+        pw.Header(
+          level: 1,
+          child: pw.Text('Summary', style: _titleMediumStyle),
+        ),
+        pw.SizedBox(height: kSpacing8),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'Income:     TSh ${(income / 100).toStringAsFixed(2)}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromInt(0xFF2E7D32),
+                    fontSize: 12,
+                  ),
+                ),
+                pw.SizedBox(height: kSpacing4),
+                pw.Text(
+                  'Expense:    TSh ${(expense / 100).toStringAsFixed(2)}',
+                  style: pw.TextStyle(
+                    color: PdfColor.fromInt(0xFFC62828),
+                    fontSize: 12,
+                  ),
+                ),
+                pw.SizedBox(height: kSpacing4),
+                pw.Text(
+                  'Net Savings: TSh ${(netSavings / 100).toStringAsFixed(2)}',
+                  style: pw.TextStyle(
+                    color: netSavings >= 0
+                        ? PdfColor.fromInt(0xFF2E7D32)
+                        : PdfColor.fromInt(0xFFC62828),
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        pw.SizedBox(height: kSpacing20),
+        pw.Header(
+          level: 1,
+          child: pw.Text('Account Balances', style: _titleMediumStyle),
+        ),
+        pw.SizedBox(height: kSpacing8),
+        ...accounts.map(
+          (acc) => pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: kSpacing2),
+            child: pw.Text(
+              '${acc.name}: TSh ${(acc.balance / 100).toStringAsFixed(2)}',
+              style: _labelSmallStyle,
+            ),
+          ),
+        ),
+        pw.SizedBox(height: kSpacing20),
+        pw.Header(
+          level: 1,
+          child: pw.Text('Transactions', style: _titleMediumStyle),
+        ),
+        pw.SizedBox(height: kSpacing8),
+        pw.TableHelper.fromTextArray(
+          headerStyle: _headerCellStyle,
+          headerDecoration: pw.BoxDecoration(
+            color: PdfColor.fromInt(0xFF1A1A2E),
+          ),
+          cellStyle: const pw.TextStyle(fontSize: 9),
+          cellAlignments: {
+            0: pw.Alignment.centerLeft,
+            1: pw.Alignment.centerLeft,
+            2: pw.Alignment.centerLeft,
+            3: pw.Alignment.centerRight,
+          },
+          headers: ['Date', 'Description', 'Category', 'Amount'],
+          data: transactions.map((t) {
+            final trans = t.transaction;
+            final prefix = trans.type == 'income' ? '+' : '-';
+            return [
+              dateFormat.format(trans.createdAt),
+              trans.description.isNotEmpty
+                  ? trans.description
+                  : t.category.name,
+              t.category.name,
+              '$prefix TSh ${(trans.amount / 100).toStringAsFixed(2)}',
+            ];
+          }).toList(),
+        ),
+        pw.SizedBox(height: kSpacing20),
+        pw.Header(level: 1, child: pw.Text('Notes', style: _titleMediumStyle)),
+        pw.SizedBox(height: kSpacing8),
+        pw.Text(
+          'This statement was generated automatically by PesaFlow. '
+          'All amounts are in Tanzanian Shillings (TSh).',
+          style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey),
+        ),
+      ],
+    ),
+  );
+
+  return pdf.save();
+}

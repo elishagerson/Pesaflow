@@ -1006,7 +1006,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   icon: PesaFlowIcons.expense,
                                   label: 'Expense',
                                   color: context.appColors.expenseColor,
-                                  onTap: () => context.go(
+                                  onTap: () => context.push(
                                     '/transactions/add?type=Expense',
                                   ),
                                 ),
@@ -1015,7 +1015,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   icon: PesaFlowIcons.income,
                                   label: 'Income',
                                   color: context.appColors.incomeColor,
-                                  onTap: () => context.go(
+                                  onTap: () => context.push(
                                     '/transactions/add?type=Income',
                                   ),
                                 ),
@@ -1024,7 +1024,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   icon: PesaFlowIcons.transfer,
                                   label: 'Transfer',
                                   color: context.appColors.transferColor,
-                                  onTap: () => context.go(
+                                  onTap: () => context.push(
                                     '/transactions/add?type=Transfer',
                                   ),
                                 ),
@@ -1033,7 +1033,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   icon: PesaFlowIcons.goal,
                                   label: 'Goal',
                                   color: context.appColors.transferColor,
-                                  onTap: () => context.go('/savings-goals/add'),
+                                  onTap: () =>
+                                      context.push('/savings-goals/add'),
                                 ),
                               ],
                             ),

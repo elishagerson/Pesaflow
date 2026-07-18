@@ -505,9 +505,20 @@ final GoRouter appRouter = GoRouter(
                   path: 'add',
                   parentNavigatorKey: _rootNavigatorKey,
                   pageBuilder: (context, state) {
-                    final type = state.uri.queryParameters['type'];
+                    final params = state.uri.queryParameters;
+                    final type = params['type'];
+                    final amountStr = params['amount'];
                     return _springSlidePage(
-                      TransactionFormScreen(initialType: type),
+                      TransactionFormScreen(
+                        initialType: type,
+                        prefillDescription: params['description'],
+                        prefillAmountCents: amountStr != null
+                            ? int.tryParse(amountStr)
+                            : null,
+                        prefillCategoryId: params['categoryId'],
+                        prefillAccountId: params['accountId'],
+                        prefillReference: params['reference'],
+                      ),
                     );
                   },
                 ),

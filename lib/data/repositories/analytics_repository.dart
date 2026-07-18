@@ -80,4 +80,12 @@ class AnalyticsRepository {
     final monthEnd = DateTime(date.year, date.month + 1, 0, 23, 59, 59);
     return _analyticsDao.getMonthTotals(monthStart, monthEnd);
   }
+
+  /// Gets total income and expense for an arbitrary date range.
+  Future<Map<String, int>> getDateRangeTotals(
+    DateTime start,
+    DateTime end,
+  ) {
+    return _analyticsDao.getMonthTotals(start, end);
+  }
 }

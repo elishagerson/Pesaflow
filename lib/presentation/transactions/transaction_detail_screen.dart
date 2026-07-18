@@ -36,6 +36,25 @@ class TransactionDetailScreen extends ConsumerWidget {
         largeTitle: false,
         actions: [
           TactileSpringContainer(
+            onTap: () {
+              final item = itemAsync.value;
+              if (item != null) _duplicateTransaction(context, item);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(kSpacing10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.copy_rounded,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+          const SizedBox(width: kSpacing8),
+          TactileSpringContainer(
             onTap: () => context.go('/transactions/edit/$transactionId'),
             child: Container(
               padding: const EdgeInsets.all(kSpacing10),
@@ -479,7 +498,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             ),
                             const SizedBox(width: kSpacing8),
                             Text(
-                              'Edit Details',
+                              'Edit',
                               style: Theme.of(context).textTheme.titleSmall!
                                   .copyWith(
                                     fontWeight: FontWeight.w700,
@@ -490,7 +509,39 @@ class TransactionDetailScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: kSpacing12),
+                    const SizedBox(width: kSpacing10),
+                    Expanded(
+                      child: GlassCard(
+                        onTap: () => _duplicateTransaction(context, item),
+                        backgroundColor: theme.colorScheme.primary.withValues(
+                          alpha: 0.08,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kSpacing14,
+                        ),
+                        borderRadius: 16,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.copy_rounded,
+                              size: 16,
+                              color: theme.colorScheme.primary,
+                            ),
+                            const SizedBox(width: kSpacing8),
+                            Text(
+                              'Duplicate',
+                              style: Theme.of(context).textTheme.titleSmall!
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing10),
                     Expanded(
                       child: GlassCard(
                         onTap: () => _confirmDelete(context, ref),
@@ -508,7 +559,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                               size: 16,
                               color: context.appColors.expenseColor,
                             ),
-                            SizedBox(width: kSpacing8),
+                            const SizedBox(width: kSpacing6),
                             Text(
                               'Delete',
                               style: Theme.of(context).textTheme.titleSmall!
@@ -777,6 +828,32 @@ class TransactionDetailScreen extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  void _duplicateTransaction(
+    BuildContext context,
+    TransactionWithCategoryAndAccount item,
+  ) {
+    final t = item.transaction;
+    final query = <String, String>{'type': t.type};
+    if (t.description.isNotEmpty) {
+      query['description'] = t.description;
+    }
+    query['amount'] = t.amount.toString();
+    query['categoryId'] = t.categoryId;
+    if (t.accountId != null) {
+      query['accountId'] = t.accountId!;
+    }
+    if (t.reference != null && t.reference!.isNotEmpty) {
+      query['reference'] = t.reference!;
+    }
+    final qs = query.entries
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+    context.go('/transactions/add?$qs');
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {

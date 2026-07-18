@@ -32,11 +32,21 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 class TransactionFormScreen extends ConsumerStatefulWidget {
   final String? transactionId;
   final String? initialType;
+  final String? prefillDescription;
+  final int? prefillAmountCents;
+  final String? prefillCategoryId;
+  final String? prefillAccountId;
+  final String? prefillReference;
 
   const TransactionFormScreen({
     super.key,
     this.transactionId,
     this.initialType,
+    this.prefillDescription,
+    this.prefillAmountCents,
+    this.prefillCategoryId,
+    this.prefillAccountId,
+    this.prefillReference,
   });
 
   @override
@@ -92,17 +102,38 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _isEditMode = widget.transactionId != null;
     if (_isEditMode) {
       _loadExistingTransaction();
-    } else if (widget.initialType != null) {
-      final type = widget.initialType!.trim().toLowerCase();
-      if (type == 'expense') {
-        _transactionType = 'Expense';
-        _selectedCategoryId = _lastCategoryByType['Expense'];
-      } else if (type == 'income') {
-        _transactionType = 'Income';
-        _selectedCategoryId = _lastCategoryByType['Income'];
-      } else if (type == 'transfer') {
-        _transactionType = 'Transfer';
-        _selectedCategoryId = _lastCategoryByType['Transfer'];
+    } else {
+      if (widget.initialType != null) {
+        final type = widget.initialType!.trim().toLowerCase();
+        if (type == 'expense') {
+          _transactionType = 'Expense';
+        } else if (type == 'income') {
+          _transactionType = 'Income';
+        } else if (type == 'transfer') {
+          _transactionType = 'Transfer';
+        }
+      }
+      if (widget.prefillCategoryId != null) {
+        _selectedCategoryId = widget.prefillCategoryId;
+      } else {
+        _selectedCategoryId = _lastCategoryByType[_transactionType];
+      }
+      if (widget.prefillAccountId != null) {
+        _selectedAccountId = widget.prefillAccountId;
+      }
+      if (widget.prefillDescription != null &&
+          widget.prefillDescription!.isNotEmpty) {
+        _descriptionController.text = widget.prefillDescription!;
+      }
+      if (widget.prefillReference != null &&
+          widget.prefillReference!.isNotEmpty) {
+        _referenceController.text = widget.prefillReference!;
+      }
+      if (widget.prefillAmountCents != null && widget.prefillAmountCents! > 0) {
+        final double baseValue = widget.prefillAmountCents! / 100.0;
+        _amountStr = baseValue % 1 == 0
+            ? baseValue.toInt().toString()
+            : baseValue.toString();
       }
     }
   }
