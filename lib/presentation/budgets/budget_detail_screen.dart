@@ -136,6 +136,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                           ],
                         );
                         if (confirm == true) {
+                          if (!context.mounted) return;
                           final budget = bp.budget;
                           final savedBudgetName = budget.name;
                           await UndoDelete.show(

@@ -260,9 +260,10 @@ class _RecurringTransactionFormScreenState
                   final existing = await ref
                       .read(recurringTransactionRepositoryProvider)
                       .getById(widget.recurringId!);
-                  if (existing == null) return;
+                  if (existing == null || !mounted) return;
                   final recurringData = existing;
 
+                  if (!context.mounted) return;
                   UndoDelete.show(
                     context: context,
                     entityName: 'Recurring Flow',
