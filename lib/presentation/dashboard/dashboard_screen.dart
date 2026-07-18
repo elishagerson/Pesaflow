@@ -1228,18 +1228,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     // Client-side dynamic filtering of recent transactions by account
                                     final filteredTransactions =
                                         (_selectedAccountId == null
-                                            ? transactions
-                                            : transactions
-                                                  .where(
-                                                    (t) =>
-                                                        t.transaction.accountId ==
-                                                        _selectedAccountId,
-                                                  )
-                                                  .toList())
-                                            .where((t) =>
-                                                !_pendingDeleteIds.contains(
-                                                  t.transaction.id,
-                                                ))
+                                                ? transactions
+                                                : transactions
+                                                      .where(
+                                                        (t) =>
+                                                            t
+                                                                .transaction
+                                                                .accountId ==
+                                                            _selectedAccountId,
+                                                      )
+                                                      .toList())
+                                            .where(
+                                              (t) => !_pendingDeleteIds
+                                                  .contains(t.transaction.id),
+                                            )
                                             .toList();
 
                                     if (filteredTransactions.isEmpty) {
@@ -1274,7 +1276,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               size: isNewUser ? 64 : 40,
                                               color: isNewUser
                                                   ? theme.colorScheme.primary
-                                                  : theme.colorScheme
+                                                  : theme
+                                                        .colorScheme
                                                         .onSurfaceVariant
                                                         .withValues(alpha: 0.4),
                                             ),
@@ -1283,14 +1286,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               isNewUser
                                                   ? 'Welcome to PesaFlow!'
                                                   : 'No transactions found.',
-                                              style: theme
-                                                  .textTheme
-                                                  .titleSmall
+                                              style: theme.textTheme.titleSmall
                                                   ?.copyWith(
                                                     color: isNewUser
-                                                        ? theme.colorScheme
+                                                        ? theme
+                                                              .colorScheme
                                                               .onSurface
-                                                        : theme.colorScheme
+                                                        : theme
+                                                              .colorScheme
                                                               .onSurfaceVariant,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -1309,18 +1312,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   ),
                                             ),
                                             if (isNewUser) ...[
-                                              const SizedBox(height: kSpacing20),
+                                              const SizedBox(
+                                                height: kSpacing20,
+                                              ),
                                               TactileSpringContainer(
-                                                onTap: () =>
-                                                    context.go('/transactions/add'),
+                                                onTap: () => context.go(
+                                                  '/transactions/add',
+                                                ),
                                                 child: Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: kSpacing24,
-                                                    vertical: kSpacing12,
-                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: kSpacing24,
+                                                        vertical: kSpacing12,
+                                                      ),
                                                   decoration: BoxDecoration(
                                                     color: theme
-                                                        .colorScheme.primary,
+                                                        .colorScheme
+                                                        .primary,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           100,
@@ -1485,9 +1493,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                       .read(
                                                         transactionRepositoryProvider,
                                                       )
-                                                      .deleteTransaction(
-                                                        tx.id,
-                                                      );
+                                                      .deleteTransaction(tx.id);
                                                 },
                                               );
                                             },

@@ -395,27 +395,36 @@ class SettingsScreen extends ConsumerWidget {
           ),
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
-            try {
-              await ref.read(accountRepositoryProvider).deleteAccount(acc.id);
-              ref.invalidate(accountsStreamProvider);
-              ref.invalidate(netWorthProvider);
-              if (context.mounted) {
-                Navigator.of(context).pop();
-                CustomToast.show(
-                  context,
-                  message: '"${acc.name}" deleted',
-                  type: ToastType.info,
-                );
-              }
-            } catch (e) {
-              if (context.mounted) {
-                CustomToast.show(
-                  context,
-                  message: 'Failed to delete account: $e',
-                  type: ToastType.error,
-                );
-              }
-            }
+            UndoDelete.show(
+              context: context,
+              entityName: 'Account',
+              message: '"${acc.name}" deleted',
+              onUndo: () async {
+                await ref.read(accountRepositoryProvider).createAccount(acc);
+                if (context.mounted) {
+                  ref.invalidate(accountsStreamProvider);
+                  ref.invalidate(netWorthProvider);
+                }
+              },
+              onDelete: () async {
+                try {
+                  await ref
+                      .read(accountRepositoryProvider)
+                      .deleteAccount(acc.id);
+                  ref.invalidate(accountsStreamProvider);
+                  ref.invalidate(netWorthProvider);
+                  if (context.mounted) Navigator.of(context).pop();
+                } catch (e) {
+                  if (context.mounted) {
+                    CustomToast.show(
+                      context,
+                      message: 'Failed to delete account: $e',
+                      type: ToastType.error,
+                    );
+                  }
+                }
+              },
+            );
           },
           child: const Text('Delete'),
         ),
@@ -523,26 +532,40 @@ class SettingsScreen extends ConsumerWidget {
                           const SizedBox(width: kSpacing12),
                           GestureDetector(
                             onTap: () async {
-                              try {
-                                await ref
-                                    .read(categoryRepositoryProvider)
-                                    .deleteCategory(cat.id);
-                                ref.invalidate(categoriesFutureProvider);
-                                ref.invalidate(
-                                  filteredTransactionsStreamProvider,
-                                );
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  CustomToast.show(
-                                    context,
-                                    message: 'Failed to delete category: $e',
-                                    type: ToastType.error,
-                                  );
-                                }
-                              }
+                              final categoryData = cat;
+                              UndoDelete.show(
+                                context: context,
+                                entityName: 'Category',
+                                message: '"${categoryData.name}" deleted',
+                                onUndo: () async {
+                                  await ref
+                                      .read(categoryRepositoryProvider)
+                                      .createCategory(categoryData);
+                                  if (context.mounted) {
+                                    ref.invalidate(categoriesFutureProvider);
+                                  }
+                                },
+                                onDelete: () async {
+                                  try {
+                                    await ref
+                                        .read(categoryRepositoryProvider)
+                                        .deleteCategory(categoryData.id);
+                                    ref.invalidate(categoriesFutureProvider);
+                                    ref.invalidate(
+                                      filteredTransactionsStreamProvider,
+                                    );
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      CustomToast.show(
+                                        context,
+                                        message:
+                                            'Failed to delete category: $e',
+                                        type: ToastType.error,
+                                      );
+                                    }
+                                  }
+                                },
+                              );
                             },
                             child: Icon(
                               PesaFlowIcons.delete,

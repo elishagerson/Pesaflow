@@ -173,7 +173,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       4,
                       (i) => AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        margin: const EdgeInsets.symmetric(horizontal: kSpacing4),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: kSpacing4,
+                        ),
                         width: i == _currentPage ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
@@ -186,168 +188,166 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     ),
                   ),
                 ),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (i) => setState(() => _currentPage = i),
-                children: [
-                  _WelcomePage(theme: theme),
-                  _SmsPermissionPage(
-                    theme: theme,
-                    permissionGranted: _smsPermissionGranted,
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (i) => setState(() => _currentPage = i),
+                    children: [
+                      _WelcomePage(theme: theme),
+                      _SmsPermissionPage(
+                        theme: theme,
+                        permissionGranted: _smsPermissionGranted,
+                      ),
+                      _AccountsPage(
+                        theme: theme,
+                        accounts: _accounts,
+                        icons: _icons,
+                        onToggle: (name, val) =>
+                            setState(() => _accounts[name] = val),
+                      ),
+                      _CompletePage(theme: theme),
+                    ],
                   ),
-                  _AccountsPage(
-                    theme: theme,
-                    accounts: _accounts,
-                    icons: _icons,
-                    onToggle: (name, val) =>
-                        setState(() => _accounts[name] = val),
-                  ),
-                  _CompletePage(theme: theme),
-                ],
-              ),
+                ),
+                // Bottom buttons
+                Padding(
+                  padding: const EdgeInsets.all(kSpacing24),
+                  child: _currentPage == 3
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TactileSpringContainer(
+                              onTap: () => _finish(seedDemo: true),
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: kSpacing14,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      theme.colorScheme.primary,
+                                      theme.colorScheme.primary.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  'Explore with Demo Data',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing12),
+                            TactileSpringContainer(
+                              onTap: () => _finish(seedDemo: false),
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: kSpacing14,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: theme.colorScheme.outline,
+                                    width: 1.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Text(
+                                  'Start Fresh',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            if (_currentPage > 0)
+                              TextButton(
+                                onPressed: () => _pageController.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                ),
+                                child: const Text('Back'),
+                              ),
+                            const Spacer(),
+                            TactileSpringContainer(
+                              onTap: _nextPage,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 28,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      theme.colorScheme.primary,
+                                      theme.colorScheme.primary.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  'Continue',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ],
             ),
-            // Bottom buttons
-            Padding(
-              padding: const EdgeInsets.all(kSpacing24),
-              child: _currentPage == 3
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TactileSpringContainer(
-                          onTap: () => _finish(seedDemo: true),
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: kSpacing14,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  theme.colorScheme.primary,
-                                  theme.colorScheme.primary.withValues(
-                                    alpha: 0.8,
-                                  ),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'Explore with Demo Data',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing12),
-                        TactileSpringContainer(
-                          onTap: () => _finish(seedDemo: false),
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: kSpacing14,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: theme.colorScheme.outline,
-                                width: 1.5,
-                              ),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Text(
-                              'Start Fresh',
-                              style: TextStyle(
-                                color: theme.colorScheme.onSurface,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        if (_currentPage > 0)
-                          TextButton(
-                            onPressed: () => _pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            ),
-                            child: const Text('Back'),
-                          ),
-                        const Spacer(),
-                        TactileSpringContainer(
-                          onTap: _nextPage,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 28,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  theme.colorScheme.primary,
-                                  theme.colorScheme.primary.withValues(
-                                    alpha: 0.8,
-                                  ),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'Continue',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+            if (_currentPage < 3)
+              Positioned(
+                top: kSpacing8,
+                right: kSpacing4,
+                child: TextButton(
+                  onPressed: _finish,
+                  child: Text(
+                    'Skip',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
                     ),
-            ),
-          ],
-        ),
-        if (_currentPage < 3)
-          Positioned(
-            top: kSpacing8,
-            right: kSpacing4,
-            child: TextButton(
-              onPressed: _finish,
-              child: Text(
-                'Skip',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-          ),
-      ],
-    ),
-  ),
-);
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -698,12 +698,11 @@ class _AccountsPage extends StatelessWidget {
               }).toList(),
             ),
           ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
   }
 }
-
 
 class _CompletePage extends StatelessWidget {
   final ThemeData theme;
