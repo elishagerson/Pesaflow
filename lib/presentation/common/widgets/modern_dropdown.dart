@@ -188,9 +188,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(24),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             border: Border.all(
               color: onSurface.withValues(alpha: 0.1),
               width: 0.5,
@@ -200,166 +198,156 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
             horizontal: kSpacing20,
             vertical: kSpacing16,
           ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Grab Handle
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: onSurface.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+              const SizedBox(height: kSpacing16),
+              // Title
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Grab Handle
-                  Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: onSurface.withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(100),
+                  Text(
+                    'Select $labelText',
+                    style: context.ts(
+                      18,
+                      fontWeight: FontWeight.bold,
+                      color: onSurface,
                     ),
                   ),
-                  const SizedBox(height: kSpacing16),
-                  // Title
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Select $labelText',
-                        style: context.ts(
-                          18,
-                          fontWeight: FontWeight.bold,
-                          color: onSurface,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(PesaFlowIcons.close, size: 20),
-                        onPressed: () => Navigator.pop(context),
-                        style: IconButton.styleFrom(
-                          backgroundColor: onSurface.withValues(alpha: 0.11),
-                          padding: const EdgeInsets.all(kSpacing6),
-                        ),
-                      ),
-                    ],
+                  IconButton(
+                    icon: const Icon(PesaFlowIcons.close, size: 20),
+                    onPressed: () => Navigator.pop(context),
+                    style: IconButton.styleFrom(
+                      backgroundColor: onSurface.withValues(alpha: 0.11),
+                      padding: const EdgeInsets.all(kSpacing6),
+                    ),
                   ),
-                  const SizedBox(height: kSpacing12),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: items.map((item) {
-                          final isSelected = item.value == value;
-                          final itemColor =
-                              item.color ?? theme.colorScheme.primary;
+                ],
+              ),
+              const SizedBox(height: kSpacing12),
+              Flexible(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: items.map((item) {
+                      final isSelected = item.value == value;
+                      final itemColor = item.color ?? theme.colorScheme.primary;
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: kSpacing8),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  HapticFeedback.lightImpact();
-                                  onChanged(item.value);
-                                  Navigator.pop(context);
-                                },
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: kSpacing8),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              onChanged(item.value);
+                              Navigator.pop(context);
+                            },
+                            borderRadius: BorderRadius.circular(
+                              AppTheme.radiusCard,
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing16),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? itemColor.withValues(alpha: 0.08)
+                                    : onSurface.withValues(alpha: 0.01),
                                 borderRadius: BorderRadius.circular(
                                   AppTheme.radiusCard,
                                 ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(kSpacing16),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? itemColor.withValues(alpha: 0.08)
-                                        : onSurface.withValues(alpha: 0.01),
-                                    borderRadius: BorderRadius.circular(
-                                      AppTheme.radiusCard,
-                                    ),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? itemColor.withValues(alpha: 0.3)
-                                          : Colors.transparent,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      if (item.icon != null) ...[
-                                        Container(
-                                          padding: const EdgeInsets.all(
-                                            kSpacing10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? itemColor.withValues(
-                                                    alpha: 0.15,
-                                                  )
-                                                : onSurface.withValues(
-                                                    alpha: 0.11,
-                                                  ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(
-                                            item.icon,
-                                            color: isSelected
-                                                ? itemColor
-                                                : onSurface.withValues(
-                                                    alpha: 0.62,
-                                                  ),
-                                            size: 20,
-                                          ),
-                                        ),
-                                        const SizedBox(width: kSpacing14),
-                                      ],
-                                      Expanded(
-          child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.label,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(
-                                                    color: isSelected
-                                                        ? itemColor
-                                                        : onSurface.withValues(
-                                                            alpha: 0.78,
-                                                          ),
-                                                  ),
-                                            ),
-                                            if (item.subtitle != null) ...[
-                                              const SizedBox(height: kSpacing2),
-                                              Text(
-                                                item.subtitle!,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelMedium!
-                                                    .copyWith(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.6,
-                                                          ),
-                                                    ),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      if (isSelected)
-                                        Icon(
-                                          PesaFlowIcons.success,
-                                          color: itemColor,
-                                          size: 22,
-                                        ),
-                                    ],
-                                  ),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? itemColor.withValues(alpha: 0.3)
+                                      : Colors.transparent,
+                                  width: 1.0,
                                 ),
                               ),
+                              child: Row(
+                                children: [
+                                  if (item.icon != null) ...[
+                                    Container(
+                                      padding: const EdgeInsets.all(kSpacing10),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? itemColor.withValues(alpha: 0.15)
+                                            : onSurface.withValues(alpha: 0.11),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        item.icon,
+                                        color: isSelected
+                                            ? itemColor
+                                            : onSurface.withValues(alpha: 0.62),
+                                        size: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing14),
+                                  ],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.label,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                color: isSelected
+                                                    ? itemColor
+                                                    : onSurface.withValues(
+                                                        alpha: 0.78,
+                                                      ),
+                                              ),
+                                        ),
+                                        if (item.subtitle != null) ...[
+                                          const SizedBox(height: kSpacing2),
+                                          Text(
+                                            item.subtitle!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .copyWith(
+                                                  color: onSurface.withValues(
+                                                    alpha: 0.6,
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    Icon(
+                                      PesaFlowIcons.success,
+                                      color: itemColor,
+                                      size: 22,
+                                    ),
+                                ],
+                              ),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(height: kSpacing12),
-                ],
+                ),
               ),
-          );
+              const SizedBox(height: kSpacing12),
+            ],
+          ),
+        );
       },
     );
   }

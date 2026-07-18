@@ -1106,10 +1106,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                               suggestion,
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
-                                                    color: onSurface
-                                                        .withValues(
-                                                          alpha: 0.87,
-                                                        ),
+                                                    color: onSurface.withValues(
+                                                      alpha: 0.87,
+                                                    ),
                                                   ),
                                             ),
                                             backgroundColor: onSurface
