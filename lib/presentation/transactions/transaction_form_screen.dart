@@ -2095,13 +2095,48 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ),
                   ),
                   const SizedBox(height: kSpacing16),
-                ],
-              ),
-            ),
-    );
-  }
 
-  Widget _buildKeypadRow(List<String> keys) {
+                  // Templates button
+                  if (!_isEditMode)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.spacing,
+                      ),
+                      child: TactileSpringContainer(
+                        onTap: () => _showTemplatePickerSheet(context),
+                        child: Container(
+                          width: double.infinity,
+                          height: 44,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: onSurface.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: onSurface.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.bookmark_border_rounded,
+                                size: 18,
+                                color: theme.colorScheme.primary,
+                              ),
+                              const SizedBox(width: kSpacing8),
+                              Text(
+                                'Templates',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: kSpacing16),
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
     final textColor = onSurface;
