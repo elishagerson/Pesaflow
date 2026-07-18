@@ -27,6 +27,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
+import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
@@ -45,6 +46,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String? _selectedAccountId;
+  final Set<String> _pendingDeleteIds = {};
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
