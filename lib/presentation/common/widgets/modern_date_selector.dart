@@ -78,7 +78,6 @@ class _ModernDateSelectorWidget extends StatelessWidget {
       children: [
         TactileSpringContainer(
           onTap: () {
-            HapticFeedback.mediumImpact();
             showSpringSheet(
               context,
               builder: (ctx) {

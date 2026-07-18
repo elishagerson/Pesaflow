@@ -36,7 +36,6 @@ class SavingsSection extends ConsumerWidget {
 
         return TactileSpringContainer(
           onTap: () {
-            HapticFeedback.mediumImpact();
             context.push('/savings-goals/${goal.id}');
           },
           child: GlassCard(
