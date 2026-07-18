@@ -24,6 +24,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
+import 'package:pesaflow/presentation/settings/widgets/import_dialog.dart';
 
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -576,6 +577,59 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _handleImportCsv(BuildContext context, WidgetRef ref) async {
+    final accounts = ref.read(accountsStreamProvider).value ?? [];
+    final categories =
+        await ref.read(categoryRepositoryProvider).getAllCategories();
+
+    if (!context.mounted) return;
+
+    final result = await showImportCsvDialog(
+      context,
+      accounts: accounts,
+      categories: categories,
+    );
+
+    if (result == null || !context.mounted) return;
+
+    final repo = ref.read(transactionRepositoryProvider);
+    var imported = 0;
+
+    for (final tx in result.transactions) {
+      try {
+        final resolvedTx = tx.accountId == null && result.accountId != null
+            ? Transaction(
+                id: tx.id,
+                accountId: result.accountId,
+                categoryId: tx.categoryId,
+                amount: tx.amount,
+                type: tx.type,
+                description: tx.description,
+                reference: tx.reference,
+                sender: tx.sender,
+                recipient: tx.recipient,
+                source: tx.source,
+                createdAt: tx.createdAt,
+                updatedAt: tx.updatedAt,
+              )
+            : tx;
+
+        await repo.createTransactionNoBalanceAdjustment(resolvedTx);
+        imported++;
+      } catch (_) {
+        // Skip duplicates or invalid rows
+      }
+    }
+
+    if (context.mounted) {
+      CustomToast.show(
+        context,
+        message: 'Imported $imported transactions',
+        type: ToastType.success,
+      );
+    }
+  }
+
   Future<void> _handleBackupDb(BuildContext context, WidgetRef ref) async {
     try {
       CustomToast.show(
@@ -1084,6 +1138,21 @@ class SettingsScreen extends ConsumerWidget {
                           'Download transactions as CSV file',
                         ),
                         onTap: () => _handleExportCsv(context, ref),
+                      ),
+                    ),
+                    TactileSpringContainer(
+                      onTap: () => _handleImportCsv(context, ref),
+                      child: IosListRow(
+                        leading: Icon(
+                          PesaFlowIcons.upload,
+                          color: theme.colorScheme.primary,
+                          size: 24,
+                        ),
+                        title: const Text('Import CSV'),
+                        subtitle: const Text(
+                          'Import transactions from CSV file',
+                        ),
+                        onTap: () => _handleImportCsv(context, ref),
                       ),
                     ),
                     TactileSpringContainer(
