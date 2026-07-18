@@ -137,7 +137,26 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             ? baseValue.toInt().toString()
             : baseValue.toString();
       }
+
+      _loadLastUsedValues();
     }
+  }
+
+  Future<void> _loadLastUsedValues() async {
+    final settingsRepo = ref.read(settingsRepositoryProvider);
+    final lastAccountId = await settingsRepo.getLastAccountId();
+    final lastCategoryId = await settingsRepo.getLastCategoryId(
+      _transactionType.toLowerCase(),
+    );
+    if (!mounted) return;
+    setState(() {
+      if (_selectedAccountId == null && lastAccountId != null) {
+        _selectedAccountId = lastAccountId;
+      }
+      if (_selectedCategoryId == null && lastCategoryId != null) {
+        _selectedCategoryId = lastCategoryId;
+      }
+    });
   }
 
   Future<void> _loadExistingTransaction() async {
@@ -285,6 +304,17 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
       if (_saveAsTemplate && !_isEditMode) {
         _showSaveTemplateDialog(cents);
+      }
+
+      final settingsRepo = ref.read(settingsRepositoryProvider);
+      if (_selectedAccountId != null && _selectedAccountId!.isNotEmpty) {
+        settingsRepo.setLastAccountId(_selectedAccountId!);
+      }
+      if (_selectedCategoryId != null && _selectedCategoryId!.isNotEmpty) {
+        settingsRepo.setLastCategoryId(
+          _transactionType.toLowerCase(),
+          _selectedCategoryId!,
+        );
       }
 
       HapticFeedback.mediumImpact();
