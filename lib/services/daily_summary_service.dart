@@ -20,12 +20,10 @@ class DailySummaryService {
   static const int _notificationId = 4000;
 
   DailySummaryService({
-    required TransactionDao transactionDao,
-    required NotificationService notificationService,
-    required String trackerId,
-  })  : _transactionDao = transactionDao,
-        _notificationService = notificationService,
-        _trackerId = trackerId;
+    required this._transactionDao,
+    required this._notificationService,
+    required this._trackerId,
+  });
 
   Future<void> checkDailySummary() async {
     try {
