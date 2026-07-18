@@ -257,29 +257,46 @@ class _RecurringTransactionFormScreenState
                   ),
                 );
                 if (confirm == true && mounted) {
-                  try {
-                    await ref
-                        .read(recurringTransactionRepositoryProvider)
-                        .deleteRecurringTransaction(widget.recurringId!);
-                    ref.invalidate(recurringTransactionsStreamProvider);
-                    ref.invalidate(dueRecurringTransactionsProvider);
-                    if (context.mounted) {
-                      CustomToast.show(
-                        context,
-                        message: 'Recurring flow deleted',
-                        type: ToastType.info,
-                      );
-                      context.pop();
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      CustomToast.show(
-                        context,
-                        message: 'Error: $e',
-                        type: ToastType.error,
-                      );
-                    }
-                  }
+                  final existing = await ref
+                      .read(recurringTransactionRepositoryProvider)
+                      .getById(widget.recurringId!);
+                  if (existing == null) return;
+                  final recurringData = existing;
+
+                  UndoDelete.show(
+                    context: context,
+                    entityName: 'Recurring Flow',
+                    message: 'Recurring flow deleted',
+                    onUndo: () async {
+                      await ref
+                          .read(recurringTransactionRepositoryProvider)
+                          .createRecurringTransaction(recurringData);
+                      if (mounted) {
+                        ref.invalidate(recurringTransactionsStreamProvider);
+                        ref.invalidate(dueRecurringTransactionsProvider);
+                      }
+                    },
+                    onDelete: () async {
+                      try {
+                        await ref
+                            .read(recurringTransactionRepositoryProvider)
+                            .deleteRecurringTransaction(widget.recurringId!);
+                        if (mounted) {
+                          ref.invalidate(recurringTransactionsStreamProvider);
+                          ref.invalidate(dueRecurringTransactionsProvider);
+                          context.pop();
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          CustomToast.show(
+                            context,
+                            message: 'Error: $e',
+                            type: ToastType.error,
+                          );
+                        }
+                      }
+                    },
+                  );
                 }
               },
             ),
