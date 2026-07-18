@@ -573,26 +573,42 @@ void confirmDeleteTracker(
       ),
       ElevatedButton(
         onPressed: () async {
-          try {
-            if (tracker.id == activeTrackerId) {
-              final anotherTracker = trackersList.firstWhere(
-                (t) => t.id != tracker.id,
-              );
+          Navigator.of(context, rootNavigator: true).pop();
+          final savedTracker = tracker;
+          final previousActiveId = activeTrackerId;
+          UndoDelete.show(
+            context: context,
+            entityName: 'Workspace',
+            message: '"${savedTracker.name}" deleted',
+            onUndo: () async {
+              await ref
+                  .read(trackerRepositoryProvider)
+                  .createTracker(savedTracker);
               await ref
                   .read(activeTrackerIdProvider.notifier)
-                  .setTrackerId(anotherTracker.id);
-            }
-            await ref.read(trackerRepositoryProvider).deleteTracker(tracker.id);
-            ref.invalidate(allTrackersStreamProvider);
-            if (context.mounted) {
-              Navigator.of(context, rootNavigator: true).pop();
-            }
-          } catch (e) {
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to delete workspace: $e')),
-            );
-          }
+                  .setTrackerId(previousActiveId);
+            },
+            onDelete: () async {
+              try {
+                if (savedTracker.id == previousActiveId) {
+                  final anotherTracker = trackersList.firstWhere(
+                    (t) => t.id != savedTracker.id,
+                  );
+                  await ref
+                      .read(activeTrackerIdProvider.notifier)
+                      .setTrackerId(anotherTracker.id);
+                }
+                await ref
+                    .read(trackerRepositoryProvider)
+                    .deleteTracker(savedTracker.id);
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete workspace: $e')),
+                );
+              }
+            },
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: theme.colorScheme.error,
