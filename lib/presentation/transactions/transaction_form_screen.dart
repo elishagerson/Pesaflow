@@ -1374,11 +1374,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 'categoryId': _selectedCategoryId,
                 'accountId': _selectedAccountId,
               };
+              Navigator.pop(ctx);
               await ref
                   .read(settingsRepositoryProvider)
                   .saveTransactionTemplate(template);
               if (mounted) {
-                Navigator.pop(ctx);
                 CustomToast.show(
                   context,
                   message: 'Template saved!',
