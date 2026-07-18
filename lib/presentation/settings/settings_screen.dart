@@ -873,6 +873,7 @@ class SettingsScreen extends ConsumerWidget {
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
+          key: const PageStorageKey('settings'),
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -71,6 +71,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 ref.invalidate(savingsGoalsTotalSavedProvider);
               },
               child: SingleChildScrollView(
+                key: const PageStorageKey('savings_goal_list'),
                 padding: const EdgeInsets.all(kSpacing16),
                 child: Column(
                   children: [

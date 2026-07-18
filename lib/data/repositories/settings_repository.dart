@@ -55,4 +55,22 @@ class SettingsRepository {
     templates.removeWhere((t) => t['id'] == id);
     await setSetting('transaction_templates', jsonEncode(templates));
   }
+
+  Future<String?> getLastAccountId() async {
+    return await getSetting('last_account_id');
+  }
+
+  Future<void> setLastAccountId(String id) async {
+    await setSetting('last_account_id', id);
+  }
+
+  Future<String?> getLastCategoryId(String type) async {
+    final key = 'last_category_id_$type';
+    return await getSetting(key);
+  }
+
+  Future<void> setLastCategoryId(String type, String id) async {
+    final key = 'last_category_id_$type';
+    await setSetting(key, id);
+  }
 }

@@ -218,7 +218,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                       .state =
                                   null;
                             } else {
-                              context.go('/transactions/add');
+                              context.push('/transactions/add');
                             }
                           },
                           child: Container(
@@ -295,6 +295,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     ..sort((a, b) => b.compareTo(a));
 
                   return SingleChildScrollView(
+                    key: const PageStorageKey('transaction_list'),
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(
                       top: MediaQuery.of(context).padding.top + 176.0,
@@ -465,8 +466,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   );
                                 },
                                 child: TactileSpringContainer(
-                                  onTap: () =>
-                                      context.go('/transactions/${trans.id}'),
+                                    onTap: () =>
+                                      context.push('/transactions/${trans.id}'),
                                   child: GlassCard(
                                     elevation: CardElevation.low,
                                     margin: const EdgeInsets.symmetric(
@@ -1011,7 +1012,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: kSpacing80),
-        child: PremiumFab(onPressed: () => context.go('/transactions/add')),
+        child: PremiumFab(onPressed: () => context.push('/transactions/add')),
       ),
     );
   }

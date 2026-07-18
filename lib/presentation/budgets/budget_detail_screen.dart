@@ -102,7 +102,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                   actions: [
                     IconButton(
                       icon: const Icon(PesaFlowIcons.edit),
-                      onPressed: () => context.go('/budgets/$budgetId/edit'),
+                      onPressed: () => context.push('/budgets/$budgetId/edit'),
                     ),
                     IconButton(
                       icon: const Icon(PesaFlowIcons.delete),

@@ -43,6 +43,7 @@ class LoanListScreen extends ConsumerWidget {
           ref.refresh(paidLoansStreamProvider.future),
         ]),
         child: SingleChildScrollView(
+          key: const PageStorageKey('loan_list'),
           padding: EdgeInsets.fromLTRB(
             kSpacing16,
             kSpacing16,

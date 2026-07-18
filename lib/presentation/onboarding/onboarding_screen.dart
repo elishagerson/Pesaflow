@@ -160,30 +160,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Progress dots
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: kSpacing16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  4,
-                  (i) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: kSpacing4),
-                    width: i == _currentPage ? 24 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: i == _currentPage
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.outlineVariant,
-                      borderRadius: BorderRadius.circular(4),
+            Column(
+              children: [
+                // Progress dots
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      4,
+                      (i) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        margin: const EdgeInsets.symmetric(horizontal: kSpacing4),
+                        width: i == _currentPage ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: i == _currentPage
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.outlineVariant,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
             Expanded(
               child: PageView(
                 controller: _pageController,
@@ -327,6 +329,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           ],
         ),
+        if (_currentPage < 3)
+          Positioned(
+            top: kSpacing8,
+            right: kSpacing4,
+            child: TextButton(
+              onPressed: _finish,
+              child: Text(
+                'Skip',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+      ],
       ),
     );
   }
@@ -504,7 +522,7 @@ class _SmsPermissionPage extends StatelessWidget {
                 Text(
                   permissionGranted
                       ? 'SMS Permission Granted'
-                      : 'You can skip this and add transactions manually.',
+                      : 'You can also add transactions manually without SMS.',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: permissionGranted
                         ? context.appColors.incomeColor

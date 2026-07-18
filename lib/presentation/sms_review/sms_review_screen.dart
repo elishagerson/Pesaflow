@@ -328,6 +328,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                   return Stack(
                     children: [
                       ListView.builder(
+                        key: const PageStorageKey('sms_review'),
                         physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.fromLTRB(
                           kSpacing16,

@@ -55,7 +55,7 @@ class TransactionDetailScreen extends ConsumerWidget {
           ),
           const SizedBox(width: kSpacing8),
           TactileSpringContainer(
-            onTap: () => context.go('/transactions/edit/$transactionId'),
+            onTap: () => context.push('/transactions/edit/$transactionId'),
             child: Container(
               padding: const EdgeInsets.all(kSpacing10),
               decoration: BoxDecoration(
@@ -482,7 +482,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: GlassCard(
-                        onTap: () => context.go('/transactions/edit/${t.id}'),
+                        onTap: () => context.push('/transactions/edit/${t.id}'),
                         backgroundColor: onSurface.withValues(alpha: 0.045),
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing14,
@@ -853,7 +853,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
         )
         .join('&');
-    context.go('/transactions/add?$qs');
+    context.push('/transactions/add?$qs');
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {

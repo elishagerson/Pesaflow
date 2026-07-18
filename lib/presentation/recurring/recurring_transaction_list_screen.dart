@@ -103,6 +103,7 @@ class _RecurringTransactionListScreenState
                     child: _buildEmptyState(context, theme),
                   )
                 : CustomScrollView(
+                    key: const PageStorageKey('recurring_list'),
                     physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
                       // ── Summary Header ──

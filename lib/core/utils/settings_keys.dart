@@ -9,4 +9,8 @@ class SettingsKey {
   static const String notificationAccessPromptDismissed =
       'notification_access_prompt_dismissed';
   static const String lockScreenBalance = 'lock_screen_balance';
+  static const String lastAccountId = 'last_account_id';
+  static const String lastCategoryIdExpense = 'last_category_id_expense';
+  static const String lastCategoryIdIncome = 'last_category_id_income';
+  static const String lastCategoryIdTransfer = 'last_category_id_transfer';
 }

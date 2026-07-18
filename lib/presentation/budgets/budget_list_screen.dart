@@ -63,7 +63,7 @@ class BudgetListScreen extends ConsumerWidget {
             onPressed: () {
               HapticFeedback.lightImpact();
               if (activeTab == 0) {
-                context.go('/budgets/add');
+                context.push('/budgets/add');
               } else {
                 showSpringSheet(
                   context,
@@ -222,7 +222,7 @@ class BudgetListScreen extends ConsumerWidget {
         action: TactileSpringContainer(
           onTap: () {
             HapticFeedback.lightImpact();
-            context.go('/budgets/add');
+            context.push('/budgets/add');
           },
           child: Container(
             padding: const EdgeInsets.symmetric(
@@ -281,6 +281,7 @@ class BudgetListScreen extends ConsumerWidget {
         ref.invalidate(categoriesFutureProvider);
       },
       child: SingleChildScrollView(
+        key: const PageStorageKey('budget_list'),
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(kSpacing16),
         child: Column(
@@ -405,7 +406,7 @@ class BudgetListScreen extends ConsumerWidget {
                     margin: const EdgeInsets.only(bottom: kSpacing14),
                     child: GlassCard(
                       borderRadius: 20,
-                      onTap: () => context.go('/budgets/${bp.budget.id}'),
+                      onTap: () => context.push('/budgets/${bp.budget.id}'),
                       backgroundColor: theme.colorScheme.surface,
                       accentColor: mutedCatColor,
                       accentWidth: 2.5,
@@ -647,6 +648,7 @@ class BudgetListScreen extends ConsumerWidget {
             ref.invalidate(categoriesFutureProvider);
           },
           child: SingleChildScrollView(
+            key: const PageStorageKey('savings_goals_tab'),
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(kSpacing16),
             child: Column(
