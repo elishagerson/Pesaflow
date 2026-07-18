@@ -245,7 +245,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              _selectAll ? PesaFlowIcons.deselect : PesaFlowIcons.selectAll,
+                              _selectAll
+                                  ? PesaFlowIcons.deselect
+                                  : PesaFlowIcons.selectAll,
                               size: 16,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.7,

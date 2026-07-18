@@ -40,9 +40,7 @@ class TransactionTile extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isCredit
-                  ? PesaFlowIcons.arrowDown
-                  : PesaFlowIcons.arrowUp,
+              isCredit ? PesaFlowIcons.arrowDown : PesaFlowIcons.arrowUp,
               color: amountColor,
               size: 16,
             ),
