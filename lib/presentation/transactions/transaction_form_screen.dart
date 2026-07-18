@@ -1254,6 +1254,364 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
+  void _showSaveTemplateDialog(int amountCents) {
+    final nameController = TextEditingController();
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: theme.colorScheme.surfaceContainerHigh,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Save as Template',
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: context.inputDecoration(hintText: 'e.g. Daily lunch 5000'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+          ),
+          TextButton(
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isEmpty) return;
+              final template = {
+                'id': const Uuid().v4(),
+                'name': name,
+                'type': _transactionType.toLowerCase(),
+                'amountCents': amountCents,
+                'description': _descriptionController.text.trim(),
+                'categoryId': _selectedCategoryId,
+                'accountId': _selectedAccountId,
+              };
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .saveTransactionTemplate(template);
+              if (mounted) {
+                Navigator.pop(ctx);
+                CustomToast.show(
+                  context,
+                  message: 'Template saved!',
+                  type: ToastType.success,
+                );
+              }
+            },
+            child: Text('Save', style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _applyTemplate(Map<String, dynamic> template) {
+    setState(() {
+      final type = template['type'] as String? ?? 'expense';
+      _transactionType = type[0].toUpperCase() + type.substring(1);
+      _selectedCategoryId = template['categoryId'] as String?;
+      _selectedAccountId = template['accountId'] as String?;
+      _descriptionController.text = template['description'] as String? ?? '';
+      final cents = template['amountCents'] as int? ?? 0;
+      if (cents > 0) {
+        final double baseValue = cents / 100.0;
+        _amountStr = baseValue % 1 == 0
+            ? baseValue.toInt().toString()
+            : baseValue.toString();
+      }
+    });
+  }
+
+  void _showTemplatePickerSheet(BuildContext context) {
+    showSpringSheet(
+      context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        final onSurface = theme.colorScheme.onSurface;
+        return DraggableScrollableSheet(
+          initialChildSize: 0.5,
+          maxChildSize: 0.75,
+          minChildSize: 0.3,
+          expand: false,
+          builder: (context, scrollController) => ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            child: LiquidGlassOverlay(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(height: kSpacing10),
+                    Container(
+                      width: 38,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: onSurface.withValues(alpha: 0.17),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                    const SizedBox(height: kSpacing16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing20,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(kSpacing8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.bookmark_border_rounded,
+                              size: 18,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Text(
+                            'Templates',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: kSpacing12),
+                    Expanded(
+                      child: FutureBuilder<List<Map<String, dynamic>>>(
+                        future: ref
+                            .read(settingsRepositoryProvider)
+                            .getTransactionTemplates(),
+                        builder: (context, snapshot) {
+                          final templates = snapshot.data ?? [];
+                          if (templates.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(kSpacing32),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.bookmark_border_rounded,
+                                      size: 48,
+                                      color: onSurface.withValues(alpha: 0.2),
+                                    ),
+                                    const SizedBox(height: kSpacing12),
+                                    Text(
+                                      'No templates yet',
+                                      style: theme.textTheme.bodyLarge
+                                          ?.copyWith(
+                                            color: onSurface.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                          ),
+                                    ),
+                                    const SizedBox(height: kSpacing4),
+                                    Text(
+                                      'Save a transaction as a template\nfor quick reuse later.',
+                                      textAlign: TextAlign.center,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: onSurface.withValues(
+                                              alpha: 0.35,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return RawScrollbar(
+                            controller: scrollController,
+                            child: ListView.builder(
+                              controller: scrollController,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing20,
+                              ),
+                              itemCount: templates.length,
+                              itemBuilder: (listCtx, index) {
+                                final t = templates[index];
+                                final type =
+                                    t['type'] as String? ?? 'expense';
+                                final amount =
+                                    t['amountCents'] as int? ?? 0;
+                                final name =
+                                    t['name'] as String? ?? 'Untitled';
+                                final typeIcon =
+                                    type == 'income'
+                                        ? PesaFlowIcons.arrowDown
+                                        : type == 'transfer'
+                                        ? Icons.swap_horiz_rounded
+                                        : PesaFlowIcons.arrowUp;
+                                final typeColor =
+                                    type == 'income'
+                                        ? context.appColors.incomeColor
+                                        : type == 'transfer'
+                                        ? AppTheme.transferColorDark
+                                        : context.appColors.expenseColor;
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: kSpacing8,
+                                  ),
+                                  child: Dismissible(
+                                    key: ValueKey(t['id']),
+                                    direction: DismissDirection.endToStart,
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.only(
+                                        right: kSpacing20,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: context
+                                            .appColors
+                                            .expenseColor
+                                            .withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      child: Icon(
+                                        Icons.delete_outline_rounded,
+                                        color: context.appColors.expenseColor,
+                                      ),
+                                    ),
+                                    onDismissed: (_) async {
+                                      await ref
+                                          .read(settingsRepositoryProvider)
+                                          .deleteTransactionTemplate(
+                                            t['id'] as String,
+                                          );
+                                    },
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _applyTemplate(t);
+                                        Navigator.pop(ctx);
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(
+                                          kSpacing16,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.surface,
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          border: Border.all(
+                                            color: onSurface.withValues(
+                                              alpha: 0.07,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.all(
+                                                    kSpacing8,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: typeColor.withValues(
+                                                  alpha: 0.12,
+                                                ),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                typeIcon,
+                                                size: 18,
+                                                color: typeColor,
+                                              ),
+                                            ),
+                                            const SizedBox(width: kSpacing12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    name,
+                                                    style: context.ts(
+                                                      15,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  if (t['description'] !=
+                                                          null &&
+                                                      (t['description']
+                                                              as String)
+                                                          .isNotEmpty)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            top: kSpacing2,
+                                                          ),
+                                                      child: Text(
+                                                        t['description']
+                                                            as String,
+                                                        maxLines: 1,
+                                                        overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                        style: theme
+                                                            .textTheme
+                                                            .bodySmall
+                                                            ?.copyWith(
+                                                              color: onSurface
+                                                                  .withValues(
+                                                                    alpha:
+                                                                        0.4,
+                                                                  ),
+                                                            ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              CurrencyFormatter.formatCents(
+                                                amount,
+                                              ),
+                                              style: context.ts(
+                                                14,
+                                                fontWeight: FontWeight.bold,
+                                                color: typeColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -40,10 +40,7 @@ class LoanReminderService {
         }
       }
     } catch (e) {
-      developer.log(
-        'Loan due date check failed: $e',
-        name: 'LoanReminder',
-      );
+      developer.log('Loan due date check failed: $e', name: 'LoanReminder');
     }
   }
 
@@ -60,13 +57,11 @@ class LoanReminderService {
     await _notificationService.showNotification(
       id: _notificationCounter,
       title: 'Overdue: $name',
-      body: '$name is $overdueDays day${overdueDays == 1 ? '' : 's'} overdue. '
+      body:
+          '$name is $overdueDays day${overdueDays == 1 ? '' : 's'} overdue. '
           'Outstanding: Tsh $amountStr',
     );
-    developer.log(
-      'Overdue loan reminder sent: $name',
-      name: 'LoanReminder',
-    );
+    developer.log('Overdue loan reminder sent: $name', name: 'LoanReminder');
   }
 
   Future<void> _sendUpcomingNotification(Loan loan, DateTime dueAt) async {
@@ -80,9 +75,6 @@ class LoanReminderService {
       title: 'Loan due soon: $name',
       body: '$name (Tsh $amountStr) is due on $dueDateStr',
     );
-    developer.log(
-      'Upcoming loan reminder sent: $name',
-      name: 'LoanReminder',
-    );
+    developer.log('Upcoming loan reminder sent: $name', name: 'LoanReminder');
   }
 }
