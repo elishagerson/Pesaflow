@@ -28,6 +28,8 @@ import 'package:pesaflow/services/sms_background_service.dart';
 import 'package:pesaflow/services/notification_service.dart';
 import 'package:pesaflow/services/lock_screen_service.dart';
 import 'package:pesaflow/services/loan_reminder_service.dart';
+import 'package:pesaflow/services/background_scheduler_service.dart';
+import 'package:pesaflow/services/daily_summary_service.dart';
 import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -196,6 +198,20 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
         await ref.read(loanReminderServiceProvider).checkLoanDueDates();
       } catch (e) {
         developer.log('Loan due date check failed: $e', name: 'AppLaunch');
+      }
+
+      // Check yesterday's spending summary
+      try {
+        await ref.read(dailySummaryServiceProvider).checkDailySummary();
+      } catch (e) {
+        developer.log('Daily summary check failed: $e', name: 'AppLaunch');
+      }
+
+      // Schedule recurring background notifications (budgets, savings, daily)
+      try {
+        await ref.read(backgroundSchedulerProvider).scheduleAll();
+      } catch (e) {
+        developer.log('Background scheduler failed: $e', name: 'AppLaunch');
       }
 
       // Check if Notification Access is enabled; if not, prompt once
