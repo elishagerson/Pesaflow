@@ -19,7 +19,7 @@ class _OnboardingOverlayState extends State<OnboardingOverlay> {
 
   static const _pages = [
     _OnboardingPageData(
-      icon: Icons.message_rounded,
+      icon: PesaFlowIcons.message,
       title: 'Track from SMS',
       description:
           'PesaFlow automatically reads transaction SMS from M-Pesa, Airtel, and Tigo',

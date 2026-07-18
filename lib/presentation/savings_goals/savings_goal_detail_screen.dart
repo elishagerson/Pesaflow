@@ -1013,7 +1013,7 @@ class _SavingsGoalDetailScreenState
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.remove_rounded,
+                                PesaFlowIcons.remove,
                                 color: context.appColors.expenseColor,
                                 size: 18,
                               ),

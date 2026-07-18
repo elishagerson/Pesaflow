@@ -59,7 +59,7 @@ class LoanOverviewSection extends ConsumerWidget {
                         ),
                       ),
                       Icon(
-                        Icons.chevron_right_rounded,
+                        PesaFlowIcons.chevronRight,
                         size: 18,
                         color: context.appColors.textMedium,
                       ),
@@ -79,7 +79,7 @@ class LoanOverviewSection extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.history_rounded,
+                                  PesaFlowIcons.history,
                                   size: 16,
                                   color: context.appColors.incomeColor,
                                 ),
@@ -93,7 +93,7 @@ class LoanOverviewSection extends ConsumerWidget {
                                 ),
                                 const Spacer(),
                                 Icon(
-                                  Icons.chevron_right_rounded,
+                                  PesaFlowIcons.chevronRight,
                                   size: 16,
                                   color: context.appColors.textMedium,
                                 ),
@@ -315,7 +315,7 @@ class LoanOverviewSection extends ConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.speed_rounded,
+                                PesaFlowIcons.speed,
                                 color: context.appColors.transferColor,
                                 size: 16,
                               ),
@@ -368,8 +368,8 @@ class LoanOverviewSection extends ConsumerWidget {
                             ),
                             child: Icon(
                               ratio > 0.5
-                                  ? Icons.arrow_upward_rounded
-                                  : Icons.arrow_downward_rounded,
+                                  ? PesaFlowIcons.arrowUp
+                                  : PesaFlowIcons.arrowDown,
                               color: loanSeverity,
                               size: 14,
                             ),

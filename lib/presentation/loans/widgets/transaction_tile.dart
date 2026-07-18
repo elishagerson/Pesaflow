@@ -5,6 +5,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction tx;
@@ -40,8 +41,8 @@ class TransactionTile extends StatelessWidget {
             ),
             child: Icon(
               isCredit
-                  ? Icons.arrow_downward_rounded
-                  : Icons.arrow_upward_rounded,
+                  ? PesaFlowIcons.arrowDown
+                  : PesaFlowIcons.arrowUp,
               color: amountColor,
               size: 16,
             ),

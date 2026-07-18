@@ -41,13 +41,13 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
 
   final List<Map<String, dynamic>> _icons = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings},
-    {'name': 'laptop', 'icon': Icons.laptop_chromebook_rounded},
-    {'name': 'flight', 'icon': Icons.flight_takeoff_rounded},
-    {'name': 'home', 'icon': Icons.home_rounded},
-    {'name': 'car', 'icon': Icons.directions_car_rounded},
-    {'name': 'school', 'icon': Icons.school_rounded},
-    {'name': 'heart', 'icon': Icons.favorite_rounded},
-    {'name': 'gift', 'icon': Icons.card_giftcard_rounded},
+    {'name': 'laptop', 'icon': PesaFlowIcons.laptop},
+    {'name': 'flight', 'icon': PesaFlowIcons.flight},
+    {'name': 'home', 'icon': PesaFlowIcons.home},
+    {'name': 'car', 'icon': PesaFlowIcons.car},
+    {'name': 'school', 'icon': PesaFlowIcons.school},
+    {'name': 'heart', 'icon': PesaFlowIcons.heart},
+    {'name': 'gift', 'icon': PesaFlowIcons.gift},
   ];
 
   @override
@@ -203,7 +203,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                         decoration: inputDeco(
                           label: 'Goal Title',
                           hint: 'e.g. Vacation to Zanzibar',
-                          icon: Icons.title_rounded,
+                          icon: PesaFlowIcons.title,
                         ).copyWith(errorText: _nameError),
                         onChanged: (_) => setState(() => _nameError = null),
                       ),

@@ -429,7 +429,7 @@ class _SmsPermissionPage extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.sms_rounded,
+                    PesaFlowIcons.sms,
                     size: 56,
                     color: theme.colorScheme.primary,
                   ),
@@ -449,7 +449,7 @@ class _SmsPermissionPage extends StatelessWidget {
                         ),
                       ),
                       child: const Icon(
-                        Icons.check_rounded,
+                        PesaFlowIcons.check,
                         size: 16,
                         color: Colors.white,
                       ),
@@ -684,7 +684,7 @@ class _AccountsPage extends StatelessWidget {
                             ),
                             child: isSelected
                                 ? const Icon(
-                                    Icons.check,
+                                    PesaFlowIcons.check,
                                     size: 10,
                                     color: Colors.white,
                                   )

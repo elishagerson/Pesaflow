@@ -288,7 +288,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 const SizedBox(width: kSpacing4),
                 Icon(
-                  Icons.keyboard_arrow_down_rounded,
+                  PesaFlowIcons.chevronDown,
                   size: 14,
                   color: onSurface.withValues(alpha: 0.45),
                 ),
@@ -309,7 +309,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   width: 0.8,
                 ),
               ),
-              child: Icon(Icons.search_rounded, color: onSurface, size: 20),
+              child: Icon(PesaFlowIcons.search, color: onSurface, size: 20),
             ),
           ),
           const SizedBox(width: kSpacing8),
@@ -326,7 +326,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               child: Icon(
-                Icons.person_outline_rounded,
+                PesaFlowIcons.personOutline,
                 color: onSurface,
                 size: 20,
               ),
@@ -349,7 +349,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ),
                   child: Icon(
-                    Icons.notifications_none_rounded,
+                    PesaFlowIcons.notification,
                     size: 20,
                     color: onSurface,
                   ),
@@ -593,7 +593,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         Row(
                                           children: [
                                             Icon(
-                                              Icons.wifi_rounded,
+                                              PesaFlowIcons.wifi,
                                               color: Colors.white.withValues(
                                                 alpha: 0.6,
                                               ),
@@ -691,7 +691,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                           width: kSpacing4,
                                                         ),
                                                         Icon(
-                                                          Icons.edit,
+                                                          PesaFlowIcons.edit,
                                                           size: 8,
                                                           color: Colors.white
                                                               .withValues(
@@ -1085,7 +1085,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.message_rounded,
+                                              PesaFlowIcons.message,
                                               size: 14,
                                               color: theme.colorScheme.primary,
                                             ),
@@ -1102,7 +1102,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                             ),
                                             const SizedBox(width: kSpacing6),
                                             Icon(
-                                              Icons.arrow_outward_rounded,
+                                              PesaFlowIcons.arrowOutward,
                                               size: 12,
                                               color: theme.colorScheme.primary,
                                             ),
@@ -1123,7 +1123,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── 3. Insights — contextual nudges ──
                         _CollapsibleSection(
                           title: 'Insights',
-                          icon: Icons.lightbulb_outline_rounded,
+                          icon: PesaFlowIcons.lightbulb,
                           child: _InsightsCarousel(),
                         ),
                         const SizedBox(height: kSpacing20),
@@ -1143,7 +1143,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── 5. Recent Activity — "The transactions behind it" ──
                         _CollapsibleSection(
                           title: 'Recent Activity',
-                          icon: Icons.history_rounded,
+                          icon: PesaFlowIcons.history,
                           action: TextButton(
                             onPressed: () {
                               context.go('/transactions');
@@ -1185,7 +1185,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           width: 0.8,
                                         ),
                                         deleteIcon: Icon(
-                                          Icons.cancel_rounded,
+                                          PesaFlowIcons.cancel,
                                           size: 16,
                                           color: theme.colorScheme.primary,
                                         ),
@@ -1764,7 +1764,7 @@ class _SummaryNavCardRow extends StatelessWidget {
         child: Row(
           children: [
             _SummaryNavCard(
-              icon: Icons.pie_chart_rounded,
+              icon: PesaFlowIcons.budgets,
               metric: budgets.isNotEmpty
                   ? '${budgets.length} budgets'
                   : 'No budgets',
@@ -1791,7 +1791,7 @@ class _SummaryNavCardRow extends StatelessWidget {
               onTap: () => context.go('/recurring'),
             ),
             _SummaryNavCard(
-              icon: Icons.credit_score_rounded,
+              icon: PesaFlowIcons.creditScore,
               metric: 'Loans',
               label: 'Debt overview',
               color: context.appColors.transferColor,
@@ -1799,7 +1799,7 @@ class _SummaryNavCardRow extends StatelessWidget {
             ),
             if (pendingReviewCount > 0)
               _SummaryNavCard(
-                icon: Icons.message_rounded,
+                icon: PesaFlowIcons.message,
                 metric: '$pendingReviewCount pending',
                 label: 'SMS review',
                 color: theme.colorScheme.primary,
@@ -1973,7 +1973,7 @@ class _CollapsibleSectionState extends State<_CollapsibleSection>
                             turns: _isExpanded ? 0.5 : 0,
                             duration: const Duration(milliseconds: 200),
                             child: Icon(
-                              Icons.keyboard_arrow_down_rounded,
+                              PesaFlowIcons.chevronDown,
                               size: 20,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.5,

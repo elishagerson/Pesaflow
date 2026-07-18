@@ -5,6 +5,7 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 const List<String> presetColors = [
   '#FF453A', // Ruby Red
@@ -162,7 +163,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                   ),
                   child: isSelected
                       ? const Icon(
-                          Icons.check_rounded,
+                          PesaFlowIcons.check,
                           color: Colors.white,
                           size: 18,
                         )
@@ -197,7 +198,7 @@ class _ModernColorPickerState extends State<ModernColorPicker> {
                 ),
                 child: Center(
                   child: Icon(
-                    Icons.palette_outlined,
+                    PesaFlowIcons.palette,
                     color: isSelectedCustom
                         ? Colors.white
                         : context.appColors.textMedium,

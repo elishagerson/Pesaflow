@@ -510,15 +510,15 @@ class _OverviewTab extends StatelessWidget {
                                                   ? Icons
                                                         .laptop_chromebook_rounded
                                                   : goal.icon == 'flight'
-                                                  ? Icons.flight_takeoff_rounded
+                                                  ? PesaFlowIcons.flight
                                                   : goal.icon == 'home'
-                                                  ? Icons.home_rounded
+                                                  ? PesaFlowIcons.home
                                                   : goal.icon == 'car'
-                                                  ? Icons.directions_car_rounded
+                                                  ? PesaFlowIcons.car
                                                   : goal.icon == 'school'
-                                                  ? Icons.school_rounded
+                                                  ? PesaFlowIcons.school
                                                   : goal.icon == 'heart'
-                                                  ? Icons.favorite_rounded
+                                                  ? PesaFlowIcons.heart
                                                   : PesaFlowIcons.savings,
                                               color: goalColor,
                                               size: 18,
@@ -1319,15 +1319,15 @@ class _InsightsTab extends StatelessWidget {
       case 'savings':
         return PesaFlowIcons.savings;
       case 'arrow_upward':
-        return Icons.arrow_upward_rounded;
+        return PesaFlowIcons.arrowUp;
       case 'arrow_downward':
-        return Icons.arrow_downward_rounded;
+        return PesaFlowIcons.arrowDown;
       case 'account_balance_wallet':
         return PesaFlowIcons.wallet;
       case 'category':
-        return Icons.category_rounded;
+        return PesaFlowIcons.category;
       default:
-        return Icons.lightbulb_rounded;
+        return PesaFlowIcons.lightbulb;
     }
   }
 

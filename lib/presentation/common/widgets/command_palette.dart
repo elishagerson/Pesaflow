@@ -48,7 +48,7 @@ const _actions = <_PaletteAction>[
     keywords: ['spend', 'pay', 'out', 'buy'],
   ),
   _PaletteAction(
-    icon: Icons.arrow_downward_rounded,
+    icon: PesaFlowIcons.arrowDown,
     label: 'Record Income',
     route: '/transactions/add',
     keywords: ['salary', 'deposit', 'earn', 'receive'],
@@ -60,7 +60,7 @@ const _actions = <_PaletteAction>[
     keywords: ['move', 'send', 'shift'],
   ),
   _PaletteAction(
-    icon: Icons.receipt_rounded,
+    icon: PesaFlowIcons.transactions,
     label: 'View Transactions',
     route: '/transactions',
     keywords: ['list', 'history'],
@@ -89,7 +89,7 @@ const _actions = <_PaletteAction>[
     keywords: ['target', 'save'],
   ),
   _PaletteAction(
-    icon: Icons.credit_score_rounded,
+    icon: PesaFlowIcons.creditScore,
     label: 'View Loans',
     route: '/loans',
     keywords: ['debt', 'borrow'],
@@ -131,7 +131,7 @@ const _actions = <_PaletteAction>[
     keywords: ['preferences', 'config'],
   ),
   _PaletteAction(
-    icon: Icons.message_rounded,
+    icon: PesaFlowIcons.message,
     label: 'SMS Review',
     route: '/sms-review',
     keywords: ['pending', 'unreviewed'],

@@ -228,7 +228,7 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
   ModernDialog.show(
     context: context,
     title: const Text('New Workspace'),
-    titleIcon: Icons.grid_view_rounded,
+    titleIcon: PesaFlowIcons.gridView,
     content: StatefulBuilder(
       builder: (context, setState) {
         final theme = Theme.of(context);

@@ -162,7 +162,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             child: Row(
               children: [
                 Icon(
-                  Icons.error_outline,
+                  PesaFlowIcons.error,
                   size: 18,
                   color: theme.colorScheme.error,
                 ),
@@ -335,7 +335,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             initialValue: _defaultCategoryId,
             decoration: InputDecoration(
               labelText: 'Default Category',
-              prefixIcon: const Icon(Icons.category_rounded, size: 20),
+              prefixIcon: const Icon(PesaFlowIcons.category, size: 20),
               filled: true,
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
@@ -392,8 +392,8 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                   children: [
                     Icon(
                       tx.type == 'income'
-                          ? Icons.arrow_downward_rounded
-                          : Icons.arrow_upward_rounded,
+                          ? PesaFlowIcons.arrowDown
+                          : PesaFlowIcons.arrowUp,
                       size: 16,
                       color: tx.type == 'income'
                           ? context.appColors.incomeColor
@@ -437,7 +437,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              icon: const Icon(Icons.file_download_rounded, size: 18),
+              icon: const Icon(PesaFlowIcons.download, size: 18),
               label: Text('Import ${result.transactions.length} Transactions'),
               onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(

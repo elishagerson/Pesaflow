@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 
 class SpringButton extends StatefulWidget {
@@ -51,6 +52,10 @@ class _SpringButtonState extends State<SpringButton>
 
   void _pressDown() {
     if (widget.onTap == null) return;
+    if (context.isReducedMotion) {
+      _controller.value = 1.0;
+      return;
+    }
     _controller.animateTo(
       1.0,
       duration: widget.pressDuration,
@@ -61,6 +66,10 @@ class _SpringButtonState extends State<SpringButton>
   void _springBack() {
     if (widget.onTap == null) return;
     if (widget.haptic != null) triggerHaptic(widget.haptic!);
+    if (context.isReducedMotion) {
+      _controller.value = 0.0;
+      return;
+    }
     final spring = SpringDescription(
       mass: widget.springMass,
       stiffness: widget.springStiffness,

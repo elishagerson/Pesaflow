@@ -78,17 +78,17 @@ class SavingsSection extends ConsumerWidget {
                           goal.icon == 'savings'
                               ? PesaFlowIcons.savings
                               : goal.icon == 'laptop'
-                              ? Icons.laptop_chromebook_rounded
+                              ? PesaFlowIcons.laptop
                               : goal.icon == 'flight'
-                              ? Icons.flight_takeoff_rounded
+                              ? PesaFlowIcons.flight
                               : goal.icon == 'home'
-                              ? Icons.home_rounded
+                              ? PesaFlowIcons.home
                               : goal.icon == 'car'
-                              ? Icons.directions_car_rounded
+                              ? PesaFlowIcons.car
                               : goal.icon == 'school'
-                              ? Icons.school_rounded
+                              ? PesaFlowIcons.school
                               : goal.icon == 'heart'
-                              ? Icons.favorite_rounded
+                              ? PesaFlowIcons.heart
                               : PesaFlowIcons.savings,
                           color: goalColor,
                           size: 16,

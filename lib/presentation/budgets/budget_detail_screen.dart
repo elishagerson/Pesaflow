@@ -110,7 +110,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                         final confirm = await ModernDialog.show<bool>(
                           context: context,
                           title: const Text('Delete Budget?'),
-                          titleIcon: Icons.delete_forever_rounded,
+                          titleIcon: PesaFlowIcons.delete,
                           iconColor: Colors.red,
                           content: const Text(
                             'This will permanently remove this budget and all its history.',
@@ -520,7 +520,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       Icon(
                                         p.isClosed
                                             ? PesaFlowIcons.lock
-                                            : Icons.lock_open_rounded,
+                                            : PesaFlowIcons.unlock,
                                         size: 16,
                                         color: Colors.grey,
                                       ),

@@ -40,7 +40,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
             ModernDropdown<String>(
               labelText: 'Account Type',
               value: accountType,
-              prefixIcon: Icons.wallet_rounded,
+              prefixIcon: PesaFlowIcons.wallet,
               items: [
                 ModernDropdownItem(
                   value: 'Cash',
@@ -127,7 +127,7 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
                 decoration: context.inputDecoration(
                   labelText: 'Phone Number',
                   hintText: 'e.g. 076XXXXXXX',
-                  prefixIcon: Icon(Icons.phone_rounded, size: 18),
+                  prefixIcon: Icon(PesaFlowIcons.phone, size: 18),
                 ),
                 onChanged: (val) {
                   phoneNumber = val;

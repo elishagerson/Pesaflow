@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class IosListSection extends StatelessWidget {
   final String? header;
@@ -128,7 +129,7 @@ class IosListRow extends StatelessWidget {
             trailing!,
           ] else if (onTap != null)
             Icon(
-              Icons.chevron_right_rounded,
+              PesaFlowIcons.chevronRight,
               size: 20,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),

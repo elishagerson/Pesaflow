@@ -4,6 +4,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class MorphingInsightCard extends StatefulWidget {
   final InsightData data;
@@ -240,13 +241,13 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                                   const Divider(height: 1),
                                   const SizedBox(height: kSpacing8),
                                   _buildDetailRow(
-                                    Icons.trending_up_rounded,
+                                    PesaFlowIcons.income,
                                     'Category trend',
                                     'Based on your spending in this category',
                                   ),
                                   const SizedBox(height: kSpacing4),
                                   _buildDetailRow(
-                                    Icons.calendar_month_rounded,
+                                    PesaFlowIcons.calendar,
                                     'Time period',
                                     'This month vs last month',
                                   ),
@@ -322,11 +323,11 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
   IconData _severityIcon(Severity s) {
     switch (s) {
       case Severity.good:
-        return Icons.arrow_downward_rounded;
+        return PesaFlowIcons.arrowDown;
       case Severity.warning:
-        return Icons.arrow_upward_rounded;
+        return PesaFlowIcons.arrowUp;
       case Severity.neutral:
-        return Icons.remove_rounded;
+        return PesaFlowIcons.remove;
     }
   }
 

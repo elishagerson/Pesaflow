@@ -213,7 +213,7 @@ class LoanListScreen extends ConsumerWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.speed_rounded,
+              PesaFlowIcons.speed,
               color: context.appColors.transferColor,
               size: 20,
             ),

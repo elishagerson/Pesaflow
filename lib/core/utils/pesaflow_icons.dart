@@ -73,4 +73,84 @@ class PesaFlowIcons {
   static const IconData file = Icons.insert_drive_file_outlined;
   static const IconData chevronRight = Icons.chevron_right_rounded;
   static const IconData restore = Icons.history_outlined;
+
+  // Directions / Arrows
+  static const IconData arrowUp = Icons.arrow_upward_rounded;
+  static const IconData arrowDown = Icons.arrow_downward_rounded;
+  static const IconData arrowForward = Icons.arrow_forward_rounded;
+  static const IconData arrowOutward = Icons.arrow_outward_rounded;
+  static const IconData chevronDown = Icons.keyboard_arrow_down_rounded;
+  static const IconData chevronUp = Icons.keyboard_arrow_up_rounded;
+
+  // Confirm / Status
+  static const IconData check = Icons.check_rounded;
+  static const IconData cancel = Icons.cancel_rounded;
+  static const IconData clear = Icons.clear_rounded;
+  static const IconData remove = Icons.remove_rounded;
+  static const IconData block = Icons.block_rounded;
+
+  // Content / Actions
+  static const IconData copy = Icons.copy_rounded;
+  static const IconData bookmark = Icons.bookmark_border_rounded;
+  static const IconData bookmarkFilled = Icons.bookmark_rounded;
+  static const IconData message = Icons.message_rounded;
+  static const IconData description = Icons.description_rounded;
+  static const IconData clearAll = Icons.clear_all_rounded;
+  static const IconData selectAll = Icons.select_all;
+  static const IconData deselect = Icons.deselect;
+
+  // Goal / Lifestyle
+  static const IconData home = Icons.home_rounded;
+  static const IconData car = Icons.directions_car_rounded;
+  static const IconData school = Icons.school_rounded;
+  static const IconData heart = Icons.favorite_rounded;
+  static const IconData flight = Icons.flight_takeoff_rounded;
+  static const IconData laptop = Icons.laptop_chromebook_rounded;
+  static const IconData business = Icons.business_rounded;
+  static const IconData hospital = Icons.local_hospital_rounded;
+  static const IconData gift = Icons.card_giftcard_rounded;
+
+  // Finance / Tags
+  static const IconData tag = Icons.tag_rounded;
+  static const IconData creditScore = Icons.credit_score_rounded;
+  static const IconData money = Icons.money_rounded;
+  static const IconData payment = Icons.payment_rounded;
+  static const IconData speed = Icons.speed_rounded;
+  static const IconData label = Icons.label_rounded;
+  static const IconData schedule = Icons.schedule_rounded;
+
+  // People
+  static const IconData person = Icons.person_rounded;
+  static const IconData personOutline = Icons.person_outline_rounded;
+
+  // Misc
+  static const IconData history = Icons.history_rounded;
+  static const IconData dateRange = Icons.date_range_rounded;
+  static const IconData calendarToday = Icons.calendar_today_rounded;
+  static const IconData gridView = Icons.grid_view_rounded;
+  static const IconData filterAlt = Icons.filter_alt_rounded;
+  static const IconData bolt = Icons.bolt_rounded;
+  static const IconData key = Icons.key_rounded;
+  static const IconData linkOff = Icons.link_off_rounded;
+  static const IconData palette = Icons.palette_outlined;
+  static const IconData replay = Icons.replay_rounded;
+  static const IconData upcoming = Icons.upcoming_rounded;
+  static const IconData wifi = Icons.wifi_rounded;
+  static const IconData backspace = Icons.backspace_outlined;
+
+  // Icon helpers / categories
+  static const IconData work = Icons.work_rounded;
+  static const IconData store = Icons.storefront_rounded;
+  static const IconData cart = Icons.shopping_cart_rounded;
+  static const IconData bus = Icons.directions_bus_rounded;
+  static const IconData book = Icons.menu_book_rounded;
+  static const IconData movie = Icons.movie_rounded;
+  static const IconData shoppingBag = Icons.shopping_bag_rounded;
+  static const IconData coffee = Icons.coffee_rounded;
+  static const IconData send = Icons.send_rounded;
+  static const IconData payments = Icons.payments_rounded;
+  static const IconData compareArrows = Icons.compare_arrows_rounded;
+  static const IconData folder = Icons.folder_rounded;
+  static const IconData title = Icons.title_rounded;
+
 }

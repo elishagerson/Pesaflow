@@ -80,7 +80,7 @@ class SmsReviewCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.message_rounded,
+                    PesaFlowIcons.message,
                     size: 14,
                     color: context.appColors.incomeColor,
                   ),
@@ -179,7 +179,7 @@ class SmsReviewCard extends StatelessWidget {
                       ),
                       const SizedBox(width: kSpacing2),
                       Icon(
-                        Icons.chevron_right_rounded,
+                        PesaFlowIcons.chevronRight,
                         size: 12,
                         color: theme.colorScheme.onSurface,
                       ),

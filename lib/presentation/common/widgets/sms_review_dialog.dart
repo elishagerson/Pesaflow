@@ -110,7 +110,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
               Row(
                 children: [
                   Icon(
-                    Icons.sms_rounded,
+                    PesaFlowIcons.sms,
                     color: theme.colorScheme.primary,
                     size: 22,
                   ),
@@ -200,7 +200,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   prefixIcon: const Icon(PesaFlowIcons.search, size: 18),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear_rounded, size: 16),
+                          icon: const Icon(PesaFlowIcons.clear, size: 16),
                           onPressed: () {
                             _searchController.clear();
                             setState(() => _searchQuery = '');
@@ -315,7 +315,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: _approve,
-                      icon: const Icon(Icons.check_rounded, size: 18),
+                      icon: const Icon(PesaFlowIcons.check, size: 18),
                       label: const Text('Approve'),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(

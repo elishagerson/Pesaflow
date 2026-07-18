@@ -1,99 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 IconData getCategoryIcon(String iconName) {
   switch (iconName) {
     case 'briefcase':
-      return Icons.work_rounded;
+      return PesaFlowIcons.work;
     case 'store':
-      return Icons.storefront_rounded;
+      return PesaFlowIcons.store;
     case 'cart':
-      return Icons.shopping_cart_rounded;
+      return PesaFlowIcons.cart;
     case 'bus':
-      return Icons.directions_bus_rounded;
+      return PesaFlowIcons.bus;
     case 'home':
-      return Icons.home_rounded;
+      return PesaFlowIcons.home;
     case 'zap':
-      return Icons.electric_bolt_rounded;
+      return PesaFlowIcons.bolt;
     case 'phone':
-      return Icons.phone_android_rounded;
+      return PesaFlowIcons.phone;
     case 'heart':
-      return Icons.favorite_rounded;
+      return PesaFlowIcons.heart;
     case 'book':
-      return Icons.menu_book_rounded;
+      return PesaFlowIcons.book;
     case 'film':
-      return Icons.movie_rounded;
+      return PesaFlowIcons.movie;
     case 'shopping-bag':
-      return Icons.shopping_bag_rounded;
+      return PesaFlowIcons.shoppingBag;
     case 'coffee':
-      return Icons.coffee_rounded;
+      return PesaFlowIcons.coffee;
     case 'send':
-      return Icons.send_rounded;
+      return PesaFlowIcons.send;
     case 'credit-card':
-      return Icons.credit_card_rounded;
+      return PesaFlowIcons.card;
     case 'banknote':
-      return Icons.payments_rounded;
+      return PesaFlowIcons.payments;
     case 'piggy-bank':
-      return Icons.savings_rounded;
+      return PesaFlowIcons.savings;
     case 'arrow-left-right':
-      return Icons.compare_arrows_rounded;
+      return PesaFlowIcons.compareArrows;
     case 'plus-circle':
-      return Icons.add_circle_outline_rounded;
+      return PesaFlowIcons.add;
     default:
-      return Icons.add_circle_outline_rounded;
+      return PesaFlowIcons.add;
   }
 }
 
 IconData getGoalIcon(String iconName) {
   switch (iconName) {
     case 'savings':
-      return Icons.savings_rounded;
+      return PesaFlowIcons.savings;
     case 'laptop':
-      return Icons.laptop_chromebook_rounded;
+      return PesaFlowIcons.laptop;
     case 'flight':
-      return Icons.flight_takeoff_rounded;
+      return PesaFlowIcons.flight;
     case 'home':
-      return Icons.home_rounded;
+      return PesaFlowIcons.home;
     case 'car':
-      return Icons.directions_car_rounded;
+      return PesaFlowIcons.car;
     case 'school':
-      return Icons.school_rounded;
+      return PesaFlowIcons.school;
     case 'heart':
-      return Icons.favorite_rounded;
+      return PesaFlowIcons.heart;
     case 'gift':
-      return Icons.card_giftcard_rounded;
+      return PesaFlowIcons.gift;
     default:
-      return Icons.savings_rounded;
+      return PesaFlowIcons.savings;
   }
 }
 
 IconData getAccountIcon(String iconStr) {
   switch (iconStr) {
     case 'phone-android':
-      return Icons.phone_android_rounded;
+      return PesaFlowIcons.phone;
     case 'account-balance':
-      return Icons.account_balance_rounded;
+      return PesaFlowIcons.loans;
     case 'wallet':
-      return Icons.account_balance_wallet_rounded;
+      return PesaFlowIcons.wallet;
     default:
-      return Icons.account_balance_wallet_rounded;
+      return PesaFlowIcons.wallet;
   }
 }
 
 IconData getTrackerIcon(String iconName) {
   switch (iconName) {
     case 'briefcase':
-      return Icons.work_rounded;
+      return PesaFlowIcons.work;
     case 'home':
-      return Icons.home_rounded;
+      return PesaFlowIcons.home;
     case 'person':
-      return Icons.person_rounded;
+      return PesaFlowIcons.person;
     case 'flight':
-      return Icons.flight_takeoff_rounded;
+      return PesaFlowIcons.flight;
     case 'shopping_cart':
-      return Icons.shopping_cart_rounded;
+      return PesaFlowIcons.cart;
     case 'payments':
-      return Icons.payments_rounded;
+      return PesaFlowIcons.payments;
     default:
-      return Icons.folder_rounded;
+      return PesaFlowIcons.folder;
   }
 }

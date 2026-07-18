@@ -552,7 +552,7 @@ class LoanDetailScreen extends ConsumerWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        isPaid ? Icons.check_rounded : Icons.schedule_rounded,
+                        isPaid ? PesaFlowIcons.check : PesaFlowIcons.schedule,
                         size: 12,
                         color: isPaid
                             ? context.appColors.incomeColor
@@ -760,7 +760,7 @@ class LoanDetailScreen extends ConsumerWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () => showPaymentSheet(context, ref, loan),
-                icon: const Icon(Icons.payment_rounded, size: 18),
+                icon: const Icon(PesaFlowIcons.payment, size: 18),
                 label: const Text('Make a Payment'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.appColors.incomeColor,

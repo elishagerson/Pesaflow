@@ -742,7 +742,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: const Icon(
-                                                        Icons.check_rounded,
+                                                        PesaFlowIcons.check,
                                                         size: 16,
                                                         color: Color(
                                                           0xFF609F8A,

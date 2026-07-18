@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class InfoRow extends StatelessWidget {
   final String label;
@@ -75,7 +76,7 @@ class CopyableInfoRow extends StatelessWidget {
                 Text(value, style: theme.textTheme.labelMedium),
                 const SizedBox(width: kSpacing4),
                 Icon(
-                  Icons.copy_rounded,
+                  PesaFlowIcons.copy,
                   size: 12,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                 ),

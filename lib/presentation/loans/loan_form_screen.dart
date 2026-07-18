@@ -94,14 +94,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   ];
 
   static const _categoryIcons = {
-    'Personal': Icons.person_rounded,
-    'Business': Icons.business_rounded,
-    'Mortgage': Icons.home_rounded,
-    'Car': Icons.directions_car_rounded,
-    'Education': Icons.school_rounded,
-    'Medical': Icons.local_hospital_rounded,
-    'Debt Consolidation': Icons.account_balance_rounded,
-    'Other': Icons.more_horiz_rounded,
+    'Personal': PesaFlowIcons.person,
+    'Business': PesaFlowIcons.business,
+    'Mortgage': PesaFlowIcons.home,
+    'Car': PesaFlowIcons.car,
+    'Education': PesaFlowIcons.school,
+    'Medical': PesaFlowIcons.hospital,
+    'Debt Consolidation': PesaFlowIcons.loans,
+    'Other': PesaFlowIcons.more,
   };
 
   Future<void> _pickCategory() async {
@@ -148,7 +148,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               const SizedBox(height: kSpacing16),
               ...(_loanCategories.map((cat) {
                 final isSelected = _selectedCategory == cat;
-                final icon = _categoryIcons[cat] ?? Icons.more_horiz_rounded;
+                final icon = _categoryIcons[cat] ?? PesaFlowIcons.more;
                 return Padding(
                   padding: const EdgeInsets.only(bottom: kSpacing6),
                   child: TactileSpringContainer(
@@ -200,7 +200,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           ),
                           if (isSelected)
                             Icon(
-                              Icons.check_rounded,
+                              PesaFlowIcons.check,
                               size: 18,
                               color: theme.colorScheme.primary,
                             ),
@@ -381,7 +381,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   decoration: context.inputDecoration(
                     labelText: 'Loan Amount (Tsh)',
                     hintText: 'e.g. 100000',
-                    prefixIcon: const Icon(Icons.money_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
                     errorText: _amountError,
                   ),
                   onChanged: (_) => setState(() => _amountError = null),
@@ -410,7 +410,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   decoration: context.inputDecoration(
                     labelText: 'Lender / Source (optional)',
                     hintText: 'e.g. Vodacom, NMB Bank',
-                    prefixIcon: const Icon(Icons.person_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.person, size: 18),
                   ),
                   textCapitalization: TextCapitalization.words,
                 ),
@@ -423,7 +423,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   decoration: context.inputDecoration(
                     labelText: 'Reference (optional)',
                     hintText: 'e.g. loan reference number',
-                    prefixIcon: const Icon(Icons.tag_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
                   ),
                 ),
               ),
@@ -456,7 +456,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   decoration: context.inputDecoration(
                     labelText: 'Interest Rate',
                     hintText: 'e.g. 18.5',
-                    prefixIcon: const Icon(Icons.percent_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.percent, size: 18),
                     errorText: _interestRateError,
                   ),
                   onChanged: (_) => setState(() => _interestRateError = null),
@@ -523,7 +523,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           ),
                         ),
                         Icon(
-                          Icons.chevron_right_rounded,
+                          PesaFlowIcons.chevronRight,
                           size: 18,
                           color: onSurface.withValues(alpha: 0.4),
                         ),

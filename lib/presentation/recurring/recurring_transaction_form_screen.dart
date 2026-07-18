@@ -364,7 +364,7 @@ class _RecurringTransactionFormScreenState
                       decoration: InputDecoration(
                         labelText: 'Category',
                         prefixIcon: const Icon(
-                          Icons.category_rounded,
+                          PesaFlowIcons.category,
                           size: 18,
                         ),
                         filled: true,
@@ -410,7 +410,7 @@ class _RecurringTransactionFormScreenState
                   decoration: InputDecoration(
                     labelText: 'Amount (Tsh)',
                     hintText: 'e.g. 50000',
-                    prefixIcon: const Icon(Icons.money_rounded, size: 18),
+                    prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
                     filled: true,
                     fillColor: inputFill,
                     border: OutlineInputBorder(
@@ -493,7 +493,7 @@ class _RecurringTransactionFormScreenState
                     decoration: InputDecoration(
                       labelText: 'SMS Auto-Matching Keywords (optional)',
                       hintText: 'e.g. netflix, spotify (comma separated)',
-                      prefixIcon: const Icon(Icons.key_rounded, size: 18),
+                      prefixIcon: const Icon(PesaFlowIcons.key, size: 18),
                       filled: true,
                       fillColor: inputFill,
                       border: OutlineInputBorder(
@@ -552,7 +552,7 @@ class _RecurringTransactionFormScreenState
                         decoration: InputDecoration(
                           labelText: 'Every',
                           hintText: '1',
-                          prefixIcon: const Icon(Icons.tag_rounded, size: 18),
+                          prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
                           filled: true,
                           fillColor: inputFill,
                           border: OutlineInputBorder(

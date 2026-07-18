@@ -154,7 +154,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.keyboard_arrow_down_rounded,
+                  PesaFlowIcons.chevronDown,
                   color: onSurface.withValues(alpha: 0.6),
                 ),
               ],
@@ -306,7 +306,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                                         const SizedBox(width: kSpacing14),
                                       ],
                                       Expanded(
-                                        child: Column(
+          child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [

@@ -456,7 +456,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                   controller: _nameController,
                                   label: 'Budget Name',
                                   hint: 'e.g. Monthly Food',
-                                  icon: Icons.label_rounded,
+                                  icon: PesaFlowIcons.label,
                                   textCapitalization: TextCapitalization.words,
                                   errorText: _nameError,
                                   onChanged: (_) =>
@@ -618,7 +618,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                         rows: [
                           IosListRow(
                             leading: _buildLeadingIcon(
-                              Icons.replay_rounded,
+                              PesaFlowIcons.replay,
                               Colors.purple,
                             ),
                             title: const Text('Enable Rollover'),
@@ -715,7 +715,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                       controller: _capController,
                                       label: 'Max Rollover (Tsh)',
                                       hint: 'e.g. 50000',
-                                      icon: Icons.upcoming_rounded,
+                                      icon: PesaFlowIcons.upcoming,
                                       keyboardType: TextInputType.number,
                                       style: Theme.of(context)
                                           .textTheme
@@ -1054,7 +1054,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 child: Padding(
                   padding: const EdgeInsets.all(kSpacing6),
                   child: Icon(
-                    Icons.cancel_rounded,
+                    PesaFlowIcons.cancel,
                     color: onSurface.withValues(alpha: 0.3),
                     size: 18,
                   ),

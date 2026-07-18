@@ -158,7 +158,7 @@ class SettingsScreen extends ConsumerWidget {
               ModernDropdown<String>(
                 labelText: 'Account Type',
                 value: accountType,
-                prefixIcon: Icons.wallet_rounded,
+                prefixIcon: PesaFlowIcons.wallet,
                 items: [
                   ModernDropdownItem(
                     value: 'Cash',
@@ -1083,7 +1083,7 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => _showCategoriesManager(context, ref),
                       child: IosListRow(
                         leading: Icon(
-                          Icons.category_rounded,
+                          PesaFlowIcons.category,
                           color: theme.colorScheme.primary,
                           size: 24,
                         ),

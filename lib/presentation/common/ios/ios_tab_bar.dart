@@ -451,6 +451,10 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   }
 
   void _pressDown() {
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.value = 1.0;
+      return;
+    }
     _controller.animateTo(
       1.0,
       duration: const Duration(milliseconds: 100),

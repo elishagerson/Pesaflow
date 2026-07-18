@@ -102,7 +102,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
 
   await ModernDialog.show(
     context: context,
-    titleIcon: Icons.file_download_rounded,
+    titleIcon: PesaFlowIcons.download,
     iconColor: Theme.of(context).colorScheme.primary,
     title: const Text('Export Statement'),
     content: StatefulBuilder(
@@ -116,12 +116,12 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 ButtonSegment(
                   value: _DateMode.monthly,
                   label: Text('Monthly'),
-                  icon: Icon(Icons.calendar_month_rounded, size: 18),
+                  icon: Icon(PesaFlowIcons.calendar, size: 18),
                 ),
                 ButtonSegment(
                   value: _DateMode.customRange,
                   label: Text('Custom Range'),
-                  icon: Icon(Icons.date_range_rounded, size: 18),
+                  icon: Icon(PesaFlowIcons.dateRange, size: 18),
                 ),
               ],
               selected: {dateMode},
@@ -150,7 +150,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               const SizedBox(height: kSpacing12),
               DropdownButtonFormField<int>(
                 initialValue: selectedYear,
-                decoration: buildDecoration('Year', Icons.date_range_rounded),
+                decoration: buildDecoration('Year', PesaFlowIcons.dateRange),
                 items: List.generate(10, (i) {
                   final year = DateTime.now().year - 5 + i;
                   return DropdownMenuItem(value: year, child: Text('$year'));
@@ -166,7 +166,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 child: InputDecorator(
                   decoration: buildDecoration(
                     'From',
-                    Icons.calendar_today_rounded,
+                    PesaFlowIcons.calendarToday,
                   ),
                   child: Text(dateFormat.format(rangeStart)),
                 ),
@@ -178,7 +178,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
                 child: InputDecorator(
                   decoration: buildDecoration(
                     'To',
-                    Icons.calendar_today_rounded,
+                    PesaFlowIcons.calendarToday,
                   ),
                   child: Text(dateFormat.format(rangeEnd)),
                 ),
@@ -187,7 +187,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
             const SizedBox(height: kSpacing12),
             DropdownButtonFormField<ExportFormat>(
               initialValue: format,
-              decoration: buildDecoration('Format', Icons.description_rounded),
+              decoration: buildDecoration('Format', PesaFlowIcons.description),
               items: const [
                 DropdownMenuItem(
                   value: ExportFormat.pdf,
@@ -222,7 +222,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         ),
       ),
       ElevatedButton.icon(
-        icon: const Icon(Icons.file_download_rounded, size: 18),
+        icon: const Icon(PesaFlowIcons.download, size: 18),
         label: const Text('Export'),
         onPressed: () async {
           Navigator.of(context).pop();
