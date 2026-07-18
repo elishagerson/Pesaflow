@@ -57,15 +57,20 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
       duration: const Duration(milliseconds: 600),
     );
 
-    final spring = SpringSimulation(
-      SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
-      0,
-      1,
-      0,
-    );
     _animation = _controller.drive(Tween<double>(begin: 0, end: 1));
 
-    _controller.animateWith(spring);
+    final reducedMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) {
+      _controller.value = 1.0;
+    } else {
+      final spring = SpringSimulation(
+        SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
+        0,
+        1,
+        0,
+      );
+      _controller.animateWith(spring);
+    }
   }
 
   @override

@@ -186,25 +186,21 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
       context,
       isScrollControlled: true,
       builder: (context) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withValues(alpha: 0.95),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
-                ),
-                border: Border.all(
-                  color: onSurface.withValues(alpha: 0.1),
-                  width: 0.5,
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing20,
-                vertical: kSpacing16,
-              ),
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24),
+            ),
+            border: Border.all(
+              color: onSurface.withValues(alpha: 0.1),
+              width: 0.5,
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: kSpacing20,
+            vertical: kSpacing16,
+          ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
