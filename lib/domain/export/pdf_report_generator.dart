@@ -180,10 +180,7 @@ Future<Uint8List> generateRangePdf({
       build: (context) => [
         pw.Header(
           level: 0,
-          child: pw.Text(
-            'PesaFlow $title',
-            style: _titleLargeStyle,
-          ),
+          child: pw.Text('PesaFlow $title', style: _titleLargeStyle),
         ),
         pw.SizedBox(height: kSpacing8),
         pw.Text(

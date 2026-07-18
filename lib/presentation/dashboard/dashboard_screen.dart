@@ -1323,35 +1323,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 DismissDirection.endToStart,
                                             confirmDismiss: (_) async {
                                               return await showDialog<bool>(
-                                                context: context,
-                                                builder: (ctx) => AlertDialog(
-                                                  title: const Text(
-                                                    'Delete Transaction',
-                                                  ),
-                                                  content: Text(
-                                                    'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(ctx)
-                                                              .pop(false),
-                                                      child: const Text(
-                                                        'Cancel',
+                                                    context: context,
+                                                    builder: (ctx) => AlertDialog(
+                                                      title: const Text(
+                                                        'Delete Transaction',
                                                       ),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(ctx)
-                                                              .pop(true),
-                                                      child: const Text(
-                                                        'Delete',
+                                                      content: Text(
+                                                        'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
                                                       ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                ctx,
+                                                              ).pop(false),
+                                                          child: const Text(
+                                                            'Cancel',
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                ctx,
+                                                              ).pop(true),
+                                                          child: const Text(
+                                                            'Delete',
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              ) ??
-                                              false;
+                                                  ) ??
+                                                  false;
                                             },
                                             background: Container(
                                               alignment: Alignment.centerRight,

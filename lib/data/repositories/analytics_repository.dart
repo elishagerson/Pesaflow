@@ -82,10 +82,7 @@ class AnalyticsRepository {
   }
 
   /// Gets total income and expense for an arbitrary date range.
-  Future<Map<String, int>> getDateRangeTotals(
-    DateTime start,
-    DateTime end,
-  ) {
+  Future<Map<String, int>> getDateRangeTotals(DateTime start, DateTime end) {
     return _analyticsDao.getMonthTotals(start, end);
   }
 }

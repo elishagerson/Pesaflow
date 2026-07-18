@@ -49,14 +49,14 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
           ).colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
   }
 
-  Future<void> pickDate({required bool isStart, required StateSetter setState}) async {
+  Future<void> pickDate({
+    required bool isStart,
+    required StateSetter setState,
+  }) async {
     final now = DateTime.now();
     final initial = isStart ? rangeStart : rangeEnd;
     final firstDate = DateTime(now.year - 10);
@@ -150,10 +150,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
               const SizedBox(height: kSpacing12),
               DropdownButtonFormField<int>(
                 initialValue: selectedYear,
-                decoration: buildDecoration(
-                  'Year',
-                  Icons.date_range_rounded,
-                ),
+                decoration: buildDecoration('Year', Icons.date_range_rounded),
                 items: List.generate(10, (i) {
                   final year = DateTime.now().year - 5 + i;
                   return DropdownMenuItem(value: year, child: Text('$year'));
@@ -190,10 +187,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
             const SizedBox(height: kSpacing12),
             DropdownButtonFormField<ExportFormat>(
               initialValue: format,
-              decoration: buildDecoration(
-                'Format',
-                Icons.description_rounded,
-              ),
+              decoration: buildDecoration('Format', Icons.description_rounded),
               items: const [
                 DropdownMenuItem(
                   value: ExportFormat.pdf,
@@ -281,19 +275,8 @@ Future<void> _generateAndShare(
       dateStart = DateTime(year, month, 1);
       dateEnd = DateTime(year, month + 1, 0, 23, 59, 59);
     } else {
-      dateStart = DateTime(
-        startDate!.year,
-        startDate.month,
-        startDate.day,
-      );
-      dateEnd = DateTime(
-        endDate!.year,
-        endDate.month,
-        endDate.day,
-        23,
-        59,
-        59,
-      );
+      dateStart = DateTime(startDate!.year, startDate.month, startDate.day);
+      dateEnd = DateTime(endDate!.year, endDate.month, endDate.day, 23, 59, 59);
     }
 
     final repo = ref.read(transactionRepositoryProvider);

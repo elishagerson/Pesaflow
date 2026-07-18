@@ -970,8 +970,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             .read(transactionRepositoryProvider)
                                             .approveReviewedTransaction(id);
                                       }
-                                      final approvedCount =
-                                          _selectedIds.length;
+                                      final approvedCount = _selectedIds.length;
                                       ref.invalidate(reviewQueueStreamProvider);
                                       ref.invalidate(
                                         recentTransactionsStreamProvider,
