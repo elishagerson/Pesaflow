@@ -1,99 +1,115 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/utils/csv_parser.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
-import 'package:pesaflow/data/repositories/category_repository.dart';
-import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
-import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
-Future<void> showImportCsvDialog(BuildContext context, WidgetRef ref) async {
-  final theme = Theme.of(context);
-  final accounts = ref.read(accountsStreamProvider).value ?? [];
-  final categories =
-      await ref.read(categoryRepositoryProvider).getAllCategories();
-  String? selectedAccountId;
-  String defaultCategoryId = categories.isNotEmpty ? categories.first.id : '';
+class CsvImportResult {
+  final List<Transaction> transactions;
+  final String? accountId;
+  final String defaultCategoryId;
 
-  if (!context.mounted) return;
+  const CsvImportResult({
+    required this.transactions,
+    this.accountId,
+    required this.defaultCategoryId,
+  });
+}
 
-  await ModernDialog.show(
+Future<CsvImportResult?> showImportCsvDialog(
+  BuildContext context, {
+  required List<Account> accounts,
+  required List<Category> categories,
+}) {
+  return showModalBottomSheet<CsvImportResult>(
     context: context,
-    titleIcon: PesaFlowIcons.file,
-    iconColor: theme.colorScheme.primary,
-    title: const Text('Import CSV'),
-    content: StatefulBuilder(
-      builder: (ctx, setState) {
-        return _ImportCsvBody(
-          accounts: accounts,
-          categories: categories,
-          selectedAccountId: selectedAccountId,
-          defaultCategoryId: defaultCategoryId,
-          onAccountChanged: (id) => setState(() => selectedAccountId = id),
-          onCategoryChanged: (id) => setState(() => defaultCategoryId = id),
-        );
-      },
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-        child: const Text('Cancel'),
-      ),
-    ],
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => _ImportCsvSheet(accounts: accounts, categories: categories),
   );
 }
 
-class _ImportCsvBody extends StatefulWidget {
+class _ImportCsvSheet extends StatefulWidget {
   final List<Account> accounts;
   final List<Category> categories;
-  final String? selectedAccountId;
-  final String defaultCategoryId;
-  final ValueChanged<String?> onAccountChanged;
-  final ValueChanged<String> onCategoryChanged;
 
-  const _ImportCsvBody({
-    required this.accounts,
-    required this.categories,
-    required this.selectedAccountId,
-    required this.defaultCategoryId,
-    required this.onAccountChanged,
-    required this.onCategoryChanged,
-  });
+  const _ImportCsvSheet({required this.accounts, required this.categories});
 
   @override
-  State<_ImportCsvBody> createState() => _ImportCsvBodyState();
+  State<_ImportCsvSheet> createState() => _ImportCsvSheetState();
 }
 
-class _ImportCsvBodyState extends State<_ImportCsvBody> {
-  _ImportStage _stage = _ImportStage.pickFile;
+enum _Stage { pickFile, preview, done }
+
+class _ImportCsvSheetState extends State<_ImportCsvSheet> {
+  _Stage _stage = _Stage.pickFile;
   CsvParseResult? _parseResult;
   String? _fileName;
-  bool _importing = false;
-  int _importedCount = 0;
   String? _error;
+  String? _selectedAccountId;
+  String? _defaultCategoryId;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.categories.isNotEmpty) {
+      _defaultCategoryId = widget.categories.first.id;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        switch (_stage) {
-          _ImportStage.pickFile => _buildFilePicker(theme),
-          _ImportStage.preview => _buildPreview(theme),
-          _ImportStage.importing => _buildImporting(theme),
-          _ImportStage.done => _buildDone(theme),
-        },
-      ],
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: kSpacing12),
+            width: 36,
+            height: 4,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(kSpacing20),
+            child: Row(
+              children: [
+                Icon(PesaFlowIcons.file, color: theme.colorScheme.primary),
+                const SizedBox(width: kSpacing8),
+                Text(
+                  'Import CSV',
+                  style: context.ts(20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(kSpacing20),
+              child: switch (_stage) {
+                _Stage.pickFile => _buildFilePicker(theme),
+                _Stage.preview => _buildPreview(theme),
+                _Stage.done => _buildDone(theme),
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -168,11 +184,11 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
   Widget _buildPreview(ThemeData theme) {
     final result = _parseResult!;
     final previewCount = result.transactions.length.clamp(0, 5);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // File info
         Container(
           padding: const EdgeInsets.all(kSpacing12),
           decoration: BoxDecoration(
@@ -194,7 +210,10 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
                     Text(
                       '${result.transactions.length} transactions found'
                       '${result.skippedRows > 0 ? ' (${result.skippedRows} skipped)' : ''}',
-                      style: context.ts(12, color: context.appColors.textMedium),
+                      style: context.ts(
+                        12,
+                        color: context.appColors.textMedium,
+                      ),
                     ),
                   ],
                 ),
@@ -216,21 +235,25 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
               children: [
                 Text(
                   '${result.errors.length} parse error(s):',
-                  style: context.ts(12, fontWeight: FontWeight.bold, color: theme.colorScheme.error),
+                  style: context.ts(
+                    12,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.error,
+                  ),
                 ),
                 const SizedBox(height: kSpacing4),
                 ...result.errors.take(3).map(
-                      (e) => Text(
-                        e,
-                        style: context.ts(11, color: theme.colorScheme.error),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                  (e) => Text(
+                    e,
+                    style: context.ts(12, color: theme.colorScheme.error),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 if (result.errors.length > 3)
                   Text(
                     '...and ${result.errors.length - 3} more',
-                    style: context.ts(11, color: theme.colorScheme.error),
+                    style: context.ts(12, color: theme.colorScheme.error),
                   ),
               ],
             ),
@@ -239,17 +262,31 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
 
         if (result.transactions.isEmpty) ...[
           const SizedBox(height: kSpacing12),
-          Text(
-            'No valid transactions found in this file.',
-            style: context.ts(14, color: context.appColors.textMedium),
+          Center(
+            child: Text(
+              'No valid transactions found in this file.',
+              style: context.ts(14, color: context.appColors.textMedium),
+            ),
+          ),
+          const SizedBox(height: kSpacing12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () => setState(() {
+                _stage = _Stage.pickFile;
+                _parseResult = null;
+                _error = null;
+              }),
+              child: const Text('Try Another File'),
+            ),
           ),
         ],
 
         // Account selector
-        if (widget.accounts.isNotEmpty) ...[
+        if (widget.accounts.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing16),
           DropdownButtonFormField<String>(
-            value: widget.selectedAccountId,
+            value: _selectedAccountId,
             decoration: InputDecoration(
               labelText: 'Assign to Account',
               prefixIcon: const Icon(PesaFlowIcons.wallet, size: 20),
@@ -258,7 +295,17 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
               contentPadding: const EdgeInsets.symmetric(
@@ -275,15 +322,15 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
                 (a) => DropdownMenuItem(value: a.id, child: Text(a.name)),
               ),
             ],
-            onChanged: widget.onAccountChanged,
+            onChanged: (id) => setState(() => _selectedAccountId = id),
           ),
         ],
 
         // Default category selector
-        if (widget.categories.isNotEmpty) ...[
+        if (widget.categories.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing12),
           DropdownButtonFormField<String>(
-            value: widget.defaultCategoryId,
+            value: _defaultCategoryId,
             decoration: InputDecoration(
               labelText: 'Default Category',
               prefixIcon: const Icon(Icons.category_rounded, size: 20),
@@ -292,7 +339,17 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.3,
+                  ),
                 ),
               ),
               contentPadding: const EdgeInsets.symmetric(
@@ -304,12 +361,12 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
                 .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                 .toList(),
             onChanged: (id) {
-              if (id != null) widget.onCategoryChanged(id);
+              if (id != null) setState(() => _defaultCategoryId = id);
             },
           ),
         ],
 
-        // Preview table
+        // Preview rows
         if (previewCount > 0) ...[
           const SizedBox(height: kSpacing16),
           Text(
@@ -353,7 +410,10 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
                           ),
                           Text(
                             tx.createdAt.toString().substring(0, 10),
-                            style: context.ts(10, color: context.appColors.textLow),
+                            style: context.ts(
+                              10,
+                              color: context.appColors.textLow,
+                            ),
                           ),
                         ],
                       ),
@@ -376,8 +436,10 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.file_download_rounded, size: 18),
-              label: Text('Import ${result.transactions.length} Transactions'),
-              onPressed: () => _startImport(),
+              label: Text(
+                'Import ${result.transactions.length} Transactions',
+              ),
+              onPressed: _confirmImport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: Colors.white,
@@ -393,22 +455,8 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
     );
   }
 
-  Widget _buildImporting(ThemeData theme) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: kSpacing16),
-        const CircularProgressIndicator(),
-        const SizedBox(height: kSpacing16),
-        Text(
-          'Importing $_importedCount of ${_parseResult!.transactions.length}...',
-          style: context.ts(14),
-        ),
-      ],
-    );
-  }
-
   Widget _buildDone(ThemeData theme) {
+    final count = _parseResult?.transactions.length ?? 0;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -420,29 +468,13 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
         ),
         const SizedBox(height: kSpacing12),
         Text(
-          'Import Complete',
+          'Ready to Import',
           style: context.ts(18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: kSpacing4),
         Text(
-          '$_importedCount transactions imported successfully.',
+          '$count transactions will be imported.',
           style: context.ts(14, color: context.appColors.textMedium),
-        ),
-        const SizedBox(height: kSpacing16),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: kSpacing12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text('Done'),
-          ),
         ),
       ],
     );
@@ -463,7 +495,7 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
       setState(() {
         _fileName = result.files.single.name;
         _parseResult = parseResult;
-        _stage = _ImportStage.preview;
+        _stage = _Stage.preview;
         _error = null;
       });
     } catch (e) {
@@ -471,123 +503,37 @@ class _ImportCsvBodyState extends State<_ImportCsvBody> {
     }
   }
 
-  Future<void> _startImport() async {
+  void _confirmImport() {
     if (_parseResult == null || _parseResult!.transactions.isEmpty) return;
 
-    setState(() {
-      _stage = _ImportStage.importing;
-      _importedCount = 0;
-    });
+    // Resolve category IDs for all transactions
+    final resolved = _parseResult!.transactions.map((tx) {
+      final catId = tx.categoryId.isNotEmpty
+          ? tx.categoryId
+          : (_defaultCategoryId ?? '');
+      if (catId == tx.categoryId && tx.accountId != null) return tx;
+      return Transaction(
+        id: tx.id,
+        accountId: tx.accountId,
+        categoryId: catId,
+        amount: tx.amount,
+        type: tx.type,
+        description: tx.description,
+        reference: tx.reference,
+        sender: tx.sender,
+        recipient: tx.recipient,
+        source: tx.source,
+        createdAt: tx.createdAt,
+        updatedAt: tx.updatedAt,
+      );
+    }).toList();
 
-    final context = this.context;
-    final repo = context.findAncestorStateOfType<State>() != null
-        ? null
-        : null;
-
-    // Use the build context to access providers via a ConsumerWidget-like approach.
-    // Since we're inside a StatefulBuilder inside ModernDialog, we need to
-    // access providers through the nearest ConsumerWidget ancestor.
-    // We'll pass a callback instead.
-    final transactions = _parseResult!.transactions;
-    var imported = 0;
-
-    try {
-      // We need to resolve category IDs for PesaFlow imports.
-      // For generic imports, assign the selected default category.
-      final resolved = transactions.map((tx) {
-        if (tx.categoryId.isNotEmpty) return tx;
-        return Transaction(
-          id: tx.id,
-          accountId: tx.accountId,
-          categoryId: widget.defaultCategoryId.isNotEmpty
-              ? widget.defaultCategoryId
-              : tx.categoryId,
-          amount: tx.amount,
-          type: tx.type,
-          description: tx.description,
-          reference: tx.reference,
-          sender: tx.sender,
-          recipient: tx.recipient,
-          source: tx.source,
-          createdAt: tx.createdAt,
-          updatedAt: tx.updatedAt,
-        );
-      }).toList();
-
-      // Signal the parent via a route-level approach.
-      // We pop with the data and let the caller handle the actual insert.
-      if (mounted) {
-        Navigator.of(context, rootNavigator: true).pop(
-          _ImportPayload(
-            transactions: resolved,
-            accountId: widget.selectedAccountId,
-          ),
-        );
-      }
-      return;
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = 'Import failed: $e';
-          _stage = _ImportStage.preview;
-        });
-      }
-    }
-  }
-}
-
-class _ImportPayload {
-  final List<Transaction> transactions;
-  final String? accountId;
-
-  const _ImportPayload({required this.transactions, this.accountId});
-}
-
-enum _ImportStage { pickFile, preview, importing, done }
-
-/// Top-level function to handle the full import flow including DB writes.
-/// Called after the dialog pops with an [_ImportPayload].
-Future<void> executeImport(
-  BuildContext context,
-  WidgetRef ref, {
-  required List<Transaction> transactions,
-  String? accountId,
-}) async {
-  final repo = ref.read(transactionRepositoryProvider);
-  var imported = 0;
-
-  for (final tx in transactions) {
-    try {
-      // Resolve account ID if not set on transaction
-      final resolvedTx = tx.accountId == null && accountId != null
-          ? Transaction(
-              id: tx.id,
-              accountId: accountId,
-              categoryId: tx.categoryId,
-              amount: tx.amount,
-              type: tx.type,
-              description: tx.description,
-              reference: tx.reference,
-              sender: tx.sender,
-              recipient: tx.recipient,
-              source: tx.source,
-              createdAt: tx.createdAt,
-              updatedAt: tx.updatedAt,
-            )
-          : tx;
-
-      await repo.createTransactionNoBalanceAdjustment(resolvedTx);
-      imported++;
-    } catch (_) {
-      // Skip duplicates or invalid rows silently
-    }
-  }
-
-  if (context.mounted) {
-    CustomToast.show(
-      context,
-      message: 'Imported $imported transactions',
-      type: ToastType.success,
+    Navigator.of(context).pop(
+      CsvImportResult(
+        transactions: resolved,
+        accountId: _selectedAccountId,
+        defaultCategoryId: _defaultCategoryId ?? '',
+      ),
     );
   }
 }
