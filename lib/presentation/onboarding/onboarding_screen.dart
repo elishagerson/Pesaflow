@@ -345,9 +345,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           ),
       ],
-      ),
     ),
   ),
+);
   }
 }
 

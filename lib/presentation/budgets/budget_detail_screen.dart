@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 /// Provider for loading a specific budget's full data.
@@ -136,11 +137,35 @@ class BudgetDetailScreen extends ConsumerWidget {
                           ],
                         );
                         if (confirm == true) {
-                          await ref
-                              .read(budgetRepositoryProvider)
-                              .deleteBudget(budgetId);
-                          ref.invalidate(budgetProgressProvider);
-                          if (context.mounted) context.pop();
+                          final budget = bp.budget;
+                          final savedBudgetName = budget.name;
+                          await UndoDelete.show(
+                            context: context,
+                            entityName: 'Budget',
+                            message: '"$savedBudgetName" deleted',
+                            onUndo: () async {
+                              await ref
+                                  .read(budgetRepositoryProvider)
+                                  .createBudget(
+                                    name: budget.name,
+                                    categoryId: budget.categoryId,
+                                    period: budget.period,
+                                    amount: budget.amount,
+                                    rollover: budget.rollover,
+                                    rolloverType: budget.rolloverType,
+                                    rolloverCap: budget.rolloverCap,
+                                    startDate: budget.startDate,
+                                    notificationThreshold:
+                                        budget.notificationThreshold,
+                                  );
+                            },
+                            onDelete: () async {
+                              await ref
+                                  .read(budgetRepositoryProvider)
+                                  .deleteBudget(budgetId);
+                              if (context.mounted) context.pop();
+                            },
+                          );
                         }
                       },
                     ),
