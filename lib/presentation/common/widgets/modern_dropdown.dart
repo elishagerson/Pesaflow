@@ -359,9 +359,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                   const SizedBox(height: kSpacing12),
                 ],
               ),
-            ),
-          ),
-        );
+          );
       },
     );
   }
