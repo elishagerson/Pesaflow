@@ -723,7 +723,9 @@ class _SavingsGoalDetailScreenState
         entityName: 'Savings Goal',
         message: '"$goalName" deleted',
         onUndo: () async {
-          await ref.read(savingsGoalRepositoryProvider).createSavingsGoal(
+          await ref
+              .read(savingsGoalRepositoryProvider)
+              .createSavingsGoal(
                 name: goal.name,
                 targetAmount: goal.targetAmount,
                 targetDate: goal.targetDate,
@@ -737,9 +739,7 @@ class _SavingsGoalDetailScreenState
           }
         },
         onDelete: () async {
-          await ref
-              .read(savingsGoalRepositoryProvider)
-              .deleteSavingsGoal(id);
+          await ref.read(savingsGoalRepositoryProvider).deleteSavingsGoal(id);
           if (mounted) {
             ref.invalidate(savingsGoalsStreamProvider);
             ref.invalidate(savingsGoalsTotalSavedProvider);

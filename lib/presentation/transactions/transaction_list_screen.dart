@@ -143,7 +143,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               child: transactionsAsync.when(
                 data: (transactionsList) {
                   final visibleTransactions = transactionsList
-                      .where((t) => !_pendingDeleteIds.contains(t.transaction.id))
+                      .where(
+                        (t) => !_pendingDeleteIds.contains(t.transaction.id),
+                      )
                       .toList();
                   if (visibleTransactions.isEmpty) {
                     final isFiltered =

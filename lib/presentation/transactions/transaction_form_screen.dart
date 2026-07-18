@@ -1623,18 +1623,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         entityName: 'Template',
                                         onUndo: () async {
                                           await ref
-                                              .read(
-                                                settingsRepositoryProvider,
-                                              )
+                                              .read(settingsRepositoryProvider)
                                               .saveTransactionTemplate(
                                                 templateData,
                                               );
                                         },
                                         onDelete: () async {
                                           await ref
-                                              .read(
-                                                settingsRepositoryProvider,
-                                              )
+                                              .read(settingsRepositoryProvider)
                                               .deleteTransactionTemplate(
                                                 templateData['id'] as String,
                                               );
