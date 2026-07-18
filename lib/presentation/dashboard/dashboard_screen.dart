@@ -247,7 +247,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Scaffold(
       appBar: IosNavBar(
-        title: _getGreeting(),
+        title: '${_getGreeting()}, $trackerName',
         largeTitle: true,
         leading: TactileSpringContainer(
           onTap: () => _showWorkspaceSelectorSheet(context),
@@ -1236,10 +1236,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               .toList();
 
                                     if (filteredTransactions.isEmpty) {
+                                      final isNewUser =
+                                          _selectedAccountId == null;
                                       return Container(
                                         width: double.infinity,
                                         padding: const EdgeInsets.symmetric(
                                           vertical: kSpacing40,
+                                          horizontal: kSpacing24,
                                         ),
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.surface,
@@ -1258,29 +1261,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              PesaFlowIcons.transactions,
-                                              size: 40,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onSurfaceVariant
-                                                  .withValues(alpha: 0.4),
+                                              isNewUser
+                                                  ? PesaFlowIcons.add
+                                                  : PesaFlowIcons.transactions,
+                                              size: isNewUser ? 64 : 40,
+                                              color: isNewUser
+                                                  ? theme.colorScheme.primary
+                                                  : theme.colorScheme
+                                                        .onSurfaceVariant
+                                                        .withValues(alpha: 0.4),
                                             ),
                                             const SizedBox(height: kSpacing12),
                                             Text(
-                                              'No transactions found.',
-                                              style: theme.textTheme.titleSmall
+                                              isNewUser
+                                                  ? 'Welcome to PesaFlow!'
+                                                  : 'No transactions found.',
+                                              style: theme
+                                                  .textTheme
+                                                  .titleSmall
                                                   ?.copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
+                                                    color: isNewUser
+                                                        ? theme.colorScheme
+                                                              .onSurface
+                                                        : theme.colorScheme
+                                                              .onSurfaceVariant,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                             ),
                                             const SizedBox(height: kSpacing4),
                                             Text(
-                                              _selectedAccountId == null
-                                                  ? 'Your offline financial logs will display here.'
+                                              isNewUser
+                                                  ? 'Add your first transaction to get started with tracking your finances.'
                                                   : 'No activity recorded for this specific account.',
+                                              textAlign: TextAlign.center,
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
                                                     color: theme
@@ -1288,6 +1301,69 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         .onSurfaceVariant,
                                                   ),
                                             ),
+                                            if (isNewUser) ...[
+                                              const SizedBox(height: kSpacing20),
+                                              TactileSpringContainer(
+                                                onTap: () =>
+                                                    context.go('/transactions/add'),
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: kSpacing24,
+                                                    vertical: kSpacing12,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: theme
+                                                        .colorScheme.primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary
+                                                            .withValues(
+                                                              alpha: 0.3,
+                                                            ),
+                                                        blurRadius: 8,
+                                                        offset: const Offset(
+                                                          0,
+                                                          3,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Icon(
+                                                        PesaFlowIcons.add,
+                                                        color: Colors.white,
+                                                        size: 18,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: kSpacing6,
+                                                      ),
+                                                      Text(
+                                                        'Add Transaction',
+                                                        style: theme
+                                                            .textTheme
+                                                            .titleSmall
+                                                            ?.copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ],
                                         ),
                                       );

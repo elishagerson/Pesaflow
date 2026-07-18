@@ -466,7 +466,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   );
                                 },
                                 child: TactileSpringContainer(
-                                    onTap: () =>
+                                  onTap: () =>
                                       context.push('/transactions/${trans.id}'),
                                   child: GlassCard(
                                     elevation: CardElevation.low,
