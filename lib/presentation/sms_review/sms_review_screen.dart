@@ -970,6 +970,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             .read(transactionRepositoryProvider)
                                             .approveReviewedTransaction(id);
                                       }
+                                      final approvedCount =
+                                          _selectedIds.length;
                                       ref.invalidate(reviewQueueStreamProvider);
                                       ref.invalidate(
                                         recentTransactionsStreamProvider,
@@ -982,7 +984,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         CustomToast.show(
                                           context,
                                           message:
-                                              '${_selectedIds.length} transactions approved',
+                                              '$approvedCount transactions approved',
                                           type: ToastType.success,
                                         );
                                       }
