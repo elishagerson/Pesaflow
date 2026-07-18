@@ -94,7 +94,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
+        TactileSpringContainer(
           onTap: () => _showSelectionSheet(context),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
