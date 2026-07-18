@@ -282,13 +282,13 @@ class _RecurringTransactionFormScreenState
                         await ref
                             .read(recurringTransactionRepositoryProvider)
                             .deleteRecurringTransaction(widget.recurringId!);
-                        if (mounted) {
+                        if (context.mounted) {
                           ref.invalidate(recurringTransactionsStreamProvider);
                           ref.invalidate(dueRecurringTransactionsProvider);
                           context.pop();
                         }
                       } catch (e) {
-                        if (mounted) {
+                        if (context.mounted) {
                           CustomToast.show(
                             context,
                             message: 'Error: $e',

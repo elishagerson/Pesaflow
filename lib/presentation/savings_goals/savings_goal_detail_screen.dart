@@ -717,6 +717,7 @@ class _SavingsGoalDetailScreenState
       final goalName = goal.name;
       final trackerId = goal.trackerId;
 
+      if (!context.mounted) return;
       UndoDelete.show(
         context: context,
         entityName: 'Savings Goal',
