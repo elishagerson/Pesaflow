@@ -48,7 +48,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.copy_rounded,
+                PesaFlowIcons.copy,
                 size: 18,
                 color: theme.colorScheme.primary,
               ),
@@ -237,8 +237,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                             children: [
                               Icon(
                                 isIncome
-                                    ? Icons.arrow_downward_rounded
-                                    : Icons.arrow_upward_rounded,
+                                    ? PesaFlowIcons.arrowDown
+                                    : PesaFlowIcons.arrowUp,
                                 color: amountColor,
                                 size: 12,
                               ),
@@ -330,7 +330,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 context,
                                 icon: acc != null
                                     ? getAccountIcon(acc.icon)
-                                    : Icons.link_off_rounded,
+                                    : PesaFlowIcons.linkOff,
                                 iconColor: onSurface.withValues(alpha: 0.78),
                                 label: 'Account',
                                 value: acc?.name ?? 'Offline',
@@ -414,7 +414,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             _copyableDetailRow(
                               context,
                               theme,
-                              Icons.tag_rounded,
+                              PesaFlowIcons.tag,
                               'Reference',
                               t.reference!,
                             ),
@@ -425,7 +425,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             _copyableDetailRow(
                               context,
                               theme,
-                              Icons.person_outline_rounded,
+                              PesaFlowIcons.personOutline,
                               'Sender',
                               t.sender!,
                             ),
@@ -439,7 +439,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             _copyableDetailRow(
                               context,
                               theme,
-                              Icons.person_rounded,
+                              PesaFlowIcons.person,
                               'Recipient',
                               t.recipient!,
                             ),
@@ -525,7 +525,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.copy_rounded,
+                              PesaFlowIcons.copy,
                               size: 16,
                               color: theme.colorScheme.primary,
                             ),
@@ -716,7 +716,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: kSpacing12),
                 Icon(
-                  Icons.copy_rounded,
+                  PesaFlowIcons.copy,
                   size: 14,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
                     alpha: 0.5,

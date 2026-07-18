@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 class SearchResult {
   final String title;
@@ -46,10 +47,10 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
 
     for (final t in txns) {
       final icon = switch (t.type) {
-        'income' => Icons.arrow_downward_rounded,
-        'expense' => Icons.arrow_upward_rounded,
-        'transfer' => Icons.swap_horiz_rounded,
-        _ => Icons.receipt_rounded,
+        'income' => PesaFlowIcons.arrowDown,
+        'expense' => PesaFlowIcons.arrowUp,
+        'transfer' => PesaFlowIcons.transfer,
+        _ => PesaFlowIcons.transactions,
       };
       final color = switch (t.type) {
         'income' => AppTheme.incomeColor,
@@ -82,7 +83,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         SearchResult(
           title: b.name,
           subtitle: 'Budget · TZS $amount/${b.period}',
-          icon: Icons.pie_chart_rounded,
+          icon: PesaFlowIcons.budgets,
           color: AppTheme.incomeColor,
           route: '/budgets/${b.id}',
         ),
@@ -105,7 +106,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         SearchResult(
           title: g.name,
           subtitle: 'Goal · TZS $current / TZS $target',
-          icon: Icons.flag_rounded,
+          icon: PesaFlowIcons.goal,
           color: color,
           route: '/savings-goals/${g.id}',
         ),
@@ -128,7 +129,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
         SearchResult(
           title: l.description ?? l.provider ?? 'Loan',
           subtitle: 'Loan · TZS $amount · ${l.status}',
-          icon: Icons.credit_score_rounded,
+          icon: PesaFlowIcons.creditScore,
           color: l.status == 'paid'
               ? AppTheme.incomeColor
               : AppTheme.transferColor,

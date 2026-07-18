@@ -522,7 +522,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            Icons.check_rounded,
+                                            PesaFlowIcons.check,
                                             size: 16,
                                             color: theme.colorScheme.primary,
                                           ),
@@ -601,7 +601,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
-                              Icons.arrow_forward_rounded,
+                              PesaFlowIcons.arrowForward,
                               size: 18,
                               color: theme.colorScheme.primary,
                             ),
@@ -686,10 +686,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         ),
                                         child: Icon(
                                           isDisabled
-                                              ? Icons.block_rounded
+                                              ? PesaFlowIcons.block
                                               : isSelected
                                               ? PesaFlowIcons.success
-                                              : Icons.arrow_forward_rounded,
+                                              : PesaFlowIcons.arrowForward,
                                           size: 20,
                                           color: isDisabled
                                               ? Colors.grey
@@ -786,7 +786,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            Icons.check_rounded,
+                                            PesaFlowIcons.check,
                                             size: 16,
                                             color: theme.colorScheme.primary,
                                           ),
@@ -935,7 +935,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.add_circle_outline_rounded,
+                                              PesaFlowIcons.add,
                                               color: theme.colorScheme.primary,
                                               size: 24,
                                             ),
@@ -1166,8 +1166,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 Icon(
                                   _showAdvanced
-                                      ? Icons.keyboard_arrow_up_rounded
-                                      : Icons.keyboard_arrow_down_rounded,
+                                      ? PesaFlowIcons.chevronUp
+                                      : PesaFlowIcons.chevronDown,
                                   color: theme.colorScheme.primary,
                                   size: 20,
                                 ),
@@ -1260,8 +1260,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   children: [
                                     Icon(
                                       _saveAsTemplate
-                                          ? Icons.bookmark_rounded
-                                          : Icons.bookmark_border_rounded,
+                                          ? PesaFlowIcons.bookmarkFilled
+                                          : PesaFlowIcons.bookmark,
                                       size: 20,
                                       color: _saveAsTemplate
                                           ? theme.colorScheme.primary
@@ -1304,7 +1304,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       ),
                                       child: _saveAsTemplate
                                           ? const Icon(
-                                              Icons.check_rounded,
+                                              PesaFlowIcons.check,
                                               size: 16,
                                               color: Colors.white,
                                             )
@@ -1507,7 +1507,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
-                              Icons.bookmark_border_rounded,
+                              PesaFlowIcons.bookmark,
                               size: 18,
                               color: theme.colorScheme.primary,
                             ),
@@ -1538,7 +1538,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(
-                                      Icons.bookmark_border_rounded,
+                                      PesaFlowIcons.bookmark,
                                       size: 48,
                                       color: onSurface.withValues(alpha: 0.2),
                                     ),
@@ -1609,7 +1609,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         borderRadius: BorderRadius.circular(14),
                                       ),
                                       child: Icon(
-                                        Icons.delete_outline_rounded,
+                                        PesaFlowIcons.delete,
                                         color: context.appColors.expenseColor,
                                       ),
                                     ),
@@ -2102,7 +2102,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 const SizedBox(width: kSpacing4),
                                 Icon(
-                                  Icons.keyboard_arrow_down_rounded,
+                                  PesaFlowIcons.chevronDown,
                                   color: onSurface.withValues(alpha: 0.54),
                                   size: 18,
                                 ),
@@ -2147,7 +2147,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   ),
                                   const SizedBox(width: kSpacing4),
                                   Icon(
-                                    Icons.keyboard_arrow_down_rounded,
+                                    PesaFlowIcons.chevronDown,
                                     color: onSurface.withValues(alpha: 0.54),
                                     size: 18,
                                   ),
@@ -2255,7 +2255,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.bookmark_border_rounded,
+                                PesaFlowIcons.bookmark,
                                 size: 18,
                                 color: theme.colorScheme.primary,
                               ),
@@ -2425,7 +2425,7 @@ class _KeypadButtonState extends State<KeypadButton>
       },
       child: Center(
         child: widget.text == '<'
-            ? Icon(Icons.backspace_outlined, color: widget.textColor, size: 20)
+            ? Icon(PesaFlowIcons.backspace, color: widget.textColor, size: 20)
             : Text(
                 widget.text,
                 style: context.ts(

@@ -10,6 +10,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
   final accounts = ref.watch(accountsStreamProvider).value ?? [];
@@ -97,7 +98,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.filter_alt_rounded,
+                    PesaFlowIcons.filterAlt,
                     size: 18,
                     color: theme.colorScheme.primary,
                   ),
@@ -324,7 +325,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                     title: const Text('All Accounts'),
                     trailing: activeAccount == null
                         ? Icon(
-                            Icons.check_rounded,
+                            PesaFlowIcons.check,
                             size: 20,
                             color: theme.colorScheme.primary,
                           )
@@ -341,7 +342,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                       title: Text(acc.name),
                       trailing: activeAccount == acc.id
                           ? Icon(
-                              Icons.check_rounded,
+                              PesaFlowIcons.check,
                               size: 20,
                               color: theme.colorScheme.primary,
                             )

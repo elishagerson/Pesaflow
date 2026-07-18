@@ -162,7 +162,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       index: 0,
                       child: EmptyState(
                         icon: isFiltered
-                            ? Icons.search_off_rounded
+                            ? PesaFlowIcons.search
                             : PesaFlowIcons.transactions,
                         title: isFiltered
                             ? 'No Transactions Found'
@@ -249,7 +249,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                               children: [
                                 Icon(
                                   isFiltered
-                                      ? Icons.clear_all_rounded
+                                      ? PesaFlowIcons.clearAll
                                       : PesaFlowIcons.add,
                                   color: theme.colorScheme.onPrimary,
                                   size: 20,
@@ -734,7 +734,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         dateTo != null)
                                       IconButton(
                                         icon: Icon(
-                                          Icons.clear_all_rounded,
+                                          PesaFlowIcons.clearAll,
                                           color: theme.colorScheme.error,
                                           size: 20,
                                         ),
@@ -848,7 +848,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                           ),
                                         ),
                                         child: Icon(
-                                          Icons.search_rounded,
+                                          PesaFlowIcons.search,
                                           size: 18,
                                           color: onSurface.withValues(
                                             alpha: 0.62,
@@ -873,7 +873,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                         ),
                                       ),
                                       child: Icon(
-                                        Icons.person_outline_rounded,
+                                        PesaFlowIcons.personOutline,
                                         size: 18,
                                         color: onSurface.withValues(
                                           alpha: 0.62,
@@ -916,7 +916,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                 suffixIcon: searchQuery.isNotEmpty
                                     ? IconButton(
                                         icon: Icon(
-                                          Icons.clear_rounded,
+                                          PesaFlowIcons.clear,
                                           size: 16,
                                           color: onSurface.withValues(
                                             alpha: 0.54,
@@ -1220,7 +1220,7 @@ class _FilterButton extends StatelessWidget {
         children: [
           IconButton(
             icon: Icon(
-              Icons.tune_rounded,
+              PesaFlowIcons.filter,
               color: isActive
                   ? theme.colorScheme.primary
                   : onSurface.withValues(alpha: 0.62),
