@@ -23,9 +23,9 @@ class DailySummaryService {
     required TransactionDao transactionDao,
     required NotificationService notificationService,
     required String trackerId,
-  }) : _transactionDao = transactionDao,
-       _notificationService = notificationService,
-       _trackerId = trackerId;
+  })  : _transactionDao = transactionDao,
+        _notificationService = notificationService,
+        _trackerId = trackerId;
 
   Future<void> checkDailySummary() async {
     try {
