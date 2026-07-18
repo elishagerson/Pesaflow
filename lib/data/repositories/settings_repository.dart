@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/daos/settings_dao.dart';
 import '../database/database_providers.dart';
@@ -35,4 +37,22 @@ class SettingsRepository {
 
   Future<void> setSetting(String key, String value) =>
       _settingsDao.setSetting(key, value);
+
+  Future<List<Map<String, dynamic>>> getTransactionTemplates() async {
+    final json = await getSetting('transaction_templates');
+    if (json == null) return [];
+    return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
+  }
+
+  Future<void> saveTransactionTemplate(Map<String, dynamic> template) async {
+    final templates = await getTransactionTemplates();
+    templates.add(template);
+    await setSetting('transaction_templates', jsonEncode(templates));
+  }
+
+  Future<void> deleteTransactionTemplate(String id) async {
+    final templates = await getTransactionTemplates();
+    templates.removeWhere((t) => t['id'] == id);
+    await setSetting('transaction_templates', jsonEncode(templates));
+  }
 }

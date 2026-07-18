@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +15,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/responsive.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -71,6 +74,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   bool _isEditMode = false;
   bool _isLoading = false;
   bool _showAdvanced = false;
+  bool _saveAsTemplate = false;
   Transaction? _existingTransaction;
 
   final List<String> _expenseSuggestions = [
@@ -280,6 +284,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         await repo.deleteTransaction(existingTransaction.id);
       }
       await repo.createTransaction(newTransaction);
+
+      if (_saveAsTemplate && !_isEditMode) {
+        _showSaveTemplateDialog(cents);
+      }
 
       HapticFeedback.mediumImpact();
 
@@ -775,9 +783,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   void _showSecondaryDetailsSheet(BuildContext context) {
     showSpringSheet(
-      context,
-      isScrollControlled: true,
-      builder: (context) {
         final theme = Theme.of(context);
         final onSurface = theme.colorScheme.onSurface;
         return Consumer(

@@ -27,6 +27,7 @@ import 'package:pesaflow/services/savings_reminder_service.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
 import 'package:pesaflow/services/notification_service.dart';
 import 'package:pesaflow/services/lock_screen_service.dart';
+import 'package:pesaflow/services/loan_reminder_service.dart';
 import 'package:pesaflow/data/seed/default_data.dart';
 import 'package:pesaflow/presentation/common/widgets/onboarding_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -188,6 +189,13 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
         );
       } catch (e) {
         developer.log('Recurring renewal check failed: $e', name: 'AppLaunch');
+      }
+
+      // Check loan payment due dates and send reminders
+      try {
+        await ref.read(loanReminderServiceProvider).checkLoanDueDates();
+      } catch (e) {
+        developer.log('Loan due date check failed: $e', name: 'AppLaunch');
       }
 
       // Check if Notification Access is enabled; if not, prompt once
