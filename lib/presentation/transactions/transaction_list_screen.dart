@@ -274,7 +274,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   }
 
                   // Track new transactions for highlight animation
-                  final Set<String> currentIds = transactionsList
+                  final Set<String> currentIds = visibleTransactions
                       .map((t) => t.transaction.id)
                       .toSet();
                   final Set<String> newIds = _isFirstBuild
@@ -286,7 +286,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   // Group items by calendar day
                   final Map<String, List<TransactionWithCategoryAndAccount>>
                   grouped = {};
-                  for (final item in transactionsList) {
+                  for (final item in visibleTransactions) {
                     final dayStr = DateFormat(
                       'yyyy-MM-dd',
                     ).format(item.transaction.createdAt);
@@ -454,20 +454,29 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                                   );
                                 },
                                 onDismissed: (_) {
-                                  final txId = trans.id;
-                                  ref
-                                      .read(transactionRepositoryProvider)
-                                      .deleteTransaction(txId);
-                                  ref.invalidate(
-                                    filteredTransactionsStreamProvider,
-                                  );
-                                  ref.invalidate(accountsStreamProvider);
-                                  ref.invalidate(netWorthProvider);
-
-                                  CustomToast.show(
-                                    context,
-                                    message: 'Transaction deleted',
-                                    type: ToastType.info,
+                                  final tx = trans;
+                                  setState(() {
+                                    _pendingDeleteIds.add(tx.id);
+                                  });
+                                  UndoDelete.show(
+                                    context: context,
+                                    entityName: 'Transaction',
+                                    onUndo: () async {
+                                      setState(() {
+                                        _pendingDeleteIds.remove(tx.id);
+                                      });
+                                      await ref
+                                          .read(transactionRepositoryProvider)
+                                          .createTransaction(tx);
+                                    },
+                                    onDelete: () async {
+                                      setState(() {
+                                        _pendingDeleteIds.remove(tx.id);
+                                      });
+                                      await ref
+                                          .read(transactionRepositoryProvider)
+                                          .deleteTransaction(tx.id);
+                                    },
                                   );
                                 },
                                 child: TactileSpringContainer(

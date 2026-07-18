@@ -697,9 +697,10 @@ class _AccountsPage extends StatelessWidget {
               }).toList(),
             ),
           ),
-        ],
-      ),
-    );
+      ],
+    ),
+  ),
+);
   }
 }
 
