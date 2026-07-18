@@ -19,6 +19,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
@@ -408,22 +409,23 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                             index: index,
                             child: SwipeableCard(
                               onSwipeLeft: () async {
-                                await ref
-                                    .read(transactionRepositoryProvider)
-                                    .deleteTransaction(trans.id);
-                                ref.invalidate(reviewQueueStreamProvider);
-                                ref.invalidate(
-                                  recentTransactionsStreamProvider,
+                                final txData = item;
+                                UndoDelete.show(
+                                  context: context,
+                                  entityName: 'Transaction',
+                                  message:
+                                      'Transaction rejected: ${trans.description}',
+                                  onUndo: () async {
+                                    await ref
+                                        .read(transactionRepositoryProvider)
+                                        .createTransaction(txData.transaction);
+                                  },
+                                  onDelete: () async {
+                                    await ref
+                                        .read(transactionRepositoryProvider)
+                                        .deleteTransaction(trans.id);
+                                  },
                                 );
-                                ref.invalidate(accountsStreamProvider);
-                                if (context.mounted) {
-                                  CustomToast.show(
-                                    context,
-                                    message:
-                                        'Transaction rejected: ${trans.description}',
-                                    type: ToastType.error,
-                                  );
-                                }
                               },
                               onSwipeRight: () async {
                                 await ref
@@ -791,30 +793,31 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             const Spacer(),
                                             TactileSpringContainer(
                                               onTap: () async {
-                                                await ref
-                                                    .read(
-                                                      transactionRepositoryProvider,
-                                                    )
-                                                    .deleteTransaction(
-                                                      trans.id,
-                                                    );
-                                                ref.invalidate(
-                                                  reviewQueueStreamProvider,
+                                                final txData = item;
+                                                UndoDelete.show(
+                                                  context: context,
+                                                  entityName: 'Transaction',
+                                                  message:
+                                                      'Transaction rejected',
+                                                  onUndo: () async {
+                                                    await ref
+                                                        .read(
+                                                          transactionRepositoryProvider,
+                                                        )
+                                                        .createTransaction(
+                                                          txData.transaction,
+                                                        );
+                                                  },
+                                                  onDelete: () async {
+                                                    await ref
+                                                        .read(
+                                                          transactionRepositoryProvider,
+                                                        )
+                                                        .deleteTransaction(
+                                                          trans.id,
+                                                        );
+                                                  },
                                                 );
-                                                ref.invalidate(
-                                                  recentTransactionsStreamProvider,
-                                                );
-                                                ref.invalidate(
-                                                  accountsStreamProvider,
-                                                );
-                                                if (context.mounted) {
-                                                  CustomToast.show(
-                                                    context,
-                                                    message:
-                                                        'Transaction rejected',
-                                                    type: ToastType.error,
-                                                  );
-                                                }
                                               },
                                               child: Container(
                                                 padding:
