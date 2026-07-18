@@ -141,7 +141,7 @@ class IosListRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            HapticFeedback.selectionClick();
+            HapticFeedback.lightImpact();
             onTap!();
           },
           highlightColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),

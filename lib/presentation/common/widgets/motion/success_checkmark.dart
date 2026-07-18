@@ -26,6 +26,7 @@ class SuccessCheckmark extends StatefulWidget {
     bool hapticFeedback = true,
   }) async {
     if (hapticFeedback) HapticFeedback.mediumImpact();
+    final reducedMotion = context.isReducedMotion;
     await showDialog(
       context: context,
       barrierDismissible: false,
@@ -33,7 +34,9 @@ class SuccessCheckmark extends StatefulWidget {
       builder: (_) => _SuccessOverlay(
         message: message,
         color: color,
-        displayDuration: displayDuration,
+        displayDuration: reducedMotion
+            ? const Duration(milliseconds: 400)
+            : displayDuration,
       ),
     );
   }
@@ -91,11 +94,13 @@ class _SuccessOverlay extends StatefulWidget {
   final String? message;
   final Color? color;
   final Duration displayDuration;
+  final bool reducedMotion;
 
   const _SuccessOverlay({
     this.message,
     this.color,
     required this.displayDuration,
+    this.reducedMotion = false,
   });
 
   @override
