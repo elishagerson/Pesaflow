@@ -459,6 +459,10 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
   }
 
   void _release() {
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller.value = 0.0;
+      return;
+    }
     const spring = SpringDescription(
       mass: 0.7,
       stiffness: 400.0,
