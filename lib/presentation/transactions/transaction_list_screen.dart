@@ -689,20 +689,20 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               child: StaggeredFadeSlide(
                 index: 0,
                 child: Container(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 16,
-                      bottom: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                        border: Border(
-                          bottom: BorderSide(
-                            color: onSurface.withValues(alpha: 0.06),
-                            width: 0.5,
-                          ),
-                        ),
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 16,
+                    bottom: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: onSurface.withValues(alpha: 0.06),
+                        width: 0.5,
                       ),
-                      child: Column(
+                    ),
+                  ),
+                  child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -1012,7 +1012,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         ],
                       ),
                     ),
-                  ),
                 ),
               ),
             ),

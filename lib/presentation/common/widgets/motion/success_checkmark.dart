@@ -37,6 +37,7 @@ class SuccessCheckmark extends StatefulWidget {
         displayDuration: reducedMotion
             ? const Duration(milliseconds: 400)
             : displayDuration,
+        reducedMotion: reducedMotion,
       ),
     );
   }
@@ -154,7 +155,9 @@ class _SuccessOverlayState extends State<_SuccessOverlay>
         final bgFade = (t / 0.2).clamp(0.0, 1.0);
 
         final circleRaw = ((t - 0.15) / 0.35).clamp(0.0, 1.0);
-        final circleScale = _springBounce(circleRaw);
+        final circleScale = widget.reducedMotion
+            ? circleRaw
+            : _springBounce(circleRaw);
 
         final ringRaw = ((t - 0.12) / 0.45).clamp(0.0, 1.0);
         final ringProgress = Curves.easeOutCubic.transform(ringRaw);
