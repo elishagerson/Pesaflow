@@ -478,17 +478,16 @@ class BudgetListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       status.paceLabel,
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.bold,
-                                            color: status.isOverBudget
-                                                ? context.appColors.expenseColor
-                                                : status.isOnTrack
-                                                ? AppTheme.transferColorDark
-                                                : Colors.orange,
-                                            letterSpacing: 0.3,
-                                          ),
+                                      style: context.ts(
+                                        11,
+                                        fontWeight: FontWeight.bold,
+                                        color: status.isOverBudget
+                                            ? context.appColors.expenseColor
+                                            : status.isOnTrack
+                                            ? AppTheme.transferColorDark
+                                            : Colors.orange,
+                                        letterSpacing: 0.3,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: kSpacing6),
@@ -894,7 +893,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .textTheme
                                                         .labelSmall
                                                         ?.copyWith(
-                                                          fontSize: 9,
+                                                          fontSize: context.ts(11),
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: AppTheme

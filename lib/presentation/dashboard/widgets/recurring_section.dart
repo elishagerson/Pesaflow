@@ -168,8 +168,8 @@ class RecurringSection extends ConsumerWidget {
                     const SizedBox(width: kSpacing6),
                     Text(
                       'UPCOMING RENEWALS',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 9,
+                      style: context.ts(
+                        11,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
                         color: theme.colorScheme.onSurface.withValues(

@@ -110,8 +110,8 @@ class MonthlyOverviewSection extends ConsumerWidget {
                           netSavings >= 0
                               ? '$savingsPct% SAVED'
                               : '${savingsPct.abs()}% DEFICIT',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontSize: 9,
+                          style: context.ts(
+                            11,
                             fontWeight: FontWeight.w900,
                             color: netSavings >= 0
                                 ? appColors.incomeColor
