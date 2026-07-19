@@ -55,6 +55,7 @@ class _SuccessConfettiDialogState extends State<SuccessConfettiDialog>
     super.didChangeDependencies();
     if (!_initialized) {
       _initialized = true;
+      if (context.isReducedMotion) return;
       _spawnParticles(120);
       _tickerController.forward();
     }
@@ -307,5 +308,7 @@ class _ConfettiPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _ConfettiPainter oldDelegate) {
+    return particles.isNotEmpty;
+  }
 }

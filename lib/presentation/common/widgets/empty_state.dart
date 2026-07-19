@@ -115,6 +115,9 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
 
   @override
   Widget build(BuildContext context) {
+    if (context.isReducedMotion) {
+      return widget.child;
+    }
     return ScaleTransition(scale: _animation, child: widget.child);
   }
 }

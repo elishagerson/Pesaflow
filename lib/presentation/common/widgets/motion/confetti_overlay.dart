@@ -50,6 +50,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   }
 
   void _startConfetti() {
+    if (context.isReducedMotion) return;
     _controller = AnimationController(vsync: this, duration: widget.duration)
       ..addListener(_updateParticles)
       ..addStatusListener((status) {
@@ -183,5 +184,7 @@ class _ConfettiPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _ConfettiPainter oldDelegate) {
+    return particles.isNotEmpty;
+  }
 }

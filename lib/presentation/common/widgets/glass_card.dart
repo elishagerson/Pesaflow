@@ -131,62 +131,64 @@ class _GlassCardState extends State<GlassCard>
       CardElevation.none => [],
     };
 
-    Widget body = Container(
-      decoration: ShapeDecoration(
-        color: glassColor,
-        gradient: widget.backgroundGradient,
-        shape: SquircleBorder(
-          side: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.8),
-          borderRadius: widget.borderRadius,
+    Widget body = RepaintBoundary(
+      child: Container(
+        decoration: ShapeDecoration(
+          color: glassColor,
+          gradient: widget.backgroundGradient,
+          shape: SquircleBorder(
+            side: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.8),
+            borderRadius: widget.borderRadius,
+          ),
+          shadows: shadows,
         ),
-        shadows: shadows,
-      ),
-      foregroundDecoration: widget.accentColor != null
-          ? ShapeDecoration(
-              shape: SquircleBorder(
-                side: BorderSide(
-                  color: widget.accentColor!.withValues(alpha: 0.16),
-                  width: 0.5,
+        foregroundDecoration: widget.accentColor != null
+            ? ShapeDecoration(
+                shape: SquircleBorder(
+                  side: BorderSide(
+                    color: widget.accentColor!.withValues(alpha: 0.25),
+                    width: 1.0,
+                  ),
+                  borderRadius: widget.borderRadius,
                 ),
-                borderRadius: widget.borderRadius,
-              ),
-            )
-          : null,
-      child: ClipPath(
-        clipper: ShapeBorderClipper(
-          shape: SquircleBorder(borderRadius: widget.borderRadius),
-        ),
-        child: Stack(
-          children: [
-            if (widget.accentColor != null &&
-                widget.onTap != null &&
-                widget.showAccentStrip)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: widget.accentWidth,
-                  decoration: BoxDecoration(
-                    color: widget.accentColor!.withValues(alpha: 0.30),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(widget.borderRadius),
-                      topRight: Radius.circular(widget.borderRadius),
+              )
+            : null,
+        child: ClipPath(
+          clipper: ShapeBorderClipper(
+            shape: SquircleBorder(borderRadius: widget.borderRadius),
+          ),
+          child: Stack(
+            children: [
+              if (widget.accentColor != null &&
+                  widget.onTap != null &&
+                  widget.showAccentStrip)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: widget.accentWidth,
+                    decoration: BoxDecoration(
+                      color: widget.accentColor!.withValues(alpha: 0.30),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(widget.borderRadius),
+                        topRight: Radius.circular(widget.borderRadius),
+                      ),
                     ),
                   ),
                 ),
+              Padding(
+                padding: (widget.padding ?? EdgeInsets.zero).add(
+                  widget.accentColor != null &&
+                          widget.onTap != null &&
+                          widget.showAccentStrip
+                      ? EdgeInsets.only(top: widget.accentWidth + 2)
+                      : EdgeInsets.zero,
+                ),
+                child: widget.child,
               ),
-            Padding(
-              padding: (widget.padding ?? EdgeInsets.zero).add(
-                widget.accentColor != null &&
-                        widget.onTap != null &&
-                        widget.showAccentStrip
-                    ? EdgeInsets.only(top: widget.accentWidth + 2)
-                    : EdgeInsets.zero,
-              ),
-              child: widget.child,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

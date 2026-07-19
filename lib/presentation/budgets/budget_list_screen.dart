@@ -893,7 +893,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .textTheme
                                                         .labelSmall
                                                         ?.copyWith(
-                                                          fontSize: context.ts(11),
+                                                           fontSize: 11,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: AppTheme

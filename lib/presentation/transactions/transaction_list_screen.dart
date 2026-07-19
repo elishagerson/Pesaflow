@@ -38,12 +38,16 @@ class TransactionListScreen extends ConsumerStatefulWidget {
       _TransactionListScreenState();
 }
 
-class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
+class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
+    with AutomaticKeepAliveClientMixin {
   Timer? _searchDebounce;
   late TextEditingController _searchController;
   Set<String> _previousTransactionIds = {};
   bool _isFirstBuild = true;
   final Set<String> _pendingDeleteIds = {};
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -88,6 +92,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
 
