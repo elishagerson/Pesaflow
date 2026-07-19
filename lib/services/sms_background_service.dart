@@ -48,7 +48,9 @@ final smsBackgroundServiceProvider = Provider<SmsBackgroundService>((ref) {
     ref.read(pendingReviewProvider.notifier).add(item);
   };
 
-  return SmsBackgroundService(processor);
+  final service = SmsBackgroundService(processor);
+  ref.onDispose(() => service.dispose());
+  return service;
 });
 
 class SmsBackgroundService {

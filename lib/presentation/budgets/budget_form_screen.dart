@@ -44,11 +44,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   double _threshold = 0.8;
   DateTime _startDate = DateTime.now();
   bool _isSaving = false;
+
+  late final VoidCallback _onNameChanged = () => setState(() {});
+  late final VoidCallback _onAmountChanged = () => setState(() {});
+
   @override
   void initState() {
     super.initState();
-    _nameController.addListener(() => setState(() {}));
-    _amountController.addListener(() => setState(() {}));
+    _nameController.addListener(_onNameChanged);
+    _amountController.addListener(_onAmountChanged);
     if (widget.budgetId != null) {
       _loadExistingBudget();
     }
@@ -77,6 +81,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
 
   @override
   void dispose() {
+    _nameController.removeListener(_onNameChanged);
+    _amountController.removeListener(_onAmountChanged);
     _nameController.dispose();
     _amountController.dispose();
     _capController.dispose();
