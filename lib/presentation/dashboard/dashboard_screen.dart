@@ -443,7 +443,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         // ── 2. Balance Hero Card — "Your Money" ──
                         Consumer(
                           builder: (context, ref, _) {
-                            final netWorth = ref.watch(netWorthProvider);
                             final accountsAsync = ref.watch(accountsStreamProvider);
                             final accounts = accountsAsync.value ?? [];
                             
@@ -1167,7 +1166,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 );
                               },
                               loading: () => const SizedBox.shrink(),
-                              error: (_, __) => const SizedBox.shrink(),
+                              error: (_, _) => const SizedBox.shrink(),
                             );
                           },
                         ),
