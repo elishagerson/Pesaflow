@@ -1075,7 +1075,102 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: kSpacing20),
+                         const SizedBox(height: kSpacing20),
+
+                        // ── Quick Templates Row ──
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
+                            return templatesAsync.when(
+                              data: (templates) {
+                                if (templates.isEmpty) return const SizedBox.shrink();
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                                      child: Text(
+                                        'QUICK TEMPLATES',
+                                        style: context.ts(
+                                          9,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 1.2,
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing10),
+                                    SizedBox(
+                                      height: 38,
+                                      child: ListView.builder(
+                                        padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const BouncingScrollPhysics(),
+                                        itemCount: templates.length,
+                                        itemBuilder: (context, index) {
+                                          final t = templates[index];
+                                          final displayName = t['name']?.isNotEmpty == true ? t['name'] : (t['description']?.isNotEmpty == true ? t['description'] : 'Template');
+                                          return Padding(
+                                            padding: const EdgeInsets.only(right: kSpacing8),
+                                            child: TactileSpringContainer(
+                                              onTap: () {
+                                                triggerHaptic(HapticType.selection);
+                                                final type = t['type'] ?? 'expense';
+                                                final desc = t['description'] ?? '';
+                                                final amount = t['amountCents'] ?? 0;
+                                                final catId = t['categoryId'] ?? '';
+                                                final accId = t['accountId'] ?? '';
+                                                context.push(
+                                                  '/transactions/add?type=$type&description=${Uri.encodeComponent(desc)}&amount=$amount&categoryId=$catId&accountId=$accId',
+                                                );
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing14,
+                                                  vertical: kSpacing8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: onSurface.withValues(alpha: 0.05),
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  border: Border.all(
+                                                    color: onSurface.withValues(alpha: 0.08),
+                                                    width: 0.8,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      PesaFlowIcons.bookmark,
+                                                      size: 13,
+                                                      color: theme.colorScheme.primary,
+                                                    ),
+                                                    const SizedBox(width: kSpacing6),
+                                                    Text(
+                                                      displayName,
+                                                      style: context.ts(
+                                                        12,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: onSurface.withValues(alpha: 0.85),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing20),
+                                  ],
+                                );
+                              },
+                              loading: () => const SizedBox.shrink(),
+                              error: (_, __) => const SizedBox.shrink(),
+                            );
+                          },
+                        ),
 
                         // ── SMS auto-categorization count ──
                         Consumer(

@@ -227,6 +227,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           }
         }
       }
+    });
   }
 
   String _exprStringForDisplay(String expr) {
