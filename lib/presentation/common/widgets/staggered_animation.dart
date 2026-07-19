@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class StaggeredFadeSlide extends StatefulWidget {
   final int index;
@@ -22,6 +25,8 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
   late AnimationController _controller;
   late Animation<double> _fade;
   late Animation<Offset> _slide;
+  Timer? _delayTimer;
+  bool _hasAnimated = false;
 
   @override
   void initState() {
@@ -33,29 +38,54 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
       end: Offset.zero,
     ).animate(_controller);
 
-    Future.delayed(Duration(milliseconds: widget.index * 40), () {
-      if (mounted) {
-        const spring = SpringDescription(
-          mass: 1.0,
-          stiffness: 180.0,
-          damping: 19.0,
-        );
-        _controller.animateWith(SpringSimulation(spring, 0.0, 1.0, 0.0));
+    _startAnimation();
+  }
+
+  void _startAnimation() {
+    // Skip animation if reduced motion is preferred
+    // (checked in first build via addPostFrameCallback)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (context.isReducedMotion) {
+        _controller.value = 1.0;
+        _hasAnimated = true;
+        return;
       }
+      if (_hasAnimated) {
+        _controller.value = 1.0;
+        return;
+      }
+      _delayTimer = Timer(
+        Duration(milliseconds: widget.index * 40),
+        () {
+          if (!mounted) return;
+          const spring = SpringDescription(
+            mass: 1.0,
+            stiffness: 180.0,
+            damping: 19.0,
+          );
+          _controller
+              .animateWith(SpringSimulation(spring, 0.0, 1.0, 0.0))
+              .then((_) => _hasAnimated = true);
+        },
+      );
     });
   }
 
   @override
   void dispose() {
+    _delayTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fade,
-      child: SlideTransition(position: _slide, child: widget.child),
+    return RepaintBoundary(
+      child: FadeTransition(
+        opacity: _fade,
+        child: SlideTransition(position: _slide, child: widget.child),
+      ),
     );
   }
 }
