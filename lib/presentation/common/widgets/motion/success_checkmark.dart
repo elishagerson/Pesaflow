@@ -142,7 +142,7 @@ class _SuccessOverlayState extends State<_SuccessOverlay>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final userColor = widget.color;
-    final circleColor = userColor ?? _silentGreen;
+    final circleColor = userColor ?? context.appColors.incomeColor;
     final isDarkBg = circleColor.computeLuminance() < 0.4;
     final checkColor = isDarkBg ? Colors.white : Colors.black87;
     final ringColor = circleColor.withValues(alpha: 0.35);

@@ -80,7 +80,7 @@ class _GlassCardState extends State<GlassCard>
       }
     }
 
-    final bool isDark = theme.brightness == Brightness.dark;
+    final bool isDark = context.isDark;
 
     final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [

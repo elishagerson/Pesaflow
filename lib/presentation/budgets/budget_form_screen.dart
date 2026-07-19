@@ -45,8 +45,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   DateTime _startDate = DateTime.now();
   bool _isSaving = false;
 
-  late final VoidCallback _onNameChanged = () => setState(() {});
-  late final VoidCallback _onAmountChanged = () => setState(() {});
+  void _onNameChanged() => setState(() {});
+  void _onAmountChanged() => setState(() {});
 
   @override
   void initState() {
