@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/repositories/analytics_repository.dart';
-import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:drift/drift.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 

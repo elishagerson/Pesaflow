@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -152,7 +151,6 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     int flex = 1,
   }) {
     final theme = Theme.of(context);
-    final appColors = theme.extension<AppColorsTheme>()!;
     
     final finalBg = bgColor ?? (isPrimary 
         ? theme.colorScheme.primary 
