@@ -392,11 +392,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           onNotification: (notification) {
             if (notification is ScrollUpdateNotification) {
               final double velocity = notification.scrollDelta?.abs() ?? 0.0;
-              final double targetSpeed =
+              final double rawSpeed =
                   1.0 + (velocity / 12.0).clamp(0.0, 4.0);
-              ref.read(scrollSpeedProvider.notifier).state = targetSpeed;
+              // Quantize to 0.5 increments to avoid per-frame provider writes
+              final double quantized = (rawSpeed * 2).roundToDouble() / 2;
+              final current = ref.read(scrollSpeedProvider);
+              if (current != quantized) {
+                ref.read(scrollSpeedProvider.notifier).state = quantized;
+              }
             } else if (notification is ScrollEndNotification) {
-              ref.read(scrollSpeedProvider.notifier).state = 1.0;
+              if (ref.read(scrollSpeedProvider) != 1.0) {
+                ref.read(scrollSpeedProvider.notifier).state = 1.0;
+              }
             }
             return false;
           },
@@ -910,10 +917,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       vertical: kSpacing16,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.black,
+                                      color: theme.colorScheme.inverseSurface,
                                       borderRadius: BorderRadius.circular(100),
                                       border: Border.all(
-                                        color: Colors.black,
+                                        color: theme.colorScheme.inverseSurface,
                                         width: 1.0,
                                       ),
                                       boxShadow: [
@@ -1995,14 +2002,13 @@ class _CollapsibleSectionState extends State<_CollapsibleSection> {
         const SizedBox(height: kSpacing8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kSpacing8),
-          child: AnimatedCrossFade(
-            firstChild: widget.child,
-            secondChild: const SizedBox.shrink(),
-            crossFadeState: _isExpanded
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
+          child: AnimatedSize(
             duration: const Duration(milliseconds: 200),
-            sizeCurve: Curves.easeInOut,
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: _isExpanded
+                ? widget.child
+                : const SizedBox(width: double.infinity, height: 0),
           ),
         ),
       ],
