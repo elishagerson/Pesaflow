@@ -49,6 +49,8 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  bool _initialized = false;
+
   @override
   void initState() {
     super.initState();
@@ -56,21 +58,27 @@ class _SpringSheetContentState extends State<_SpringSheetContent>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-
     _animation = _controller.drive(Tween<double>(begin: 0, end: 1));
+  }
 
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (reducedMotion) {
-      _controller.value = 1.0;
-    } else {
-      final spring = SpringSimulation(
-        SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
-        0,
-        1,
-        0,
-      );
-      _controller.animateWith(spring);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      final reducedMotion =
+          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+      if (reducedMotion) {
+        _controller.value = 1.0;
+      } else {
+        final spring = SpringSimulation(
+          SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
+          0,
+          1,
+          0,
+        );
+        _controller.animateWith(spring);
+      }
     }
   }
 
