@@ -55,18 +55,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     _searchController = TextEditingController();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    ref.listen(transactionSearchQueryProvider, (prev, next) {
-      if (_searchController.text != next) {
-        _searchController.text = next;
-        _searchController.selection = TextSelection.fromPosition(
-          TextPosition(offset: next.length),
-        );
-      }
-    });
-  }
+
 
   @override
   void dispose() {
@@ -101,6 +90,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     final activeAccount = ref.watch(transactionAccountFilterProvider);
     final activeCategory = ref.watch(transactionCategoryFilterProvider);
     final searchQuery = ref.watch(transactionSearchQueryProvider);
+    if (_searchController.text != searchQuery) {
+      _searchController.text = searchQuery;
+      _searchController.selection = TextSelection.fromPosition(
+        TextPosition(offset: searchQuery.length),
+      );
+    }
     final amountMin = ref.watch(transactionAmountMinProvider);
     final amountMax = ref.watch(transactionAmountMaxProvider);
     final dateFrom = ref.watch(transactionDateFromProvider);
