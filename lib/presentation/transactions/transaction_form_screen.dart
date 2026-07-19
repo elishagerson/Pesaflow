@@ -227,11 +227,94 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           }
         }
       }
-    });
+  }
+
+  String _exprStringForDisplay(String expr) {
+    final operators = RegExp(r'([\+\-\*\/])');
+    final parts = expr.split(operators);
+    final matches = operators.allMatches(expr).map((m) => m.group(0)!).toList();
+    
+    final formattedParts = parts.map((part) {
+      final doubleValue = double.tryParse(part);
+      if (doubleValue != null) {
+        return NumberFormat('#,###.##').format(doubleValue);
+      }
+      return part;
+    }).toList();
+    
+    final result = StringBuffer();
+    for (int i = 0; i < formattedParts.length; i++) {
+      result.write(formattedParts[i]);
+      if (i < matches.length) {
+        result.write(' ${matches[i]} ');
+      }
+    }
+    return result.toString();
   }
 
   double _getAmountCents() {
-    return CurrencyFormatter.parseToCents(_amountStr).toDouble();
+    String val = _amountStr;
+    if (_amountStr.contains(RegExp(r'[\+\-\*\/]'))) {
+      try {
+        final double? evaluated = _parseAndEval(_amountStr);
+        if (evaluated != null) {
+          val = evaluated.toString();
+        }
+      } catch (_) {}
+    }
+    return CurrencyFormatter.parseToCents(val).toDouble();
+  }
+
+  double? _parseAndEval(String expression) {
+    final normalized = expression.replaceAll(' ', '');
+    try {
+      return _parseAdditionSubtraction(normalized);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  double _parseAdditionSubtraction(String expr) {
+    int opIndex = -1;
+    String currentOp = '';
+    for (int i = expr.length - 1; i >= 0; i--) {
+      final char = expr[i];
+      if (char == '+' || char == '-') {
+        opIndex = i;
+        currentOp = char;
+        break;
+      }
+    }
+    if (opIndex != -1) {
+      final left = _parseAdditionSubtraction(expr.substring(0, opIndex));
+      final right = _parseMultiplicationDivision(expr.substring(opIndex + 1));
+      if (currentOp == '+') return left + right;
+      if (currentOp == '-') return left - right;
+    }
+    return _parseMultiplicationDivision(expr);
+  }
+
+  double _parseMultiplicationDivision(String expr) {
+    int opIndex = -1;
+    String currentOp = '';
+    for (int i = expr.length - 1; i >= 0; i--) {
+      final char = expr[i];
+      if (char == '*' || char == '/') {
+        opIndex = i;
+        currentOp = char;
+        break;
+      }
+    }
+    if (opIndex != -1) {
+      final left = _parseMultiplicationDivision(expr.substring(0, opIndex));
+      final right = double.parse(expr.substring(opIndex + 1));
+      if (currentOp == '*') return left * right;
+      if (currentOp == '/') {
+        if (right == 0) throw Exception('Division by zero');
+        return left / right;
+      }
+    }
+    return double.parse(expr);
   }
 
   Future<void> _saveTransaction() async {
@@ -1777,10 +1860,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
 
     // Parsing amount for bold screen display
-    final double amountValue = double.tryParse(_amountStr) ?? 0.0;
-    final String formattedDisplay = NumberFormat(
-      '#,###.##',
-    ).format(amountValue);
+    final String formattedDisplay;
+    if (_amountStr.contains(RegExp(r'[\+\-\*\/]'))) {
+      formattedDisplay = _exprStringForDisplay(_amountStr);
+    } else {
+      final double amountValue = double.tryParse(_amountStr) ?? 0.0;
+      formattedDisplay = NumberFormat('#,###.##').format(amountValue);
+    }
 
     final double baseFontSize = _amountStr.length > 10
         ? 36.0
@@ -2161,26 +2247,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   ),
                   const Spacer(),
 
-                  // Numeric Keypad Grid (Edge-to-edge with elegant thin line grid dividers)
+                  // Numeric Keypad Grid (Cupertino Calculator replacement)
                   StaggeredFadeSlide(
                     index: 3,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: onSurface.withValues(alpha: 0.08),
-                            width: 0.5,
-                          ),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildKeypadRow(['1', '2', '3']),
-                          _buildKeypadRow(['4', '5', '6']),
-                          _buildKeypadRow(['7', '8', '9']),
-                          _buildKeypadRow(['.', '0', '<']),
-                        ],
-                      ),
+                    child: CalculatorNumpad(
+                      initialValue: _amountStr,
+                      onValueChanged: (val) {
+                        setState(() {
+                          _amountStr = val;
+                          _amountError = null;
+                        });
+                      },
+                      onConfirm: () => _showSecondaryDetailsSheet(context),
                     ),
                   ),
                   SizedBox(height: context.isCompactView ? 16 : 24),

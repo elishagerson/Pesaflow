@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
@@ -516,4 +517,16 @@ class ScrollSpeedNotifier extends Notifier<double> {
 
 final scrollSpeedProvider = NotifierProvider<ScrollSpeedNotifier, double>(() {
   return ScrollSpeedNotifier();
+});
+
+final transactionTemplatesStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('transaction_templates').map((json) {
+    if (json == null) return [];
+    try {
+      return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
+    } catch (_) {
+      return [];
+    }
+  });
 });
