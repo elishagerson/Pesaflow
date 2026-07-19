@@ -78,4 +78,7 @@ class SavingsGoalRepository {
 
   Future<void> deleteContribution(String contributionId) =>
       _savingsGoalsDao.deleteContribution(contributionId);
+
+  Future<DateTime?> getLatestDepositDate(String trackerId) =>
+      _savingsGoalsDao.getLatestDepositDate(trackerId);
 }

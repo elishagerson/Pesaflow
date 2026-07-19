@@ -372,7 +372,6 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                           else
                             Flexible(
                               child: ListView.builder(
-                                shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(
                                   kSpacing8,
                                   0,

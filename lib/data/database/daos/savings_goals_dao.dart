@@ -124,4 +124,27 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase>
       );
     });
   }
+
+  /// Fetches the latest savings deposit contribution date using a single database query.
+  Future<DateTime?> getLatestDepositDate(String trackerId) async {
+    final query = select(savingsGoalContributions).join([
+      innerJoin(
+        savingsGoals,
+        savingsGoals.id.equalsExp(savingsGoalContributions.savingsGoalId),
+      ),
+    ])
+      ..where(savingsGoals.trackerId.equals(trackerId) &
+          savingsGoalContributions.amount.isBiggerThan(const Constant(0)))
+      ..orderBy([
+        OrderingTerm(
+          expression: savingsGoalContributions.createdAt,
+          mode: OrderingMode.desc,
+        ),
+      ])
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+    if (row == null) return null;
+    return row.readTable(savingsGoalContributions).createdAt;
+  }
 }
