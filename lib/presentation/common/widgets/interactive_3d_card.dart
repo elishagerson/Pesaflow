@@ -28,34 +28,65 @@ class Interactive3DCard extends StatefulWidget {
   State<Interactive3DCard> createState() => _Interactive3DCardState();
 }
 
-class _Interactive3DCardState extends State<Interactive3DCard> {
+class _Interactive3DCardState extends State<Interactive3DCard>
+    with SingleTickerProviderStateMixin {
   double _tiltX = 0.0;
   double _tiltY = 0.0;
   bool _isPressed = false;
   bool _hasTriggeredHaptic = false;
 
+  late AnimationController _introController;
+  late Animation<double> _introAnimation;
+
   @override
   void initState() {
     super.initState();
-    // Glance auto-tilt sway animation: briefly tilt and release to show off the 3D effect
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (!mounted) return;
-      setState(() {
-        _tiltX = 0.35;
-        _tiltY = -0.2;
-      });
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (!mounted) return;
-        setState(() {
-          _tiltX = -0.3;
-          _tiltY = 0.35;
-        });
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (!mounted) return;
-          _resetTilt();
-        });
-      });
+    // Single AnimationController replaces the nested Future.delayed chains
+    _introController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1300),
+    );
+    _introAnimation = TweenSequence<double>([
+      // 0 → 300ms: idle
+      TweenSequenceItem(tween: ConstantTween(0.0), weight: 300),
+      // 300 → 650ms: tilt right-up
+      TweenSequenceItem(
+        tween: Tween(begin: 0.0, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeOut)),
+        weight: 350,
+      ),
+      // 650 → 1000ms: tilt left-down
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: -1.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 350,
+      ),
+      // 1000 → 1300ms: settle to center
+      TweenSequenceItem(
+        tween: Tween(begin: -1.0, end: 0.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 300,
+      ),
+    ]).animate(_introController);
+
+    _introAnimation.addListener(_onIntroTick);
+    _introController.forward();
+  }
+
+  void _onIntroTick() {
+    if (!mounted || _isPressed) return;
+    final v = _introAnimation.value;
+    setState(() {
+      _tiltX = v * 0.35;
+      _tiltY = v * -0.2;
     });
+  }
+
+  @override
+  void dispose() {
+    _introAnimation.removeListener(_onIntroTick);
+    _introController.dispose();
+    super.dispose();
   }
 
   void _updateTilt(Offset localPosition, double width, double height) {

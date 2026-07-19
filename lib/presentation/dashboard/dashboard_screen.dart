@@ -1927,8 +1927,7 @@ class _CollapsibleSection extends StatefulWidget {
   State<_CollapsibleSection> createState() => _CollapsibleSectionState();
 }
 
-class _CollapsibleSectionState extends State<_CollapsibleSection>
-    with SingleTickerProviderStateMixin {
+class _CollapsibleSectionState extends State<_CollapsibleSection> {
   bool _isExpanded = true;
 
   @override
