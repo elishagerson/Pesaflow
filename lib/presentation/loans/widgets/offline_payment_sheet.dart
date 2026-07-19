@@ -430,7 +430,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                           }
                                         : null,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF609F8A),
+                                      backgroundColor: context.appColors.incomeColor,
                                       foregroundColor:
                                           theme.colorScheme.onPrimary,
                                       disabledBackgroundColor: onSurface

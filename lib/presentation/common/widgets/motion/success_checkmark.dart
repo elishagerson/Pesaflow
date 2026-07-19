@@ -112,7 +112,7 @@ class _SuccessOverlayState extends State<_SuccessOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _overlayController;
 
-  static const _silentGreen = Color(0xFF7A9A7E);
+  // Resolved from theme in build() via context.appColors.incomeColor
 
   @override
   void initState() {
