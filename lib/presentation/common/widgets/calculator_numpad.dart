@@ -24,6 +24,7 @@ class CalculatorNumpad extends StatefulWidget {
 
 class _CalculatorNumpadState extends State<CalculatorNumpad> {
   late String _expr;
+  bool _showOperators = false;
 
   @override
   void initState() {
@@ -42,6 +43,8 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
         }
       } else if (key == '=') {
         _evaluate();
+      } else if (key == '+−') {
+        _showOperators = !_showOperators;
       } else {
         // Prevent duplicate operators
         final operators = ['+', '-', '*', '/'];
@@ -149,6 +152,7 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     bool isPrimary = false,
     IconData? icon,
     int flex = 1,
+    VoidCallback? customTap,
   }) {
     final theme = Theme.of(context);
     
@@ -165,7 +169,7 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: TactileSpringContainer(
-          onTap: () => icon != null && text == '⌫' 
+          onTap: customTap ?? () => icon != null && text == '⌫' 
               ? _onKeyPress('⌫') 
               : _onKeyPress(text),
           child: Container(
@@ -227,48 +231,110 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                 ),
               ),
             ),
-          Row(
-            children: [
-              _buildButton(text: 'C', textColor: appColors.expenseColor),
-              _buildButton(text: '('), // Placeholder or paren
-              _buildButton(text: ')'), // Paren
-              _buildButton(text: '/', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton(text: '7'),
-              _buildButton(text: '8'),
-              _buildButton(text: '9'),
-              _buildButton(text: '*', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton(text: '4'),
-              _buildButton(text: '5'),
-              _buildButton(text: '6'),
-              _buildButton(text: '-', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton(text: '1'),
-              _buildButton(text: '2'),
-              _buildButton(text: '3'),
-              _buildButton(text: '+', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton(text: '.'),
-              _buildButton(text: '0'),
-              _buildButton(text: '⌫', icon: PesaFlowIcons.backspace),
-              _buildButton(text: '=', isPrimary: true),
-            ],
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  axisAlignment: -1.0,
+                  child: child,
+                ),
+              );
+            },
+            child: _showOperators 
+                ? Column(
+                    key: const ValueKey('math_layout'),
+                    children: [
+                      Row(
+                        children: [
+                          _buildButton(text: 'C', textColor: appColors.expenseColor),
+                          _buildButton(text: '⌫', icon: PesaFlowIcons.backspace),
+                          _buildButton(
+                            text: '+−',
+                            bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
+                            textColor: theme.colorScheme.primary,
+                          ),
+                          _buildButton(text: '/', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '7'),
+                          _buildButton(text: '8'),
+                          _buildButton(text: '9'),
+                          _buildButton(text: '*', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '4'),
+                          _buildButton(text: '5'),
+                          _buildButton(text: '6'),
+                          _buildButton(text: '-', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '1'),
+                          _buildButton(text: '2'),
+                          _buildButton(text: '3'),
+                          _buildButton(text: '+', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '.'),
+                          _buildButton(text: '0'),
+                          _buildButton(text: '='),
+                          _buildButton(text: 'Done', isPrimary: true, customTap: widget.onConfirm),
+                        ],
+                      ),
+                    ],
+                  )
+                : Column(
+                    key: const ValueKey('simple_layout'),
+                    children: [
+                      Row(
+                        children: [
+                          _buildButton(text: '7'),
+                          _buildButton(text: '8'),
+                          _buildButton(text: '9'),
+                          _buildButton(text: '⌫', icon: PesaFlowIcons.backspace),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '4'),
+                          _buildButton(text: '5'),
+                          _buildButton(text: '6'),
+                          _buildButton(text: 'C', textColor: appColors.expenseColor),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '1'),
+                          _buildButton(text: '2'),
+                          _buildButton(text: '3'),
+                          _buildButton(
+                            text: '+−',
+                            bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
+                            textColor: theme.colorScheme.primary,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          _buildButton(text: '.'),
+                          _buildButton(text: '0'),
+                          _buildButton(text: 'Done', isPrimary: true, flex: 2, customTap: widget.onConfirm),
+                        ],
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
-    );
   }
 }
