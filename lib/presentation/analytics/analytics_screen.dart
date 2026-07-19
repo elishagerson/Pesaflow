@@ -22,6 +22,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 
 enum TrendRange { days, weeks, months }
 
@@ -926,6 +927,8 @@ class _OverviewTab extends StatelessWidget {
                   ),
                   error: (e, _) => Text('Error: $e'),
                 ),
+                const SizedBox(height: kSpacing24),
+                const SpendingHeatmapCard(),
               ],
             ),
           ),

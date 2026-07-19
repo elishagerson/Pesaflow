@@ -25,6 +25,7 @@ import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart'
 import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
@@ -194,9 +195,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       orElse: () => 'Personal',
     );
 
-    // Calculate budget overall spent percentage
+    // Calculate budget overall spent percentage and Safe-to-Spend
     final budgets = budgetsAsync.value ?? [];
     double overallPct = 0.0;
+    int remainingBudget = 0;
+    int budgetTotal = 0;
     if (budgets.isNotEmpty) {
       double totalSpent = 0;
       double totalAllocated = 0;
@@ -204,6 +207,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         totalSpent += bp.spentInPeriod;
         totalAllocated += bp.currentPeriod?.allocated ?? bp.budget.amount;
       }
+      budgetTotal = totalAllocated.round();
+      remainingBudget = (totalAllocated - totalSpent).round();
       if (totalAllocated > 0) {
         overallPct = (totalSpent / totalAllocated).clamp(0.0, 1.0);
       }
@@ -213,6 +218,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       if (totals != null) {
         final income = totals['income'] ?? 0;
         final expense = totals['expense'] ?? 0;
+        budgetTotal = income;
+        remainingBudget = income - expense;
         if (income > 0) {
           overallPct = (expense / income).clamp(0.0, 1.0);
         } else if (expense > 0) {
@@ -623,7 +630,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 Text(
                                                   _selectedAccountId != null
                                                       ? 'ACCOUNT BALANCE'
-                                                      : 'TOTAL NET WORTH',
+                                                      : 'SAFE-TO-SPEND (REMAINING)',
                                                   style: context.ts(
                                                     9,
                                                     fontWeight: FontWeight.w900,
@@ -646,7 +653,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                   accounts.first,
                                                             )
                                                             .balance)
-                                                      : netWorth,
+                                                      : remainingBudget,
                                                   useMonospace: false,
                                                   animate: true,
                                                   style: theme
@@ -659,6 +666,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         letterSpacing: -0.5,
                                                       ),
                                                 ),
+                                                if (_selectedAccountId == null) ...[
+                                                  const SizedBox(height: kSpacing4),
+                                                  Text(
+                                                    'Budget Limit: ${CurrencyFormatter.formatCents(budgetTotal)}',
+                                                    style: context.ts(
+                                                      9,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white.withValues(alpha: 0.6),
+                                                    ),
+                                                  ),
+                                                ],
                                               ],
                                             ),
 
@@ -1151,6 +1169,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             title: 'Monthly Overview',
                             icon: PesaFlowIcons.income,
                             child: _buildMonthlyOverview(theme),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing20),
+
+                        // ── Spending Activity Heatmap Calendar ──
+                        StaggeredFadeSlide(
+                          index: 3,
+                          child: CollapsibleSection(
+                            title: 'Spending Activity',
+                            icon: PesaFlowIcons.calendar,
+                            child: const SpendingHeatmapCard(),
                           ),
                         ),
                         const SizedBox(height: kSpacing20),
