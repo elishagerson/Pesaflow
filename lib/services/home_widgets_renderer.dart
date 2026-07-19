@@ -25,7 +25,8 @@ class HomeWidgetsRenderer {
     required String widgetName,
   }) async {
     try {
-      final boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final boundary =
+          key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) return;
 
       // Use a high pixel ratio of 3.0 so the widgets remain crisp when resized
@@ -81,12 +82,17 @@ class WidgetHeatmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = theme.extension<AppColorsTheme>()!;
-    final totalStr = NumberFormat.simpleCurrency(name: 'TZS ', decimalDigits: 0).format(data.totalExpenditure);
+    final totalStr = NumberFormat.simpleCurrency(
+      name: 'TZS ',
+      decimalDigits: 0,
+    ).format(data.totalExpenditure);
 
     // Calculate grid start date (aligning Sundays)
     final startDayOfWeek = data.startDate.weekday;
     final daysToSubtract = startDayOfWeek == 7 ? 0 : startDayOfWeek;
-    final gridStartDate = data.startDate.subtract(Duration(days: daysToSubtract));
+    final gridStartDate = data.startDate.subtract(
+      Duration(days: daysToSubtract),
+    );
 
     final weeks = <List<DateTime>>[];
     for (int w = 0; w < 20; w++) {
@@ -152,7 +158,11 @@ class WidgetHeatmap extends StatelessWidget {
                     children: week.map((day) {
                       final dayKey = DateFormat('yyyy-MM-dd').format(day);
                       final amount = data.dailyExpenses[dayKey] ?? 0;
-                      final cellColor = _getCellColor(amount, data.maxExpense, appColors);
+                      final cellColor = _getCellColor(
+                        amount,
+                        data.maxExpense,
+                        appColors,
+                      );
 
                       return Container(
                         width: 10,
@@ -194,8 +204,14 @@ class WidgetSafeToSpend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = theme.extension<AppColorsTheme>()!;
-    final remainingStr = NumberFormat.simpleCurrency(name: 'Tsh ', decimalDigits: 0).format(remainingCents / 100);
-    final limitStr = NumberFormat.simpleCurrency(name: 'Limit: Tsh ', decimalDigits: 0).format(limitCents / 100);
+    final remainingStr = NumberFormat.simpleCurrency(
+      name: 'Tsh ',
+      decimalDigits: 0,
+    ).format(remainingCents / 100);
+    final limitStr = NumberFormat.simpleCurrency(
+      name: 'Limit: Tsh ',
+      decimalDigits: 0,
+    ).format(limitCents / 100);
 
     return Theme(
       data: theme,
@@ -243,7 +259,9 @@ class WidgetSafeToSpend extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: percentage.clamp(0.0, 1.0),
                 minHeight: 8,
-                backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                backgroundColor: theme.colorScheme.onSurface.withValues(
+                  alpha: 0.08,
+                ),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   percentage >= 1.0
                       ? appColors.expenseColor
@@ -273,7 +291,11 @@ class WidgetQuickTemplates extends StatelessWidget {
   final List<Map<String, dynamic>> templates;
   final ThemeData theme;
 
-  const WidgetQuickTemplates({super.key, required this.templates, required this.theme});
+  const WidgetQuickTemplates({
+    super.key,
+    required this.templates,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -339,15 +361,21 @@ class WidgetQuickTemplates extends StatelessWidget {
                     final t = list[index];
                     final displayName = t['name']?.isNotEmpty == true
                         ? t['name']
-                        : (t['description']?.isNotEmpty == true ? t['description'] : 'Template');
+                        : (t['description']?.isNotEmpty == true
+                              ? t['description']
+                              : 'Template');
 
                     return Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.04,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.06,
+                          ),
                         ),
                       ),
                       child: Row(
@@ -365,7 +393,9 @@ class WidgetQuickTemplates extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.8,
+                                ),
                               ),
                             ),
                           ),
@@ -389,7 +419,11 @@ class WidgetRecentTransactions extends StatelessWidget {
   final List<TransactionWithCategoryAndAccount> transactions;
   final ThemeData theme;
 
-  const WidgetRecentTransactions({super.key, required this.transactions, required this.theme});
+  const WidgetRecentTransactions({
+    super.key,
+    required this.transactions,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +462,7 @@ class WidgetRecentTransactions extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: kSpacing12),
             if (list.isEmpty)
               Expanded(
                 child: Center(
@@ -441,51 +475,61 @@ class WidgetRecentTransactions extends StatelessWidget {
                 ),
               )
             else
-              Column(
-                children: list.map((tx) {
-                  final isExpense = tx.transaction.type.toLowerCase() == 'expense';
-                  final amountSign = isExpense ? '-' : '+';
-                  final amountColor = isExpense ? appColors.expenseColor : appColors.incomeColor;
-                  final amountStr = NumberFormat.simpleCurrency(name: 'Tsh ', decimalDigits: 0).format(tx.transaction.amount / 100);
+              Expanded(
+                child: Column(
+                  children: list.map((tx) {
+                    final isExpense =
+                        tx.transaction.type.toLowerCase() == 'expense';
+                    final amountSign = isExpense ? '-' : '+';
+                    final amountColor = isExpense
+                        ? appColors.expenseColor
+                        : appColors.incomeColor;
+                    final amountStr = NumberFormat.simpleCurrency(
+                      name: 'Tsh ',
+                      decimalDigits: 0,
+                    ).format(tx.transaction.amount / 100);
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                tx.transaction.description,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 6.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tx.transaction.description,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.85),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                tx.category.name,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                Text(
+                                  tx.category.name,
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.4),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Text(
-                          '$amountSign$amountStr',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: amountColor,
+                          Text(
+                            '$amountSign$amountStr',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: amountColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
           ],
         ),
