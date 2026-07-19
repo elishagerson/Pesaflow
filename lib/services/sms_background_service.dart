@@ -10,6 +10,18 @@ import '../domain/sms/provider_matcher.dart';
 
 /// Top-level VM entry point running inside a separate native background Isolate.
 /// Intercepts incoming carrier transaction alerts when the app is backgrounded or closed.
+///
+/// NOTE: Because this function executes in a separate background Isolate, it does
+/// not share the main UI isolate's memory state, Riverpod ProviderContainer, or
+/// SQLite connection.
+///
+/// PERFORMANCE TRADE-OFF:
+/// - Creating a `ProviderContainer` here initializes a completely fresh dependency graph.
+/// - This includes spinning up a new SQLite connection (`AppDatabase`) on the background thread.
+/// - Rapid incoming SMS bursts can spawn concurrent db operations.
+/// - To prevent file lock contention and memory leaks:
+///   1. The `container` MUST be cleanly disposed in the `finally` block to release DB handles.
+///   2. Avoid introducing complex UI providers/states to this background graph.
 @pragma('vm:entry-point')
 void backgroundMessageHandler(SmsMessage message) async {
   developer.log(
