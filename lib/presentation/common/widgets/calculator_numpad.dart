@@ -77,7 +77,9 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
       final result = _parseAndEval(_expr);
       if (result != null) {
         // Format to remove trailing .0 if integer
-        _expr = result % 1 == 0 ? result.toInt().toString() : result.toStringAsFixed(2);
+        _expr = result % 1 == 0
+            ? result.toInt().toString()
+            : result.toStringAsFixed(2);
       }
     } catch (_) {
       // Invalid expression, do nothing
@@ -98,7 +100,7 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     // Find the last occurrence of + or - not inside any priority (if we had parentheses)
     int opIndex = -1;
     String currentOp = '';
-    
+
     // Find + or - from right to left to maintain left-to-right evaluation order
     for (int i = expr.length - 1; i >= 0; i--) {
       final char = expr[i];
@@ -155,23 +157,26 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     VoidCallback? customTap,
   }) {
     final theme = Theme.of(context);
-    
-    final finalBg = bgColor ?? (isPrimary 
-        ? theme.colorScheme.primary 
-        : theme.colorScheme.surfaceContainerHigh);
 
-    final finalTextColor = textColor ?? (isPrimary
-        ? Colors.white
-        : theme.colorScheme.onSurface);
+    final finalBg =
+        bgColor ??
+        (isPrimary
+            ? theme.colorScheme.primary
+            : theme.colorScheme.surfaceContainerHigh);
+
+    final finalTextColor =
+        textColor ?? (isPrimary ? Colors.white : theme.colorScheme.onSurface);
 
     return Expanded(
       flex: flex,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: TactileSpringContainer(
-          onTap: customTap ?? () => icon != null && text == '⌫' 
-              ? _onKeyPress('⌫') 
-              : _onKeyPress(text),
+          onTap:
+              customTap ??
+              () => icon != null && text == '⌫'
+                  ? _onKeyPress('⌫')
+                  : _onKeyPress(text),
           child: Container(
             height: 52,
             decoration: BoxDecoration(
@@ -183,7 +188,7 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
               ),
             ),
             alignment: Alignment.center,
-            child: icon != null 
+            child: icon != null
                 ? Icon(icon, color: finalTextColor, size: 20)
                 : Text(
                     text,
@@ -205,7 +210,10 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     final appColors = theme.extension<AppColorsTheme>()!;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing8, vertical: kSpacing4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: kSpacing8,
+        vertical: kSpacing4,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
@@ -238,25 +246,37 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                 opacity: animation,
                 child: SizeTransition(
                   sizeFactor: animation,
-                  axisAlignment: -1.0,
+                  alignment: Alignment.topCenter,
                   child: child,
                 ),
               );
             },
-            child: _showOperators 
+            child: _showOperators
                 ? Column(
                     key: const ValueKey('math_layout'),
                     children: [
                       Row(
                         children: [
-                          _buildButton(text: 'C', textColor: appColors.expenseColor),
-                          _buildButton(text: '⌫', icon: PesaFlowIcons.backspace),
+                          _buildButton(
+                            text: 'C',
+                            textColor: appColors.expenseColor,
+                          ),
+                          _buildButton(
+                            text: '⌫',
+                            icon: PesaFlowIcons.backspace,
+                          ),
                           _buildButton(
                             text: '+−',
-                            bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.15),
                             textColor: theme.colorScheme.primary,
                           ),
-                          _buildButton(text: '/', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                          _buildButton(
+                            text: '/',
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.4),
+                            textColor: theme.colorScheme.primary,
+                          ),
                         ],
                       ),
                       Row(
@@ -264,7 +284,12 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '7'),
                           _buildButton(text: '8'),
                           _buildButton(text: '9'),
-                          _buildButton(text: '*', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                          _buildButton(
+                            text: '*',
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.4),
+                            textColor: theme.colorScheme.primary,
+                          ),
                         ],
                       ),
                       Row(
@@ -272,7 +297,12 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '4'),
                           _buildButton(text: '5'),
                           _buildButton(text: '6'),
-                          _buildButton(text: '-', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                          _buildButton(
+                            text: '-',
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.4),
+                            textColor: theme.colorScheme.primary,
+                          ),
                         ],
                       ),
                       Row(
@@ -280,7 +310,12 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '1'),
                           _buildButton(text: '2'),
                           _buildButton(text: '3'),
-                          _buildButton(text: '+', bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.4), textColor: theme.colorScheme.primary),
+                          _buildButton(
+                            text: '+',
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.4),
+                            textColor: theme.colorScheme.primary,
+                          ),
                         ],
                       ),
                       Row(
@@ -288,7 +323,11 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '.'),
                           _buildButton(text: '0'),
                           _buildButton(text: '='),
-                          _buildButton(text: 'Done', isPrimary: true, customTap: widget.onConfirm),
+                          _buildButton(
+                            text: 'Done',
+                            isPrimary: true,
+                            customTap: widget.onConfirm,
+                          ),
                         ],
                       ),
                     ],
@@ -301,7 +340,10 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '7'),
                           _buildButton(text: '8'),
                           _buildButton(text: '9'),
-                          _buildButton(text: '⌫', icon: PesaFlowIcons.backspace),
+                          _buildButton(
+                            text: '⌫',
+                            icon: PesaFlowIcons.backspace,
+                          ),
                         ],
                       ),
                       Row(
@@ -309,7 +351,10 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '4'),
                           _buildButton(text: '5'),
                           _buildButton(text: '6'),
-                          _buildButton(text: 'C', textColor: appColors.expenseColor),
+                          _buildButton(
+                            text: 'C',
+                            textColor: appColors.expenseColor,
+                          ),
                         ],
                       ),
                       Row(
@@ -319,7 +364,8 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                           _buildButton(text: '3'),
                           _buildButton(
                             text: '+−',
-                            bgColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.15),
+                            bgColor: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.15),
                             textColor: theme.colorScheme.primary,
                           ),
                         ],
@@ -328,7 +374,12 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
                         children: [
                           _buildButton(text: '.'),
                           _buildButton(text: '0'),
-                          _buildButton(text: 'Done', isPrimary: true, flex: 2, customTap: widget.onConfirm),
+                          _buildButton(
+                            text: 'Done',
+                            isPrimary: true,
+                            flex: 2,
+                            customTap: widget.onConfirm,
+                          ),
                         ],
                       ),
                     ],
@@ -336,5 +387,6 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
           ),
         ],
       ),
+    );
   }
 }
