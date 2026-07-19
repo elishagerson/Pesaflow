@@ -18,12 +18,13 @@ class LiquidGlassOverlay extends StatefulWidget {
 }
 
 class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3600),
@@ -31,7 +32,19 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Pause the continuous repaint loop when the app is backgrounded
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _controller.stop();
+    } else if (state == AppLifecycleState.resumed) {
+      if (!_controller.isAnimating) _controller.repeat();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
   }
@@ -40,6 +53,12 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
+
+    // Respect reduced motion: render children without the animated overlay
+    final reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) return widget.child;
+
     return RepaintBoundary(
       child: Stack(
         children: [
