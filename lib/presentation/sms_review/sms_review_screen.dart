@@ -1208,6 +1208,8 @@ class _SwipeableCardState extends State<SwipeableCard>
   late Animation<double> _rotation;
   late Animation<double> _scale;
 
+  double _screenWidth = 400.0;
+
   final SpringDescription _snapSpring = const SpringDescription(
     mass: 0.6,
     stiffness: 200,
@@ -1238,6 +1240,12 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _screenWidth = MediaQuery.sizeOf(context).width;
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -1245,13 +1253,13 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   void _onPanUpdate(DragUpdateDetails details) {
     final newDx = (_position.value.dx + details.delta.dx).clamp(
-      -MediaQuery.of(context).size.width,
-      MediaQuery.of(context).size.width,
+      -_screenWidth,
+      _screenWidth,
     );
     final newDy = _position.value.dy + details.delta.dy;
     final angle = newDx / 800.0;
     final scale =
-        1.0 - (newDx.abs() / MediaQuery.of(context).size.width) * 0.04;
+        1.0 - (newDx.abs() / _screenWidth) * 0.04;
 
     _position = Tween<Offset>(
       begin: Offset.zero,
@@ -1260,7 +1268,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     _rotation = Tween<double>(begin: 0.0, end: angle).animate(_controller);
     _scale = Tween<double>(begin: 1.0, end: scale).animate(_controller);
 
-    final threshold = MediaQuery.of(context).size.width * 0.35;
+    final threshold = _screenWidth * 0.35;
     if (newDx.abs() > threshold && !_hapticTriggered) {
       HapticFeedback.mediumImpact();
       _hapticTriggered = true;
@@ -1272,7 +1280,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _onPanEnd(DragEndDetails details) {
-    final threshold = MediaQuery.of(context).size.width * 0.35;
+    final threshold = _screenWidth * 0.35;
     final dx = _position.value.dx;
 
     if (dx > threshold) {
@@ -1319,7 +1327,7 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   @override
   Widget build(BuildContext context) {
-    final threshold = MediaQuery.of(context).size.width * 0.35;
+    final threshold = _screenWidth * 0.35;
 
     return GestureDetector(
       onPanUpdate: _onPanUpdate,
