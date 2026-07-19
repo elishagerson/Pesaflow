@@ -28,6 +28,8 @@ import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
+import 'package:pesaflow/services/home_widgets_renderer.dart';
+import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
@@ -254,98 +256,114 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
 
-    return Scaffold(
-      appBar: IosNavBar(
-        title: '${_getGreeting()}, $trackerName',
-        largeTitle: true,
-        leading: TactileSpringContainer(
-          onTap: () => _showWorkspaceSelectorSheet(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kSpacing14,
-              vertical: kSpacing8,
-            ),
-            decoration: BoxDecoration(
-              color: onSurface.withValues(alpha: 0.04),
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(
-                color: onSurface.withValues(alpha: 0.07),
-                width: 0.8,
+    final heatmapAsync = ref.watch(spendingHeatmapProvider);
+    final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
+
+    // Trigger AppWidget captures post-frame so the launcher widgets update dynamically
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final heatmapData = heatmapAsync.value;
+      final templates = templatesAsync.value;
+      if (heatmapData != null) {
+        await HomeWidgetsRenderer.captureAndUpdate(
+          key: HomeWidgetsRenderer.heatmapKey,
+          imageKey: 'heatmap_image_path',
+          widgetName: 'SpendingHeatmapWidgetProvider',
+        );
+      }
+      await HomeWidgetsRenderer.captureAndUpdate(
+        key: HomeWidgetsRenderer.safeToSpendKey,
+        imageKey: 'safe_to_spend_image_path',
+        widgetName: 'SafeToSpendWidgetProvider',
+      );
+      if (templates != null) {
+        await HomeWidgetsRenderer.captureAndUpdate(
+          key: HomeWidgetsRenderer.quickTemplatesKey,
+          imageKey: 'quick_templates_image_path',
+          widgetName: 'QuickTemplatesWidgetProvider',
+        );
+      }
+      final transactions = recentTransAsync.value;
+      if (transactions != null) {
+        await HomeWidgetsRenderer.captureAndUpdate(
+          key: HomeWidgetsRenderer.recentTransactionsKey,
+          imageKey: 'recent_transactions_image_path',
+          widgetName: 'RecentTransactionsWidgetProvider',
+        );
+      }
+    });
+
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: IosNavBar(
+            title: '${_getGreeting()}, $trackerName',
+            largeTitle: true,
+            leading: TactileSpringContainer(
+              onTap: () => _showWorkspaceSelectorSheet(context),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing14,
+                  vertical: kSpacing8,
+                ),
+                decoration: BoxDecoration(
+                  color: onSurface.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    color: onSurface.withValues(alpha: 0.07),
+                    width: 0.8,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: trackerColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    Text(
+                      trackerName,
+                      style: context.ts(
+                        13,
+                        fontWeight: FontWeight.bold,
+                        color: onSurface,
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing4),
+                    Icon(
+                      PesaFlowIcons.chevronDown,
+                      size: 14,
+                      color: onSurface.withValues(alpha: 0.45),
+                    ),
+                  ],
+                ),
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
+            actions: [
+              TactileSpringContainer(
+                onTap: () =>
+                    ref.read(paletteVisibilityProvider.notifier).toggle(),
+                child: Container(
+                  padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
-                    color: trackerColor,
+                    color: onSurface.withValues(alpha: 0.04),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: onSurface.withValues(alpha: 0.08),
+                      width: 0.8,
+                    ),
                   ),
-                ),
-                const SizedBox(width: kSpacing8),
-                Text(
-                  trackerName,
-                  style: context.ts(
-                    13,
-                    fontWeight: FontWeight.bold,
-                    color: onSurface,
-                  ),
-                ),
-                const SizedBox(width: kSpacing4),
-                Icon(
-                  PesaFlowIcons.chevronDown,
-                  size: 14,
-                  color: onSurface.withValues(alpha: 0.45),
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          TactileSpringContainer(
-            onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
-            child: Container(
-              padding: const EdgeInsets.all(kSpacing10),
-              decoration: BoxDecoration(
-                color: onSurface.withValues(alpha: 0.04),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: onSurface.withValues(alpha: 0.08),
-                  width: 0.8,
+                  child: Icon(PesaFlowIcons.search, color: onSurface, size: 20),
                 ),
               ),
-              child: Icon(PesaFlowIcons.search, color: onSurface, size: 20),
-            ),
-          ),
-          const SizedBox(width: kSpacing8),
-          TactileSpringContainer(
-            onTap: () => context.go('/settings'),
-            child: Container(
-              padding: const EdgeInsets.all(kSpacing10),
-              decoration: BoxDecoration(
-                color: onSurface.withValues(alpha: 0.04),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: onSurface.withValues(alpha: 0.08),
-                  width: 0.8,
-                ),
-              ),
-              child: Icon(
-                PesaFlowIcons.personOutline,
-                color: onSurface,
-                size: 20,
-              ),
-            ),
-          ),
-          const SizedBox(width: kSpacing8),
-          TactileSpringContainer(
-            onTap: () => context.push('/sms-review'),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
+              const SizedBox(width: kSpacing8),
+              TactileSpringContainer(
+                onTap: () => context.go('/settings'),
+                child: Container(
                   padding: const EdgeInsets.all(kSpacing10),
                   decoration: BoxDecoration(
                     color: onSurface.withValues(alpha: 0.04),
@@ -356,555 +374,533 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ),
                   child: Icon(
-                    PesaFlowIcons.notification,
-                    size: 20,
+                    PesaFlowIcons.personOutline,
                     color: onSurface,
+                    size: 20,
                   ),
                 ),
-                if (pendingReviewCount > 0)
-                  Positioned(
-                    right: -2,
-                    top: -2,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing4,
-                        vertical: kSpacing2,
-                      ),
+              ),
+              const SizedBox(width: kSpacing8),
+              TactileSpringContainer(
+                onTap: () => context.push('/sms-review'),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(kSpacing10),
                       decoration: BoxDecoration(
-                        color: context.appColors.expenseColor,
-                        borderRadius: BorderRadius.circular(100),
+                        color: onSurface.withValues(alpha: 0.04),
+                        shape: BoxShape.circle,
                         border: Border.all(
-                          color: theme.colorScheme.surface,
-                          width: 1.5,
+                          color: onSurface.withValues(alpha: 0.08),
+                          width: 0.8,
                         ),
                       ),
-                      child: Text(
-                        '$pendingReviewCount',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.w900,
-                        ),
+                      child: Icon(
+                        PesaFlowIcons.notification,
+                        size: 20,
+                        color: onSurface,
                       ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        top: false,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            if (notification is ScrollUpdateNotification) {
-              final double velocity = notification.scrollDelta?.abs() ?? 0.0;
-              final double rawSpeed =
-                  1.0 + (velocity / 12.0).clamp(0.0, 4.0);
-              // Quantize to 0.5 increments to avoid per-frame provider writes
-              final double quantized = (rawSpeed * 2).roundToDouble() / 2;
-              final current = ref.read(scrollSpeedProvider);
-              if (current != quantized) {
-                ref.read(scrollSpeedProvider.notifier).state = quantized;
-              }
-            } else if (notification is ScrollEndNotification) {
-              if (ref.read(scrollSpeedProvider) != 1.0) {
-                ref.read(scrollSpeedProvider.notifier).state = 1.0;
-              }
-            }
-            return false;
-          },
-          child: RefreshIndicator(
-            color: theme.colorScheme.primary,
-            backgroundColor: theme.colorScheme.surface,
-            onRefresh: () async {
-              ref.invalidate(monthlyTotalsProvider);
-              ref.invalidate(netWorthProvider);
-              ref.invalidate(accountsStreamProvider);
-              ref.invalidate(budgetProgressProvider);
-              ref.invalidate(recentTransactionsStreamProvider);
-              ref.invalidate(reviewQueueStreamProvider);
-              ref.invalidate(savingsGoalsStreamProvider);
-            },
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(
-                top: kSpacing4,
-                bottom: kSpacing16,
+                    if (pendingReviewCount > 0)
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing4,
+                            vertical: kSpacing2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.appColors.expenseColor,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: theme.colorScheme.surface,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Text(
+                            '$pendingReviewCount',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // ── 2. Balance Hero Card — "Your Money" ──
-                        Consumer(
-                          builder: (context, ref, _) {
-                            final accountsAsync = ref.watch(accountsStreamProvider);
-                            final accounts = accountsAsync.value ?? [];
-                            
-                            return StaggeredFadeSlide(
-                              index: 0,
-                              child: Interactive3DCard(
-                                borderRadius: AppTheme.radiusCard,
-                                shadowColor: trackerColor,
-                                maxTiltX: 0.08,
-                                maxTiltY: 0.08,
-                                glareOpacity: 0.12,
-                                child: AspectRatio(
-                                  aspectRatio: 1.58,
-                                  child: Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        child: CustomPaint(
-                                          painter: _GlossyWavesPainter(
-                                            accentColor: trackerColor,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(kSpacing20),
-                                        decoration: BoxDecoration(
-                                          gradient: cardGradient,
-                                          borderRadius: BorderRadius.circular(
-                                            AppTheme.radiusCard,
-                                          ),
-                                          border: Border.all(
-                                            color: trackerColor.withValues(
-                                              alpha: 0.18,
+            ],
+          ),
+          body: SafeArea(
+            top: false,
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollUpdateNotification) {
+                  final double velocity =
+                      notification.scrollDelta?.abs() ?? 0.0;
+                  final double rawSpeed =
+                      1.0 + (velocity / 12.0).clamp(0.0, 4.0);
+                  // Quantize to 0.5 increments to avoid per-frame provider writes
+                  final double quantized = (rawSpeed * 2).roundToDouble() / 2;
+                  final current = ref.read(scrollSpeedProvider);
+                  if (current != quantized) {
+                    ref.read(scrollSpeedProvider.notifier).state = quantized;
+                  }
+                } else if (notification is ScrollEndNotification) {
+                  if (ref.read(scrollSpeedProvider) != 1.0) {
+                    ref.read(scrollSpeedProvider.notifier).state = 1.0;
+                  }
+                }
+                return false;
+              },
+              child: RefreshIndicator(
+                color: theme.colorScheme.primary,
+                backgroundColor: theme.colorScheme.surface,
+                onRefresh: () async {
+                  ref.invalidate(monthlyTotalsProvider);
+                  ref.invalidate(netWorthProvider);
+                  ref.invalidate(accountsStreamProvider);
+                  ref.invalidate(budgetProgressProvider);
+                  ref.invalidate(recentTransactionsStreamProvider);
+                  ref.invalidate(reviewQueueStreamProvider);
+                  ref.invalidate(savingsGoalsStreamProvider);
+                },
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(
+                    top: kSpacing4,
+                    bottom: kSpacing16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ── 2. Balance Hero Card — "Your Money" ──
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final accountsAsync = ref.watch(
+                                  accountsStreamProvider,
+                                );
+                                final accounts = accountsAsync.value ?? [];
+
+                                return StaggeredFadeSlide(
+                                  index: 0,
+                                  child: Interactive3DCard(
+                                    borderRadius: AppTheme.radiusCard,
+                                    shadowColor: trackerColor,
+                                    maxTiltX: 0.08,
+                                    maxTiltY: 0.08,
+                                    glareOpacity: 0.12,
+                                    child: AspectRatio(
+                                      aspectRatio: 1.58,
+                                      child: Stack(
+                                        children: [
+                                          Positioned.fill(
+                                            child: CustomPaint(
+                                              painter: _GlossyWavesPainter(
+                                                accentColor: trackerColor,
+                                              ),
                                             ),
-                                            width: 0.8,
                                           ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            // Top Row: PesaFlow Brand + DEBIT
-                                            Row(
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.all(
+                                              kSpacing20,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              gradient: cardGradient,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusCard,
+                                                  ),
+                                              border: Border.all(
+                                                color: trackerColor.withValues(
+                                                  alpha: 0.18,
+                                                ),
+                                                width: 0.8,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
+                                                // Top Row: PesaFlow Brand + DEBIT
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      'pesa',
-                                                      style: theme
-                                                          .textTheme
-                                                          .titleMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            fontSize: 18,
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          'pesa',
+                                                          style: theme
+                                                              .textTheme
+                                                              .titleMedium
+                                                              ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w900,
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .white
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.95,
+                                                                    ),
+                                                                letterSpacing:
+                                                                    -0.5,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          'flow',
+                                                          style: theme
+                                                              .textTheme
+                                                              .titleMedium
+                                                              ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                fontSize: 18,
+                                                                color:
+                                                                    heroTextColor,
+                                                                letterSpacing:
+                                                                    -0.5,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        // Dynamic Spent Progress Badge
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    kSpacing8,
+                                                                vertical: 3,
+                                                              ),
+                                                          decoration: BoxDecoration(
                                                             color: Colors.white
                                                                 .withValues(
-                                                                  alpha: 0.95,
+                                                                  alpha: 0.12,
                                                                 ),
-                                                            letterSpacing: -0.5,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  100,
+                                                                ),
                                                           ),
-                                                    ),
-                                                    Text(
-                                                      'flow',
-                                                      style: theme
-                                                          .textTheme
-                                                          .titleMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            fontSize: 18,
-                                                            color: heroTextColor,
-                                                            letterSpacing: -0.5,
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    // Dynamic Spent Progress Badge
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: kSpacing8,
-                                                            vertical: 3,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withValues(
-                                                              alpha: 0.12,
-                                                            ),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              100,
-                                                            ),
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 10,
-                                                            width: 10,
-                                                            child: CircularProgressIndicator(
-                                                              value: overallPct,
-                                                              strokeWidth: 1.8,
-                                                              backgroundColor:
-                                                                  Colors.white24,
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation<
-                                                                    Color
-                                                                  >(
-                                                                    overallPct > 0.9
+                                                          child: Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 10,
+                                                                width: 10,
+                                                                child: CircularProgressIndicator(
+                                                                  value:
+                                                                      overallPct,
+                                                                  strokeWidth:
+                                                                      1.8,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .white24,
+                                                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                                                    overallPct >
+                                                                            0.9
                                                                         ? context
                                                                               .appColors
                                                                               .expenseColor
                                                                         : Colors
                                                                               .white,
                                                                   ),
-                                                            ),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width:
+                                                                    kSpacing4,
+                                                              ),
+                                                              Text(
+                                                                '${(overallPct * 100).round()}%',
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .labelSmall
+                                                                    ?.copyWith(
+                                                                      fontSize:
+                                                                          8,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          heroTextColor,
+                                                                      letterSpacing:
+                                                                          0.2,
+                                                                    ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                          const SizedBox(
-                                                            width: kSpacing4,
-                                                          ),
-                                                          Text(
-                                                            '${(overallPct * 100).round()}%',
-                                                            style: theme
-                                                                .textTheme
-                                                                .labelSmall
-                                                                ?.copyWith(
-                                                                  fontSize: 8,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color:
-                                                                      heroTextColor,
-                                                                  letterSpacing:
-                                                                      0.2,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: kSpacing8,
+                                                        ),
+                                                        Text(
+                                                          'PREMIUM',
+                                                          style: context.ts(
+                                                            9,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            letterSpacing: 1.5,
+                                                            color: Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.65,
                                                                 ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: kSpacing8,
-                                                    ),
-                                                    Text(
-                                                      'PREMIUM',
-                                                      style: context.ts(
-                                                        9,
-                                                        fontWeight: FontWeight.w900,
-                                                        letterSpacing: 1.5,
-                                                        color: Colors.white
-                                                            .withValues(
-                                                              alpha: 0.65,
-                                                            ),
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
 
-                                            // Middle Row: Contactless Icon
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  PesaFlowIcons.wifi,
-                                                  color: Colors.white.withValues(
-                                                    alpha: 0.6,
-                                                  ),
-                                                  size: 24,
-                                                ),
-                                              ],
-                                            ),
-
-                                            // Balance Section
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  _selectedAccountId != null
-                                                      ? 'ACCOUNT BALANCE'
-                                                      : 'SAFE-TO-SPEND (REMAINING)',
-                                                  style: context.ts(
-                                                    9,
-                                                    fontWeight: FontWeight.w900,
-                                                    letterSpacing: 1.2,
-                                                    color: Colors.white.withValues(
-                                                      alpha: 0.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: kSpacing4),
-                                                AmountText(
-                                                  amountInCents:
-                                                      _selectedAccountId != null
-                                                      ? (accounts
-                                                            .firstWhere(
-                                                              (a) =>
-                                                                  a.id ==
-                                                                  _selectedAccountId,
-                                                              orElse: () =>
-                                                                  accounts.first,
-                                                            )
-                                                            .balance)
-                                                      : remainingBudget,
-                                                  useMonospace: false,
-                                                  animate: true,
-                                                  style: theme
-                                                      .textTheme
-                                                      .headlineMedium
-                                                      ?.copyWith(
-                                                        fontWeight: FontWeight.w900,
-                                                        fontSize: 30,
-                                                        color: heroTextColor,
-                                                        letterSpacing: -0.5,
-                                                      ),
-                                                ),
-                                                if (_selectedAccountId == null) ...[
-                                                  const SizedBox(height: kSpacing4),
-                                                  Text(
-                                                    'Budget Limit: ${CurrencyFormatter.formatCents(budgetTotal)}',
-                                                    style: context.ts(
-                                                      9,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white.withValues(alpha: 0.6),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ],
-                                            ),
-
-                                            // Bottom Row: Cardholder Name, Expiry, Logo
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                GestureDetector(
-                                                  behavior: HitTestBehavior.opaque,
-                                                  onTap: _selectedAccountId == null
-                                                      ? () =>
-                                                            _showEditCardholderDialog(
-                                                              context,
-                                                              cardholderName,
-                                                            )
-                                                      : null,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            'CARDHOLDER',
-                                                            style: context.ts(
-                                                              7,
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              color: Colors.white
-                                                                  .withValues(
-                                                                    alpha: 0.4,
-                                                                  ),
-                                                            ),
+                                                // Middle Row: Contactless Icon
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      PesaFlowIcons.wifi,
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.6,
                                                           ),
-                                                          if (_selectedAccountId ==
-                                                              null) ...[
-                                                            const SizedBox(
-                                                              width: kSpacing4,
-                                                            ),
-                                                            Icon(
-                                                              PesaFlowIcons.edit,
-                                                              size: 8,
-                                                              color: Colors.white
-                                                                  .withValues(
-                                                                    alpha: 0.4,
-                                                                  ),
-                                                            ),
-                                                          ],
-                                                        ],
-                                                      ),
-                                                      const SizedBox(height: 2),
-                                                      Text(
-                                                        _selectedAccountId != null
-                                                            ? (accounts
-                                                                  .firstWhere(
-                                                                    (a) =>
-                                                                        a.id ==
-                                                                        _selectedAccountId,
-                                                                    orElse: () =>
-                                                                        accounts
-                                                                            .first,
-                                                                  )
-                                                                  .name
-                                                                  .toUpperCase())
-                                                            : cardholderName
-                                                                  .toUpperCase(),
-                                                        style: context.ts(
-                                                          11,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white
-                                                              .withValues(
-                                                                alpha: 0.85,
-                                                              ),
-                                                          letterSpacing: 0.5,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                      size: 24,
+                                                    ),
+                                                  ],
                                                 ),
-                                                // Expiry
+
+                                                // Balance Section
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'VALID THRU',
+                                                      _selectedAccountId != null
+                                                          ? 'ACCOUNT BALANCE'
+                                                          : 'SAFE-TO-SPEND (REMAINING)',
                                                       style: context.ts(
-                                                        7,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.white
-                                                            .withValues(alpha: 0.4),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 2),
-                                                    Text(
-                                                      '∞/∞',
-                                                      style: context.ts(
-                                                        11,
-                                                        fontWeight: FontWeight.bold,
+                                                        9,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        letterSpacing: 1.2,
                                                         color: Colors.white
                                                             .withValues(
-                                                              alpha: 0.85,
+                                                              alpha: 0.5,
                                                             ),
                                                       ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: kSpacing4,
+                                                    ),
+                                                    AmountText(
+                                                      amountInCents:
+                                                          _selectedAccountId !=
+                                                              null
+                                                          ? (accounts
+                                                                .firstWhere(
+                                                                  (a) =>
+                                                                      a.id ==
+                                                                      _selectedAccountId,
+                                                                  orElse: () =>
+                                                                      accounts
+                                                                          .first,
+                                                                )
+                                                                .balance)
+                                                          : remainingBudget,
+                                                      useMonospace: false,
+                                                      animate: true,
+                                                      style: theme
+                                                          .textTheme
+                                                          .headlineMedium
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            fontSize: 30,
+                                                            color:
+                                                                heroTextColor,
+                                                            letterSpacing: -0.5,
+                                                          ),
+                                                    ),
+                                                    if (_selectedAccountId ==
+                                                        null) ...[
+                                                      const SizedBox(
+                                                        height: kSpacing4,
+                                                      ),
+                                                      Text(
+                                                        'Budget Limit: ${CurrencyFormatter.formatCents(budgetTotal)}',
+                                                        style: context.ts(
+                                                          9,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white
+                                                              .withValues(
+                                                                alpha: 0.6,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ],
+                                                ),
+
+                                                // Bottom Row: Cardholder Name, Expiry, Logo
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    GestureDetector(
+                                                      behavior: HitTestBehavior
+                                                          .opaque,
+                                                      onTap:
+                                                          _selectedAccountId ==
+                                                              null
+                                                          ? () =>
+                                                                _showEditCardholderDialog(
+                                                                  context,
+                                                                  cardholderName,
+                                                                )
+                                                          : null,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                'CARDHOLDER',
+                                                                style: context.ts(
+                                                                  7,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.4,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              if (_selectedAccountId ==
+                                                                  null) ...[
+                                                                const SizedBox(
+                                                                  width:
+                                                                      kSpacing4,
+                                                                ),
+                                                                Icon(
+                                                                  PesaFlowIcons
+                                                                      .edit,
+                                                                  size: 8,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.4,
+                                                                      ),
+                                                                ),
+                                                              ],
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
+                                                          ),
+                                                          Text(
+                                                            _selectedAccountId !=
+                                                                    null
+                                                                ? (accounts
+                                                                      .firstWhere(
+                                                                        (a) =>
+                                                                            a.id ==
+                                                                            _selectedAccountId,
+                                                                        orElse: () =>
+                                                                            accounts.first,
+                                                                      )
+                                                                      .name
+                                                                      .toUpperCase())
+                                                                : cardholderName
+                                                                      .toUpperCase(),
+                                                            style: context.ts(
+                                                              11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors
+                                                                  .white
+                                                                  .withValues(
+                                                                    alpha: 0.85,
+                                                                  ),
+                                                              letterSpacing:
+                                                                  0.5,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    // Expiry
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'VALID THRU',
+                                                          style: context.ts(
+                                                            7,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.4,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
+                                                        Text(
+                                                          '∞/∞',
+                                                          style: context.ts(
+                                                            11,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white
+                                                                .withValues(
+                                                                  alpha: 0.85,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    // Card network logo
+                                                    _buildCardNetworkLogo(
+                                                      trackerColor,
                                                     ),
                                                   ],
                                                 ),
-                                                // Card network logo
-                                                _buildCardNetworkLogo(trackerColor),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-
-                        // ── 2b. Account Pills (Below Card) ──
-                        if (accounts.isNotEmpty) ...[
-                          const SizedBox(height: kSpacing16),
-                          SizedBox(
-                            height: 36,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: accounts.length,
-                              itemBuilder: (context, index) {
-                                final account = accounts[index];
-                                final isSelected =
-                                    _selectedAccountId == account.id;
-
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    right: kSpacing8,
-                                    left: index == 0 ? kSpacing2 : 0.0,
-                                  ),
-                                  child: TactileSpringContainer(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_selectedAccountId == account.id) {
-                                          _selectedAccountId =
-                                              null; // Clear filter
-                                        } else {
-                                          _selectedAccountId =
-                                              account.id; // Apply filter
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing14,
-                                        vertical: kSpacing6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? theme.colorScheme.primary
-                                                  .withValues(alpha: 0.25)
-                                            : theme
-                                                  .colorScheme
-                                                  .surfaceContainerHigh,
-                                        borderRadius: BorderRadius.circular(
-                                          100,
-                                        ),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? theme.colorScheme.primary
-                                                    .withValues(alpha: 0.6)
-                                              : theme.colorScheme.onSurface
-                                                    .withValues(alpha: 0.1),
-                                          width: isSelected ? 1.5 : 0.8,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            getAccountIcon(account.icon),
-                                            size: 14,
-                                            color: isSelected
-                                                ? theme.colorScheme.primary
-                                                : theme.colorScheme.onSurface,
-                                          ),
-                                          const SizedBox(width: kSpacing6),
-                                          Text(
-                                            account.name,
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurface,
-                                                ),
-                                          ),
-                                          const SizedBox(width: kSpacing8),
-                                          Text(
-                                            _formatCompact(account.balance),
-                                            style: theme.textTheme.labelSmall
-                                                ?.copyWith(
-                                                  fontFamily: 'monospace',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                            .withValues(
-                                                              alpha: 0.9,
-                                                            )
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurface
-                                                            .withValues(
-                                                              alpha: 0.8,
-                                                            ),
-                                                ),
                                           ),
                                         ],
                                       ),
@@ -913,960 +909,1224 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 );
                               },
                             ),
-                          ),
-                        ] else ...[
-                          const SizedBox(height: kSpacing16),
-                          Center(
-                            child: Text(
-                              'No active accounts. Tap Add Account below to start.',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.6,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: kSpacing16),
 
-                        // ── 3. High-Contrast Action Buttons ──
-                        StaggeredFadeSlide(
-                          index: 1,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TactileSpringContainer(
-                                  onTap: () => context.go('/transactions/add'),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: kSpacing16,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.inverseSurface,
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: theme.colorScheme.inverseSurface,
-                                        width: 1.0,
+                            // ── 2b. Account Pills (Below Card) ──
+                            if (accounts.isNotEmpty) ...[
+                              const SizedBox(height: kSpacing16),
+                              SizedBox(
+                                height: 36,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: accounts.length,
+                                  itemBuilder: (context, index) {
+                                    final account = accounts[index];
+                                    final isSelected =
+                                        _selectedAccountId == account.id;
+
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        right: kSpacing8,
+                                        left: index == 0 ? kSpacing2 : 0.0,
                                       ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: trackerColor.withValues(
-                                            alpha: 0.15,
+                                      child: TactileSpringContainer(
+                                        onTap: () {
+                                          setState(() {
+                                            if (_selectedAccountId ==
+                                                account.id) {
+                                              _selectedAccountId =
+                                                  null; // Clear filter
+                                            } else {
+                                              _selectedAccountId =
+                                                  account.id; // Apply filter
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing14,
+                                            vertical: kSpacing6,
                                           ),
-                                          blurRadius: 10,
-                                          spreadRadius: 0.5,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          PesaFlowIcons.add,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                        const SizedBox(width: kSpacing6),
-                                        Text(
-                                          'Add transaction',
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900,
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
+                                                      .withValues(alpha: 0.25)
+                                                : theme
+                                                      .colorScheme
+                                                      .surfaceContainerHigh,
+                                            borderRadius: BorderRadius.circular(
+                                              100,
+                                            ),
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? theme.colorScheme.primary
+                                                        .withValues(alpha: 0.6)
+                                                  : theme.colorScheme.onSurface
+                                                        .withValues(alpha: 0.1),
+                                              width: isSelected ? 1.5 : 0.8,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                getAccountIcon(account.icon),
+                                                size: 14,
+                                                color: isSelected
+                                                    ? theme.colorScheme.primary
+                                                    : theme
+                                                          .colorScheme
+                                                          .onSurface,
                                               ),
+                                              const SizedBox(width: kSpacing6),
+                                              Text(
+                                                account.name,
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: isSelected
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurface,
+                                                    ),
+                                              ),
+                                              const SizedBox(width: kSpacing8),
+                                              Text(
+                                                _formatCompact(account.balance),
+                                                style: theme
+                                                    .textTheme
+                                                    .labelSmall
+                                                    ?.copyWith(
+                                                      fontFamily: 'monospace',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: isSelected
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                                .withValues(
+                                                                  alpha: 0.9,
+                                                                )
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withValues(
+                                                                  alpha: 0.8,
+                                                                ),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                              const SizedBox(width: kSpacing12),
-                              Expanded(
-                                child: TactileSpringContainer(
-                                  onTap: () => _showAddAccountDialog(context),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: kSpacing16,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: onSurface.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: onSurface.withValues(
-                                          alpha: 0.12,
-                                        ),
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          PesaFlowIcons.wallet,
-                                          color: onSurface,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(width: kSpacing6),
-                                        Text(
-                                          'Add account',
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                                color: onSurface,
-                                                fontWeight: FontWeight.w900,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
+                            ] else ...[
+                              const SizedBox(height: kSpacing16),
+                              Center(
+                                child: Text(
+                                  'No active accounts. Tap Add Account below to start.',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
                                   ),
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing20),
+                            const SizedBox(height: kSpacing16),
 
-                        // ── 3b. Quick Actions ──
-                        StaggeredFadeSlide(
-                          index: 2,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: kSpacing20,
-                            ),
-                            child: Row(
-                              children: [
-                                _QuickActionButton(
-                                  icon: PesaFlowIcons.expense,
-                                  label: 'Expense',
-                                  color: context.appColors.expenseColor,
-                                  onTap: () => context.push(
-                                    '/transactions/add?type=Expense',
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing10),
-                                _QuickActionButton(
-                                  icon: PesaFlowIcons.income,
-                                  label: 'Income',
-                                  color: context.appColors.incomeColor,
-                                  onTap: () => context.push(
-                                    '/transactions/add?type=Income',
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing10),
-                                _QuickActionButton(
-                                  icon: PesaFlowIcons.transfer,
-                                  label: 'Transfer',
-                                  color: context.appColors.transferColor,
-                                  onTap: () => context.push(
-                                    '/transactions/add?type=Transfer',
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing10),
-                                _QuickActionButton(
-                                  icon: PesaFlowIcons.goal,
-                                  label: 'Goal',
-                                  color: context.appColors.transferColor,
-                                  onTap: () =>
-                                      context.push('/savings-goals/add'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                         const SizedBox(height: kSpacing20),
-
-                        // ── Quick Templates Row ──
-                        Consumer(
-                          builder: (context, ref, _) {
-                            final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
-                            return templatesAsync.when(
-                              data: (templates) {
-                                if (templates.isEmpty) return const SizedBox.shrink();
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
-                                      child: Text(
-                                        'QUICK TEMPLATES',
-                                        style: context.ts(
-                                          9,
-                                          fontWeight: FontWeight.w900,
-                                          letterSpacing: 1.2,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing10),
-                                    SizedBox(
-                                      height: 38,
-                                      child: ListView.builder(
-                                        padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
-                                        scrollDirection: Axis.horizontal,
-                                        physics: const BouncingScrollPhysics(),
-                                        itemCount: templates.length,
-                                        itemBuilder: (context, index) {
-                                          final t = templates[index];
-                                          final displayName = t['name']?.isNotEmpty == true ? t['name'] : (t['description']?.isNotEmpty == true ? t['description'] : 'Template');
-                                          return Padding(
-                                            padding: const EdgeInsets.only(right: kSpacing8),
-                                            child: TactileSpringContainer(
-                                              onTap: () {
-                                                triggerHaptic(HapticType.selection);
-                                                final type = t['type'] ?? 'expense';
-                                                final desc = t['description'] ?? '';
-                                                final amount = t['amountCents'] ?? 0;
-                                                final catId = t['categoryId'] ?? '';
-                                                final accId = t['accountId'] ?? '';
-                                                context.push(
-                                                  '/transactions/add?type=$type&description=${Uri.encodeComponent(desc)}&amount=$amount&categoryId=$catId&accountId=$accId',
-                                                );
-                                              },
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: kSpacing14,
-                                                  vertical: kSpacing8,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: onSurface.withValues(alpha: 0.05),
-                                                  borderRadius: BorderRadius.circular(100),
-                                                  border: Border.all(
-                                                    color: onSurface.withValues(alpha: 0.08),
-                                                    width: 0.8,
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      PesaFlowIcons.bookmark,
-                                                      size: 13,
-                                                      color: theme.colorScheme.primary,
-                                                    ),
-                                                    const SizedBox(width: kSpacing6),
-                                                    Text(
-                                                      displayName,
-                                                      style: context.ts(
-                                                        12,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: onSurface.withValues(alpha: 0.85),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(height: kSpacing20),
-                                  ],
-                                );
-                              },
-                              loading: () => const SizedBox.shrink(),
-                              error: (_, _) => const SizedBox.shrink(),
-                            );
-                          },
-                        ),
-
-                        // ── SMS auto-categorization count ──
-                        Consumer(
-                          builder: (context, ref, _) {
-                            final smsCountAsync = ref.watch(
-                              todaySmsCountProvider,
-                            );
-                            return smsCountAsync.when(
-                              data: (count) {
-                                if (count == 0) return const SizedBox.shrink();
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: kSpacing12,
-                                    left: kSpacing20,
-                                    right: kSpacing20,
-                                  ),
-                                  child: Center(
+                            // ── 3. High-Contrast Action Buttons ──
+                            StaggeredFadeSlide(
+                              index: 1,
+                              child: Row(
+                                children: [
+                                  Expanded(
                                     child: TactileSpringContainer(
-                                      onTap: () => context.push('/sms-review'),
+                                      onTap: () =>
+                                          context.go('/transactions/add'),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: kSpacing16,
-                                          vertical: kSpacing10,
+                                          vertical: kSpacing16,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.primary
-                                              .withValues(alpha: 0.08),
+                                          color:
+                                              theme.colorScheme.inverseSurface,
                                           borderRadius: BorderRadius.circular(
                                             100,
                                           ),
                                           border: Border.all(
-                                            color: theme.colorScheme.primary
-                                                .withValues(alpha: 0.15),
-                                            width: 0.8,
+                                            color: theme
+                                                .colorScheme
+                                                .inverseSurface,
+                                            width: 1.0,
                                           ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: trackerColor.withValues(
+                                                alpha: 0.15,
+                                              ),
+                                              blurRadius: 10,
+                                              spreadRadius: 0.5,
+                                            ),
+                                          ],
                                         ),
                                         child: Row(
-                                          mainAxisSize: MainAxisSize.min,
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              PesaFlowIcons.message,
-                                              size: 14,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                            const SizedBox(width: kSpacing8),
-                                            Text(
-                                              'Auto-categorized $count message${count == 1 ? '' : 's'} today',
-                                              style: theme.textTheme.labelMedium
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .primary,
-                                                  ),
+                                              PesaFlowIcons.add,
+                                              color: Colors.white,
+                                              size: 20,
                                             ),
                                             const SizedBox(width: kSpacing6),
-                                            Icon(
-                                              PesaFlowIcons.arrowOutward,
-                                              size: 12,
-                                              color: theme.colorScheme.primary,
+                                            Text(
+                                              'Add transaction',
+                                              style: theme.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                              error: (_, _) => const SizedBox.shrink(),
-                              loading: () => const SizedBox.shrink(),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: kSpacing12),
-
-                        // ── 3. Insights — contextual nudges ──
-                        CollapsibleSection(
-                          title: 'Insights',
-                          icon: PesaFlowIcons.lightbulb,
-                          child: const _InsightsCarousel(),
-                        ),
-                        const SizedBox(height: kSpacing20),
-
-                        // ── 4. Monthly Overview — "How your money moved" ──
-                        // (StaggeredFadeSlide indices below are scoped per-column, not sequential)
-                        StaggeredFadeSlide(
-                          index: 2,
-                          child: CollapsibleSection(
-                            title: 'Monthly Overview',
-                            icon: PesaFlowIcons.income,
-                            child: _buildMonthlyOverview(theme),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing20),
-
-                        // ── Spending Activity Heatmap Calendar ──
-                        StaggeredFadeSlide(
-                          index: 3,
-                          child: CollapsibleSection(
-                            title: 'Spending Activity',
-                            icon: PesaFlowIcons.calendar,
-                            child: const SpendingHeatmapCard(),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing20),
-
-                        // ── 5. Recent Activity — "The transactions behind it" ──
-                        CollapsibleSection(
-                          title: 'Recent Activity',
-                          icon: PesaFlowIcons.history,
-                          action: TextButton(
-                            onPressed: () {
-                              context.go('/transactions');
-                            },
-                            child: const Text('See All'),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Clear account filter chip row if _selectedAccountId is active
-                              if (_selectedAccountId != null) ...[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: kSpacing4,
-                                    bottom: kSpacing12,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      InputChip(
-                                        label: Text(
-                                          'Filtered by: ${accounts.firstWhere(
-                                            (a) => a.id == _selectedAccountId,
-                                            orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
-                                          ).name}',
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color:
-                                                    theme.colorScheme.primary,
-                                              ),
-                                        ),
-                                        backgroundColor: theme
-                                            .colorScheme
-                                            .primary
-                                            .withValues(alpha: 0.08),
-                                        side: BorderSide(
-                                          color: theme.colorScheme.primary
-                                              .withValues(alpha: 0.2),
-                                          width: 0.8,
-                                        ),
-                                        deleteIcon: Icon(
-                                          PesaFlowIcons.cancel,
-                                          size: 16,
-                                          color: theme.colorScheme.primary,
-                                        ),
-                                        onDeleted: () {
-                                          setState(() {
-                                            _selectedAccountId = null;
-                                          });
-                                        },
-                                        onPressed: () {
-                                          setState(() {
-                                            _selectedAccountId = null;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ] else ...[
-                                const SizedBox(height: kSpacing4),
-                              ],
-
-                              SkeletonCrossfade(
-                                isLoading:
-                                    recentTransAsync is AsyncLoading &&
-                                    !recentTransAsync.hasValue,
-                                skeleton: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: kSpacing16,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      SkeletonCard(height: 80),
-                                      SizedBox(height: kSpacing8),
-                                      SkeletonCard(height: 80),
-                                    ],
-                                  ),
-                                ),
-                                child: recentTransAsync.when(
-                                  data: (transactions) {
-                                    // Client-side dynamic filtering of recent transactions by account
-                                    final filteredTransactions =
-                                        (_selectedAccountId == null
-                                                ? transactions
-                                                : transactions
-                                                      .where(
-                                                        (t) =>
-                                                            t
-                                                                .transaction
-                                                                .accountId ==
-                                                            _selectedAccountId,
-                                                      )
-                                                      .toList())
-                                            .where(
-                                              (t) => !_pendingDeleteIds
-                                                  .contains(t.transaction.id),
-                                            )
-                                            .toList();
-
-                                    if (filteredTransactions.isEmpty) {
-                                      final isNewUser =
-                                          _selectedAccountId == null;
-                                      return Container(
-                                        width: double.infinity,
+                                  const SizedBox(width: kSpacing12),
+                                  Expanded(
+                                    child: TactileSpringContainer(
+                                      onTap: () =>
+                                          _showAddAccountDialog(context),
+                                      child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                          vertical: kSpacing40,
-                                          horizontal: kSpacing24,
+                                          vertical: kSpacing16,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: theme.colorScheme.surface,
+                                          color: onSurface.withValues(
+                                            alpha: 0.08,
+                                          ),
                                           borderRadius: BorderRadius.circular(
-                                            AppTheme.radiusCard,
+                                            100,
                                           ),
                                           border: Border.all(
                                             color: onSurface.withValues(
-                                              alpha: 0.08,
+                                              alpha: 0.12,
                                             ),
                                             width: 0.5,
                                           ),
                                         ),
-                                        child: Column(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              isNewUser
-                                                  ? PesaFlowIcons.add
-                                                  : PesaFlowIcons.transactions,
-                                              size: isNewUser ? 64 : 40,
-                                              color: isNewUser
-                                                  ? theme.colorScheme.primary
-                                                  : theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant
-                                                        .withValues(alpha: 0.4),
+                                              PesaFlowIcons.wallet,
+                                              color: onSurface,
+                                              size: 18,
                                             ),
-                                            const SizedBox(height: kSpacing12),
+                                            const SizedBox(width: kSpacing6),
                                             Text(
-                                              isNewUser
-                                                  ? 'Welcome to PesaFlow!'
-                                                  : 'No transactions found.',
-                                              style: theme.textTheme.titleSmall
+                                              'Add account',
+                                              style: theme.textTheme.titleMedium
                                                   ?.copyWith(
-                                                    color: isNewUser
-                                                        ? theme
-                                                              .colorScheme
-                                                              .onSurface
-                                                        : theme
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                    fontWeight: FontWeight.bold,
+                                                    color: onSurface,
+                                                    fontWeight: FontWeight.w900,
                                                   ),
                                             ),
-                                            const SizedBox(height: kSpacing4),
-                                            Text(
-                                              isNewUser
-                                                  ? 'Add your first transaction to get started with tracking your finances.'
-                                                  : 'No activity recorded for this specific account.',
-                                              textAlign: TextAlign.center,
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                                  ),
-                                            ),
-                                            if (isNewUser) ...[
-                                              const SizedBox(
-                                                height: kSpacing20,
-                                              ),
-                                              TactileSpringContainer(
-                                                onTap: () => context.go(
-                                                  '/transactions/add',
-                                                ),
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: kSpacing24,
-                                                        vertical: kSpacing12,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .primary,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          100,
-                                                        ),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary
-                                                            .withValues(
-                                                              alpha: 0.3,
-                                                            ),
-                                                        blurRadius: 8,
-                                                        offset: const Offset(
-                                                          0,
-                                                          3,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      const Icon(
-                                                        PesaFlowIcons.add,
-                                                        color: Colors.white,
-                                                        size: 18,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: kSpacing6,
-                                                      ),
-                                                      Text(
-                                                        'Add Transaction',
-                                                        style: theme
-                                                            .textTheme
-                                                            .titleSmall
-                                                            ?.copyWith(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
                                           ],
                                         ),
-                                      );
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
+                            // ── 3b. Quick Actions ──
+                            StaggeredFadeSlide(
+                              index: 2,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: kSpacing20,
+                                ),
+                                child: Row(
+                                  children: [
+                                    _QuickActionButton(
+                                      icon: PesaFlowIcons.expense,
+                                      label: 'Expense',
+                                      color: context.appColors.expenseColor,
+                                      onTap: () => context.push(
+                                        '/transactions/add?type=Expense',
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing10),
+                                    _QuickActionButton(
+                                      icon: PesaFlowIcons.income,
+                                      label: 'Income',
+                                      color: context.appColors.incomeColor,
+                                      onTap: () => context.push(
+                                        '/transactions/add?type=Income',
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing10),
+                                    _QuickActionButton(
+                                      icon: PesaFlowIcons.transfer,
+                                      label: 'Transfer',
+                                      color: context.appColors.transferColor,
+                                      onTap: () => context.push(
+                                        '/transactions/add?type=Transfer',
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing10),
+                                    _QuickActionButton(
+                                      icon: PesaFlowIcons.goal,
+                                      label: 'Goal',
+                                      color: context.appColors.transferColor,
+                                      onTap: () =>
+                                          context.push('/savings-goals/add'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
+                            // ── Quick Templates Row ──
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final templatesAsync = ref.watch(
+                                  transactionTemplatesStreamProvider,
+                                );
+                                return templatesAsync.when(
+                                  data: (templates) {
+                                    if (templates.isEmpty) {
+                                      return const SizedBox.shrink();
                                     }
-
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: filteredTransactions.length,
-                                      itemBuilder: (context, index) {
-                                        final item =
-                                            filteredTransactions[index];
-                                        final trans = item.transaction;
-
-                                        AmountType amtType = AmountType.neutral;
-                                        if (trans.type.toLowerCase() ==
-                                            'income') {
-                                          amtType = AmountType.income;
-                                        } else if (trans.type.toLowerCase() ==
-                                                'expense' ||
-                                            trans.type.toLowerCase() ==
-                                                'airtime' ||
-                                            trans.type.toLowerCase() == 'fee') {
-                                          amtType = AmountType.expense;
-                                        }
-
-                                        return StaggeredFadeSlide(
-                                          index: index,
-                                          child: Dismissible(
-                                            key: Key(trans.id),
-                                            direction:
-                                                DismissDirection.endToStart,
-                                            confirmDismiss: (_) async {
-                                              return await showDialog<bool>(
-                                                    context: context,
-                                                    builder: (ctx) => AlertDialog(
-                                                      title: const Text(
-                                                        'Delete Transaction',
-                                                      ),
-                                                      content: Text(
-                                                        'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(
-                                                                ctx,
-                                                              ).pop(false),
-                                                          child: const Text(
-                                                            'Cancel',
-                                                          ),
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: kSpacing20,
+                                          ),
+                                          child: Text(
+                                            'QUICK TEMPLATES',
+                                            style: context.ts(
+                                              9,
+                                              fontWeight: FontWeight.w900,
+                                              letterSpacing: 1.2,
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.5),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: kSpacing10),
+                                        SizedBox(
+                                          height: 38,
+                                          child: ListView.builder(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing20,
+                                            ),
+                                            scrollDirection: Axis.horizontal,
+                                            physics:
+                                                const BouncingScrollPhysics(),
+                                            itemCount: templates.length,
+                                            itemBuilder: (context, index) {
+                                              final t = templates[index];
+                                              final displayName =
+                                                  t['name']?.isNotEmpty == true
+                                                  ? t['name']
+                                                  : (t['description']
+                                                                ?.isNotEmpty ==
+                                                            true
+                                                        ? t['description']
+                                                        : 'Template');
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: kSpacing8,
+                                                ),
+                                                child: TactileSpringContainer(
+                                                  onTap: () {
+                                                    triggerHaptic(
+                                                      HapticType.selection,
+                                                    );
+                                                    final type =
+                                                        t['type'] ?? 'expense';
+                                                    final desc =
+                                                        t['description'] ?? '';
+                                                    final amount =
+                                                        t['amountCents'] ?? 0;
+                                                    final catId =
+                                                        t['categoryId'] ?? '';
+                                                    final accId =
+                                                        t['accountId'] ?? '';
+                                                    context.push(
+                                                      '/transactions/add?type=$type&description=${Uri.encodeComponent(desc)}&amount=$amount&categoryId=$catId&accountId=$accId',
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal:
+                                                              kSpacing14,
+                                                          vertical: kSpacing8,
                                                         ),
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(
-                                                                ctx,
-                                                              ).pop(true),
-                                                          child: const Text(
-                                                            'Delete',
+                                                    decoration: BoxDecoration(
+                                                      color: onSurface
+                                                          .withValues(
+                                                            alpha: 0.05,
+                                                          ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            100,
+                                                          ),
+                                                      border: Border.all(
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.08,
+                                                            ),
+                                                        width: 0.8,
+                                                      ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          PesaFlowIcons
+                                                              .bookmark,
+                                                          size: 13,
+                                                          color: theme
+                                                              .colorScheme
+                                                              .primary,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: kSpacing6,
+                                                        ),
+                                                        Text(
+                                                          displayName,
+                                                          style: context.ts(
+                                                            12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: onSurface
+                                                                .withValues(
+                                                                  alpha: 0.85,
+                                                                ),
                                                           ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ) ??
-                                                  false;
-                                            },
-                                            background: Container(
-                                              alignment: Alignment.centerRight,
-                                              padding: const EdgeInsets.only(
-                                                right: kSpacing20,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: theme.colorScheme.error,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      AppTheme.radiusCard,
-                                                    ),
-                                              ),
-                                              child: const Icon(
-                                                PesaFlowIcons.delete,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            onDismissed: (_) async {
-                                              final tx = trans;
-                                              setState(() {
-                                                _pendingDeleteIds.add(tx.id);
-                                              });
-                                              UndoDelete.show(
-                                                context: context,
-                                                entityName: 'Transaction',
-                                                onUndo: () async {
-                                                  setState(() {
-                                                    _pendingDeleteIds.remove(
-                                                      tx.id,
-                                                    );
-                                                  });
-                                                  await ref
-                                                      .read(
-                                                        transactionRepositoryProvider,
-                                                      )
-                                                      .createTransaction(tx);
-                                                },
-                                                onDelete: () async {
-                                                  setState(() {
-                                                    _pendingDeleteIds.remove(
-                                                      tx.id,
-                                                    );
-                                                  });
-                                                  await ref
-                                                      .read(
-                                                        transactionRepositoryProvider,
-                                                      )
-                                                      .deleteTransaction(tx.id);
-                                                },
+                                                  ),
+                                                ),
                                               );
                                             },
-                                            child: TactileSpringContainer(
-                                              onTap: () => context.push(
-                                                '/transactions/${trans.id}',
+                                          ),
+                                        ),
+                                        const SizedBox(height: kSpacing20),
+                                      ],
+                                    );
+                                  },
+                                  loading: () => const SizedBox.shrink(),
+                                  error: (_, _) => const SizedBox.shrink(),
+                                );
+                              },
+                            ),
+
+                            // ── SMS auto-categorization count ──
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final smsCountAsync = ref.watch(
+                                  todaySmsCountProvider,
+                                );
+                                return smsCountAsync.when(
+                                  data: (count) {
+                                    if (count == 0) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: kSpacing12,
+                                        left: kSpacing20,
+                                        right: kSpacing20,
+                                      ),
+                                      child: Center(
+                                        child: TactileSpringContainer(
+                                          onTap: () =>
+                                              context.push('/sms-review'),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: kSpacing16,
+                                              vertical: kSpacing10,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.primary
+                                                  .withValues(alpha: 0.08),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              border: Border.all(
+                                                color: theme.colorScheme.primary
+                                                    .withValues(alpha: 0.15),
+                                                width: 0.8,
                                               ),
-                                              child: Container(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: kSpacing6,
-                                                    ),
-                                                padding: const EdgeInsets.all(
-                                                  kSpacing16,
-                                                ),
-                                                decoration: BoxDecoration(
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  PesaFlowIcons.message,
+                                                  size: 14,
                                                   color:
-                                                      theme.colorScheme.surface,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: Border.all(
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.08,
-                                                    ),
-                                                    width: 0.5,
-                                                  ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.08,
-                                                          ),
-                                                      blurRadius: 8,
-                                                      offset: const Offset(
-                                                        0,
-                                                        4,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                      theme.colorScheme.primary,
                                                 ),
-                                                child: Row(
-                                                  children: [
-                                                    // Category Icon Container (Squircle Style)
-                                                    Container(
-                                                      width: 46,
-                                                      height: 46,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            desaturateColor(
-                                                              hexToColor(
-                                                                item
-                                                                    .category
-                                                                    .color,
-                                                              ),
-                                                            ).withValues(
-                                                              alpha: 0.15,
+                                                const SizedBox(
+                                                  width: kSpacing8,
+                                                ),
+                                                Text(
+                                                  'Auto-categorized $count message${count == 1 ? '' : 's'} today',
+                                                  style: theme
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  width: kSpacing6,
+                                                ),
+                                                Icon(
+                                                  PesaFlowIcons.arrowOutward,
+                                                  size: 12,
+                                                  color:
+                                                      theme.colorScheme.primary,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  error: (_, _) => const SizedBox.shrink(),
+                                  loading: () => const SizedBox.shrink(),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: kSpacing12),
+
+                            // ── 3. Insights — contextual nudges ──
+                            CollapsibleSection(
+                              title: 'Insights',
+                              icon: PesaFlowIcons.lightbulb,
+                              child: const _InsightsCarousel(),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
+                            // ── 4. Monthly Overview — "How your money moved" ──
+                            // (StaggeredFadeSlide indices below are scoped per-column, not sequential)
+                            StaggeredFadeSlide(
+                              index: 2,
+                              child: CollapsibleSection(
+                                title: 'Monthly Overview',
+                                icon: PesaFlowIcons.income,
+                                child: _buildMonthlyOverview(theme),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
+                            // ── Spending Activity Heatmap Calendar ──
+                            StaggeredFadeSlide(
+                              index: 3,
+                              child: CollapsibleSection(
+                                title: 'Spending Activity',
+                                icon: PesaFlowIcons.calendar,
+                                child: const SpendingHeatmapCard(),
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
+                            // ── 5. Recent Activity — "The transactions behind it" ──
+                            CollapsibleSection(
+                              title: 'Recent Activity',
+                              icon: PesaFlowIcons.history,
+                              action: TextButton(
+                                onPressed: () {
+                                  context.go('/transactions');
+                                },
+                                child: const Text('See All'),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Clear account filter chip row if _selectedAccountId is active
+                                  if (_selectedAccountId != null) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: kSpacing4,
+                                        bottom: kSpacing12,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          InputChip(
+                                            label: Text(
+                                              'Filtered by: ${accounts.firstWhere(
+                                                (a) => a.id == _selectedAccountId,
+                                                orElse: () => Account(id: '', name: 'Account', type: '', balance: 0, icon: 'wallet', sortOrder: 0, isArchived: false, createdAt: DateTime.now()),
+                                              ).name}',
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                            ),
+                                            backgroundColor: theme
+                                                .colorScheme
+                                                .primary
+                                                .withValues(alpha: 0.08),
+                                            side: BorderSide(
+                                              color: theme.colorScheme.primary
+                                                  .withValues(alpha: 0.2),
+                                              width: 0.8,
+                                            ),
+                                            deleteIcon: Icon(
+                                              PesaFlowIcons.cancel,
+                                              size: 16,
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                            onDeleted: () {
+                                              setState(() {
+                                                _selectedAccountId = null;
+                                              });
+                                            },
+                                            onPressed: () {
+                                              setState(() {
+                                                _selectedAccountId = null;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ] else ...[
+                                    const SizedBox(height: kSpacing4),
+                                  ],
+
+                                  SkeletonCrossfade(
+                                    isLoading:
+                                        recentTransAsync is AsyncLoading &&
+                                        !recentTransAsync.hasValue,
+                                    skeleton: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: kSpacing16,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          SkeletonCard(height: 80),
+                                          SizedBox(height: kSpacing8),
+                                          SkeletonCard(height: 80),
+                                        ],
+                                      ),
+                                    ),
+                                    child: recentTransAsync.when(
+                                      data: (transactions) {
+                                        // Client-side dynamic filtering of recent transactions by account
+                                        final filteredTransactions =
+                                            (_selectedAccountId == null
+                                                    ? transactions
+                                                    : transactions
+                                                          .where(
+                                                            (t) =>
+                                                                t
+                                                                    .transaction
+                                                                    .accountId ==
+                                                                _selectedAccountId,
+                                                          )
+                                                          .toList())
+                                                .where(
+                                                  (t) => !_pendingDeleteIds
+                                                      .contains(
+                                                        t.transaction.id,
+                                                      ),
+                                                )
+                                                .toList();
+
+                                        if (filteredTransactions.isEmpty) {
+                                          final isNewUser =
+                                              _selectedAccountId == null;
+                                          return Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: kSpacing40,
+                                              horizontal: kSpacing24,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.surface,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusCard,
+                                                  ),
+                                              border: Border.all(
+                                                color: onSurface.withValues(
+                                                  alpha: 0.08,
+                                                ),
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  isNewUser
+                                                      ? PesaFlowIcons.add
+                                                      : PesaFlowIcons
+                                                            .transactions,
+                                                  size: isNewUser ? 64 : 40,
+                                                  color: isNewUser
+                                                      ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant
+                                                            .withValues(
+                                                              alpha: 0.4,
                                                             ),
+                                                ),
+                                                const SizedBox(
+                                                  height: kSpacing12,
+                                                ),
+                                                Text(
+                                                  isNewUser
+                                                      ? 'Welcome to PesaFlow!'
+                                                      : 'No transactions found.',
+                                                  style: theme
+                                                      .textTheme
+                                                      .titleSmall
+                                                      ?.copyWith(
+                                                        color: isNewUser
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .onSurface
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  height: kSpacing4,
+                                                ),
+                                                Text(
+                                                  isNewUser
+                                                      ? 'Add your first transaction to get started with tracking your finances.'
+                                                      : 'No activity recorded for this specific account.',
+                                                  textAlign: TextAlign.center,
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                ),
+                                                if (isNewUser) ...[
+                                                  const SizedBox(
+                                                    height: kSpacing20,
+                                                  ),
+                                                  TactileSpringContainer(
+                                                    onTap: () => context.go(
+                                                      '/transactions/add',
+                                                    ),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                kSpacing24,
+                                                            vertical:
+                                                                kSpacing12,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .primary,
                                                         borderRadius:
                                                             BorderRadius.circular(
-                                                              14,
+                                                              100,
                                                             ),
-                                                      ),
-                                                      child: Center(
-                                                        child: Icon(
-                                                          getCategoryIcon(
-                                                            item.category.icon,
-                                                          ),
-                                                          color: hexToColor(
-                                                            item.category.color,
-                                                          ),
-                                                          size: 22,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: kSpacing14,
-                                                    ),
-                                                    // Content
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            trans
-                                                                    .description
-                                                                    .isNotEmpty
-                                                                ? trans
-                                                                      .description
-                                                                : item
-                                                                      .category
-                                                                      .name,
-                                                            style: theme
-                                                                .textTheme
-                                                                .titleMedium
-                                                                ?.copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color:
-                                                                      onSurface,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .primary
+                                                                .withValues(
+                                                                  alpha: 0.3,
                                                                 ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
+                                                            blurRadius: 8,
+                                                            offset:
+                                                                const Offset(
+                                                                  0,
+                                                                  3,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          const Icon(
+                                                            PesaFlowIcons.add,
+                                                            color: Colors.white,
+                                                            size: 18,
                                                           ),
                                                           const SizedBox(
-                                                            height: kSpacing4,
+                                                            width: kSpacing6,
                                                           ),
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                item
-                                                                        .account
-                                                                        ?.name ??
-                                                                    'Offline',
-                                                                style: theme.textTheme.labelSmall?.copyWith(
-                                                                  color: theme
-                                                                      .colorScheme
-                                                                      .onSurface
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.6,
-                                                                      ),
+                                                          Text(
+                                                            'Add Transaction',
+                                                            style: theme
+                                                                .textTheme
+                                                                .titleSmall
+                                                                ?.copyWith(
+                                                                  color: Colors
+                                                                      .white,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w600,
+                                                                          .bold,
                                                                 ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing8,
-                                                              ),
-                                                              Text(
-                                                                trans.createdAt
-                                                                    .toString()
-                                                                    .substring(
-                                                                      0,
-                                                                      10,
-                                                                    ),
-                                                                style: theme
-                                                                    .textTheme
-                                                                    .labelSmall
-                                                                    ?.copyWith(
-                                                                      color: theme
-                                                                          .colorScheme
-                                                                          .onSurfaceVariant,
-                                                                    ),
-                                                              ),
-                                                            ],
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      width: kSpacing12,
-                                                    ),
-                                                    // Amount
-                                                    AmountText(
-                                                      amountInCents:
-                                                          trans.amount,
-                                                      type: amtType,
-                                                      showDecimals: true,
-                                                      style: context.ts(
-                                                        16,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        color:
-                                                            amtType ==
-                                                                AmountType
-                                                                    .income
-                                                            ? AppTheme
-                                                                  .transferColorDark
-                                                            : (amtType ==
-                                                                      AmountType
-                                                                          .expense
-                                                                  ? const Color(
-                                                                      0xFFFF453A,
-                                                                    )
-                                                                  : theme
-                                                                        .colorScheme
-                                                                        .onSurfaceVariant),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          );
+                                        }
+
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount:
+                                              filteredTransactions.length,
+                                          itemBuilder: (context, index) {
+                                            final item =
+                                                filteredTransactions[index];
+                                            final trans = item.transaction;
+
+                                            AmountType amtType =
+                                                AmountType.neutral;
+                                            if (trans.type.toLowerCase() ==
+                                                'income') {
+                                              amtType = AmountType.income;
+                                            } else if (trans.type
+                                                        .toLowerCase() ==
+                                                    'expense' ||
+                                                trans.type.toLowerCase() ==
+                                                    'airtime' ||
+                                                trans.type.toLowerCase() ==
+                                                    'fee') {
+                                              amtType = AmountType.expense;
+                                            }
+
+                                            return StaggeredFadeSlide(
+                                              index: index,
+                                              child: Dismissible(
+                                                key: Key(trans.id),
+                                                direction:
+                                                    DismissDirection.endToStart,
+                                                confirmDismiss: (_) async {
+                                                  return await showDialog<bool>(
+                                                        context: context,
+                                                        builder: (ctx) => AlertDialog(
+                                                          title: const Text(
+                                                            'Delete Transaction',
+                                                          ),
+                                                          content: Text(
+                                                            'Delete "${trans.description.length > 30 ? '${trans.description.substring(0, 30)}…' : trans.description}" (${CurrencyFormatter.formatCents(trans.amount)})?',
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                    ctx,
+                                                                  ).pop(false),
+                                                              child: const Text(
+                                                                'Cancel',
+                                                              ),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                    ctx,
+                                                                  ).pop(true),
+                                                              child: const Text(
+                                                                'Delete',
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ) ??
+                                                      false;
+                                                },
+                                                background: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: kSpacing20,
                                                       ),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        theme.colorScheme.error,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppTheme.radiusCard,
+                                                        ),
+                                                  ),
+                                                  child: const Icon(
+                                                    PesaFlowIcons.delete,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                onDismissed: (_) async {
+                                                  final tx = trans;
+                                                  setState(() {
+                                                    _pendingDeleteIds.add(
+                                                      tx.id,
+                                                    );
+                                                  });
+                                                  UndoDelete.show(
+                                                    context: context,
+                                                    entityName: 'Transaction',
+                                                    onUndo: () async {
+                                                      setState(() {
+                                                        _pendingDeleteIds
+                                                            .remove(tx.id);
+                                                      });
+                                                      await ref
+                                                          .read(
+                                                            transactionRepositoryProvider,
+                                                          )
+                                                          .createTransaction(
+                                                            tx,
+                                                          );
+                                                    },
+                                                    onDelete: () async {
+                                                      setState(() {
+                                                        _pendingDeleteIds
+                                                            .remove(tx.id);
+                                                      });
+                                                      await ref
+                                                          .read(
+                                                            transactionRepositoryProvider,
+                                                          )
+                                                          .deleteTransaction(
+                                                            tx.id,
+                                                          );
+                                                    },
+                                                  );
+                                                },
+                                                child: TactileSpringContainer(
+                                                  onTap: () => context.push(
+                                                    '/transactions/${trans.id}',
+                                                  ),
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: kSpacing6,
+                                                        ),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          kSpacing16,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: theme
+                                                          .colorScheme
+                                                          .surface,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            20,
+                                                          ),
+                                                      border: Border.all(
+                                                        color: onSurface
+                                                            .withValues(
+                                                              alpha: 0.08,
+                                                            ),
+                                                        width: 0.5,
+                                                      ),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: onSurface
+                                                              .withValues(
+                                                                alpha: 0.08,
+                                                              ),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(
+                                                            0,
+                                                            4,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                    child: Row(
+                                                      children: [
+                                                        // Category Icon Container (Squircle Style)
+                                                        Container(
+                                                          width: 46,
+                                                          height: 46,
+                                                          decoration: BoxDecoration(
+                                                            color:
+                                                                desaturateColor(
+                                                                  hexToColor(
+                                                                    item
+                                                                        .category
+                                                                        .color,
+                                                                  ),
+                                                                ).withValues(
+                                                                  alpha: 0.15,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  14,
+                                                                ),
+                                                          ),
+                                                          child: Center(
+                                                            child: Icon(
+                                                              getCategoryIcon(
+                                                                item
+                                                                    .category
+                                                                    .icon,
+                                                              ),
+                                                              color: hexToColor(
+                                                                item
+                                                                    .category
+                                                                    .color,
+                                                              ),
+                                                              size: 22,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: kSpacing14,
+                                                        ),
+                                                        // Content
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                trans
+                                                                        .description
+                                                                        .isNotEmpty
+                                                                    ? trans
+                                                                          .description
+                                                                    : item
+                                                                          .category
+                                                                          .name,
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .titleMedium
+                                                                    ?.copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      color:
+                                                                          onSurface,
+                                                                    ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                              const SizedBox(
+                                                                height:
+                                                                    kSpacing4,
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    item.account?.name ??
+                                                                        'Offline',
+                                                                    style: theme.textTheme.labelSmall?.copyWith(
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .onSurface
+                                                                          .withValues(
+                                                                            alpha:
+                                                                                0.6,
+                                                                          ),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width:
+                                                                        kSpacing8,
+                                                                  ),
+                                                                  Text(
+                                                                    trans
+                                                                        .createdAt
+                                                                        .toString()
+                                                                        .substring(
+                                                                          0,
+                                                                          10,
+                                                                        ),
+                                                                    style: theme
+                                                                        .textTheme
+                                                                        .labelSmall
+                                                                        ?.copyWith(
+                                                                          color: theme
+                                                                              .colorScheme
+                                                                              .onSurfaceVariant,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: kSpacing12,
+                                                        ),
+                                                        // Amount
+                                                        AmountText(
+                                                          amountInCents:
+                                                              trans.amount,
+                                                          type: amtType,
+                                                          showDecimals: true,
+                                                          style: context.ts(
+                                                            16,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            color:
+                                                                amtType ==
+                                                                    AmountType
+                                                                        .income
+                                                                ? AppTheme
+                                                                      .transferColorDark
+                                                                : (amtType ==
+                                                                          AmountType
+                                                                              .expense
+                                                                      ? const Color(
+                                                                          0xFFFF453A,
+                                                                        )
+                                                                      : theme
+                                                                            .colorScheme
+                                                                            .onSurfaceVariant),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                  loading: () => const SizedBox.shrink(),
-                                  error: (err, _) => Center(
-                                    child: Text('Error loading activity: $err'),
+                                      loading: () => const SizedBox.shrink(),
+                                      error: (err, _) => Center(
+                                        child: Text(
+                                          'Error loading activity: $err',
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: kSpacing20),
+                      SummaryNavCardRow(
+                        budgets: budgets,
+                        overallPct: overallPct,
+                        savingsGoals: savingsGoalsAsync.value ?? [],
+                        activeRecurringCount: recsAsync.maybeWhen(
+                          data: (recs) => recs
+                              .where(
+                                (r) =>
+                                    r.type == 'expense' && r.status == 'active',
+                              )
+                              .length,
+                          orElse: () => 0,
+                        ),
+                        dueCount: dueAsync.maybeWhen(
+                          data: (due) =>
+                              due.where((d) => d.type == 'expense').length,
+                          orElse: () => 0,
+                        ),
+                        pendingReviewCount: pendingReviewCount,
+                        trackerColor: trackerColor,
+                      ),
+                      const SizedBox(height: kSpacing24),
+                    ],
                   ),
-                  const SizedBox(height: kSpacing20),
-                  SummaryNavCardRow(
-                    budgets: budgets,
-                    overallPct: overallPct,
-                    savingsGoals: savingsGoalsAsync.value ?? [],
-                    activeRecurringCount: recsAsync.maybeWhen(
-                      data: (recs) => recs
-                          .where(
-                            (r) => r.type == 'expense' && r.status == 'active',
-                          )
-                          .length,
-                      orElse: () => 0,
-                    ),
-                    dueCount: dueAsync.maybeWhen(
-                      data: (due) =>
-                          due.where((d) => d.type == 'expense').length,
-                      orElse: () => 0,
-                    ),
-                    pendingReviewCount: pendingReviewCount,
-                    trackerColor: trackerColor,
-                  ),
-                  const SizedBox(height: kSpacing24),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+        // Offscreen Home Widgets Renderer
+        Positioned(
+          left: -9999,
+          top: -9999,
+          child: Column(
+            children: [
+              if (heatmapAsync.value != null)
+                WidgetHeatmap(
+                  key: HomeWidgetsRenderer.heatmapKey,
+                  data: heatmapAsync.value!,
+                  theme: theme,
+                ),
+              WidgetSafeToSpend(
+                key: HomeWidgetsRenderer.safeToSpendKey,
+                remainingCents: (remainingBudget * 100).toInt(),
+                limitCents: (budgetTotal * 100).toInt(),
+                percentage: overallPct,
+                theme: theme,
+              ),
+              WidgetQuickTemplates(
+                key: HomeWidgetsRenderer.quickTemplatesKey,
+                templates: templatesAsync.value ?? [],
+                theme: theme,
+              ),
+              WidgetRecentTransactions(
+                key: HomeWidgetsRenderer.recentTransactionsKey,
+                transactions: recentTransAsync.value ?? [],
+                theme: theme,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

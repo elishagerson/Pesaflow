@@ -7,12 +7,9 @@ import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
-import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
-import 'package:pesaflow/data/database/app_database.dart' as db;
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 
 class HomeWidgetsRenderer {
@@ -154,8 +151,7 @@ class WidgetHeatmap extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: week.map((day) {
                       final dayKey = DateFormat('yyyy-MM-dd').format(day);
-                      final snapshot = data.snapshots[dayKey];
-                      final amount = snapshot?.totalExpense ?? 0;
+                      final amount = data.dailyExpenses[dayKey] ?? 0;
                       final cellColor = _getCellColor(amount, data.maxExpense, appColors);
 
                       return Container(
@@ -450,7 +446,7 @@ class WidgetRecentTransactions extends StatelessWidget {
                   final isExpense = tx.transaction.type.toLowerCase() == 'expense';
                   final amountSign = isExpense ? '-' : '+';
                   final amountColor = isExpense ? appColors.expenseColor : appColors.incomeColor;
-                  final amountStr = NumberFormat.simpleCurrency(name: 'Tsh ', decimalDigits: 0).format(tx.transaction.amountCents / 100);
+                  final amountStr = NumberFormat.simpleCurrency(name: 'Tsh ', decimalDigits: 0).format(tx.transaction.amount / 100);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
