@@ -39,8 +39,8 @@ class ActiveParserBadge extends StatelessWidget {
           const SizedBox(width: kSpacing4),
           Text(
             label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontSize: 9,
+            style: context.ts(
+              11,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -111,8 +111,8 @@ class SmsReviewCard extends StatelessWidget {
                   pendingReviewCount > 0
                       ? '$pendingReviewCount PENDING'
                       : '0 PENDING',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 8,
+                  style: context.ts(
+                    10,
                     fontWeight: FontWeight.w900,
                     color: pendingReviewCount > 0
                         ? context.appColors.transferColor
