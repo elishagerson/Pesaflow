@@ -41,9 +41,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
     super.dispose();
   }
 
-  Color _getCellColor(int amount, int maxExpense, AppColorsTheme appColors) {
+  Color _getCellColor(BuildContext context, int amount, int maxExpense, AppColorsTheme appColors) {
     if (amount == 0) {
-      return appColors.surfaceLow;
+      return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06);
     }
     if (maxExpense <= 0) {
       return appColors.expenseColor.withValues(alpha: 0.15);
