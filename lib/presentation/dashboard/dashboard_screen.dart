@@ -523,6 +523,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 );
                                 final accounts = accountsAsync.value ?? [];
                                 final netWorth = ref.watch(netWorthProvider);
+                                final displayBalance = _selectedAccountId != null
+                                    ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                                    : netWorth;
 
                                 final front = _buildBalanceCardFront(
                                   context: context,
@@ -532,7 +535,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   heroTextColor: heroTextColor,
                                   cardGradient: cardGradient,
                                   accounts: accounts,
-                                  netWorth: netWorth,
+                                  netWorth: displayBalance,
                                   overallPct: overallPct,
                                   budgetTotal: budgetTotal,
                                   cardholderName: cardholderName,
@@ -1840,7 +1843,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NET WORTH',
+                      _selectedAccountId != null
+                          ? (accounts.any((a) => a.id == _selectedAccountId)
+                              ? accounts.firstWhere((a) => a.id == _selectedAccountId).name.toUpperCase()
+                              : 'NET WORTH')
+                          : 'NET WORTH',
                       style: context.ts(
                         9,
                         fontWeight: FontWeight.w800,
