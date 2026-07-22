@@ -49,13 +49,11 @@ final cardholderNameProvider = StreamProvider<String>((ref) {
 class _BalanceHeroCard extends StatefulWidget {
   final Widget front;
   final Widget back;
-  final VoidCallback? onTap;
   final BorderRadius borderRadius;
 
   const _BalanceHeroCard({
     required this.front,
     required this.back,
-    this.onTap,
     this.borderRadius = const BorderRadius.all(Radius.circular(20)),
   });
 
