@@ -1,4 +1,6 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -40,6 +42,92 @@ final cardholderNameProvider = StreamProvider<String>((ref) {
       .watchSetting('cardholder_name')
       .map((val) => val ?? 'TOTAL NET WORTH');
 });
+
+/// Flip card that shows NET WORTH on front and BUDGET BALANCE on back.
+/// Tap to flip with a spring animation.
+class _BalanceHeroCard extends StatefulWidget {
+  final Widget front;
+  final Widget back;
+  final VoidCallback? onTap;
+  final BorderRadius borderRadius;
+
+  const _BalanceHeroCard({
+    required this.front,
+    required this.back,
+    this.onTap,
+    this.borderRadius = const BorderRadius.all(Radius.circular(20)),
+  });
+
+  @override
+  State<_BalanceHeroCard> createState() => _BalanceHeroCardState();
+}
+
+class _BalanceHeroCardState extends State<_BalanceHeroCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  bool _showFront = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _flip() {
+    widget.onTap?.call();
+    final target = _showFront ? 1.0 : 0.0;
+    _showFront = !_showFront;
+
+    final simulation = SpringSimulation(
+      const SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
+      _controller.value,
+      target,
+      0,
+    );
+    _controller.animateWith(simulation);
+    HapticFeedback.mediumImpact();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _flip,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final angle = _controller.value * math.pi;
+          final isFront = angle < math.pi / 2;
+
+          return ClipRRect(
+            borderRadius: widget.borderRadius,
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.001)
+                ..rotateY(angle),
+              child: isFront
+                  ? widget.front
+                  : Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()..rotateY(math.pi),
+                      child: widget.back,
+                    ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -484,13 +572,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ── 2. Balance Hero Card — "Your Money" ──
+                            // ── 2. Balance Hero Card — tap to flip ──
                             Consumer(
                               builder: (context, ref, _) {
                                 final accountsAsync = ref.watch(
                                   accountsStreamProvider,
                                 );
                                 final accounts = accountsAsync.value ?? [];
+                                final netWorth = ref.watch(netWorthProvider);
+
+                                final front = _buildBalanceCardFront(
+                                  context: context,
+                                  ref: ref,
+                                  theme: theme,
+                                  trackerColor: trackerColor,
+                                  heroTextColor: heroTextColor,
+                                  cardGradient: cardGradient,
+                                  accounts: accounts,
+                                  netWorth: netWorth,
+                                  overallPct: overallPct,
+                                  budgetTotal: budgetTotal,
+                                  cardholderName: cardholderName,
+                                );
+
+                                final back = _buildBalanceCardBack(
+                                  context: context,
+                                  theme: theme,
+                                  trackerColor: trackerColor,
+                                  heroTextColor: heroTextColor,
+                                  cardGradient: cardGradient,
+                                  overallPct: overallPct,
+                                  budgetTotal: budgetTotal,
+                                  remainingBudget: remainingBudget,
+                                );
 
                                 return StaggeredFadeSlide(
                                   index: 0,
@@ -502,407 +616,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     glareOpacity: 0.12,
                                     child: AspectRatio(
                                       aspectRatio: 1.58,
-                                      child: Stack(
-                                        children: [
-                                          Positioned.fill(
-                                            child: CustomPaint(
-                                              painter: _GlossyWavesPainter(
-                                                accentColor: trackerColor,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(
-                                              kSpacing20,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: cardGradient,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppTheme.radiusCard,
-                                                  ),
-                                              border: Border.all(
-                                                color: trackerColor.withValues(
-                                                  alpha: 0.18,
-                                                ),
-                                                width: 0.8,
-                                              ),
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                // Top Row: PesaFlow Brand + DEBIT
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          'pesa',
-                                                          style: theme
-                                                              .textTheme
-                                                              .titleMedium
-                                                              ?.copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w900,
-                                                                fontSize: 18,
-                                                                color: Colors
-                                                                    .white
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.95,
-                                                                    ),
-                                                                letterSpacing:
-                                                                    -0.5,
-                                                              ),
-                                                        ),
-                                                        Text(
-                                                          'flow',
-                                                          style: theme
-                                                              .textTheme
-                                                              .titleMedium
-                                                              ?.copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                fontSize: 18,
-                                                                color:
-                                                                    heroTextColor,
-                                                                letterSpacing:
-                                                                    -0.5,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        // Dynamic Spent Progress Badge
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    kSpacing8,
-                                                                vertical: 3,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.12,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  100,
-                                                                ),
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              SizedBox(
-                                                                height: 10,
-                                                                width: 10,
-                                                                child: CircularProgressIndicator(
-                                                                  value:
-                                                                      overallPct,
-                                                                  strokeWidth:
-                                                                      1.8,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .white24,
-                                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                                    overallPct >
-                                                                            0.9
-                                                                        ? context
-                                                                              .appColors
-                                                                              .expenseColor
-                                                                        : Colors
-                                                                              .white,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width:
-                                                                    kSpacing4,
-                                                              ),
-                                                              Text(
-                                                                '${(overallPct * 100).round()}%',
-                                                                style: theme
-                                                                    .textTheme
-                                                                    .labelSmall
-                                                                    ?.copyWith(
-                                                                      fontSize:
-                                                                          8,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color:
-                                                                          heroTextColor,
-                                                                      letterSpacing:
-                                                                          0.2,
-                                                                    ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing8,
-                                                        ),
-                                                        Text(
-                                                          'PREMIUM',
-                                                          style: context.ts(
-                                                            9,
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            letterSpacing: 1.5,
-                                                            color: Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.65,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-
-                                                // Middle Row: Contactless Icon
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      PesaFlowIcons.wifi,
-                                                      color: Colors.white
-                                                          .withValues(
-                                                            alpha: 0.6,
-                                                          ),
-                                                      size: 24,
-                                                    ),
-                                                  ],
-                                                ),
-
-                                                // Balance Section
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      _selectedAccountId != null
-                                                          ? 'ACCOUNT BALANCE'
-                                                          : 'SAFE-TO-SPEND (REMAINING)',
-                                                      style: context.ts(
-                                                        9,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        letterSpacing: 1.2,
-                                                        color: Colors.white
-                                                            .withValues(
-                                                              alpha: 0.5,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: kSpacing4,
-                                                    ),
-                                                    AmountText(
-                                                      amountInCents:
-                                                          _selectedAccountId !=
-                                                              null
-                                                          ? (accounts
-                                                                .firstWhere(
-                                                                  (a) =>
-                                                                      a.id ==
-                                                                      _selectedAccountId,
-                                                                  orElse: () =>
-                                                                      accounts
-                                                                          .first,
-                                                                )
-                                                                .balance)
-                                                          : remainingBudget,
-                                                      useMonospace: false,
-                                                      animate: true,
-                                                      style: theme
-                                                          .textTheme
-                                                          .headlineMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            fontSize: 30,
-                                                            color:
-                                                                heroTextColor,
-                                                            letterSpacing: -0.5,
-                                                          ),
-                                                    ),
-                                                    if (_selectedAccountId ==
-                                                        null) ...[
-                                                      const SizedBox(
-                                                        height: kSpacing4,
-                                                      ),
-                                                      Text(
-                                                        'Budget Limit: ${CurrencyFormatter.formatCents(budgetTotal)}',
-                                                        style: context.ts(
-                                                          9,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white
-                                                              .withValues(
-                                                                alpha: 0.6,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ],
-                                                ),
-
-                                                // Bottom Row: Cardholder Name, Expiry, Logo
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    GestureDetector(
-                                                      behavior: HitTestBehavior
-                                                          .opaque,
-                                                      onTap:
-                                                          _selectedAccountId ==
-                                                              null
-                                                          ? () =>
-                                                                _showEditCardholderDialog(
-                                                                  context,
-                                                                  cardholderName,
-                                                                )
-                                                          : null,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Text(
-                                                                'CARDHOLDER',
-                                                                style: context.ts(
-                                                                  7,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.4,
-                                                                      ),
-                                                                ),
-                                                              ),
-                                                              if (_selectedAccountId ==
-                                                                  null) ...[
-                                                                const SizedBox(
-                                                                  width:
-                                                                      kSpacing4,
-                                                                ),
-                                                                Icon(
-                                                                  PesaFlowIcons
-                                                                      .edit,
-                                                                  size: 8,
-                                                                  color: Colors
-                                                                      .white
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.4,
-                                                                      ),
-                                                                ),
-                                                              ],
-                                                            ],
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 2,
-                                                          ),
-                                                          Text(
-                                                            _selectedAccountId !=
-                                                                    null
-                                                                ? (accounts
-                                                                      .firstWhere(
-                                                                        (a) =>
-                                                                            a.id ==
-                                                                            _selectedAccountId,
-                                                                        orElse: () =>
-                                                                            accounts.first,
-                                                                      )
-                                                                      .name
-                                                                      .toUpperCase())
-                                                                : cardholderName
-                                                                      .toUpperCase(),
-                                                            style: context.ts(
-                                                              11,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .white
-                                                                  .withValues(
-                                                                    alpha: 0.85,
-                                                                  ),
-                                                              letterSpacing:
-                                                                  0.5,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    // Expiry
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'VALID THRU',
-                                                          style: context.ts(
-                                                            7,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.4,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                        Text(
-                                                          '∞/∞',
-                                                          style: context.ts(
-                                                            11,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white
-                                                                .withValues(
-                                                                  alpha: 0.85,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    // Card network logo
-                                                    _buildCardNetworkLogo(
-                                                      trackerColor,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                      child: _BalanceHeroCard(
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusCard,
+                                        ),
+                                        front: front,
+                                        back: back,
                                       ),
                                     ),
                                   ),
