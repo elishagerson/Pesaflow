@@ -82,7 +82,6 @@ class _BalanceHeroCardState extends State<_BalanceHeroCard>
   }
 
   void _flip() {
-    widget.onTap?.call();
     final target = _showFront ? 1.0 : 0.0;
     _showFront = !_showFront;
 
