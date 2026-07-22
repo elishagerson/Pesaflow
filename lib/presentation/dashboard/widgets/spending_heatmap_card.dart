@@ -242,8 +242,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                         : null,
                                   ),
                                 ),
-                              );
-                            }).toList(),
+                            }).toList(), // Keep the map structure clean
                           ],
                         ),
                       );
