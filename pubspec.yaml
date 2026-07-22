@@ -60,10 +60,13 @@ dependencies:
   pdf: ^3.10.8
   home_widget: ^0.9.3
   share_plus: ^13.1.0
-  file_picker: ^3.0.4
+  file_picker: ^11.0.2
   google_fonts: ^8.1.0
   local_auth: ^3.0.1
   shared_preferences: ^2.2.2
+
+dependency_overrides:
+  win32: ^6.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
