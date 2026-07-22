@@ -1849,6 +1849,193 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ],
     );
   }
+
+  Widget _buildBalanceCardFront({
+    required BuildContext context,
+    required WidgetRef ref,
+    required ThemeData theme,
+    required Color trackerColor,
+    required Color heroTextColor,
+    required Gradient cardGradient,
+    required List<Account> accounts,
+    required int netWorth,
+    required double overallPct,
+    required int budgetTotal,
+    required String cardholderName,
+  }) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: cardGradient,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: _GlossyWavesPainter(accentColor: trackerColor)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(kSpacing20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      cardholderName,
+                      style: context.ts(
+                        9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.6,
+                        color: heroTextColor.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    _buildCardNetworkLogo(heroTextColor),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'NET WORTH',
+                      style: context.ts(
+                        9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                        color: heroTextColor.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    const SizedBox(height: kSpacing4),
+                    Text(
+                      CurrencyFormatter.formatCents(netWorth),
+                      style: context.ts(
+                        28,
+                        fontWeight: FontWeight.w900,
+                        color: heroTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${accounts.length} account${accounts.length == 1 ? '' : 's'}',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w600,
+                        color: heroTextColor.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    Icon(
+                      PesaFlowIcons.chevronRight,
+                      size: 14,
+                      color: heroTextColor.withValues(alpha: 0.4),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBalanceCardBack({
+    required BuildContext context,
+    required ThemeData theme,
+    required Color trackerColor,
+    required Color heroTextColor,
+    required Gradient cardGradient,
+    required double overallPct,
+    required int budgetTotal,
+    required int remainingBudget,
+  }) {
+    final pctLabel = '${(overallPct * 100).round()}%';
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: cardGradient,
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: _GlossyWavesPainter(accentColor: trackerColor)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(kSpacing20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'BUDGET BALANCE',
+                  style: context.ts(
+                    9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                    color: heroTextColor.withValues(alpha: 0.55),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      CurrencyFormatter.formatCents(remainingBudget),
+                      style: context.ts(
+                        28,
+                        fontWeight: FontWeight.w900,
+                        color: heroTextColor,
+                      ),
+                    ),
+                    const SizedBox(height: kSpacing6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: LinearProgressIndicator(
+                        value: overallPct,
+                        minHeight: 6,
+                        backgroundColor: heroTextColor.withValues(alpha: 0.15),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          overallPct < 0.7
+                              ? context.appColors.incomeColor
+                              : overallPct < 0.9
+                                  ? Colors.amber
+                                  : context.appColors.expenseColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'of ${CurrencyFormatter.formatCents(budgetTotal)} budget',
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w600,
+                        color: heroTextColor.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    Text(
+                      pctLabel,
+                      style: context.ts(
+                        10,
+                        fontWeight: FontWeight.w800,
+                        color: heroTextColor.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _InsightsCarousel extends ConsumerStatefulWidget {
