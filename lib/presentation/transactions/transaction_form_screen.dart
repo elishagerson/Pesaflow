@@ -1967,14 +1967,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Income'
-                                      ? AppTheme.transferColorDark.withValues(
+                                      ? context.appColors.incomeColor.withValues(
                                           alpha: 0.15,
                                         )
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(100),
                                   border: _transactionType == 'Income'
                                       ? Border.all(
-                                          color: AppTheme.transferColorDark,
+                                          color: context.appColors.incomeColor,
                                           width: 1.2,
                                         )
                                       : null,
@@ -1986,7 +1986,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Income'
-                                          ? AppTheme.transferColorDark
+                                          ? context.appColors.incomeColor
                                           : theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),
@@ -2008,14 +2008,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: _transactionType == 'Transfer'
-                                      ? AppTheme.transferColorDark.withValues(
+                                      ? context.appColors.transferColor.withValues(
                                           alpha: 0.15,
                                         )
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(100),
                                   border: _transactionType == 'Transfer'
                                       ? Border.all(
-                                          color: AppTheme.transferColorDark,
+                                          color: context.appColors.transferColor,
                                           width: 1.2,
                                         )
                                       : null,
@@ -2027,7 +2027,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                       13,
                                       fontWeight: FontWeight.bold,
                                       color: _transactionType == 'Transfer'
-                                          ? AppTheme.transferColorDark
+                                          ? context.appColors.transferColor
                                           : theme.colorScheme.onSurfaceVariant,
                                     ),
                                   ),

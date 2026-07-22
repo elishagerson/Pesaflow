@@ -157,44 +157,72 @@ class _CalculatorNumpadState extends State<CalculatorNumpad> {
     VoidCallback? customTap,
   }) {
     final theme = Theme.of(context);
+    final isSpecialKey = text == '⌫' || text == 'C' || text == '+−' || text == '=';
 
-    final finalBg =
-        bgColor ??
+    final finalBg = bgColor ??
         (isPrimary
             ? theme.colorScheme.primary
-            : theme.colorScheme.surfaceContainerHigh);
+            : (isSpecialKey
+                ? theme.colorScheme.surfaceContainerHigh
+                : theme.colorScheme.surfaceContainerLow));
 
-    final finalTextColor =
-        textColor ?? (isPrimary ? Colors.white : theme.colorScheme.onSurface);
+    final finalTextColor = textColor ??
+        (isPrimary
+            ? theme.colorScheme.onPrimary
+            : (isSpecialKey
+                ? theme.colorScheme.onSurfaceVariant
+                : theme.colorScheme.onSurface));
 
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(5.0),
         child: TactileSpringContainer(
-          onTap:
-              customTap ??
+          onTap: customTap ??
               () => icon != null && text == '⌫'
                   ? _onKeyPress('⌫')
                   : _onKeyPress(text),
           child: Container(
-            height: 52,
+            height: 64,
             decoration: BoxDecoration(
-              color: finalBg,
-              borderRadius: BorderRadius.circular(16),
+              gradient: isPrimary
+                  ? LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withValues(alpha: 0.85),
+                      ],
+                    )
+                  : LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        finalBg,
+                        finalBg.withValues(alpha: 0.95),
+                      ],
+                    ),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                width: 0.8,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                width: 0.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: icon != null
-                ? Icon(icon, color: finalTextColor, size: 20)
+                ? Icon(icon, color: finalTextColor, size: 22)
                 : Text(
                     text,
                     style: context.ts(
-                      18,
-                      fontWeight: FontWeight.bold,
+                      isPrimary ? 16 : 20,
+                      fontWeight: isPrimary ? FontWeight.w800 : FontWeight.w600,
                       color: finalTextColor,
                     ),
                   ),
