@@ -198,61 +198,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return const MonthlyOverviewSection();
   }
 
-  void _showEditCardholderDialog(BuildContext context, String currentName) {
-    final controller = TextEditingController(
-      text: currentName == 'TOTAL NET WORTH' ? '' : currentName,
-    );
-    showDialog(
-      context: context,
-      builder: (context) {
-        final theme = Theme.of(context);
-        return AlertDialog(
-          backgroundColor: theme.colorScheme.surface,
-          title: Text(
-            'Edit Cardholder Name',
-            style: context.ts(18, fontWeight: FontWeight.bold),
-          ),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: context.inputDecoration().copyWith(
-              hintText: 'Enter name (e.g. JOHN DOE)',
-            ),
-            textCapitalization: TextCapitalization.characters,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: context.ts(14, color: theme.colorScheme.primary),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                final name = controller.text.trim();
-                final repo = ref.read(settingsRepositoryProvider);
-                await repo.setSetting(
-                  'cardholder_name',
-                  name.isNotEmpty ? name.toUpperCase() : 'TOTAL NET WORTH',
-                );
-                if (context.mounted) Navigator.pop(context);
-              },
-              child: Text(
-                'Save',
-                style: context.ts(
-                  14,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _showWorkspaceSelectorSheet(BuildContext context) {
     showWorkspaceSelectorSheet(context, ref);
   }
