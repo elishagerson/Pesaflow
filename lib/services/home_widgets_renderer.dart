@@ -476,7 +476,9 @@ class WidgetRecentTransactions extends StatelessWidget {
               )
             else
               Expanded(
-                child: Column(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
                   children: list.map((tx) {
                     final isExpense =
                         tx.transaction.type.toLowerCase() == 'expense';

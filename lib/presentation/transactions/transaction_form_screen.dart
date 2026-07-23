@@ -2231,54 +2231,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       onConfirm: () => _showSecondaryDetailsSheet(context),
                     ),
                   ),
-                  SizedBox(height: context.isCompactView ? 16 : 24),
-
-                  // Continue Button
-                  StaggeredFadeSlide(
-                    index: 4,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.spacing,
-                        vertical: kSpacing12,
-                      ),
-                      child: TactileSpringContainer(
-                        onTap: () => _showSecondaryDetailsSheet(context),
-                        child: Container(
-                          width: double.infinity,
-                          height: context.isCompactView ? 44 : 50,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primary,
-                                theme.colorScheme.primary.withValues(
-                                  alpha: 0.8,
-                                ),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(100),
-                            boxShadow: [
-                              BoxShadow(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.3,
-                                ),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            'Continue',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: kSpacing16),
+                  const SizedBox(height: kSpacing8),
 
                   // Templates button
                   if (!_isEditMode)
