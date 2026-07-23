@@ -42,7 +42,6 @@ class GlassCard extends StatefulWidget {
 class _GlassCardState extends State<GlassCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -51,10 +50,6 @@ class _GlassCardState extends State<GlassCard>
       vsync: this,
       duration: const Duration(milliseconds: 80),
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.97,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -82,18 +77,26 @@ class _GlassCardState extends State<GlassCard>
 
     final bool isDark = context.isDark;
 
+    // Premium multi-layered 3D shadows (ambient + sharp occlusion shadows)
     final List<BoxShadow> shadows = switch (widget.elevation) {
       CardElevation.low => [
         BoxShadow(
           color: isDark
-              ? Colors.black.withValues(alpha: 0.30)
-              : Colors.black.withValues(alpha: 0.04),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
+              ? Colors.black.withValues(alpha: 0.25)
+              : Colors.black.withValues(alpha: 0.03),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+        BoxShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.35)
+              : Colors.black.withValues(alpha: 0.02),
+          blurRadius: 4,
+          offset: const Offset(0, 1),
         ),
         if (isDark)
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.03),
+            color: Colors.white.withValues(alpha: 0.04),
             blurRadius: 4,
             offset: const Offset(0, -1),
           ),
@@ -101,14 +104,21 @@ class _GlassCardState extends State<GlassCard>
       CardElevation.medium => [
         BoxShadow(
           color: isDark
-              ? Colors.black.withValues(alpha: 0.40)
-              : Colors.black.withValues(alpha: 0.08),
-          blurRadius: 16,
-          offset: const Offset(0, 6),
+              ? Colors.black.withValues(alpha: 0.35)
+              : Colors.black.withValues(alpha: 0.05),
+          blurRadius: 24,
+          offset: const Offset(0, 10),
+        ),
+        BoxShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.20)
+              : Colors.black.withValues(alpha: 0.03),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
         ),
         if (isDark)
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: Colors.white.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, -1),
           ),
@@ -116,14 +126,21 @@ class _GlassCardState extends State<GlassCard>
       CardElevation.high => [
         BoxShadow(
           color: isDark
-              ? Colors.black.withValues(alpha: 0.50)
-              : Colors.black.withValues(alpha: 0.12),
-          blurRadius: 40,
-          offset: const Offset(0, 12),
+              ? Colors.black.withValues(alpha: 0.45)
+              : Colors.black.withValues(alpha: 0.08),
+          blurRadius: 48,
+          offset: const Offset(0, 20),
+        ),
+        BoxShadow(
+          color: isDark
+              ? Colors.black.withValues(alpha: 0.25)
+              : Colors.black.withValues(alpha: 0.04),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
         ),
         if (isDark)
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.06),
+            color: Colors.white.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -131,63 +148,82 @@ class _GlassCardState extends State<GlassCard>
       CardElevation.none => [],
     };
 
+    // Premium 3D Bevel border gradient (light source coming from top-left)
+    final double borderWidth = widget.hasBorder ? 1.0 : 0.8;
     Widget body = RepaintBoundary(
       child: Container(
         decoration: ShapeDecoration(
-          color: glassColor,
-          gradient: widget.backgroundGradient,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: isDark ? 0.15 : 0.4),
+              Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+            ],
+          ),
           shape: SquircleBorder(
-            side: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.8),
             borderRadius: widget.borderRadius,
           ),
           shadows: shadows,
         ),
-        foregroundDecoration: widget.accentColor != null
-            ? ShapeDecoration(
-                shape: SquircleBorder(
-                  side: BorderSide(
-                    color: widget.accentColor!.withValues(alpha: 0.25),
-                    width: 1.0,
-                  ),
-                  borderRadius: widget.borderRadius,
-                ),
-              )
-            : null,
-        child: ClipPath(
-          clipper: ShapeBorderClipper(
-            shape: SquircleBorder(borderRadius: widget.borderRadius),
-          ),
-          child: Stack(
-            children: [
-              if (widget.accentColor != null &&
-                  widget.onTap != null &&
-                  widget.showAccentStrip)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: widget.accentWidth,
-                    decoration: BoxDecoration(
-                      color: widget.accentColor!.withValues(alpha: 0.30),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(widget.borderRadius),
-                        topRight: Radius.circular(widget.borderRadius),
+        child: Padding(
+          padding: EdgeInsets.all(borderWidth),
+          child: Container(
+            decoration: ShapeDecoration(
+              color: glassColor,
+              gradient: widget.backgroundGradient,
+              shape: SquircleBorder(
+                borderRadius: widget.borderRadius - borderWidth,
+              ),
+            ),
+            foregroundDecoration: widget.accentColor != null
+                ? ShapeDecoration(
+                    shape: SquircleBorder(
+                      side: BorderSide(
+                        color: widget.accentColor!.withValues(alpha: 0.25),
+                        width: 1.0,
+                      ),
+                      borderRadius: widget.borderRadius - borderWidth,
+                    ),
+                  )
+                : null,
+            child: ClipPath(
+              clipper: ShapeBorderClipper(
+                shape: SquircleBorder(borderRadius: widget.borderRadius - borderWidth),
+              ),
+              child: Stack(
+                children: [
+                  if (widget.accentColor != null &&
+                      widget.onTap != null &&
+                      widget.showAccentStrip)
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: widget.accentWidth,
+                        decoration: BoxDecoration(
+                          color: widget.accentColor!.withValues(alpha: 0.30),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(widget.borderRadius - borderWidth),
+                            topRight: Radius.circular(widget.borderRadius - borderWidth),
+                          ),
+                        ),
                       ),
                     ),
+                  Padding(
+                    padding: (widget.padding ?? EdgeInsets.zero).add(
+                      widget.accentColor != null &&
+                              widget.onTap != null &&
+                              widget.showAccentStrip
+                          ? EdgeInsets.only(top: widget.accentWidth + 2)
+                          : EdgeInsets.zero,
+                    ),
+                    child: widget.child,
                   ),
-                ),
-              Padding(
-                padding: (widget.padding ?? EdgeInsets.zero).add(
-                  widget.accentColor != null &&
-                          widget.onTap != null &&
-                          widget.showAccentStrip
-                      ? EdgeInsets.only(top: widget.accentWidth + 2)
-                      : EdgeInsets.zero,
-                ),
-                child: widget.child,
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -210,7 +246,19 @@ class _GlassCardState extends State<GlassCard>
           onTap: widget.onTap,
           child: reducedMotion
               ? body
-              : ScaleTransition(scale: _scaleAnimation, child: body),
+              : AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, _controller.value * 2.5),
+                      child: Transform.scale(
+                        scale: 1.0 - (_controller.value * 0.03),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: body,
+                ),
         ),
       );
     }
