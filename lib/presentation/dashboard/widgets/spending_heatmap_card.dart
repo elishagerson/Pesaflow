@@ -142,7 +142,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                 const SizedBox(height: kSpacing16),
                 // Scrollable Grid of blocks
                 SizedBox(
-                  height: 140,
+                  height: 144,
                   child: ListView.builder(
                     controller: _scrollController,
                     scrollDirection: Axis.horizontal,
