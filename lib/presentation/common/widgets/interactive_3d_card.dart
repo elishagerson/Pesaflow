@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// A premium, state-of-the-art interactive container that provides a 3D perspective
 /// tilt effect, dynamic shadow translation, and a shifting light reflection sheen
@@ -37,6 +38,7 @@ class _Interactive3DCardState extends State<Interactive3DCard>
 
   late AnimationController _introController;
   late Animation<double> _introAnimation;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -70,11 +72,21 @@ class _Interactive3DCardState extends State<Interactive3DCard>
     ]).animate(_introController);
 
     _introAnimation.addListener(_onIntroTick);
-    _introController.forward();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      if (!context.isReducedMotion) {
+        _introController.forward();
+      }
+    }
   }
 
   void _onIntroTick() {
-    if (!mounted || _isPressed) return;
+    if (!mounted || _isPressed || context.isReducedMotion) return;
     final v = _introAnimation.value;
     setState(() {
       _tiltX = v * 0.35;
@@ -90,6 +102,7 @@ class _Interactive3DCardState extends State<Interactive3DCard>
   }
 
   void _updateTilt(Offset localPosition, double width, double height) {
+    if (context.isReducedMotion) return;
     if (width <= 0 || height <= 0) return;
 
     // Normalize coordinates to [-1.0, 1.0] relative to the center of the widget
