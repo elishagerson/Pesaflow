@@ -28,11 +28,31 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3600),
-    )..repeat();
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) {
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
+    } else {
+      if (!_controller.isAnimating) {
+        _controller.repeat();
+      }
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    final reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) return;
+
     // Pause the continuous repaint loop when the app is backgrounded
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
