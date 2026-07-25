@@ -18,6 +18,8 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_rect_tween.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 
@@ -904,6 +906,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       .deleteTransaction(transactionId);
                   if (context.mounted) context.pop();
                 } catch (e) {
+                  if (context.mounted) {
                     CustomToast.show(
                       context,
                       message: 'Failed to delete: $e',
