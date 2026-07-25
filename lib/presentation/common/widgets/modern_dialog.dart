@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
-
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class ModernDialog extends StatelessWidget {
   final Widget title;
@@ -28,26 +28,36 @@ class ModernDialog extends StatelessWidget {
     Color? iconColor,
     bool barrierDismissible = true,
   }) {
+    final reduced = context.isReducedMotion;
     return showGeneralDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      transitionDuration: const Duration(milliseconds: 320),
+      transitionDuration: reduced
+          ? const Duration(milliseconds: 100)
+          : const Duration(milliseconds: 320),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, child) {
+        final dialog = ModernDialog(
+          title: title,
+          content: content,
+          actions: actions,
+          titleIcon: titleIcon,
+          iconColor: iconColor,
+        );
+        if (reduced) {
+          return FadeTransition(
+            opacity: anim1,
+            child: dialog,
+          );
+        }
         final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
         return ScaleTransition(
           scale: curve,
           child: FadeTransition(
             opacity: anim1,
-            child: ModernDialog(
-              title: title,
-              content: content,
-              actions: actions,
-              titleIcon: titleIcon,
-              iconColor: iconColor,
-            ),
+            child: dialog,
           ),
         );
       },
@@ -59,14 +69,20 @@ class ModernDialog extends StatelessWidget {
     required Widget child,
     bool barrierDismissible = true,
   }) {
+    final reduced = context.isReducedMotion;
     return showGeneralDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      transitionDuration: const Duration(milliseconds: 320),
+      transitionDuration: reduced
+          ? const Duration(milliseconds: 100)
+          : const Duration(milliseconds: 320),
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, anim2, childWidget) {
+        if (reduced) {
+          return FadeTransition(opacity: anim1, child: child);
+        }
         final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
         return ScaleTransition(
           scale: curve,
