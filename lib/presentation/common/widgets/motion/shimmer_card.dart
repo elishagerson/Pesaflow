@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class ShimmerCard extends StatefulWidget {
   final double height;
@@ -30,6 +30,7 @@ class _ShimmerCardState extends State<ShimmerCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -37,10 +38,23 @@ class _ShimmerCardState extends State<ShimmerCard>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat();
+    );
     _animation = Tween<double>(begin: -1, end: 2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      _initialized = true;
+      if (!context.isReducedMotion) {
+        _controller.repeat();
+      } else {
+        _controller.value = 0.5;
+      }
+    }
   }
 
   @override
@@ -141,6 +155,9 @@ class _ShimmerEffect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (context.isReducedMotion) {
+      return child;
+    }
     return AnimatedBuilder(
       animation: animation,
       builder: (_, child) {
