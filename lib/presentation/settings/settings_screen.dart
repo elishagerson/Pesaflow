@@ -11,6 +11,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/data/repositories/account_repository.dart';
 import 'package:pesaflow/data/repositories/category_repository.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
