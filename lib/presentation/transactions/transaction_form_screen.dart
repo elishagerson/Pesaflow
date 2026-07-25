@@ -73,6 +73,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   bool _isEditMode = false;
   bool _isLoading = false;
+  bool _isSaving = false;
   bool _showAdvanced = false;
   bool _saveAsTemplate = false;
   Transaction? _existingTransaction;
@@ -191,9 +192,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(
+      CustomToast.show(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load transaction: $e')));
+        message: 'Failed to load transaction',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -288,6 +291,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Future<void> _saveTransaction() async {
+    if (_isSaving) return;
+
     final cents = _getAmountCents().round();
     if (cents <= 0) {
       setState(() => _amountError = 'Enter a valid amount');
@@ -351,6 +356,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       updatedAt: DateTime.now(),
     );
 
+    setState(() => _isSaving = true);
+
     try {
       if (existingTransaction != null) {
         await repo.deleteTransaction(existingTransaction.id);
@@ -390,6 +397,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
+      setState(() => _isSaving = false);
       CustomToast.show(
         context,
         message: 'Failed to save transaction: $e',
@@ -1373,10 +1381,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         StaggeredFadeSlide(
                           index: 4,
                           child: TactileSpringContainer(
-                            onTap: () {
-                              Navigator.pop(context);
-                              _saveTransaction();
-                            },
+                            onTap: _isSaving
+                                ? null
+                                : () {
+                                    Navigator.pop(context);
+                                    _saveTransaction();
+                                  },
                             child: Container(
                               width: double.infinity,
                               height: 50,

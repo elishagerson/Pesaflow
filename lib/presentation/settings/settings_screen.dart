@@ -128,8 +128,10 @@ class SettingsScreen extends ConsumerWidget {
       default:
         accountType = 'Cash';
     }
-    String? phoneNumber = acc.phoneNumber;
     String? provider = acc.provider;
+    final phoneController = TextEditingController(
+      text: acc.phoneNumber ?? '',
+    );
     final balanceController = TextEditingController(
       text: (acc.balance / 100).toStringAsFixed(0),
     );
@@ -246,10 +248,7 @@ class SettingsScreen extends ConsumerWidget {
                     hintText: 'e.g. 076XXXXXXX',
                     prefixIcon: const Icon(PesaFlowIcons.phone, size: 18),
                   ),
-                  controller: TextEditingController(text: phoneNumber ?? ''),
-                  onChanged: (val) {
-                    phoneNumber = val;
-                  },
+                  controller: phoneController,
                 ),
               ],
               if (accountType == 'Bank') ...[
@@ -347,7 +346,11 @@ class SettingsScreen extends ConsumerWidget {
               balance: newBalance,
               provider: Value<String?>(provider),
               phoneNumber: Value<String?>(
-                accountType == 'Mobile Money' ? phoneNumber : null,
+                accountType == 'Mobile Money'
+                    ? phoneController.text.trim().isEmpty
+                        ? null
+                        : phoneController.text.trim()
+                    : null,
               ),
             );
 
@@ -677,6 +680,39 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _handleRestoreDb(BuildContext context, WidgetRef ref) async {
     final theme = Theme.of(context);
+
+    // Confirmation dialog before destructive operation
+    final confirmed = await ModernDialog.show<bool>(
+      context: context,
+      title: const Text('Restore Database?'),
+      titleIcon: PesaFlowIcons.warning,
+      iconColor: Colors.orange,
+      content: const Text(
+        'This will replace all current data with the backup file you select. '
+        'This action cannot be undone.\n\n'
+        'Consider creating a backup first.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(false),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+          child: const Text('Restore'),
+        ),
+      ],
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
     try {
       final success = await ref.read(backupServiceProvider).restoreDatabase();
       if (!success || !context.mounted) return;
