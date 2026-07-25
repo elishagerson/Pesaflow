@@ -1033,11 +1033,10 @@ Future<bool> processPayment({
   } catch (e) {
     HapticFeedback.heavyImpact();
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment failed: $e'),
-          backgroundColor: context.appColors.expenseColor,
-        ),
+      CustomToast.show(
+        context,
+        message: 'Payment failed: $e',
+        type: ToastType.error,
       );
     }
     return false;
