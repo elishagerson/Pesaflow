@@ -681,23 +681,26 @@ class SettingsScreen extends ConsumerWidget {
       final success = await ref.read(backupServiceProvider).restoreDatabase();
       if (!success || !context.mounted) return;
 
-      // Show relaunch alert dialog
-      ModernDialog.show(
-        context: context,
-        barrierDismissible: false,
-        title: const Text('Profile Restored'),
-        titleIcon: PesaFlowIcons.success,
-        iconColor: context.appColors.incomeColor,
-        content: const Text(
-          'Your offline database backup has been successfully restored.\n\n'
-          'To cleanly load your transactions, budgets, and settings, PesaFlow needs to relaunch.',
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => exit(0),
-            child: const Text('Relaunch App'),
-          ),
-        ],
+      // Invalidate the database connection and all dependent providers to hot-reload restored data instantly
+      ref.invalidate(databaseProvider);
+      ref.invalidate(accountsStreamProvider);
+      ref.invalidate(categoriesFutureProvider);
+      ref.invalidate(recentTransactionsStreamProvider);
+      ref.invalidate(netWorthProvider);
+      ref.invalidate(activeTrackerProvider);
+      ref.invalidate(budgetProgressProvider);
+      ref.invalidate(monthlyTotalsProvider);
+      ref.invalidate(topCategoriesProvider);
+      ref.invalidate(monthlySnapshotsProvider);
+      ref.invalidate(insightsProvider);
+      ref.invalidate(savingsGoalsStreamProvider);
+      ref.invalidate(loansStreamProvider);
+      ref.invalidate(recurringTransactionsStreamProvider);
+
+      CustomToast.show(
+        context,
+        message: 'Profile restored successfully',
+        type: ToastType.success,
       );
     } catch (e) {
       if (context.mounted) {
