@@ -10,6 +10,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dropdown.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 void showAddAccountDialog(BuildContext context, WidgetRef ref) {
   final nameController = TextEditingController();
@@ -230,8 +231,10 @@ void showAddAccountDialog(BuildContext context, WidgetRef ref) {
             }
           } catch (e) {
             if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to create account: $e')),
+            CustomToast.show(
+              context,
+              message: 'Failed to create account: $e',
+              type: ToastType.error,
             );
           }
         },

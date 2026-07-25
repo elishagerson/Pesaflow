@@ -16,6 +16,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
   showSpringSheet(
@@ -356,8 +357,10 @@ void showAddTrackerDialog(BuildContext context, WidgetRef ref) {
             }
           } catch (e) {
             if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to create workspace: $e')),
+            CustomToast.show(
+              context,
+              message: 'Failed to create workspace: $e',
+              type: ToastType.error,
             );
           }
         },
@@ -539,8 +542,10 @@ void showManageTrackerDialog(
             }
           } catch (e) {
             if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to update workspace: $e')),
+            CustomToast.show(
+              context,
+              message: 'Failed to update workspace: $e',
+              type: ToastType.error,
             );
           }
         },
@@ -603,8 +608,10 @@ void confirmDeleteTracker(
                     .deleteTracker(savedTracker.id);
               } catch (e) {
                 if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to delete workspace: $e')),
+                CustomToast.show(
+                  context,
+                  message: 'Failed to delete workspace: $e',
+                  type: ToastType.error,
                 );
               }
             },
