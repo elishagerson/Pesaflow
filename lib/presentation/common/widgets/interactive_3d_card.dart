@@ -138,6 +138,31 @@ class _Interactive3DCardState extends State<Interactive3DCard>
 
   @override
   Widget build(BuildContext context) {
+    if (context.isReducedMotion) {
+      return GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            boxShadow: [
+              BoxShadow(
+                color: widget.shadowColor.withValues(
+                  alpha: 0.12,
+                ),
+                blurRadius: 12.0,
+                offset: const Offset(0, 4.0),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            child: widget.child,
+          ),
+        ),
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
