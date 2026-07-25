@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 class InfoRow extends StatelessWidget {
   final String label;
@@ -46,16 +47,10 @@ class CopyableInfoRow extends StatelessWidget {
       onTap: () {
         Clipboard.setData(ClipboardData(text: value));
         HapticFeedback.lightImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Copied $label to clipboard'),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(kSpacing8),
-            ),
-            width: 250,
-          ),
+        CustomToast.show(
+          context,
+          message: 'Copied $label to clipboard',
+          type: ToastType.success,
         );
       },
       borderRadius: BorderRadius.circular(kSpacing4),

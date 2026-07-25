@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'payment_sheet.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -536,11 +537,10 @@ Future<bool> processOfflinePayment({
   } catch (e) {
     HapticFeedback.heavyImpact();
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment failed: $e'),
-          backgroundColor: context.appColors.expenseColor,
-        ),
+      CustomToast.show(
+        context,
+        message: 'Payment failed: $e',
+        type: ToastType.error,
       );
     }
     return false;
