@@ -666,16 +666,10 @@ class TransactionDetailScreen extends ConsumerWidget {
           onTap: () {
             Clipboard.setData(ClipboardData(text: value));
             HapticFeedback.lightImpact();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Copied $label to clipboard'),
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                width: 250,
-              ),
+            CustomToast.show(
+              context,
+              message: 'Copied $label to clipboard',
+              type: ToastType.success,
             );
           },
           borderRadius: BorderRadius.circular(12),
@@ -910,9 +904,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                       .deleteTransaction(transactionId);
                   if (context.mounted) context.pop();
                 } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to delete: $e')),
+                    CustomToast.show(
+                      context,
+                      message: 'Failed to delete: $e',
+                      type: ToastType.error,
                     );
                   }
                 }

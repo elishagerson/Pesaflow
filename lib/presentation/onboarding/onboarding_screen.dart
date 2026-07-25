@@ -15,6 +15,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/sms_background_service.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/data/seed/demo_seeder.dart';
 
@@ -142,8 +143,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         name: 'Onboarding',
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to initialize setup: $e')),
+        CustomToast.show(
+          context,
+          message: 'Failed to initialize setup: $e',
+          type: ToastType.error,
         );
       }
     }
