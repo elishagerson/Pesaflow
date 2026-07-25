@@ -10,6 +10,7 @@ import 'package:pesaflow/data/repositories/recurring_transaction_repository.dart
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 Future<void> showMarkRecurringPaymentSheet({
   required BuildContext context,
@@ -330,12 +331,10 @@ Future<void> _confirmMarkPaid({
 
   if (context.mounted) {
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Payment recorded'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
+    CustomToast.show(
+      context,
+      message: 'Payment recorded',
+      type: ToastType.success,
     );
   }
 }
