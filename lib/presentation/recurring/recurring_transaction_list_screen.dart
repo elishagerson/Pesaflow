@@ -12,6 +12,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -273,7 +274,13 @@ class _RecurringTransactionListScreenState
             ],
           ),
         ),
-        error: (e, _) => Center(child: Text('Error: $e')),
+         error: (e, _) => ErrorState(
+          title: 'Failed to load recurring transactions',
+          message: e.toString(),
+          onRetry: () {
+            ref.invalidate(recurringTransactionsStreamProvider);
+          },
+        ),
       ),
     );
   }
