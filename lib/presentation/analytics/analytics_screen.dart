@@ -1461,11 +1461,11 @@ class _InsightsTab extends StatelessWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => ErrorState(
+        error: (e, _) => ErrorState(
         title: 'Failed to load analytics',
         message: e.toString(),
         onRetry: () {
-          ref.invalidate(analyticsDataProvider);
+          ref.invalidate(insightsProvider);
         },
       ),
     );
