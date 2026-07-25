@@ -78,6 +78,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   bool _saveAsTemplate = false;
   Transaction? _existingTransaction;
 
+  bool get _isDirty {
+    if (_isSaving) return false;
+    return _amountStr != '0' ||
+        _descriptionController.text.trim().isNotEmpty ||
+        _referenceController.text.trim().isNotEmpty;
+  }
+
   final List<String> _expenseSuggestions = [
     'Lunch',
     'Transport / Taxi',
@@ -1853,7 +1860,43 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         : (_amountStr.length > 7 ? 46.0 : 64.0);
     final double fontSize = responsiveFontSize(context, base: baseFontSize);
 
-    return Scaffold(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await ModernDialog.show<bool>(
+          context: context,
+          title: const Text('Discard Changes?'),
+          titleIcon: PesaFlowIcons.warning,
+          iconColor: Colors.orange,
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to go back?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(false),
+              child: const Text('Keep Editing'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.expenseColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              child: const Text('Discard'),
+            ),
+          ],
+        );
+        if (shouldPop == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : accounts.isEmpty
