@@ -123,8 +123,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
     final isTablet = width >= 600 && width < 1200;
     final isDesktop = width >= 1200;
 
+    final canPopRouter = GoRouter.of(context).canPop();
+
     return PopScope(
-      canPop: true,
+      canPop: canPopRouter,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         final now = DateTime.now();
