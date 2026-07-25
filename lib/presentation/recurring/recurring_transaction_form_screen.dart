@@ -15,6 +15,8 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class RecurringTransactionFormScreen extends ConsumerStatefulWidget {
   final String? recurringId;
@@ -43,6 +45,14 @@ class _RecurringTransactionFormScreenState
 
   bool _isLoading = false;
   bool _isEditing = false;
+
+  bool get _isDirty {
+    if (_isLoading) return false;
+    return _amountController.text.trim().isNotEmpty ||
+        _descriptionController.text.trim().isNotEmpty ||
+        _selectedAccountId != null ||
+        _selectedCategoryId != null;
+  }
 
   @override
   void initState() {
@@ -224,7 +234,43 @@ class _RecurringTransactionFormScreenState
     final accountsAsync = ref.watch(accountsStreamProvider);
     final categoriesAsync = ref.watch(categoriesFutureProvider);
 
-    return Scaffold(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await ModernDialog.show<bool>(
+          context: context,
+          title: const Text('Discard Changes?'),
+          titleIcon: PesaFlowIcons.warning,
+          iconColor: Colors.orange,
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to go back?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(false),
+              child: const Text('Keep Editing'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.expenseColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              child: const Text('Discard'),
+            ),
+          ],
+        );
+        if (shouldPop == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       appBar: IosNavBar(
         title: _isEditing ? 'Edit Recurring' : 'Add Recurring',
         largeTitle: false,
@@ -712,6 +758,7 @@ class _RecurringTransactionFormScreenState
           ),
         ),
       ),
+    ),
     );
   }
 }
