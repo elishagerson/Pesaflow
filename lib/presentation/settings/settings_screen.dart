@@ -928,8 +928,8 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categories = ref.watch(categoriesFutureProvider).value ?? [];
-    final recentTransactions =
-        ref.watch(recentTransactionsStreamProvider).value ?? [];
+    final totalTransactionsCount =
+        ref.watch(totalTransactionsCountProvider).value ?? 0;
 
     return Scaffold(
       appBar: const IosNavBar(title: 'Settings', largeTitle: true),
@@ -1172,7 +1172,7 @@ class SettingsScreen extends ConsumerWidget {
                             child: IosMetricCard(
                               icon: PesaFlowIcons.transactions,
                               label: 'Transactions',
-                              value: '${recentTransactions.length}',
+                              value: '${ref.watch(totalTransactionsCountProvider)}',
                             ),
                           ),
                         ],
