@@ -12,6 +12,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -1460,7 +1461,13 @@ class _InsightsTab extends StatelessWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => ErrorState(
+        title: 'Failed to load analytics',
+        message: e.toString(),
+        onRetry: () {
+          ref.invalidate(analyticsDataProvider);
+        },
+      ),
     );
   }
 }
