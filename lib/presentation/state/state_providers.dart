@@ -75,6 +75,13 @@ final recentTransactionsStreamProvider =
       return repo.watchRecentTransactions(5, trackerId: trackerId);
     });
 
+final totalTransactionsCountProvider = StreamProvider<int>((ref) {
+  final db = ref.watch(databaseProvider);
+  final trackerId = ref.watch(activeTrackerIdProvider);
+  final query = db.select(db.transactions)..where((t) => t.trackerId.equals(trackerId));
+  return query.watch().map((list) => list.length);
+});
+
 final netWorthProvider = Provider<int>((ref) {
   final accountsAsync = ref.watch(accountsStreamProvider);
   return accountsAsync.when(
