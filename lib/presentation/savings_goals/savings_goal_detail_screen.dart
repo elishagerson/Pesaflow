@@ -50,10 +50,24 @@ class _SavingsGoalDetailScreenState
 
   Future<void> _handleContribution(SavingsGoal goal, bool isDeposit) async {
     final amountText = _amountController.text.trim();
-    if (amountText.isEmpty) return;
+    if (amountText.isEmpty) {
+      CustomToast.show(
+        context,
+        message: 'Please enter an amount.',
+        type: ToastType.error,
+      );
+      return;
+    }
 
     final amountVal = int.tryParse(amountText) ?? 0;
-    if (amountVal <= 0) return;
+    if (amountVal <= 0) {
+      CustomToast.show(
+        context,
+        message: 'Please enter a valid amount.',
+        type: ToastType.error,
+      );
+      return;
+    }
 
     final amountCents = amountVal * 100;
 
@@ -69,6 +83,16 @@ class _SavingsGoalDetailScreenState
           ? null
           : _noteController.text.trim(),
     );
+
+    if (mounted) {
+      CustomToast.show(
+        context,
+        message: isDeposit ? 'Contribution saved successfully!' : 'Withdrawal completed!',
+        type: ToastType.success,
+      );
+      _amountController.clear();
+      _noteController.clear();
+    }
 
     if (_deductFromWallet && _selectedAccountId != null) {
       final txRepo = ref.read(transactionRepositoryProvider);

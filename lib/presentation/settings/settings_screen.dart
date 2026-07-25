@@ -1172,7 +1172,7 @@ class SettingsScreen extends ConsumerWidget {
                             child: IosMetricCard(
                               icon: PesaFlowIcons.transactions,
                               label: 'Transactions',
-                              value: '${ref.watch(totalTransactionsCountProvider)}',
+                              value: '$totalTransactionsCount',
                             ),
                           ),
                         ],
