@@ -94,12 +94,22 @@ class TransactionDetailScreen extends ConsumerWidget {
           child: itemAsync.when(
             data: (item) {
               if (item == null) {
-                return const Center(child: Text('Transaction not found'));
+                return ErrorState(
+                  title: 'Transaction Not Found',
+                  message: 'This transaction may have been deleted or does not exist.',
+                  onRetry: () => Navigator.of(context).pop(),
+                );
               }
               return _buildDetail(context, ref, theme, onSurface, item);
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, _) => Center(child: Text('Error: $err')),
+            error: (err, _) => ErrorState(
+              title: 'Error Loading Transaction',
+              message: err.toString(),
+              onRetry: () {
+                ref.invalidate(transactionDetailProvider(transactionId));
+              },
+            ),
           ),
         ),
       ),
