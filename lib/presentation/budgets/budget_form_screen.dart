@@ -42,8 +42,15 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   bool _rollover = false;
   String _rolloverType = 'none';
   double _threshold = 0.8;
-  DateTime _startDate = DateTime.now();
   bool _isSaving = false;
+  DateTime _startDate = DateTime.now();
+
+  bool get _isDirty {
+    if (_isSaving) return false;
+    return _nameController.text.trim().isNotEmpty ||
+        _amountController.text.trim().isNotEmpty ||
+        _selectedCategoryId != null;
+  }
 
   void _onNameChanged() => setState(() {});
   void _onAmountChanged() => setState(() {});
@@ -425,7 +432,43 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       );
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await ModernDialog.show<bool>(
+          context: context,
+          title: const Text('Discard Changes?'),
+          titleIcon: PesaFlowIcons.warning,
+          iconColor: Colors.orange,
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to go back?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(false),
+              child: const Text('Keep Editing'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.expenseColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              child: const Text('Discard'),
+            ),
+          ],
+        );
+        if (shouldPop == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       body: SafeArea(
         child: Column(
           children: [
@@ -911,6 +954,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }
