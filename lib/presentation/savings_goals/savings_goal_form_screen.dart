@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
 class SavingsGoalFormScreen extends ConsumerStatefulWidget {
   final String? goalId;
@@ -38,6 +39,12 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   late String _selectedIcon;
   late DateTime _selectedDate;
   bool _isLoading = false;
+
+  bool get _isDirty {
+    if (_isLoading) return false;
+    return _nameController.text.trim().isNotEmpty ||
+        _amountController.text.trim().isNotEmpty;
+  }
 
   final List<Map<String, dynamic>> _icons = [
     {'name': 'savings', 'icon': PesaFlowIcons.savings},
@@ -166,7 +173,43 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
       );
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await ModernDialog.show<bool>(
+          context: context,
+          title: const Text('Discard Changes?'),
+          titleIcon: PesaFlowIcons.warning,
+          iconColor: Colors.orange,
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to go back?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(false),
+              child: const Text('Keep Editing'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.expenseColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              child: const Text('Discard'),
+            ),
+          ],
+        );
+        if (shouldPop == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       appBar: IosNavBar(
         title: widget.goalId != null ? 'Edit Goal' : 'New Goal',
         largeTitle: false,
@@ -388,6 +431,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
