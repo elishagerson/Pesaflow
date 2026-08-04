@@ -53,7 +53,8 @@ class BudgetRepository {
     double notificationThreshold = 0.8,
   }) async {
     final budgetId = _uuid.v4();
-    final periodEnd = _computePeriodEnd(startDate, period);
+    final normalizedStart = DateTime(startDate.year, startDate.month, startDate.day);
+    final periodEnd = BudgetEngine.computePeriodEnd(normalizedStart, period);
 
     final budget = Budget(
       id: budgetId,
@@ -64,7 +65,7 @@ class BudgetRepository {
       rollover: rollover,
       rolloverType: rolloverType,
       rolloverCap: rolloverCap,
-      startDate: startDate,
+      startDate: normalizedStart,
       notificationThreshold: notificationThreshold,
       isActive: true,
       createdAt: DateTime.now(),
@@ -73,7 +74,7 @@ class BudgetRepository {
     final firstPeriod = BudgetPeriod(
       id: _uuid.v4(),
       budgetId: budgetId,
-      periodStart: startDate,
+      periodStart: normalizedStart,
       periodEnd: periodEnd,
       allocated: amount,
       spent: 0,
@@ -116,15 +117,17 @@ class BudgetRepository {
   ) => _budgetDao.getSpentForBudgetInRange(budgetId, start, end);
 
   /// Checks and closes any expired budget periods, creating new ones with rollover.
+  ///
+  /// Loops until the current period is no longer expired so that long gaps
+  /// between app launches (e.g. a month without opening the app) catch up one
+  /// period at a time instead of skipping straight to a single new period.
   Future<void> checkAndCloseExpiredPeriods() async {
     final activeBudgets = await _budgetDao.getAllActiveBudgets();
     final now = DateTime.now();
 
     for (final budget in activeBudgets) {
-      final currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
-      if (currentPeriod == null) continue;
-
-      if (now.isAfter(currentPeriod.periodEnd)) {
+      var currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
+      while (currentPeriod != null && now.isAfter(currentPeriod.periodEnd)) {
         // Period has expired — close it and create next
         final spent = await _budgetDao.getSpentForCategoryInPeriod(
           budget.categoryId,
@@ -142,8 +145,10 @@ class BudgetRepository {
           );
         }
 
-        final nextStart = currentPeriod.periodEnd;
-        final nextEnd = _computePeriodEnd(nextStart, budget.period);
+        // Next period starts the day after the current one ends so the
+        // boundary day is never counted twice.
+        final nextStart = currentPeriod.periodEnd.add(const Duration(days: 1));
+        final nextEnd = BudgetEngine.computePeriodEnd(nextStart, budget.period);
 
         final closedPeriod = currentPeriod.copyWith(
           spent: spent,
@@ -164,23 +169,8 @@ class BudgetRepository {
         );
 
         await _budgetDao.closePeriodAndCreateNext(closedPeriod, nextPeriod);
+        currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
       }
-    }
-  }
-
-  /// Computes the end date for a budget period.
-  DateTime _computePeriodEnd(DateTime start, String period) {
-    switch (period) {
-      case 'weekly':
-        return start.add(const Duration(days: 7));
-      case 'biweekly':
-        return start.add(const Duration(days: 14));
-      case 'monthly':
-        return DateTime(start.year, start.month + 1, start.day);
-      case 'yearly':
-        return DateTime(start.year + 1, start.month, start.day);
-      default:
-        return DateTime(start.year, start.month + 1, start.day);
     }
   }
 }
