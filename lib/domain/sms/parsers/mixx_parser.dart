@@ -57,6 +57,17 @@ class MixxParser implements SmsParser {
       return parseAmount(match.group(1) ?? '');
     }
 
+    // English: abbreviated balance-first format, e.g. "New Bal TSh 200."
+    // Modern Mixx by Yas messages put the balance right at the start.
+    final balFirstRegex = RegExp(
+      r'(?<!(?:outstanding\s+|(?:Your\s+)?outstanding\s+))\b(?:New\s+)?Bal(?:ance)?[.:]?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    match = balFirstRegex.firstMatch(text);
+    if (match != null) {
+      return parseAmount(match.group(1) ?? '');
+    }
+
     // Generic: "Balance: TSh X" (standalone)
     final genericRegex = RegExp(
       r'(?<!(?:outstanding|(?:Your\s+)?outstanding))\bBalance\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
