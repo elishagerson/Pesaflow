@@ -243,5 +243,96 @@ void main() {
         expect(result.projectedToExceed, isEmpty);
       });
     });
+
+    group('computePeriodEnd', () {
+      test('weekly period spans 7 days inclusive', () {
+        final start = DateTime(2026, 1, 1);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'weekly'),
+          DateTime(2026, 1, 7),
+        );
+      });
+
+      test('biweekly period spans 14 days inclusive', () {
+        final start = DateTime(2026, 1, 1);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'biweekly'),
+          DateTime(2026, 1, 14),
+        );
+      });
+
+      test('monthly from mid-month stays day-aligned', () {
+        final start = DateTime(2026, 3, 10);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'monthly'),
+          DateTime(2026, 4, 9),
+        );
+      });
+
+      test('monthly from Jan 31 clamps to Feb 28 (non-leap)', () {
+        final start = DateTime(2026, 1, 31);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'monthly'),
+          DateTime(2026, 2, 28),
+        );
+      });
+
+      test('monthly from Jan 31 clamps to Feb 29 (leap year)', () {
+        final start = DateTime(2024, 1, 31);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'monthly'),
+          DateTime(2024, 2, 29),
+        );
+      });
+
+      test('monthly from Feb 29 (leap year) clamps to Mar 28', () {
+        final start = DateTime(2024, 2, 29);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'monthly'),
+          DateTime(2024, 3, 28),
+        );
+      });
+
+      test('yearly period ends day before next year anniversary', () {
+        final start = DateTime(2026, 1, 1);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'yearly'),
+          DateTime(2026, 12, 31),
+        );
+      });
+
+      test('yearly from Feb 29 (leap year) clamps to next non-leap year', () {
+        final start = DateTime(2024, 2, 29);
+        // Anniversary falls off the end of Feb 2025 — period runs to Feb 28
+        // and the next period starts Mar 1.
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'yearly'),
+          DateTime(2025, 2, 28),
+        );
+      });
+
+      test('unknown period falls back to monthly', () {
+        final start = DateTime(2026, 3, 10);
+        expect(
+          BudgetEngine.computePeriodEnd(start, 'quarterly'),
+          DateTime(2026, 4, 9),
+        );
+      });
+
+      test('successive monthly periods from month-end clamp without overlap',
+          () {
+        final period = 'monthly';
+        var start = DateTime(2026, 1, 31);
+        for (var i = 0; i < 12; i++) {
+          final end = BudgetEngine.computePeriodEnd(start, period);
+          final length = end.difference(start).inDays + 1;
+          expect(length, inInclusiveRange(28, 31));
+          start = end.add(const Duration(days: 1));
+        }
+        // 12 monthly periods starting Jan 31 2026 finish in Feb 2027.
+        expect(start.year, 2027);
+        expect(start.month, 2);
+      });
+    });
   });
 }

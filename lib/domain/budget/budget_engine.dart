@@ -147,16 +147,21 @@ class BudgetEngine {
       case 'biweekly':
         return date.add(const Duration(days: 13));
       case 'monthly':
-        return _addMonthsClamped(date, 1).subtract(const Duration(days: 1));
+        return _addMonthsClamped(date, 1);
       case 'yearly':
-        return _addMonthsClamped(date, 12).subtract(const Duration(days: 1));
+        return _addMonthsClamped(date, 12);
       default:
-        return _addMonthsClamped(date, 1).subtract(const Duration(days: 1));
+        return _addMonthsClamped(date, 1);
     }
   }
 
-  /// Returns [date] advanced by [months] months, with the day-of-month clamped
-  /// to the last valid day of the target month (e.g. Jan 31 + 1 month → Feb 28).
+  /// Returns the inclusive last day of the period that is [months] ahead of
+  /// the period's start [date].
+  ///
+  /// When the anniversary day doesn't exist in the target month (e.g. a monthly
+  /// period starting Jan 31), the period runs through the last day of the
+  /// target month so month-end budgets stay aligned to calendar month-ends and
+  /// the next period starts on the 1st.
   static DateTime _addMonthsClamped(DateTime date, int months) {
     final totalMonth = date.month + months;
     final year = date.year + (totalMonth - 1) ~/ 12;
@@ -165,7 +170,12 @@ class BudgetEngine {
     final day = date.day > lastDayOfTargetMonth
         ? lastDayOfTargetMonth
         : date.day;
-    return DateTime(year, month, day);
+    final nextStart = DateTime(year, month, day);
+    if (date.day > lastDayOfTargetMonth) {
+      // Anniversary fell off the end of the target month — run to month-end.
+      return DateTime(year, month + 1, 0);
+    }
+    return nextStart.subtract(const Duration(days: 1));
   }
 }
 

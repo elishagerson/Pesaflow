@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/domain/budget/budget_engine.dart';
 
 class DemoSeeder {
   final AppDatabase db;
@@ -112,7 +113,7 @@ class DemoSeeder {
 
     // 4. Seed Budgets & Periods
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final endOfMonth = DateTime(now.year, now.month + 1, 0);
+    final endOfMonth = BudgetEngine.computePeriodEnd(startOfMonth, 'monthly');
 
     final foodBudgetId = uuid.v4();
     await db
