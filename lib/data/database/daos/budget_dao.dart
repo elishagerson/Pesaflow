@@ -88,6 +88,10 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   }
 
   /// Calculates total spent for a category within a date range from transactions.
+  ///
+  /// [start] is inclusive; [end] is treated as the inclusive last day of the
+  /// range, so transactions on [end] itself are counted (upper bound is
+  /// exclusive at midnight of the day after [end]).
   Future<int> getSpentForCategoryInPeriod(
     String categoryId,
     DateTime start,
@@ -98,7 +102,9 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
       ..where(
         transactions.categoryId.equals(categoryId) &
             transactions.createdAt.isBiggerOrEqual(Constant(start)) &
-            transactions.createdAt.isSmallerOrEqual(Constant(end)) &
+            transactions.createdAt.isSmallerThan(
+              Constant(end.add(const Duration(days: 1))),
+            ) &
             (transactions.type.equals('expense') |
                 transactions.type.equals('airtime') |
                 transactions.type.equals('fee')),
@@ -277,7 +283,9 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
                 (t) =>
                     t.categoryId.equals(budget.categoryId) &
                     t.createdAt.isBiggerOrEqual(Constant(periodStart)) &
-                    t.createdAt.isSmallerOrEqual(Constant(periodEnd)) &
+                    t.createdAt.isSmallerThan(
+                      Constant(periodEnd.add(const Duration(days: 1))),
+                    ) &
                     (t.type.equals('expense') |
                         t.type.equals('airtime') |
                         t.type.equals('fee')),
