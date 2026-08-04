@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -137,6 +138,13 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String? _selectedAccountId;
   final Set<String> _pendingDeleteIds = {};
+  Timer? _homeWidgetCaptureTimer;
+
+  @override
+  void dispose() {
+    _homeWidgetCaptureTimer?.cancel();
+    super.dispose();
+  }
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -200,6 +208,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   void _showWorkspaceSelectorSheet(BuildContext context) {
     showWorkspaceSelectorSheet(context, ref);
+  }
+
+  /// Debounces AppWidget captures so launcher widgets only refresh after data
+  /// settles, and only while the dashboard is the visible route.
+  void _scheduleHomeWidgetCaptures() {
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    _homeWidgetCaptureTimer?.cancel();
+    _homeWidgetCaptureTimer = Timer(const Duration(milliseconds: 1200), () {
+      _captureHomeWidgets();
+    });
+  }
+
+  Future<void> _captureHomeWidgets() async {
+    await HomeWidgetsRenderer.captureAndUpdate(
+      key: HomeWidgetsRenderer.heatmapKey,
+      imageKey: 'heatmap_image_path',
+      widgetName: 'SpendingHeatmapWidgetProvider',
+    );
+    await HomeWidgetsRenderer.captureAndUpdate(
+      key: HomeWidgetsRenderer.safeToSpendKey,
+      imageKey: 'safe_to_spend_image_path',
+      widgetName: 'SafeToSpendWidgetProvider',
+    );
+    await HomeWidgetsRenderer.captureAndUpdate(
+      key: HomeWidgetsRenderer.quickTemplatesKey,
+      imageKey: 'quick_templates_image_path',
+      widgetName: 'QuickTemplatesWidgetProvider',
+    );
+    await HomeWidgetsRenderer.captureAndUpdate(
+      key: HomeWidgetsRenderer.recentTransactionsKey,
+      imageKey: 'recent_transactions_image_path',
+      widgetName: 'RecentTransactionsWidgetProvider',
+    );
   }
 
   @override
@@ -290,38 +331,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final heatmapAsync = ref.watch(spendingHeatmapProvider);
     final templatesAsync = ref.watch(transactionTemplatesStreamProvider);
 
-    // Trigger AppWidget captures post-frame so the launcher widgets update dynamically
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final heatmapData = heatmapAsync.value;
-      final templates = templatesAsync.value;
-      if (heatmapData != null) {
-        await HomeWidgetsRenderer.captureAndUpdate(
-          key: HomeWidgetsRenderer.heatmapKey,
-          imageKey: 'heatmap_image_path',
-          widgetName: 'SpendingHeatmapWidgetProvider',
-        );
-      }
-      await HomeWidgetsRenderer.captureAndUpdate(
-        key: HomeWidgetsRenderer.safeToSpendKey,
-        imageKey: 'safe_to_spend_image_path',
-        widgetName: 'SafeToSpendWidgetProvider',
-      );
-      if (templates != null) {
-        await HomeWidgetsRenderer.captureAndUpdate(
-          key: HomeWidgetsRenderer.quickTemplatesKey,
-          imageKey: 'quick_templates_image_path',
-          widgetName: 'QuickTemplatesWidgetProvider',
-        );
-      }
-      final transactions = recentTransAsync.value;
-      if (transactions != null) {
-        await HomeWidgetsRenderer.captureAndUpdate(
-          key: HomeWidgetsRenderer.recentTransactionsKey,
-          imageKey: 'recent_transactions_image_path',
-          widgetName: 'RecentTransactionsWidgetProvider',
-        );
-      }
-    });
+    // Debounce AppWidget captures so launcher widgets refresh once data
+    // settles instead of re-capturing on every dashboard rebuild.
+    _scheduleHomeWidgetCaptures();
 
     return Stack(
       children: [
@@ -523,8 +535,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 );
                                 final accounts = accountsAsync.value ?? [];
                                 final netWorth = ref.watch(netWorthProvider);
-                                final displayBalance = _selectedAccountId != null
-                                    ? (accounts.firstWhere((a) => a.id == _selectedAccountId, orElse: () => accounts.first).balance)
+                                final displayBalance =
+                                    _selectedAccountId != null
+                                    ? (accounts
+                                          .firstWhere(
+                                            (a) => a.id == _selectedAccountId,
+                                            orElse: () => accounts.first,
+                                          )
+                                          .balance)
                                     : netWorth;
 
                                 final front = _buildBalanceCardFront(
@@ -1766,27 +1784,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Column(
             children: [
               if (heatmapAsync.value != null)
-                WidgetHeatmap(
+                RepaintBoundary(
                   key: HomeWidgetsRenderer.heatmapKey,
-                  data: heatmapAsync.value!,
+                  child: WidgetHeatmap(data: heatmapAsync.value!, theme: theme),
+                ),
+              RepaintBoundary(
+                key: HomeWidgetsRenderer.safeToSpendKey,
+                child: WidgetSafeToSpend(
+                  remainingCents: (remainingBudget * 100).toInt(),
+                  limitCents: (budgetTotal * 100).toInt(),
+                  percentage: overallPct,
                   theme: theme,
                 ),
-              WidgetSafeToSpend(
-                key: HomeWidgetsRenderer.safeToSpendKey,
-                remainingCents: (remainingBudget * 100).toInt(),
-                limitCents: (budgetTotal * 100).toInt(),
-                percentage: overallPct,
-                theme: theme,
               ),
-              WidgetQuickTemplates(
+              RepaintBoundary(
                 key: HomeWidgetsRenderer.quickTemplatesKey,
-                templates: templatesAsync.value ?? [],
-                theme: theme,
+                child: WidgetQuickTemplates(
+                  templates: templatesAsync.value ?? [],
+                  theme: theme,
+                ),
               ),
-              WidgetRecentTransactions(
+              RepaintBoundary(
                 key: HomeWidgetsRenderer.recentTransactionsKey,
-                transactions: recentTransAsync.value ?? [],
-                theme: theme,
+                child: WidgetRecentTransactions(
+                  transactions: recentTransAsync.value ?? [],
+                  theme: theme,
+                ),
               ),
             ],
           ),
@@ -1816,7 +1839,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(painter: _GlossyWavesPainter(accentColor: trackerColor)),
+            child: CustomPaint(
+              painter: _GlossyWavesPainter(accentColor: trackerColor),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(kSpacing20),
@@ -1845,8 +1870,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Text(
                       _selectedAccountId != null
                           ? (accounts.any((a) => a.id == _selectedAccountId)
-                              ? accounts.firstWhere((a) => a.id == _selectedAccountId).name.toUpperCase()
-                              : 'NET WORTH')
+                                ? accounts
+                                      .firstWhere(
+                                        (a) => a.id == _selectedAccountId,
+                                      )
+                                      .name
+                                      .toUpperCase()
+                                : 'NET WORTH')
                           : 'NET WORTH',
                       style: context.ts(
                         9,
@@ -1911,7 +1941,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(painter: _GlossyWavesPainter(accentColor: trackerColor)),
+            child: CustomPaint(
+              painter: _GlossyWavesPainter(accentColor: trackerColor),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(kSpacing20),
@@ -1950,8 +1982,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           overallPct < 0.7
                               ? context.appColors.incomeColor
                               : overallPct < 0.9
-                                  ? Colors.amber
-                                  : context.appColors.expenseColor,
+                              ? Colors.amber
+                              : context.appColors.expenseColor,
                         ),
                       ),
                     ),
