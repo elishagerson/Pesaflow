@@ -94,6 +94,9 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - `GlassCard.frosted` defaults to `false`; accent strip only on `onTap` cards.
 - `SwipeableCard` imports `package:flutter/physics.dart` and `package:flutter/services.dart`.
 - No defensive `SmsClassifier` checks in `SmsProcessor._processParsed()` or `SelcomPesaParser.parse()`.
+- **`LiquidGlassOverlay`** (`lib/presentation/common/widgets/liquid_glass.dart`): Stopwatch-driven; no infinite `AnimationController`; painter repaints only on `speedFactor`/`baseColor` change; 50ms ticker active only while scrolling (`speedFactor != 1.0`).
+- **`IosNavBar`** (`lib/presentation/common/ios/ios_tab_bar.dart`): StatelessWidget; `scrollSpeedProvider` watched in a scoped `Consumer` so only the glass wrapper rebuilds per scroll frame.
+- **Home-widget captures** (`lib/presentation/dashboard/dashboard_screen.dart`): debounced 1200ms via `_scheduleHomeWidgetCaptures()`; gated on `ModalRoute.isCurrent`; keys live on `RepaintBoundary` wrappers of the 4 offscreen renderers.
 
 ## Relevant Files
 - `lib/core/utils/context_extensions.dart`: `PesaFlowContext` extension — `appColors`, `isDark`, `ts()`, `inputDecoration()`, `viewPadding`, `keyboardInset`, `bottomInset`, `topInset`
@@ -107,4 +110,8 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - `lib/presentation/common/widgets/empty_state.dart`: Available and used by all 6 data-list screens
 - `lib/presentation/common/ios/ios_list_section.dart`: Fixed `DefaultTheme` → `DefaultTextStyle.merge`
 - `lib/domain/export/pdf_report_generator.dart`: 8 pre-existing errors — out of scope
+- `lib/presentation/common/widgets/liquid_glass.dart`: Stopwatch-driven glass overlay — no infinite `AnimationController`; repaints only on change
+- `lib/presentation/common/ios/ios_tab_bar.dart`: `IosNavBar` StatelessWidget + scoped `Consumer` around `LiquidGlassOverlay`
+- `lib/presentation/dashboard/dashboard_screen.dart`: `_scheduleHomeWidgetCaptures()` debounce + `RepaintBoundary`-wrapped offscreen home widgets
+- `lib/services/home_widgets_renderer.dart`: captures offscreen `RepaintBoundary` → PNG → Android home widgets
 - `lib/presentation/loans/widgets/payment_sheet.dart`, `lib/presentation/savings_goals/savings_goal_detail_screen.dart`, `lib/presentation/analytics/analytics_screen.dart`: Top-3 files with most remaining raw `fontSize`/`fontWeight`
