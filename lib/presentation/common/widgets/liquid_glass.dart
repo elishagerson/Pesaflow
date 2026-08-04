@@ -1,6 +1,14 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+/// Subtle animated glass sheen layered beneath [child].
+///
+/// Instead of running a perpetual `AnimationController.repeat()` (which forces
+/// a full repaint of the painter on every frame, 24/7), the overlay is driven
+/// by a [Stopwatch] and only repaints when its [speedFactor] or color changes
+/// (i.e. while the user is scrolling). A low-frequency ticker runs only while
+/// [speedFactor] differs from `1.0`, so the layer is completely inert at rest.
 class LiquidGlassOverlay extends StatefulWidget {
   final Widget child;
   final Color? accentColor;
@@ -17,55 +25,49 @@ class LiquidGlassOverlay extends StatefulWidget {
   State<LiquidGlassOverlay> createState() => _LiquidGlassOverlayState();
 }
 
-class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late AnimationController _controller;
+class _LiquidGlassOverlayState extends State<LiquidGlassOverlay> {
+  final Stopwatch _clock = Stopwatch();
+  Timer? _ticker;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3600),
-    );
+    _clock.start();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (reducedMotion) {
-      if (_controller.isAnimating) {
-        _controller.stop();
-      }
-    } else {
-      if (!_controller.isAnimating) {
-        _controller.repeat();
-      }
-    }
+    _syncTicker();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didUpdateWidget(LiquidGlassOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.speedFactor == widget.speedFactor) return;
+    _syncTicker();
+  }
+
+  /// Drift the glass only while the user is actively scrolling.
+  void _syncTicker() {
     final reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (reducedMotion) return;
-
-    // Pause the continuous repaint loop when the app is backgrounded
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      _controller.stop();
-    } else if (state == AppLifecycleState.resumed) {
-      if (!_controller.isAnimating) _controller.repeat();
+    final shouldRun = !reducedMotion && widget.speedFactor != 1.0;
+    if (shouldRun) {
+      _ticker ??= Timer.periodic(const Duration(milliseconds: 50), (_) {
+        if (!mounted) return;
+        setState(() {});
+      });
+    } else {
+      _ticker?.cancel();
+      _ticker = null;
     }
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _controller.dispose();
+    _ticker?.cancel();
+    _clock.stop();
     super.dispose();
   }
 
@@ -75,9 +77,9 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
 
     // Respect reduced motion: render children without the animated overlay
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (reducedMotion) return widget.child;
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      return widget.child;
+    }
 
     return RepaintBoundary(
       child: Stack(
@@ -86,7 +88,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
             child: IgnorePointer(
               child: CustomPaint(
                 painter: _LiquidGlassPainter(
-                  animation: _controller,
+                  elapsedMs: _clock.elapsedMilliseconds,
                   speedFactor: widget.speedFactor,
                   baseColor: baseColor,
                 ),
@@ -101,15 +103,15 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
 }
 
 class _LiquidGlassPainter extends CustomPainter {
-  final Animation<double> animation;
+  final int elapsedMs;
   final double speedFactor;
   final Color baseColor;
 
   _LiquidGlassPainter({
-    required this.animation,
+    required this.elapsedMs,
     required this.speedFactor,
     required this.baseColor,
-  }) : super(repaint: animation);
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -117,10 +119,9 @@ class _LiquidGlassPainter extends CustomPainter {
       return;
     }
 
-    // Original rate of change: 0.1 per second.
-    // Animation value goes 0.0 -> 1.0 over 3600 seconds.
-    // So time = value * 3600 * 0.1 = value * 360.
-    final time = animation.value * 360.0 * speedFactor;
+    // Original rate of change: 0.1 per second (0.0001 per millisecond).
+    // Scrolling scales the apparent drift via speedFactor.
+    final time = elapsedMs * 0.0001 * speedFactor;
 
     // -- Highlight 1: drifting radial pool --
     final px1 = 0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15));
@@ -184,7 +185,7 @@ class _LiquidGlassPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LiquidGlassPainter oldDelegate) =>
-      oldDelegate.animation.value != animation.value ||
+      oldDelegate.elapsedMs != elapsedMs ||
       oldDelegate.speedFactor != speedFactor ||
       oldDelegate.baseColor != baseColor;
 }

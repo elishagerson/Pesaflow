@@ -249,7 +249,7 @@ class _TabConfig {
   }) : isCenter = false;
 }
 
-class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
+class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
   final List<Widget>? actions;
@@ -275,10 +275,9 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final top = MediaQuery.of(context).padding.top;
-    final speedFactor = ref.watch(scrollSpeedProvider);
 
     final effectiveCanPop = canPop ?? Navigator.of(context).canPop();
     final effectiveLeading =
@@ -298,8 +297,14 @@ class IosNavBar extends ConsumerWidget implements PreferredSizeWidget {
     );
 
     return ClipRect(
-      child: LiquidGlassOverlay(
-        speedFactor: speedFactor,
+      child: Consumer(
+        builder: (context, ref, child) => LiquidGlassOverlay(
+          speedFactor: ref.watch(scrollSpeedProvider),
+          child: child!,
+        ),
+        // The nav bar content is passed as [child] so it is built once and
+        // NOT rebuilt on every scroll-velocity change — only the glass layer
+        // above it updates.
         child: Container(
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
