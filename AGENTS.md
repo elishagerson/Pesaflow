@@ -46,6 +46,11 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - **Savings goal progress bar animation** — Both `LinearProgressIndicator` instances in `savings_goal_list_screen.dart` wrapped in `TweenAnimationBuilder<double>(begin: 0, end: pct, curve: easeOutCubic)` — 1s for overall, 800ms per-goal.
 - **SkeletonCrossfade widget** — `lib/presentation/common/widgets/motion/skeleton_crossfade.dart`: `AnimatedSwitcher(350ms, FadeTransition)`. Awaiting wiring into screens.
 - **Transaction templates** — `settings_repository.dart`: `getTransactionTemplates()`, `saveTransactionTemplate()`, `deleteTransactionTemplate()` via JSON in `app_settings` table (key: `transaction_templates`). `transaction_form_screen.dart`: "Templates" button opens picker sheet with swipe-to-delete; "Save as template" toggle in secondary details sheet saves config with name dialog after transaction save.
+- **`LiquidGlassOverlay` repaint loop eliminated** — `liquid_glass.dart` no longer runs a perpetual `AnimationController(duration: 3600s).repeat()` (which forced a full painter repaint every frame, 24/7, on all 5 indexedStack-mounted tab nav bars). Now Stopwatch-driven: repaints only when `speedFactor`/`baseColor` change; a 50ms ticker runs only while `speedFactor != 1.0` (active scroll) and is cancelled at rest; reduced-motion still bypasses the overlay entirely.
+- **Nav bar scroll rebuilds scoped** — `IosNavBar` converted `ConsumerWidget`→`StatelessWidget`; the app-bar content is passed as `Consumer.child` so `ref.watch(scrollSpeedProvider)` rebuilds only the `LiquidGlassOverlay` wrapper per scroll frame, not the whole nav bar.
+- **Home-widget captures fixed + debounced** — Offscreen dashboard widgets (`WidgetHeatmap`/`WidgetSafeToSpend`/`WidgetQuickTemplates`/`WidgetRecentTransactions`) wrapped in `RepaintBoundary` carrying the capture GlobalKeys (previously `as RenderRepaintBoundary?` threw silently → home widgets never updated). Captures now debounce 1200ms after the last dashboard rebuild and only run while the dashboard route is current.
+- **Budget repetition fix complete** — `BudgetEngine.computePeriodEnd` (Model-B month-end clamping, Jan 31 → Feb 28/29) wired through DAO/repository/seeder; `checkAndCloseExpiredPeriods` catch-up while loop; next period starts day after period end; spent queries exclusive-end. Commits `3f62dca`/`f812f42`/`586da93`/`efbf201`/`7570371`.
+- **All 232 tests pass** — `dart analyze lib/ test/` → 0 issues; `flutter test` → 232/232.
 
 ### In Progress
 - **Typography audit** — `ts()` helper created; top-10 files still use raw `fontSize`/`fontWeight` overrides
@@ -65,6 +70,7 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 - **Flat cards over glass**: `BackdropFilter` GPU-heavy; reserve for overlays.
 - **Hub-and-spoke dashboard**: Compress secondary features into nav cards; show only what needs attention.
 - **No defensive classifier on parsed messages**: Trust the parser when it extracts a concrete transaction.
+- **No continuous repaint for ambient effects**: A perpetual `AnimationController.repeat()` driving a `CustomPainter` is a permanent frame-budget drain — worse here because `StatefulShellRoute.indexedStack` keeps all 5 tab branches mounted. Ambient effects should be Stopwatch/time-driven and repaint only when inputs change.
 
 ## Next Steps
 1. **Micro-interactions** — Wire `SuccessCheckmark` into SMS approve, transaction save, payment complete. Apply `TactileSpringContainer` to remaining flat buttons. Add transaction row slide-in with brief highlight.
@@ -72,6 +78,7 @@ Refactor screens into focused widgets, polish UI to designer quality (consistent
 3. **Reduced motion** — `MediaQuery.prefersReducedMotion` → disable springs, use `AnimationController(duration: 200)` fallback across all motion widgets.
 4. **Icon unification** — Replace 401 filled `Icons.*` → `PesaFlowIcons.*`.
 5. **One animation per action** — Audit all 253 tappable surfaces: pick spring *or* scale *or* haptic, not all three.
+6. **Perf follow-ups** — Profile with `flutter run --profile`/DevTools to confirm frame timings after the repaint-loop fix. Remaining candidates: hoist the two `ColorScheme.fromSeed` calls in every root build (`main.dart`); audit `Interactive3DCard` intro/tilt controllers; confirm the 4 offscreen home-widget renderers stay idle between debounced captures.
 
 ## Critical Context
 - **`dart analyze lib/`**: **0 issues** across entire `lib/` (pdf_report_generator.dart errors also resolved).
