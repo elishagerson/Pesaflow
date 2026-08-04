@@ -133,6 +133,43 @@ class BudgetEngine {
   }
 }
 
+  /// Computes the inclusive last day of a budget period that starts on
+  /// [start], for the given repetition [period].
+  ///
+  /// Returns the last day of the period (i.e. the day before the next period
+  /// begins). Handles month overflow correctly: e.g. a monthly period starting
+  /// Jan 31 ends Feb 28 (or Feb 29 in a leap year), and a yearly period
+  /// starting Feb 29 ends Feb 28 of the following year.
+  static DateTime computePeriodEnd(DateTime start, String period) {
+    final date = DateTime(start.year, start.month, start.day);
+    switch (period) {
+      case 'weekly':
+        return date.add(const Duration(days: 6));
+      case 'biweekly':
+        return date.add(const Duration(days: 13));
+      case 'monthly':
+        return _addMonthsClamped(date, 1).subtract(const Duration(days: 1));
+      case 'yearly':
+        return _addMonthsClamped(date, 12).subtract(const Duration(days: 1));
+      default:
+        return _addMonthsClamped(date, 1).subtract(const Duration(days: 1));
+    }
+  }
+
+  /// Returns [date] advanced by [months] months, with the day-of-month clamped
+  /// to the last valid day of the target month (e.g. Jan 31 + 1 month → Feb 28).
+  static DateTime _addMonthsClamped(DateTime date, int months) {
+    final totalMonth = date.month + months;
+    final year = date.year + (totalMonth - 1) ~/ 12;
+    final month = (totalMonth - 1) % 12 + 1;
+    final lastDayOfTargetMonth = DateTime(year, month + 1, 0).day;
+    final day = date.day > lastDayOfTargetMonth
+        ? lastDayOfTargetMonth
+        : date.day;
+    return DateTime(year, month, day);
+  }
+}
+
 /// Result of threshold checking across multiple budgets.
 class BudgetThresholdResult {
   final List<String> crossedThreshold;
