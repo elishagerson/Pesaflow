@@ -131,7 +131,6 @@ class BudgetEngine {
       projectedToExceed: projectedToExceed,
     );
   }
-}
 
   /// Computes the inclusive last day of a budget period that starts on
   /// [start], for the given repetition [period].
