@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/core/utils/context_extensions.dart';
 
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(

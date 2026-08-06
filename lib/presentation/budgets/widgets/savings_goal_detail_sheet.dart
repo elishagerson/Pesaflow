@@ -151,7 +151,6 @@ class _SavingsGoalDetailSheetState
             }
           });
         }
-      }
     } catch (e) {
       if (mounted) {
         CustomToast.show(context, message: 'Error: $e', type: ToastType.error);
