@@ -34,7 +34,8 @@ extension PesaFlowContext on BuildContext {
   }) {
     final t = Theme.of(this).textTheme;
     final base = switch (size) {
-      10 => Theme.of(this).extension<AppTypographyTheme>()!.labelMicro,
+      10 => Theme.of(this).extension<AppTypographyTheme>()?.labelMicro ??
+          t.labelSmall!.copyWith(fontSize: 10),
       11 => t.labelSmall!,
       12 => t.labelMedium!,
       13 => t.bodySmall!,
