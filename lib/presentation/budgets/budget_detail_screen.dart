@@ -287,6 +287,22 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   amount: status.allocated,
                                   color: theme.colorScheme.primary,
                                   theme: theme,
+                                  subtitle: () {
+                                    final rolled = bp.currentPeriod?.rolledFrom ?? 0;
+                                    if (rolled == 0) return null;
+                                    final prefix = rolled > 0 ? '+' : '-';
+                                    final label = rolled > 0 ? 'roll' : 'def';
+                                    return Text(
+                                      '$prefix Tsh ${rolled.abs() ~/ 100} $label',
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: rolled > 0 
+                                            ? context.appColors.incomeColor 
+                                            : context.appColors.expenseColor,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    );
+                                  }(),
                                 ),
                               ),
                             ],
@@ -665,11 +681,13 @@ class _StatCard extends StatelessWidget {
   final int amount;
   final Color color;
   final ThemeData theme;
+  final Widget? subtitle;
   const _StatCard({
     required this.label,
     required this.amount,
     required this.color,
     required this.theme,
+    this.subtitle,
   });
 
   @override
@@ -695,6 +713,10 @@ class _StatCard extends StatelessWidget {
               letterSpacing: -0.3,
             ),
           ),
+          if (subtitle != null) ...[
+            const SizedBox(height: kSpacing2),
+            subtitle!,
+          ],
         ],
       ),
     );
