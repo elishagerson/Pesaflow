@@ -688,99 +688,108 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                           ),
                         ],
                       ),
-                      if (_rollover) ...[
-                        StaggeredFadeSlide(
-                          index: 3,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing16,
-                            ),
-                            child: GlassCard(
-                              padding: const EdgeInsets.all(kSpacing6),
-                              borderRadius: AppTheme.radiusCard,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: CupertinoSlidingSegmentedControl<String>(
-                                      groupValue: _rolloverType,
-                                      backgroundColor: theme
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: 0.05),
-                                      thumbColor: theme.colorScheme.surface,
-                                      children: {
-                                        'all': Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing12,
-                                            vertical: kSpacing8,
-                                          ),
-                                          child: Text(
-                                            'All',
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: _rolloverType == 'all'
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
-                                                ),
-                                          ),
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: _rollover
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                  left: kSpacing16,
+                                  right: kSpacing16,
+                                  top: kSpacing8,
+                                ),
+                                child: GlassCard(
+                                  padding: const EdgeInsets.all(kSpacing6),
+                                  borderRadius: AppTheme.radiusCard,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: CupertinoSlidingSegmentedControl<String>(
+                                          groupValue: _rolloverType,
+                                          backgroundColor: theme
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.05),
+                                          thumbColor: theme.colorScheme.surface,
+                                          children: {
+                                            'all': Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: kSpacing12,
+                                                vertical: kSpacing8,
+                                              ),
+                                              child: Text(
+                                                'All',
+                                                style: theme.textTheme.labelMedium
+                                                    ?.copyWith(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: _rolloverType == 'all'
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant,
+                                                    ),
+                                              ),
+                                            ),
+                                            'capped': Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: kSpacing12,
+                                                vertical: kSpacing8,
+                                              ),
+                                              child: Text(
+                                                'Capped',
+                                                style: theme.textTheme.labelMedium
+                                                    ?.copyWith(
+                                                      fontWeight: FontWeight.bold,
+                                                      color:
+                                                          _rolloverType == 'capped'
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurfaceVariant,
+                                                    ),
+                                              ),
+                                            ),
+                                          },
+                                          onValueChanged: (v) {
+                                            if (v != null) {
+                                              setState(() => _rolloverType = v);
+                                            }
+                                          },
                                         ),
-                                        'capped': Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing12,
-                                            vertical: kSpacing8,
-                                          ),
-                                          child: Text(
-                                            'Capped',
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color:
-                                                      _rolloverType == 'capped'
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
+                                      ),
+                                      AnimatedSize(
+                                        duration: const Duration(milliseconds: 250),
+                                        curve: Curves.easeInOut,
+                                        child: _rolloverType == 'capped'
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(top: kSpacing10),
+                                                child: _InteractiveInputRow(
+                                                  controller: _capController,
+                                                  label: 'Max Rollover (Tsh)',
+                                                  hint: 'e.g. 50000',
+                                                  icon: PesaFlowIcons.upcoming,
+                                                  keyboardType: TextInputType.number,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
                                                 ),
-                                          ),
-                                        ),
-                                      },
-                                      onValueChanged: (v) {
-                                        if (v != null) {
-                                          setState(() => _rolloverType = v);
-                                        }
-                                      },
-                                    ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ),
+                                    ],
                                   ),
-                                  if (_rolloverType == 'capped') ...[
-                                    const SizedBox(height: kSpacing10),
-                                    _InteractiveInputRow(
-                                      controller: _capController,
-                                      label: 'Max Rollover (Tsh)',
-                                      hint: 'e.g. 50000',
-                                      icon: PesaFlowIcons.upcoming,
-                                      keyboardType: TextInputType.number,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
                       const SizedBox(height: kSpacing8),
                       sectionLabel('ALERT THRESHOLD'),
                       StaggeredFadeSlide(
