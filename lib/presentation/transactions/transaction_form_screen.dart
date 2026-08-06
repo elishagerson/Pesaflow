@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -395,12 +396,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(netWorthProvider);
 
       if (mounted) {
-        CustomToast.show(
+        await SuccessCheckmark.show(
           context,
           message: 'Transaction saved!',
-          type: ToastType.success,
         );
-        context.pop();
+        if (mounted) {
+          context.pop();
+        }
       }
     } catch (e) {
       HapticFeedback.heavyImpact();
