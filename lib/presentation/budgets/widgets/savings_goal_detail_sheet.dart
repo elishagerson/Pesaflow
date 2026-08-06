@@ -19,6 +19,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -122,13 +123,19 @@ class _SavingsGoalDetailSheetState
 
       if (mounted) {
         Navigator.of(context).pop(); // pop amount modal
-        CustomToast.show(
-          context,
-          message: isDeposit
-              ? 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!'
-              : 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
-          type: isDeposit ? ToastType.success : ToastType.error,
-        );
+        if (isDeposit) {
+          await SuccessCheckmark.show(
+            context,
+            message: 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!',
+          );
+        } else {
+          CustomToast.show(
+            context,
+            message: 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
+            type: ToastType.error,
+          );
+        }
+      }
 
         if (reachedMilestone) {
           Future.delayed(const Duration(milliseconds: 300), () {
