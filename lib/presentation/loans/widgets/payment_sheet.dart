@@ -13,6 +13,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
@@ -803,15 +804,16 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                   );
                                               if (success) {
                                                 if (sheetContext.mounted) {
-                                                  CustomToast.show(
+                                                  await SuccessCheckmark.show(
                                                     sheetContext,
                                                     message:
                                                         'Payment recorded!',
-                                                    type: ToastType.success,
                                                   );
-                                                  Navigator.of(
-                                                    sheetContext,
-                                                  ).pop();
+                                                  if (sheetContext.mounted) {
+                                                    Navigator.of(
+                                                      sheetContext,
+                                                    ).pop();
+                                                  }
                                                 }
                                               } else {
                                                 setSheetState(() {
