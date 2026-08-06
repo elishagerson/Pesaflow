@@ -217,44 +217,51 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                           ],
                         ),
                         const SizedBox(height: kSpacing8),
-                        Text(
-                          widget.data.subtitle,
-                          style: context.ts(
-                            13,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.7,
-                            ),
-                          ),
-                          maxLines: _expanded ? 5 : 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        // Expanded detail area
-                        if (_expanded)
-                          Padding(
-                            padding: const EdgeInsets.only(top: kSpacing8),
-                            child: AnimatedOpacity(
-                              opacity: _expandAnimation.value,
-                              duration: Duration.zero,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Divider(height: 1),
-                                  const SizedBox(height: kSpacing8),
-                                  _buildDetailRow(
-                                    PesaFlowIcons.income,
-                                    'Category trend',
-                                    'Based on your spending in this category',
-                                  ),
-                                  const SizedBox(height: kSpacing4),
-                                  _buildDetailRow(
-                                    PesaFlowIcons.calendar,
-                                    'Time period',
-                                    'This month vs last month',
-                                  ),
-                                ],
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.data.subtitle,
+                              style: context.ts(
+                                13,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
                               ),
+                              maxLines: _expanded ? 5 : 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
+                            if (_expanded)
+                              FadeTransition(
+                                opacity: _expandAnimation,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: kSpacing8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Divider(height: 1),
+                                      const SizedBox(height: kSpacing8),
+                                      _buildDetailRow(
+                                        PesaFlowIcons.income,
+                                        'Category trend',
+                                        'Based on your spending in this category',
+                                      ),
+                                      const SizedBox(height: kSpacing4),
+                                      _buildDetailRow(
+                                        PesaFlowIcons.calendar,
+                                        'Time period',
+                                        'This month vs last month',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                       ],
                     ),
                   ),
