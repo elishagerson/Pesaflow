@@ -25,6 +25,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
@@ -85,11 +86,18 @@ class _SavingsGoalDetailScreenState
     );
 
     if (mounted) {
-      CustomToast.show(
-        context,
-        message: isDeposit ? 'Contribution saved successfully!' : 'Withdrawal completed!',
-        type: ToastType.success,
-      );
+      if (isDeposit) {
+        await SuccessCheckmark.show(
+          context,
+          message: 'Contribution saved successfully!',
+        );
+      } else {
+        CustomToast.show(
+          context,
+          message: 'Withdrawal completed!',
+          type: ToastType.success,
+        );
+      }
       _amountController.clear();
       _noteController.clear();
     }
