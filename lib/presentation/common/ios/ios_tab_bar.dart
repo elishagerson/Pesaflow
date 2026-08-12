@@ -21,7 +21,7 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 72.0;
+  static const double navBarHeight = 68.0;
   static const double minimizedHeight = 48.0;
 
   @override
@@ -30,38 +30,45 @@ class IosTabBar extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final height = minimized ? minimizedHeight : navBarHeight;
 
-    final visualTabs = [
+    final visualTabs = const [
       _TabConfig(
         routeIndex: 0,
         label: 'Dashboard',
-        icon: PesaFlowIcons.dashboard,
-        activeIcon: PesaFlowIcons.dashboard,
+        icon: Icons.grid_view_outlined,
+        activeIcon: Icons.grid_view_rounded,
       ),
       _TabConfig(
         routeIndex: 1,
         label: 'Transactions',
-        icon: PesaFlowIcons.transactions,
-        activeIcon: PesaFlowIcons.transactions,
+        icon: Icons.receipt_long_outlined,
+        activeIcon: Icons.receipt_long_rounded,
       ),
       _TabConfig(
         routeIndex: 2,
         label: 'Budgets',
-        icon: PesaFlowIcons.budgets,
-        activeIcon: PesaFlowIcons.budgets,
+        icon: Icons.pie_chart_outline,
+        activeIcon: Icons.donut_large_rounded,
       ),
       _TabConfig(
         routeIndex: 3,
         label: 'Analytics',
-        icon: PesaFlowIcons.analytics,
-        activeIcon: PesaFlowIcons.analytics,
+        icon: Icons.insights_outlined,
+        activeIcon: Icons.insights_rounded,
       ),
       _TabConfig(
         routeIndex: 4,
         label: 'Settings',
-        icon: PesaFlowIcons.settings,
-        activeIcon: PesaFlowIcons.settings,
+        icon: Icons.tune_outlined,
+        activeIcon: Icons.tune_rounded,
       ),
     ];
+
+    // Compute alignment for the smooth sliding active pill
+    final safeIndex = selectedIndex.clamp(0, visualTabs.length - 1);
+    final activeAlignment = Alignment(
+      -1.0 + (safeIndex * 2.0 / (visualTabs.length - 1)),
+      0.0,
+    );
 
     return Container(
       height: height + bottomPadding + (minimized ? 8 : 16),
@@ -73,12 +80,17 @@ class IosTabBar extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
+              color: Colors.black.withValues(alpha: 0.22),
+              blurRadius: 28,
+              offset: const Offset(0, 10),
+            ),
+            BoxShadow(
+              color: theme.colorScheme.primary.withValues(alpha: 0.04),
+              blurRadius: 16,
+              spreadRadius: -2,
             ),
           ],
         ),
@@ -86,147 +98,171 @@ class IosTabBar extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           height: height,
-          padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 10),
+          padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(32),
             color: theme.colorScheme.surfaceContainerHigh.withValues(
-              alpha: 0.85,
+              alpha: 0.90,
             ),
             border: Border.all(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.10),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
               width: 0.8,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: visualTabs.map((tab) {
-              final isSelected = tab.routeIndex == selectedIndex;
-
-              if (tab.isCenter) {
-                return Semantics(
-                  label: tab.label,
-                  button: true,
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.mediumImpact();
-                      onDestinationSelected(tab.routeIndex);
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutBack,
-                      width: minimized ? 36 : 54,
-                      height: minimized ? 36 : 54,
-                      margin: const EdgeInsets.symmetric(horizontal: kSpacing8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSelected
-                            ? theme.colorScheme.primary.withValues(alpha: 0.20)
-                            : theme.colorScheme.onSurface.withValues(
-                                alpha: 0.05,
-                              ),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          tab.icon,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.4,
-                                ),
-                          size: minimized ? 18 : 26,
-                        ),
-                      ),
+          child: Stack(
+            children: [
+              // Fluid sliding background pill indicator behind active tab
+              AnimatedAlign(
+                alignment: activeAlignment,
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.fastOutSlowIn,
+                child: FractionallySizedBox(
+                  widthFactor: 1.0 / visualTabs.length,
+                  heightFactor: 1.0,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                      vertical: minimized ? 4 : 6,
+                      horizontal: minimized ? 2 : 4,
                     ),
-                  ),
-                );
-              }
-
-              return Expanded(
-                child: Semantics(
-                  label: tab.label,
-                  button: true,
-                  child: _ElasticTabButton(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      onDestinationSelected(tab.routeIndex);
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeInOut,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 4,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: minimized ? 8 : 4,
-                        horizontal: minimized ? 8 : 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? theme.colorScheme.primary.withValues(alpha: 0.125)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: isSelected
-                              ? theme.colorScheme.primary.withValues(
-                                  alpha: 0.175,
-                                )
-                              : Colors.transparent,
-                          width: 0.5,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.22,
                         ),
+                        width: 0.8,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            transitionBuilder: (child, animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: Icon(
-                              isSelected ? tab.activeIcon : tab.icon,
-                              key: ValueKey(isSelected),
-                              size: minimized ? 20 : 22,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.4,
-                                    ),
-                            ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.12,
                           ),
-                          if (!minimized) ...[
-                            const SizedBox(height: kSpacing2),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                tab.label,
-                                style: context.ts(
-                                  10,
-                                  letterSpacing: 0.3,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurface.withValues(
-                                          alpha: 0.4,
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                          blurRadius: 10,
+                          spreadRadius: -2,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              );
-            }).toList(),
+              ),
+
+              // Foreground Tab Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: visualTabs.map((tab) {
+                  final isSelected = tab.routeIndex == selectedIndex;
+
+                  if (tab.isCenter) {
+                    return Semantics(
+                      label: tab.label,
+                      button: true,
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          onDestinationSelected(tab.routeIndex);
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutBack,
+                          width: minimized ? 36 : 52,
+                          height: minimized ? 36 : 52,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: kSpacing8,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isSelected
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: 0.20,
+                                  )
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.05,
+                                  ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              isSelected ? tab.activeIcon : tab.icon,
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.45,
+                                    ),
+                              size: minimized ? 18 : 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                    child: Semantics(
+                      label: tab.label,
+                      button: true,
+                      child: _ElasticTabButton(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          onDestinationSelected(tab.routeIndex);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          padding: EdgeInsets.symmetric(
+                            vertical: minimized ? 6 : 4,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedScale(
+                                scale: isSelected ? 1.06 : 1.0,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeOut,
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 180),
+                                  child: Icon(
+                                    isSelected ? tab.activeIcon : tab.icon,
+                                    key: ValueKey(isSelected),
+                                    size: minimized ? 20 : 22,
+                                    color: isSelected
+                                        ? theme.colorScheme.primary
+                                        : theme.colorScheme.onSurface.withValues(
+                                            alpha: 0.45,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                              if (!minimized) ...[
+                                const SizedBox(height: 3),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    tab.label,
+                                    style: context.ts(
+                                      10,
+                                      letterSpacing: 0.2,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface.withValues(
+                                              alpha: 0.45,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
           ),
         ),
       ),
@@ -437,16 +473,13 @@ class _ElasticTabButton extends StatefulWidget {
 class _ElasticTabButtonState extends State<_ElasticTabButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _stretchY;
-  late Animation<double> _stretchX;
+  late Animation<double> _scale;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-
-    _stretchY = Tween<double>(begin: 1.0, end: 1.12).animate(_controller);
-    _stretchX = Tween<double>(begin: 1.0, end: 0.92).animate(_controller);
+    _scale = Tween<double>(begin: 1.0, end: 0.94).animate(_controller);
   }
 
   @override
@@ -462,7 +495,7 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
     }
     _controller.animateTo(
       1.0,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 80),
       curve: Curves.easeOut,
     );
   }
@@ -473,9 +506,9 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
       return;
     }
     const spring = SpringDescription(
-      mass: 0.7,
-      stiffness: 400.0,
-      damping: 12.0,
+      mass: 0.6,
+      stiffness: 450.0,
+      damping: 14.0,
     );
     final simulation = SpringSimulation(spring, _controller.value, 0.0, 0.0);
     _controller.animateWith(simulation);
@@ -494,13 +527,9 @@ class _ElasticTabButtonState extends State<_ElasticTabButton>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          return Transform(
+          return Transform.scale(
+            scale: _scale.value,
             alignment: Alignment.center,
-            transform: Matrix4.diagonal3Values(
-              _stretchX.value,
-              _stretchY.value,
-              1.0,
-            ),
             child: child,
           );
         },
