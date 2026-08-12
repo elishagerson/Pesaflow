@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
@@ -71,28 +72,32 @@ class IosTabBar extends StatelessWidget {
         left: minimized ? 20 : 12,
         right: minimized ? 20 : 12,
       ),
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.92),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.12),
-            width: 0.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
-              blurRadius: 20,
-              offset: const Offset(0, 6),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            height: height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+              border: Border.all(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.12),
+                width: 0.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.12),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           child: LayoutBuilder(
@@ -146,13 +151,19 @@ class IosTabBar extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                isSelected ? tab.activeIcon : tab.icon,
-                                size: isSelected ? 26 : 28,
-                                color: isSelected
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurfaceVariant
-                                          .withValues(alpha: 0.55),
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                switchInCurve: Curves.easeOutCubic,
+                                switchOutCurve: Curves.easeInCubic,
+                                child: Icon(
+                                  isSelected ? tab.activeIcon : tab.icon,
+                                  key: ValueKey('${tab.routeIndex}_$isSelected'),
+                                  size: isSelected ? 26 : 28,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.onSurfaceVariant
+                                            .withValues(alpha: 0.55),
+                                ),
                               ),
                               if (isSelected && !minimized) ...[
                                 const SizedBox(width: 8),
@@ -177,6 +188,8 @@ class IosTabBar extends StatelessWidget {
             },
           ),
         ),
+      ),
+      ),
       ),
     );
   }
