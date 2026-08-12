@@ -526,6 +526,19 @@ final scrollSpeedProvider = NotifierProvider<ScrollSpeedNotifier, double>(() {
   return ScrollSpeedNotifier();
 });
 
+/// Ticks up each time the user re-taps the currently-active tab so the visible
+/// screen can scroll itself back to the top.
+class ScrollToTopNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void trigger() => state++;
+}
+
+final scrollToTopProvider = NotifierProvider<ScrollToTopNotifier, int>(() {
+  return ScrollToTopNotifier();
+});
+
 final transactionTemplatesStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
   return repo.watchSetting('transaction_templates').map((json) {
