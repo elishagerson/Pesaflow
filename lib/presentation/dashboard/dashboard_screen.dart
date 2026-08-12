@@ -263,7 +263,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(scrollToTopProvider, (_, __) {
+    ref.listen(scrollToTopProvider, (_, _) {
       _scrollToTop();
     });
     final accountsAsync = ref.watch(accountsStreamProvider);
