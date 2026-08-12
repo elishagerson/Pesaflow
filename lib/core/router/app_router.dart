@@ -106,17 +106,28 @@ Page<dynamic> _tabTransitionPage(Widget child) {
   );
 }
 
-class ScaffoldWithNavBar extends StatefulWidget {
+class ScaffoldWithNavBar extends ConsumerStatefulWidget {
   const ScaffoldWithNavBar({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  State<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
+  ConsumerState<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
 }
 
-class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
+class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
   DateTime? _lastBackPress;
+
+  /// Re-tapping the currently-active tab scrolls the visible screen to top.
+  void _onDestinationSelected(int index) {
+    if (index == widget.navigationShell.currentIndex) {
+      ref.read(scrollToTopProvider.notifier).trigger();
+    }
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,13 +172,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
         bottomNavigationBar: isPhone
             ? IosTabBar(
                 selectedIndex: widget.navigationShell.currentIndex,
-                onDestinationSelected: (int index) {
-                  widget.navigationShell.goBranch(
-                    index,
-                    initialLocation:
-                        index == widget.navigationShell.currentIndex,
-                  );
-                },
+                onDestinationSelected: _onDestinationSelected,
               )
             : null,
       ),
@@ -189,12 +194,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
 
     return NavigationRail(
       selectedIndex: currentIndex,
-      onDestinationSelected: (index) {
-        widget.navigationShell.goBranch(
-          index,
-          initialLocation: index == currentIndex,
-        );
-      },
+      onDestinationSelected: _onDestinationSelected,
       labelType: NavigationRailLabelType.all,
       backgroundColor: appColors.surfaceContainer,
       indicatorColor: theme.colorScheme.primary.withValues(alpha: 0.15),
@@ -305,13 +305,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    widget.navigationShell.goBranch(
-                      item.$3,
-                      initialLocation:
-                          item.$3 == widget.navigationShell.currentIndex,
-                    );
-                  },
+                  onTap: () => _onDestinationSelected(item.$3),
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     padding: const EdgeInsets.symmetric(

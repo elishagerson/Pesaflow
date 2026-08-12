@@ -139,11 +139,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String? _selectedAccountId;
   final Set<String> _pendingDeleteIds = {};
   Timer? _homeWidgetCaptureTimer;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
     _homeWidgetCaptureTimer?.cancel();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  /// Scrolls back to the top when the active Dashboard tab is re-tapped.
+  void _scrollToTop() {
+    if (!(ModalRoute.of(context)?.isCurrent ?? false)) return;
+    if (!_scrollController.hasClients) return;
+    if (_scrollController.offset <= 0) return;
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _scrollController.jumpTo(0);
+    } else {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 
   String _getGreeting() {
@@ -245,6 +263,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(scrollToTopProvider, (_, __) {
+      _scrollToTop();
+    });
     final accountsAsync = ref.watch(accountsStreamProvider);
     final recentTransAsync = ref.watch(recentTransactionsStreamProvider);
     final budgetsAsync = ref.watch(budgetProgressProvider);
