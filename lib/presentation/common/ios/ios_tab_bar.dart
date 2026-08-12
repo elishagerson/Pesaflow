@@ -21,8 +21,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 68.0;
-  static const double minimizedHeight = 48.0;
+  static const double navBarHeight = 56.0;
+  static const double minimizedHeight = 44.0;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +30,12 @@ class IosTabBar extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final height = minimized ? minimizedHeight : navBarHeight;
 
-    final visualTabs = const [
+    const tabs = [
       _TabConfig(
         routeIndex: 0,
         label: 'Dashboard',
-        icon: Icons.grid_view_outlined,
-        activeIcon: Icons.grid_view_rounded,
+        icon: Icons.space_dashboard_outlined,
+        activeIcon: Icons.space_dashboard_rounded,
       ),
       _TabConfig(
         routeIndex: 1,
@@ -46,8 +46,8 @@ class IosTabBar extends StatelessWidget {
       _TabConfig(
         routeIndex: 2,
         label: 'Budgets',
-        icon: Icons.pie_chart_outline,
-        activeIcon: Icons.donut_large_rounded,
+        icon: Icons.donut_small_outlined,
+        activeIcon: Icons.donut_small_rounded,
       ),
       _TabConfig(
         routeIndex: 3,
@@ -63,206 +63,120 @@ class IosTabBar extends StatelessWidget {
       ),
     ];
 
-    // Compute alignment for the smooth sliding active pill
-    final safeIndex = selectedIndex.clamp(0, visualTabs.length - 1);
-    final activeAlignment = Alignment(
-      -1.0 + (safeIndex * 2.0 / (visualTabs.length - 1)),
-      0.0,
-    );
-
     return Container(
-      height: height + bottomPadding + (minimized ? 8 : 16),
+      height: height + bottomPadding + (minimized ? 6 : 14),
       alignment: Alignment.bottomCenter,
       padding: EdgeInsets.only(
-        bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 8 : 12),
-        left: minimized ? 24 : 16,
-        right: minimized ? 24 : 16,
+        bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 6 : 8),
+        left: minimized ? 20 : 12,
+        right: minimized ? 20 : 12,
       ),
       child: Container(
+        height: height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.92),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.12),
+            width: 0.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.22),
-              blurRadius: 28,
-              offset: const Offset(0, 10),
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
             ),
             BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.04),
-              blurRadius: 16,
-              spreadRadius: -2,
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          height: height,
-          padding: EdgeInsets.symmetric(horizontal: minimized ? 4 : 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
-            color: theme.colorScheme.surfaceContainerHigh.withValues(
-              alpha: 0.90,
-            ),
-            border: Border.all(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-              width: 0.8,
-            ),
-          ),
-          child: Stack(
-            children: [
-              // Fluid sliding background pill indicator behind active tab
-              AnimatedAlign(
-                alignment: activeAlignment,
-                duration: const Duration(milliseconds: 280),
-                curve: Curves.fastOutSlowIn,
-                child: FractionallySizedBox(
-                  widthFactor: 1.0 / visualTabs.length,
-                  heightFactor: 1.0,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      vertical: minimized ? 4 : 6,
-                      horizontal: minimized ? 2 : 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                        color: theme.colorScheme.primary.withValues(
-                          alpha: 0.22,
-                        ),
-                        width: 0.8,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.12,
-                          ),
-                          blurRadius: 10,
-                          spreadRadius: -2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final totalWidth = constraints.maxWidth;
+              final tabCount = tabs.length;
 
-              // Foreground Tab Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: visualTabs.map((tab) {
+              // Active tab gets 30% to fit icon + label; inactive share rest.
+              // In minimized mode, all tabs are equal (no label shown).
+              final double activeWidth;
+              final double inactiveWidth;
+              if (minimized) {
+                activeWidth = totalWidth / tabCount;
+                inactiveWidth = totalWidth / tabCount;
+              } else {
+                activeWidth = totalWidth * 0.30;
+                inactiveWidth =
+                    (totalWidth - activeWidth) / (tabCount - 1);
+              }
+
+              return Row(
+                children: tabs.map((tab) {
                   final isSelected = tab.routeIndex == selectedIndex;
-
-                  if (tab.isCenter) {
-                    return Semantics(
-                      label: tab.label,
-                      button: true,
-                      child: GestureDetector(
-                        onTap: () {
-                          HapticFeedback.mediumImpact();
-                          onDestinationSelected(tab.routeIndex);
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutBack,
-                          width: minimized ? 36 : 52,
-                          height: minimized ? 36 : 52,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: kSpacing8,
-                          ),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isSelected
-                                ? theme.colorScheme.primary.withValues(
-                                    alpha: 0.20,
-                                  )
-                                : theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.05,
-                                  ),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              isSelected ? tab.activeIcon : tab.icon,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.45,
-                                    ),
-                              size: minimized ? 18 : 24,
-                            ),
-                          ),
+                  return Semantics(
+                    label: tab.label,
+                    button: true,
+                    selected: isSelected,
+                    child: _ElasticTabButton(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onDestinationSelected(tab.routeIndex);
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeOutCubic,
+                        width: isSelected ? activeWidth : inactiveWidth,
+                        height: double.infinity,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.12,
+                                )
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(14),
                         ),
-                      ),
-                    );
-                  }
-
-                  return Expanded(
-                    child: Semantics(
-                      label: tab.label,
-                      button: true,
-                      child: _ElasticTabButton(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          onDestinationSelected(tab.routeIndex);
-                        },
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: EdgeInsets.symmetric(
-                            vertical: minimized ? 6 : 4,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedScale(
-                                scale: isSelected ? 1.06 : 1.0,
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.easeOut,
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 180),
-                                  child: Icon(
-                                    isSelected ? tab.activeIcon : tab.icon,
-                                    key: ValueKey(isSelected),
-                                    size: minimized ? 20 : 22,
-                                    color: isSelected
-                                        ? theme.colorScheme.primary
-                                        : theme.colorScheme.onSurface.withValues(
-                                            alpha: 0.45,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                              if (!minimized) ...[
-                                const SizedBox(height: 3),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    tab.label,
-                                    style: context.ts(
-                                      10,
-                                      letterSpacing: 0.2,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w500,
-                                      color: isSelected
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onSurface.withValues(
-                                              alpha: 0.45,
-                                            ),
+                        child: Center(
+                          child: isSelected && !minimized
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      tab.activeIcon,
+                                      size: 20,
+                                      color: theme.colorScheme.primary,
                                     ),
-                                  ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      tab.label,
+                                      style: context.ts(
+                                        13,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: -0.1,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                )
+                              : Icon(
+                                  isSelected ? tab.activeIcon : tab.icon,
+                                  size: 22,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.onSurfaceVariant
+                                            .withValues(alpha: 0.55),
                                 ),
-                              ],
-                            ],
-                          ),
                         ),
                       ),
                     ),
                   );
                 }).toList(),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -275,14 +189,13 @@ class _TabConfig {
   final String label;
   final IconData icon;
   final IconData activeIcon;
-  final bool isCenter;
 
   const _TabConfig({
     required this.routeIndex,
     required this.label,
     required this.icon,
     required this.activeIcon,
-  }) : isCenter = false;
+  });
 }
 
 class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
