@@ -938,6 +938,9 @@ class SettingsScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           key: const PageStorageKey('settings'),
           physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(
+            bottom: IosTabBar.navBarHeight + kSpacing32,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

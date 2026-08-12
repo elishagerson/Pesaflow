@@ -283,7 +283,12 @@ class BudgetListScreen extends ConsumerWidget {
       child: SingleChildScrollView(
         key: const PageStorageKey('budget_list'),
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(kSpacing16),
+        padding: EdgeInsets.fromLTRB(
+          kSpacing16,
+          kSpacing16,
+          kSpacing16,
+          IosTabBar.navBarHeight + kSpacing32,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -649,7 +654,12 @@ class BudgetListScreen extends ConsumerWidget {
           child: SingleChildScrollView(
             key: const PageStorageKey('savings_goals_tab'),
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(kSpacing16),
+            padding: EdgeInsets.fromLTRB(
+              kSpacing16,
+              kSpacing16,
+              kSpacing16,
+              IosTabBar.navBarHeight + kSpacing32,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

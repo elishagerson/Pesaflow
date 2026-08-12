@@ -294,7 +294,12 @@ class _OverviewTab extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(kSpacing16),
+      padding: EdgeInsets.fromLTRB(
+        kSpacing16,
+        kSpacing16,
+        kSpacing16,
+        IosTabBar.navBarHeight + kSpacing32,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -983,7 +988,12 @@ class _TrendsTab extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(kSpacing16),
+      padding: EdgeInsets.fromLTRB(
+        kSpacing16,
+        kSpacing16,
+        kSpacing16,
+        IosTabBar.navBarHeight + kSpacing32,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1373,7 +1383,12 @@ class _InsightsTab extends StatelessWidget {
         }
         return ListView.builder(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(kSpacing16),
+          padding: EdgeInsets.fromLTRB(
+            kSpacing16,
+            kSpacing16,
+            kSpacing16,
+            IosTabBar.navBarHeight + kSpacing32,
+          ),
           itemCount: insights.length,
           itemBuilder: (context, index) {
             final insight = insights[index];

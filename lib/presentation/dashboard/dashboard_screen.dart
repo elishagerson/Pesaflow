@@ -535,9 +535,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                     top: kSpacing4,
-                    bottom: kSpacing16,
+                    bottom: IosTabBar.navBarHeight + kSpacing32,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
