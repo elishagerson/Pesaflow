@@ -24,6 +24,7 @@ import 'package:pesaflow/presentation/savings_goals/savings_goal_list_screen.dar
 import 'package:pesaflow/presentation/savings_goals/savings_goal_form_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'route_params.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
