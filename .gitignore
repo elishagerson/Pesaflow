@@ -145,3 +145,4 @@ migrate_working_dir/
 **/DerivedData/
 *.symbols
 *.map.json
+AGENTS.md
