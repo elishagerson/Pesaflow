@@ -13,6 +13,11 @@ set(APPLICATION_ID "com.elishagerson.pesaflow.pesaflow")
 # versions of CMake.
 cmake_policy(SET CMP0063 NEW)
 
+# GCC 14+ promotes -Wincompatible-pointer-types to a hard error, which breaks
+# the `jni` plugin's Linux FFI shim (JNIEnv** passed where void** is expected).
+# jni is only used on Android, so downgrade the diagnostic to a warning here.
+add_compile_options(-Wno-error=incompatible-pointer-types)
+
 # Load bundled libraries from the lib/ directory relative to the binary.
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 
