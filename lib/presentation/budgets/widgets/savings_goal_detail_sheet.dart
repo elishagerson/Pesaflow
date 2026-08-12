@@ -14,12 +14,10 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -113,44 +111,24 @@ class _SavingsGoalDetailSheetState
       ref.invalidate(savingsGoalsStreamProvider);
       ref.invalidate(savingsGoalsTotalSavedProvider);
 
-      // Check if this deposit completed the savings goal milestone (crossed from < 100% to >= 100%)
-      final updatedGoal = await repo.getSavingsGoalById(widget.goal.id);
-      final reachedMilestone =
-          isDeposit &&
-          updatedGoal != null &&
-          updatedGoal.currentAmount >= updatedGoal.targetAmount &&
-          widget.goal.currentAmount < widget.goal.targetAmount;
-
       if (mounted) {
         Navigator.of(context).pop(); // pop amount modal
         if (isDeposit) {
-          await SuccessCheckmark.show(
+          CustomToast.show(
             context,
-            message: 'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!',
+            message:
+                'Successfully deposited ${CurrencyFormatter.formatCents(amountCents)}!',
+            type: ToastType.success,
           );
         } else {
           CustomToast.show(
             context,
-            message: 'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
+            message:
+                'Successfully withdrew ${CurrencyFormatter.formatCents(amountCents)}!',
             type: ToastType.error,
           );
         }
       }
-
-        if (reachedMilestone) {
-          Future.delayed(const Duration(milliseconds: 300), () {
-            if (mounted) {
-              ModernDialog.showCustom(
-                context: context,
-                barrierDismissible: true,
-                child: SuccessConfettiDialog(
-                  goalName: widget.goal.name,
-                  targetAmount: widget.goal.targetAmount,
-                ),
-              );
-            }
-          });
-        }
     } catch (e) {
       if (mounted) {
         CustomToast.show(context, message: 'Error: $e', type: ToastType.error);

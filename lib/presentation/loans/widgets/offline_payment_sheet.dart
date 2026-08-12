@@ -13,7 +13,6 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'payment_sheet.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -420,9 +419,10 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 );
                                             if (success) {
                                               if (sheetContext.mounted) {
-                                                await SuccessCheckmark.show(
+                                                CustomToast.show(
                                                   sheetContext,
                                                   message: 'Payment recorded!',
+                                                  type: ToastType.success,
                                                 );
                                                 if (sheetContext.mounted) {
                                                   Navigator.of(

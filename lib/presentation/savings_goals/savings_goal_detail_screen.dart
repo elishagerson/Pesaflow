@@ -17,7 +17,6 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:pesaflow/presentation/common/widgets/success_confetti_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -25,7 +24,6 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
@@ -87,9 +85,10 @@ class _SavingsGoalDetailScreenState
 
     if (mounted) {
       if (isDeposit) {
-        await SuccessCheckmark.show(
+        CustomToast.show(
           context,
           message: 'Contribution saved successfully!',
+          type: ToastType.success,
         );
       } else {
         CustomToast.show(
@@ -138,24 +137,6 @@ class _SavingsGoalDetailScreenState
 
     ref.invalidate(savingsGoalsStreamProvider);
     ref.invalidate(savingsGoalsTotalSavedProvider);
-
-    final updatedGoal = await repo.getSavingsGoalById(goal.id);
-    final reachedMilestone =
-        isDeposit &&
-        updatedGoal != null &&
-        updatedGoal.currentAmount >= updatedGoal.targetAmount &&
-        goal.currentAmount < goal.targetAmount;
-
-    if (reachedMilestone && mounted) {
-      ModernDialog.showCustom(
-        context: context,
-        barrierDismissible: true,
-        child: SuccessConfettiDialog(
-          goalName: goal.name,
-          targetAmount: goal.targetAmount,
-        ),
-      );
-    }
   }
 
   void _showAddMoneySheet(

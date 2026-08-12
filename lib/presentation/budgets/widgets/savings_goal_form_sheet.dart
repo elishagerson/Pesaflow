@@ -18,7 +18,6 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
-import 'package:pesaflow/presentation/common/widgets/motion/success_checkmark.dart';
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -111,7 +110,11 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
       ref.invalidate(savingsGoalsTotalSavedProvider);
 
       if (mounted) {
-        await SuccessCheckmark.show(context, message: 'Goal saved!');
+        CustomToast.show(
+          context,
+          message: 'Goal saved!',
+          type: ToastType.success,
+        );
         if (mounted) Navigator.of(context).pop();
       }
     } catch (e) {
