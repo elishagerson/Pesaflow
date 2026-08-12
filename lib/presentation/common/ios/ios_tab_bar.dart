@@ -21,8 +21,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 68.0;
-  static const double minimizedHeight = 50.0;
+  static const double navBarHeight = 80.0;
+  static const double minimizedHeight = 62.0;
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +126,8 @@ class IosTabBar extends StatelessWidget {
                         onDestinationSelected(tab.routeIndex);
                       },
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeOutCubic,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.fastOutSlowIn,
                         width: isSelected ? activeWidth : inactiveWidth,
                         height: double.infinity,
                         clipBehavior: Clip.antiAlias,
@@ -137,39 +137,37 @@ class IosTabBar extends StatelessWidget {
                                   alpha: 0.12,
                                 )
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Center(
-                          child: isSelected && !minimized
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      tab.activeIcon,
-                                      size: 22,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      tab.label,
-                                      style: context.ts(
-                                        14,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: -0.1,
-                                        color: theme.colorScheme.primary,
-                                      ),
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                )
-                              : Icon(
-                                  isSelected ? tab.activeIcon : tab.icon,
-                                  size: 24,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurfaceVariant
-                                            .withValues(alpha: 0.55),
+                        alignment: Alignment.center,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isSelected ? tab.activeIcon : tab.icon,
+                                size: isSelected ? 26 : 28,
+                                color: isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurfaceVariant
+                                          .withValues(alpha: 0.55),
+                              ),
+                              if (isSelected && !minimized) ...[
+                                const SizedBox(width: 8),
+                                Text(
+                                  tab.label,
+                                  style: context.ts(
+                                    16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.1,
+                                    color: theme.colorScheme.primary,
+                                  ),
                                 ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -500,6 +500,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           body: SafeArea(
             top: false,
+            bottom: false,
             child: NotificationListener<ScrollNotification>(
               onNotification: (notification) {
                 if (notification is ScrollUpdateNotification) {

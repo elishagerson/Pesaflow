@@ -77,6 +77,7 @@ class BudgetListScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         top: false,
+        bottom: false,
         child: Column(
           children: [
             // HIG Segmented Control Slider

@@ -935,6 +935,7 @@ class SettingsScreen extends ConsumerWidget {
       appBar: const IosNavBar(title: 'Settings', largeTitle: true),
       body: SafeArea(
         top: false,
+        bottom: false,
         child: SingleChildScrollView(
           key: const PageStorageKey('settings'),
           physics: const BouncingScrollPhysics(),

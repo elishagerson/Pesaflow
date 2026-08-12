@@ -192,6 +192,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         appBar: const IosNavBar(title: 'Analytics', largeTitle: true),
         body: SafeArea(
           top: false,
+          bottom: false,
           child: Column(
             children: [
               // iOS-style sliding capsule control
