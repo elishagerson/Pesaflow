@@ -21,8 +21,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 56.0;
-  static const double minimizedHeight = 44.0;
+  static const double navBarHeight = 64.0;
+  static const double minimizedHeight = 48.0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,33 +33,33 @@ class IosTabBar extends StatelessWidget {
     const tabs = [
       _TabConfig(
         routeIndex: 0,
-        label: 'Dashboard',
-        icon: Icons.space_dashboard_outlined,
-        activeIcon: Icons.space_dashboard_rounded,
+        label: 'Home',
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home_rounded,
       ),
       _TabConfig(
         routeIndex: 1,
         label: 'Transactions',
-        icon: Icons.receipt_long_outlined,
-        activeIcon: Icons.receipt_long_rounded,
+        icon: Icons.swap_horiz_outlined,
+        activeIcon: Icons.swap_horiz_rounded,
       ),
       _TabConfig(
         routeIndex: 2,
         label: 'Budgets',
-        icon: Icons.donut_small_outlined,
-        activeIcon: Icons.donut_small_rounded,
+        icon: Icons.savings_outlined,
+        activeIcon: Icons.savings_rounded,
       ),
       _TabConfig(
         routeIndex: 3,
         label: 'Analytics',
-        icon: Icons.insights_outlined,
-        activeIcon: Icons.insights_rounded,
+        icon: Icons.leaderboard_outlined,
+        activeIcon: Icons.leaderboard_rounded,
       ),
       _TabConfig(
         routeIndex: 4,
-        label: 'Settings',
-        icon: Icons.tune_outlined,
-        activeIcon: Icons.tune_rounded,
+        label: 'Account',
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
       ),
     ];
 
@@ -108,7 +108,7 @@ class IosTabBar extends StatelessWidget {
                 activeWidth = totalWidth / tabCount;
                 inactiveWidth = totalWidth / tabCount;
               } else {
-                activeWidth = totalWidth * 0.30;
+                activeWidth = totalWidth * 0.32;
                 inactiveWidth =
                     (totalWidth - activeWidth) / (tabCount - 1);
               }
@@ -146,14 +146,14 @@ class IosTabBar extends StatelessWidget {
                                   children: [
                                     Icon(
                                       tab.activeIcon,
-                                      size: 20,
+                                      size: 22,
                                       color: theme.colorScheme.primary,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       tab.label,
                                       style: context.ts(
-                                        13,
+                                        14,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: -0.1,
                                         color: theme.colorScheme.primary,
@@ -164,7 +164,7 @@ class IosTabBar extends StatelessWidget {
                                 )
                               : Icon(
                                   isSelected ? tab.activeIcon : tab.icon,
-                                  size: 22,
+                                  size: 24,
                                   color: isSelected
                                       ? theme.colorScheme.primary
                                       : theme.colorScheme.onSurfaceVariant
