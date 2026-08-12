@@ -21,8 +21,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 64.0;
-  static const double minimizedHeight = 48.0;
+  static const double navBarHeight = 68.0;
+  static const double minimizedHeight = 50.0;
 
   @override
   Widget build(BuildContext context) {
