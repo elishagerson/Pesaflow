@@ -533,6 +533,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ref.invalidate(savingsGoalsStreamProvider);
                 },
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.only(
                     top: kSpacing4,

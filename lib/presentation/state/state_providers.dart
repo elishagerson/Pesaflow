@@ -78,7 +78,8 @@ final recentTransactionsStreamProvider =
 final totalTransactionsCountProvider = StreamProvider<int>((ref) {
   final db = ref.watch(databaseProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
-  final query = db.select(db.transactions)..where((t) => t.trackerId.equals(trackerId));
+  final query = db.select(db.transactions)
+    ..where((t) => t.trackerId.equals(trackerId));
   return query.watch().map((list) => list.length);
 });
 
@@ -539,14 +540,15 @@ final scrollToTopProvider = NotifierProvider<ScrollToTopNotifier, int>(() {
   return ScrollToTopNotifier();
 });
 
-final transactionTemplatesStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
-  final repo = ref.watch(settingsRepositoryProvider);
-  return repo.watchSetting('transaction_templates').map((json) {
-    if (json == null) return [];
-    try {
-      return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
-    } catch (_) {
-      return [];
-    }
-  });
-});
+final transactionTemplatesStreamProvider =
+    StreamProvider<List<Map<String, dynamic>>>((ref) {
+      final repo = ref.watch(settingsRepositoryProvider);
+      return repo.watchSetting('transaction_templates').map((json) {
+        if (json == null) return [];
+        try {
+          return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
+        } catch (_) {
+          return [];
+        }
+      });
+    });
