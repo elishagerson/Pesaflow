@@ -160,6 +160,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
         }
       },
       child: Scaffold(
+        extendBody: isPhone,
         body: Row(
           children: [
             if (isDesktop)
