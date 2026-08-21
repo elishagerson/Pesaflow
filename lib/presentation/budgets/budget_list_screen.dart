@@ -54,32 +54,47 @@ class BudgetListScreen extends ConsumerWidget {
     final budgetProgressAsync = ref.watch(budgetProgressProvider);
 
     return Scaffold(
-      appBar: IosNavBar(
-        title: activeTab == 0 ? 'Budgets' : 'Savings Goals',
-        largeTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(PesaFlowIcons.add, size: 28),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              if (activeTab == 0) {
-                context.push('/budgets/add');
-              } else {
-                showSpringSheet(
-                  context,
-                  isScrollControlled: true,
-                  builder: (context) => const SavingsGoalFormSheet(),
-                );
-              }
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
-        top: false,
+        top: true,
         bottom: false,
         child: Column(
           children: [
+            // ── Floating Top Bar ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    activeTab == 0 ? 'Budgets' : 'Savings Goals',
+                    style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                  ),
+                  TactileSpringContainer(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      if (activeTab == 0) {
+                        context.push('/budgets/add');
+                      } else {
+                        showSpringSheet(
+                          context,
+                          isScrollControlled: true,
+                          builder: (context) => const SavingsGoalFormSheet(),
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(PesaFlowIcons.add, color: Colors.white, size: 22),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             // HIG Segmented Control Slider
             _buildSegmentedControl(context, ref),
 
