@@ -22,8 +22,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 80.0;
-  static const double minimizedHeight = 62.0;
+  static const double navBarHeight = 66.0;
+  static const double minimizedHeight = 54.0;
 
   @override
   Widget build(BuildContext context) {
@@ -80,21 +80,16 @@ class IosTabBar extends StatelessWidget {
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+              color: theme.colorScheme.surface.withValues(alpha: 0.92),
               border: Border.all(
-                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.12),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
                 width: 0.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.12),
-                  blurRadius: 20,
-                  offset: const Offset(0, 6),
-                ),
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -158,11 +153,11 @@ class IosTabBar extends StatelessWidget {
                                 child: Icon(
                                   isSelected ? tab.activeIcon : tab.icon,
                                   key: ValueKey('${tab.routeIndex}_$isSelected'),
-                                  size: isSelected ? 26 : 28,
+                                  size: isSelected ? 22 : 24,
                                   color: isSelected
                                       ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurfaceVariant
-                                            .withValues(alpha: 0.55),
+                                      : theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.40),
                                 ),
                               ),
                               if (isSelected && !minimized) ...[
@@ -170,26 +165,37 @@ class IosTabBar extends StatelessWidget {
                                 Text(
                                   tab.label,
                                   style: context.ts(
-                                    16,
-                                    fontWeight: FontWeight.w600,
+                                    13,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: -0.1,
                                     color: theme.colorScheme.primary,
                                   ),
                                 ),
-                              ],
-                            ],
+                                  if (isSelected && !minimized) ...[
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      tab.label,
+                                      style: context.ts(
+                                        13,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: -0.1,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
-              );
-            },
+                },
+              ),
+            ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }
@@ -257,21 +263,13 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return ClipRect(
-      child: Consumer(
-        builder: (context, ref, child) => LiquidGlassOverlay(
-          speedFactor: ref.watch(scrollSpeedProvider),
-          child: child!,
-        ),
-        // The nav bar content is passed as [child] so it is built once and
-        // NOT rebuilt on every scroll-velocity change — only the glass layer
-        // above it updates.
         child: Container(
           padding: EdgeInsets.only(top: top),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface.withValues(alpha: 0.7),
+            color: theme.colorScheme.surface.withValues(alpha: 0.85),
             border: Border(
               bottom: BorderSide(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.065),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
                 width: 0.5,
               ),
             ),
