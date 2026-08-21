@@ -875,7 +875,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                             const RectangularSliderValueIndicatorShape(),
                                         valueIndicatorColor: thresholdColor,
                                         valueIndicatorTextStyle:
-                                            const TextStyle(
+                                            context.ts(
+                                              12,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),

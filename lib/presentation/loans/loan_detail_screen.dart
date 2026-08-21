@@ -123,7 +123,8 @@ class LoanDetailScreen extends ConsumerWidget {
                         child: Center(
                           child: Text(
                             'No payment transactions recorded',
-                            style: TextStyle(
+                            style: context.ts(
+                              14,
                               color: theme.colorScheme.onSurface.withValues(
                                 alpha: 0.5,
                               ),

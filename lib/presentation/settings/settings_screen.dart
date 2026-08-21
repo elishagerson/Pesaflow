@@ -70,7 +70,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 title: Text(
                   acc.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: context.ts(14, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   acc.type.toUpperCase().replaceAll('_', ' ') +
@@ -82,7 +82,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     AmountText(
                       amountInCents: acc.balance,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: context.ts(14, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: kSpacing4),
                     TactileSpringContainer(
@@ -489,7 +489,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 title: Text(
                   cat.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: context.ts(14, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   cat.type.toUpperCase(),

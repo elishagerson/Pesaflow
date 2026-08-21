@@ -1472,7 +1472,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+              style: context.ts(14, color: theme.colorScheme.onSurfaceVariant),
             ),
           ),
           TextButton(
@@ -1502,7 +1502,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             },
             child: Text(
               'Save',
-              style: TextStyle(
+              style: context.ts(
+                14,
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
