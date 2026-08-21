@@ -87,48 +87,45 @@ class IosTabBar extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final totalWidth = constraints.maxWidth;
-              final tabCount = tabs.length;
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: tabs.map((tab) {
+              final isSelected = tab.routeIndex == selectedIndex;
+              
+              final targetFlex = minimized 
+                  ? 200 
+                  : (isSelected ? 350 : 162); // 35% and 16.25% * 4 = 65%
 
-              final double activeWidth;
-              final double inactiveWidth;
-              if (minimized) {
-                activeWidth = totalWidth / tabCount;
-                inactiveWidth = totalWidth / tabCount;
-              } else {
-                activeWidth = totalWidth * 0.35;
-                // Subtract 0.5 to prevent fractional pixel overflow during layout
-                inactiveWidth = ((totalWidth - activeWidth) / (tabCount - 1)) - 0.5;
-              }
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: tabs.map((tab) {
-                  final isSelected = tab.routeIndex == selectedIndex;
-                  return Semantics(
-                    label: tab.label,
-                    button: true,
-                    selected: isSelected,
-                    child: _ElasticTabButton(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        onDestinationSelected(tab.routeIndex);
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.fastOutSlowIn,
-                        width: isSelected ? activeWidth : inactiveWidth,
-                        height: double.infinity,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? navFgColor.withValues(alpha: 0.15)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        alignment: Alignment.center,
+              return TweenAnimationBuilder<double>(
+                tween: Tween<double>(end: targetFlex.toDouble()),
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.fastOutSlowIn,
+                builder: (context, flex, child) {
+                  return Expanded(
+                    flex: flex.round(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: Semantics(
+                        label: tab.label,
+                        button: true,
+                        selected: isSelected,
+                        child: _ElasticTabButton(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            onDestinationSelected(tab.routeIndex);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.fastOutSlowIn,
+                            height: double.infinity,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? navFgColor.withValues(alpha: 0.15)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            alignment: Alignment.center,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           physics: const NeverScrollableScrollPhysics(),
@@ -163,9 +160,9 @@ class IosTabBar extends StatelessWidget {
                       ),
                     ),
                   );
-                }).toList(),
+                },
               );
-            },
+            }).toList(),
           ),
         ),
       ),
