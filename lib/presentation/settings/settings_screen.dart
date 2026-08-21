@@ -37,14 +37,16 @@ import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  static void showAccountsManager(BuildContext context, WidgetRef ref) {
-    final accounts = ref.watch(accountsStreamProvider).value ?? [];
+  static void showAccountsManager(BuildContext context, WidgetRef _) {
     final theme = Theme.of(context);
     IosBottomSheet.show(
       context: context,
       initialChildSize: 0.6,
       maxChildSize: 0.9,
-      child: Column(
+      child: Consumer(
+        builder: (context, ref, _) {
+          final accounts = ref.watch(accountsStreamProvider).value ?? [];
+          return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
@@ -108,8 +110,10 @@ class SettingsScreen extends ConsumerWidget {
             ),
           const SizedBox(height: kSpacing24),
         ],
-      ),
-    );
+      );
+     },
+    ),
+   );
   }
 
   static void _showEditAccountDialog(

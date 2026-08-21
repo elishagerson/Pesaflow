@@ -99,10 +99,12 @@ class IosTabBar extends StatelessWidget {
                 inactiveWidth = totalWidth / tabCount;
               } else {
                 activeWidth = totalWidth * 0.35;
-                inactiveWidth = (totalWidth - activeWidth) / (tabCount - 1);
+                // Subtract 0.5 to prevent fractional pixel overflow during layout
+                inactiveWidth = ((totalWidth - activeWidth) / (tabCount - 1)) - 0.5;
               }
 
               return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: tabs.map((tab) {
                   final isSelected = tab.routeIndex == selectedIndex;
                   return Semantics(
