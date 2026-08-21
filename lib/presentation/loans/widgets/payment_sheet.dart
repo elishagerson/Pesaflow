@@ -436,7 +436,6 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing8),
-                                Container(
                                 TextField(
                                   controller: descriptionController,
                                   textCapitalization:
