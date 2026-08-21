@@ -25,6 +25,8 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
+import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
+import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 
 import 'package:pesaflow/presentation/state/insight_provider.dart';
@@ -264,7 +266,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       hexToColor: hexToColor,
                     ),
                     _TrendsTab(theme: theme, ref: ref),
-                    _InsightsTab(theme: theme, ref: ref),
+                    InsightsTab(theme: theme, ref: ref),
                   ],
                 ),
               ),
@@ -744,7 +746,7 @@ class _OverviewTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: kSpacing12),
-          const _InsightsCarousel(),
+          const InsightsCarousel(),
           const SizedBox(height: kSpacing24),
 
           // Category Donut inside a beautiful GlassCard
@@ -1367,220 +1369,4 @@ class _TrendsTab extends StatelessWidget {
   }
 }
 
-class _InsightsTab extends StatelessWidget {
-  final ThemeData theme;
-  final WidgetRef ref;
-  const _InsightsTab({required this.theme, required this.ref});
 
-  IconData _getInsightIcon(String iconName) {
-    switch (iconName) {
-      case 'trending_up':
-        return PesaFlowIcons.income;
-      case 'trending_down':
-        return PesaFlowIcons.expense;
-      case 'savings':
-        return PesaFlowIcons.savings;
-      case 'arrow_upward':
-        return PesaFlowIcons.arrowUp;
-      case 'arrow_downward':
-        return PesaFlowIcons.arrowDown;
-      case 'account_balance_wallet':
-        return PesaFlowIcons.wallet;
-      case 'category':
-        return PesaFlowIcons.category;
-      default:
-        return PesaFlowIcons.lightbulb;
-    }
-  }
-
-  Color _getSeverityColor(BuildContext context, InsightSeverity severity) {
-    switch (severity) {
-      case InsightSeverity.positive:
-        return context.appColors.incomeColor;
-      case InsightSeverity.warning:
-        return context.appColors.transferColor;
-      case InsightSeverity.critical:
-        return context.appColors.expenseColor;
-      case InsightSeverity.neutral:
-        return theme.colorScheme.onSurfaceVariant;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final insightsAsync = ref.watch(insightsProvider);
-    return insightsAsync.when(
-      data: (insights) {
-        if (insights.isEmpty) {
-          return EmptyState(
-            icon: PesaFlowIcons.lightbulb,
-            title: 'No Insights Yet',
-            subtitle:
-                'Insights will appear after you have transactions recorded.',
-          );
-        }
-        return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(
-            kSpacing16,
-            kSpacing16,
-            kSpacing16,
-            IosTabBar.navBarHeight + kSpacing32,
-          ),
-          itemCount: insights.length,
-          itemBuilder: (context, index) {
-            final insight = insights[index];
-            final color = _getSeverityColor(context, insight.severity);
-
-            return StaggeredFadeSlide(
-              index: index,
-              child: GlassCard(
-                margin: const EdgeInsets.only(bottom: kSpacing14),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Left colored accent border strip with glowing shadow
-                      Container(
-                        width: 5,
-                        decoration: BoxDecoration(
-                          color: color,
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withValues(alpha: 0.4),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Content Row
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(kSpacing18),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(kSpacing10),
-                                decoration: BoxDecoration(
-                                  color: color.withValues(alpha: 0.12),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  _getInsightIcon(insight.icon),
-                                  color: color,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      insight.title,
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: -0.2,
-                                          ),
-                                    ),
-                                    const SizedBox(height: kSpacing6),
-                                    Text(
-                                      insight.message,
-                                      style: context.ts(
-                                        12,
-                                        color: theme
-                                            .colorScheme
-                                            .onSurfaceVariant
-                                            .withValues(alpha: 0.85),
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorState(
-        title: 'Failed to load analytics',
-        message: e.toString(),
-        onRetry: () {
-          ref.invalidate(insightsProvider);
-        },
-      ),
-    );
-  }
-}
-
-class _InsightsCarousel extends ConsumerStatefulWidget {
-  const _InsightsCarousel();
-
-  @override
-  ConsumerState<_InsightsCarousel> createState() => _InsightsCarouselState();
-}
-
-class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
-  final Set<int> _expandedIndices = {};
-
-  @override
-  Widget build(BuildContext context) {
-    final insightsAsync = ref.watch(dynamicInsightsProvider);
-
-    return insightsAsync.when(
-      data: (insights) {
-        if (insights.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        // Animated height between 114 (all collapsed) and 176 (any expanded)
-        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
-
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          height: height,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: insights.length,
-            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
-            itemBuilder: (_, i) {
-              final isExpanded = _expandedIndices.contains(i);
-              return Align(
-                alignment: Alignment.topCenter,
-                child: MorphingInsightCard(
-                  data: insights[i],
-                  index: i,
-                  expanded: isExpanded,
-                  onTap: () {
-                    setState(() {
-                      if (isExpanded) {
-                        _expandedIndices.remove(i);
-                      } else {
-                        _expandedIndices.add(i);
-                      }
-                    });
-                  },
-                ),
-              );
-            },
-          ),
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (e, stack) => const SizedBox.shrink(),
-    );
-  }
-}

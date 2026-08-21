@@ -851,7 +851,7 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(ctx);
     return Padding(
       padding: const EdgeInsets.only(bottom: kSpacing8),
-      child: GestureDetector(
+      child: TactileSpringContainer(
         onTap: () {
           ref.read(themeModeProvider.notifier).setThemeMode(mode);
           Navigator.pop(ctx);

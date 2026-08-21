@@ -447,10 +447,10 @@ class LoanListScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       loan.category!,
-                                      style: theme.textTheme.labelSmall?.copyWith(
+                                      style: context.ts(
+                                        11,
                                         color: theme.colorScheme.primary,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 11,
                                       ),
                                     ),
                                   ),
@@ -582,10 +582,10 @@ class LoanListScreen extends ConsumerWidget {
                             ),
                             child: Text(
                               loan.category!,
-                              style: theme.textTheme.labelSmall?.copyWith(
+                              style: context.ts(
+                                11,
                                 color: context.appColors.incomeColor,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 11,
                               ),
                             ),
                           ),
