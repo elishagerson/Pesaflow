@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
@@ -62,38 +61,24 @@ class IosTabBar extends StatelessWidget {
     ];
 
     return Container(
-      height: height + bottomPadding + (minimized ? 6 : 14),
+      height: height + bottomPadding,
       alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(
-        bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 6 : 8),
-        left: minimized ? 20 : 12,
-        right: minimized ? 20 : 12,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+            width: 0.5,
+          ),
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            height: height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: theme.colorScheme.surface.withValues(alpha: 0.92),
-              border: Border.all(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                width: 0.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              child: LayoutBuilder(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: bottomPadding,
+          left: kSpacing8,
+          right: kSpacing8,
+        ),
+        child: LayoutBuilder(
                 builder: (context, constraints) {
                   final totalWidth = constraints.maxWidth;
                   final tabCount = tabs.length;
@@ -180,9 +165,6 @@ class IosTabBar extends StatelessWidget {
                   );
                 },
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

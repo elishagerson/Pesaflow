@@ -378,6 +378,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   child: BudjetlyBalanceHeader(
                                     balance: displayBalance,
                                     label: cardholderName,
+                                    remainingBudget: remainingBudget,
                                   ),
                                 );
                               },

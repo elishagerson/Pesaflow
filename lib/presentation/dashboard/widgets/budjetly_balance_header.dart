@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class BudjetlyBalanceHeader extends StatelessWidget {
   final int balance;
   final String label;
+  final int remainingBudget;
 
   const BudjetlyBalanceHeader({
     super.key,
     required this.balance,
     this.label = 'Total Balance',
+    this.remainingBudget = 0,
   });
 
   @override
@@ -104,17 +107,19 @@ class BudjetlyBalanceHeader extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.trending_up, color: Colors.white, size: 16),
-                        const SizedBox(width: 4),
+                        const Icon(Icons.account_balance_wallet, color: Colors.white, size: 16),
+                        const SizedBox(width: 6),
                         Text(
-                          'On Track',
+                          remainingBudget > 0
+                              ? 'Remaining Budget: ${CurrencyFormatter.formatCents(remainingBudget)}'
+                              : 'No Remaining Budget',
                           style: context.ts(12, fontWeight: FontWeight.w600, color: Colors.white),
                         ),
                       ],
                     ),
                   ),
                   Icon(
-                    Icons.account_balance_wallet_rounded,
+                    Icons.trending_up_rounded,
                     color: Colors.white.withValues(alpha: 0.4),
                     size: 32,
                   )

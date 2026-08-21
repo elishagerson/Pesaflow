@@ -296,15 +296,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   final sortedDays = grouped.keys.toList()
                     ..sort((a, b) => b.compareTo(a));
 
-                  return SingleChildScrollView(
+                  return StaggeredList(
                     key: const PageStorageKey('transaction_list'),
+                    shrinkWrap: false,
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(
                       top: MediaQuery.of(context).padding.top + 176.0,
                       bottom: 110.0,
                     ),
-                    child: StaggeredList(
-                      itemCount: sortedDays.length + 1,
+                    itemCount: sortedDays.length + 1,
                       itemBuilder: (context, dayIndex) {
                         // Append insights card at the end of the transactions list
                         if (dayIndex == sortedDays.length) {
@@ -672,8 +672,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                           ],
                         );
                       },
-                    ),
-                  );
+                    );
                 },
                 loading: () => const SizedBox.shrink(),
                 error: (err, _) =>
