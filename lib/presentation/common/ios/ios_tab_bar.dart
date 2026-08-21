@@ -165,12 +165,73 @@ class IosTabBar extends StatelessWidget {
                                 Text(
                                   tab.label,
                                   style: context.ts(
-                                    13,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.1,
-                                    color: theme.colorScheme.primary,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final totalWidth = constraints.maxWidth;
+                  final tabCount = tabs.length;
+
+                  // Active tab gets 30% to fit icon + label; inactive share rest.
+                  // In minimized mode, all tabs are equal (no label shown).
+                  final double activeWidth;
+                  final double inactiveWidth;
+                  if (minimized) {
+                    activeWidth = totalWidth / tabCount;
+                    inactiveWidth = totalWidth / tabCount;
+                  } else {
+                    activeWidth = totalWidth * 0.32;
+                    inactiveWidth =
+                        (totalWidth - activeWidth) / (tabCount - 1);
+                  }
+
+                  return Row(
+                    children: tabs.map((tab) {
+                      final isSelected = tab.routeIndex == selectedIndex;
+                      return Semantics(
+                        label: tab.label,
+                        button: true,
+                        selected: isSelected,
+                        child: _ElasticTabButton(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            onDestinationSelected(tab.routeIndex);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.fastOutSlowIn,
+                            width: isSelected ? activeWidth : inactiveWidth,
+                            height: double.infinity,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary.withValues(
+                                      alpha: 0.12,
+                                    )
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            alignment: Alignment.center,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 250),
+                                    switchInCurve: Curves.easeOutCubic,
+                                    switchOutCurve: Curves.easeInCubic,
+                                    child: Icon(
+                                      isSelected ? tab.activeIcon : tab.icon,
+                                      key: ValueKey('${tab.routeIndex}_$isSelected'),
+                                      size: isSelected ? 22 : 24,
+                                      color: isSelected
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.40),
+                                    ),
                                   ),
-                                ),
                                   if (isSelected && !minimized) ...[
                                     const SizedBox(width: 8),
                                     Text(
