@@ -1,0 +1,419 @@
+diff --git a/lib/presentation/dashboard/dashboard_screen.dart b/lib/presentation/dashboard/dashboard_screen.dart
+index 784021b..b550ee6 100644
+--- a/lib/presentation/dashboard/dashboard_screen.dart
++++ b/lib/presentation/dashboard/dashboard_screen.dart
+@@ -1722,414 +1722,4 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+     );
+   }
+ 
+-  Widget _buildBalanceCardFront({
+-    required BuildContext context,
+-    required WidgetRef ref,
+-    required ThemeData theme,
+-    required Color trackerColor,
+-    required Color heroTextColor,
+-    required Gradient cardGradient,
+-    required List<Account> accounts,
+-    required int netWorth,
+-    required double overallPct,
+-    required int budgetTotal,
+-    required String cardholderName,
+-  }) {
+-    return DecoratedBox(
+-      decoration: BoxDecoration(
+-        gradient: cardGradient,
+-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+-      ),
+-      child: Stack(
+-        children: [
+-          Positioned.fill(
+-            child: CustomPaint(
+-              painter: _GlossyWavesPainter(accentColor: trackerColor),
+-            ),
+-          ),
+-          Padding(
+-            padding: const EdgeInsets.all(kSpacing20),
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-              children: [
+-                Row(
+-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                  children: [
+-                    Text(
+-                      cardholderName,
+-                      style: context.ts(
+-                        9,
+-                        fontWeight: FontWeight.w800,
+-                        letterSpacing: 1.6,
+-                        color: heroTextColor.withValues(alpha: 0.7),
+-                      ),
+-                    ),
+-                    _buildCardNetworkLogo(heroTextColor),
+-                  ],
+-                ),
+-                Column(
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  children: [
+-                    Text(
+-                      _selectedAccountId != null
+-                          ? (accounts.any((a) => a.id == _selectedAccountId)
+-                                ? accounts
+-                                      .firstWhere(
+-                                        (a) => a.id == _selectedAccountId,
+-                                      )
+-                                      .name
+-                                      .toUpperCase()
+-                                : 'NET WORTH')
+-                          : 'NET WORTH',
+-                      style: context.ts(
+-                        9,
+-                        fontWeight: FontWeight.w800,
+-                        letterSpacing: 1.2,
+-                        color: heroTextColor.withValues(alpha: 0.55),
+-                      ),
+-                    ),
+-                    const SizedBox(height: kSpacing4),
+-                    Text(
+-                      CurrencyFormatter.formatCents(netWorth),
+-                      style: context.ts(
+-                        28,
+-                        fontWeight: FontWeight.w900,
+-                        color: heroTextColor,
+-                      ),
+-                    ),
+-                  ],
+-                ),
+-                Row(
+-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                  children: [
+-                    Text(
+-                      '${accounts.length} account${accounts.length == 1 ? '' : 's'}',
+-                      style: context.ts(
+-                        10,
+-                        fontWeight: FontWeight.w600,
+-                        color: heroTextColor.withValues(alpha: 0.55),
+-                      ),
+-                    ),
+-                    Icon(
+-                      PesaFlowIcons.chevronRight,
+-                      size: 14,
+-                      color: heroTextColor.withValues(alpha: 0.4),
+-                    ),
+-                  ],
+-                ),
+-              ],
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+ 
+-  Widget _buildBalanceCardBack({
+-    required BuildContext context,
+-    required ThemeData theme,
+-    required Color trackerColor,
+-    required Color heroTextColor,
+-    required Gradient cardGradient,
+-    required double overallPct,
+-    required int budgetTotal,
+-    required int remainingBudget,
+-  }) {
+-    final pctLabel = '${(overallPct * 100).round()}%';
+-    return DecoratedBox(
+-      decoration: BoxDecoration(
+-        gradient: cardGradient,
+-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+-      ),
+-      child: Stack(
+-        children: [
+-          Positioned.fill(
+-            child: CustomPaint(
+-              painter: _GlossyWavesPainter(accentColor: trackerColor),
+-            ),
+-          ),
+-          Padding(
+-            padding: const EdgeInsets.all(kSpacing20),
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-              children: [
+-                Text(
+-                  'BUDGET BALANCE',
+-                  style: context.ts(
+-                    9,
+-                    fontWeight: FontWeight.w800,
+-                    letterSpacing: 1.2,
+-                    color: heroTextColor.withValues(alpha: 0.55),
+-                  ),
+-                ),
+-                Column(
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  children: [
+-                    Text(
+-                      CurrencyFormatter.formatCents(remainingBudget),
+-                      style: context.ts(
+-                        28,
+-                        fontWeight: FontWeight.w900,
+-                        color: heroTextColor,
+-                      ),
+-                    ),
+-                    const SizedBox(height: kSpacing6),
+-                    ClipRRect(
+-                      borderRadius: BorderRadius.circular(100),
+-                      child: LinearProgressIndicator(
+-                        value: overallPct,
+-                        minHeight: 6,
+-                        backgroundColor: heroTextColor.withValues(alpha: 0.15),
+-                        valueColor: AlwaysStoppedAnimation<Color>(
+-                          overallPct < 0.7
+-                              ? context.appColors.incomeColor
+-                              : overallPct < 0.9
+-                              ? Colors.amber
+-                              : context.appColors.expenseColor,
+-                        ),
+-                      ),
+-                    ),
+-                  ],
+-                ),
+-                Row(
+-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                  children: [
+-                    Text(
+-                      'of ${CurrencyFormatter.formatCents(budgetTotal)} budget',
+-                      style: context.ts(
+-                        10,
+-                        fontWeight: FontWeight.w600,
+-                        color: heroTextColor.withValues(alpha: 0.55),
+-                      ),
+-                    ),
+-                    Text(
+-                      pctLabel,
+-                      style: context.ts(
+-                        10,
+-                        fontWeight: FontWeight.w800,
+-                        color: heroTextColor.withValues(alpha: 0.7),
+-                      ),
+-                    ),
+-                  ],
+-                ),
+-              ],
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _InsightsCarousel extends ConsumerStatefulWidget {
+-  const _InsightsCarousel();
+-
+-  @override
+-  ConsumerState<_InsightsCarousel> createState() => _InsightsCarouselState();
+-}
+-
+-class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
+-  final Set<int> _expandedIndices = {};
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final insightsAsync = ref.watch(dynamicInsightsProvider);
+-
+-    return insightsAsync.when(
+-      data: (insights) {
+-        if (insights.isEmpty) {
+-          return const SizedBox.shrink();
+-        }
+-        // Animated height between 114 (all collapsed) and 176 (any expanded)
+-        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
+-
+-        return AnimatedContainer(
+-          duration: const Duration(milliseconds: 300),
+-          curve: Curves.easeInOut,
+-          height: height,
+-          child: ListView.separated(
+-            scrollDirection: Axis.horizontal,
+-            padding: const EdgeInsets.symmetric(vertical: kSpacing8),
+-            clipBehavior: Clip.none,
+-            itemCount: insights.length,
+-            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+-            itemBuilder: (_, i) {
+-              final isExpanded = _expandedIndices.contains(i);
+-              return Align(
+-                alignment: Alignment.topCenter,
+-                child: MorphingInsightCard(
+-                  data: insights[i],
+-                  index: i,
+-                  expanded: isExpanded,
+-                  onTap: () {
+-                    setState(() {
+-                      if (isExpanded) {
+-                        _expandedIndices.remove(i);
+-                      } else {
+-                        _expandedIndices.add(i);
+-                      }
+-                    });
+-                  },
+-                ),
+-              );
+-            },
+-          ),
+-        );
+-      },
+-      loading: () => const SizedBox.shrink(),
+-      error: (e, stack) => const SizedBox.shrink(),
+-    );
+-  }
+-}
+-
+-class _QuickActionButton extends StatelessWidget {
+-  final IconData icon;
+-  final String label;
+-  final Color color;
+-  final VoidCallback onTap;
+-
+-  const _QuickActionButton({
+-    required this.icon,
+-    required this.label,
+-    required this.color,
+-    required this.onTap,
+-  });
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Expanded(
+-      child: SpringButton(
+-        haptic: HapticType.selection,
+-        onTap: onTap,
+-        child: Container(
+-          padding: EdgeInsets.symmetric(vertical: kSpacing12),
+-          decoration: BoxDecoration(
+-            color: color.withValues(alpha: 0.08),
+-            borderRadius: BorderRadius.circular(14),
+-            border: Border.all(color: color.withValues(alpha: 0.12)),
+-          ),
+-          child: Column(
+-            mainAxisSize: MainAxisSize.min,
+-            children: [
+-              Icon(icon, color: color, size: 22),
+-              SizedBox(height: kSpacing4),
+-              Text(
+-                label,
+-                style: Theme.of(
+-                  context,
+-                ).textTheme.labelSmall!.copyWith(color: color),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _GlossyWavesPainter extends CustomPainter {
+-  final Color accentColor;
+-
+-  _GlossyWavesPainter({required this.accentColor});
+-
+-  Paint? _paint1Cache;
+-  Paint? _paint2Cache;
+-  Paint? _paint3Cache;
+-  Color? _lastAccentColor;
+-  Rect? _lastRect;
+-
+-  @override
+-  void paint(Canvas canvas, Size size) {
+-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+-
+-    if (_paint1Cache == null ||
+-        _lastAccentColor != accentColor ||
+-        _lastRect != rect) {
+-      _lastAccentColor = accentColor;
+-      _lastRect = rect;
+-
+-      _paint1Cache = Paint()
+-        ..shader = LinearGradient(
+-          colors: [
+-            accentColor.withValues(alpha: 0.28),
+-            accentColor.withValues(alpha: 0.0),
+-          ],
+-          begin: Alignment.topCenter,
+-          end: Alignment.bottomCenter,
+-        ).createShader(rect);
+-
+-      _paint2Cache = Paint()
+-        ..shader = LinearGradient(
+-          colors: [
+-            Colors.white.withValues(alpha: 0.08),
+-            Colors.white.withValues(alpha: 0.0),
+-          ],
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-        ).createShader(rect);
+-
+-      _paint3Cache = Paint()
+-        ..shader = LinearGradient(
+-          colors: [
+-            accentColor.withValues(alpha: 0.15),
+-            accentColor.withValues(alpha: 0.0),
+-          ],
+-          begin: Alignment.bottomLeft,
+-          end: Alignment.topRight,
+-        ).createShader(rect);
+-    }
+-
+-    // Wave 1: Accent color glow wave
+-    final path1 = Path();
+-    path1.moveTo(0, size.height * 0.7);
+-    path1.quadraticBezierTo(
+-      size.width * 0.4,
+-      size.height * 0.45,
+-      size.width * 0.8,
+-      size.height * 0.85,
+-    );
+-    path1.quadraticBezierTo(
+-      size.width * 0.9,
+-      size.height * 0.9,
+-      size.width,
+-      size.height * 0.6,
+-    );
+-    path1.lineTo(size.width, size.height);
+-    path1.lineTo(0, size.height);
+-    path1.close();
+-    canvas.drawPath(path1, _paint1Cache!);
+-
+-    // Wave 2: Glossy white highlight wave
+-    final path2 = Path();
+-    path2.moveTo(0, size.height * 0.85);
+-    path2.quadraticBezierTo(
+-      size.width * 0.5,
+-      size.height * 0.4,
+-      size.width,
+-      size.height * 0.75,
+-    );
+-    path2.lineTo(size.width, size.height);
+-    path2.lineTo(0, size.height);
+-    path2.close();
+-    canvas.drawPath(path2, _paint2Cache!);
+-
+-    // Wave 3: Deep contrast wave
+-    final path3 = Path();
+-    path3.moveTo(size.width * 0.25, size.height);
+-    path3.quadraticBezierTo(
+-      size.width * 0.65,
+-      size.height * 0.55,
+-      size.width,
+-      size.height * 0.85,
+-    );
+-    path3.lineTo(size.width, size.height);
+-    path3.close();
+-    canvas.drawPath(path3, _paint3Cache!);
+-  }
+-
+-  @override
+-  bool shouldRepaint(covariant _GlossyWavesPainter oldDelegate) =>
+-      oldDelegate.accentColor != accentColor;
+-}
