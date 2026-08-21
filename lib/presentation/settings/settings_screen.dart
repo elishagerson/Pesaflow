@@ -377,7 +377,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
+  static void _confirmDeleteAccount(BuildContext context, WidgetRef ref, Account acc) {
     final theme = Theme.of(context);
     ModernDialog.show(
       context: context,

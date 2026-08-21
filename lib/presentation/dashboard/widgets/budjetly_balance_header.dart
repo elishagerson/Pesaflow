@@ -12,13 +12,15 @@ import 'package:pesaflow/presentation/settings/settings_screen.dart';
 class BudjetlyBalanceHeader extends StatefulWidget {
   final int balance;
   final String label;
-  final int remainingBudget;
+  final int income;
+  final int expense;
 
   const BudjetlyBalanceHeader({
     super.key,
     required this.balance,
-    this.label = 'Total Balance',
-    this.remainingBudget = 0,
+    required this.label,
+    required this.income,
+    required this.expense,
   });
 
   @override
@@ -220,17 +222,17 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total Spent', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
+                Text('Total In', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
                 const SizedBox(height: 4),
-                Text(CurrencyFormatter.formatCents(0), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(CurrencyFormatter.formatCents(widget.income), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Monthly Limit', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
+                Text('Total Out', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
                 const SizedBox(height: 4),
-                Text(CurrencyFormatter.formatCents(widget.remainingBudget), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(CurrencyFormatter.formatCents(widget.expense), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
               ],
             ),
           ],
