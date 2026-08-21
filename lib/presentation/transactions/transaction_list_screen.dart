@@ -685,10 +685,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
               right: 0,
               child: StaggeredFadeSlide(
                 index: 0,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-                    child: Container(
+                child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -956,8 +953,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 ),
               ),
             ),
-          ),
-        ),
       ],
         ),
       ),
