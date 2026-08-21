@@ -336,7 +336,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             // Group Date Header
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                kSpacing16,
+                                kSpacing20,
                                 kSpacing16,
                                 kSpacing20,
                                 kSpacing12,
@@ -925,7 +925,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       duration: const Duration(milliseconds: 250),
                                       curve: Curves.easeOutCubic,
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 22,
+                                        horizontal: 16,
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
@@ -1004,7 +1004,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             kSpacing24,
           ),
           child: Container(
-            height: 170,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
