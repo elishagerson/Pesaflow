@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -423,11 +424,12 @@ class BudgetListScreen extends ConsumerWidget {
             const SizedBox(height: kSpacing12),
 
             // Budget cards list
-            StaggeredList(
-              itemCount: budgets.length,
-              itemBuilder: (context, index) {
-                final bp = budgets[index];
-                final status = BudgetEngine.computeStatus(
+            GlassListContainer(
+              child: Column(
+                children: budgets.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final bp = entry.value;
+                  final status = BudgetEngine.computeStatus(
                   allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
                   spent: bp.spentInPeriod,
                   periodStart:
@@ -442,23 +444,15 @@ class BudgetListScreen extends ConsumerWidget {
 
                 return Hero(
                   tag: 'budget-${bp.budget.id}',
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: kSpacing14),
-                    child: InkWell(
-                      onTap: () => context.push('/budgets/${bp.budget.id}'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing16,
-                          vertical: kSpacing16,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: onSurface.withValues(alpha: 0.05),
-                              width: 1,
-                            ),
+                  child: TactileSpringContainer(
+                    onTap: () => context.push('/budgets/${bp.budget.id}'),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kSpacing20,
+                            vertical: kSpacing16,
                           ),
-                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -540,16 +534,25 @@ class BudgetListScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                    ),
+                      if (index < budgets.length - 1)
+                        Divider(
+                          height: 1,
+                          thickness: 0.5,
+                          color: onSurface.withValues(alpha: 0.08),
+                          indent: 20 + 12 + 16,
+                        ),
+                    ],
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+              );
+            }).toList(),
+          ),
         ),
+      ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   // ════════════════════════════════════════════════════════════════════════════
   // 2. DEDICATED SAVINGS GOALS DASHBOARD RENDERER (Brand New Screen Area)
