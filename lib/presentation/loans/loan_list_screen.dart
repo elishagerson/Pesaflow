@@ -14,8 +14,6 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -187,18 +185,9 @@ class LoanListScreen extends ConsumerWidget {
             ],
           ),
         ),
-        if (index < totalCount - 1)
-          Divider(
-            height: 1,
-            thickness: 0.5,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-            indent: 14 + 34 + 12,
-          ),
-      ],
-    ),
-  ),
-);
-}
+      ),
+    );
+  }
 
   Widget _buildSectionHeader(
     BuildContext context,
