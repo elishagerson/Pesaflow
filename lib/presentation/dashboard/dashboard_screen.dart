@@ -21,7 +21,6 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -31,6 +30,8 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/animated_balance_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_transaction_card.dart';
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
@@ -206,102 +207,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: IosNavBar(
-            title: 'Dashboard',
-            largeTitle: true,
-            actions: [
-              TactileSpringContainer(
-                onTap: () =>
-                    ref.read(paletteVisibilityProvider.notifier).toggle(),
-                child: Container(
-                  padding: const EdgeInsets.all(kSpacing10),
-                  decoration: BoxDecoration(
-                    color: onSurface.withValues(alpha: 0.04),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: onSurface.withValues(alpha: 0.08),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Icon(PesaFlowIcons.search, color: onSurface, size: 20),
-                ),
-              ),
-              const SizedBox(width: kSpacing8),
-              TactileSpringContainer(
-                onTap: () => context.go('/settings'),
-                child: Container(
-                  padding: const EdgeInsets.all(kSpacing10),
-                  decoration: BoxDecoration(
-                    color: onSurface.withValues(alpha: 0.04),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: onSurface.withValues(alpha: 0.08),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Icon(
-                    PesaFlowIcons.personOutline,
-                    color: onSurface,
-                    size: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(width: kSpacing8),
-              TactileSpringContainer(
-                onTap: () => context.push('/sms-review'),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: onSurface.withValues(alpha: 0.04),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: onSurface.withValues(alpha: 0.08),
-                          width: 0.8,
-                        ),
-                      ),
-                      child: Icon(
-                        PesaFlowIcons.notification,
-                        size: 20,
-                        color: onSurface,
-                      ),
-                    ),
-                    if (pendingReviewCount > 0)
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing4,
-                            vertical: kSpacing2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.appColors.expenseColor,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: theme.colorScheme.surface,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Text(
-                            '$pendingReviewCount',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
-                              fontSize: 8,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
           body: SafeArea(
-            top: false,
+            top: true,
             bottom: false,
             child: NotificationListener<ScrollNotification>(
               onNotification: (notification) {
@@ -352,6 +259,99 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ── 1. Floating Top Bar ──
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // "Personal" Pill
+                                TactileSpringContainer(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: Text(
+                                      'Personal',
+                                      style: context.ts(15, color: Colors.white, fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                                // Actions
+                                Row(
+                                  children: [
+                                    TactileSpringContainer(
+                                      onTap: () => ref.read(paletteVisibilityProvider.notifier).toggle(),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.1),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(PesaFlowIcons.search, color: Colors.white, size: 18),
+                                      ),
+                                    ),
+                                    const SizedBox(width: kSpacing8),
+                                    TactileSpringContainer(
+                                      onTap: () => context.push('/sms-review'),
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withValues(alpha: 0.1),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Icon(
+                                              Icons.menu,
+                                              size: 18,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          if (pendingReviewCount > 0)
+                                            Positioned(
+                                              right: -2,
+                                              top: -2,
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing4,
+                                                  vertical: kSpacing2,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: context.appColors.expenseColor,
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  border: Border.all(
+                                                    color: theme.colorScheme.surface,
+                                                    width: 1.5,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  '$pendingReviewCount',
+                                                  style: theme.textTheme.labelSmall?.copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing24),
+                            // Large "Overview" Title
+                            Text(
+                              'Overview',
+                              style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                            ),
+                            const SizedBox(height: kSpacing20),
+
                             // ── 2. Balance Header ──
                             Consumer(
                               builder: (context, ref, _) {
@@ -1010,84 +1010,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     },
                                                   );
                                                 },
-                                                child: TactileSpringContainer(
+                                                child: GlassTransactionCard(
                                                   onTap: () => context.push(
                                                     '/transactions/${trans.id}',
                                                   ),
-                                                  child: Container(
-                                                    margin:
-                                                        const EdgeInsets.symmetric(
-                                                          vertical: kSpacing6,
-                                                        ),
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          kSpacing16,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .surface,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            20,
-                                                          ),
-                                                      border: Border.all(
-                                                        color: onSurface
-                                                            .withValues(
-                                                              alpha: 0.08,
-                                                            ),
-                                                        width: 0.5,
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: onSurface
-                                                              .withValues(
-                                                                alpha: 0.08,
-                                                              ),
-                                                          blurRadius: 8,
-                                                          offset: const Offset(
-                                                            0,
-                                                            4,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        // Category Icon Container (Squircle Style)
+                                                  child: Row(
+                                                    children: [
                                                         Container(
                                                           width: 46,
                                                           height: 46,
-                                                          decoration: BoxDecoration(
-                                                            color:
-                                                                desaturateColor(
-                                                                  hexToColor(
-                                                                    item
-                                                                        .category
-                                                                        .color,
-                                                                  ),
-                                                                ).withValues(
-                                                                  alpha: 0.15,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  14,
-                                                                ),
-                                                          ),
-                                                          child: Center(
-                                                            child: Icon(
-                                                              getCategoryIcon(
-                                                                item
-                                                                    .category
-                                                                    .icon,
-                                                              ),
-                                                              color: hexToColor(
-                                                                item
-                                                                    .category
-                                                                    .color,
-                                                              ),
-                                                              size: 22,
+                                                          alignment: Alignment.center,
+                                                          child: Icon(
+                                                            getCategoryIcon(
+                                                              item.category.icon,
                                                             ),
+                                                            color: hexToColor(
+                                                              item.category.color,
+                                                            ),
+                                                            size: 28,
                                                           ),
                                                         ),
                                                         const SizedBox(
