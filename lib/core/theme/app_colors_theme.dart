@@ -66,16 +66,16 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgDark,
     surfaceHigh: AppTheme.surfaceHighDark,
     surfaceContainer: AppTheme.surfaceDark,
-    surfaceContainerHighest: Color(0xFF334155), // Slate-700
+    surfaceContainerHighest: Color(0xFF2C2C2E), // Dark gray
     bgColor: AppTheme.bgDark,
     onBgColor: AppTheme.onBgDark,
-    textMedium: Color(0xFF94A3B8), // Slate-400
-    textLow: Color(0xFF64748B), // Slate-500
+    textMedium: Color(0xFF8E8E93), // System gray
+    textLow: Color(0xFF636366), // System gray 2
     scaffoldLine: Color(0x14FFFFFF),
-    cardBackground: Color(0xFF1E293B), // Slate-800
-    cardBorder: Color(0xFF334155), // Slate-700
-    sectionHeader: Color(0xFF94A3B8), // Slate-400
-    accentSubtle: Color(0xFF1E3A5F), // Dark blue
+    cardBackground: Color(0xFF1C1C1E), // Apple secondary dark
+    cardBorder: Color(0xFF2C2C2E), // Apple tertiary dark
+    sectionHeader: Color(0xFF8E8E93), // System gray
+    accentSubtle: Color(0xFF2C2C2E), // Subtle gray
   );
 
   @override
