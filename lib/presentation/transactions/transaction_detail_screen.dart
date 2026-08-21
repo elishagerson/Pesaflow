@@ -8,6 +8,8 @@ import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/transactions/widgets/note_attachment_card.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -34,65 +36,70 @@ class TransactionDetailScreen extends ConsumerWidget {
     final itemAsync = ref.watch(transactionDetailProvider(transactionId));
 
     return Scaffold(
-      appBar: IosNavBar(
-        title: 'Transaction',
-        largeTitle: false,
-        actions: [
-          TactileSpringContainer(
-            onTap: () {
-              final item = itemAsync.value;
-              if (item != null) _duplicateTransaction(context, item);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(kSpacing10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                PesaFlowIcons.copy,
-                size: 18,
-                color: theme.colorScheme.primary,
-              ),
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: Column(
+          children: [
+            FloatingTopBar(
+              title: 'Transaction',
+              actions: [
+                TactileSpringContainer(
+                  onTap: () {
+                    final item = itemAsync.value;
+                    if (item != null) _duplicateTransaction(context, item);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(kSpacing10),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.copy,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: kSpacing8),
+                TactileSpringContainer(
+                  onTap: () => context.push('/transactions/edit/$transactionId'),
+                  child: Container(
+                    padding: const EdgeInsets.all(kSpacing10),
+                    decoration: BoxDecoration(
+                      color: onSurface.withValues(alpha: 0.06),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(PesaFlowIcons.edit, size: 18, color: onSurface),
+                  ),
+                ),
+                const SizedBox(width: kSpacing8),
+                TactileSpringContainer(
+                  onTap: () => _confirmDelete(context, ref),
+                  child: Container(
+                    padding: const EdgeInsets.all(kSpacing10),
+                    decoration: BoxDecoration(
+                      color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PesaFlowIcons.delete,
+                      size: 18,
+                      color: context.appColors.expenseColor,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(width: kSpacing8),
-          TactileSpringContainer(
-            onTap: () => context.push('/transactions/edit/$transactionId'),
-            child: Container(
-              padding: const EdgeInsets.all(kSpacing10),
-              decoration: BoxDecoration(
-                color: onSurface.withValues(alpha: 0.06),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(PesaFlowIcons.edit, size: 18, color: onSurface),
-            ),
-          ),
-          const SizedBox(width: kSpacing8),
-          TactileSpringContainer(
-            onTap: () => _confirmDelete(context, ref),
-            child: Container(
-              padding: const EdgeInsets.all(kSpacing10),
-              decoration: BoxDecoration(
-                color: context.appColors.expenseColor.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                PesaFlowIcons.delete,
-                size: 18,
-                color: context.appColors.expenseColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Hero(
-        tag: 'transaction-$transactionId',
-        createRectTween: (begin, end) {
-          return SpringRectTween(begin: begin!, end: end!);
-        },
-        child: Material(
-          type: MaterialType.transparency,
+            Expanded(
+              child: Hero(
+                tag: 'transaction-$transactionId',
+                createRectTween: (begin, end) {
+                  return SpringRectTween(begin: begin!, end: end!);
+                },
+                child: Material(
+                  type: MaterialType.transparency,
           child: itemAsync.when(
             data: (item) {
               if (item == null) {

@@ -139,6 +139,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
               Center(child: Text('Error loading savings goals: $err')),
         ),
       ),
+      ),
     ],
   ),
 ),
