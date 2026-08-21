@@ -77,12 +77,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  }
+
 
   void _showAddAccountDialog(BuildContext context) {
     showAddAccountDialog(context, ref);
@@ -222,53 +217,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       children: [
         Scaffold(
           appBar: IosNavBar(
-            title: '${_getGreeting()}, $trackerName',
+            title: 'Dashboard',
             largeTitle: true,
-            leading: TactileSpringContainer(
-              onTap: () => _showWorkspaceSelectorSheet(context),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kSpacing14,
-                  vertical: kSpacing8,
-                ),
-                decoration: BoxDecoration(
-                  color: onSurface.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                    color: onSurface.withValues(alpha: 0.07),
-                    width: 0.8,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: trackerColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing8),
-                    Text(
-                      trackerName,
-                      style: context.ts(
-                        13,
-                        fontWeight: FontWeight.bold,
-                        color: onSurface,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing4),
-                    Icon(
-                      PesaFlowIcons.chevronDown,
-                      size: 14,
-                      color: onSurface.withValues(alpha: 0.45),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             actions: [
               TactileSpringContainer(
                 onTap: () =>
