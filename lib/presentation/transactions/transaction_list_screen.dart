@@ -689,14 +689,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 index: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.96),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    color: context.appColors.bgColor.withValues(alpha: 0.98),
                     border: Border(
                       bottom: BorderSide(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.05),

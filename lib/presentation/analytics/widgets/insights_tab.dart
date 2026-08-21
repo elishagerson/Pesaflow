@@ -9,7 +9,7 @@ import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/state/insight_provider.dart';
+
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 
 class InsightsTab extends StatelessWidget {
