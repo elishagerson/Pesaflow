@@ -779,10 +779,24 @@ class BudgetListScreen extends ConsumerWidget {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Container(width: 4, color: goalColor),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
+                                child: Container(
+                                  width: 4,
+                                  decoration: BoxDecoration(
+                                    color: goalColor,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(kSpacing16),
+                                  padding: const EdgeInsets.only(
+                                    left: 12,
+                                    right: kSpacing16,
+                                    top: kSpacing16,
+                                    bottom: kSpacing16,
+                                  ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
