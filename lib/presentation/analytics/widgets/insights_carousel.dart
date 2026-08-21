@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
+import 'package:pesaflow/presentation/state/insight_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 
 class InsightsCarousel extends ConsumerStatefulWidget {

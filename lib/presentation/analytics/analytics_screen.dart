@@ -6,13 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
-import 'package:pesaflow/domain/analytics/insight_generator.dart';
+
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
-import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_detail_sheet.dart';
 import 'package:pesaflow/presentation/budgets/widgets/savings_goal_form_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -27,9 +27,9 @@ import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.da
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
-import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 
-import 'package:pesaflow/presentation/state/insight_provider.dart';
+
+
 
 enum TrendRange { days, weeks, months }
 
