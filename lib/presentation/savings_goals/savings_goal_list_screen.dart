@@ -9,7 +9,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
-import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -124,10 +124,12 @@ class SavingsGoalListScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: kSpacing12),
-                    StaggeredList(
-                      itemCount: goals.length,
-                      itemBuilder: (context, index) =>
-                          _buildGoalCard(context, ref, goals[index], theme),
+                    GlassListContainer(
+                      child: Column(
+                        children: goals.asMap().entries.map((entry) =>
+                            _buildGoalCard(context, ref, entry.value, theme, entry.key, goals.length)
+                        ).toList(),
+                      ),
                     ),
                   ],
                 ),
@@ -270,6 +272,8 @@ class SavingsGoalListScreen extends ConsumerWidget {
     WidgetRef ref,
     dynamic goal,
     ThemeData theme,
+    int index,
+    int totalCount,
   ) {
     final goalColor = hexToColor(goal.color);
     final mutedGoalColor = desaturateColor(goalColor);
@@ -281,20 +285,19 @@ class SavingsGoalListScreen extends ConsumerWidget {
 
     return TactileSpringContainer(
       onTap: () => context.push('/savings-goals/${goal.id}'),
-      child: Hero(
-        tag: 'goal-${goal.id}',
-        child: GlassCard(
-          elevation: CardElevation.none,
-          margin: const EdgeInsets.only(bottom: kSpacing12),
-          backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),
-          child: IntrinsicHeight(
+      child: Column(
+        children: [
+          IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(width: 4, color: mutedGoalColor),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(kSpacing16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kSpacing16,
+                      vertical: kSpacing20,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -462,7 +465,14 @@ class SavingsGoalListScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ),
+          if (index < totalCount - 1)
+            Divider(
+              height: 1,
+              thickness: 0.5,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+              indent: 4 + 16,
+            ),
+        ],
       ),
     );
   }
