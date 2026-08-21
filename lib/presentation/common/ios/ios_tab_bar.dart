@@ -60,111 +60,112 @@ class IosTabBar extends StatelessWidget {
       ),
     ];
 
+    final isDark = theme.brightness == Brightness.dark;
+    final navBgColor = isDark ? const Color(0xFF0F0F0F) : Colors.black;
+    final navFgColor = Colors.white;
+
     return Container(
-      height: height + bottomPadding,
+      height: height + bottomPadding + (minimized ? 6 : 14),
       alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-            width: 0.5,
-          ),
-        ),
+      padding: EdgeInsets.only(
+        bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 6 : 14),
+        left: minimized ? 24 : 16,
+        right: minimized ? 24 : 16,
       ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: bottomPadding,
-          left: kSpacing8,
-          right: kSpacing8,
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: navBgColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-        child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final totalWidth = constraints.maxWidth;
-                  final tabCount = tabs.length;
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final totalWidth = constraints.maxWidth;
+              final tabCount = tabs.length;
 
-                  // Active tab gets 30% to fit icon + label; inactive share rest.
-                  // In minimized mode, all tabs are equal (no label shown).
-                  final double activeWidth;
-                  final double inactiveWidth;
-                  if (minimized) {
-                    activeWidth = totalWidth / tabCount;
-                    inactiveWidth = totalWidth / tabCount;
-                  } else {
-                    activeWidth = totalWidth * 0.32;
-                    inactiveWidth =
-                        (totalWidth - activeWidth) / (tabCount - 1);
-                  }
+              final double activeWidth;
+              final double inactiveWidth;
+              if (minimized) {
+                activeWidth = totalWidth / tabCount;
+                inactiveWidth = totalWidth / tabCount;
+              } else {
+                activeWidth = totalWidth * 0.35;
+                inactiveWidth = (totalWidth - activeWidth) / (tabCount - 1);
+              }
 
-                  return Row(
-                    children: tabs.map((tab) {
-                      final isSelected = tab.routeIndex == selectedIndex;
-                      return Semantics(
-                        label: tab.label,
-                        button: true,
-                        selected: isSelected,
-                        child: _ElasticTabButton(
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            onDestinationSelected(tab.routeIndex);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.fastOutSlowIn,
-                            width: isSelected ? activeWidth : inactiveWidth,
-                            height: double.infinity,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? theme.colorScheme.primary.withValues(
-                                      alpha: 0.12,
-                                    )
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            alignment: Alignment.center,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 250),
-                                    switchInCurve: Curves.easeOutCubic,
-                                    switchOutCurve: Curves.easeInCubic,
-                                    child: Icon(
-                                      isSelected ? tab.activeIcon : tab.icon,
-                                      key: ValueKey('${tab.routeIndex}_$isSelected'),
-                                      size: isSelected ? 22 : 24,
-                                      color: isSelected
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.40),
-                                    ),
-                                  ),
-                                  if (isSelected && !minimized) ...[
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      tab.label,
-                                      style: context.ts(
-                                        13,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: -0.1,
-                                        color: theme.colorScheme.primary,
-                                      ),
-                                    ),
-                                  ],
-                                ],
+              return Row(
+                children: tabs.map((tab) {
+                  final isSelected = tab.routeIndex == selectedIndex;
+                  return Semantics(
+                    label: tab.label,
+                    button: true,
+                    selected: isSelected,
+                    child: _ElasticTabButton(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onDestinationSelected(tab.routeIndex);
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.fastOutSlowIn,
+                        width: isSelected ? activeWidth : inactiveWidth,
+                        height: double.infinity,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? navFgColor.withValues(alpha: 0.15)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        alignment: Alignment.center,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                switchInCurve: Curves.easeOutCubic,
+                                switchOutCurve: Curves.easeInCubic,
+                                child: Icon(
+                                  isSelected ? tab.activeIcon : tab.icon,
+                                  key: ValueKey('${tab.routeIndex}_$isSelected'),
+                                  size: 22,
+                                  color: navFgColor,
+                                ),
                               ),
-                            ),
+                              if (isSelected && !minimized) ...[
+                                const SizedBox(width: 8),
+                                Text(
+                                  tab.label,
+                                  style: context.ts(
+                                    14,
+                                    fontWeight: FontWeight.w600,
+                                    color: navFgColor,
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    ),
                   );
-                },
-              ),
+                }).toList(),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
