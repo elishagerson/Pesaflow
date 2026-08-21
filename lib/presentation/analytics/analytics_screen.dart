@@ -193,12 +193,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: const IosNavBar(title: 'Analytics', largeTitle: true),
         body: SafeArea(
-          top: false,
+          top: true,
           bottom: false,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Text(
+                  'Analytics',
+                  style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                ),
+              ),
               // iOS-style sliding capsule control
               Padding(
                 padding: const EdgeInsets.symmetric(
