@@ -401,126 +401,132 @@ class LoanListScreen extends ConsumerWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing16,
-                vertical: kSpacing20,
-              ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+              padding: const EdgeInsets.all(kSpacing14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(kSpacing8),
-                    decoration: BoxDecoration(
-                      color: progressColor.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      PesaFlowIcons.income,
-                      color: progressColor,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          loan.description ?? loan.sender ?? 'Loan',
-                          style: Theme.of(context).textTheme.titleSmall!
-                              .copyWith(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(kSpacing8),
+                        decoration: BoxDecoration(
+                          color: progressColor.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
                         ),
-                        const SizedBox(height: kSpacing4),
-                        Row(
+                        child: Icon(
+                          PesaFlowIcons.income,
+                          color: progressColor,
+                          size: 18,
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (loan.category != null) ...[
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: kSpacing8,
-                                  vertical: kSpacing2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  loan.category!,
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing6),
-                            ],
                             Text(
-                              'Active',
-                              style: Theme.of(context).textTheme.labelSmall!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: progressColor,
-                                  ),
+                              loan.description ?? loan.sender ?? 'Loan',
+                              style: Theme.of(context).textTheme.titleSmall!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            const SizedBox(height: kSpacing4),
+                            Row(
+                              children: [
+                                if (loan.category != null) ...[
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing8,
+                                      vertical: kSpacing2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      loan.category!,
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: kSpacing6),
+                                ],
+                                Text(
+                                  'Active',
+                                  style: Theme.of(context).textTheme.labelSmall!
+                                      .copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: progressColor,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            if (loan.dueAt != null) ...[
+                              const SizedBox(height: kSpacing2),
+                              Text(
+                                loan.dueAt!.isBefore(DateTime.now())
+                                    ? 'Overdue by ${DateTime.now().difference(loan.dueAt!).inDays} days'
+                                    : 'Due ${DateFormatter.relative(loan.dueAt!)}',
+                                style: Theme.of(context)
+                                    .extension<AppTypographyTheme>()!
+                                    .labelMicro
+                                    .copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: loan.dueAt!.isBefore(DateTime.now())
+                                          ? context.appColors.expenseColor
+                                          : context.appColors.textMedium,
+                                    ),
+                              ),
+                            ],
                           ],
                         ),
-                        if (loan.dueAt != null) ...[
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            CurrencyFormatter.formatCents(loan.amount),
+                            style: context.ts(14, fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: kSpacing2),
                           Text(
-                            loan.dueAt!.isBefore(DateTime.now())
-                                ? 'Overdue by ${DateTime.now().difference(loan.dueAt!).inDays} days'
-                                : 'Due ${DateFormatter.relative(loan.dueAt!)}',
-                            style: Theme.of(context)
-                                .extension<AppTypographyTheme>()!
-                                .labelMicro
-                                .copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: loan.dueAt!.isBefore(DateTime.now())
-                                      ? context.appColors.expenseColor
-                                      : context.appColors.textMedium,
-                                ),
+                            '${CurrencyFormatter.formatCents(loan.remaining)} left',
+                            style: context.ts(
+                              11,
+                              color: onSurface.withValues(alpha: 0.6),
+                            ),
                           ),
                         ],
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        CurrencyFormatter.formatCents(loan.amount),
-                        style: context.ts(14, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: kSpacing2),
-                      Text(
-                        '${CurrencyFormatter.formatCents(loan.remaining)} left',
-                        style: context.ts(
-                          11,
-                          color: onSurface.withValues(alpha: 0.6),
-                        ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: kSpacing12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: ratio.clamp(0.0, 1.0),
+                      backgroundColor: progressColor.withValues(alpha: 0.12),
+                      valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                      minHeight: 4,
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: kSpacing12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: ratio.clamp(0.0, 1.0),
-                  backgroundColor: progressColor.withValues(alpha: 0.12),
-                  valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                  minHeight: 4,
-                ),
+            ),
+            if (index < totalCount - 1)
+              Divider(
+                height: 1,
+                thickness: 0.5,
+                color: onSurface.withValues(alpha: 0.08),
+                indent: 14 + 34 + 12,
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
