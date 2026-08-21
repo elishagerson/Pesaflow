@@ -15,6 +15,11 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
   final Color textMedium;
   final Color textLow;
   final Color scaffoldLine;
+  // Budjetly-inspired tokens
+  final Color cardBackground;
+  final Color cardBorder;
+  final Color sectionHeader;
+  final Color accentSubtle;
 
   const AppColorsTheme({
     required this.incomeColor,
@@ -29,6 +34,10 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     required this.textMedium,
     required this.textLow,
     required this.scaffoldLine,
+    required this.cardBackground,
+    required this.cardBorder,
+    required this.sectionHeader,
+    required this.accentSubtle,
   });
 
   factory AppColorsTheme.light() => const AppColorsTheme(
@@ -38,12 +47,16 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgLight,
     surfaceHigh: AppTheme.surfaceHighLight,
     surfaceContainer: AppTheme.surfaceLight,
-    surfaceContainerHighest: Color(0xFFF0F1F4),
+    surfaceContainerHighest: Color(0xFFE2E8F0), // Slate-200
     bgColor: AppTheme.bgLight,
     onBgColor: AppTheme.onBgLight,
-    textMedium: Color(0xFF9E9E9E),
-    textLow: Color(0xFFBDBDBD),
-    scaffoldLine: Color(0x1A000000),
+    textMedium: Color(0xFF64748B), // Slate-500
+    textLow: Color(0xFF94A3B8), // Slate-400
+    scaffoldLine: Color(0x14000000),
+    cardBackground: Color(0xFFFFFFFF), // Pure white
+    cardBorder: Color(0xFFE2E8F0), // Slate-200
+    sectionHeader: Color(0xFF475569), // Slate-600
+    accentSubtle: Color(0xFFEFF6FF), // Blue-50
   );
 
   factory AppColorsTheme.dark() => const AppColorsTheme(
@@ -53,12 +66,16 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     surfaceLow: AppTheme.bgDark,
     surfaceHigh: AppTheme.surfaceHighDark,
     surfaceContainer: AppTheme.surfaceDark,
-    surfaceContainerHighest: Color(0xFF21262D),
+    surfaceContainerHighest: Color(0xFF334155), // Slate-700
     bgColor: AppTheme.bgDark,
     onBgColor: AppTheme.onBgDark,
-    textMedium: Color(0xFF9E9E9E),
-    textLow: Color(0xFF757575),
-    scaffoldLine: Color(0x1AFFFFFF),
+    textMedium: Color(0xFF94A3B8), // Slate-400
+    textLow: Color(0xFF64748B), // Slate-500
+    scaffoldLine: Color(0x14FFFFFF),
+    cardBackground: Color(0xFF1E293B), // Slate-800
+    cardBorder: Color(0xFF334155), // Slate-700
+    sectionHeader: Color(0xFF94A3B8), // Slate-400
+    accentSubtle: Color(0xFF1E3A5F), // Dark blue
   );
 
   @override
@@ -75,6 +92,10 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
     Color? textMedium,
     Color? textLow,
     Color? scaffoldLine,
+    Color? cardBackground,
+    Color? cardBorder,
+    Color? sectionHeader,
+    Color? accentSubtle,
   }) {
     return AppColorsTheme(
       incomeColor: incomeColor ?? this.incomeColor,
@@ -90,6 +111,10 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       textMedium: textMedium ?? this.textMedium,
       textLow: textLow ?? this.textLow,
       scaffoldLine: scaffoldLine ?? this.scaffoldLine,
+      cardBackground: cardBackground ?? this.cardBackground,
+      cardBorder: cardBorder ?? this.cardBorder,
+      sectionHeader: sectionHeader ?? this.sectionHeader,
+      accentSubtle: accentSubtle ?? this.accentSubtle,
     );
   }
 
@@ -117,6 +142,10 @@ class AppColorsTheme extends ThemeExtension<AppColorsTheme> {
       textMedium: Color.lerp(textMedium, other.textMedium, t)!,
       textLow: Color.lerp(textLow, other.textLow, t)!,
       scaffoldLine: Color.lerp(scaffoldLine, other.scaffoldLine, t)!,
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
+      cardBorder: Color.lerp(cardBorder, other.cardBorder, t)!,
+      sectionHeader: Color.lerp(sectionHeader, other.sectionHeader, t)!,
+      accentSubtle: Color.lerp(accentSubtle, other.accentSubtle, t)!,
     );
   }
 }

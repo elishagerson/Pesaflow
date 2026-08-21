@@ -9,37 +9,37 @@ export 'app_typography_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class AppTheme {
-  // ── "Ocean & Gold" — distinctive fintech palette ──
+  // ── Calm & Clean — Budjetly-inspired palette ──
 
-  // Light
-  static const Color primaryLight = Color(0xFF0F4C5C);
+  // Light — airy blue-grey canvas
+  static const Color primaryLight = Color(0xFF3B82F6); // Clean blue
   static const Color onPrimaryLight = Color(0xFFFFFFFF);
-  static const Color primaryContainerLight = Color(0xFFC7E8ED);
-  static const Color onPrimaryContainerLight = Color(0xFF061F26);
+  static const Color primaryContainerLight = Color(0xFFDBEAFE);
+  static const Color onPrimaryContainerLight = Color(0xFF1E3A5F);
 
-  static const Color secondaryLight = Color(0xFF3B8A8F);
+  static const Color secondaryLight = Color(0xFF64748B); // Slate
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
-  static const Color secondaryContainerLight = Color(0xFFBEE3E6);
-  static const Color onSecondaryContainerLight = Color(0xFF0A2F33);
+  static const Color secondaryContainerLight = Color(0xFFE2E8F0);
+  static const Color onSecondaryContainerLight = Color(0xFF1E293B);
 
-  static const Color tertiaryLight = Color(0xFFD4942D);
-  static const Color tertiaryLightVariant = Color(0xFFF4B740);
+  static const Color tertiaryLight = Color(0xFFF59E0B); // Warm amber
+  static const Color tertiaryLightVariant = Color(0xFFFBBF24);
   static const Color onTertiaryLight = Color(0xFFFFFFFF);
-  static const Color tertiaryContainerLight = Color(0xFFFCECC8);
-  static const Color onTertiaryContainerLight = Color(0xFF3D2A06);
+  static const Color tertiaryContainerLight = Color(0xFFFEF3C7);
+  static const Color onTertiaryContainerLight = Color(0xFF451A03);
 
-  static const Color bgLight = Color(0xFFF5F3F0);
-  static const Color onBgLight = Color(0xFF1E202A);
-  static const Color surfaceLight = Color(0xFFFEFDFB);
-  static const Color onSurfaceLight = Color(0xFF1E202A);
-  static const Color surfaceHighLight = Color(0xFFF0EEEA);
+  static const Color bgLight = Color(0xFFF1F5F9); // Slate-100
+  static const Color onBgLight = Color(0xFF0F172A); // Slate-900
+  static const Color surfaceLight = Color(0xFFFFFFFF); // Pure white cards
+  static const Color onSurfaceLight = Color(0xFF0F172A);
+  static const Color surfaceHighLight = Color(0xFFF1F5F9); // Matches bg
 
-  // Dark — deep navy base
-  static const Color bgDark = Color(0xFF0D1117);
-  static const Color onBgDark = Color(0xFFF0F6FC);
-  static const Color surfaceDark = Color(0xFF161B22);
-  static const Color onSurfaceDark = Color(0xFFF0F6FC);
-  static const Color surfaceHighDark = Color(0xFF21262D);
+  // Dark — deep slate base
+  static const Color bgDark = Color(0xFF0F172A); // Slate-900
+  static const Color onBgDark = Color(0xFFF1F5F9);
+  static const Color surfaceDark = Color(0xFF1E293B); // Slate-800
+  static const Color onSurfaceDark = Color(0xFFF1F5F9);
+  static const Color surfaceHighDark = Color(0xFF334155); // Slate-700
 
   // Finance semantic colors
   static const Color incomeColor = Color(0xFF10B981);
@@ -58,10 +58,10 @@ class AppTheme {
   // Backward compat aliases
   static Color get surfaceContainerDark => surfaceHighDark;
 
-  // Radii
-  static const double radiusCard = 12.0;
-  static const double radiusDialog = 16.0;
-  static const double radiusInput = 8.0;
+  // Radii — generous, soft corners (Budjetly feel)
+  static const double radiusCard = 16.0;
+  static const double radiusDialog = 20.0;
+  static const double radiusInput = 12.0;
   static const double radiusButton = 28.0;
 
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
@@ -152,15 +152,15 @@ class AppTheme {
       bodyMedium: base.bodyMedium?.copyWith(
         fontSize: 15,
         fontWeight: FontWeight.w400,
-        letterSpacing: 0.15,
-        height: 1.5,
+        letterSpacing: 0.0,
+        height: 1.55,
         color: textColor,
       ),
       bodySmall: base.bodySmall?.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.w400,
-        letterSpacing: 0.2,
-        height: 1.5,
+        letterSpacing: 0.05,
+        height: 1.55,
         color: textColor,
       ),
       labelLarge: base.labelLarge?.copyWith(
@@ -231,7 +231,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isLight ? const Color(0xFFF0F1F4) : const Color(0xFF21262D),
+        fillColor: isLight ? const Color(0xFFF1F5F9) : const Color(0xFF1E293B),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,
@@ -333,8 +333,8 @@ class AppTheme {
         backgroundColor: isLight ? bgLight : surfaceHighDark,
         elevation: 0,
         headerBackgroundColor: isLight
-            ? const Color(0xFFF0F1F4)
-            : const Color(0xFF161B22),
+            ? const Color(0xFFF1F5F9)
+            : const Color(0xFF1E293B),
         headerForegroundColor: isLight ? onBgLight : Colors.white,
         headerHeadlineStyle: txtTheme.headlineSmall!.copyWith(
           fontWeight: FontWeight.bold,
@@ -394,38 +394,38 @@ class AppTheme {
     final isLight = brightness == Brightness.light;
     return ColorScheme(
       brightness: brightness,
-      primary: isLight ? primaryLight : const Color(0xFF83C5BE),
-      onPrimary: isLight ? onPrimaryLight : Colors.black,
+      primary: isLight ? primaryLight : const Color(0xFF60A5FA), // Blue-400
+      onPrimary: isLight ? onPrimaryLight : const Color(0xFF0F172A),
       primaryContainer: isLight
           ? primaryContainerLight
-          : const Color(0xFF0A3A45),
+          : const Color(0xFF1E3A5F),
       onPrimaryContainer: isLight
           ? onPrimaryContainerLight
-          : const Color(0xFFC7E8ED),
-      secondary: isLight ? secondaryLight : const Color(0xFF83C5BE),
-      onSecondary: isLight ? onSecondaryLight : Colors.black,
+          : const Color(0xFFDBEAFE),
+      secondary: isLight ? secondaryLight : const Color(0xFF94A3B8), // Slate-400
+      onSecondary: isLight ? onSecondaryLight : const Color(0xFF0F172A),
       secondaryContainer: isLight
           ? secondaryContainerLight
-          : const Color(0xFF1A4F52),
+          : const Color(0xFF334155),
       onSecondaryContainer: isLight
           ? onSecondaryContainerLight
-          : const Color(0xFFBEE3E6),
-      tertiary: isLight ? tertiaryLight : const Color(0xFFF4B740),
-      onTertiary: isLight ? onTertiaryLight : Colors.black,
+          : const Color(0xFFE2E8F0),
+      tertiary: isLight ? tertiaryLight : const Color(0xFFFBBF24),
+      onTertiary: isLight ? onTertiaryLight : const Color(0xFF0F172A),
       tertiaryContainer: isLight
           ? tertiaryContainerLight
-          : const Color(0xFF4A350E),
+          : const Color(0xFF451A03),
       onTertiaryContainer: isLight
           ? onTertiaryContainerLight
-          : const Color(0xFFFCECC8),
-      surface: isLight ? bgLight : bgDark,
+          : const Color(0xFFFEF3C7),
+      surface: isLight ? surfaceLight : surfaceDark,
       onSurface: isLight ? onBgLight : onBgDark,
       surfaceContainerHigh: isLight ? surfaceHighLight : surfaceHighDark,
       surfaceContainerLow: isLight ? bgLight : bgDark,
-      outline: isLight ? const Color(0x1A000000) : const Color(0x1AFFFFFF),
+      outline: isLight ? const Color(0x14000000) : const Color(0x14FFFFFF),
       outlineVariant: isLight
-          ? const Color(0x0F000000)
-          : const Color(0x0FFFFFFF),
+          ? const Color(0x0A000000)
+          : const Color(0x0AFFFFFF),
       error: isLight ? errorLight : errorDark,
       onError: isLight ? onErrorLight : onErrorDark,
     );
