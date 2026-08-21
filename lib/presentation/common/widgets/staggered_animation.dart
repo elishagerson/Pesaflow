@@ -13,7 +13,7 @@ class StaggeredFadeSlide extends StatefulWidget {
     super.key,
     required this.index,
     required this.child,
-    this.offset = 20,
+    this.offset = 10,
   });
 
   @override
@@ -56,13 +56,13 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
         return;
       }
       _delayTimer = Timer(
-        Duration(milliseconds: widget.index * 40),
+        Duration(milliseconds: widget.index * 30),
         () {
           if (!mounted) return;
           const spring = SpringDescription(
             mass: 1.0,
-            stiffness: 180.0,
-            damping: 19.0,
+            stiffness: 250.0,
+            damping: 18.0,
           );
           _controller
               .animateWith(SpringSimulation(spring, 0.0, 1.0, 0.0))

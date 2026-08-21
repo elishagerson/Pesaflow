@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 
 class BudjetlyBalanceHeader extends StatelessWidget {
@@ -40,16 +38,6 @@ class BudjetlyBalanceHeader extends StatelessWidget {
             fontWeight: FontWeight.w800,
             letterSpacing: -1.5,
             color: theme.colorScheme.onSurface,
-          ),
-          symbolStyle: context.ts(
-            24,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-          ),
-          decimalStyle: context.ts(
-            24,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
         const SizedBox(height: kSpacing24),

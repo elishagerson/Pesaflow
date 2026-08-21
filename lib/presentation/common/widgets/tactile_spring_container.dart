@@ -60,9 +60,9 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
       return;
     }
     const spring = SpringDescription(
-      mass: 0.8,
-      stiffness: 350.0,
-      damping: 14.0,
+      mass: 1.0,
+      stiffness: 250.0,
+      damping: 18.0,
     );
     final simulation = SpringSimulation(spring, _controller.value, 0.0, 0.0);
     _controller.animateWith(simulation);

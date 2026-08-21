@@ -27,6 +27,7 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/settings/widgets/export_dialog.dart';
 import 'package:pesaflow/presentation/settings/widgets/import_dialog.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 
 import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -947,9 +948,52 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: kSpacing16),
 
-              // Privacy section
+              // Organization
               StaggeredFadeSlide(
                 index: 0,
+                child: IosListSection(
+                  header: 'Organization',
+                  rows: [
+                    IosListRow(
+                      leading: Icon(
+                        PesaFlowIcons.wallet,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Manage Accounts'),
+                      subtitle: const Text('Add, edit, or delete accounts'),
+                      trailing: Icon(
+                        PesaFlowIcons.chevronRight,
+                        size: 18,
+                        color: context.appColors.textMedium,
+                      ),
+                      onTap: () => _showAccountsManager(context, ref),
+                    ),
+                    IosListRow(
+                      leading: Icon(
+                        PesaFlowIcons.home,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Manage Workspaces'),
+                      subtitle: const Text('Switch or create workspaces'),
+                      trailing: Icon(
+                        PesaFlowIcons.chevronRight,
+                        size: 18,
+                        color: context.appColors.textMedium,
+                      ),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        showWorkspaceSelectorSheet(context, ref);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              // Privacy section
+              StaggeredFadeSlide(
+                index: 1,
                 child: IosListSection(
                   rows: [
                     IosListRow(
@@ -979,7 +1023,7 @@ class SettingsScreen extends ConsumerWidget {
 
               // Security
               StaggeredFadeSlide(
-                index: 1,
+                index: 2,
                 child: IosListSection(
                   header: 'Security',
                   rows: [
@@ -1027,7 +1071,7 @@ class SettingsScreen extends ConsumerWidget {
 
               // Preferences
               StaggeredFadeSlide(
-                index: 2,
+                index: 3,
                 child: IosListSection(
                   header: 'Preferences',
                   rows: [
