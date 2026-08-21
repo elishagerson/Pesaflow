@@ -487,13 +487,13 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
         allowedExtensions: ['csv'],
       );
 
-      if (result == null || result.files.single.path == null) return;
+      if (result.isEmpty || result.single.path == null) return;
 
-      final content = await File(result.files.single.path!).readAsString();
+      final content = await File(result.single.path!).readAsString();
       final parseResult = CsvParser.parse(content);
 
       setState(() {
-        _fileName = result.files.single.name;
+        _fileName = result.single.name;
         _parseResult = parseResult;
         _stage = _Stage.preview;
         _error = null;

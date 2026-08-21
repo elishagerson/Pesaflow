@@ -90,11 +90,11 @@ class BackupService {
     try {
       final result = await FilePicker.pickFiles(type: FileType.any);
 
-      if (result == null || result.files.isEmpty) {
+      if (result.isEmpty) {
         return false; // User cancelled
       }
 
-      final filePath = result.files.single.path;
+      final filePath = result.single.path;
       if (filePath == null) return false;
       final pickedFile = File(filePath);
 
