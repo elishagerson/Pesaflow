@@ -156,13 +156,15 @@ class IosTabBar extends StatelessWidget {
                               ],
                             ],
                           ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }).toList(),
+                          ), // SingleChildScrollView
+                        ), // AnimatedContainer
+                      ), // _ElasticTabButton
+                    ), // Semantics
+                  ), // Padding
+                ); // Expanded
+              }, // builder
+            ); // TweenAnimationBuilder
+          }).toList(),
           ),
         ),
       ),
