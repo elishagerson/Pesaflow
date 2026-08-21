@@ -185,9 +185,13 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                   ),
                   if (widget.remainingBudget > 0) ...[
                     const SizedBox(width: 8),
-                    Text(
-                      'of ${CurrencyFormatter.formatCents(widget.remainingBudget)} budget',
-                      style: context.ts(14, color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
+                    Flexible(
+                      child: Text(
+                        'of ${CurrencyFormatter.formatCents(widget.remainingBudget)} budget',
+                        style: context.ts(14, color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ],

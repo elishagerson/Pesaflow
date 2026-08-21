@@ -78,9 +78,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
 
 
-  void _showAddAccountDialog(BuildContext context) {
-    showAddAccountDialog(context, ref);
-  }
 
   String _formatCompact(int amountInCents) {
     final double value = amountInCents / 100.0;
@@ -515,114 +512,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ],
                             const SizedBox(height: kSpacing16),
 
-                            // ── 3. High-Contrast Action Buttons ──
-                            StaggeredFadeSlide(
-                              index: 1,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TactileSpringContainer(
-                                      onTap: () =>
-                                          context.go('/transactions/add'),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: kSpacing16,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              theme.colorScheme.inverseSurface,
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                          border: Border.all(
-                                            color: theme
-                                                .colorScheme
-                                                .inverseSurface,
-                                            width: 1.0,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: trackerColor.withValues(
-                                                alpha: 0.15,
-                                              ),
-                                              blurRadius: 10,
-                                              spreadRadius: 0.5,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              PesaFlowIcons.add,
-                                              color: Colors.white,
-                                              size: 20,
-                                            ),
-                                            const SizedBox(width: kSpacing6),
-                                            Text(
-                                              'Add transaction',
-                                              style: theme.textTheme.titleMedium
-                                                  ?.copyWith(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w900,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: kSpacing12),
-                                  Expanded(
-                                    child: TactileSpringContainer(
-                                      onTap: () =>
-                                          _showAddAccountDialog(context),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: kSpacing16,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: onSurface.withValues(
-                                            alpha: 0.08,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                          border: Border.all(
-                                            color: onSurface.withValues(
-                                              alpha: 0.12,
-                                            ),
-                                            width: 0.5,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              PesaFlowIcons.wallet,
-                                              color: onSurface,
-                                              size: 18,
-                                            ),
-                                            const SizedBox(width: kSpacing6),
-                                            Text(
-                                              'Add account',
-                                              style: theme.textTheme.titleMedium
-                                                  ?.copyWith(
-                                                    color: onSurface,
-                                                    fontWeight: FontWeight.w900,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing20),
+
 
                             // ── 3b. Quick Actions ──
                             StaggeredFadeSlide(
