@@ -42,6 +42,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
     with AutomaticKeepAliveClientMixin {
   Timer? _searchDebounce;
   late TextEditingController _searchController;
+  bool _isSearchVisible = false;
   Set<String> _previousTransactionIds = {};
   bool _isFirstBuild = true;
   final Set<String> _pendingDeleteIds = {};
@@ -690,13 +691,20 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 index: 0,
                 child: ClipRect(
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: context.appColors.bgColor.withValues(alpha: 0.8),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            context.appColors.bgColor.withValues(alpha: 0.85),
+                            context.appColors.bgColor.withValues(alpha: 0.98),
+                          ],
+                        ),
                         border: Border(
                           bottom: BorderSide(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                             width: 1.0,
                           ),
                         ),
@@ -716,13 +724,22 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Transactions',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.8,
-                                color: onSurface,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Transactions',
+                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -0.5,
+                                    color: onSurface,
+                                  ),
+                                ),
+                                Text(
+                                  'Track your recent activity',
+                                  style: context.ts(13, color: onSurface.withValues(alpha: 0.5)),
+                                ),
+                              ],
                             ),
                             Row(
                               children: [
