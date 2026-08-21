@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/physics.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
