@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ui';
+
 
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -807,12 +807,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                   ),
                                 Container(
+                                  height: 40,
                                   decoration: BoxDecoration(
-                                    color: onSurface.withValues(alpha: 0.04),
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(color: onSurface.withValues(alpha: 0.08)),
+                                    color: onSurface.withValues(alpha: 0.05),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       _FilterButton(
                                         isActive: activeAccount != null ||
@@ -833,7 +834,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         ].length,
                                         onPressed: () => showTransactionFilterSheet(context, ref),
                                       ),
-                                      Container(width: 1, height: 20, color: onSurface.withValues(alpha: 0.1)),
+                                      Container(width: 1, height: 18, color: onSurface.withValues(alpha: 0.08)),
                                       TactileSpringContainer(
                                         onTap: () {
                                           setState(() {
@@ -845,11 +846,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                           });
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                           child: Icon(
                                             PesaFlowIcons.search,
-                                            size: 18,
-                                            color: _isSearchVisible ? theme.colorScheme.primary : onSurface.withValues(alpha: 0.62),
+                                            size: 17,
+                                            color: _isSearchVisible
+                                                ? theme.colorScheme.primary
+                                                : onSurface.withValues(alpha: 0.5),
                                           ),
                                         ),
                                       ),
@@ -1136,55 +1139,45 @@ class _FilterButton extends StatelessWidget {
     final theme = Theme.of(context);
     final onSurface = theme.colorScheme.onSurface;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isActive
-            ? theme.colorScheme.primary.withValues(alpha: 0.12)
-            : onSurface.withValues(alpha: 0.04),
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: isActive
-              ? theme.colorScheme.primary.withValues(alpha: 0.20)
-              : onSurface.withValues(alpha: 0.08),
-          width: 0.8,
-        ),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          IconButton(
-            icon: Icon(
+    return TactileSpringContainer(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(
               PesaFlowIcons.filter,
               color: isActive
                   ? theme.colorScheme.primary
-                  : onSurface.withValues(alpha: 0.62),
-              size: 22,
+                  : onSurface.withValues(alpha: 0.5),
+              size: 17,
             ),
-            onPressed: onPressed,
-          ),
-          if (isActive && activeCount > 0)
-            Positioned(
-              right: 2,
-              top: 2,
-              child: Container(
-                padding: const EdgeInsets.all(kSpacing4),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.error,
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                child: Text(
-                  '$activeCount',
-                  style: context.ts(
-                    10,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            if (isActive && activeCount > 0)
+              Positioned(
+                right: -6,
+                top: -6,
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    shape: BoxShape.circle,
                   ),
-                  textAlign: TextAlign.center,
+                  child: Text(
+                    '$activeCount',
+                    style: context.ts(
+                      8,
+                      color: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
