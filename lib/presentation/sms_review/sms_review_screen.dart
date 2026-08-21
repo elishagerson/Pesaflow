@@ -227,39 +227,28 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                           }
                         });
                       },
-                      child: Container(
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing12,
-                          vertical: kSpacing6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.outlineVariant,
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(
-                            color: theme.colorScheme.outlineVariant,
-                            width: 0.8,
-                          ),
+                          horizontal: kSpacing8,
+                          vertical: kSpacing8,
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               _selectAll
-                                  ? PesaFlowIcons.deselect
-                                  : PesaFlowIcons.selectAll,
-                              size: 16,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.7,
-                              ),
+                                  ? Icons.remove_done_rounded
+                                  : Icons.done_all_rounded,
+                              size: 18,
+                              color: theme.colorScheme.primary,
                             ),
                             const SizedBox(width: kSpacing6),
                             Text(
-                              _selectAll ? 'Deselect' : 'Select All',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.8,
-                                ),
-                                fontWeight: FontWeight.w500,
+                              _selectAll ? 'Deselect All' : 'Select All',
+                              style: context.ts(
+                                14,
+                                fontWeight: FontWeight.w700,
+                                color: theme.colorScheme.primary,
                               ),
                             ),
                           ],

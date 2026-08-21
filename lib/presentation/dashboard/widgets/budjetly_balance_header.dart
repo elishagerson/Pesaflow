@@ -92,7 +92,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
     final cardColor = isDark ? const Color(0xFF1C1C1E) : const Color(0xFF1C1C1E); // Always dark per screenshot
 
     return ClipPath(
-      clipper: _TicketClipper(cutoutRadius: 12, cutoutOffset: 120),
+      clipper: _TicketClipper(cutoutRadius: 12, cutoutOffset: 135),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -112,8 +112,8 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
           children: [
             // Top Section
             Container(
-              height: 120,
-              padding: const EdgeInsets.all(24),
+              height: 135,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: isFront ? _buildFrontTop(context) : _buildBackTop(context),
             ),
 
@@ -268,7 +268,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                 children: [
                   const Icon(PesaFlowIcons.add, color: Colors.blueAccent, size: 18),
                   const SizedBox(width: 6),
-                  Text('Add Transaction', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.blueAccent)),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Add Transaction', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.blueAccent)),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -292,7 +297,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                 children: [
                   const Icon(Icons.account_balance_wallet_outlined, color: Colors.white, size: 18),
                   const SizedBox(width: 6),
-                  Text('Accounts', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.white)),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Accounts', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.white)),
+                    ),
+                  ),
                 ],
               ),
             ),

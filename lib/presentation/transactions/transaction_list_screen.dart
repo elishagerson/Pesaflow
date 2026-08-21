@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -687,16 +688,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
               right: 0,
               child: StaggeredFadeSlide(
                 index: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: context.appColors.bgColor.withValues(alpha: 0.98),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                        width: 1.0,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: context.appColors.bgColor.withValues(alpha: 0.8),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                            width: 1.0,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 16,
                     bottom: 16,
@@ -986,7 +990,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 ),
               ),
             ),
-          ],
+          ),
+        ),
+      ],
         ),
       ),
       floatingActionButton: Padding(
