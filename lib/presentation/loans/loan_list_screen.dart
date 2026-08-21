@@ -9,13 +9,14 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
-import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanListScreen extends ConsumerWidget {
@@ -117,10 +118,12 @@ class LoanListScreen extends ConsumerWidget {
                         context.appColors.expenseColor,
                       ),
                       const SizedBox(height: kSpacing4),
-                      StaggeredList(
-                        itemCount: activeLoans.length,
-                        itemBuilder: (context, index) =>
-                            _buildLoanTile(context, activeLoans[index], theme),
+                      GlassListContainer(
+                        child: Column(
+                          children: activeLoans.asMap().entries.map((entry) =>
+                              _buildLoanTile(context, entry.value, theme, entry.key, activeLoans.length)
+                          ).toList(),
+                        ),
                       ),
                       const SizedBox(height: kSpacing20),
                     ],
@@ -185,9 +188,8 @@ class LoanListScreen extends ConsumerWidget {
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSectionHeader(
     BuildContext context,
@@ -385,7 +387,7 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanTile(BuildContext context, Loan loan, ThemeData theme) {
+  Widget _buildLoanTile(BuildContext context, Loan loan, ThemeData theme, int index, int totalCount) {
     final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
@@ -394,14 +396,15 @@ class LoanListScreen extends ConsumerWidget {
 
     return Hero(
       tag: 'loan-${loan.id}',
-      child: GlassCard(
-        margin: const EdgeInsets.only(bottom: kSpacing10),
-        borderRadius: AppTheme.radiusCard,
-        elevation: CardElevation.low,
-        accentColor: progressColor,
+      child: TactileSpringContainer(
         onTap: () => context.push('/loans/${loan.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(kSpacing14),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kSpacing16,
+                vertical: kSpacing20,
+              ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
