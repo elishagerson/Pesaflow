@@ -37,7 +37,7 @@ import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  void _showAccountsManager(BuildContext context, WidgetRef ref) {
+  static void showAccountsManager(BuildContext context, WidgetRef ref) {
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final theme = Theme.of(context);
     IosBottomSheet.show(
@@ -112,7 +112,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showEditAccountDialog(
+  static void _showEditAccountDialog(
     BuildContext context,
     WidgetRef ref,
     Account acc,
@@ -976,7 +976,7 @@ class SettingsScreen extends ConsumerWidget {
                         size: 18,
                         color: context.appColors.textMedium,
                       ),
-                      onTap: () => _showAccountsManager(context, ref),
+                      onTap: () => showAccountsManager(context, ref),
                     ),
                     IosListRow(
                       leading: Icon(
@@ -1160,7 +1160,7 @@ class SettingsScreen extends ConsumerWidget {
                   header: 'Data',
                   rows: [
                     TactileSpringContainer(
-                      onTap: () => _showAccountsManager(context, ref),
+                      onTap: () => showAccountsManager(context, ref),
                       child: IosListRow(
                         leading: Icon(
                           PesaFlowIcons.wallet,
@@ -1171,7 +1171,7 @@ class SettingsScreen extends ConsumerWidget {
                         subtitle: const Text(
                           'Manage bank, mobile money & cash wallets',
                         ),
-                        onTap: () => _showAccountsManager(context, ref),
+                        onTap: () => showAccountsManager(context, ref),
                       ),
                     ),
                     TactileSpringContainer(

@@ -6,6 +6,8 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/presentation/settings/settings_screen.dart';
 
 class BudjetlyBalanceHeader extends StatefulWidget {
   final int balance;
@@ -183,17 +185,6 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                       ),
                     ),
                   ),
-                  if (widget.remainingBudget > 0) ...[
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'of ${CurrencyFormatter.formatCents(widget.remainingBudget)} budget',
-                        style: context.ts(14, color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.w500),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ],
@@ -281,11 +272,13 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: TactileSpringContainer(
-            onTap: () {
-              context.push('/settings');
-            },
-            child: Container(
+          child: Consumer(
+            builder: (context, ref, _) {
+              return TactileSpringContainer(
+                onTap: () {
+                  SettingsScreen.showAccountsManager(context, ref);
+                },
+                child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.1),
@@ -306,8 +299,10 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                 ],
               ),
             ),
-          ),
+          );
+         },
         ),
+       ),
       ],
     );
   }
