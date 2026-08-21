@@ -367,7 +367,6 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
         ),
-      ),
     );
   }
 }
