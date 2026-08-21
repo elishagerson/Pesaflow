@@ -186,6 +186,7 @@ class LoanListScreen extends ConsumerWidget {
           ),
         ),
       ),
+      ),
     );
   }
 
