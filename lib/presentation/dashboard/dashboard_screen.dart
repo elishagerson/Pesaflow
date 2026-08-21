@@ -22,7 +22,6 @@ import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -93,9 +92,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return value.toStringAsFixed(0);
   }
 
-  void _showWorkspaceSelectorSheet(BuildContext context) {
-    showWorkspaceSelectorSheet(context, ref);
-  }
 
   /// Debounces AppWidget captures so launcher widgets only refresh after data
   /// settles, and only while the dashboard is the visible route.
@@ -154,10 +150,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           : theme.colorScheme.primary,
       orElse: () => theme.colorScheme.primary,
     );
-    final trackerName = activeTrackerAsync.maybeWhen(
-      data: (tracker) => tracker != null ? tracker.name : 'Personal',
-      orElse: () => 'Personal',
-    );
+
 
     // Calculate budget overall spent percentage and Safe-to-Spend
     final budgets = budgetsAsync.value ?? [];
