@@ -14,6 +14,8 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -186,71 +188,70 @@ class _RecurringTransactionListScreenState
                             kSpacing16,
                             100,
                           ),
-                          sliver: SliverList.builder(
-                            itemCount: sorted.length,
-                            itemBuilder: (_, i) {
-                              return StaggeredFadeSlide(
-                                index: i + 2,
-                                child: Dismissible(
-                                  key: ValueKey(sorted[i].id),
-                                  direction: DismissDirection.endToStart,
-                                  confirmDismiss: (_) async {
-                                    showMarkRecurringPaymentSheet(
-                                      context: context,
-                                      ref: ref,
-                                      recurring: sorted[i],
-                                      accountName:
-                                          accountNames[sorted[i].accountId] ??
-                                          'Unknown',
-                                    );
-                                    return false;
-                                  },
-                                  background: Container(
-                                    margin: const EdgeInsets.only(
-                                      bottom: kSpacing10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: context.appColors.incomeColor,
-                                      borderRadius: BorderRadius.circular(
-                                        AppTheme.radiusCard,
+                          sliver: SliverToBoxAdapter(
+                            child: GlassListContainer(
+                              child: Column(
+                                children: sorted.asMap().entries.map((e) {
+                                  final i = e.key;
+                                  return StaggeredFadeSlide(
+                                    index: i + 2,
+                                    child: Dismissible(
+                                      key: ValueKey(sorted[i].id),
+                                      direction: DismissDirection.endToStart,
+                                      confirmDismiss: (_) async {
+                                        showMarkRecurringPaymentSheet(
+                                          context: context,
+                                          ref: ref,
+                                          recurring: sorted[i],
+                                          accountName:
+                                              accountNames[sorted[i].accountId] ??
+                                              'Unknown',
+                                        );
+                                        return false;
+                                      },
+                                      background: Container(
+                                        decoration: BoxDecoration(
+                                          color: context.appColors.incomeColor,
+                                        ),
+                                        alignment: Alignment.centerRight,
+                                        padding: const EdgeInsets.only(
+                                          right: kSpacing24,
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              PesaFlowIcons.success,
+                                              color: Colors.white,
+                                              size: 24,
+                                            ),
+                                            const SizedBox(height: kSpacing4),
+                                            Text(
+                                              'Mark Paid',
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      child: _buildRecurringTile(
+                                        context,
+                                        sorted[i],
+                                        theme,
+                                        dueIds.contains(sorted[i].id),
+                                        catColor(sorted[i].categoryId),
+                                        accountNames,
+                                        i,
+                                        sorted.length,
                                       ),
                                     ),
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(
-                                      right: kSpacing24,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          PesaFlowIcons.success,
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
-                                        const SizedBox(height: kSpacing4),
-                                        Text(
-                                          'Mark Paid',
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  child: _buildRecurringTile(
-                                    context,
-                                    sorted[i],
-                                    theme,
-                                    dueIds.contains(sorted[i].id),
-                                    catColor(sorted[i].categoryId),
-                                    accountNames,
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                           ),
                         ),
                     ],
@@ -584,7 +585,10 @@ class _RecurringTransactionListScreenState
     bool isDue,
     Color? categoryColor,
     Map<String, String> accountNames,
+    int index,
+    int totalCount,
   ) {
+    final onSurface = theme.colorScheme.onSurface;
     final isExpense = recurring.type == 'expense';
     final accentColor = isDue
         ? context.appColors.transferColor
@@ -609,15 +613,13 @@ class _RecurringTransactionListScreenState
         ? '${daysUntil.abs()}d overdue'
         : 'in $daysUntil days';
 
-    final Widget card = GlassCard(
-      margin: const EdgeInsets.only(bottom: kSpacing10),
-      borderRadius: AppTheme.radiusCard,
-      elevation: isDue ? CardElevation.medium : CardElevation.low,
-      accentColor: mutedAccent,
+    final Widget card = TactileSpringContainer(
       onTap: () => context.push('/recurring/${recurring.id}/edit'),
-      child: Padding(
-        padding: const EdgeInsets.all(kSpacing14),
-        child: Column(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(kSpacing14),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -832,10 +834,19 @@ class _RecurringTransactionListScreenState
                 ),
               ),
             ],
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+        if (index < totalCount - 1)
+          Divider(
+            height: 1,
+            thickness: 0.5,
+            color: onSurface.withValues(alpha: 0.08),
+            indent: 14 + 32 + 12,
+          ),
+      ],
+    ),
+  );
 
     if (isDue) {
       return _DueItemPulse(child: card);
