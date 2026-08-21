@@ -460,29 +460,37 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   duration: const Duration(milliseconds: 200),
                                   curve: Curves.easeOut,
                                   margin: const EdgeInsets.only(
-                                    bottom: kSpacing10,
+                                    bottom: kSpacing16,
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? theme.colorScheme.primary.withValues(
-                                            alpha: 0.06,
+                                            alpha: 0.08,
                                           )
                                         : theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
                                       color: isSelected
                                           ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.25)
+                                                .withValues(alpha: 0.3)
                                           : theme.colorScheme.onSurface
-                                                .withValues(alpha: 0.06),
+                                                .withValues(alpha: 0.08),
+                                      width: isSelected ? 1.5 : 1.0,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: theme.colorScheme.shadow.withValues(alpha: 0.04),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                      kSpacing14,
-                                      kSpacing14,
                                       kSpacing16,
-                                      kSpacing14,
+                                      kSpacing16,
+                                      kSpacing16,
+                                      kSpacing16,
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
@@ -665,7 +673,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                         ],
 
                                         // Action buttons
-                                        const SizedBox(height: kSpacing10),
+                                        const SizedBox(height: kSpacing16),
                                         Row(
                                           children: [
                                             TactileSpringContainer(

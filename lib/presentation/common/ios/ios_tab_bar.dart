@@ -18,8 +18,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 66.0;
-  static const double minimizedHeight = 54.0;
+  static const double navBarHeight = 72.0;
+  static const double minimizedHeight = 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class IosTabBar extends StatelessWidget {
                         onDestinationSelected(tab.routeIndex);
                       },
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
+                        duration: const Duration(milliseconds: 350),
                         curve: Curves.fastOutSlowIn,
                         width: isSelected ? activeWidth : inactiveWidth,
                         height: double.infinity,
@@ -134,13 +134,13 @@ class IosTabBar extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 250),
+                                duration: const Duration(milliseconds: 350),
                                 switchInCurve: Curves.easeOutCubic,
                                 switchOutCurve: Curves.easeInCubic,
                                 child: Icon(
                                   isSelected ? tab.activeIcon : tab.icon,
                                   key: ValueKey('${tab.routeIndex}_$isSelected'),
-                                  size: 22,
+                                  size: isSelected ? 26 : 22,
                                   color: navFgColor,
                                 ),
                               ),
@@ -149,7 +149,7 @@ class IosTabBar extends StatelessWidget {
                                 Text(
                                   tab.label,
                                   style: context.ts(
-                                    14,
+                                    15,
                                     fontWeight: FontWeight.w600,
                                     color: navFgColor,
                                   ),

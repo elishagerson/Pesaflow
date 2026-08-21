@@ -81,6 +81,18 @@ class TransactionRepository {
     _refreshAnalytics(transaction.createdAt);
   }
 
+  /// Creates a batch of transactions without adjusting account balances.
+  Future<void> createTransactionsBatchNoBalanceAdjustment(
+    List<Transaction> transactions,
+  ) async {
+    await _transactionDao.insertTransactionsBatchWithoutBalanceAdjustment(
+      transactions,
+    );
+    if (transactions.isNotEmpty) {
+      _refreshAnalytics(DateTime.now());
+    }
+  }
+
   Future<void> deleteTransaction(String transactionId) {
     return _transactionDao.deleteTransactionWithBalanceAdjustment(
       transactionId,

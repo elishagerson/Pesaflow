@@ -42,6 +42,7 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
 
   void _pressDown() {
     if (widget.onTap == null) return;
+    HapticFeedback.selectionClick();
     if (context.isReducedMotion) {
       _controller.value = 1.0;
       return;
@@ -74,9 +75,6 @@ class _TactileSpringContainerState extends State<TactileSpringContainer>
       behavior: HitTestBehavior.opaque,
       onTapDown: (_) => _pressDown(),
       onTapUp: (_) {
-        if (widget.onTap != null) {
-          HapticFeedback.lightImpact();
-        }
         _springBack();
         widget.onTap?.call();
       },

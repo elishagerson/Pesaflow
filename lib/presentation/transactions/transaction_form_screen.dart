@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/state/spending_pattern_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/transactions/widgets/keypad_spring_text.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
@@ -2342,66 +2343,3 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 // ════════════════════════════════════════════════════════════════════════════
 // PREMIUM DYNAMIC KEYPAD SPRING MONOSPACE TEXT
 // ════════════════════════════════════════════════════════════════════════════
-class KeypadSpringText extends StatefulWidget {
-  final String text;
-  final TextStyle style;
-
-  const KeypadSpringText({super.key, required this.text, required this.style});
-
-  @override
-  State<KeypadSpringText> createState() => _KeypadSpringTextState();
-}
-
-class _KeypadSpringTextState extends State<KeypadSpringText>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    );
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 1.0,
-          end: 0.93,
-        ).chain(CurveTween(curve: Curves.easeOut)),
-        weight: 40,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 0.93,
-          end: 1.0,
-        ).chain(CurveTween(curve: Curves.elasticOut)),
-        weight: 60,
-      ),
-    ]).animate(_controller);
-  }
-
-  @override
-  void didUpdateWidget(covariant KeypadSpringText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text) {
-      _controller.reset();
-      _controller.forward();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: Text(widget.text, style: widget.style),
-    );
-  }
-}

@@ -623,7 +623,7 @@ class SettingsScreen extends ConsumerWidget {
     if (result == null || !context.mounted) return;
 
     final repo = ref.read(transactionRepositoryProvider);
-    var imported = 0;
+    final validTxs = <Transaction>[];
 
     for (final tx in result.transactions) {
       try {
@@ -644,17 +644,20 @@ class SettingsScreen extends ConsumerWidget {
               )
             : tx;
 
-        await repo.createTransactionNoBalanceAdjustment(resolvedTx);
-        imported++;
+        validTxs.add(resolvedTx);
       } catch (_) {
         // Skip duplicates or invalid rows
       }
     }
 
+    if (validTxs.isNotEmpty) {
+      await repo.createTransactionsBatchNoBalanceAdjustment(validTxs);
+    }
+
     if (context.mounted) {
       CustomToast.show(
         context,
-        message: 'Imported $imported transactions',
+        message: 'Imported ${validTxs.length} transactions',
         type: ToastType.success,
       );
     }

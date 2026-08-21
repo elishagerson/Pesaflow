@@ -680,7 +680,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
               ),
             ),
 
-            // ── GLASS HEADER ──
+            // ── HEADER ──
             Positioned(
               top: 0,
               left: 0,
@@ -688,9 +688,25 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
               child: StaggeredFadeSlide(
                 index: 0,
                 child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface.withValues(alpha: 0.96),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 16,
-                    bottom: 12,
+                    bottom: 16,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -878,9 +894,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               },
                             );
                           },
-                          decoration: InputDecoration(
+                          decoration: context.inputDecoration(
                             hintText: 'Search transactions...',
-                            prefixIcon: Icon(PesaFlowIcons.search, size: 20),
+                            prefixIcon: const Icon(PesaFlowIcons.search, size: 20),
                             suffixIcon: searchQuery.isNotEmpty
                                 ? IconButton(
                                     icon: Icon(
@@ -899,15 +915,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                   )
                                 : null,
-                            isDense: true,
                           ),
                         ),
                       ),
-                      const SizedBox(height: kSpacing10),
+                      const SizedBox(height: kSpacing16),
                       SizedBox(
-                        height: 34,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        height: 38,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
                           children: ['All', 'Income', 'Expense', 'Transfer']
                               .map((type) {
                                 final isSelected = activeType == type;
@@ -915,7 +932,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: kSpacing4,
                                   ),
-                                  child: GestureDetector(
+                                  child: TactileSpringContainer(
                                     onTap: () {
                                       ref
                                               .read(
@@ -927,42 +944,42 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                     child: AnimatedContainer(
                                       duration: const Duration(
-                                        milliseconds: 200,
+                                        milliseconds: 250,
                                       ),
                                       curve: Curves.easeOutCubic,
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 6,
+                                        horizontal: 22,
+                                        vertical: 8,
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
                                             ? theme.colorScheme.primary
-                                            : onSurface.withValues(alpha: 0.04),
+                                            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                                         borderRadius: BorderRadius.circular(
                                           100,
                                         ),
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : onSurface.withValues(
-                                                  alpha: 0.06,
-                                                ),
-                                          width: 0.8,
+                                              : Colors.transparent,
+                                          width: 1.0,
                                         ),
                                       ),
-                                      child: Text(
-                                        type,
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              color: isSelected
-                                                  ? theme.colorScheme.onPrimary
-                                                  : onSurface.withValues(
-                                                      alpha: 0.52,
-                                                    ),
-                                              fontWeight: isSelected
-                                                  ? FontWeight.bold
-                                                  : FontWeight.w500,
-                                            ),
+                                      child: Center(
+                                        child: Text(
+                                          type,
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                                color: isSelected
+                                                    ? theme.colorScheme.onPrimary
+                                                    : onSurface.withValues(
+                                                        alpha: 0.6,
+                                                      ),
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.w600,
+                                              ),
+                                        ),
                                       ),
                                     ),
                                   ),

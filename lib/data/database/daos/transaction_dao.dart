@@ -244,6 +244,14 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     await into(transactions).insert(transaction);
   }
 
+  Future<void> insertTransactionsBatchWithoutBalanceAdjustment(
+    List<Transaction> txs,
+  ) async {
+    await batch((b) {
+      b.insertAll(transactions, txs, mode: InsertMode.insertOrIgnore);
+    });
+  }
+
   /// Deletes a transaction and reverses the linked account's balance adjustment inside a transaction.
   Future<void> deleteTransactionWithBalanceAdjustment(
     String transactionId,
