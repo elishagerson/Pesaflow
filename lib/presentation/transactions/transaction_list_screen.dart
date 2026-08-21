@@ -379,6 +379,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             GlassListContainer(
                               child: Column(
                                 children: dayItems.asMap().entries.map((entry) {
+                              final index = entry.key;
                               final item = entry.value;
                               final trans = item.transaction;
 
