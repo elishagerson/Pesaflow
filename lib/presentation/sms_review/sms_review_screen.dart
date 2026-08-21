@@ -10,13 +10,13 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
@@ -204,12 +204,11 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
 
     return Scaffold(
       body: SafeArea(
-        top: false,
+        top: true,
         child: Column(
           children: [
-            IosNavBar(
+            FloatingTopBar(
               title: 'SMS Review',
-              largeTitle: true,
               actions: [
                 Row(
                   mainAxisSize: MainAxisSize.min,

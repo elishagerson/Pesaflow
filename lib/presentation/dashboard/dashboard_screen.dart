@@ -17,6 +17,7 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
@@ -30,7 +31,7 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_transaction_card.dart';
+
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
@@ -885,10 +886,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           );
                                         }
 
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
+                                        return GlassListContainer(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            padding: EdgeInsets.zero,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
                                           itemCount:
                                               filteredTransactions.length,
                                           itemBuilder: (context, index) {
@@ -1009,17 +1012,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                     },
                                                   );
                                                 },
-                                                child: GlassTransactionCard(
+                                                child: TactileSpringContainer(
                                                   onTap: () => context.push(
                                                     '/transactions/${trans.id}',
                                                   ),
-                                                  child: Row(
+                                                  child: Column(
                                                     children: [
-                                                        Container(
-                                                          width: 46,
-                                                          height: 46,
-                                                          alignment: Alignment.center,
-                                                          child: Icon(
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(
+                                                          horizontal: kSpacing20,
+                                                          vertical: kSpacing12,
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 46,
+                                                              height: 46,
+                                                              alignment: Alignment.center,
+                                                              child: Icon(
                                                             getCategoryIcon(
                                                               item.category.icon,
                                                             ),
@@ -1141,12 +1151,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                             .onSurfaceVariant),
                                                           ),
                                                         ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
+                                                    if (index < filteredTransactions.length - 1)
+                                                      Divider(
+                                                        height: 1,
+                                                        thickness: 0.5,
+                                                        color: onSurface.withValues(alpha: 0.08),
+                                                        indent: 20 + 46 + 14,
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
-                                            );
+                                            ),
+                                          );
                                           },
+                                        ),
                                         );
                                       },
                                       loading: () => const SizedBox.shrink(),

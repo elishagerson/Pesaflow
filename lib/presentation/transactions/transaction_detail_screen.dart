@@ -9,10 +9,8 @@ import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
-import 'package:pesaflow/presentation/transactions/widgets/note_attachment_card.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -119,9 +117,13 @@ class TransactionDetailScreen extends ConsumerWidget {
                 ref.invalidate(transactionDetailProvider(transactionId));
               },
             ),
+            ),
           ),
         ),
       ),
+    ],
+  ),
+),
     );
   }
 

@@ -13,6 +13,7 @@ import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
@@ -374,8 +375,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               ),
                             ),
 
-                            // Transaction Items as Individual GlassCards
-                            ...dayItems.asMap().entries.map((entry) {
+                            // Transaction Items as single group GlassListContainer
+                            GlassListContainer(
+                              child: Column(
+                                children: dayItems.asMap().entries.map((entry) {
                               final item = entry.value;
                               final trans = item.transaction;
 
@@ -474,14 +477,17 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                   );
                                 },
-                                child: GlassTransactionCard(
+                                child: TactileSpringContainer(
                                   onTap: () =>
                                       context.push('/transactions/${trans.id}'),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: kSpacing20,
-                                    vertical: kSpacing6,
-                                  ),
-                                  child: Row(
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing20,
+                                          vertical: kSpacing12,
+                                        ),
+                                        child: Row(
                                     children: [
                                       Container(
                                         width: 40,
@@ -642,15 +648,27 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (index < dayItems.length - 1)
+                                        Divider(
+                                          height: 1,
+                                          thickness: 0.5,
+                                          color: onSurface.withValues(alpha: 0.08),
+                                          indent: 20 + 40 + 14,
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               );
                               if (isNewRow) {
                                 return _NewRowHighlight(child: row);
                               }
                               return row;
-                            }),
+                            }).toList(),
+                              ),
+                            ),
                           ],
                         );
                       },
