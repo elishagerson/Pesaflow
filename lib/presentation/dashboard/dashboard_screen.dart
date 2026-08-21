@@ -37,6 +37,7 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
@@ -45,88 +46,6 @@ final cardholderNameProvider = StreamProvider<String>((ref) {
       .map((val) => val ?? 'TOTAL NET WORTH');
 });
 
-/// Flip card that shows NET WORTH on front and BUDGET BALANCE on back.
-/// Tap to flip with a spring animation.
-class _BalanceHeroCard extends StatefulWidget {
-  final Widget front;
-  final Widget back;
-  final BorderRadius borderRadius;
-
-  const _BalanceHeroCard({
-    required this.front,
-    required this.back,
-    this.borderRadius = const BorderRadius.all(Radius.circular(20)),
-  });
-
-  @override
-  State<_BalanceHeroCard> createState() => _BalanceHeroCardState();
-}
-
-class _BalanceHeroCardState extends State<_BalanceHeroCard>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  bool _showFront = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _flip() {
-    final target = _showFront ? 1.0 : 0.0;
-    _showFront = !_showFront;
-
-    final simulation = SpringSimulation(
-      const SpringDescription(mass: 0.8, stiffness: 300, damping: 18),
-      _controller.value,
-      target,
-      0,
-    );
-    _controller.animateWith(simulation);
-    HapticFeedback.mediumImpact();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _flip,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          final angle = _controller.value * math.pi;
-          final isFront = angle < math.pi / 2;
-
-          return ClipRRect(
-            borderRadius: widget.borderRadius,
-            child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..rotateY(angle),
-              child: isFront
-                  ? widget.front
-                  : Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.identity()..rotateY(math.pi),
-                      child: widget.back,
-                    ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -550,7 +469,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ── 2. Balance Hero Card — tap to flip ──
+                            // ── 2. Balance Header ──
                             Consumer(
                               builder: (context, ref, _) {
                                 final accountsAsync = ref.watch(
@@ -568,49 +487,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           .balance)
                                     : netWorth;
 
-                                final front = _buildBalanceCardFront(
-                                  context: context,
-                                  ref: ref,
-                                  theme: theme,
-                                  trackerColor: trackerColor,
-                                  heroTextColor: heroTextColor,
-                                  cardGradient: cardGradient,
-                                  accounts: accounts,
-                                  netWorth: displayBalance,
-                                  overallPct: overallPct,
-                                  budgetTotal: budgetTotal,
-                                  cardholderName: cardholderName,
-                                );
-
-                                final back = _buildBalanceCardBack(
-                                  context: context,
-                                  theme: theme,
-                                  trackerColor: trackerColor,
-                                  heroTextColor: heroTextColor,
-                                  cardGradient: cardGradient,
-                                  overallPct: overallPct,
-                                  budgetTotal: budgetTotal,
-                                  remainingBudget: remainingBudget,
-                                );
-
                                 return StaggeredFadeSlide(
                                   index: 0,
-                                  child: Interactive3DCard(
-                                    borderRadius: AppTheme.radiusCard,
-                                    shadowColor: trackerColor,
-                                    maxTiltX: 0.08,
-                                    maxTiltY: 0.08,
-                                    glareOpacity: 0.12,
-                                    child: AspectRatio(
-                                      aspectRatio: 1.58,
-                                      child: _BalanceHeroCard(
-                                        borderRadius: BorderRadius.circular(
-                                          AppTheme.radiusCard,
-                                        ),
-                                        front: front,
-                                        back: back,
-                                      ),
-                                    ),
+                                  child: BudjetlyBalanceHeader(
+                                    balance: displayBalance,
+                                    label: cardholderName,
                                   ),
                                 );
                               },
