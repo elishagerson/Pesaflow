@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -15,7 +12,6 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/state/insight_provider.dart';
-import 'package:pesaflow/presentation/state/sms_stats_provider.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
@@ -27,14 +23,12 @@ import 'package:pesaflow/presentation/common/widgets/motion/spring_button.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/haptic_pattern.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/workspace_dialogs.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/dashboard_widgets.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/category_budget_card.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 import 'package:pesaflow/services/home_widgets_renderer.dart';
 import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
-import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
@@ -102,45 +96,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return '${(value / 1000).toStringAsFixed(0)}k';
     }
     return value.toStringAsFixed(0);
-  }
-
-  Widget _buildCardNetworkLogo(Color trackerColor) {
-    return SizedBox(
-      width: 32,
-      height: 22,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            right: 12,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.35),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            left: 12,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: trackerColor.withValues(alpha: 0.65),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMonthlyOverview(ThemeData theme) {
-    return const MonthlyOverviewSection();
   }
 
   void _showWorkspaceSelectorSheet(BuildContext context) {
@@ -252,18 +207,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
 
     final accounts = accountsAsync.value ?? [];
-
-    // Dynamic Balance card color properties matching HIG/M3 design brief
-    final cardGradient = LinearGradient(
-      colors: [
-        trackerColor.withValues(alpha: 0.22),
-        theme.colorScheme.surfaceContainerHigh,
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
-
-    const Color heroTextColor = Colors.white;
 
     final recsAsync = ref.watch(recurringTransactionsStreamProvider);
     final dueAsync = ref.watch(dueRecurringTransactionsProvider);
@@ -786,281 +729,78 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             const SizedBox(height: kSpacing20),
 
-                            // ── Quick Templates Row ──
-                            Consumer(
-                              builder: (context, ref, _) {
-                                final templatesAsync = ref.watch(
-                                  transactionTemplatesStreamProvider,
-                                );
-                                return templatesAsync.when(
-                                  data: (templates) {
-                                    if (templates.isEmpty) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: kSpacing20,
-                                          ),
-                                          child: Text(
-                                            'QUICK TEMPLATES',
-                                            style: context.ts(
-                                              9,
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: 1.2,
-                                              color: theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.5),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: kSpacing10),
-                                        SizedBox(
-                                          height: 38,
-                                          child: ListView.builder(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing20,
-                                            ),
-                                            scrollDirection: Axis.horizontal,
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            itemCount: templates.length,
-                                            itemBuilder: (context, index) {
-                                              final t = templates[index];
-                                              final displayName =
-                                                  t['name']?.isNotEmpty == true
-                                                  ? t['name']
-                                                  : (t['description']
-                                                                ?.isNotEmpty ==
-                                                            true
-                                                        ? t['description']
-                                                        : 'Template');
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: kSpacing8,
-                                                ),
-                                                child: TactileSpringContainer(
-                                                  onTap: () {
-                                                    triggerHaptic(
-                                                      HapticType.selection,
-                                                    );
-                                                    final type =
-                                                        t['type'] ?? 'expense';
-                                                    final desc =
-                                                        t['description'] ?? '';
-                                                    final amount =
-                                                        t['amountCents'] ?? 0;
-                                                    final catId =
-                                                        t['categoryId'] ?? '';
-                                                    final accId =
-                                                        t['accountId'] ?? '';
-                                                    context.push(
-                                                      '/transactions/add?type=$type&description=${Uri.encodeComponent(desc)}&amount=$amount&categoryId=$catId&accountId=$accId',
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal:
-                                                              kSpacing14,
-                                                          vertical: kSpacing8,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: onSurface
-                                                          .withValues(
-                                                            alpha: 0.05,
-                                                          ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            100,
-                                                          ),
-                                                      border: Border.all(
-                                                        color: onSurface
-                                                            .withValues(
-                                                              alpha: 0.08,
-                                                            ),
-                                                        width: 0.8,
-                                                      ),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Icon(
-                                                          PesaFlowIcons
-                                                              .bookmark,
-                                                          size: 13,
-                                                          color: theme
-                                                              .colorScheme
-                                                              .primary,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: kSpacing6,
-                                                        ),
-                                                        Text(
-                                                          displayName,
-                                                          style: context.ts(
-                                                            12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: onSurface
-                                                                .withValues(
-                                                                  alpha: 0.85,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(height: kSpacing20),
-                                      ],
-                                    );
-                                  },
-                                  loading: () => const SizedBox.shrink(),
-                                  error: (_, _) => const SizedBox.shrink(),
-                                );
-                              },
-                            ),
-
-                            // ── SMS auto-categorization count ──
-                            Consumer(
-                              builder: (context, ref, _) {
-                                final smsCountAsync = ref.watch(
-                                  todaySmsCountProvider,
-                                );
-                                return smsCountAsync.when(
-                                  data: (count) {
-                                    if (count == 0) {
-                                      return const SizedBox.shrink();
-                                    }
+                            // ── Budget Progress Row ──
+                            if (budgets.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                                child: Text(
+                                  'BUDGET PROGRESS',
+                                  style: context.ts(
+                                    12,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.1,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing12),
+                              SizedBox(
+                                height: 120, // Enough for the CategoryBudgetCard
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: budgets.length,
+                                  itemBuilder: (context, index) {
                                     return Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: kSpacing12,
-                                        left: kSpacing20,
-                                        right: kSpacing20,
-                                      ),
-                                      child: Center(
-                                        child: TactileSpringContainer(
-                                          onTap: () =>
-                                              context.push('/sms-review'),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing16,
-                                              vertical: kSpacing10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.primary
-                                                  .withValues(alpha: 0.08),
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              border: Border.all(
-                                                color: theme.colorScheme.primary
-                                                    .withValues(alpha: 0.15),
-                                                width: 0.8,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  PesaFlowIcons.message,
-                                                  size: 14,
-                                                  color:
-                                                      theme.colorScheme.primary,
-                                                ),
-                                                const SizedBox(
-                                                  width: kSpacing8,
-                                                ),
-                                                Text(
-                                                  'Auto-categorized $count message${count == 1 ? '' : 's'} today',
-                                                  style: theme
-                                                      .textTheme
-                                                      .labelMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: theme
-                                                            .colorScheme
-                                                            .primary,
-                                                      ),
-                                                ),
-                                                const SizedBox(
-                                                  width: kSpacing6,
-                                                ),
-                                                Icon(
-                                                  PesaFlowIcons.arrowOutward,
-                                                  size: 12,
-                                                  color:
-                                                      theme.colorScheme.primary,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
+                                      padding: const EdgeInsets.only(right: kSpacing12),
+                                      child: CategoryBudgetCard(
+                                        budgetProgress: budgets[index],
+                                        onTap: () {
+                                          context.go('/budgets');
+                                        },
                                       ),
                                     );
                                   },
-                                  error: (_, _) => const SizedBox.shrink(),
-                                  loading: () => const SizedBox.shrink(),
-                                );
-                              },
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing20),
+                            ],
+
+                            // ── 3. Recent Activity ──
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: kSpacing20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'RECENT TRANSACTIONS',
+                                    style: context.ts(
+                                      12,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.1,
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                  TactileSpringContainer(
+                                    onTap: () => context.go('/transactions'),
+                                    child: Text(
+                                      'See All',
+                                      style: context.ts(
+                                        12,
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(height: kSpacing12),
-
-                            // ── 3. Insights — contextual nudges ──
-                            CollapsibleSection(
-                              title: 'Insights',
-                              icon: PesaFlowIcons.lightbulb,
-                              child: const _InsightsCarousel(),
-                            ),
-                            const SizedBox(height: kSpacing20),
-
-                            // ── 4. Monthly Overview — "How your money moved" ──
-                            // (StaggeredFadeSlide indices below are scoped per-column, not sequential)
-                            StaggeredFadeSlide(
-                              index: 2,
-                              child: CollapsibleSection(
-                                title: 'Monthly Overview',
-                                icon: PesaFlowIcons.income,
-                                child: _buildMonthlyOverview(theme),
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing20),
-
-                            // ── Spending Activity Heatmap Calendar ──
-                            StaggeredFadeSlide(
-                              index: 3,
-                              child: CollapsibleSection(
-                                title: 'Spending Activity',
-                                icon: PesaFlowIcons.calendar,
-                                child: const SpendingHeatmapCard(),
-                              ),
-                            ),
-                            const SizedBox(height: kSpacing20),
-
-                            // ── 5. Recent Activity — "The transactions behind it" ──
-                            CollapsibleSection(
-                              title: 'Recent Activity',
-                              icon: PesaFlowIcons.history,
-                              action: TextButton(
-                                onPressed: () {
-                                  context.go('/transactions');
-                                },
-                                child: const Text('See All'),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Clear account filter chip row if _selectedAccountId is active
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Clear account filter chip row if _selectedAccountId is active
                                   if (_selectedAccountId != null) ...[
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -1647,7 +1387,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ],
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -1793,7 +1532,6 @@ class _QuickActionButton extends StatelessWidget {
   final VoidCallback onTap;
 
   const _QuickActionButton({
-    super.key,
     required this.icon,
     required this.label,
     required this.color,

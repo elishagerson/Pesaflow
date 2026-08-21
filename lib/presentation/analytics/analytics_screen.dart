@@ -24,6 +24,8 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
+import 'package:pesaflow/presentation/common/widgets/morphing_insight_card.dart';
 
 enum TrendRange { days, weeks, months }
 
@@ -446,6 +448,20 @@ class _OverviewTab extends StatelessWidget {
             ),
             error: (e, _) => Text('Error: $e'),
           ),
+          const SizedBox(height: kSpacing24),
+          const MonthlyOverviewSection(),
+          const SizedBox(height: kSpacing24),
+          Text(
+            'SPENDING HEATMAP',
+            style: context.ts(
+              11,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: kSpacing12),
+          const SpendingHeatmapCard(),
           const SizedBox(height: kSpacing20),
 
           // Savings Goal Bento Box
@@ -708,6 +724,18 @@ class _OverviewTab extends StatelessWidget {
                 ),
                 error: (_, _) => const SizedBox(),
               ),
+          const SizedBox(height: kSpacing24),
+          Text(
+            'INSIGHTS',
+            style: context.ts(
+              11,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: kSpacing12),
+          const _InsightsCarousel(),
           const SizedBox(height: kSpacing24),
 
           // Category Donut inside a beautiful GlassCard

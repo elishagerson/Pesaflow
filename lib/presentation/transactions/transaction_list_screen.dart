@@ -14,9 +14,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:pesaflow/presentation/common/widgets/interactive_3d_card.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -393,9 +391,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               final categoryColor = hexToColor(
                                 item.category.color,
                               );
-                              final mutedCategoryColor = desaturateColor(
-                                categoryColor,
-                              );
                               final formattedTime = DateFormat(
                                 'HH:mm',
                               ).format(trans.createdAt);
@@ -481,22 +476,28 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                 child: TactileSpringContainer(
                                   onTap: () =>
                                       context.push('/transactions/${trans.id}'),
-                                  child: GlassCard(
-                                    elevation: CardElevation.low,
+                                  child: Container(
                                     margin: const EdgeInsets.symmetric(
                                       horizontal: kSpacing20,
-                                      vertical: kSpacing6,
                                     ),
-                                    padding: const EdgeInsets.all(kSpacing16),
-                                    backgroundColor: theme.colorScheme.surface,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: kSpacing12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: onSurface.withValues(alpha: 0.05),
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
                                     child: Row(
                                       children: [
                                         Container(
-                                          width: 46,
-                                          height: 46,
+                                          width: 40,
+                                          height: 40,
                                           decoration: BoxDecoration(
-                                            color: mutedCategoryColor
-                                                .withValues(alpha: 0.15),
+                                            color: categoryColor.withValues(alpha: 0.12),
                                             borderRadius: BorderRadius.circular(
                                               14,
                                             ),
@@ -506,8 +507,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                               getCategoryIcon(
                                                 item.category.icon,
                                               ),
-                                              color: categoryColor,
-                                              size: 22,
+                                                color: categoryColor,
+                                                size: 20,
                                             ),
                                           ),
                                         ),
@@ -1032,12 +1033,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             kSpacing20,
             kSpacing24,
           ),
-          child: Interactive3DCard(
-            borderRadius: 24.0,
-            shadowColor: accentColor,
-            child: Container(
-              height: 170,
-              decoration: BoxDecoration(
+          child: Container(
+            height: 170,
+            decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: accentColor.withValues(alpha: 0.3),
@@ -1142,9 +1140,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
       orElse: () => const SizedBox.shrink(),
     );
   }
