@@ -291,12 +291,23 @@ class SavingsGoalListScreen extends ConsumerWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(width: 4, color: mutedGoalColor),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
+                  child: Container(
+                    width: 4,
+                    decoration: BoxDecoration(
+                      color: mutedGoalColor,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kSpacing16,
-                      vertical: kSpacing20,
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: kSpacing16,
+                      top: kSpacing20,
+                      bottom: kSpacing20,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
