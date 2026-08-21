@@ -437,40 +437,19 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                 ),
                                 const SizedBox(height: kSpacing8),
                                 Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(
-                                      color: onSurface.withValues(alpha: 0.07),
-                                    ),
-                                  ),
-                                  child: TextField(
-                                    controller: descriptionController,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: onSurface,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: 'Add a note (optional)',
-                                      hintStyle: TextStyle(
-                                        color: onSurface.withValues(
-                                          alpha: 0.28,
-                                        ),
+                                TextField(
+                                  controller: descriptionController,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: context.ts(14, color: onSurface),
+                                  decoration: context.inputDecoration(
+                                    hintText: 'Add a note (optional)',
+                                    prefixIcon: Icon(
+                                      PesaFlowIcons.edit,
+                                      size: 20,
+                                      color: onSurface.withValues(
+                                        alpha: 0.32,
                                       ),
-                                      prefixIcon: Icon(
-                                        PesaFlowIcons.edit,
-                                        size: 20,
-                                        color: onSurface.withValues(
-                                          alpha: 0.32,
-                                        ),
-                                      ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 14,
-                                          ),
                                     ),
                                   ),
                                 ),
@@ -946,10 +925,8 @@ Widget _buildAmountField({
               fontWeight: FontWeight.bold,
               color: onSurface,
             ),
-            decoration: const InputDecoration(
+            decoration: context.inputDecoration(
               hintText: 'Enter amount',
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: kSpacing12),
             ),
             onChanged: (val) {
               setSheetState(() {});
