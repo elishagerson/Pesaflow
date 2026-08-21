@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -31,25 +30,55 @@ class SavingsGoalListScreen extends ConsumerWidget {
     final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
-      appBar: IosNavBar(title: 'Savings Goals', canPop: canPop),
-      body: SkeletonCrossfade(
-        isLoading:
-            savingsGoalsAsync is AsyncLoading && !savingsGoalsAsync.hasValue,
-        skeleton: const Padding(
-          padding: EdgeInsets.all(kSpacing16),
-          child: Column(
-            children: [
-              SkeletonCard(height: 130),
-              SizedBox(height: kSpacing12),
-              SkeletonCard(height: 130),
-              SizedBox(height: kSpacing12),
-              SkeletonCard(height: 130),
-              SizedBox(height: kSpacing12),
-              SkeletonCard(height: 130),
-            ],
-          ),
-        ),
-        child: savingsGoalsAsync.when(
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: Column(
+          children: [
+            // ── Floating Top Bar ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Row(
+                children: [
+                  if (canPop)
+                    TactileSpringContainer(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                      ),
+                    ),
+                  Text(
+                    'Savings Goals',
+                    style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SkeletonCrossfade(
+                isLoading:
+                    savingsGoalsAsync is AsyncLoading && !savingsGoalsAsync.hasValue,
+                skeleton: const Padding(
+                  padding: EdgeInsets.all(kSpacing16),
+                  child: Column(
+                    children: [
+                      SkeletonCard(height: 130),
+                      SizedBox(height: kSpacing12),
+                      SkeletonCard(height: 130),
+                      SizedBox(height: kSpacing12),
+                      SkeletonCard(height: 130),
+                      SizedBox(height: kSpacing12),
+                      SkeletonCard(height: 130),
+                    ],
+                  ),
+                ),
+                child: savingsGoalsAsync.when(
           data: (goals) {
             if (goals.isEmpty) {
               return _buildEmptyState(context, theme);
@@ -110,6 +139,9 @@ class SavingsGoalListScreen extends ConsumerWidget {
               Center(child: Text('Error loading savings goals: $err')),
         ),
       ),
+    ],
+  ),
+),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/savings-goals/add'),
         label: 'New Goal',

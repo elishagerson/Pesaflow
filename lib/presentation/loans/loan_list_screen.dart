@@ -14,8 +14,8 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class LoanListScreen extends ConsumerWidget {
@@ -31,29 +31,56 @@ class LoanListScreen extends ConsumerWidget {
     final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
-      appBar: IosNavBar(title: 'Loans', largeTitle: true, canPop: canPop),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/loans/add'),
         label: 'Add Loan',
       ),
-      body: RefreshIndicator(
-        color: theme.colorScheme.primary,
-        backgroundColor: theme.colorScheme.surface,
-        onRefresh: () => Future.wait([
-          ref.refresh(activeLoansStreamProvider.future),
-          ref.refresh(paidLoansStreamProvider.future),
-        ]),
-        child: SingleChildScrollView(
-          key: const PageStorageKey('loan_list'),
-          padding: EdgeInsets.fromLTRB(
-            kSpacing16,
-            kSpacing16,
-            kSpacing16,
-            kSpacing80,
-          ),
-          child: Column(
-            children: [
-              // Outstanding header
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: RefreshIndicator(
+          color: theme.colorScheme.primary,
+          backgroundColor: theme.colorScheme.surface,
+          onRefresh: () => Future.wait([
+            ref.refresh(activeLoansStreamProvider.future),
+            ref.refresh(paidLoansStreamProvider.future),
+          ]),
+          child: SingleChildScrollView(
+            key: const PageStorageKey('loan_list'),
+            padding: const EdgeInsets.fromLTRB(
+              kSpacing16,
+              kSpacing8,
+              kSpacing16,
+              kSpacing80,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Floating Top Bar ──
+                Row(
+                  children: [
+                    if (canPop)
+                      TactileSpringContainer(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 12),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                        ),
+                      ),
+                    Text(
+                      'Loans',
+                      style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                
+                // Outstanding header
               totalOutstandingAsync.when(
                 data: (total) => total > 0
                     ? _buildOutstandingHeader(context, total, ref)
@@ -158,8 +185,9 @@ class LoanListScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSectionHeader(
     BuildContext context,

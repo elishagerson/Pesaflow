@@ -933,9 +933,8 @@ class SettingsScreen extends ConsumerWidget {
         ref.watch(totalTransactionsCountProvider).value ?? 0;
 
     return Scaffold(
-      appBar: const IosNavBar(title: 'Settings', largeTitle: true),
       body: SafeArea(
-        top: false,
+        top: true,
         bottom: false,
         child: SingleChildScrollView(
           key: const PageStorageKey('settings'),
@@ -946,7 +945,14 @@ class SettingsScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: kSpacing16),
+              // ── Floating Top Bar ──
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: Text(
+                  'Settings',
+                  style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                ),
+              ),
 
               // Organization
               StaggeredFadeSlide(
