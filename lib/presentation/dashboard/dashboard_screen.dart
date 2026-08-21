@@ -1723,3 +1723,111 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
 
+}
+
+class _InsightsCarousel extends ConsumerStatefulWidget {
+  const _InsightsCarousel();
+
+  @override
+  ConsumerState<_InsightsCarousel> createState() => _InsightsCarouselState();
+}
+
+class _InsightsCarouselState extends ConsumerState<_InsightsCarousel> {
+  final Set<int> _expandedIndices = {};
+
+  @override
+  Widget build(BuildContext context) {
+    final insightsAsync = ref.watch(dynamicInsightsProvider);
+
+    return insightsAsync.when(
+      data: (insights) {
+        if (insights.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        // Animated height between 114 (all collapsed) and 176 (any expanded)
+        final double height = _expandedIndices.isNotEmpty ? 176.0 : 114.0;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: height,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(vertical: kSpacing8),
+            clipBehavior: Clip.none,
+            itemCount: insights.length,
+            separatorBuilder: (_, _) => const SizedBox(width: kSpacing10),
+            itemBuilder: (_, i) {
+              final isExpanded = _expandedIndices.contains(i);
+              return Align(
+                alignment: Alignment.topCenter,
+                child: MorphingInsightCard(
+                  data: insights[i],
+                  index: i,
+                  expanded: isExpanded,
+                  onTap: () {
+                    setState(() {
+                      if (isExpanded) {
+                        _expandedIndices.remove(i);
+                      } else {
+                        _expandedIndices.add(i);
+                      }
+                    });
+                  },
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (e, stack) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _QuickActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SpringButton(
+        haptic: HapticType.selection,
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: kSpacing12),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: color.withValues(alpha: 0.12)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 22),
+              const SizedBox(height: kSpacing4),
+              Text(
+                label,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall!.copyWith(color: color),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
