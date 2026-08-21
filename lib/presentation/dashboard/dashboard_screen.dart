@@ -30,7 +30,6 @@ import 'package:pesaflow/presentation/state/spending_heatmap_provider.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/budjetly_balance_header.dart';
-import 'package:pesaflow/presentation/dashboard/widgets/animated_balance_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_transaction_card.dart';
 
 final cardholderNameProvider = StreamProvider<String>((ref) {
@@ -1144,7 +1143,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
                                                 ),
                                               ),
                                             );

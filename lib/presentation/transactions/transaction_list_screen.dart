@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_transaction_card.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
@@ -473,45 +474,27 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     },
                                   );
                                 },
-                                child: TactileSpringContainer(
+                                child: GlassTransactionCard(
                                   onTap: () =>
                                       context.push('/transactions/${trans.id}'),
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing20,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: kSpacing12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: onSurface.withValues(alpha: 0.05),
-                                          width: 1,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: kSpacing20,
+                                    vertical: kSpacing6,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          getCategoryIcon(
+                                            item.category.icon,
+                                          ),
+                                          color: categoryColor,
+                                          size: 24,
                                         ),
                                       ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: categoryColor.withValues(alpha: 0.12),
-                                            borderRadius: BorderRadius.circular(
-                                              14,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              getCategoryIcon(
-                                                item.category.icon,
-                                              ),
-                                                color: categoryColor,
-                                                size: 20,
-                                            ),
-                                          ),
-                                        ),
                                         const SizedBox(width: kSpacing14),
                                         // Content
                                         Expanded(
@@ -661,7 +644,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         ),
                                       ],
                                     ),
-                                  ),
                                 ),
                               );
                               if (isNewRow) {
@@ -691,15 +673,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 16,
                     bottom: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: onSurface.withValues(alpha: 0.06),
-                        width: 0.5,
-                      ),
-                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
