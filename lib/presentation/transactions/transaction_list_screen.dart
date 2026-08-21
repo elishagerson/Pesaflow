@@ -14,7 +14,6 @@ import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
@@ -24,7 +23,6 @@ import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 
-import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -376,10 +374,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               ),
                             ),
 
-                            // Transaction Items as single group GlassListContainer
-                            GlassListContainer(
-                              child: Column(
-                                children: dayItems.asMap().entries.map((entry) {
+                            // Transaction Items — flat, no container card
+                            Column(
+                              children: dayItems.asMap().entries.map((entry) {
                               final index = entry.key;
                               final item = entry.value;
                               final trans = item.transaction;
@@ -657,7 +654,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         Divider(
                                           height: 1,
                                           thickness: 0.5,
-                                          color: onSurface.withValues(alpha: 0.08),
+                                          color: onSurface.withValues(alpha: 0.06),
                                           indent: 20 + 40 + 14,
                                         ),
                                     ],
@@ -669,7 +666,6 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               }
                               return row;
                             }).toList(),
-                              ),
                             ),
                           ],
                         );
@@ -697,16 +693,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
+                          stops: const [0.0, 0.7, 1.0],
                           colors: [
-                            context.appColors.bgColor.withValues(alpha: 0.85),
-                            context.appColors.bgColor.withValues(alpha: 0.98),
+                            context.appColors.bgColor,
+                            context.appColors.bgColor,
+                            context.appColors.bgColor.withValues(alpha: 0.0),
                           ],
-                        ),
-                        border: Border(
-                          bottom: BorderSide(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                            width: 1.0,
-                          ),
                         ),
                       ),
                   padding: EdgeInsets.only(
@@ -817,69 +809,54 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                           null;
                                     },
                                   ),
-                                _FilterButton(
-                                  isActive:
-                                      activeAccount != null ||
-                                      activeCategory != null ||
-                                      amountMin != null ||
-                                      amountMax != null ||
-                                      dateFrom != null ||
-                                      dateTo != null ||
-                                      searchQuery.isNotEmpty ||
-                                      activeType != 'All',
-                                  activeCount: [
-                                    if (activeType != 'All') 1,
-                                    if (activeAccount != null) 1,
-                                    if (activeCategory != null) 1,
-                                    if (searchQuery.isNotEmpty) 1,
-                                    if (amountMin != null || amountMax != null)
-                                      1,
-                                    if (dateFrom != null || dateTo != null) 1,
-                                  ].length,
-                                  onPressed: () =>
-                                      showTransactionFilterSheet(context, ref),
-                                ),
-                                const SizedBox(width: kSpacing8),
-                                TactileSpringContainer(
-                                  onTap: () => ref
-                                      .read(paletteVisibilityProvider.notifier)
-                                      .toggle(),
-                                  child: Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: onSurface.withValues(alpha: 0.04),
-                                      border: Border.all(
-                                        color: onSurface.withValues(
-                                          alpha: 0.08,
-                                        ),
-                                        width: 0.8,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      PesaFlowIcons.search,
-                                      size: 18,
-                                      color: onSurface.withValues(alpha: 0.62),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing8),
                                 Container(
-                                  width: 36,
-                                  height: 36,
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
                                     color: onSurface.withValues(alpha: 0.04),
-                                    border: Border.all(
-                                      color: onSurface.withValues(alpha: 0.08),
-                                      width: 0.8,
-                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(color: onSurface.withValues(alpha: 0.08)),
                                   ),
-                                  child: Icon(
-                                    PesaFlowIcons.personOutline,
-                                    size: 18,
-                                    color: onSurface.withValues(alpha: 0.62),
+                                  child: Row(
+                                    children: [
+                                      _FilterButton(
+                                        isActive: activeAccount != null ||
+                                            activeCategory != null ||
+                                            amountMin != null ||
+                                            amountMax != null ||
+                                            dateFrom != null ||
+                                            dateTo != null ||
+                                            searchQuery.isNotEmpty ||
+                                            activeType != 'All',
+                                        activeCount: [
+                                          if (activeType != 'All') 1,
+                                          if (activeAccount != null) 1,
+                                          if (activeCategory != null) 1,
+                                          if (searchQuery.isNotEmpty) 1,
+                                          if (amountMin != null || amountMax != null) 1,
+                                          if (dateFrom != null || dateTo != null) 1,
+                                        ].length,
+                                        onPressed: () => showTransactionFilterSheet(context, ref),
+                                      ),
+                                      Container(width: 1, height: 20, color: onSurface.withValues(alpha: 0.1)),
+                                      TactileSpringContainer(
+                                        onTap: () {
+                                          setState(() {
+                                            _isSearchVisible = !_isSearchVisible;
+                                            if (!_isSearchVisible) {
+                                              _searchController.clear();
+                                              ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                            }
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          child: Icon(
+                                            PesaFlowIcons.search,
+                                            size: 18,
+                                            color: _isSearchVisible ? theme.colorScheme.primary : onSurface.withValues(alpha: 0.62),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -887,50 +864,44 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                           ],
                         ),
                       ),
-                      const SizedBox(height: kSpacing16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing20,
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: (val) {
-                            _searchDebounce?.cancel();
-                            _searchDebounce = Timer(
-                              const Duration(milliseconds: 300),
-                              () {
-                                ref
-                                    .read(
-                                      transactionSearchQueryProvider.notifier,
-                                    )
-                                    .state = val
-                                    .trim();
-                              },
-                            );
-                          },
-                          decoration: context.inputDecoration(
-                            hintText: 'Search transactions...',
-                            prefixIcon: const Icon(PesaFlowIcons.search, size: 20),
-                            suffixIcon: searchQuery.isNotEmpty
-                                ? IconButton(
-                                    icon: Icon(
-                                      PesaFlowIcons.clear,
-                                      size: 16,
-                                      color: onSurface.withValues(alpha: 0.54),
-                                    ),
-                                    onPressed: () {
-                                      ref
-                                              .read(
-                                                transactionSearchQueryProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          '';
-                                    },
-                                  )
-                                : null,
-                          ),
-                        ),
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.fastOutSlowIn,
+                        child: _isSearchVisible || searchQuery.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                  top: kSpacing16,
+                                  left: kSpacing20,
+                                  right: kSpacing20,
+                                ),
+                                child: TextField(
+                                  controller: _searchController,
+                                  autofocus: _isSearchVisible,
+                                  onChanged: (val) {
+                                    _searchDebounce?.cancel();
+                                    _searchDebounce = Timer(
+                                      const Duration(milliseconds: 300),
+                                      () {
+                                        ref.read(transactionSearchQueryProvider.notifier).state = val.trim();
+                                      },
+                                    );
+                                  },
+                                  decoration: context.inputDecoration(
+                                    hintText: 'Search transactions...',
+                                    prefixIcon: const Icon(PesaFlowIcons.search, size: 20),
+                                    suffixIcon: searchQuery.isNotEmpty
+                                        ? IconButton(
+                                            icon: Icon(PesaFlowIcons.clear, size: 16, color: onSurface.withValues(alpha: 0.54)),
+                                            onPressed: () {
+                                              _searchController.clear();
+                                              ref.read(transactionSearchQueryProvider.notifier).state = '';
+                                            },
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
                       ),
                       const SizedBox(height: kSpacing16),
                       SizedBox(
@@ -948,52 +919,30 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   ),
                                   child: TactileSpringContainer(
                                     onTap: () {
-                                      ref
-                                              .read(
-                                                transactionTypeFilterProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          type;
+                                      ref.read(transactionTypeFilterProvider.notifier).state = type;
                                     },
                                     child: AnimatedContainer(
-                                      duration: const Duration(
-                                        milliseconds: 250,
-                                      ),
+                                      duration: const Duration(milliseconds: 250),
                                       curve: Curves.easeOutCubic,
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 22,
-                                        vertical: 8,
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
                                             ? theme.colorScheme.primary
-                                            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-                                        borderRadius: BorderRadius.circular(
-                                          100,
-                                        ),
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(100),
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : Colors.transparent,
+                                              : onSurface.withValues(alpha: 0.1),
                                           width: 1.0,
                                         ),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          type,
-                                          style: theme.textTheme.labelMedium
-                                              ?.copyWith(
-                                                color: isSelected
-                                                    ? theme.colorScheme.onPrimary
-                                                    : onSurface.withValues(
-                                                        alpha: 0.6,
-                                                      ),
-                                                fontWeight: isSelected
-                                                    ? FontWeight.bold
-                                                    : FontWeight.w600,
-                                              ),
-                                        ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        type,
+                                        style: context.ts(13, color: isSelected ? theme.colorScheme.onPrimary : onSurface.withValues(alpha: 0.7), fontWeight: isSelected ? FontWeight.bold : FontWeight.w600),
                                       ),
                                     ),
                                   ),
