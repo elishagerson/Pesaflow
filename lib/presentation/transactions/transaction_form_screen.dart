@@ -702,7 +702,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             // TOP HALF: Display & Context
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   // Premium Segmented Control
                   Container(
@@ -779,25 +779,26 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   TactileSpringContainer(
                     onTap: () => _showCategorySheet(context, theme, categoriesAsync),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing12),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (selectedCatObj != null) ...[
-                            Icon(getCategoryIcon(selectedCatObj.icon), color: hexToColor(selectedCatObj.color), size: 18),
-                            const SizedBox(width: kSpacing8),
-                            Text(selectedCatObj.name, style: context.ts(16, fontWeight: FontWeight.w600)),
+                            Icon(getCategoryIcon(selectedCatObj.icon), color: hexToColor(selectedCatObj.color), size: 22),
+                            const SizedBox(width: kSpacing12),
+                            Text(selectedCatObj.name, style: context.ts(18, fontWeight: FontWeight.bold)),
                           ] else ...[
-                            Icon(PesaFlowIcons.category, color: theme.colorScheme.onSurfaceVariant, size: 18),
-                            const SizedBox(width: kSpacing8),
-                            Text('Select Category', style: context.ts(16, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurfaceVariant)),
+                            Icon(PesaFlowIcons.category, color: theme.colorScheme.onSurfaceVariant, size: 22),
+                            const SizedBox(width: kSpacing12),
+                            Text('Select Category', style: context.ts(18, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
                           ],
-                          const SizedBox(width: kSpacing4),
-                          Icon(Icons.keyboard_arrow_down, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                          const SizedBox(width: kSpacing8),
+                          Icon(Icons.keyboard_arrow_down, size: 20, color: theme.colorScheme.onSurfaceVariant),
                         ],
                       ),
                     ),
@@ -810,7 +811,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ActionChip(
                           avatar: const Icon(PesaFlowIcons.calendar, size: 16),

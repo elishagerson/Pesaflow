@@ -50,15 +50,15 @@ class ModernNumpad extends StatelessWidget {
           child: TactileSpringContainer(
             onTap: onTap ?? () => _onKeyPress(label),
             child: Container(
-              height: 72,
+              height: 80,
               decoration: BoxDecoration(
-                color: color ?? Colors.transparent,
+                color: color ?? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
               child: icon ?? Text(
                 label,
-                style: context.ts(32, fontWeight: FontWeight.w400, color: textColor ?? theme.colorScheme.onSurface),
+                style: context.ts(36, fontWeight: FontWeight.w500, color: textColor ?? theme.colorScheme.onSurface),
               ),
             ),
           ),
@@ -69,7 +69,7 @@ class ModernNumpad extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(kSpacing16),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.5),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
@@ -112,7 +112,7 @@ class ModernNumpad extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      height: 72,
+                      height: 80,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [theme.colorScheme.primary, theme.colorScheme.tertiary],
