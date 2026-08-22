@@ -346,15 +346,19 @@ class BudgetListScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: kSpacing8),
-                        AmountText(
-                          amountInCents: totalSpent,
-                          style: context.ts(
-                            32,
-                            fontWeight: FontWeight.w900,
-                            color: totalSpent > totalAllocated
-                                ? context.appColors.expenseColor
-                                : onSurface,
-                            letterSpacing: -0.5,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: AmountText(
+                            amountInCents: totalSpent,
+                            style: context.ts(
+                              32,
+                              fontWeight: FontWeight.w900,
+                              color: totalSpent > totalAllocated
+                                  ? context.appColors.expenseColor
+                                  : onSurface,
+                              letterSpacing: -0.5,
+                            ),
                           ),
                         ),
                         const SizedBox(height: kSpacing16),
@@ -390,40 +394,53 @@ class BudgetListScreen extends ConsumerWidget {
                           curve: Curves.easeOutCubic,
                           tween: Tween<double>(begin: 0, end: totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.0) : 0),
                           builder: (context, value, _) {
-                            return CircularProgressIndicator(
-                              value: value,
-                              strokeWidth: 8,
-                              strokeCap: StrokeCap.round,
-                              backgroundColor: onSurface.withValues(alpha: 0.05),
-                              color: totalSpent > totalAllocated
-                                  ? context.appColors.expenseColor
-                                  : theme.colorScheme.primary,
+                            return SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: CircularProgressIndicator(
+                                value: value,
+                                strokeWidth: 8,
+                                strokeCap: StrokeCap.round,
+                                backgroundColor: onSurface.withValues(alpha: 0.05),
+                                color: totalSpent > totalAllocated
+                                    ? context.appColors.expenseColor
+                                    : theme.colorScheme.primary,
+                              ),
                             );
                           },
                         ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              totalAllocated > 0
-                                  ? '${(totalSpent / totalAllocated * 100).round()}%'
-                                  : '0%',
-                              style: context.ts(
-                                20,
-                                fontWeight: FontWeight.w800,
-                                color: totalSpent > totalAllocated
-                                    ? context.appColors.expenseColor
-                                    : onSurface,
-                              ),
+                        SizedBox(
+                          width: 70,
+                          height: 70,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  totalAllocated > 0
+                                      ? (((totalSpent / totalAllocated) * 100) > 999
+                                          ? '>999%'
+                                          : '${(totalSpent / totalAllocated * 100).round()}%')
+                                      : '0%',
+                                  style: context.ts(
+                                    20,
+                                    fontWeight: FontWeight.w800,
+                                    color: totalSpent > totalAllocated
+                                        ? context.appColors.expenseColor
+                                        : onSurface,
+                                  ),
+                                ),
+                                Text(
+                                  'Used',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: onSurface.withValues(alpha: 0.5),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Used',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: onSurface.withValues(alpha: 0.5),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -454,7 +471,7 @@ class BudgetListScreen extends ConsumerWidget {
                 } else if (!status.isOnTrack) {
                   paceColor = Colors.orange;
                 } else {
-                  paceColor = catColor;
+                  paceColor = context.appColors.incomeColor;
                 }
 
                 return Padding(

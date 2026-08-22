@@ -8,12 +8,16 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 class ModernNumpad extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback? onDone;
+  final String? doneLabel;
+  final bool isDoneLoading;
   final int maxLength;
 
   const ModernNumpad({
     super.key,
     required this.controller,
     this.onDone,
+    this.doneLabel,
+    this.isDoneLoading = false,
     this.maxLength = 12,
   });
 
@@ -119,10 +123,12 @@ class ModernNumpad extends StatelessWidget {
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Text(
-                    'Done',
-                    style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
+                  child: isDoneLoading
+                      ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                      : Text(
+                          doneLabel ?? 'Done',
+                          style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
                 ),
               ),
             ),
