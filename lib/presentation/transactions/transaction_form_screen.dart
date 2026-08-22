@@ -759,7 +759,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               width: tabWidth,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.surface,
+                                  color: context.appColors.surfaceContainerHighest,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: [
                                     BoxShadow(
