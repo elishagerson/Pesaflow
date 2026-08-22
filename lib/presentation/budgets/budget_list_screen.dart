@@ -14,7 +14,6 @@ import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/core/utils/app_illustrations.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
-import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_list.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
@@ -436,9 +435,7 @@ class BudgetListScreen extends ConsumerWidget {
 
             // Budget cards list
             Column(
-              children: budgets.asMap().entries.map((entry) {
-                final index = entry.key;
-                final bp = entry.value;
+              children: budgets.map((bp) {
                 final status = BudgetEngine.computeStatus(
                   allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
                   spent: bp.spentInPeriod,
@@ -450,7 +447,6 @@ class BudgetListScreen extends ConsumerWidget {
                 );
 
                 final catColor = hexToColor(bp.category.color);
-                final mutedCatColor = desaturateColor(catColor);
                 
                 Color paceColor;
                 if (status.isOverBudget) {
@@ -481,7 +477,7 @@ class BudgetListScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
-                                    getIconData(bp.category.icon),
+                                    getCategoryIcon(bp.category.icon),
                                     color: catColor,
                                     size: 24,
                                   ),
