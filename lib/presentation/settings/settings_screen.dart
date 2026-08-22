@@ -33,6 +33,7 @@ import 'package:pesaflow/services/backup_service.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:pesaflow/presentation/dashboard/widgets/add_account_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -50,10 +51,44 @@ class SettingsScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: kSpacing16),
-            child: Text(
-              'Manage Accounts',
-              style: context.ts(22, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.only(
+              left: kSpacing20,
+              right: kSpacing16,
+              top: kSpacing16,
+              bottom: kSpacing12,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Manage Accounts',
+                  style: context.ts(22, fontWeight: FontWeight.bold),
+                ),
+                TactileSpringContainer(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    showAddAccountDialog(context, ref);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(PesaFlowIcons.add, size: 16, color: theme.colorScheme.primary),
+                        const SizedBox(width: kSpacing4),
+                        Text(
+                          'Add',
+                          style: context.ts(14, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           if (accounts.isEmpty)
@@ -64,49 +99,75 @@ class SettingsScreen extends ConsumerWidget {
               ),
             )
           else
-            ...accounts.map(
-              (acc) => IosListRow(
-                leading: Icon(
-                  getAccountIcon(acc.icon),
-                  color: theme.colorScheme.primary,
-                ),
-                title: Text(
-                  acc.name,
-                  style: context.ts(14, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  acc.type.toUpperCase().replaceAll('_', ' ') +
-                      (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
-                  style: theme.textTheme.labelMedium!,
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AmountText(
-                      amountInCents: acc.balance,
-                      style: context.ts(14, fontWeight: FontWeight.bold),
+            IosListSection(
+              rows: accounts.map(
+                (acc) => IosListRow(
+                  leading: Container(
+                    padding: const EdgeInsets.all(kSpacing8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    const SizedBox(width: kSpacing4),
-                    TactileSpringContainer(
-                      onTap: () => _showEditAccountDialog(context, ref, acc),
-                      child: Icon(
-                        PesaFlowIcons.edit,
-                        size: 18,
-                        color: theme.colorScheme.primary,
+                    child: Icon(
+                      getAccountIcon(acc.icon),
+                      color: theme.colorScheme.primary,
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(
+                    acc.name,
+                    style: context.ts(15, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    acc.type.toUpperCase().replaceAll('_', ' ') +
+                        (acc.phoneNumber != null ? ' • ${acc.phoneNumber}' : ''),
+                    style: theme.textTheme.labelMedium!.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AmountText(
+                        amountInCents: acc.balance,
+                        style: context.ts(15, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    const SizedBox(width: kSpacing4),
-                    TactileSpringContainer(
-                      onTap: () => _confirmDeleteAccount(context, ref, acc),
-                      child: Icon(
-                        PesaFlowIcons.delete,
-                        size: 20,
-                        color: theme.colorScheme.error,
+                      const SizedBox(width: kSpacing8),
+                      TactileSpringContainer(
+                        onTap: () => _showEditAccountDialog(context, ref, acc),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            PesaFlowIcons.edit,
+                            size: 16,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: kSpacing6),
+                      TactileSpringContainer(
+                        onTap: () => _confirmDeleteAccount(context, ref, acc),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            PesaFlowIcons.delete,
+                            size: 16,
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ).toList(),
             ),
           const SizedBox(height: kSpacing24),
         ],
