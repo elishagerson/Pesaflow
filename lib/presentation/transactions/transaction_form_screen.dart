@@ -13,6 +13,9 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:intl/intl.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_numpad.dart';
+import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
@@ -139,6 +142,20 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     _amountController.dispose();
     super.dispose();
   }
+
+  void _showNumpad(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    IosBottomSheet.show(
+      context: context,
+      initialChildSize: 0.45,
+      maxChildSize: 0.5,
+      child: ModernNumpad(
+        controller: _amountController,
+        onDone: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
 
   Future<void> _loadLastUsedValues() async {
     final settingsRepo = ref.read(settingsRepositoryProvider);
@@ -1479,19 +1496,31 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         error: (e, _) => Text('Error loading categories'),
                                       ),
                                       
-                                      TextFormField(
-                                        controller: _amountController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                        style: theme.textTheme.titleMedium!.copyWith(
-                                          fontWeight: FontWeight.w500,
+                                      TactileSpringContainer(
+                                        onTap: () {
+                                          setState(() => _amountError = null);
+                                          _showNumpad(context);
+                                        },
+                                        child: ValueListenableBuilder<TextEditingValue>(
+                                          valueListenable: _amountController,
+                                          builder: (context, value, child) {
+                                            final amt = value.text.isEmpty ? '' : NumberFormat('#,###').format(int.tryParse(value.text) ?? 0);
+                                            return IgnorePointer(
+                                              child: TextFormField(
+                                                controller: TextEditingController(text: amt),
+                                                readOnly: true,
+                                                style: theme.textTheme.titleMedium!.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                decoration: context.inputDecoration(
+                                                  labelText: 'Amount (Tsh)',
+                                                  hintText: 'e.g. 10,000',
+                                                  prefixIcon: const Icon(PesaFlowIcons.cash, size: 18),
+                                                ).copyWith(errorText: _amountError),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                        decoration: context.inputDecoration(
-                                          labelText: 'Amount (Tsh)',
-                                          hintText: 'e.g. 10000',
-                                          prefixIcon: Icon(PesaFlowIcons.cash, size: 18),
-                                        ).copyWith(errorText: _amountError),
-                                        onChanged: (_) => setState(() => _amountError = null),
                                       ),
                                       const SizedBox(height: kSpacing12),
                                       TextFormField(
