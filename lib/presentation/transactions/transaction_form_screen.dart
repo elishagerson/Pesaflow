@@ -4,7 +4,6 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pesaflow/core/theme/app_typography_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
@@ -68,8 +66,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   bool _isEditMode = false;
   bool _isSaving = false;
-  bool _isLoading = false;
-  final bool _saveAsTemplate = false;
   Transaction? _existingTransaction;
 
 
@@ -139,7 +135,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   Future<void> _loadExistingTransaction() async {
     if (!mounted) return;
-    setState(() => _isLoading = true);
     try {
       final repo = ref.read(transactionRepositoryProvider);
       final match = await repo.getTransactionById(widget.transactionId!);
@@ -159,10 +154,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       _selectedDate = match.transaction.createdAt;
 
       if (!mounted) return;
-      setState(() => _isLoading = false);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _isLoading = false);
       CustomToast.show(context, message: 'Failed to load transaction', type: ToastType.error);
     }
   }
