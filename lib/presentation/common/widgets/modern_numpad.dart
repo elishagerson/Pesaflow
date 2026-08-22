@@ -46,19 +46,19 @@ class ModernNumpad extends StatelessWidget {
     Widget buildKey(String label, {VoidCallback? onTap, Widget? icon, Color? color, Color? textColor}) {
       return Expanded(
         child: Padding(
-          padding: const EdgeInsets.all(kSpacing6),
+          padding: const EdgeInsets.all(kSpacing4),
           child: TactileSpringContainer(
             onTap: onTap ?? () => _onKeyPress(label),
             child: Container(
-              height: 64,
+              height: 72,
               decoration: BoxDecoration(
-                color: color ?? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(16),
+                color: color ?? Colors.transparent,
+                shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
               child: icon ?? Text(
                 label,
-                style: context.ts(24, fontWeight: FontWeight.w600, color: textColor ?? theme.colorScheme.onSurface),
+                style: context.ts(32, fontWeight: FontWeight.w400, color: textColor ?? theme.colorScheme.onSurface),
               ),
             ),
           ),
@@ -69,7 +69,7 @@ class ModernNumpad extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(kSpacing16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: Colors.transparent,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
@@ -98,41 +98,50 @@ class ModernNumpad extends StatelessWidget {
           ),
           Row(
             children: [
-              buildKey('00'),
+              buildKey('⌫', onTap: _onBackspace, icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.onSurfaceVariant)),
               buildKey('0'),
-              buildKey(
-                '⌫',
-                onTap: _onBackspace,
-                icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+              // Integrated Save Button
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(kSpacing4),
+                  child: TactileSpringContainer(
+                    onTap: () {
+                      if (onDone != null && !isDoneLoading) {
+                        HapticFeedback.mediumImpact();
+                        onDone!();
+                      }
+                    },
+                    child: Container(
+                      height: 72,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [theme.colorScheme.primary, theme.colorScheme.tertiary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
+                      ),
+                      alignment: Alignment.center,
+                      child: isDoneLoading
+                          ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                          : Text(
+                              doneLabel ?? 'Save',
+                              style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: kSpacing12),
-          if (onDone != null)
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: TactileSpringContainer(
-                onTap: () {
-                  HapticFeedback.mediumImpact();
-                  onDone!();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: isDoneLoading
-                      ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                      : Text(
-                          doneLabel ?? 'Done',
-                          style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                ),
-              ),
-            ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom),
+          SizedBox(height: MediaQuery.of(context).padding.bottom + kSpacing16),
         ],
       ),
     );

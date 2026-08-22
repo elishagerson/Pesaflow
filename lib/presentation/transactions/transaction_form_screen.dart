@@ -720,7 +720,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         amt,
-                        style: context.ts(72, fontWeight: FontWeight.w900, color: amtColor, letterSpacing: -2),
+                        style: context.ts(96, fontWeight: FontWeight.w700, color: amtColor, letterSpacing: -2),
                       ),
                     ),
                   ),
@@ -760,7 +760,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     ),
                   ),
                   
-                  const Spacer(),
+                  const SizedBox(height: kSpacing24),
                   
                   // Quick Action Pills
                   SingleChildScrollView(
