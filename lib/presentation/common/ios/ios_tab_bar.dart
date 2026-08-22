@@ -18,8 +18,8 @@ class IosTabBar extends StatelessWidget {
     this.minimized = false,
   });
 
-  static const double navBarHeight = 72.0;
-  static const double minimizedHeight = 60.0;
+  static const double navBarHeight = 96.0;
+  static const double minimizedHeight = 76.0;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +69,8 @@ class IosTabBar extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       padding: EdgeInsets.only(
         bottom: bottomPadding > 0 ? bottomPadding : (minimized ? 6 : 14),
-        left: minimized ? 24 : 16,
-        right: minimized ? 24 : 16,
+        left: minimized ? 24 : 12,
+        right: minimized ? 24 : 12,
       ),
       child: Container(
         height: height,
@@ -139,7 +139,7 @@ class IosTabBar extends StatelessWidget {
                                 child: Icon(
                                   isSelected ? tab.activeIcon : tab.icon,
                                   key: ValueKey('${tab.routeIndex}_$isSelected'),
-                                  size: isSelected ? 26 : 22,
+                                  size: isSelected ? 32 : 26,
                                   color: navFgColor,
                                 ),
                               ),
@@ -147,9 +147,7 @@ class IosTabBar extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Text(
                                   tab.label,
-                                  style: context.ts(
-                                    15,
-                                    fontWeight: FontWeight.w600,
+                                  style: context.ts(17, fontWeight: FontWeight.w600,
                                     color: navFgColor,
                                   ),
                                 ),
