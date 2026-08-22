@@ -485,6 +485,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: kSpacing16),
             Text(
@@ -492,21 +493,22 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               style: context.ts(20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: kSpacing24),
-            Expanded(
-              child: categoriesAsync.when(
-                data: (categories) {
-                  final filteredCategories = categories.where((cat) {
-                    return cat.type.toLowerCase() == _transactionType.toLowerCase();
-                  }).toList();
+            categoriesAsync.when(
+              data: (categories) {
+                final filteredCategories = categories.where((cat) {
+                  return cat.type.toLowerCase() == _transactionType.toLowerCase();
+                }).toList();
 
-                  return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: kSpacing24,
-                      crossAxisSpacing: kSpacing16,
-                      childAspectRatio: 0.7,
-                    ),
-                    itemCount: filteredCategories.length + 1,
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: kSpacing24,
+                    crossAxisSpacing: kSpacing16,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemCount: filteredCategories.length + 1,
                     itemBuilder: (context, index) {
                       if (index == filteredCategories.length) {
                         return GestureDetector(
@@ -582,7 +584,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) => Center(child: Text('Error: $e')),
               ),
-            ),
           ],
         ),
       ),
