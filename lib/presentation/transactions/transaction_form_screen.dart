@@ -446,6 +446,36 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
   
 
+
+  Widget _buildTab(String title, Color activeColor, ThemeData theme) {
+    final isSelected = _transactionType == title;
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (!isSelected) {
+            HapticFeedback.selectionClick();
+            setState(() {
+              _transactionType = title;
+              _selectedCategoryId = _lastCategoryByType[title];
+            });
+          }
+        },
+        child: Center(
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 200),
+            style: context.ts(
+              14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+              color: isSelected ? activeColor : theme.colorScheme.onSurfaceVariant,
+            ),
+            child: Text(title),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showCategorySheet(BuildContext context, ThemeData theme, AsyncValue<List<dynamic>> categoriesAsync) {
     IosBottomSheet.show(
       context: context,
@@ -674,40 +704,53 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Segmented Control
+                  // Premium Segmented Control
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: kSpacing32),
+                    height: 48,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                      color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: const EdgeInsets.all(kSpacing4),
-                    child: CupertinoSlidingSegmentedControl<String>(
-                      backgroundColor: Colors.transparent,
-                      thumbColor: theme.colorScheme.surface,
-                      groupValue: _transactionType,
-                      children: {
-                        'Expense': Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
-                          child: Text('Expense', style: context.ts(14, fontWeight: FontWeight.w600, color: _transactionType == 'Expense' ? context.appColors.expenseColor : theme.colorScheme.onSurfaceVariant)),
-                        ),
-                        'Income': Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
-                          child: Text('Income', style: context.ts(14, fontWeight: FontWeight.w600, color: _transactionType == 'Income' ? context.appColors.incomeColor : theme.colorScheme.onSurfaceVariant)),
-                        ),
-                        'Transfer': Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
-                          child: Text('Transfer', style: context.ts(14, fontWeight: FontWeight.w600, color: _transactionType == 'Transfer' ? context.appColors.transferColor : theme.colorScheme.onSurfaceVariant)),
-                        ),
-                      },
-                      onValueChanged: (v) {
-                        if (v != null) {
-                          setState(() {
-                            _transactionType = v;
-                            _selectedCategoryId = _lastCategoryByType[v];
-                          });
-                        }
-                      },
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final tabWidth = constraints.maxWidth / 3;
+                        final selectedIndex = _transactionType == 'Expense' ? 0 : (_transactionType == 'Income' ? 1 : 2);
+                        
+                        return Stack(
+                          children: [
+                            AnimatedPositioned(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeOutCubic,
+                              left: selectedIndex * tabWidth,
+                              top: 0,
+                              bottom: 0,
+                              width: tabWidth,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.15),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                _buildTab('Expense', context.appColors.expenseColor, theme),
+                                _buildTab('Income', context.appColors.incomeColor, theme),
+                                _buildTab('Transfer', context.appColors.transferColor, theme),
+                              ],
+                            ),
+                          ],
+                        );
+                      }
                     ),
                   ),
                   
