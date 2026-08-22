@@ -53,6 +53,7 @@ class BudgetListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final activeTab = ref.watch(budgetActiveTabProvider);
     final budgetProgressAsync = ref.watch(budgetProgressProvider);
+    final onSurface = theme.colorScheme.onSurface;
 
     return Scaffold(
       body: SafeArea(
@@ -68,7 +69,7 @@ class BudgetListScreen extends ConsumerWidget {
                 children: [
                   Text(
                     activeTab == 0 ? 'Budgets' : 'Savings Goals',
-                    style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                    style: context.ts(34, fontWeight: FontWeight.w800, color: onSurface, letterSpacing: -0.5),
                   ),
                   TactileSpringContainer(
                     onTap: () {
@@ -86,10 +87,10 @@ class BudgetListScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(PesaFlowIcons.add, color: Colors.white, size: 22),
+                      child: Icon(PesaFlowIcons.add, color: theme.colorScheme.primary, size: 22),
                     ),
                   ),
                 ],
@@ -144,8 +145,9 @@ class BudgetListScreen extends ConsumerWidget {
       ),
       padding: const EdgeInsets.all(kSpacing4),
       decoration: BoxDecoration(
-        color: onSurface.withValues(alpha: 0.065),
+        color: onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: onSurface.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
@@ -157,26 +159,35 @@ class BudgetListScreen extends ConsumerWidget {
               },
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(
                   color: activeTab == 0
-                      ? theme.colorScheme.primary
+                      ? theme.colorScheme.surface
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
+                  boxShadow: activeTab == 0
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
                 ),
                 child: Text(
                   'Category Budgets',
                   textAlign: TextAlign.center,
                   style: context.ts(
-                    12,
+                    13,
                     fontWeight: activeTab == 0
-                        ? FontWeight.bold
+                        ? FontWeight.w700
                         : FontWeight.w500,
                     color: activeTab == 0
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        ? onSurface
+                        : onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -190,26 +201,35 @@ class BudgetListScreen extends ConsumerWidget {
               },
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing8),
                 decoration: BoxDecoration(
                   color: activeTab == 1
-                      ? theme.colorScheme.primary
+                      ? theme.colorScheme.surface
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
+                  boxShadow: activeTab == 1
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
                 ),
                 child: Text(
                   'Savings Goals',
                   textAlign: TextAlign.center,
                   style: context.ts(
-                    12,
+                    13,
                     fontWeight: activeTab == 1
-                        ? FontWeight.bold
+                        ? FontWeight.w700
                         : FontWeight.w500,
                     color: activeTab == 1
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        ? onSurface
+                        : onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -221,7 +241,7 @@ class BudgetListScreen extends ConsumerWidget {
   }
 
   // ════════════════════════════════════════════════════════════════════════════
-  // 1. CATEGORY BUDGETS RENDERER (Original code preserved & visual polished)
+  // 1. CATEGORY BUDGETS RENDERER (Glass Stack UI)
   // ════════════════════════════════════════════════════════════════════════════
   Widget _buildCategoryBudgets(
     BuildContext context,
@@ -307,45 +327,80 @@ class BudgetListScreen extends ConsumerWidget {
           IosTabBar.navBarHeight + kSpacing32,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Summary Donut Chart
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: kSpacing20),
+            // Summary Glass Card (Top Hero)
+            GlassCard(
+              padding: const EdgeInsets.all(kSpacing24),
+              borderRadius: AppTheme.radiusCard,
               child: Row(
                 children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total Spent',
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: onSurface.withValues(alpha: 0.6),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        AmountText(
+                          amountInCents: totalSpent,
+                          style: context.ts(
+                            32,
+                            fontWeight: FontWeight.w900,
+                            color: totalSpent > totalAllocated
+                                ? context.appColors.expenseColor
+                                : onSurface,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing16),
+                        Row(
+                          children: [
+                            Text(
+                              'Out of ',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            AmountText(
+                              amountInCents: totalAllocated,
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: onSurface.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Sleek Circular Progress
                   SizedBox(
-                    height: 120,
-                    width: 120,
+                    height: 100,
+                    width: 100,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        PieChart(
-                          PieChartData(
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 45,
-                            startDegreeOffset: -90,
-                            sections: [
-                              PieChartSectionData(
-                                color: totalSpent > totalAllocated
-                                    ? context.appColors.expenseColor
-                                    : theme.colorScheme.primary,
-                                value: totalAllocated > 0
-                                    ? (totalSpent / totalAllocated).clamp(0.0, 1.0) * 100
-                                    : 0,
-                                title: '',
-                                radius: 12,
-                              ),
-                              PieChartSectionData(
-                                color: onSurface.withValues(alpha: 0.07),
-                                value: totalAllocated > 0
-                                    ? (1 - (totalSpent / totalAllocated).clamp(0.0, 1.0)) * 100
-                                    : 100,
-                                title: '',
-                                radius: 12,
-                              ),
-                            ],
-                          ),
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 1200),
+                          curve: Curves.easeOutCubic,
+                          tween: Tween<double>(begin: 0, end: totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.0) : 0),
+                          builder: (context, value, _) {
+                            return CircularProgressIndicator(
+                              value: value,
+                              strokeWidth: 8,
+                              strokeCap: StrokeCap.round,
+                              backgroundColor: onSurface.withValues(alpha: 0.05),
+                              color: totalSpent > totalAllocated
+                                  ? context.appColors.expenseColor
+                                  : theme.colorScheme.primary,
+                            );
+                          },
                         ),
                         Column(
                           mainAxisSize: MainAxisSize.min,
@@ -354,8 +409,9 @@ class BudgetListScreen extends ConsumerWidget {
                               totalAllocated > 0
                                   ? '${(totalSpent / totalAllocated * 100).round()}%'
                                   : '0%',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
+                              style: context.ts(
+                                20,
+                                fontWeight: FontWeight.w800,
                                 color: totalSpent > totalAllocated
                                     ? context.appColors.expenseColor
                                     : onSurface,
@@ -364,7 +420,7 @@ class BudgetListScreen extends ConsumerWidget {
                             Text(
                               'Used',
                               style: theme.textTheme.labelSmall?.copyWith(
-                                color: onSurface.withValues(alpha: 0.45),
+                                color: onSurface.withValues(alpha: 0.5),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -373,63 +429,17 @@ class BudgetListScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: kSpacing24),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Total Spent',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: onSurface.withValues(alpha: 0.45),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing2),
-                        AmountText(
-                          amountInCents: totalSpent,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: totalSpent > totalAllocated
-                                ? context.appColors.expenseColor
-                                : onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing16),
-                        Text(
-                          'Total Budget',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: onSurface.withValues(alpha: 0.45),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing2),
-                        AmountText(
-                          amountInCents: totalAllocated,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
-
-            Text(
-              'Active Budgets',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: kSpacing12),
+            const SizedBox(height: kSpacing24),
 
             // Budget cards list
-            GlassListContainer(
-              child: Column(
-                children: budgets.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final bp = entry.value;
-                  final status = BudgetEngine.computeStatus(
+            Column(
+              children: budgets.asMap().entries.map((entry) {
+                final index = entry.key;
+                final bp = entry.value;
+                final status = BudgetEngine.computeStatus(
                   allocated: bp.currentPeriod?.allocated ?? bp.budget.amount,
                   spent: bp.spentInPeriod,
                   periodStart:
@@ -441,122 +451,134 @@ class BudgetListScreen extends ConsumerWidget {
 
                 final catColor = hexToColor(bp.category.color);
                 final mutedCatColor = desaturateColor(catColor);
+                
+                Color paceColor;
+                if (status.isOverBudget) {
+                  paceColor = context.appColors.expenseColor;
+                } else if (!status.isOnTrack) {
+                  paceColor = Colors.orange;
+                } else {
+                  paceColor = catColor;
+                }
 
-                return Hero(
-                  tag: 'budget-${bp.budget.id}',
-                  child: TactileSpringContainer(
-                    onTap: () => context.push('/budgets/${bp.budget.id}'),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing20,
-                            vertical: kSpacing16,
-                          ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: kSpacing12),
+                  child: Hero(
+                    tag: 'budget-${bp.budget.id}',
+                    child: TactileSpringContainer(
+                      onTap: () => context.push('/budgets/${bp.budget.id}'),
+                      child: GlassCard(
+                        padding: const EdgeInsets.all(kSpacing16),
+                        borderRadius: AppTheme.radiusCard,
+                        child: Column(
                           children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: catColor,
-                              ),
-                            ),
-                            const SizedBox(width: kSpacing16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(kSpacing10),
+                                  decoration: BoxDecoration(
+                                    color: catColor.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    getIconData(bp.category.icon),
+                                    color: catColor,
+                                    size: 24,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         bp.category.name,
-                                        style: theme.textTheme.titleSmall?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: onSurface,
-                                        ),
+                                        style: context.ts(16, fontWeight: FontWeight.bold, color: onSurface),
                                       ),
+                                      const SizedBox(height: 4),
                                       Row(
                                         children: [
-                                          if (status.isOverBudget) ...[
-                                            Icon(
-                                              PesaFlowIcons.error,
-                                              color: context.appColors.expenseColor,
-                                              size: 14,
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: paceColor.withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(4),
                                             ),
-                                            const SizedBox(width: 4),
+                                            child: Text(
+                                              status.paceLabel,
+                                              style: context.ts(10, fontWeight: FontWeight.w700, color: paceColor),
+                                            ),
+                                          ),
+                                          if (status.daysLeft > 0) ...[
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              '${status.daysLeft} days left',
+                                              style: context.ts(11, color: onSurface.withValues(alpha: 0.5)),
+                                            ),
                                           ],
-                                          AmountText(
-                                            amountInCents: bp.spentInPeriod,
-                                            style: theme.textTheme.titleSmall?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: status.isOverBudget
-                                                  ? context.appColors.expenseColor
-                                                  : onSurface,
-                                            ),
-                                          ),
-                                          Text(
-                                            ' / ',
-                                            style: theme.textTheme.bodySmall?.copyWith(
-                                              color: onSurface.withValues(alpha: 0.54),
-                                            ),
-                                          ),
-                                          AmountText(
-                                            amountInCents: status.allocated,
-                                            style: theme.textTheme.bodySmall?.copyWith(
-                                              color: onSurface.withValues(alpha: 0.54),
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: kSpacing8),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: LinearProgressIndicator(
-                                      value: status.percentage.clamp(0.0, 1.0),
-                                      backgroundColor: onSurface.withValues(
-                                        alpha: 0.05,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    AmountText(
+                                      amountInCents: bp.spentInPeriod,
+                                      style: context.ts(
+                                        16,
+                                        fontWeight: FontWeight.w800,
+                                        color: status.isOverBudget
+                                            ? context.appColors.expenseColor
+                                            : onSurface,
                                       ),
-                                      color: status.isOverBudget
-                                          ? context.appColors.expenseColor
-                                          : mutedCatColor,
-                                      minHeight: 6,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 2),
+                                    Row(
+                                      children: [
+                                        Text('of ', style: context.ts(12, color: onSurface.withValues(alpha: 0.5))),
+                                        AmountText(
+                                          amountInCents: status.allocated,
+                                          style: context.ts(12, color: onSurface.withValues(alpha: 0.5), fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: kSpacing16),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: TweenAnimationBuilder<double>(
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutCubic,
+                                tween: Tween<double>(begin: 0, end: status.percentage.clamp(0.0, 1.0)),
+                                builder: (context, value, _) {
+                                  return LinearProgressIndicator(
+                                    value: value,
+                                    backgroundColor: onSurface.withValues(alpha: 0.05),
+                                    color: paceColor,
+                                    minHeight: 8,
+                                  );
+                                },
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (index < budgets.length - 1)
-                        Divider(
-                          height: 1,
-                          thickness: 0.5,
-                          color: onSurface.withValues(alpha: 0.08),
-                          indent: 20 + 12 + 16,
-                        ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
+                );
+              }).toList(),
+            ),
+          ],
         ),
-      ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // 2. DEDICATED SAVINGS GOALS DASHBOARD RENDERER (Brand New Screen Area)
-  // ════════════════════════════════════════════════════════════════════════════
   Widget _buildSavingsGoals(
     BuildContext context,
     WidgetRef ref,

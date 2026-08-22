@@ -1413,89 +1413,44 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         padding: const EdgeInsets.all(kSpacing16),
                         child: Form(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text(
-                                'TRANSACTION DETAILS',
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: onSurface.withValues(alpha: 0.45),
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing8),
+                              // CARD 1: Core (Amount & Type)
                               StaggeredFadeSlide(
                                 index: 0,
                                 child: GlassCard(
-                                  padding: const EdgeInsets.all(kSpacing16),
+                                  padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing32),
                                   borderRadius: AppTheme.radiusCard,
                                   child: Column(
                                     children: [
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: CupertinoSlidingSegmentedControl<String>(
-                                          groupValue: _transactionType,
-                                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                                          thumbColor: theme.colorScheme.surface,
-                                          children: {
-                                            'Expense': Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                              child: Text(
-                                                'Expense',
-                                                style: theme.textTheme.labelMedium?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: _transactionType == 'Expense'
-                                                      ? context.appColors.expenseColor
-                                                      : theme.colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                            'Income': Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                              child: Text(
-                                                'Income',
-                                                style: theme.textTheme.labelMedium?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: _transactionType == 'Income'
-                                                      ? context.appColors.incomeColor
-                                                      : theme.colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                            'Transfer': Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
-                                              child: Text(
-                                                'Transfer',
-                                                style: theme.textTheme.labelMedium?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: _transactionType == 'Transfer'
-                                                      ? context.appColors.transferColor
-                                                      : theme.colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                          },
-                                          onValueChanged: (v) {
-                                            if (v != null) {
-                                              setState(() {
-                                                _transactionType = v;
-                                                _selectedCategoryId = _lastCategoryByType[v];
-                                              });
-                                            }
-                                          },
-                                        ),
+                                      CupertinoSlidingSegmentedControl<String>(
+                                        groupValue: _transactionType,
+                                        backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                        thumbColor: theme.colorScheme.surface,
+                                        children: {
+                                          'Expense': Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
+                                            child: Text('Expense', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _transactionType == 'Expense' ? context.appColors.expenseColor : theme.colorScheme.onSurfaceVariant)),
+                                          ),
+                                          'Income': Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
+                                            child: Text('Income', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _transactionType == 'Income' ? context.appColors.incomeColor : theme.colorScheme.onSurfaceVariant)),
+                                          ),
+                                          'Transfer': Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: kSpacing10, vertical: kSpacing8),
+                                            child: Text('Transfer', style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, color: _transactionType == 'Transfer' ? context.appColors.transferColor : theme.colorScheme.onSurfaceVariant)),
+                                          ),
+                                        },
+                                        onValueChanged: (v) {
+                                          if (v != null) {
+                                            setState(() {
+                                              _transactionType = v;
+                                              _selectedCategoryId = _lastCategoryByType[v];
+                                            });
+                                          }
+                                        },
                                       ),
-                                      const SizedBox(height: kSpacing16),
-                                      
-                                      categoriesAsync.when(
-                                        data: (cats) => _buildCategorySelector(cats, theme),
-                                        loading: () => const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 20),
-                                          child: Center(child: CircularProgressIndicator()),
-                                        ),
-                                        error: (e, _) => Text('Error loading categories'),
-                                      ),
-                                      
+                                      const SizedBox(height: kSpacing32),
                                       TactileSpringContainer(
                                         onTap: () {
                                           setState(() => _amountError = null);
@@ -1504,39 +1459,81 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         child: ValueListenableBuilder<TextEditingValue>(
                                           valueListenable: _amountController,
                                           builder: (context, value, child) {
-                                            final amt = value.text.isEmpty ? '' : NumberFormat('#,###').format(int.tryParse(value.text) ?? 0);
-                                            return IgnorePointer(
-                                              child: TextFormField(
-                                                controller: TextEditingController(text: amt),
-                                                readOnly: true,
-                                                style: theme.textTheme.titleMedium!.copyWith(
-                                                  fontWeight: FontWeight.w500,
+                                            final amt = value.text.isEmpty ? '0' : NumberFormat('#,###').format(int.tryParse(value.text) ?? 0);
+                                            final color = _transactionType == 'Expense' ? context.appColors.expenseColor : (_transactionType == 'Income' ? context.appColors.incomeColor : context.appColors.transferColor);
+                                            return Column(
+                                              children: [
+                                                Text(
+                                                  'Amount (Tsh)',
+                                                  style: theme.textTheme.labelMedium?.copyWith(
+                                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
-                                                decoration: context.inputDecoration(
-                                                  labelText: 'Amount (Tsh)',
-                                                  hintText: 'e.g. 10,000',
-                                                  prefixIcon: const Icon(PesaFlowIcons.cash, size: 18),
-                                                ).copyWith(errorText: _amountError),
-                                              ),
+                                                const SizedBox(height: kSpacing8),
+                                                Text(
+                                                  amt,
+                                                  style: context.ts(48, fontWeight: FontWeight.w900, color: color),
+                                                ),
+                                                if (_amountError != null)
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: kSpacing8),
+                                                    child: Text(_amountError!, style: TextStyle(color: theme.colorScheme.error, fontSize: 13, fontWeight: FontWeight.w500)),
+                                                  ),
+                                              ],
                                             );
                                           },
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: kSpacing16),
+                              
+                              // CARD 2: Context (Category & Description)
+                              StaggeredFadeSlide(
+                                index: 1,
+                                child: GlassCard(
+                                  padding: const EdgeInsets.all(kSpacing16),
+                                  borderRadius: AppTheme.radiusCard,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Category',
+                                        style: theme.textTheme.labelMedium?.copyWith(
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const SizedBox(height: kSpacing12),
+                                      categoriesAsync.when(
+                                        data: (cats) => _buildCategorySelector(cats, theme),
+                                        loading: () => const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 20),
+                                          child: Center(child: CircularProgressIndicator()),
+                                        ),
+                                        error: (e, _) => Text('Error loading categories'),
+                                      ),
+                                      const SizedBox(height: kSpacing16),
+                                      Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.05), height: 1),
+                                      const SizedBox(height: kSpacing8),
                                       TextFormField(
                                         controller: _descriptionController,
                                         textCapitalization: TextCapitalization.sentences,
                                         style: theme.textTheme.titleMedium!.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        decoration: context.inputDecoration(
-                                          labelText: 'Description',
-                                          hintText: 'e.g. Lunch',
-                                          prefixIcon: Icon(PesaFlowIcons.label, size: 18),
+                                        decoration: InputDecoration(
+                                          hintText: 'Add a note...',
+                                          border: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          icon: Icon(PesaFlowIcons.label, size: 20, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                                         ),
                                       ),
                                       const SizedBox(height: kSpacing8),
-                                      
                                       SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         physics: const BouncingScrollPhysics(),
@@ -1575,19 +1572,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: kSpacing20),
+                              const SizedBox(height: kSpacing16),
                               
-                              Text(
-                                'ACCOUNTS & TIMING',
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: onSurface.withValues(alpha: 0.45),
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing8),
+                              // CARD 3: Logistics (Account, Date, Reference)
                               StaggeredFadeSlide(
-                                index: 1,
+                                index: 2,
                                 child: GlassCard(
                                   padding: const EdgeInsets.all(kSpacing16),
                                   borderRadius: AppTheme.radiusCard,
@@ -1599,8 +1588,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: onSurface.withValues(alpha: 0.1)),
+                                            border: Border.all(color: onSurface.withValues(alpha: 0.05)),
                                             borderRadius: BorderRadius.circular(12),
+                                            color: onSurface.withValues(alpha: 0.02),
                                           ),
                                           child: Row(
                                             children: [
@@ -1625,8 +1615,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: onSurface.withValues(alpha: 0.1)),
+                                              border: Border.all(color: onSurface.withValues(alpha: 0.05)),
                                               borderRadius: BorderRadius.circular(12),
+                                              color: onSurface.withValues(alpha: 0.02),
                                             ),
                                             child: Row(
                                               children: [
@@ -1655,28 +1646,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                         lastDate: DateTime(2101),
                                         onChanged: (d) => setState(() => _selectedDate = d),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing20),
-                              
-                              Text(
-                                'OPTIONAL',
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: onSurface.withValues(alpha: 0.45),
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing8),
-                              StaggeredFadeSlide(
-                                index: 2,
-                                child: GlassCard(
-                                  padding: const EdgeInsets.all(kSpacing16),
-                                  borderRadius: AppTheme.radiusCard,
-                                  child: Column(
-                                    children: [
+                                      const SizedBox(height: kSpacing16),
                                       TextFormField(
                                         controller: _referenceController,
                                         textCapitalization: TextCapitalization.characters,
@@ -1684,13 +1654,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                         decoration: context.inputDecoration(
-                                          labelText: 'Carrier Reference',
+                                          labelText: 'Carrier Reference (Optional)',
                                           hintText: 'e.g. PP230489A1',
-                                          prefixIcon: Icon(PesaFlowIcons.upcoming, size: 18),
+                                          prefixIcon: const Icon(PesaFlowIcons.upcoming, size: 18),
                                         ),
                                       ),
                                       if (!_isEditMode) ...[
-                                        const SizedBox(height: kSpacing16),
+                                        const SizedBox(height: kSpacing8),
                                         SwitchListTile(
                                           title: Text('Save as template', style: theme.textTheme.titleSmall),
                                           subtitle: Text('Quickly reuse this transaction later', style: theme.textTheme.bodySmall?.copyWith(color: onSurface.withValues(alpha: 0.6))),
