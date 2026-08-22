@@ -213,10 +213,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       }
       await repo.createTransaction(newTransaction);
 
-      if (mounted) {
-        if (context.canPop()) context.pop();
-      }
-
       final settingsRepo = ref.read(settingsRepositoryProvider);
       if (_selectedAccountId != null && _selectedAccountId!.isNotEmpty) {
         settingsRepo.setLastAccountId(_selectedAccountId!);
