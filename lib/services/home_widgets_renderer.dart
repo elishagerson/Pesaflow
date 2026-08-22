@@ -245,7 +245,7 @@ class WidgetSafeToSpend extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
               ),
             ),
-            const SizedBox(height: kSpacing12),
+            const SizedBox(height: kSpacing8),
             Text(
               remainingStr,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -269,7 +269,7 @@ class WidgetSafeToSpend extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: kSpacing12),
+            const SizedBox(height: kSpacing8),
             Text(
               limitStr,
               style: theme.textTheme.labelSmall?.copyWith(

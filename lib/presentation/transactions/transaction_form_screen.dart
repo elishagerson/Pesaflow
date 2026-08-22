@@ -73,6 +73,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   @override
   void initState() {
     super.initState();
+    _amountController.addListener(() { if (mounted) setState(() {}); });
     _isEditMode = widget.transactionId != null;
     if (_isEditMode) {
       _loadExistingTransaction();
@@ -672,6 +673,38 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
+  Widget _buildActionPill({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required Color backgroundColor,
+    required Color iconColor,
+    required Color textColor,
+  }) {
+    return TactileSpringContainer(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: iconColor),
+            const SizedBox(width: kSpacing8),
+            Text(
+              label,
+              style: context.ts(15, fontWeight: FontWeight.w600, color: textColor),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -814,31 +847,34 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        ActionChip(
-                          avatar: const Icon(PesaFlowIcons.calendar, size: 16),
-                          label: Text((_selectedDate.year == DateTime.now().year && _selectedDate.month == DateTime.now().month && _selectedDate.day == DateTime.now().day) ? 'Today' : DateFormat('MMM d').format(_selectedDate)),
-                          onPressed: () => _showDatePickerSheet(context),
-                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.03),
-                          side: BorderSide.none,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        _buildActionPill(
+                          context: context,
+                          icon: PesaFlowIcons.calendar,
+                          label: (_selectedDate.year == DateTime.now().year && _selectedDate.month == DateTime.now().month && _selectedDate.day == DateTime.now().day) ? 'Today' : DateFormat('MMM d').format(_selectedDate),
+                          onTap: () => _showDatePickerSheet(context),
+                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                          iconColor: theme.colorScheme.primary,
+                          textColor: theme.colorScheme.onSurface,
                         ),
                         const SizedBox(width: kSpacing8),
-                        ActionChip(
-                          avatar: const Icon(PesaFlowIcons.label, size: 16),
-                          label: Text(_descriptionController.text.isEmpty ? 'Note' : 'Note Added'),
-                          onPressed: () => _showNoteSheet(context, theme),
-                          backgroundColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary.withValues(alpha: 0.1) : theme.colorScheme.onSurface.withValues(alpha: 0.03),
-                          side: BorderSide.none,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        _buildActionPill(
+                          context: context,
+                          icon: PesaFlowIcons.label,
+                          label: _descriptionController.text.isEmpty ? 'Note' : 'Note Added',
+                          onTap: () => _showNoteSheet(context, theme),
+                          backgroundColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary.withValues(alpha: 0.15) : theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                          iconColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary : theme.colorScheme.primary,
+                          textColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary : theme.colorScheme.onSurface,
                         ),
                         const SizedBox(width: kSpacing8),
-                        ActionChip(
-                          avatar: const Icon(PesaFlowIcons.wallet, size: 16),
-                          label: Text(accounts.where((a) => a.id == _selectedAccountId).firstOrNull?.name ?? 'Account'),
-                          onPressed: () => _showAccountPickerSheet(context, accounts),
-                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.03),
-                          side: BorderSide.none,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        _buildActionPill(
+                          context: context,
+                          icon: PesaFlowIcons.wallet,
+                          label: accounts.where((a) => a.id == _selectedAccountId).firstOrNull?.name ?? 'Account',
+                          onTap: () => _showAccountPickerSheet(context, accounts),
+                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                          iconColor: theme.colorScheme.primary,
+                          textColor: theme.colorScheme.onSurface,
                         ),
                       ],
                     ),
