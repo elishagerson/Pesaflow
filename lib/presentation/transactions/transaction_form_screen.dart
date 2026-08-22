@@ -686,7 +686,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final amtColor = _transactionType == 'Expense' ? context.appColors.expenseColor : (_transactionType == 'Income' ? context.appColors.incomeColor : context.appColors.transferColor);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: context.appColors.bgColor,
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Transaction' : 'New Transaction', style: context.ts(18, fontWeight: FontWeight.w600)),
         centerTitle: true,

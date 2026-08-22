@@ -52,13 +52,13 @@ class ModernNumpad extends StatelessWidget {
             child: Container(
               height: 80,
               decoration: BoxDecoration(
-                color: color ?? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: color ?? theme.colorScheme.onSurface.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
               child: icon ?? Text(
                 label,
-                style: context.ts(36, fontWeight: FontWeight.w500, color: textColor ?? theme.colorScheme.onSurface),
+                style: context.ts(36, fontWeight: FontWeight.w400, color: textColor ?? theme.colorScheme.onSurface),
               ),
             ),
           ),
@@ -131,10 +131,7 @@ class ModernNumpad extends StatelessWidget {
                       alignment: Alignment.center,
                       child: isDoneLoading
                           ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                          : Text(
-                              doneLabel ?? 'Save',
-                              style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white),
-                            ),
+                          : const Icon(Icons.check, size: 36, color: Colors.white),
                     ),
                   ),
                 ),
