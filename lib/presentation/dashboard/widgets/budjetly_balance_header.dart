@@ -143,7 +143,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                           (index) => Container(
                             width: 4,
                             height: 1,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.2,
+                            ),
                           ),
                         ),
                       );
