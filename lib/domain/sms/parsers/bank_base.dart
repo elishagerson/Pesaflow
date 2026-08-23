@@ -50,6 +50,9 @@ class NmbBankParser implements SmsParser {
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
+        // NMB default transaction tariff for Kimetumwa (sent money)
+        const int nmbTariff = 1500;
+
         return SmsParsed(
           amount: amt,
           type: 'expense',
@@ -59,6 +62,7 @@ class NmbBankParser implements SmsParser {
           balanceAfter: bal,
           timestamp: timestamp,
           rawSmsBody: text,
+          feeAmount: nmbTariff,
         );
       }
 
