@@ -496,6 +496,34 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
+      // Create separate fee transaction if SMS includes a tariff/fee amount
+      if (sms.feeAmount != null && sms.feeAmount! > 0) {
+        final feeTransaction = Transaction(
+          id: const Uuid().v4(),
+          accountId: finalAccountId,
+          categoryId: finalCategoryId,
+          trackerId: activeTrackerId,
+          amount: sms.feeAmount!,
+          type: 'fee',
+          description: 'NMB Transaction Tariff',
+          provider: sms.provider,
+          sender: null,
+          recipient: 'NMB Bank Fee',
+          reference: '${sms.reference}-FEE',
+          rawSms: sms.rawSmsBody,
+          smsTimestamp: sms.timestamp,
+          balanceAfter: null,
+          source: source,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        await _transactionRepo.createTransaction(feeTransaction);
+        developer.log(
+          'Created NMB tariff fee transaction: ${sms.feeAmount} cents',
+          name: 'SmsProcessor',
+        );
+      }
+
       // 8.5 Recurring matching
       if (finalType == 'expense') {
         try {
