@@ -61,8 +61,8 @@ class IosTabBar extends StatelessWidget {
     ];
 
     final isDark = theme.brightness == Brightness.dark;
-    final navBgColor = isDark ? const Color(0xFF0F0F0F) : Colors.black;
-    final navFgColor = Colors.white;
+    final navBgColor = isDark ? const Color(0xFF0F0F0F) : theme.colorScheme.surface;
+    final navFgColor = isDark ? Colors.white : theme.colorScheme.onSurface;
 
     return Container(
       height: height + bottomPadding + (minimized ? 6 : 14),
@@ -79,7 +79,7 @@ class IosTabBar extends StatelessWidget {
           color: navBgColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
+              color: isDark ? Colors.black.withValues(alpha: 0.5) : theme.colorScheme.onSurface.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
