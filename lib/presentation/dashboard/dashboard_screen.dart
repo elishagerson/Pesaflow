@@ -269,12 +269,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.1),
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                                       borderRadius: BorderRadius.circular(24),
                                     ),
                                     child: Text(
                                       'Personal',
-                                      style: context.ts(15, color: Colors.white, fontWeight: FontWeight.w600),
+                                      style: context.ts(15, color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600),
                                     ),
                                   ),
                                 ),
@@ -286,10 +286,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.1),
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(PesaFlowIcons.search, color: Colors.white, size: 18),
+                                        child: Icon(PesaFlowIcons.search, color: theme.colorScheme.onSurface, size: 18),
                                       ),
                                     ),
                                     const SizedBox(width: kSpacing8),
@@ -301,13 +301,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           Container(
                                             padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.1),
+                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                                               shape: BoxShape.circle,
                                             ),
-                                            child: const Icon(
+                                            child: Icon(
                                               Icons.menu,
                                               size: 18,
-                                              color: Colors.white,
+                                              color: theme.colorScheme.onSurface,
                                             ),
                                           ),
                                           if (pendingReviewCount > 0)
@@ -348,7 +348,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             // Large "Overview" Title
                             Text(
                               'Overview',
-                              style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                              style: context.ts(34, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
                             ),
                             const SizedBox(height: kSpacing20),
 

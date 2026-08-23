@@ -32,7 +32,7 @@ class AppTheme {
   static const Color onBgLight = Color(0xFF0F172A); // Slate-900
   static const Color surfaceLight = Color(0xFFFFFFFF); // Pure white cards
   static const Color onSurfaceLight = Color(0xFF0F172A);
-  static const Color surfaceHighLight = Color(0xFFF1F5F9); // Matches bg
+  static const Color surfaceHighLight = Color(0xFFFFFFFF); // Pure white for elevated surfaces
 
   // Dark — OLED black base
   static const Color bgDark = Color(0xFF000000); // Pure OLED black
@@ -231,7 +231,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isLight ? const Color(0xFFF1F5F9) : const Color(0xFF1E293B),
+        fillColor: isLight ? const Color(0xFFFFFFFF) : const Color(0xFF1E293B),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
           borderSide: BorderSide.none,

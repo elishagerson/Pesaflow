@@ -66,15 +66,15 @@ class LoanListScreen extends ConsumerWidget {
                           margin: const EdgeInsets.only(right: 12),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                          child: Icon(Icons.arrow_back_ios_new, color: theme.colorScheme.onSurface, size: 18),
                         ),
                       ),
                     Text(
                       'Loans',
-                      style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                      style: context.ts(34, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
                     ),
                   ],
                 ),

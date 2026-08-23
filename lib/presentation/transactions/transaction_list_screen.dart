@@ -417,9 +417,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     color: theme.colorScheme.error,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     PesaFlowIcons.delete,
-                                    color: Colors.white,
+                                    color: theme.colorScheme.onError,
                                   ),
                                 ),
                                 confirmDismiss: (_) async {
@@ -1050,7 +1050,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: -0.6,
-                                color: Colors.white,
+                                color: theme.colorScheme.onSurface,
                                 height: 1.15,
                               ),
                               maxLines: 2,
@@ -1060,7 +1060,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                             Text(
                               message,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.7),
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                 height: 1.25,
                               ),
                               maxLines: 2,
@@ -1214,7 +1214,7 @@ class _MiniBar extends StatelessWidget {
               label,
               style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
             const Spacer(),
@@ -1222,7 +1222,7 @@ class _MiniBar extends StatelessWidget {
               formatValue(value),
               style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -1239,7 +1239,7 @@ class _MiniBar extends StatelessWidget {
                 height: 8,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(
