@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
@@ -16,6 +17,7 @@ class _PaletteAction {
   final String route;
   final List<String> keywords;
   final bool isDataResult;
+  final String category;
 
   const _PaletteAction({
     required this.icon,
@@ -24,6 +26,7 @@ class _PaletteAction {
     required this.route,
     this.keywords = const [],
     this.isDataResult = false,
+    this.category = 'Actions',
   });
 
   bool matches(String query) {
@@ -154,6 +157,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   late Animation<Offset> _slideAnimation;
   int _selectedIndex = 0;
   List<_PaletteAction> _cachedDataResults = [];
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -202,6 +206,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     _focusNode.dispose();
     _animController.dispose();
@@ -240,13 +245,22 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
             subtitle: r.subtitle,
             route: r.route,
             isDataResult: true,
+            category: r.category,
           ),
         )
         .toList();
     _cachedDataResults = dataResults;
     final results = _filtered(query);
 
-    _selectedIndex = _selectedIndex.clamp(0, results.length - 1);
+    _selectedIndex = _selectedIndex.clamp(
+      0,
+      results.isEmpty ? 0 : results.length - 1,
+    );
+
+    final groupedResults = <String, List<_PaletteAction>>{};
+    for (final action in results) {
+      groupedResults.putIfAbsent(action.category, () => []).add(action);
+    }
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -302,10 +316,16 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                 focusNode: _focusNode,
                                 autofocus: true,
                                 onChanged: (v) {
-                                  ref
-                                      .read(paletteQueryProvider.notifier)
-                                      .update(v);
-                                  setState(() => _selectedIndex = 0);
+                                  _debounceTimer?.cancel();
+                                  _debounceTimer = Timer(
+                                    const Duration(milliseconds: 150),
+                                    () {
+                                      ref
+                                          .read(paletteQueryProvider.notifier)
+                                          .update(v);
+                                      setState(() => _selectedIndex = 0);
+                                    },
+                                  );
                                 },
                                 onSubmitted: (_) {
                                   if (results.isNotEmpty) {
@@ -322,14 +342,29 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.5),
                                   ),
-                                  suffixIcon: GestureDetector(
-                                    onTap: _dismiss,
-                                    child: Icon(
-                                      PesaFlowIcons.close,
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                  ),
+                                  suffixIcon: searchResults.isLoading
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    theme.colorScheme.primary,
+                                                  ),
+                                            ),
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: _dismiss,
+                                          child: Icon(
+                                            PesaFlowIcons.close,
+                                            color: theme.colorScheme.onSurface
+                                                .withValues(alpha: 0.5),
+                                          ),
+                                        ),
                                   filled: true,
                                   fillColor:
                                       theme.colorScheme.surfaceContainerHigh,
@@ -371,145 +406,199 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                             )
                           else
                             Flexible(
-                              child: ListView.builder(
+                              child: ListView(
                                 padding: const EdgeInsets.fromLTRB(
                                   kSpacing8,
                                   0,
                                   kSpacing8,
                                   kSpacing8,
                                 ),
-                                itemCount: results.length,
-                                itemBuilder: (_, i) {
-                                  final action = results[i];
-                                  final selected = i == _selectedIndex;
-                                  return StaggeredFadeSlide(
-                                    index: i,
-                                    child: Semantics(
-                                      button: true,
-                                      label: action.label,
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
+                                children: [
+                                  for (
+                                    var flatIndex = 0, entryIdx = 0;
+                                    entryIdx < groupedResults.entries.length;
+                                    entryIdx++
+                                  )
+                                    ...() {
+                                      final entry = groupedResults.entries
+                                          .elementAt(entryIdx);
+                                      final category = entry.key;
+                                      final categoryActions = entry.value;
+                                      final items = <Widget>[];
+
+                                      items.add(
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            16,
+                                            16,
+                                            16,
+                                            8,
                                           ),
-                                          onTap: () => _select(action),
-                                          onHover: (_) => setState(
-                                            () => _selectedIndex = i,
+                                          child: Text(
+                                            category.toUpperCase(),
+                                            style: theme.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.primary,
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 1.2,
+                                                ),
                                           ),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: kSpacing12,
-                                              vertical: kSpacing10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: selected
-                                                  ? theme.colorScheme.primary
-                                                        .withValues(alpha: 0.15)
-                                                  : Colors.transparent,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  action.icon,
-                                                  size: 20,
-                                                  color: action.isDataResult
-                                                      ? theme
-                                                            .colorScheme
-                                                            .secondary
-                                                      : selected
-                                                      ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                      : theme
-                                                            .colorScheme
-                                                            .onSurface
-                                                            .withValues(
-                                                              alpha: 0.6,
-                                                            ),
-                                                ),
-                                                const SizedBox(
-                                                  width: kSpacing12,
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Text(
-                                                        action.label,
-                                                        style: theme
-                                                            .textTheme
-                                                            .bodyMedium
-                                                            ?.copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurface,
-                                                            ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                      if (action.subtitle !=
-                                                          null) ...[
-                                                        const SizedBox(
-                                                          height: 2,
+                                        ),
+                                      );
+
+                                      for (final action in categoryActions) {
+                                        final i = flatIndex++;
+                                        final selected = i == _selectedIndex;
+                                        items.add(
+                                          StaggeredFadeSlide(
+                                            index: i,
+                                            child: Semantics(
+                                              button: true,
+                                              label: action.label,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  onTap: () => _select(action),
+                                                  onHover: (_) => setState(
+                                                    () => _selectedIndex = i,
+                                                  ),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal:
+                                                              kSpacing12,
+                                                          vertical: kSpacing10,
                                                         ),
-                                                        Text(
-                                                          action.subtitle!,
-                                                          style: theme
-                                                              .textTheme
-                                                              .bodySmall
-                                                              ?.copyWith(
-                                                                color: theme
+                                                    decoration: BoxDecoration(
+                                                      color: selected
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                                .withValues(
+                                                                  alpha: 0.15,
+                                                                )
+                                                          : Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          action.icon,
+                                                          size: 20,
+                                                          color:
+                                                              action
+                                                                  .isDataResult
+                                                              ? theme
+                                                                    .colorScheme
+                                                                    .secondary
+                                                              : selected
+                                                              ? theme
+                                                                    .colorScheme
+                                                                    .primary
+                                                              : theme
                                                                     .colorScheme
                                                                     .onSurface
                                                                     .withValues(
                                                                       alpha:
-                                                                          0.5,
+                                                                          0.6,
                                                                     ),
-                                                              ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
                                                         ),
+                                                        const SizedBox(
+                                                          width: kSpacing12,
+                                                        ),
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                action.label,
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .bodyMedium
+                                                                    ?.copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .onSurface,
+                                                                    ),
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                              if (action
+                                                                      .subtitle !=
+                                                                  null) ...[
+                                                                const SizedBox(
+                                                                  height: 2,
+                                                                ),
+                                                                Text(
+                                                                  action
+                                                                      .subtitle!,
+                                                                  style: theme
+                                                                      .textTheme
+                                                                      .bodySmall
+                                                                      ?.copyWith(
+                                                                        color: theme
+                                                                            .colorScheme
+                                                                            .onSurface
+                                                                            .withValues(
+                                                                              alpha: 0.5,
+                                                                            ),
+                                                                      ),
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        if (!action
+                                                            .isDataResult)
+                                                          Text(
+                                                            '/>',
+                                                            style: theme
+                                                                .textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                  color: theme
+                                                                      .colorScheme
+                                                                      .onSurface
+                                                                      .withValues(
+                                                                        alpha:
+                                                                            0.3,
+                                                                      ),
+                                                                  fontFamily:
+                                                                      'monospace',
+                                                                ),
+                                                          ),
                                                       ],
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
-                                                if (!action.isDataResult)
-                                                  Text(
-                                                    '/>',
-                                                    style: theme
-                                                        .textTheme
-                                                        .bodySmall
-                                                        ?.copyWith(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onSurface
-                                                              .withValues(
-                                                                alpha: 0.3,
-                                                              ),
-                                                          fontFamily:
-                                                              'monospace',
-                                                        ),
-                                                  ),
-                                              ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
+                                        );
+                                      }
+                                      return items;
+                                    }(),
+                                ],
                               ),
                             ),
                         ],
