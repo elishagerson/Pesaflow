@@ -75,6 +75,8 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
+    final primaryColor = theme.colorScheme.primary;
+    final tertiaryColor = theme.colorScheme.tertiary;
 
     // Respect reduced motion: render children without the animated overlay
     if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
@@ -91,6 +93,8 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay> {
                   elapsedMs: _clock.elapsedMilliseconds,
                   speedFactor: widget.speedFactor,
                   baseColor: baseColor,
+                  primaryColor: primaryColor,
+                  tertiaryColor: tertiaryColor,
                 ),
               ),
             ),
@@ -106,11 +110,15 @@ class _LiquidGlassPainter extends CustomPainter {
   final int elapsedMs;
   final double speedFactor;
   final Color baseColor;
+  final Color primaryColor;
+  final Color tertiaryColor;
 
   _LiquidGlassPainter({
     required this.elapsedMs,
     required this.speedFactor,
     required this.baseColor,
+    required this.primaryColor,
+    required this.tertiaryColor,
   });
 
   @override
@@ -121,41 +129,58 @@ class _LiquidGlassPainter extends CustomPainter {
 
     // Original rate of change: 0.1 per second (0.0001 per millisecond).
     // Scrolling scales the apparent drift via speedFactor.
-    final time = elapsedMs * 0.0001 * speedFactor;
+    final time = elapsedMs * 0.00005 * speedFactor; // Slowed down slightly for aurora feel
 
-    // -- Highlight 1: drifting radial pool --
-    final px1 = 0.2 + 0.6 * (0.5 + 0.5 * sin(time * 2 * pi * 0.15));
-    final py1 = 0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.11 + 1.8));
+    // Aurora blob 1 (Primary)
+    final px1 = 0.5 + 0.5 * sin(time * 2 * pi * 0.15);
+    final py1 = 0.5 + 0.5 * cos(time * 2 * pi * 0.11 + 1.0);
 
-    final poolPaint = Paint()
+    final poolPaint1 = Paint()
       ..shader = RadialGradient(
         center: Alignment(px1 * 2 - 1, py1 * 2 - 1),
-        radius: 0.7,
+        radius: 1.2,
         colors: [
-          baseColor.withValues(alpha: 0.035),
-          baseColor.withValues(alpha: 0.015),
-          baseColor.withValues(alpha: 0.0),
+          primaryColor.withValues(alpha: 0.12),
+          primaryColor.withValues(alpha: 0.04),
+          primaryColor.withValues(alpha: 0.0),
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint1);
 
-    // -- Highlight 2: smaller secondary drift (opposite phase) --
-    final px2 = 0.1 + 0.8 * (0.5 + 0.5 * sin(time * 2 * pi * 0.09 + 3.2));
-    final py2 = 0.3 + 0.6 * (0.5 + 0.5 * cos(time * 2 * pi * 0.13 + 0.7));
+    // Aurora blob 2 (Tertiary)
+    final px2 = 0.5 + 0.6 * sin(time * 2 * pi * 0.09 + 2.0);
+    final py2 = 0.5 + 0.4 * cos(time * 2 * pi * 0.13 + 3.0);
 
     final poolPaint2 = Paint()
       ..shader = RadialGradient(
         center: Alignment(px2 * 2 - 1, py2 * 2 - 1),
-        radius: 0.5,
+        radius: 1.0,
         colors: [
-          baseColor.withValues(alpha: 0.025),
-          baseColor.withValues(alpha: 0.0),
+          tertiaryColor.withValues(alpha: 0.12),
+          tertiaryColor.withValues(alpha: 0.04),
+          tertiaryColor.withValues(alpha: 0.0),
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint2);
 
-    // -- Diagonal sheen (very faint moving reflection) --
-    final sheenT = (time * 2 * pi) % (2 * pi);
+    // Aurora blob 3 (Base/OnSurface)
+    final px3 = 0.5 + 0.4 * cos(time * 2 * pi * 0.12 + 4.5);
+    final py3 = 0.5 + 0.5 * sin(time * 2 * pi * 0.14 + 1.5);
+
+    final poolPaint3 = Paint()
+      ..shader = RadialGradient(
+        center: Alignment(px3 * 2 - 1, py3 * 2 - 1),
+        radius: 0.9,
+        colors: [
+          baseColor.withValues(alpha: 0.08),
+          baseColor.withValues(alpha: 0.02),
+          baseColor.withValues(alpha: 0.0),
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint3);
+
+    // Diagonal sheen (very faint moving reflection)
+    final sheenT = (time * 2 * pi * 2) % (2 * pi); // Sheen moves slightly faster
     final dx = size.width * (0.5 + 0.6 * sin(sheenT - pi / 2));
 
     final sheenPaint = Paint()
@@ -166,11 +191,11 @@ class _LiquidGlassPainter extends CustomPainter {
             colors: [
               Colors.transparent,
               Colors.transparent,
-              baseColor.withValues(alpha: 0.015),
+              Colors.white.withValues(alpha: 0.025),
               Colors.transparent,
               Colors.transparent,
             ],
-            stops: [0.0, 0.35, 0.5, 0.65, 1.0],
+            stops: const [0.0, 0.35, 0.5, 0.65, 1.0],
             transform: GradientRotation(0.3),
           ).createShader(
             Rect.fromLTWH(
@@ -186,6 +211,7 @@ class _LiquidGlassPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _LiquidGlassPainter oldDelegate) =>
       oldDelegate.elapsedMs != elapsedMs ||
-      oldDelegate.speedFactor != speedFactor ||
-      oldDelegate.baseColor != baseColor;
+      oldDelegate.baseColor != baseColor ||
+      oldDelegate.primaryColor != primaryColor ||
+      oldDelegate.tertiaryColor != tertiaryColor;
 }

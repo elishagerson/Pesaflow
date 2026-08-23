@@ -102,6 +102,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
         vertical: kSpacing40,
       ),
       child: GlassCard(
+        frosted: true,
         padding: const EdgeInsets.all(kSpacing20),
         child: SingleChildScrollView(
           child: Column(

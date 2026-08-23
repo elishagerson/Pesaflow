@@ -5,6 +5,7 @@ import 'package:flutter/physics.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class IosTabBar extends StatelessWidget {
   final int selectedIndex;
@@ -62,8 +63,8 @@ class IosTabBar extends StatelessWidget {
 
     final isDark = theme.brightness == Brightness.dark;
     final navBgColor = isDark
-        ? const Color(0xFF0F0F0F)
-        : theme.colorScheme.surface;
+        ? const Color(0xFF0F0F0F).withValues(alpha: 0.6)
+        : theme.colorScheme.surface.withValues(alpha: 0.7);
     final navFgColor = isDark ? Colors.white : theme.colorScheme.onSurface;
 
     return Container(
@@ -74,21 +75,13 @@ class IosTabBar extends StatelessWidget {
         left: minimized ? 24 : 16,
         right: minimized ? 24 : 16,
       ),
-      child: Container(
+      child: SizedBox(
         height: height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: navBgColor,
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.5)
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
+        child: GlassCard(
+          frosted: true,
+          borderRadius: 100,
+          backgroundColor: navBgColor,
+          elevation: CardElevation.medium,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
@@ -171,6 +164,7 @@ class IosTabBar extends StatelessWidget {
                 }, // builder
               ); // TweenAnimationBuilder
             }).toList(),
+          ),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -17,6 +18,7 @@ class GlassCard extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final VoidCallback? onTap;
   final bool showAccentStrip;
+  final bool frosted;
 
   const GlassCard({
     super.key,
@@ -32,6 +34,7 @@ class GlassCard extends StatefulWidget {
     this.padding,
     this.onTap,
     this.showAccentStrip = false,
+    this.frosted = false,
   });
 
   @override
@@ -107,51 +110,91 @@ class _GlassCardState extends State<GlassCard>
       CardElevation.none => [],
     };
 
-    // Clean card — standard rounded rect, optional thin border
+    // Clean card — standard rounded rect
+    Widget innerContent = Container(
+      decoration: BoxDecoration(
+        color: widget.backgroundGradient == null ? cardColor : null,
+        gradient: widget.backgroundGradient,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+      ),
+      child: Stack(
+        children: [
+          if (widget.accentColor != null &&
+              widget.onTap != null &&
+              widget.showAccentStrip)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: widget.accentWidth,
+                color: widget.accentColor!.withValues(alpha: 0.30),
+              ),
+            ),
+          Padding(
+            padding: (widget.padding ?? EdgeInsets.zero).add(
+              widget.accentColor != null &&
+                      widget.onTap != null &&
+                      widget.showAccentStrip
+                  ? EdgeInsets.only(top: widget.accentWidth + 2)
+                  : EdgeInsets.zero,
+            ),
+            child: widget.child,
+          ),
+          if (widget.onTap != null && !context.isReducedMotion)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    if (_controller.value == 0) return const SizedBox.shrink();
+                    return FractionalTranslation(
+                      translation: Offset((_controller.value * 2.5) - 1.25, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.0),
+                              Colors.white.withValues(
+                                  alpha: isDark ? 0.1 : 0.3),
+                              Colors.white.withValues(alpha: 0.0),
+                            ],
+                            stops: const [0.3, 0.5, 0.7],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+
+    if (widget.frosted) {
+      innerContent = ClipRRect(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+          child: innerContent,
+        ),
+      );
+    }
+
     Widget body = RepaintBoundary(
       child: Container(
         decoration: BoxDecoration(
-          color: widget.backgroundGradient == null ? cardColor : null,
-          gradient: widget.backgroundGradient,
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          border: widget.hasBorder
-              ? Border.all(
-                  color:
-                      widget.accentColor?.withValues(alpha: 0.20) ??
-                      appColors.cardBorder,
-                  width: 1.0,
-                )
-              : null,
           boxShadow: shadows,
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          child: Stack(
-            children: [
-              if (widget.accentColor != null &&
-                  widget.onTap != null &&
-                  widget.showAccentStrip)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: widget.accentWidth,
-                    color: widget.accentColor!.withValues(alpha: 0.30),
-                  ),
-                ),
-              Padding(
-                padding: (widget.padding ?? EdgeInsets.zero).add(
-                  widget.accentColor != null &&
-                          widget.onTap != null &&
-                          widget.showAccentStrip
-                      ? EdgeInsets.only(top: widget.accentWidth + 2)
-                      : EdgeInsets.zero,
-                ),
-                child: widget.child,
-              ),
-            ],
-          ),
+        child: CustomPaint(
+          foregroundPainter: widget.hasBorder
+              ? _GradientBorderPainter(widget.borderRadius, isDark)
+              : null,
+          child: innerContent,
         ),
       ),
     );
@@ -188,4 +231,33 @@ class _GlassCardState extends State<GlassCard>
     }
     return Semantics(container: true, label: 'Card', child: body);
   }
+}
+
+class _GradientBorderPainter extends CustomPainter {
+  final double radius;
+  final bool isDark;
+
+  _GradientBorderPainter(this.radius, this.isDark);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withValues(alpha: isDark ? 0.35 : 0.8),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.4],
+      ).createShader(rect);
+    canvas.drawRRect(rrect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }
