@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -148,7 +149,9 @@ class _ToastWidgetState extends State<_ToastWidget>
                       color: Colors.transparent,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Container(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                          child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: kSpacing20,
                             vertical: kSpacing12,
@@ -238,10 +241,10 @@ class _ToastWidgetState extends State<_ToastWidget>
                               ],
                             ],
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        ), // Container
+                      ), // BackdropFilter
+                    ), // ClipRRect
+                  ), // Material
                 ),
               ),
             );
