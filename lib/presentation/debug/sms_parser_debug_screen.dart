@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pesaflow/domain/sms/sms_processor.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
-import 'package:pesaflow/domain/sms/parsers/sms_parser_interface.dart';
 import 'package:pesaflow/domain/sms/provider_config.dart';
 import 'package:pesaflow/domain/sms/sms_classifier.dart';
-import 'package:pesaflow/domain/sms/deduplicator.dart';
-import 'package:pesaflow/domain/sms/parsers/generic_fallback_parser.dart';
-import 'package:pesaflow/domain/sms/models/sms_parsed.dart';
+import 'package:pesaflow/domain/models/sms_parsed.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 
 class SmsParserDebugScreen extends ConsumerStatefulWidget {
