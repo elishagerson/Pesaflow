@@ -1,217 +1,228 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
-/// Subtle animated glass sheen layered beneath [child].
+/// visionOS / iOS 17-style frosted glass overlay.
 ///
-/// Instead of running a perpetual `AnimationController.repeat()` (which forces
-/// a full repaint of the painter on every frame, 24/7), the overlay is driven
-/// by a [Stopwatch] and only repaints when its [speedFactor] or color changes
-/// (i.e. while the user is scrolling). A low-frequency ticker runs only while
-/// [speedFactor] differs from `1.0`, so the layer is completely inert at rest.
+/// Composition (top to bottom):
+/// 1. `BackdropFilter` blur + saturation boost — the core "material" look
+/// 2. Translucent tint wash (white in dark mode, ink in light mode)
+/// 3. Top-edge specular highlight — simulates light catching the glass rim
+/// 4. Hairline inner border — defines the sheet/card silhouette
+/// 5. [child] content
+///
+/// Performance contract (per AGENTS.md): reserved for overlays/sheets only —
+/// never wrap scrollable card lists. The entrance fade runs once (~350ms);
+/// afterwards the widget is fully inert. Reduced-motion users skip the fade.
 class LiquidGlassOverlay extends StatefulWidget {
   final Widget child;
-  final Color? accentColor;
-  final double speedFactor;
+  final Color? tintColor;
+  final double intensity;
+  final double blurSigma;
+  final bool showTopHighlight;
+  final bool showInnerBorder;
 
   const LiquidGlassOverlay({
     super.key,
     required this.child,
-    this.accentColor,
-    this.speedFactor = 1.0,
+    this.tintColor,
+    this.intensity = 1.0,
+    this.blurSigma = 24,
+    this.showTopHighlight = true,
+    this.showInnerBorder = true,
   });
 
   @override
   State<LiquidGlassOverlay> createState() => _LiquidGlassOverlayState();
 }
 
-class _LiquidGlassOverlayState extends State<LiquidGlassOverlay> {
-  final Stopwatch _clock = Stopwatch();
-  Timer? _ticker;
+class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _entrance;
 
   @override
   void initState() {
     super.initState();
-    _clock.start();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _syncTicker();
-  }
-
-  @override
-  void didUpdateWidget(LiquidGlassOverlay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.speedFactor == widget.speedFactor) return;
-    _syncTicker();
-  }
-
-  /// Drift the glass only while the user is actively scrolling.
-  void _syncTicker() {
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    final shouldRun = !reducedMotion && widget.speedFactor != 1.0;
-    if (shouldRun) {
-      _ticker ??= Timer.periodic(const Duration(milliseconds: 50), (_) {
-        if (!mounted) return;
-        setState(() {});
+    _entrance = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+      value: MediaQuery.maybeOf(context)?.disableAnimations ?? false
+          ? 1.0
+          : 0.0,
+    );
+    if (_entrance.value == 0.0) {
+      // Post-frame so the first frame paints content-only (no flash).
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _entrance.forward();
       });
-    } else {
-      _ticker?.cancel();
-      _ticker = null;
     }
   }
 
   @override
   void dispose() {
-    _ticker?.cancel();
-    _clock.stop();
+    _entrance.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baseColor = widget.accentColor ?? theme.colorScheme.onSurface;
-    final primaryColor = theme.colorScheme.primary;
-    final tertiaryColor = theme.colorScheme.tertiary;
+    final isDark = theme.brightness == Brightness.dark;
 
-    // Respect reduced motion: render children without the animated overlay
-    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
-      return widget.child;
-    }
+    // visionOS "regular" material: lighten on dark surfaces, darken on light.
+    final baseTint = widget.tintColor ??
+        (isDark
+            ? const Color(0xFFFFFFFF).withValues(alpha: 0.10)
+            : const Color(0xFFFBFBFD).withValues(alpha: 0.72));
 
     return RepaintBoundary(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: IgnorePointer(
-              child: CustomPaint(
-                painter: _LiquidGlassPainter(
-                  elapsedMs: _clock.elapsedMilliseconds,
-                  speedFactor: widget.speedFactor,
-                  baseColor: baseColor,
-                  primaryColor: primaryColor,
-                  tertiaryColor: tertiaryColor,
+      child: AnimatedBuilder(
+        animation: _entrance,
+        builder: (context, child) {
+          final e = Curves.easeOutCubic.transform(_entrance.value);
+          final k = e * widget.intensity;
+          if (k <= 0.01) return child!;
+
+          return Stack(
+            children: [
+              // ── 1+2. Frosted blur + saturation + tint wash ──
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.compose(
+                        outer: ImageFilter.blur(
+                          sigmaX: widget.blurSigma * k,
+                          sigmaY: widget.blurSigma * k,
+                          tileMode: TileMode.mirror,
+                        ),
+                        inner: ImageFilter.colorFilter(
+                          colorFilter: const ColorFilter.matrix(<double>[
+                            1.15, 0, 0, 0, 0, //
+                            0, 1.15, 0, 0, 0, //
+                            0, 0, 1.15, 0, 0, //
+                            0, 0, 0, 1, 0,
+                          ]),
+                        ),
+                      ),
+                      child: Container(
+                        color: baseTint.withValues(
+                          alpha: baseTint.a * k,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          widget.child,
-        ],
+
+              // ── 3. Specular top highlight ──
+              if (widget.showTopHighlight && k > 0.25)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 1.5,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Colors.white.withValues(alpha: 0),
+                            Colors.white.withValues(alpha: 0.35 * k),
+                            Colors.white.withValues(alpha: 0),
+                          ],
+                          stops: const [0.0, 0.5, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+              // ── 4. Hairline inner border ──
+              if (widget.showInnerBorder && k > 0.25)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: _HairlineBorderPainter(k: k, isDark: isDark),
+                    ),
+                  ),
+                ),
+
+              // ── 5. Content ──
+              Opacity(opacity: e.clamp(0.0, 1.0), child: child!),
+            ],
+          );
+        },
+        child: widget.child,
       ),
     );
   }
 }
 
-class _LiquidGlassPainter extends CustomPainter {
-  final int elapsedMs;
-  final double speedFactor;
-  final Color baseColor;
-  final Color primaryColor;
-  final Color tertiaryColor;
+/// Hairline stroke that reads as the physical edge of a glass pane.
+class _HairlineBorderPainter extends CustomPainter {
+  final double k;
+  final bool isDark;
 
-  _LiquidGlassPainter({
-    required this.elapsedMs,
-    required this.speedFactor,
-    required this.baseColor,
-    required this.primaryColor,
-    required this.tertiaryColor,
-  });
+  _HairlineBorderPainter({required this.k, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (size.width <= 0.0 || size.height <= 0.0) {
-      return;
-    }
+    if (size.isEmpty) return;
 
-    // Original rate of change: 0.1 per second (0.0001 per millisecond).
-    // Scrolling scales the apparent drift via speedFactor.
-    final time = elapsedMs * 0.00005 * speedFactor; // Slowed down slightly for aurora feel
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(
+      rect.deflate(0.5),
+      const Radius.circular(27),
+    );
 
-    // Aurora blob 1 (Primary)
-    final px1 = 0.5 + 0.5 * sin(time * 2 * pi * 0.15);
-    final py1 = 0.5 + 0.5 * cos(time * 2 * pi * 0.11 + 1.0);
-
-    final poolPaint1 = Paint()
-      ..shader = RadialGradient(
-        center: Alignment(px1 * 2 - 1, py1 * 2 - 1),
-        radius: 1.2,
-        colors: [
-          primaryColor.withValues(alpha: 0.12),
-          primaryColor.withValues(alpha: 0.04),
-          primaryColor.withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint1);
-
-    // Aurora blob 2 (Tertiary)
-    final px2 = 0.5 + 0.6 * sin(time * 2 * pi * 0.09 + 2.0);
-    final py2 = 0.5 + 0.4 * cos(time * 2 * pi * 0.13 + 3.0);
-
-    final poolPaint2 = Paint()
-      ..shader = RadialGradient(
-        center: Alignment(px2 * 2 - 1, py2 * 2 - 1),
-        radius: 1.0,
-        colors: [
-          tertiaryColor.withValues(alpha: 0.12),
-          tertiaryColor.withValues(alpha: 0.04),
-          tertiaryColor.withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint2);
-
-    // Aurora blob 3 (Base/OnSurface)
-    final px3 = 0.5 + 0.4 * cos(time * 2 * pi * 0.12 + 4.5);
-    final py3 = 0.5 + 0.5 * sin(time * 2 * pi * 0.14 + 1.5);
-
-    final poolPaint3 = Paint()
-      ..shader = RadialGradient(
-        center: Alignment(px3 * 2 - 1, py3 * 2 - 1),
-        radius: 0.9,
-        colors: [
-          baseColor.withValues(alpha: 0.08),
-          baseColor.withValues(alpha: 0.02),
-          baseColor.withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), poolPaint3);
-
-    // Diagonal sheen (very faint moving reflection)
-    final sheenT = (time * 2 * pi * 2) % (2 * pi); // Sheen moves slightly faster
-    final dx = size.width * (0.5 + 0.6 * sin(sheenT - pi / 2));
-
-    final sheenPaint = Paint()
-      ..shader =
-          LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.transparent,
-              Colors.transparent,
-              Colors.white.withValues(alpha: 0.025),
-              Colors.transparent,
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.35, 0.5, 0.65, 1.0],
-            transform: GradientRotation(0.3),
-          ).createShader(
-            Rect.fromLTWH(
-              dx - size.width * 0.4,
-              0,
-              size.width * 0.8,
-              size.height,
-            ),
-          );
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), sheenPaint);
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: (isDark ? 0.22 : 0.55) * k),
+            Colors.white.withValues(alpha: 0.04 * k),
+            Colors.white.withValues(alpha: (isDark ? 0.10 : 0.28) * k),
+          ],
+        ).createShader(rect),
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _LiquidGlassPainter oldDelegate) =>
-      oldDelegate.elapsedMs != elapsedMs ||
-      oldDelegate.baseColor != baseColor ||
-      oldDelegate.primaryColor != primaryColor ||
-      oldDelegate.tertiaryColor != tertiaryColor;
+  bool shouldRepaint(_HairlineBorderPainter oldDelegate) =>
+      oldDelegate.k != k || oldDelegate.isDark != isDark;
+}
+
+/// Ready-made visionOS sheet container: clip radius + glass + padding.
+class VisionOSSheet extends StatelessWidget {
+  final Widget child;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+
+  const VisionOSSheet({
+    super.key,
+    required this.child,
+    this.borderRadius = 28,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: LiquidGlassOverlay(
+        child: Padding(
+          padding: padding ?? EdgeInsets.zero,
+          child: child,
+        ),
+      ),
+    );
+  }
 }
