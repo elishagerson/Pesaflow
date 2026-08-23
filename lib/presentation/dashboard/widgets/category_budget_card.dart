@@ -80,7 +80,7 @@ class CategoryBudgetCard extends StatelessWidget {
                 ),
                 const SizedBox(height: kSpacing4),
                 Text(
-                  '${CurrencyFormatter.formatCents(budgetProgress.spentInPeriod)} / ${CurrencyFormatter.formatCents(allocated)}',
+                  '${CurrencyFormatter.formatCompact(budgetProgress.spentInPeriod)} / ${CurrencyFormatter.formatCompact(allocated)}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.ts(

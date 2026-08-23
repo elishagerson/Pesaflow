@@ -24,6 +24,18 @@ class CurrencyFormatter {
     }
   }
 
+  static String formatCompact(int amountInCents) {
+    final double value = amountInCents / 100.0;
+    if (value >= 1000000000) {
+      return '${currencyPrefix}${(value / 1000000000).toStringAsFixed(1).replaceAll('.0', '')}B';
+    } else if (value >= 1000000) {
+      return '${currencyPrefix}${(value / 1000000).toStringAsFixed(1).replaceAll('.0', '')}M';
+    } else if (value >= 1000) {
+      return '${currencyPrefix}${(value / 1000).toStringAsFixed(1).replaceAll('.0', '')}K';
+    }
+    return formatCents(amountInCents);
+  }
+
   /// Parses a user-input decimal string back into integer cents (e.g. "50,000.25" -> 5000025)
   /// Returns 0 if parsing fails.
   ///
