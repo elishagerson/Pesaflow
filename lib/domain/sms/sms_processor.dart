@@ -496,39 +496,6 @@ class SmsProcessor {
 
       await _transactionRepo.createTransaction(transaction);
 
-      // 8.2 Update account running balance
-      // If SMS provides balanceAfter, use it (authoritative).
-      // Otherwise compute running balance locally on the transaction's account.
-      final accountToUpdate = await _accountRepo.getAccountById(finalAccountId);
-      if (accountToUpdate != null) {
-        if (sms.balanceAfter != null) {
-          final reconciledAccount = accountToUpdate.copyWith(balance: sms.balanceAfter!);
-          await _accountRepo.updateAccount(reconciledAccount);
-        } else {
-          final currentBalance = accountToUpdate.balance;
-          int delta = 0;
-          switch (finalType) {
-            case 'income':
-            case 'loan':
-              delta = sms.amount;
-              break;
-            case 'expense':
-            case 'fee':
-            case 'airtime':
-              delta = -sms.amount;
-              break;
-            case 'transfer':
-              // For transfers, finalAccountId is the source account (money leaves)
-              delta = (sms.type == 'income') ? sms.amount : -sms.amount;
-              break;
-          }
-          if (delta != 0) {
-            final updatedAccount = accountToUpdate.copyWith(balance: currentBalance + delta);
-            await _accountRepo.updateAccount(updatedAccount);
-          }
-        }
-      }
-
       // 8.5 Recurring matching
       if (finalType == 'expense') {
         try {
