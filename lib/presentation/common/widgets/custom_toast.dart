@@ -245,9 +245,10 @@ class _ToastWidgetState extends State<_ToastWidget>
                       ), // BackdropFilter
                     ), // ClipRRect
                   ), // Material
-                ),
-              ),
-            );
+                ), // Center
+              ), // Opacity
+            ), // Transform.scale
+          ); // Transform.translate
           },
         ),
       ),
