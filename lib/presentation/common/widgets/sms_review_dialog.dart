@@ -14,6 +14,8 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 
 class SmsReviewDialog extends ConsumerStatefulWidget {
   final TransactionWithCategoryAndAccount item;
@@ -93,14 +95,14 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     }
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
       insetPadding: const EdgeInsets.symmetric(
         horizontal: kSpacing16,
         vertical: kSpacing40,
       ),
-      child: Padding(
+      child: GlassCard(
+        frosted: true,
         padding: const EdgeInsets.all(kSpacing20),
         child: SingleChildScrollView(
           child: Column(
@@ -195,7 +197,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
               const SizedBox(height: kSpacing8),
               TextField(
                 controller: _searchController,
-                decoration: InputDecoration(
+                decoration: context.inputDecoration(
                   hintText: 'Search categories...',
                   prefixIcon: const Icon(PesaFlowIcons.search, size: 18),
                   suffixIcon: _searchQuery.isNotEmpty
@@ -207,11 +209,6 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                           },
                         )
                       : null,
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
                 ),
                 onChanged: (v) =>
                     setState(() => _searchQuery = v.toLowerCase()),
@@ -293,36 +290,82 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _reject,
-                      icon: const Icon(PesaFlowIcons.close, size: 18),
-                      label: const Text('Reject'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.colorScheme.error,
-                        side: BorderSide(
-                          color: theme.colorScheme.error.withValues(alpha: 0.4),
-                        ),
+                    child: TactileSpringContainer(
+                      onTap: _reject,
+                      child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing12,
                         ),
-                        shape: RoundedRectangleBorder(
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
+                          border: BorderSide(
+                            color: theme.colorScheme.error.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              PesaFlowIcons.close,
+                              size: 18,
+                              color: theme.colorScheme.error,
+                            ),
+                            const SizedBox(width: kSpacing8),
+                            Text(
+                              'Reject',
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: theme.colorScheme.error,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(width: kSpacing12),
                   Expanded(
-                    child: FilledButton.icon(
-                      onPressed: _approve,
-                      icon: const Icon(PesaFlowIcons.check, size: 18),
-                      label: const Text('Approve'),
-                      style: FilledButton.styleFrom(
+                    child: TactileSpringContainer(
+                      onTap: _approve,
+                      child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: kSpacing12,
                         ),
-                        shape: RoundedRectangleBorder(
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
                           borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              PesaFlowIcons.check,
+                              size: 18,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                            const SizedBox(width: kSpacing8),
+                            Text(
+                              'Approve',
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
