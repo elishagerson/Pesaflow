@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -97,26 +97,14 @@ class ModernDialog extends StatelessWidget {
         horizontal: kSpacing24,
         vertical: kSpacing24,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28.0),
-        child: LiquidGlassOverlay(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface.withValues(alpha: 0.9),
-              borderRadius: BorderRadius.circular(28.0),
-              border: Border.all(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.11),
-                width: 1.0,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
+      child: GlassCard(
+        frosted: true,
+        borderRadius: 28.0,
+        backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.9),
+        hasBorder: true,
+        elevation: CardElevation.medium,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -195,8 +183,7 @@ class ModernDialog extends StatelessWidget {
               ],
             ),
           ), // Container
-        ), // LiquidGlassOverlay
-      ), // ClipRRect
-    );
+        ), // GlassCard
+      ); // Dialog
   }
 }

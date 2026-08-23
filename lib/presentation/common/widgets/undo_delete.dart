@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 
 class UndoDelete {
   /// Shows an undo SnackBar for 5 seconds.
@@ -19,19 +20,15 @@ class UndoDelete {
   }) async {
     final completer = Completer<bool>();
 
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message ?? '$entityName deleted'),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            if (!completer.isCompleted) completer.complete(true);
-          },
-        ),
-        duration: const Duration(seconds: 5),
-      ),
+    CustomToast.show(
+      context,
+      message: message ?? '$entityName deleted',
+      type: ToastType.info,
+      duration: const Duration(seconds: 5),
+      actionLabel: 'Undo',
+      onAction: () {
+        if (!completer.isCompleted) completer.complete(true);
+      },
     );
 
     final didUndo = await completer.future.timeout(

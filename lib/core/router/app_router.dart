@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/recurring/recurring_transaction_list_scree
 import 'package:pesaflow/presentation/savings_goals/savings_goal_list_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_form_screen.dart';
 import 'package:pesaflow/presentation/savings_goals/savings_goal_detail_screen.dart';
+import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'route_params.dart';
@@ -148,15 +149,12 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
           SystemNavigator.pop();
         } else {
           _lastBackPress = now;
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text('Press back again to exit'),
-                duration: Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+          CustomToast.show(
+            context,
+            message: 'Press back again to exit',
+            duration: const Duration(seconds: 2),
+            type: ToastType.info,
+          );
         }
       },
       child: Scaffold(

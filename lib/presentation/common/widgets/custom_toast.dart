@@ -14,6 +14,8 @@ class CustomToast {
     required String message,
     ToastType type = ToastType.info,
     Duration duration = const Duration(seconds: 3),
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
     final overlayState = Overlay.of(context);
     late OverlayEntry overlayEntry;
@@ -26,6 +28,8 @@ class CustomToast {
           overlayEntry.remove();
         },
         duration: duration,
+        actionLabel: actionLabel,
+        onAction: onAction,
       ),
     );
 
@@ -38,12 +42,16 @@ class _ToastWidget extends StatefulWidget {
   final ToastType type;
   final VoidCallback onDismiss;
   final Duration duration;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   const _ToastWidget({
     required this.message,
     required this.type,
     required this.onDismiss,
     required this.duration,
+    this.actionLabel,
+    this.onAction,
   });
 
   @override
@@ -198,6 +206,36 @@ class _ToastWidgetState extends State<_ToastWidget>
                                   maxLines: 2,
                                 ),
                               ),
+                              if (widget.actionLabel != null &&
+                                  widget.onAction != null) ...[
+                                const SizedBox(width: kSpacing8),
+                                Container(
+                                  height: 24,
+                                  width: 1,
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.1),
+                                ),
+                                const SizedBox(width: kSpacing4),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing12),
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () {
+                                    widget.onAction!();
+                                    _dismiss();
+                                  },
+                                  child: Text(
+                                    widget.actionLabel!.toUpperCase(),
+                                    style: context.ts(12,
+                                        fontWeight: FontWeight.bold,
+                                        color: brandColor),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),
