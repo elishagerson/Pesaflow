@@ -102,7 +102,6 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
         vertical: kSpacing40,
       ),
       child: GlassCard(
-        frosted: true,
         padding: const EdgeInsets.all(kSpacing20),
         child: SingleChildScrollView(
           child: Column(
@@ -299,7 +298,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                         decoration: BoxDecoration(
                           color: theme.colorScheme.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: BorderSide(
+                          border: Border.all(
                             color: theme.colorScheme.error.withValues(
                               alpha: 0.3,
                             ),
