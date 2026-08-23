@@ -1411,6 +1411,31 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
 
+              // Debug (dev only)
+              StaggeredFadeSlide(
+                index: 4,
+                child: IosListSection(
+                  header: 'Debug',
+                  rows: [
+                    TactileSpringContainer(
+                      onTap: () => context.push('/debug/sms-parser'),
+                      child: IosListRow(
+                        leading: Icon(
+                          Icons.bug_report,
+                          color: Colors.orange,
+                          size: 24,
+                        ),
+                        title: const Text('SMS Parser Debug'),
+                        subtitle: const Text(
+                          'Test SMS parsing pipeline step-by-step',
+                        ),
+                        onTap: () => context.push('/debug/sms-parser'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               // Footer
               const SizedBox(height: kSpacing40),
               Center(
