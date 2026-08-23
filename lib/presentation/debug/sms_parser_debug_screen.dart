@@ -7,6 +7,7 @@ import 'package:pesaflow/domain/sms/provider_config.dart';
 import 'package:pesaflow/domain/sms/sms_classifier.dart';
 import 'package:pesaflow/domain/sms/deduplicator.dart';
 import 'package:pesaflow/domain/sms/parsers/generic_fallback_parser.dart';
+import 'package:pesaflow/domain/sms/models/sms_parsed.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 
 class SmsParserDebugScreen extends ConsumerStatefulWidget {
