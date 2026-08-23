@@ -170,6 +170,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   }
 
   Widget _buildFrontTop(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,6 +232,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   }
 
   Widget _buildBackTop(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -295,6 +297,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
   }
 
   Widget _buildBottomButtons(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Expanded(
@@ -354,7 +357,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.account_balance_wallet_outlined,
                         color: theme.colorScheme.onSurface,
                         size: 18,
