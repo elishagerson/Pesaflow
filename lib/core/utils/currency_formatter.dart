@@ -27,11 +27,11 @@ class CurrencyFormatter {
   static String formatCompact(int amountInCents) {
     final double value = amountInCents / 100.0;
     if (value >= 1000000000) {
-      return '${currencyPrefix}${(value / 1000000000).toStringAsFixed(1).replaceAll('.0', '')}B';
+      return '$currencyPrefix${(value / 1000000000).toStringAsFixed(1).replaceAll('.0', '')}B';
     } else if (value >= 1000000) {
-      return '${currencyPrefix}${(value / 1000000).toStringAsFixed(1).replaceAll('.0', '')}M';
+      return '$currencyPrefix${(value / 1000000).toStringAsFixed(1).replaceAll('.0', '')}M';
     } else if (value >= 1000) {
-      return '${currencyPrefix}${(value / 1000).toStringAsFixed(1).replaceAll('.0', '')}K';
+      return '$currencyPrefix${(value / 1000).toStringAsFixed(1).replaceAll('.0', '')}K';
     }
     return formatCents(amountInCents);
   }
