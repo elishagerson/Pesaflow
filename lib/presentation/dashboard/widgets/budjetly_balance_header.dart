@@ -99,7 +99,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
     final isDark = theme.brightness == Brightness.dark;
     final cardColor = isDark
         ? const Color(0xFF1C1C1E)
-        : const Color(0xFF1C1C1E); // Always dark per screenshot
+        : theme.colorScheme.surface;
 
     return ClipPath(
       clipper: _TicketClipper(cutoutRadius: 12, cutoutOffset: 135),
@@ -143,7 +143,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                           (index) => Container(
                             width: 4,
                             height: 1,
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                           ),
                         ),
                       );
@@ -181,7 +181,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 style: context.ts(
                   16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
@@ -200,7 +200,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                         style: context.ts(
                           40,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: theme.colorScheme.onSurface,
                           letterSpacing: -1.0,
                         ),
                       ),
@@ -221,7 +221,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
             _isHidden
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
-            color: Colors.white.withValues(alpha: 0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],
@@ -237,7 +237,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
           style: context.ts(
             16,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
@@ -251,7 +251,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   'Total In',
                   style: context.ts(
                     13,
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -260,7 +260,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   style: context.ts(
                     18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -272,7 +272,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   'Total Out',
                   style: context.ts(
                     13,
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -281,7 +281,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                   style: context.ts(
                     18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -345,7 +345,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   alignment: Alignment.center,
@@ -354,7 +354,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                     children: [
                       const Icon(
                         Icons.account_balance_wallet_outlined,
-                        color: Colors.white,
+                        color: theme.colorScheme.onSurface,
                         size: 18,
                       ),
                       const SizedBox(width: 6),
@@ -366,7 +366,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                             style: context.ts(
                               14,
                               fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
