@@ -47,7 +47,8 @@ class TransactionFormScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<TransactionFormScreen> createState() => _TransactionFormScreenState();
+  ConsumerState<TransactionFormScreen> createState() =>
+      _TransactionFormScreenState();
 }
 
 class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
@@ -68,12 +69,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   bool _isSaving = false;
   Transaction? _existingTransaction;
 
-
-
   @override
   void initState() {
     super.initState();
-    _amountController.addListener(() { if (mounted) setState(() {}); });
+    _amountController.addListener(() {
+      if (mounted) setState(() {});
+    });
     _isEditMode = widget.transactionId != null;
     if (_isEditMode) {
       _loadExistingTransaction();
@@ -96,15 +97,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       if (widget.prefillAccountId != null) {
         _selectedAccountId = widget.prefillAccountId;
       }
-      if (widget.prefillDescription != null && widget.prefillDescription!.isNotEmpty) {
+      if (widget.prefillDescription != null &&
+          widget.prefillDescription!.isNotEmpty) {
         _descriptionController.text = widget.prefillDescription!;
       }
-      if (widget.prefillReference != null && widget.prefillReference!.isNotEmpty) {
+      if (widget.prefillReference != null &&
+          widget.prefillReference!.isNotEmpty) {
         _referenceController.text = widget.prefillReference!;
       }
       if (widget.prefillAmountCents != null && widget.prefillAmountCents! > 0) {
         final double baseValue = widget.prefillAmountCents! / 100.0;
-        _amountController.text = baseValue % 1 == 0 ? baseValue.toInt().toString() : baseValue.toString();
+        _amountController.text = baseValue % 1 == 0
+            ? baseValue.toInt().toString()
+            : baseValue.toString();
       }
 
       _loadLastUsedValues();
@@ -122,7 +127,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   Future<void> _loadLastUsedValues() async {
     final settingsRepo = ref.read(settingsRepositoryProvider);
     final lastAccountId = await settingsRepo.getLastAccountId();
-    final lastCategoryId = await settingsRepo.getLastCategoryId(_transactionType.toLowerCase());
+    final lastCategoryId = await settingsRepo.getLastCategoryId(
+      _transactionType.toLowerCase(),
+    );
     if (!mounted) return;
     setState(() {
       if (_selectedAccountId == null && lastAccountId != null) {
@@ -145,19 +152,27 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       _existingTransaction = match.transaction;
 
       final double baseValue = match.transaction.amount / 100.0;
-      _amountController.text = baseValue % 1 == 0 ? baseValue.toInt().toString() : baseValue.toString();
+      _amountController.text = baseValue % 1 == 0
+          ? baseValue.toInt().toString()
+          : baseValue.toString();
 
       _descriptionController.text = match.transaction.description;
       _referenceController.text = match.transaction.reference ?? '';
       _selectedAccountId = match.transaction.accountId;
       _selectedCategoryId = match.transaction.categoryId;
-      _transactionType = match.transaction.type[0].toUpperCase() + match.transaction.type.substring(1).toLowerCase();
+      _transactionType =
+          match.transaction.type[0].toUpperCase() +
+          match.transaction.type.substring(1).toLowerCase();
       _selectedDate = match.transaction.createdAt;
 
       if (!mounted) return;
     } catch (e) {
       if (!mounted) return;
-      CustomToast.show(context, message: 'Failed to load transaction', type: ToastType.error);
+      CustomToast.show(
+        context,
+        message: 'Failed to load transaction',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -170,19 +185,37 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       return;
     }
     if (_selectedAccountId == null) {
-      CustomToast.show(context, message: 'Please select a source account.', type: ToastType.error);
+      CustomToast.show(
+        context,
+        message: 'Please select a source account.',
+        type: ToastType.error,
+      );
       return;
     }
-    if (_transactionType == 'Transfer' && _selectedDestinationAccountId == null) {
-      CustomToast.show(context, message: 'Please select a destination account.', type: ToastType.error);
+    if (_transactionType == 'Transfer' &&
+        _selectedDestinationAccountId == null) {
+      CustomToast.show(
+        context,
+        message: 'Please select a destination account.',
+        type: ToastType.error,
+      );
       return;
     }
-    if (_transactionType == 'Transfer' && _selectedDestinationAccountId == _selectedAccountId) {
-      CustomToast.show(context, message: 'Source and destination accounts must be different.', type: ToastType.error);
+    if (_transactionType == 'Transfer' &&
+        _selectedDestinationAccountId == _selectedAccountId) {
+      CustomToast.show(
+        context,
+        message: 'Source and destination accounts must be different.',
+        type: ToastType.error,
+      );
       return;
     }
     if (_selectedCategoryId == null) {
-      CustomToast.show(context, message: 'Please select a category.', type: ToastType.error);
+      CustomToast.show(
+        context,
+        message: 'Please select a category.',
+        type: ToastType.error,
+      );
       return;
     }
 
@@ -193,13 +226,17 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final newTransaction = Transaction(
       id: existingTransaction?.id ?? const Uuid().v4(),
       accountId: _selectedAccountId!,
-      destinationAccountId: _transactionType == 'Transfer' ? _selectedDestinationAccountId : null,
+      destinationAccountId: _transactionType == 'Transfer'
+          ? _selectedDestinationAccountId
+          : null,
       categoryId: _selectedCategoryId!,
       trackerId: existingTransaction?.trackerId ?? trackerId,
       amount: cents,
       type: _transactionType.toLowerCase(),
       description: _descriptionController.text.trim(),
-      reference: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
+      reference: _referenceController.text.trim().isEmpty
+          ? null
+          : _referenceController.text.trim(),
       source: 'manual',
       createdAt: _selectedDate,
       updatedAt: DateTime.now(),
@@ -218,7 +255,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         settingsRepo.setLastAccountId(_selectedAccountId!);
       }
       if (_selectedCategoryId != null && _selectedCategoryId!.isNotEmpty) {
-        settingsRepo.setLastCategoryId(_transactionType.toLowerCase(), _selectedCategoryId!);
+        settingsRepo.setLastCategoryId(
+          _transactionType.toLowerCase(),
+          _selectedCategoryId!,
+        );
       }
 
       HapticFeedback.mediumImpact();
@@ -229,14 +269,22 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       ref.invalidate(netWorthProvider);
 
       if (mounted) {
-        CustomToast.show(context, message: 'Transaction saved!', type: ToastType.success);
+        CustomToast.show(
+          context,
+          message: 'Transaction saved!',
+          type: ToastType.success,
+        );
         context.pop();
       }
     } catch (e) {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
       setState(() => _isSaving = false);
-      CustomToast.show(context, message: 'Failed to save transaction: $e', type: ToastType.error);
+      CustomToast.show(
+        context,
+        message: 'Failed to save transaction: $e',
+        type: ToastType.error,
+      );
     }
   }
 
@@ -441,8 +489,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       },
     );
   }
-  
-
 
   Widget _buildTab(String title, Color activeColor, ThemeData theme) {
     final isSelected = _transactionType == title;
@@ -464,7 +510,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             style: context.ts(
               14,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-              color: isSelected ? activeColor : theme.colorScheme.onSurfaceVariant,
+              color: isSelected
+                  ? activeColor
+                  : theme.colorScheme.onSurfaceVariant,
             ),
             child: Text(title),
           ),
@@ -473,7 +521,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     );
   }
 
-  void _showCategorySheet(BuildContext context, ThemeData theme, AsyncValue<List<dynamic>> categoriesAsync) {
+  void _showCategorySheet(
+    BuildContext context,
+    ThemeData theme,
+    AsyncValue<List<dynamic>> categoriesAsync,
+  ) {
     IosBottomSheet.show(
       context: context,
       initialChildSize: 0.6,
@@ -493,7 +545,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             categoriesAsync.when(
               data: (categories) {
                 final filteredCategories = categories.where((cat) {
-                  return cat.type.toLowerCase() == _transactionType.toLowerCase();
+                  return cat.type.toLowerCase() ==
+                      _transactionType.toLowerCase();
                 }).toList();
 
                 return GridView.builder(
@@ -506,51 +559,20 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     childAspectRatio: 0.7,
                   ),
                   itemCount: filteredCategories.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == filteredCategories.length) {
-                        return GestureDetector(
-                          onTap: () async {
-                            final newCat = await showAddCategoryDialog(
-                              context,
-                              ref,
-                              initialType: _transactionType,
-                            );
-                            if (newCat != null) {
-                              _lastCategoryByType[_transactionType] = newCat.id;
-                              setState(() => _selectedCategoryId = newCat.id);
-                              if (context.mounted) Navigator.pop(context);
-                            }
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 56,
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(PesaFlowIcons.add, color: theme.colorScheme.primary),
-                              ),
-                              const SizedBox(height: kSpacing8),
-                              Text('Custom', style: context.ts(12, color: theme.colorScheme.primary, fontWeight: FontWeight.w600)),
-                            ],
-                          ),
-                        );
-                      }
-
-                      final cat = filteredCategories[index];
-                      final color = hexToColor(cat.color);
-                      final isSelected = cat.id == _selectedCategoryId;
-
+                  itemBuilder: (context, index) {
+                    if (index == filteredCategories.length) {
                       return GestureDetector(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          setState(() {
-                            _lastCategoryByType[_transactionType] = cat.id;
-                            _selectedCategoryId = cat.id;
-                          });
-                          Navigator.pop(context);
+                        onTap: () async {
+                          final newCat = await showAddCategoryDialog(
+                            context,
+                            ref,
+                            initialType: _transactionType,
+                          );
+                          if (newCat != null) {
+                            _lastCategoryByType[_transactionType] = newCat.id;
+                            setState(() => _selectedCategoryId = newCat.id);
+                            if (context.mounted) Navigator.pop(context);
+                          }
                         },
                         child: Column(
                           children: [
@@ -558,29 +580,95 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               width: 56,
                               height: 56,
                               decoration: BoxDecoration(
-                                color: isSelected ? color.withValues(alpha: 0.2) : theme.colorScheme.onSurface.withValues(alpha: 0.03),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.05,
+                                ),
                                 shape: BoxShape.circle,
-                                border: isSelected ? Border.all(color: color, width: 2) : null,
                               ),
-                              child: Icon(getCategoryIcon(cat.icon), color: isSelected ? color : theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                              child: Icon(
+                                PesaFlowIcons.add,
+                                color: theme.colorScheme.primary,
+                              ),
                             ),
                             const SizedBox(height: kSpacing8),
                             Text(
-                              cat.name,
-                              style: context.ts(11, fontWeight: isSelected ? FontWeight.bold : FontWeight.w500, color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
+                              'Custom',
+                              style: context.ts(
+                                12,
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
                       );
-                    },
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error: $e')),
-              ),
+                    }
+
+                    final cat = filteredCategories[index];
+                    final color = hexToColor(cat.color);
+                    final isSelected = cat.id == _selectedCategoryId;
+
+                    return GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        setState(() {
+                          _lastCategoryByType[_transactionType] = cat.id;
+                          _selectedCategoryId = cat.id;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? color.withValues(alpha: 0.2)
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.03,
+                                    ),
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(color: color, width: 2)
+                                  : null,
+                            ),
+                            child: Icon(
+                              getCategoryIcon(cat.icon),
+                              color: isSelected
+                                  ? color
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.7,
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: kSpacing8),
+                          Text(
+                            cat.name,
+                            style: context.ts(
+                              11,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.6,
+                                    ),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('Error: $e')),
+            ),
           ],
         ),
       ),
@@ -603,7 +691,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Add a Note', style: context.ts(20, fontWeight: FontWeight.bold)),
+            Text(
+              'Add a Note',
+              style: context.ts(20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: kSpacing24),
             TextFormField(
               controller: _descriptionController,
@@ -630,9 +721,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-                child: Text('Done', style: context.ts(16, fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Done',
+                  style: context.ts(16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -662,7 +758,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             CupertinoButton(
               child: const Text('Done'),
               onPressed: () => Navigator.of(context).pop(),
-            )
+            ),
           ],
         ),
       ),
@@ -681,7 +777,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     return TactileSpringContainer(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing16, vertical: kSpacing10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing16,
+          vertical: kSpacing10,
+        ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(100),
@@ -693,7 +792,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             const SizedBox(width: kSpacing8),
             Text(
               label,
-              style: context.ts(15, fontWeight: FontWeight.w600, color: textColor),
+              style: context.ts(
+                15,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
             ),
           ],
         ),
@@ -706,18 +809,31 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     final theme = Theme.of(context);
     final accounts = ref.watch(accountsStreamProvider).value ?? [];
     final categoriesAsync = ref.watch(categoriesFutureProvider);
-    
-    final selectedCatObj = _selectedCategoryId != null 
-        ? categoriesAsync.value?.where((c) => c.id == _selectedCategoryId).firstOrNull 
+
+    final selectedCatObj = _selectedCategoryId != null
+        ? categoriesAsync.value
+              ?.where((c) => c.id == _selectedCategoryId)
+              .firstOrNull
         : null;
-        
-    final amt = _amountController.text.isEmpty ? '0' : NumberFormat('#,###').format(int.tryParse(_amountController.text) ?? 0);
-    final amtColor = _transactionType == 'Expense' ? context.appColors.expenseColor : (_transactionType == 'Income' ? context.appColors.incomeColor : context.appColors.transferColor);
+
+    final amt = _amountController.text.isEmpty
+        ? '0'
+        : NumberFormat(
+            '#,###',
+          ).format(int.tryParse(_amountController.text) ?? 0);
+    final amtColor = _transactionType == 'Expense'
+        ? context.appColors.expenseColor
+        : (_transactionType == 'Income'
+              ? context.appColors.incomeColor
+              : context.appColors.transferColor);
 
     return Scaffold(
       backgroundColor: context.appColors.bgColor,
       appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Transaction' : 'New Transaction', style: context.ts(18, fontWeight: FontWeight.w600)),
+        title: Text(
+          _isEditMode ? 'Edit Transaction' : 'New Transaction',
+          style: context.ts(18, fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -739,15 +855,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: kSpacing32),
                     height: 48,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+                      color: theme.colorScheme.surfaceContainerHigh.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: const EdgeInsets.all(kSpacing4),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final tabWidth = constraints.maxWidth / 3;
-                        final selectedIndex = _transactionType == 'Expense' ? 0 : (_transactionType == 'Income' ? 1 : 2);
-                        
+                        final selectedIndex = _transactionType == 'Expense'
+                            ? 0
+                            : (_transactionType == 'Income' ? 1 : 2);
+
                         return Stack(
                           children: [
                             AnimatedPositioned(
@@ -759,11 +879,14 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               width: tabWidth,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: context.appColors.surfaceContainerHighest,
+                                  color:
+                                      context.appColors.surfaceContainerHighest,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.15),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.15,
+                                      ),
                                       blurRadius: 8,
                                       offset: const Offset(0, 2),
                                     ),
@@ -773,19 +896,31 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             ),
                             Row(
                               children: [
-                                _buildTab('Expense', context.appColors.expenseColor, theme),
-                                _buildTab('Income', context.appColors.incomeColor, theme),
-                                _buildTab('Transfer', context.appColors.transferColor, theme),
+                                _buildTab(
+                                  'Expense',
+                                  context.appColors.expenseColor,
+                                  theme,
+                                ),
+                                _buildTab(
+                                  'Income',
+                                  context.appColors.incomeColor,
+                                  theme,
+                                ),
+                                _buildTab(
+                                  'Transfer',
+                                  context.appColors.transferColor,
+                                  theme,
+                                ),
                               ],
                             ),
                           ],
                         );
-                      }
+                      },
                     ),
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Massive Hero Amount
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
@@ -793,49 +928,95 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         amt,
-                        style: context.ts(96, fontWeight: FontWeight.w700, color: amtColor, letterSpacing: -2),
+                        style: context.ts(
+                          96,
+                          fontWeight: FontWeight.w700,
+                          color: amtColor,
+                          letterSpacing: -2,
+                        ),
                       ),
                     ),
                   ),
                   if (_amountError != null)
                     Padding(
                       padding: const EdgeInsets.only(top: kSpacing8),
-                      child: Text(_amountError!, style: TextStyle(color: theme.colorScheme.error, fontSize: 14, fontWeight: FontWeight.w500)),
+                      child: Text(
+                        _amountError!,
+                        style: TextStyle(
+                          color: theme.colorScheme.error,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
 
                   const SizedBox(height: kSpacing16),
-                  
+
                   // Category Pill
                   TactileSpringContainer(
-                    onTap: () => _showCategorySheet(context, theme, categoriesAsync),
+                    onTap: () =>
+                        _showCategorySheet(context, theme, categoriesAsync),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing24, vertical: kSpacing12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing24,
+                        vertical: kSpacing12,
+                      ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                        color: theme.colorScheme.surfaceContainerHighest
+                            .withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
+                        border: Border.all(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.1,
+                          ),
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (selectedCatObj != null) ...[
-                            Icon(getCategoryIcon(selectedCatObj.icon), color: hexToColor(selectedCatObj.color), size: 22),
+                            Icon(
+                              getCategoryIcon(selectedCatObj.icon),
+                              color: hexToColor(selectedCatObj.color),
+                              size: 22,
+                            ),
                             const SizedBox(width: kSpacing12),
-                            Text(selectedCatObj.name, style: context.ts(18, fontWeight: FontWeight.bold)),
+                            Text(
+                              selectedCatObj.name,
+                              style: context.ts(
+                                18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ] else ...[
-                            Icon(PesaFlowIcons.category, color: theme.colorScheme.onSurfaceVariant, size: 22),
+                            Icon(
+                              PesaFlowIcons.category,
+                              color: theme.colorScheme.onSurfaceVariant,
+                              size: 22,
+                            ),
                             const SizedBox(width: kSpacing12),
-                            Text('Select Category', style: context.ts(18, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant)),
+                            Text(
+                              'Select Category',
+                              style: context.ts(
+                                18,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
                           ],
                           const SizedBox(width: kSpacing8),
-                          Icon(Icons.keyboard_arrow_down, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: kSpacing24),
-                  
+
                   // Quick Action Pills
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -846,9 +1027,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         _buildActionPill(
                           context: context,
                           icon: PesaFlowIcons.calendar,
-                          label: (_selectedDate.year == DateTime.now().year && _selectedDate.month == DateTime.now().month && _selectedDate.day == DateTime.now().day) ? 'Today' : DateFormat('MMM d').format(_selectedDate),
+                          label:
+                              (_selectedDate.year == DateTime.now().year &&
+                                  _selectedDate.month == DateTime.now().month &&
+                                  _selectedDate.day == DateTime.now().day)
+                              ? 'Today'
+                              : DateFormat('MMM d').format(_selectedDate),
                           onTap: () => _showDatePickerSheet(context),
-                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                          backgroundColor: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.04),
                           iconColor: theme.colorScheme.primary,
                           textColor: theme.colorScheme.onSurface,
                         ),
@@ -856,19 +1043,39 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         _buildActionPill(
                           context: context,
                           icon: PesaFlowIcons.label,
-                          label: _descriptionController.text.isEmpty ? 'Note' : 'Note Added',
+                          label: _descriptionController.text.isEmpty
+                              ? 'Note'
+                              : 'Note Added',
                           onTap: () => _showNoteSheet(context, theme),
-                          backgroundColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary.withValues(alpha: 0.15) : theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                          iconColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary : theme.colorScheme.primary,
-                          textColor: _descriptionController.text.isNotEmpty ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+                          backgroundColor:
+                              _descriptionController.text.isNotEmpty
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.15,
+                                )
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.04,
+                                ),
+                          iconColor: _descriptionController.text.isNotEmpty
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.primary,
+                          textColor: _descriptionController.text.isNotEmpty
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
                         ),
                         const SizedBox(width: kSpacing8),
                         _buildActionPill(
                           context: context,
                           icon: PesaFlowIcons.wallet,
-                          label: accounts.where((a) => a.id == _selectedAccountId).firstOrNull?.name ?? 'Account',
-                          onTap: () => _showAccountPickerSheet(context, accounts),
-                          backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                          label:
+                              accounts
+                                  .where((a) => a.id == _selectedAccountId)
+                                  .firstOrNull
+                                  ?.name ??
+                              'Account',
+                          onTap: () =>
+                              _showAccountPickerSheet(context, accounts),
+                          backgroundColor: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.04),
                           iconColor: theme.colorScheme.primary,
                           textColor: theme.colorScheme.onSurface,
                         ),
@@ -879,7 +1086,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 ],
               ),
             ),
-            
+
             // BOTTOM HALF: Integrated Numpad
             ModernNumpad(
               controller: _amountController,
