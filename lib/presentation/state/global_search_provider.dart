@@ -11,6 +11,7 @@ class SearchResult {
   final IconData icon;
   final Color color;
   final String route;
+  final String category;
 
   SearchResult({
     required this.title,
@@ -18,6 +19,7 @@ class SearchResult {
     required this.icon,
     required this.color,
     required this.route,
+    required this.category,
   });
 }
 
@@ -28,21 +30,29 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
   if (query.trim().length < 2) return [];
 
   final db = ref.read(databaseProvider);
-  final q = query.toLowerCase();
+  final words = query.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+  if (words.isEmpty) return [];
   final results = <SearchResult>[];
 
   try {
     final txns =
         await (db.select(db.transactions)
-              ..where(
-                (t) =>
-                    t.description.like('%$q%') |
-                    t.sender.like('%$q%') |
-                    t.recipient.like('%$q%') |
-                    t.reference.like('%$q%'),
-              )
+              ..where((t) {
+                Expression<bool>? condition;
+                for (final word in words) {
+                  final term = '%$word%';
+                  final wordCondition =
+                      t.description.like(term) |
+                      t.sender.like(term) |
+                      t.recipient.like(term) |
+                      t.reference.like(term);
+                  condition =
+                      condition == null ? wordCondition : condition & wordCondition;
+                }
+                return condition ?? const Constant(true);
+              })
               ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
-              ..limit(6))
+              ..limit(8))
             .get();
 
     for (final t in txns) {
@@ -65,6 +75,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
           icon: icon,
           color: color,
           route: '/transactions/${t.id}',
+          category: 'Transactions',
         ),
       );
     }
@@ -73,7 +84,15 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
   try {
     final budgets =
         await (db.select(db.budgets)
-              ..where((b) => b.name.like('%$q%'))
+              ..where((b) {
+                Expression<bool>? condition;
+                for (final word in words) {
+                  final term = '%$word%';
+                  final wordCondition = b.name.like(term);
+                  condition = condition == null ? wordCondition : condition & wordCondition;
+                }
+                return condition ?? const Constant(true);
+              })
               ..limit(6))
             .get();
 
@@ -86,6 +105,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
           icon: PesaFlowIcons.budgets,
           color: AppTheme.incomeColor,
           route: '/budgets/${b.id}',
+          category: 'Budgets',
         ),
       );
     }
@@ -94,7 +114,15 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
   try {
     final goals =
         await (db.select(db.savingsGoals)
-              ..where((g) => g.name.like('%$q%'))
+              ..where((g) {
+                Expression<bool>? condition;
+                for (final word in words) {
+                  final term = '%$word%';
+                  final wordCondition = g.name.like(term);
+                  condition = condition == null ? wordCondition : condition & wordCondition;
+                }
+                return condition ?? const Constant(true);
+              })
               ..limit(6))
             .get();
 
@@ -109,6 +137,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
           icon: PesaFlowIcons.goal,
           color: color,
           route: '/savings-goals/${g.id}',
+          category: 'Savings Goals',
         ),
       );
     }
@@ -117,9 +146,15 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
   try {
     final loans =
         await (db.select(db.loans)
-              ..where(
-                (l) => l.description.like('%$q%') | l.provider.like('%$q%'),
-              )
+              ..where((l) {
+                Expression<bool>? condition;
+                for (final word in words) {
+                  final term = '%$word%';
+                  final wordCondition = l.description.like(term) | l.provider.like(term);
+                  condition = condition == null ? wordCondition : condition & wordCondition;
+                }
+                return condition ?? const Constant(true);
+              })
               ..limit(6))
             .get();
 
@@ -134,6 +169,7 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
               ? AppTheme.incomeColor
               : AppTheme.transferColor,
           route: '/loans/${l.id}',
+          category: 'Loans',
         ),
       );
     }
