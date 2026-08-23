@@ -50,8 +50,9 @@ class NmbBankParser implements SmsParser {
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
-        // NMB default transaction tariff for Kimetumwa (sent money)
-        const int nmbTariff = 1500;
+        // NMB Tariff Guide (June 2026): EFT Outward to other Bank = 2,000 TZS
+        // NMB to NMB (internal) = FREE. Kimetumwa to phone number = mobile money = EFT outward.
+        const int nmbEftOutwardTariff = 2000;
 
         return SmsParsed(
           amount: amt,
@@ -62,7 +63,7 @@ class NmbBankParser implements SmsParser {
           balanceAfter: bal,
           timestamp: timestamp,
           rawSmsBody: text,
-          feeAmount: nmbTariff,
+          feeAmount: nmbEftOutwardTariff,
         );
       }
 
