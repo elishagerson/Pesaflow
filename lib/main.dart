@@ -581,7 +581,13 @@ class _PesaFlowAppState extends ConsumerState<PesaFlowApp>
                       ),
                     ),
                   if (ref.watch(paletteVisibilityProvider))
-                    const CommandPalette(),
+                    Overlay(
+                      initialEntries: [
+                        OverlayEntry(
+                          builder: (context) => const CommandPalette(),
+                        ),
+                      ],
+                    ),
                   if (_showOnboarding)
                     OnboardingOverlay(onComplete: _onOnboardingComplete),
                 ],

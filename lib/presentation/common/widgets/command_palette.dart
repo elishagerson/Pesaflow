@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
 import 'package:pesaflow/presentation/state/global_search_provider.dart';
@@ -224,7 +224,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
   void _select(_PaletteAction action) {
     ref.read(paletteVisibilityProvider.notifier).hide();
     ref.read(paletteQueryProvider.notifier).clear();
-    context.go(action.route);
+    appRouter.go(action.route);
   }
 
   void _dismiss() {
