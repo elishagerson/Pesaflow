@@ -7,6 +7,7 @@ class SmsParsed {
   final int? balanceAfter;
   final DateTime timestamp;
   final String rawSmsBody;
+  final int? feeAmount;
 
   const SmsParsed({
     required this.amount,
@@ -17,6 +18,7 @@ class SmsParsed {
     this.balanceAfter,
     required this.timestamp,
     required this.rawSmsBody,
+    this.feeAmount,
   });
 
   @override
