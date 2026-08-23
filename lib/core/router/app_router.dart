@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/presentation/analytics/analytics_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_list_screen.dart';
+import 'package:pesaflow/presentation/debug/sms_parser_debug_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_form_screen.dart';
 import 'package:pesaflow/presentation/budgets/budget_detail_screen.dart';
 import 'package:pesaflow/presentation/dashboard/dashboard_screen.dart';
@@ -606,6 +607,13 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       pageBuilder: (context, state) =>
           _springSlidePage(const SmsReviewScreen()),
+    ),
+
+    GoRoute(
+      path: '/debug/sms-parser',
+      parentNavigatorKey: _rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          _springSlidePage(const SmsParserDebugScreen()),
     ),
   ],
 );
