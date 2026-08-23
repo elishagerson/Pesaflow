@@ -39,6 +39,7 @@ class LiquidGlassOverlay extends StatefulWidget {
 class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _entrance;
+  bool _entranceStarted = false;
 
   @override
   void initState() {
@@ -46,11 +47,20 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
     _entrance = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
-      value: MediaQuery.maybeOf(context)?.disableAnimations ?? false
-          ? 1.0
-          : 0.0,
     );
-    if (_entrance.value == 0.0) {
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_entranceStarted) return;
+    _entranceStarted = true;
+
+    final reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) {
+      _entrance.value = 1.0;
+    } else {
       // Post-frame so the first frame paints content-only (no flash).
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _entrance.forward();
