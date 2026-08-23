@@ -129,6 +129,39 @@ class NmbBankParser implements SmsParser {
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
+        // NMB Tariff: ATM On-Us withdrawal fees (tiered by amount)
+        // Only apply if merchant mentions POS/ATM/WITHDRAWAL
+        int? posFee;
+        final lowerMerchant = merchant.toLowerCase();
+        if (lowerMerchant.contains('pos') ||
+            lowerMerchant.contains('atm') ||
+            lowerMerchant.contains('withdrawal') ||
+            lowerMerchant.contains('wakala') ||
+            lowerMerchant.contains('agent')) {
+          // Tiered fees per NMB Tariff Guide June 2026
+          if (amt <= 19999) {
+            posFee = 1100;
+          } else if (amt <= 39999) {
+            posFee = 1400;
+          } else if (amt <= 99999) {
+            posFee = 1600;
+          } else if (amt <= 199999) {
+            posFee = 1800;
+          } else if (amt <= 299999) {
+            posFee = 2200;
+          } else if (amt <= 399999) {
+            posFee = 2400;
+          } else if (amt <= 499999) {
+            posFee = 2700;
+          } else if (amt <= 599999) {
+            posFee = 2800;
+          } else if (amt <= 799999) {
+            posFee = 3000;
+          } else {
+            posFee = 4000; // 800,000 - 1,000,000
+          }
+        }
+
         return SmsParsed(
           amount: amt,
           type: 'expense',
@@ -138,6 +171,7 @@ class NmbBankParser implements SmsParser {
           balanceAfter: bal,
           timestamp: timestamp,
           rawSmsBody: text,
+          feeAmount: posFee,
         );
       }
 

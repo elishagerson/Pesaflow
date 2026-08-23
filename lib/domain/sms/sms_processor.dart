@@ -497,7 +497,10 @@ class SmsProcessor {
       await _transactionRepo.createTransaction(transaction);
 
       // Create separate fee transaction if SMS includes a tariff/fee amount
-      if (sms.feeAmount != null && sms.feeAmount! > 0) {
+      // ONLY when SMS does NOT provide balanceAfter (carrier balance is authoritative and includes fees).
+      if (sms.feeAmount != null &&
+          sms.feeAmount! > 0 &&
+          sms.balanceAfter == null) {
         final feeTransaction = Transaction(
           id: const Uuid().v4(),
           accountId: finalAccountId,
