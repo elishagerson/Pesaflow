@@ -283,7 +283,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                       ),
                       margin: const EdgeInsets.all(kSpacing24),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface,
+                        color: theme.colorScheme.surface.withValues(alpha: 0.60),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: theme.colorScheme.onSurface.withValues(

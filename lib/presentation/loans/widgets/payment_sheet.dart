@@ -240,7 +240,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
               child: LiquidGlassOverlay(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.94),
+                    color: theme.colorScheme.surface.withValues(alpha: 0.78),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),

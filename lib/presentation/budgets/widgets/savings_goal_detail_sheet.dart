@@ -169,7 +169,7 @@ class _SavingsGoalDetailSheetState
             child: LiquidGlassOverlay(
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.94),
+                  color: theme.colorScheme.surface.withValues(alpha: 0.60),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24),
                   ),

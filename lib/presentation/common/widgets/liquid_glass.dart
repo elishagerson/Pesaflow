@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
@@ -100,20 +99,10 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
                 child: IgnorePointer(
                   child: ClipRect(
                     child: BackdropFilter(
-                      filter: ImageFilter.compose(
-                        outer: ImageFilter.blur(
-                          sigmaX: widget.blurSigma * k,
-                          sigmaY: widget.blurSigma * k,
-                          tileMode: TileMode.mirror,
-                        ),
-                        inner: ImageFilter.colorFilter(
-                          colorFilter: const ColorFilter.matrix(<double>[
-                            1.15, 0, 0, 0, 0, //
-                            0, 1.15, 0, 0, 0, //
-                            0, 0, 1.15, 0, 0, //
-                            0, 0, 0, 1, 0,
-                          ]),
-                        ),
+                      filter: ImageFilter.blur(
+                        sigmaX: widget.blurSigma * k,
+                        sigmaY: widget.blurSigma * k,
+                        tileMode: TileMode.mirror,
                       ),
                       child: Container(
                         color: baseTint.withValues(

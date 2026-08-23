@@ -305,7 +305,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             child: LiquidGlassOverlay(
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
+                  color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.75),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24),
                   ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
-import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
+/// Flat grouped-list container.
+///
+/// Intentionally NOT frosted: this wraps per-day/per-item groups inside
+/// long scrolling ListViews, where `BackdropFilter` would run per group and
+/// blow the frame budget (AGENTS.md: blur reserved for overlays/sheets).
 class GlassListContainer extends StatelessWidget {
   final Widget child;
 
@@ -14,21 +18,16 @@ class GlassListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = context.appColors;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
+        color: appColors.surfaceContainer,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: appColors.scaffoldLine,
           width: 0.5,
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: LiquidGlassOverlay(
-          intensity: 0.85,
-          child: child,
-        ),
-      ),
+      child: child,
     );
   }
 }

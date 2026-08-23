@@ -171,7 +171,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh.withValues(
-              alpha: 0.94,
+              alpha: 0.78,
             ),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
