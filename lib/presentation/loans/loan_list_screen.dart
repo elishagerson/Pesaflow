@@ -66,126 +66,157 @@ class LoanListScreen extends ConsumerWidget {
                           margin: const EdgeInsets.only(right: 12),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.08,
+                            ),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.arrow_back_ios_new, color: theme.colorScheme.onSurface, size: 18),
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: theme.colorScheme.onSurface,
+                            size: 18,
+                          ),
                         ),
                       ),
                     Text(
                       'Loans',
-                      style: context.ts(34, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
+                      style: context.ts(
+                        34,
+                        fontWeight: FontWeight.w800,
+                        color: theme.colorScheme.onSurface,
+                        letterSpacing: -0.5,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Outstanding header
-              totalOutstandingAsync.when(
-                data: (total) => total > 0
-                    ? _buildOutstandingHeader(context, total, ref)
-                    : const SizedBox.shrink(),
-                loading: () => const SizedBox.shrink(),
-                error: (_, _) => const SizedBox.shrink(),
-              ),
-
-              // Loan burden warning
-              recentLoanCountAsync.when(
-                data: (count) => count >= 3
-                    ? _buildLoanBurdenWarning(context, count)
-                    : const SizedBox.shrink(),
-                loading: () => const SizedBox.shrink(),
-                error: (_, _) => const SizedBox.shrink(),
-              ),
-
-              // Active Loans section
-              activeLoansAsync.when(
-                data: (activeLoans) {
-                  final paidData = paidLoansAsync.asData?.value;
-                  if (activeLoans.isEmpty &&
-                      (paidData == null || paidData.isEmpty)) {
-                    return _buildEmptyState(theme);
-                  }
-                  if (activeLoans.isEmpty) return const SizedBox.shrink();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionHeader(
-                        context,
-                        'Active Loans',
-                        '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
-                        context.appColors.expenseColor,
-                      ),
-                      const SizedBox(height: kSpacing4),
-                      GlassListContainer(
-                        child: Column(
-                          children: activeLoans.asMap().entries.map((entry) =>
-                              _buildLoanTile(context, entry.value, theme, entry.key, activeLoans.length)
-                          ).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing20),
-                    ],
-                  );
-                },
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: kSpacing4,
-                    vertical: kSpacing8,
-                  ),
-                  child: Column(
-                    children: [
-                      SkeletonCard(height: 110),
-                      SizedBox(height: kSpacing8),
-                      SkeletonCard(height: 110),
-                      SizedBox(height: kSpacing8),
-                      SkeletonCard(height: 110),
-                      SizedBox(height: kSpacing8),
-                      SkeletonCard(height: 110),
-                    ],
-                  ),
+                totalOutstandingAsync.when(
+                  data: (total) => total > 0
+                      ? _buildOutstandingHeader(context, total, ref)
+                      : const SizedBox.shrink(),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
                 ),
-                 error: (e, _) => ErrorState(
-                  title: 'Failed to load loans',
-                  message: e.toString(),
-                  onRetry: () {
-                    ref.invalidate(activeLoansStreamProvider);
+
+                // Loan burden warning
+                recentLoanCountAsync.when(
+                  data: (count) => count >= 3
+                      ? _buildLoanBurdenWarning(context, count)
+                      : const SizedBox.shrink(),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
+
+                // Active Loans section
+                activeLoansAsync.when(
+                  data: (activeLoans) {
+                    final paidData = paidLoansAsync.asData?.value;
+                    if (activeLoans.isEmpty &&
+                        (paidData == null || paidData.isEmpty)) {
+                      return _buildEmptyState(theme);
+                    }
+                    if (activeLoans.isEmpty) return const SizedBox.shrink();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionHeader(
+                          context,
+                          'Active Loans',
+                          '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',
+                          context.appColors.expenseColor,
+                        ),
+                        const SizedBox(height: kSpacing4),
+                        GlassListContainer(
+                          child: Column(
+                            children: activeLoans
+                                .asMap()
+                                .entries
+                                .map(
+                                  (entry) => _buildLoanTile(
+                                    context,
+                                    entry.value,
+                                    theme,
+                                    entry.key,
+                                    activeLoans.length,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing20),
+                      ],
+                    );
                   },
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: kSpacing4,
+                      vertical: kSpacing8,
+                    ),
+                    child: Column(
+                      children: [
+                        SkeletonCard(height: 110),
+                        SizedBox(height: kSpacing8),
+                        SkeletonCard(height: 110),
+                        SizedBox(height: kSpacing8),
+                        SkeletonCard(height: 110),
+                        SizedBox(height: kSpacing8),
+                        SkeletonCard(height: 110),
+                      ],
+                    ),
+                  ),
+                  error: (e, _) => ErrorState(
+                    title: 'Failed to load loans',
+                    message: e.toString(),
+                    onRetry: () {
+                      ref.invalidate(activeLoansStreamProvider);
+                    },
+                  ),
                 ),
-              ),
 
-              // Paid Loans section
-              paidLoansAsync.when(
-                data: (paidLoans) {
-                  if (paidLoans.isEmpty) return const SizedBox.shrink();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionHeader(
-                        context,
-                        'Paid Loans',
-                        '${paidLoans.length} paid',
-                        context.appColors.incomeColor,
-                      ),
-                      const SizedBox(height: kSpacing4),
-                      GlassListContainer(
-                        child: Column(
-                          children: paidLoans.asMap().entries.map((entry) =>
-                              _buildPaidLoanTile(context, entry.value, theme, entry.key, paidLoans.length)
-                          ).toList(),
+                // Paid Loans section
+                paidLoansAsync.when(
+                  data: (paidLoans) {
+                    if (paidLoans.isEmpty) return const SizedBox.shrink();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionHeader(
+                          context,
+                          'Paid Loans',
+                          '${paidLoans.length} paid',
+                          context.appColors.incomeColor,
                         ),
-                      ),
-                      const SizedBox(height: kSpacing20),
-                    ],
-                  );
-                },
-                loading: () => const SizedBox.shrink(),
-                error: (_, _) => const SizedBox.shrink(),
-              ),
-            ],
+                        const SizedBox(height: kSpacing4),
+                        GlassListContainer(
+                          child: Column(
+                            children: paidLoans
+                                .asMap()
+                                .entries
+                                .map(
+                                  (entry) => _buildPaidLoanTile(
+                                    context,
+                                    entry.value,
+                                    theme,
+                                    entry.key,
+                                    paidLoans.length,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing20),
+                      ],
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -386,7 +417,13 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoanTile(BuildContext context, Loan loan, ThemeData theme, int index, int totalCount) {
+  Widget _buildLoanTile(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    int index,
+    int totalCount,
+  ) {
     final onSurface = theme.colorScheme.onSurface;
     final ratio = loan.amount > 0 ? loan.remaining / loan.amount : 1.0;
     final progressColor = ratio > 0.5
@@ -440,9 +477,8 @@ class LoanListScreen extends ConsumerWidget {
                                       vertical: kSpacing2,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: theme.colorScheme.primary.withValues(
-                                        alpha: 0.1,
-                                      ),
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
@@ -477,7 +513,8 @@ class LoanListScreen extends ConsumerWidget {
                                     .labelMicro
                                     .copyWith(
                                       fontWeight: FontWeight.w800,
-                                      color: loan.dueAt!.isBefore(DateTime.now())
+                                      color:
+                                          loan.dueAt!.isBefore(DateTime.now())
                                           ? context.appColors.expenseColor
                                           : context.appColors.textMedium,
                                     ),
@@ -531,7 +568,13 @@ class LoanListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaidLoanTile(BuildContext context, Loan loan, ThemeData theme, int index, int totalCount) {
+  Widget _buildPaidLoanTile(
+    BuildContext context,
+    Loan loan,
+    ThemeData theme,
+    int index,
+    int totalCount,
+  ) {
     return Hero(
       tag: 'loan-${loan.id}',
       child: TactileSpringContainer(
@@ -540,88 +583,89 @@ class LoanListScreen extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(kSpacing14),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(kSpacing8),
-                decoration: BoxDecoration(
-                  color: context.appColors.incomeColor.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  PesaFlowIcons.success,
-                  color: context.appColors.incomeColor,
-                  size: 18,
-                ),
-              ),
-              const SizedBox(width: kSpacing12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      loan.description ?? loan.sender ?? 'Loan',
-                      style: context.ts(14, fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kSpacing8),
+                    decoration: BoxDecoration(
+                      color: context.appColors.incomeColor.withValues(
+                        alpha: 0.12,
+                      ),
+                      shape: BoxShape.circle,
                     ),
-                    const SizedBox(height: kSpacing4),
-                    Row(
+                    child: Icon(
+                      PesaFlowIcons.success,
+                      color: context.appColors.incomeColor,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (loan.category != null) ...[
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kSpacing8,
-                              vertical: kSpacing2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.appColors.incomeColor.withValues(
-                                alpha: 0.1,
+                        Text(
+                          loan.description ?? loan.sender ?? 'Loan',
+                          style: context.ts(14, fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: kSpacing4),
+                        Row(
+                          children: [
+                            if (loan.category != null) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing8,
+                                  vertical: kSpacing2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.appColors.incomeColor
+                                      .withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  loan.category!,
+                                  style: context.ts(
+                                    11,
+                                    color: context.appColors.incomeColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              loan.category!,
+                              const SizedBox(width: kSpacing6),
+                            ],
+                            Text(
+                              'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
                               style: context.ts(
                                 11,
-                                color: context.appColors.incomeColor,
-                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: kSpacing6),
-                        ],
-                        Text(
-                          'Paid ${loan.paidAt != null ? DateFormatter.relative(loan.paidAt!) : ''}',
-                          style: context.ts(
-                            11,
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.6,
-                            ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    CurrencyFormatter.formatCents(loan.amount),
+                    style: context.ts(14, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              Text(
-                CurrencyFormatter.formatCents(loan.amount),
-                style: context.ts(14, fontWeight: FontWeight.bold),
+            ),
+            if (index < totalCount - 1)
+              Divider(
+                height: 1,
+                thickness: 0.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                indent: 14 + 34 + 12,
               ),
-            ],
-          ),
+          ],
         ),
-        if (index < totalCount - 1)
-          Divider(
-            height: 1,
-            thickness: 0.5,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-            indent: 14 + 34 + 12,
-          ),
-      ],
-    ),
-  ),
-);
-}
+      ),
+    );
+  }
 }

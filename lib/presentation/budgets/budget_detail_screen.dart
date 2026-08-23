@@ -289,19 +289,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   color: theme.colorScheme.primary,
                                   theme: theme,
                                   subtitle: () {
-                                    final rolled = bp.currentPeriod?.rolledFrom ?? 0;
+                                    final rolled =
+                                        bp.currentPeriod?.rolledFrom ?? 0;
                                     if (rolled == 0) return null;
                                     final prefix = rolled > 0 ? '+' : '-';
                                     final label = rolled > 0 ? 'roll' : 'def';
                                     return Text(
                                       '$prefix Tsh ${rolled.abs() ~/ 100} $label',
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: rolled > 0 
-                                            ? context.appColors.incomeColor 
-                                            : context.appColors.expenseColor,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: rolled > 0
+                                                ? context.appColors.incomeColor
+                                                : context
+                                                      .appColors
+                                                      .expenseColor,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     );
                                   }(),
                                 ),

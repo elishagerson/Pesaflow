@@ -47,15 +47,26 @@ class SavingsGoalListScreen extends ConsumerWidget {
                         margin: const EdgeInsets.only(right: 12),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.08,
+                          ),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.arrow_back_ios_new, color: theme.colorScheme.onSurface, size: 18),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: theme.colorScheme.onSurface,
+                          size: 18,
+                        ),
                       ),
                     ),
                   Text(
                     'Savings Goals',
-                    style: context.ts(34, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5),
+                    style: context.ts(
+                      34,
+                      fontWeight: FontWeight.w800,
+                      color: theme.colorScheme.onSurface,
+                      letterSpacing: -0.5,
+                    ),
                   ),
                 ],
               ),
@@ -63,7 +74,8 @@ class SavingsGoalListScreen extends ConsumerWidget {
             Expanded(
               child: SkeletonCrossfade(
                 isLoading:
-                    savingsGoalsAsync is AsyncLoading && !savingsGoalsAsync.hasValue,
+                    savingsGoalsAsync is AsyncLoading &&
+                    !savingsGoalsAsync.hasValue,
                 skeleton: const Padding(
                   padding: EdgeInsets.all(kSpacing16),
                   child: Column(
@@ -79,72 +91,83 @@ class SavingsGoalListScreen extends ConsumerWidget {
                   ),
                 ),
                 child: savingsGoalsAsync.when(
-          data: (goals) {
-            if (goals.isEmpty) {
-              return _buildEmptyState(context, theme);
-            }
+                  data: (goals) {
+                    if (goals.isEmpty) {
+                      return _buildEmptyState(context, theme);
+                    }
 
-            int totalTarget = 0;
-            for (final goal in goals) {
-              totalTarget += goal.targetAmount;
-            }
-            final overallPct = totalTarget > 0
-                ? (totalSaved / totalTarget).clamp(0.0, 1.0)
-                : 0.0;
+                    int totalTarget = 0;
+                    for (final goal in goals) {
+                      totalTarget += goal.targetAmount;
+                    }
+                    final overallPct = totalTarget > 0
+                        ? (totalSaved / totalTarget).clamp(0.0, 1.0)
+                        : 0.0;
 
-            return RefreshIndicator(
-              color: theme.colorScheme.primary,
-              backgroundColor: theme.colorScheme.surfaceContainerHigh,
-              onRefresh: () async {
-                ref.invalidate(savingsGoalsStreamProvider);
-                ref.invalidate(savingsGoalsTotalSavedProvider);
-              },
-              child: SingleChildScrollView(
-                key: const PageStorageKey('savings_goal_list'),
-                padding: const EdgeInsets.all(kSpacing16),
-                child: Column(
-                  children: [
-                    _buildSummaryCard(
-                      context,
-                      theme,
-                      totalSaved,
-                      totalTarget,
-                      overallPct,
-                    ),
-                    const SizedBox(height: kSpacing20),
-                    Text(
-                      'ACTIVE GOALS',
-                      style: context.ts(
-                        13,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
+                    return RefreshIndicator(
+                      color: theme.colorScheme.primary,
+                      backgroundColor: theme.colorScheme.surfaceContainerHigh,
+                      onRefresh: () async {
+                        ref.invalidate(savingsGoalsStreamProvider);
+                        ref.invalidate(savingsGoalsTotalSavedProvider);
+                      },
+                      child: SingleChildScrollView(
+                        key: const PageStorageKey('savings_goal_list'),
+                        padding: const EdgeInsets.all(kSpacing16),
+                        child: Column(
+                          children: [
+                            _buildSummaryCard(
+                              context,
+                              theme,
+                              totalSaved,
+                              totalTarget,
+                              overallPct,
+                            ),
+                            const SizedBox(height: kSpacing20),
+                            Text(
+                              'ACTIVE GOALS',
+                              style: context.ts(
+                                13,
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            const SizedBox(height: kSpacing12),
+                            GlassListContainer(
+                              child: Column(
+                                children: goals
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (entry) => _buildGoalCard(
+                                        context,
+                                        ref,
+                                        entry.value,
+                                        theme,
+                                        entry.key,
+                                        goals.length,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ],
                         ),
-                        letterSpacing: 0.3,
                       ),
-                    ),
-                    const SizedBox(height: kSpacing12),
-                    GlassListContainer(
-                      child: Column(
-                        children: goals.asMap().entries.map((entry) =>
-                            _buildGoalCard(context, ref, entry.value, theme, entry.key, goals.length)
-                        ).toList(),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (err, _) =>
+                      Center(child: Text('Error loading savings goals: $err')),
                 ),
               ),
-            );
-          },
-          loading: () => const SizedBox.shrink(),
-          error: (err, _) =>
-              Center(child: Text('Error loading savings goals: $err')),
+            ),
+          ],
         ),
       ),
-      ),
-    ],
-  ),
-),
       floatingActionButton: PremiumExtendedFab(
         onPressed: () => context.push('/savings-goals/add'),
         label: 'New Goal',

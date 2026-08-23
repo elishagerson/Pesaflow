@@ -470,502 +470,529 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         }
       },
       child: Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            IosNavBar(
-              title: isEditing ? 'Edit Budget' : 'New Budget',
-              largeTitle: false,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      categoriesAsync.maybeWhen(
-                        data: (cats) => _buildBudgetHero(theme, cats),
-                        orElse: () => _buildBudgetHero(theme, []),
-                      ),
-                      const SizedBox(height: kSpacing16),
-                      sectionLabel('BUDGET DETAILS'),
-                      StaggeredFadeSlide(
-                        index: 0,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          child: GlassCard(
-                            padding: const EdgeInsets.all(kSpacing16),
-                            borderRadius: AppTheme.radiusCard,
-                            child: Column(
-                              children: [
-                                _InteractiveInputRow(
-                                  controller: _nameController,
-                                  label: 'Budget Name',
-                                  hint: 'e.g. Monthly Food',
-                                  icon: PesaFlowIcons.label,
-                                  textCapitalization: TextCapitalization.words,
-                                  errorText: _nameError,
-                                  onChanged: (_) =>
-                                      setState(() => _nameError = null),
-                                ),
-                                const SizedBox(height: kSpacing16),
-                                categoriesAsync.when(
-                                  data: (cats) =>
-                                      _buildCategorySelector(cats, theme),
-                                  loading: () =>
-                                      const LinearProgressIndicator(),
-                                  error: (e, _) => Text('Error: $e'),
-                                ),
-                                const SizedBox(height: kSpacing8),
-                                _InteractiveInputRow(
-                                  controller: _amountController,
-                                  label: 'Budget Amount (Tsh)',
-                                  hint: 'e.g. 300000',
-                                  icon: PesaFlowIcons.cash,
-                                  keyboardType: TextInputType.number,
-                                  errorText: _amountError,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(fontWeight: FontWeight.w500),
-                                  onChanged: (_) =>
-                                      setState(() => _amountError = null),
-                                ),
-                              ],
-                            ),
-                          ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              IosNavBar(
+                title: isEditing ? 'Edit Budget' : 'New Budget',
+                largeTitle: false,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        categoriesAsync.maybeWhen(
+                          data: (cats) => _buildBudgetHero(theme, cats),
+                          orElse: () => _buildBudgetHero(theme, []),
                         ),
-                      ),
-                      const SizedBox(height: kSpacing8),
-                      sectionLabel('PERIOD'),
-                      StaggeredFadeSlide(
-                        index: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          child: GlassCard(
-                            padding: const EdgeInsets.all(kSpacing6),
-                            borderRadius: AppTheme.radiusCard,
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: CupertinoSlidingSegmentedControl<String>(
-                                groupValue: _period,
-                                backgroundColor: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.05),
-                                thumbColor: theme.colorScheme.surface,
-                                children: {
-                                  'weekly': Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing10,
-                                      vertical: kSpacing8,
-                                    ),
-                                    child: Text(
-                                      'Week',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: _period == 'weekly'
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ),
-                                  'biweekly': Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing10,
-                                      vertical: kSpacing8,
-                                    ),
-                                    child: Text(
-                                      '2 Wk',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: _period == 'biweekly'
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ),
-                                  'monthly': Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing10,
-                                      vertical: kSpacing8,
-                                    ),
-                                    child: Text(
-                                      'Month',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: _period == 'monthly'
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ),
-                                  'yearly': Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing10,
-                                      vertical: kSpacing8,
-                                    ),
-                                    child: Text(
-                                      'Year',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: _period == 'yearly'
-                                                ? theme.colorScheme.primary
-                                                : theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ),
-                                },
-                                onValueChanged: (v) {
-                                  if (v != null) setState(() => _period = v);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing8),
-                      sectionLabel('START DATE'),
-                      StaggeredFadeSlide(
-                        index: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          child: GlassCard(
-                            padding: const EdgeInsets.all(kSpacing8),
-                            borderRadius: AppTheme.radiusCard,
-                            child: ModernDateSelector(
-                              labelText: 'Start Date',
-                              value: _startDate,
-                              prefixIcon: PesaFlowIcons.calendar,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2030),
-                              onChanged: (d) => setState(() => _startDate = d),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing8),
-                      IosListSection(
-                        header: 'ROLLOVER',
-                        rows: [
-                          IosListRow(
-                            leading: _buildLeadingIcon(
-                              PesaFlowIcons.replay,
-                              Colors.purple,
-                            ),
-                            title: const Text('Enable Rollover'),
-                            subtitle: const Text(
-                              'Unused budget carries to next period',
-                            ),
-                            trailing: CupertinoSwitch(
-                              value: _rollover,
-                              activeTrackColor: theme.colorScheme.primary,
-                              onChanged: (v) => setState(() {
-                                _rollover = v;
-                                if (v && _rolloverType == 'none') {
-                                  _rolloverType = 'all';
-                                }
-                              }),
-                            ),
-                          ),
-                        ],
-                      ),
-                      AnimatedSize(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        child: _rollover
-                            ? Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kSpacing16,
-                                  right: kSpacing16,
-                                  top: kSpacing8,
-                                ),
-                                child: GlassCard(
-                                  padding: const EdgeInsets.all(kSpacing6),
-                                  borderRadius: AppTheme.radiusCard,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: CupertinoSlidingSegmentedControl<String>(
-                                          groupValue: _rolloverType,
-                                          backgroundColor: theme
-                                              .colorScheme
-                                              .onSurface
-                                              .withValues(alpha: 0.05),
-                                          thumbColor: theme.colorScheme.surface,
-                                          children: {
-                                            'all': Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: kSpacing12,
-                                                vertical: kSpacing8,
-                                              ),
-                                              child: Text(
-                                                'All',
-                                                style: theme.textTheme.labelMedium
-                                                    ?.copyWith(
-                                                      fontWeight: FontWeight.bold,
-                                                      color: _rolloverType == 'all'
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                    ),
-                                              ),
-                                            ),
-                                            'capped': Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: kSpacing12,
-                                                vertical: kSpacing8,
-                                              ),
-                                              child: Text(
-                                                'Capped',
-                                                style: theme.textTheme.labelMedium
-                                                    ?.copyWith(
-                                                      fontWeight: FontWeight.bold,
-                                                      color:
-                                                          _rolloverType == 'capped'
-                                                          ? theme
-                                                                .colorScheme
-                                                                .primary
-                                                          : theme
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                    ),
-                                              ),
-                                            ),
-                                          },
-                                          onValueChanged: (v) {
-                                            if (v != null) {
-                                              setState(() => _rolloverType = v);
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      AnimatedSize(
-                                        duration: const Duration(milliseconds: 250),
-                                        curve: Curves.easeInOut,
-                                        child: _rolloverType == 'capped'
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(top: kSpacing10),
-                                                child: _InteractiveInputRow(
-                                                  controller: _capController,
-                                                  label: 'Max Rollover (Tsh)',
-                                                  hint: 'e.g. 50000',
-                                                  icon: PesaFlowIcons.upcoming,
-                                                  keyboardType: TextInputType.number,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                ),
-                                              )
-                                            : const SizedBox.shrink(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ),
-                      const SizedBox(height: kSpacing8),
-                      sectionLabel('ALERT THRESHOLD'),
-                      StaggeredFadeSlide(
-                        index: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          child: GlassCard(
+                        const SizedBox(height: kSpacing16),
+                        sectionLabel('BUDGET DETAILS'),
+                        StaggeredFadeSlide(
+                          index: 0,
+                          child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
+                              horizontal: kSpacing16,
                             ),
-                            borderRadius: AppTheme.radiusCard,
-                            elevation: CardElevation.medium,
-                            child: Builder(
-                              builder: (context) {
-                                final Color thresholdColor = _threshold >= 0.85
-                                    ? context.appColors.expenseColor
-                                    : (_threshold >= 0.75
-                                          ? Colors.amber
-                                          : context.appColors.incomeColor);
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        _buildLeadingIcon(
-                                          PesaFlowIcons.notification,
-                                          thresholdColor,
-                                        ),
-                                        const SizedBox(width: kSpacing12),
-                                        Expanded(
-                                          child: Text(
-                                            'Notify when spending reaches',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurface
-                                                      .withValues(alpha: 0.7),
-                                                ),
-                                          ),
-                                        ),
-                                        AnimatedDefaultTextStyle(
-                                          duration: const Duration(
-                                            milliseconds: 200,
-                                          ),
-                                          style: theme.textTheme.titleMedium!
-                                              .copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: thresholdColor,
-                                              ),
-                                          child: Text(
-                                            '${(_threshold * 100).round()}%',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: kSpacing12),
-                                    SliderTheme(
-                                      data: SliderTheme.of(context).copyWith(
-                                        trackHeight: 4,
-                                        activeTrackColor: thresholdColor,
-                                        inactiveTrackColor: thresholdColor
-                                            .withValues(alpha: 0.2),
-                                        thumbColor: thresholdColor,
-                                        overlayColor: thresholdColor.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        thumbShape: const RoundSliderThumbShape(
-                                          enabledThumbRadius: 8,
-                                        ),
-                                        overlayShape:
-                                            const RoundSliderOverlayShape(
-                                              overlayRadius: 16,
-                                            ),
-                                        valueIndicatorShape:
-                                            const RectangularSliderValueIndicatorShape(),
-                                        valueIndicatorColor: thresholdColor,
-                                        valueIndicatorTextStyle:
-                                            context.ts(
-                                              12,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      child: Slider(
-                                        value: _threshold,
-                                        min: 0.5,
-                                        max: 1.0,
-                                        divisions: 10,
-                                        label: '${(_threshold * 100).round()}%',
-                                        onChanged: (v) =>
-                                            setState(() => _threshold = v),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: kSpacing32),
-                      StaggeredFadeSlide(
-                        index: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing16,
-                          ),
-                          child: TactileSpringContainer(
-                            onTap: _save,
-                            child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              alignment: Alignment.center,
-                              decoration: ShapeDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    theme.colorScheme.primary,
-                                    theme.colorScheme.primary.withValues(
-                                      alpha: 0.8,
-                                    ),
-                                  ],
-                                ),
-                                shape: const SquircleBorder(borderRadius: 24.0),
-                                shadows: [
-                                  BoxShadow(
-                                    color: theme.colorScheme.primary.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                            child: GlassCard(
+                              padding: const EdgeInsets.all(kSpacing16),
+                              borderRadius: AppTheme.radiusCard,
+                              child: Column(
+                                children: [
+                                  _InteractiveInputRow(
+                                    controller: _nameController,
+                                    label: 'Budget Name',
+                                    hint: 'e.g. Monthly Food',
+                                    icon: PesaFlowIcons.label,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    errorText: _nameError,
+                                    onChanged: (_) =>
+                                        setState(() => _nameError = null),
+                                  ),
+                                  const SizedBox(height: kSpacing16),
+                                  categoriesAsync.when(
+                                    data: (cats) =>
+                                        _buildCategorySelector(cats, theme),
+                                    loading: () =>
+                                        const LinearProgressIndicator(),
+                                    error: (e, _) => Text('Error: $e'),
+                                  ),
+                                  const SizedBox(height: kSpacing8),
+                                  _InteractiveInputRow(
+                                    controller: _amountController,
+                                    label: 'Budget Amount (Tsh)',
+                                    hint: 'e.g. 300000',
+                                    icon: PesaFlowIcons.cash,
+                                    keyboardType: TextInputType.number,
+                                    errorText: _amountError,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                    onChanged: (_) =>
+                                        setState(() => _amountError = null),
                                   ),
                                 ],
                               ),
-                              child: _isSaving
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(
-                                      isEditing
-                                          ? 'Update Budget'
-                                          : 'Create Budget',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                    ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: kSpacing40),
-                    ],
+                        const SizedBox(height: kSpacing8),
+                        sectionLabel('PERIOD'),
+                        StaggeredFadeSlide(
+                          index: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
+                            child: GlassCard(
+                              padding: const EdgeInsets.all(kSpacing6),
+                              borderRadius: AppTheme.radiusCard,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: CupertinoSlidingSegmentedControl<String>(
+                                  groupValue: _period,
+                                  backgroundColor: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.05),
+                                  thumbColor: theme.colorScheme.surface,
+                                  children: {
+                                    'weekly': Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing10,
+                                        vertical: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        'Week',
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: _period == 'weekly'
+                                                  ? theme.colorScheme.primary
+                                                  : theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                    'biweekly': Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing10,
+                                        vertical: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        '2 Wk',
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: _period == 'biweekly'
+                                                  ? theme.colorScheme.primary
+                                                  : theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                    'monthly': Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing10,
+                                        vertical: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        'Month',
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: _period == 'monthly'
+                                                  ? theme.colorScheme.primary
+                                                  : theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                    'yearly': Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing10,
+                                        vertical: kSpacing8,
+                                      ),
+                                      child: Text(
+                                        'Year',
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: _period == 'yearly'
+                                                  ? theme.colorScheme.primary
+                                                  : theme
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                  },
+                                  onValueChanged: (v) {
+                                    if (v != null) setState(() => _period = v);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        sectionLabel('START DATE'),
+                        StaggeredFadeSlide(
+                          index: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
+                            child: GlassCard(
+                              padding: const EdgeInsets.all(kSpacing8),
+                              borderRadius: AppTheme.radiusCard,
+                              child: ModernDateSelector(
+                                labelText: 'Start Date',
+                                value: _startDate,
+                                prefixIcon: PesaFlowIcons.calendar,
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2030),
+                                onChanged: (d) =>
+                                    setState(() => _startDate = d),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        IosListSection(
+                          header: 'ROLLOVER',
+                          rows: [
+                            IosListRow(
+                              leading: _buildLeadingIcon(
+                                PesaFlowIcons.replay,
+                                Colors.purple,
+                              ),
+                              title: const Text('Enable Rollover'),
+                              subtitle: const Text(
+                                'Unused budget carries to next period',
+                              ),
+                              trailing: CupertinoSwitch(
+                                value: _rollover,
+                                activeTrackColor: theme.colorScheme.primary,
+                                onChanged: (v) => setState(() {
+                                  _rollover = v;
+                                  if (v && _rolloverType == 'none') {
+                                    _rolloverType = 'all';
+                                  }
+                                }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: _rollover
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: kSpacing16,
+                                    right: kSpacing16,
+                                    top: kSpacing8,
+                                  ),
+                                  child: GlassCard(
+                                    padding: const EdgeInsets.all(kSpacing6),
+                                    borderRadius: AppTheme.radiusCard,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: CupertinoSlidingSegmentedControl<String>(
+                                            groupValue: _rolloverType,
+                                            backgroundColor: theme
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.05),
+                                            thumbColor:
+                                                theme.colorScheme.surface,
+                                            children: {
+                                              'all': Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing12,
+                                                      vertical: kSpacing8,
+                                                    ),
+                                                child: Text(
+                                                  'All',
+                                                  style: theme
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            _rolloverType ==
+                                                                'all'
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                      ),
+                                                ),
+                                              ),
+                                              'capped': Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing12,
+                                                      vertical: kSpacing8,
+                                                    ),
+                                                child: Text(
+                                                  'Capped',
+                                                  style: theme
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            _rolloverType ==
+                                                                'capped'
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                      ),
+                                                ),
+                                              ),
+                                            },
+                                            onValueChanged: (v) {
+                                              if (v != null) {
+                                                setState(
+                                                  () => _rolloverType = v,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        AnimatedSize(
+                                          duration: const Duration(
+                                            milliseconds: 250,
+                                          ),
+                                          curve: Curves.easeInOut,
+                                          child: _rolloverType == 'capped'
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        top: kSpacing10,
+                                                      ),
+                                                  child: _InteractiveInputRow(
+                                                    controller: _capController,
+                                                    label: 'Max Rollover (Tsh)',
+                                                    hint: 'e.g. 50000',
+                                                    icon:
+                                                        PesaFlowIcons.upcoming,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        sectionLabel('ALERT THRESHOLD'),
+                        StaggeredFadeSlide(
+                          index: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
+                            child: GlassCard(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              borderRadius: AppTheme.radiusCard,
+                              elevation: CardElevation.medium,
+                              child: Builder(
+                                builder: (context) {
+                                  final Color thresholdColor =
+                                      _threshold >= 0.85
+                                      ? context.appColors.expenseColor
+                                      : (_threshold >= 0.75
+                                            ? Colors.amber
+                                            : context.appColors.incomeColor);
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          _buildLeadingIcon(
+                                            PesaFlowIcons.notification,
+                                            thresholdColor,
+                                          ),
+                                          const SizedBox(width: kSpacing12),
+                                          Expanded(
+                                            child: Text(
+                                              'Notify when spending reaches',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withValues(alpha: 0.7),
+                                                  ),
+                                            ),
+                                          ),
+                                          AnimatedDefaultTextStyle(
+                                            duration: const Duration(
+                                              milliseconds: 200,
+                                            ),
+                                            style: theme.textTheme.titleMedium!
+                                                .copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: thresholdColor,
+                                                ),
+                                            child: Text(
+                                              '${(_threshold * 100).round()}%',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: kSpacing12),
+                                      SliderTheme(
+                                        data: SliderTheme.of(context).copyWith(
+                                          trackHeight: 4,
+                                          activeTrackColor: thresholdColor,
+                                          inactiveTrackColor: thresholdColor
+                                              .withValues(alpha: 0.2),
+                                          thumbColor: thresholdColor,
+                                          overlayColor: thresholdColor
+                                              .withValues(alpha: 0.1),
+                                          thumbShape:
+                                              const RoundSliderThumbShape(
+                                                enabledThumbRadius: 8,
+                                              ),
+                                          overlayShape:
+                                              const RoundSliderOverlayShape(
+                                                overlayRadius: 16,
+                                              ),
+                                          valueIndicatorShape:
+                                              const RectangularSliderValueIndicatorShape(),
+                                          valueIndicatorColor: thresholdColor,
+                                          valueIndicatorTextStyle: context.ts(
+                                            12,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        child: Slider(
+                                          value: _threshold,
+                                          min: 0.5,
+                                          max: 1.0,
+                                          divisions: 10,
+                                          label:
+                                              '${(_threshold * 100).round()}%',
+                                          onChanged: (v) =>
+                                              setState(() => _threshold = v),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing32),
+                        StaggeredFadeSlide(
+                          index: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                            ),
+                            child: TactileSpringContainer(
+                              onTap: _save,
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                alignment: Alignment.center,
+                                decoration: ShapeDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      theme.colorScheme.primary,
+                                      theme.colorScheme.primary.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                    ],
+                                  ),
+                                  shape: const SquircleBorder(
+                                    borderRadius: 24.0,
+                                  ),
+                                  shadows: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: _isSaving
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        isEditing
+                                            ? 'Update Budget'
+                                            : 'Create Budget',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing40),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

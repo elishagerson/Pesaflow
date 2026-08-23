@@ -23,9 +23,10 @@ class CategoryBudgetCard extends StatelessWidget {
     final appColors = context.appColors;
 
     final pct = budgetProgress.percentage;
-    final allocated = budgetProgress.currentPeriod?.allocated ?? budgetProgress.budget.amount;
+    final allocated =
+        budgetProgress.currentPeriod?.allocated ?? budgetProgress.budget.amount;
     final isOverBudget = pct > 1.0;
-    
+
     // Choose color based on budget progress
     final Color progressColor = isOverBudget
         ? appColors.expenseColor
@@ -57,7 +58,9 @@ class CategoryBudgetCard extends StatelessWidget {
                   style: context.ts(
                     11,
                     fontWeight: FontWeight.w700,
-                    color: isOverBudget ? appColors.expenseColor : appColors.textMedium,
+                    color: isOverBudget
+                        ? appColors.expenseColor
+                        : appColors.textMedium,
                   ),
                 ),
               ],
@@ -92,7 +95,9 @@ class CategoryBudgetCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: pct.clamp(0.0, 1.0),
                     minHeight: 4,
-                    backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                    backgroundColor: theme.colorScheme.onSurface.withValues(
+                      alpha: 0.05,
+                    ),
                     valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                   ),
                 ),

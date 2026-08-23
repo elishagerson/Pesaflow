@@ -53,20 +53,26 @@ class _Interactive3DCardState extends State<Interactive3DCard>
       TweenSequenceItem(tween: ConstantTween(0.0), weight: 300),
       // 300 → 650ms: tilt right-up
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.0,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 350,
       ),
       // 650 → 1000ms: tilt left-down
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: -1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 1.0,
+          end: -1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 350,
       ),
       // 1000 → 1300ms: settle to center
       TweenSequenceItem(
-        tween: Tween(begin: -1.0, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: -1.0,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 300,
       ),
     ]).animate(_introController);
@@ -147,9 +153,7 @@ class _Interactive3DCardState extends State<Interactive3DCard>
             borderRadius: BorderRadius.circular(widget.borderRadius),
             boxShadow: [
               BoxShadow(
-                color: widget.shadowColor.withValues(
-                  alpha: 0.12,
-                ),
+                color: widget.shadowColor.withValues(alpha: 0.12),
                 blurRadius: 12.0,
                 offset: const Offset(0, 4.0),
               ),

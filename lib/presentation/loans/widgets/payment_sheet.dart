@@ -446,9 +446,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     prefixIcon: Icon(
                                       PesaFlowIcons.edit,
                                       size: 20,
-                                      color: onSurface.withValues(
-                                        alpha: 0.32,
-                                      ),
+                                      color: onSurface.withValues(alpha: 0.32),
                                     ),
                                   ),
                                 ),
@@ -783,7 +781,8 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                                 if (sheetContext.mounted) {
                                                   CustomToast.show(
                                                     sheetContext,
-                                                    message: 'Payment recorded!',
+                                                    message:
+                                                        'Payment recorded!',
                                                     type: ToastType.success,
                                                   );
                                                   if (sheetContext.mounted) {
@@ -924,9 +923,7 @@ Widget _buildAmountField({
               fontWeight: FontWeight.bold,
               color: onSurface,
             ),
-            decoration: context.inputDecoration(
-              hintText: 'Enter amount',
-            ),
+            decoration: context.inputDecoration(hintText: 'Enter amount'),
             onChanged: (val) {
               setSheetState(() {});
             },

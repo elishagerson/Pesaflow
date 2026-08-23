@@ -47,18 +47,12 @@ class ModernDialog extends StatelessWidget {
           iconColor: iconColor,
         );
         if (reduced) {
-          return FadeTransition(
-            opacity: anim1,
-            child: dialog,
-          );
+          return FadeTransition(opacity: anim1, child: dialog);
         }
         final curve = CurvedAnimation(parent: anim1, curve: Curves.easeOutBack);
         return ScaleTransition(
           scale: curve,
-          child: FadeTransition(
-            opacity: anim1,
-            child: dialog,
-          ),
+          child: FadeTransition(opacity: anim1, child: dialog),
         );
       },
     );

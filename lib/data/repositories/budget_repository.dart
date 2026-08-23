@@ -53,7 +53,11 @@ class BudgetRepository {
     double notificationThreshold = 0.8,
   }) async {
     final budgetId = _uuid.v4();
-    final normalizedStart = DateTime(startDate.year, startDate.month, startDate.day);
+    final normalizedStart = DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+    );
     final periodEnd = BudgetEngine.computePeriodEnd(normalizedStart, period);
 
     final budget = Budget(

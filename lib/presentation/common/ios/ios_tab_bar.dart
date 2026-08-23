@@ -91,9 +91,9 @@ class IosTabBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: tabs.map((tab) {
               final isSelected = tab.routeIndex == selectedIndex;
-              
-              final targetFlex = minimized 
-                  ? 200 
+
+              final targetFlex = minimized
+                  ? 200
                   : (isSelected ? 350 : 162); // 35% and 16.25% * 4 = 65%
 
               return TweenAnimationBuilder<double>(
@@ -126,43 +126,47 @@ class IosTabBar extends StatelessWidget {
                               borderRadius: BorderRadius.circular(100),
                             ),
                             alignment: Alignment.center,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const NeverScrollableScrollPhysics(),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 350),
-                                switchInCurve: Curves.easeOutCubic,
-                                switchOutCurve: Curves.easeInCubic,
-                                child: Icon(
-                                  isSelected ? tab.activeIcon : tab.icon,
-                                  key: ValueKey('${tab.routeIndex}_$isSelected'),
-                                  size: isSelected ? 26 : 22,
-                                  color: navFgColor,
-                                ),
-                              ),
-                              if (isSelected && !minimized) ...[
-                                const SizedBox(width: 8),
-                                Text(
-                                  tab.label,
-                                  style: context.ts(15, fontWeight: FontWeight.w600,
-                                    color: navFgColor,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 350),
+                                    switchInCurve: Curves.easeOutCubic,
+                                    switchOutCurve: Curves.easeInCubic,
+                                    child: Icon(
+                                      isSelected ? tab.activeIcon : tab.icon,
+                                      key: ValueKey(
+                                        '${tab.routeIndex}_$isSelected',
+                                      ),
+                                      size: isSelected ? 26 : 22,
+                                      color: navFgColor,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ],
-                          ),
-                          ), // SingleChildScrollView
-                        ), // AnimatedContainer
-                      ), // _ElasticTabButton
-                    ), // Semantics
-                  ), // Padding
-                ); // Expanded
-              }, // builder
-            ); // TweenAnimationBuilder
-          }).toList(),
+                                  if (isSelected && !minimized) ...[
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      tab.label,
+                                      style: context.ts(
+                                        15,
+                                        fontWeight: FontWeight.w600,
+                                        color: navFgColor,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ), // SingleChildScrollView
+                          ), // AnimatedContainer
+                        ), // _ElasticTabButton
+                      ), // Semantics
+                    ), // Padding
+                  ); // Expanded
+                }, // builder
+              ); // TweenAnimationBuilder
+            }).toList(),
           ),
         ),
       ),
@@ -232,118 +236,112 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return ClipRect(
-        child: Container(
-          padding: EdgeInsets.only(top: top),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface.withValues(alpha: 0.85),
-            border: Border(
-              bottom: BorderSide(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                width: 0.5,
-              ),
+      child: Container(
+        padding: EdgeInsets.only(top: top),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface.withValues(alpha: 0.85),
+          border: Border(
+            bottom: BorderSide(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+              width: 0.5,
             ),
           ),
-          child: Builder(
-            builder: (context) {
-              if (!largeTitle) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing16,
-                    vertical: 6,
-                  ),
-                  child: SizedBox(
-                    height: 44,
-                    child: Row(
-                      children: [
-                        effectiveLeading ?? const SizedBox(width: 48),
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: context.ts(15, fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (actions != null && actions!.isNotEmpty)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: actions!,
-                          )
-                        else
-                          const SizedBox(width: 48),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              // Large title
-              if (effectiveLeading != null) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 12.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing16,
-                      ),
-                      child: SizedBox(
-                        height: 44,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            effectiveLeading,
-                            if (actions != null && actions!.isNotEmpty)
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: actions!,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: kSpacing16,
-                        top: kSpacing8,
-                        bottom: kSpacing16,
-                      ),
-                      child: Text(title, style: titleStyle),
-                    ),
-                  ],
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    kSpacing16,
-                    kSpacing16,
-                    kSpacing16,
-                    kSpacing16,
-                  ),
-                  child: SizedBox(
-                    height: 40,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(title, style: titleStyle),
-                        if (actions != null && actions!.isNotEmpty)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: actions!,
-                          ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
         ),
+        child: Builder(
+          builder: (context) {
+            if (!largeTitle) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kSpacing16,
+                  vertical: 6,
+                ),
+                child: SizedBox(
+                  height: 44,
+                  child: Row(
+                    children: [
+                      effectiveLeading ?? const SizedBox(width: 48),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: context.ts(
+                            15,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (actions != null && actions!.isNotEmpty)
+                        Row(mainAxisSize: MainAxisSize.min, children: actions!)
+                      else
+                        const SizedBox(width: 48),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            // Large title
+            if (effectiveLeading != null) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kSpacing16),
+                    child: SizedBox(
+                      height: 44,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          effectiveLeading,
+                          if (actions != null && actions!.isNotEmpty)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: actions!,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: kSpacing16,
+                      top: kSpacing8,
+                      bottom: kSpacing16,
+                    ),
+                    child: Text(title, style: titleStyle),
+                  ),
+                ],
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  kSpacing16,
+                  kSpacing16,
+                  kSpacing16,
+                  kSpacing16,
+                ),
+                child: SizedBox(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(title, style: titleStyle),
+                      if (actions != null && actions!.isNotEmpty)
+                        Row(mainAxisSize: MainAxisSize.min, children: actions!),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }

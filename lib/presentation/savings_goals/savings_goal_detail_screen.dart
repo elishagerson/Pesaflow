@@ -1115,7 +1115,10 @@ class _SavingsGoalDetailScreenState
                                                   ).pop(true),
                                                   child: Text(
                                                     'Delete',
-                                                    style: context.ts(14, color: Colors.red),
+                                                    style: context.ts(
+                                                      14,
+                                                      color: Colors.red,
+                                                    ),
                                                   ),
                                                 ),
                                               ],

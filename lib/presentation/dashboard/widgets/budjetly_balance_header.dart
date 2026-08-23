@@ -27,7 +27,8 @@ class BudjetlyBalanceHeader extends StatefulWidget {
   State<BudjetlyBalanceHeader> createState() => _BudjetlyBalanceHeaderState();
 }
 
-class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with SingleTickerProviderStateMixin {
+class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isFront = true;
@@ -36,7 +37,10 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutBack),
     );
@@ -93,7 +97,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
   Widget _buildCardSide(BuildContext context, {required bool isFront}) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final cardColor = isDark ? const Color(0xFF1C1C1E) : const Color(0xFF1C1C1E); // Always dark per screenshot
+    final cardColor = isDark
+        ? const Color(0xFF1C1C1E)
+        : const Color(0xFF1C1C1E); // Always dark per screenshot
 
     return ClipPath(
       clipper: _TicketClipper(cutoutRadius: 12, cutoutOffset: 135),
@@ -151,7 +157,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
             // Bottom Section
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: isFront ? _buildBottomButtons(context) : _buildBottomButtons(context),
+              child: isFront
+                  ? _buildBottomButtons(context)
+                  : _buildBottomButtons(context),
             ),
           ],
         ),
@@ -170,7 +178,11 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
             children: [
               Text(
                 widget.label,
-                style: context.ts(16, fontWeight: FontWeight.w600, color: Colors.white),
+                style: context.ts(
+                  16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -182,8 +194,15 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        _isHidden ? '••••••' : CurrencyFormatter.formatCents(widget.balance),
-                        style: context.ts(40, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1.0),
+                        _isHidden
+                            ? '••••••'
+                            : CurrencyFormatter.formatCents(widget.balance),
+                        style: context.ts(
+                          40,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          letterSpacing: -1.0,
+                        ),
                       ),
                     ),
                   ),
@@ -199,7 +218,9 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
             });
           },
           icon: Icon(
-            _isHidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+            _isHidden
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
             color: Colors.white.withValues(alpha: 0.6),
           ),
         ),
@@ -213,7 +234,11 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
       children: [
         Text(
           'Account Details',
-          style: context.ts(16, fontWeight: FontWeight.w600, color: Colors.white),
+          style: context.ts(
+            16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -222,21 +247,47 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total In', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
+                Text(
+                  'Total In',
+                  style: context.ts(
+                    13,
+                    color: Colors.white.withValues(alpha: 0.6),
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(CurrencyFormatter.formatCents(widget.income), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(
+                  CurrencyFormatter.formatCents(widget.income),
+                  style: context.ts(
+                    18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Total Out', style: context.ts(13, color: Colors.white.withValues(alpha: 0.6))),
+                Text(
+                  'Total Out',
+                  style: context.ts(
+                    13,
+                    color: Colors.white.withValues(alpha: 0.6),
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(CurrencyFormatter.formatCents(widget.expense), style: context.ts(18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(
+                  CurrencyFormatter.formatCents(widget.expense),
+                  style: context.ts(
+                    18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -259,12 +310,23 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(PesaFlowIcons.add, color: Colors.blueAccent, size: 18),
+                  const Icon(
+                    PesaFlowIcons.add,
+                    color: Colors.blueAccent,
+                    size: 18,
+                  ),
                   const SizedBox(width: 6),
                   Flexible(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text('Add Transaction', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.blueAccent)),
+                      child: Text(
+                        'Add Transaction',
+                        style: context.ts(
+                          14,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -281,30 +343,41 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader> with Sing
                   SettingsScreen.showAccountsManager(context, ref);
                 },
                 child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.account_balance_wallet_outlined, color: Colors.white, size: 18),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text('Accounts', style: context.ts(14, fontWeight: FontWeight.w700, color: Colors.white)),
-                    ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-              ),
-            ),
-          );
-         },
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.account_balance_wallet_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Accounts',
+                            style: context.ts(
+                              14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-       ),
       ],
     );
   }
@@ -331,11 +404,14 @@ class _TicketClipper extends CustomClipper<Path> {
         -pi / 2,
         pi,
       );
-    
+
     // Right cutout
     final rightCutout = Path()
       ..addArc(
-        Rect.fromCircle(center: Offset(size.width, cutoutOffset), radius: cutoutRadius),
+        Rect.fromCircle(
+          center: Offset(size.width, cutoutOffset),
+          radius: cutoutRadius,
+        ),
         pi / 2,
         pi,
       );
@@ -348,6 +424,7 @@ class _TicketClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(_TicketClipper oldClipper) => 
-    oldClipper.cutoutRadius != cutoutRadius || oldClipper.cutoutOffset != cutoutOffset;
+  bool shouldReclip(_TicketClipper oldClipper) =>
+      oldClipper.cutoutRadius != cutoutRadius ||
+      oldClipper.cutoutOffset != cutoutOffset;
 }

@@ -28,9 +28,6 @@ import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section
 import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
 
-
-
-
 enum TrendRange { days, weeks, months }
 
 class TrendDataPoint {
@@ -205,7 +202,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Text(
                   'Analytics',
-                  style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+                  style: context.ts(
+                    34,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ),
               // iOS-style sliding capsule control
@@ -1368,5 +1370,3 @@ class _TrendsTab extends StatelessWidget {
     );
   }
 }
-
-

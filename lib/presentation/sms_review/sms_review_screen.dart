@@ -468,7 +468,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: theme.colorScheme.shadow.withValues(alpha: 0.04),
+                                        color: theme.colorScheme.shadow
+                                            .withValues(alpha: 0.04),
                                         blurRadius: 12,
                                         offset: const Offset(0, 4),
                                       ),
@@ -1254,8 +1255,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     );
     final newDy = _position.value.dy + details.delta.dy;
     final angle = newDx / 800.0;
-    final scale =
-        1.0 - (newDx.abs() / _screenWidth) * 0.04;
+    final scale = 1.0 - (newDx.abs() / _screenWidth) * 0.04;
 
     _position = Tween<Offset>(
       begin: Offset.zero,

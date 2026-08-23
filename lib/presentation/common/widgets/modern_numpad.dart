@@ -24,7 +24,7 @@ class ModernNumpad extends StatelessWidget {
   void _onKeyPress(String value) {
     HapticFeedback.lightImpact();
     if (controller.text.length >= maxLength) return;
-    
+
     if (controller.text == '0' && value != '.') {
       controller.text = value;
     } else {
@@ -35,15 +35,24 @@ class ModernNumpad extends StatelessWidget {
   void _onBackspace() {
     HapticFeedback.lightImpact();
     if (controller.text.isNotEmpty) {
-      controller.text = controller.text.substring(0, controller.text.length - 1);
+      controller.text = controller.text.substring(
+        0,
+        controller.text.length - 1,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
-    Widget buildKey(String label, {VoidCallback? onTap, Widget? icon, Color? color, Color? textColor}) {
+
+    Widget buildKey(
+      String label, {
+      VoidCallback? onTap,
+      Widget? icon,
+      Color? color,
+      Color? textColor,
+    }) {
       return Expanded(
         child: Padding(
           padding: const EdgeInsets.all(kSpacing4),
@@ -52,14 +61,22 @@ class ModernNumpad extends StatelessWidget {
             child: Container(
               height: 80,
               decoration: BoxDecoration(
-                color: color ?? theme.colorScheme.onSurface.withValues(alpha: 0.04),
+                color:
+                    color ??
+                    theme.colorScheme.onSurface.withValues(alpha: 0.04),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child: icon ?? Text(
-                label,
-                style: context.ts(36, fontWeight: FontWeight.w400, color: textColor ?? theme.colorScheme.onSurface),
-              ),
+              child:
+                  icon ??
+                  Text(
+                    label,
+                    style: context.ts(
+                      36,
+                      fontWeight: FontWeight.w400,
+                      color: textColor ?? theme.colorScheme.onSurface,
+                    ),
+                  ),
             ),
           ),
         ),
@@ -75,30 +92,19 @@ class ModernNumpad extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(children: [buildKey('1'), buildKey('2'), buildKey('3')]),
+          Row(children: [buildKey('4'), buildKey('5'), buildKey('6')]),
+          Row(children: [buildKey('7'), buildKey('8'), buildKey('9')]),
           Row(
             children: [
-              buildKey('1'),
-              buildKey('2'),
-              buildKey('3'),
-            ],
-          ),
-          Row(
-            children: [
-              buildKey('4'),
-              buildKey('5'),
-              buildKey('6'),
-            ],
-          ),
-          Row(
-            children: [
-              buildKey('7'),
-              buildKey('8'),
-              buildKey('9'),
-            ],
-          ),
-          Row(
-            children: [
-              buildKey('⌫', onTap: _onBackspace, icon: Icon(PesaFlowIcons.delete, color: theme.colorScheme.onSurfaceVariant)),
+              buildKey(
+                '⌫',
+                onTap: _onBackspace,
+                icon: Icon(
+                  PesaFlowIcons.delete,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
               buildKey('0'),
               // Integrated Save Button
               Expanded(
@@ -115,23 +121,39 @@ class ModernNumpad extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [theme.colorScheme.primary, theme.colorScheme.tertiary],
+                          colors: [
+                            theme.colorScheme.primary,
+                            theme.colorScheme.tertiary,
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.3,
+                            ),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
-                          )
+                          ),
                         ],
                       ),
                       alignment: Alignment.center,
                       child: isDoneLoading
-                          ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                          : const Icon(Icons.check, size: 36, color: Colors.white),
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.check,
+                              size: 36,
+                              color: Colors.white,
+                            ),
                     ),
                   ),
                 ),

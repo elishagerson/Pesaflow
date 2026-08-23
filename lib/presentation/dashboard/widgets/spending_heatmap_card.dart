@@ -17,7 +17,8 @@ class SpendingHeatmapCard extends ConsumerStatefulWidget {
   const SpendingHeatmapCard({super.key});
 
   @override
-  ConsumerState<SpendingHeatmapCard> createState() => _SpendingHeatmapCardState();
+  ConsumerState<SpendingHeatmapCard> createState() =>
+      _SpendingHeatmapCardState();
 }
 
 class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
@@ -41,7 +42,12 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
     super.dispose();
   }
 
-  Color _getCellColor(BuildContext context, int amount, int maxExpense, AppColorsTheme appColors) {
+  Color _getCellColor(
+    BuildContext context,
+    int amount,
+    int maxExpense,
+    AppColorsTheme appColors,
+  ) {
     if (amount == 0) {
       return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06);
     }
@@ -78,7 +84,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
           // We start on the Sunday before the calculated start date
           final startDayOfWeek = data.startDate.weekday;
           final daysToSubtract = startDayOfWeek == 7 ? 0 : startDayOfWeek;
-          final gridStartDate = data.startDate.subtract(Duration(days: daysToSubtract));
+          final gridStartDate = data.startDate.subtract(
+            Duration(days: daysToSubtract),
+          );
 
           final weeks = <List<DateTime>>[];
           for (int w = 0; w < 20; w++) {
@@ -102,7 +110,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                       'SPENDING ACTIVITY',
                       style: context.ts(
                         11,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                         letterSpacing: 1.2,
                         fontWeight: FontWeight.bold,
                       ),
@@ -111,7 +121,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                       'Last 20 Weeks',
                       style: context.ts(
                         11,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.4,
+                        ),
                       ),
                     ),
                   ],
@@ -125,7 +137,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                       'Total Spent: ',
                       style: context.ts(
                         13,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                     AmountText(
@@ -181,7 +195,8 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                         monthLabel,
                                         style: context.ts(
                                           9,
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                                          color: theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.45),
                                           fontWeight: FontWeight.bold,
                                         ),
                                         maxLines: 1,
@@ -192,10 +207,17 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                             ),
                             const SizedBox(height: kSpacing6),
                             ...week.map((date) {
-                              final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                              final dateStr =
+                                  '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
                               final amount = data.dailyExpenses[dateStr] ?? 0;
-                              final cellColor = _getCellColor(context, amount, data.maxExpense, appColors);
-                              final isSelected = _selectedDate != null &&
+                              final cellColor = _getCellColor(
+                                context,
+                                amount,
+                                data.maxExpense,
+                                appColors,
+                              );
+                              final isSelected =
+                                  _selectedDate != null &&
                                   _selectedDate!.year == date.year &&
                                   _selectedDate!.month == date.month &&
                                   _selectedDate!.day == date.day;
@@ -224,7 +246,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: cellColor,
-                                    borderRadius: BorderRadius.circular(isSelected ? 4 : 3),
+                                    borderRadius: BorderRadius.circular(
+                                      isSelected ? 4 : 3,
+                                    ),
                                     border: Border.all(
                                       color: isSelected
                                           ? Colors.white
@@ -234,10 +258,12 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: cellColor.withValues(alpha: 0.4),
+                                              color: cellColor.withValues(
+                                                alpha: 0.4,
+                                              ),
                                               blurRadius: 6,
                                               spreadRadius: 1,
-                                            )
+                                            ),
                                           ]
                                         : null,
                                   ),
@@ -262,7 +288,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                           'Less',
                           style: context.ts(
                             10,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -272,7 +300,12 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                             height: 9,
                             margin: const EdgeInsets.symmetric(horizontal: 1.5),
                             decoration: BoxDecoration(
-                              color: _getCellColor(context, val, 400, appColors),
+                              color: _getCellColor(
+                                context,
+                                val,
+                                400,
+                                appColors,
+                              ),
                               borderRadius: BorderRadius.circular(2.5),
                             ),
                           );
@@ -282,7 +315,9 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                           'More',
                           style: context.ts(
                             10,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                       ],
@@ -298,7 +333,8 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   '${DateFormat('d MMM').format(_selectedDate!)}: ${CurrencyFormatter.formatCents(_selectedAmount ?? 0)}',
                                   style: context.ts(
                                     11,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.7),
                                     fontWeight: FontWeight.w600,
                                   ),
                                   key: ValueKey(_selectedDate),
@@ -307,7 +343,8 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                                   'Tap cell for details',
                                   style: context.ts(
                                     10,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.35),
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),

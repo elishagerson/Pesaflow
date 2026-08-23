@@ -68,7 +68,12 @@ class BudgetListScreen extends ConsumerWidget {
                 children: [
                   Text(
                     activeTab == 0 ? 'Budgets' : 'Savings Goals',
-                    style: context.ts(34, fontWeight: FontWeight.w800, color: onSurface, letterSpacing: -0.5),
+                    style: context.ts(
+                      34,
+                      fontWeight: FontWeight.w800,
+                      color: onSurface,
+                      letterSpacing: -0.5,
+                    ),
                   ),
                   TactileSpringContainer(
                     onTap: () {
@@ -86,10 +91,16 @@ class BudgetListScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.15,
+                        ),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(PesaFlowIcons.add, color: theme.colorScheme.primary, size: 22),
+                      child: Icon(
+                        PesaFlowIcons.add,
+                        color: theme.colorScheme.primary,
+                        size: 22,
+                      ),
                     ),
                   ),
                 ],
@@ -392,7 +403,12 @@ class BudgetListScreen extends ConsumerWidget {
                         TweenAnimationBuilder<double>(
                           duration: const Duration(milliseconds: 1200),
                           curve: Curves.easeOutCubic,
-                          tween: Tween<double>(begin: 0, end: totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.0) : 0),
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: totalAllocated > 0
+                                ? (totalSpent / totalAllocated).clamp(0.0, 1.0)
+                                : 0,
+                          ),
                           builder: (context, value, _) {
                             return SizedBox(
                               width: 100,
@@ -401,7 +417,9 @@ class BudgetListScreen extends ConsumerWidget {
                                 value: value,
                                 strokeWidth: 8,
                                 strokeCap: StrokeCap.round,
-                                backgroundColor: onSurface.withValues(alpha: 0.05),
+                                backgroundColor: onSurface.withValues(
+                                  alpha: 0.05,
+                                ),
                                 color: totalSpent > totalAllocated
                                     ? context.appColors.expenseColor
                                     : theme.colorScheme.primary,
@@ -419,9 +437,10 @@ class BudgetListScreen extends ConsumerWidget {
                               children: [
                                 Text(
                                   totalAllocated > 0
-                                      ? (((totalSpent / totalAllocated) * 100) > 999
-                                          ? '>999%'
-                                          : '${(totalSpent / totalAllocated * 100).round()}%')
+                                      ? (((totalSpent / totalAllocated) * 100) >
+                                                999
+                                            ? '>999%'
+                                            : '${(totalSpent / totalAllocated * 100).round()}%')
                                       : '0%',
                                   style: context.ts(
                                     20,
@@ -464,7 +483,7 @@ class BudgetListScreen extends ConsumerWidget {
                 );
 
                 final catColor = hexToColor(bp.category.color);
-                
+
                 Color paceColor;
                 if (status.isOverBudget) {
                   paceColor = context.appColors.expenseColor;
@@ -502,31 +521,51 @@ class BudgetListScreen extends ConsumerWidget {
                                 const SizedBox(width: kSpacing16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         bp.category.name,
-                                        style: context.ts(16, fontWeight: FontWeight.bold, color: onSurface),
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.bold,
+                                          color: onSurface,
+                                        ),
                                       ),
                                       const SizedBox(height: 4),
                                       Row(
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 6,
+                                              vertical: 2,
+                                            ),
                                             decoration: BoxDecoration(
-                                              color: paceColor.withValues(alpha: 0.1),
-                                              borderRadius: BorderRadius.circular(4),
+                                              color: paceColor.withValues(
+                                                alpha: 0.1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
                                             child: Text(
                                               status.paceLabel,
-                                              style: context.ts(10, fontWeight: FontWeight.w700, color: paceColor),
+                                              style: context.ts(
+                                                10,
+                                                fontWeight: FontWeight.w700,
+                                                color: paceColor,
+                                              ),
                                             ),
                                           ),
                                           if (status.daysLeft > 0) ...[
                                             const SizedBox(width: 8),
                                             Text(
                                               '${status.daysLeft} days left',
-                                              style: context.ts(11, color: onSurface.withValues(alpha: 0.5)),
+                                              style: context.ts(
+                                                11,
+                                                color: onSurface.withValues(
+                                                  alpha: 0.5,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ],
@@ -550,10 +589,24 @@ class BudgetListScreen extends ConsumerWidget {
                                     const SizedBox(height: 2),
                                     Row(
                                       children: [
-                                        Text('of ', style: context.ts(12, color: onSurface.withValues(alpha: 0.5))),
+                                        Text(
+                                          'of ',
+                                          style: context.ts(
+                                            12,
+                                            color: onSurface.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                          ),
+                                        ),
                                         AmountText(
                                           amountInCents: status.allocated,
-                                          style: context.ts(12, color: onSurface.withValues(alpha: 0.5), fontWeight: FontWeight.w600),
+                                          style: context.ts(
+                                            12,
+                                            color: onSurface.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -567,11 +620,16 @@ class BudgetListScreen extends ConsumerWidget {
                               child: TweenAnimationBuilder<double>(
                                 duration: const Duration(milliseconds: 800),
                                 curve: Curves.easeOutCubic,
-                                tween: Tween<double>(begin: 0, end: status.percentage.clamp(0.0, 1.0)),
+                                tween: Tween<double>(
+                                  begin: 0,
+                                  end: status.percentage.clamp(0.0, 1.0),
+                                ),
                                 builder: (context, value, _) {
                                   return LinearProgressIndicator(
                                     value: value,
-                                    backgroundColor: onSurface.withValues(alpha: 0.05),
+                                    backgroundColor: onSurface.withValues(
+                                      alpha: 0.05,
+                                    ),
                                     color: paceColor,
                                     minHeight: 8,
                                   );
@@ -815,7 +873,11 @@ class BudgetListScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 8, top: 12, bottom: 12),
+                                padding: const EdgeInsets.only(
+                                  left: 8,
+                                  top: 12,
+                                  bottom: 12,
+                                ),
                                 child: Container(
                                   width: 4,
                                   decoration: BoxDecoration(
@@ -942,7 +1004,7 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .textTheme
                                                         .labelSmall
                                                         ?.copyWith(
-                                                           fontSize: 11,
+                                                          fontSize: 11,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: AppTheme

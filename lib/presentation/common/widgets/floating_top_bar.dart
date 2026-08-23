@@ -18,7 +18,7 @@ class FloatingTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showPop = canPop && Navigator.of(context).canPop();
-    
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Row(
@@ -57,10 +57,7 @@ class FloatingTopBar extends StatelessWidget {
               ),
             ],
           ),
-          if (actions != null)
-            Row(
-              children: actions!,
-            ),
+          if (actions != null) Row(children: actions!),
         ],
       ),
     );

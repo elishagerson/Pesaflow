@@ -116,7 +116,8 @@ class _GlassCardState extends State<GlassCard>
           borderRadius: BorderRadius.circular(widget.borderRadius),
           border: widget.hasBorder
               ? Border.all(
-                  color: widget.accentColor?.withValues(alpha: 0.20) ??
+                  color:
+                      widget.accentColor?.withValues(alpha: 0.20) ??
                       appColors.cardBorder,
                   width: 1.0,
                 )
@@ -188,4 +189,3 @@ class _GlassCardState extends State<GlassCard>
     return Semantics(container: true, label: 'Card', child: body);
   }
 }
-

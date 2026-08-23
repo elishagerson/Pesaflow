@@ -204,7 +204,8 @@ class _RecurringTransactionListScreenState
                                           ref: ref,
                                           recurring: sorted[i],
                                           accountName:
-                                              accountNames[sorted[i].accountId] ??
+                                              accountNames[sorted[i]
+                                                  .accountId] ??
                                               'Unknown',
                                         );
                                         return false;
@@ -218,7 +219,8 @@ class _RecurringTransactionListScreenState
                                           right: kSpacing24,
                                         ),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               PesaFlowIcons.success,
@@ -275,7 +277,7 @@ class _RecurringTransactionListScreenState
             ],
           ),
         ),
-         error: (e, _) => ErrorState(
+        error: (e, _) => ErrorState(
           title: 'Failed to load recurring transactions',
           message: e.toString(),
           onRetry: () {
@@ -620,233 +622,248 @@ class _RecurringTransactionListScreenState
           Padding(
             padding: const EdgeInsets.all(kSpacing14),
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon
-                Container(
-                  padding: const EdgeInsets.all(kSpacing10),
-                  decoration: BoxDecoration(
-                    color: mutedAccent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    isExpense ? PesaFlowIcons.arrowUp : PesaFlowIcons.arrowDown,
-                    color: accentColor,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: kSpacing12),
-                // Title + frequency
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              recurring.description ??
-                                  'Recurring ${recurring.type}',
-                              style: context.ts(
-                                14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          // Badges
-                          ..._buildBadges(recurring, theme, isDue),
-                        ],
+                Row(
+                  children: [
+                    // Icon
+                    Container(
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: mutedAccent.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(height: kSpacing4),
-                      Row(
+                      child: Icon(
+                        isExpense
+                            ? PesaFlowIcons.arrowUp
+                            : PesaFlowIcons.arrowDown,
+                        color: accentColor,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing12),
+                    // Title + frequency
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            frequencyLabel(
-                              recurring.frequency,
-                              recurring.intervalValue,
-                            ),
-                            style: context.ts(
-                              11,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 3,
-                            height: 3,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: kSpacing6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.2,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          Icon(
-                            PesaFlowIcons.calendar,
-                            size: 11,
-                            color: isDue
-                                ? context.appColors.transferColor
-                                : theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.4,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  recurring.description ??
+                                      'Recurring ${recurring.type}',
+                                  style: context.ts(
+                                    14,
+                                    fontWeight: FontWeight.bold,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              // Badges
+                              ..._buildBadges(recurring, theme, isDue),
+                            ],
                           ),
-                          const SizedBox(width: kSpacing4),
-                          Text(
-                            nextDateLabel,
-                            style: context.ts(
-                              11,
-                              fontWeight: isDue
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                              color: isDue
-                                  ? context.appColors.transferColor
-                                  : theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.5,
-                                    ),
-                            ),
+                          const SizedBox(height: kSpacing4),
+                          Row(
+                            children: [
+                              Text(
+                                frequencyLabel(
+                                  recurring.frequency,
+                                  recurring.intervalValue,
+                                ),
+                                style: context.ts(
+                                  11,
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 3,
+                                height: 3,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: kSpacing6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Icon(
+                                PesaFlowIcons.calendar,
+                                size: 11,
+                                color: isDue
+                                    ? context.appColors.transferColor
+                                    : theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.4,
+                                      ),
+                              ),
+                              const SizedBox(width: kSpacing4),
+                              Text(
+                                nextDateLabel,
+                                style: context.ts(
+                                  11,
+                                  fontWeight: isDue
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isDue
+                                      ? context.appColors.transferColor
+                                      : theme.colorScheme.onSurface.withValues(
+                                          alpha: 0.5,
+                                        ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    // Amount
+                    AmountText(
+                      amountInCents: recurring.amount,
+                      type: isExpense ? AmountType.expense : AmountType.income,
+                      useMonospace: true,
+                      style: context.ts(14, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: kSpacing8),
-                // Amount
-                AmountText(
-                  amountInCents: recurring.amount,
-                  type: isExpense ? AmountType.expense : AmountType.income,
-                  useMonospace: true,
-                  style: context.ts(14, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            // Payment stats (for auto-matched expenses)
-            if (isExpense && recurring.paymentCount > 0) ...[
-              const SizedBox(height: kSpacing10),
-              Divider(
-                height: 0.5,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-              ),
-              const SizedBox(height: kSpacing10),
-              Row(
-                children: [
-                  Icon(
-                    PesaFlowIcons.analytics,
-                    size: 12,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                // Payment stats (for auto-matched expenses)
+                if (isExpense && recurring.paymentCount > 0) ...[
+                  const SizedBox(height: kSpacing10),
+                  Divider(
+                    height: 0.5,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
                   ),
-                  const SizedBox(width: kSpacing6),
-                  Text(
-                    'Paid ${CurrencyFormatter.formatCents(recurring.totalPaid)}',
-                    style: context.ts(
-                      11,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                  ),
-                  Container(
-                    width: 3,
-                    height: 3,
-                    margin: const EdgeInsets.symmetric(horizontal: kSpacing6),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Text(
-                    '${recurring.paymentCount} payment${recurring.paymentCount > 1 ? 's' : ''}',
-                    style: context.ts(
-                      11,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                  ),
-                  const Spacer(),
-                  if (recurring.lastPaidAt != null)
-                    Text(
-                      'Last: ${recurring.lastPaidAt!.day}/${recurring.lastPaidAt!.month}',
-                      style: context.ts(
-                        10,
+                  const SizedBox(height: kSpacing10),
+                  Row(
+                    children: [
+                      Icon(
+                        PesaFlowIcons.analytics,
+                        size: 12,
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.4,
                         ),
                       ),
-                    ),
-                ],
-              ),
-            ],
-            // Mark Paid action for due items
-            if (isDue) ...[
-              const SizedBox(height: kSpacing10),
-              if (isExpense && recurring.paymentCount > 0)
-                Divider(
-                  height: 0.5,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                ),
-              const SizedBox(height: kSpacing10),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  showMarkRecurringPaymentSheet(
-                    context: context,
-                    ref: ref,
-                    recurring: recurring,
-                    accountName: accountNames[recurring.accountId] ?? 'Unknown',
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing12,
-                    vertical: kSpacing6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.appColors.incomeColor.withValues(
-                      alpha: 0.12,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        PesaFlowIcons.success,
-                        size: 14,
-                        color: context.appColors.incomeColor,
-                      ),
                       const SizedBox(width: kSpacing6),
                       Text(
-                        'Mark Paid',
+                        'Paid ${CurrencyFormatter.formatCents(recurring.totalPaid)}',
                         style: context.ts(
                           11,
-                          fontWeight: FontWeight.w700,
-                          color: context.appColors.incomeColor,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
+                      Container(
+                        width: 3,
+                        height: 3,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: kSpacing6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.2,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Text(
+                        '${recurring.paymentCount} payment${recurring.paymentCount > 1 ? 's' : ''}',
+                        style: context.ts(
+                          11,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      if (recurring.lastPaidAt != null)
+                        Text(
+                          'Last: ${recurring.lastPaidAt!.day}/${recurring.lastPaidAt!.month}',
+                          style: context.ts(
+                            10,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.4,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                ),
-              ),
-            ],
-            ],
+                ],
+                // Mark Paid action for due items
+                if (isDue) ...[
+                  const SizedBox(height: kSpacing10),
+                  if (isExpense && recurring.paymentCount > 0)
+                    Divider(
+                      height: 0.5,
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.06,
+                      ),
+                    ),
+                  const SizedBox(height: kSpacing10),
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      showMarkRecurringPaymentSheet(
+                        context: context,
+                        ref: ref,
+                        recurring: recurring,
+                        accountName:
+                            accountNames[recurring.accountId] ?? 'Unknown',
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing12,
+                        vertical: kSpacing6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.appColors.incomeColor.withValues(
+                          alpha: 0.12,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            PesaFlowIcons.success,
+                            size: 14,
+                            color: context.appColors.incomeColor,
+                          ),
+                          const SizedBox(width: kSpacing6),
+                          Text(
+                            'Mark Paid',
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w700,
+                              color: context.appColors.incomeColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
-        ),
-        if (index < totalCount - 1)
-          Divider(
-            height: 1,
-            thickness: 0.5,
-            color: onSurface.withValues(alpha: 0.08),
-            indent: 14 + 32 + 12,
-          ),
-      ],
-    ),
-  );
+          if (index < totalCount - 1)
+            Divider(
+              height: 1,
+              thickness: 0.5,
+              color: onSurface.withValues(alpha: 0.08),
+              indent: 14 + 32 + 12,
+            ),
+        ],
+      ),
+    );
 
     if (isDue) {
       return _DueItemPulse(child: card);

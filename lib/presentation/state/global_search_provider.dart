@@ -30,7 +30,11 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
   if (query.trim().length < 2) return [];
 
   final db = ref.read(databaseProvider);
-  final words = query.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+  final words = query
+      .toLowerCase()
+      .split(RegExp(r'\s+'))
+      .where((w) => w.isNotEmpty)
+      .toList();
   if (words.isEmpty) return [];
   final results = <SearchResult>[];
 
@@ -46,8 +50,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
                       t.sender.like(term) |
                       t.recipient.like(term) |
                       t.reference.like(term);
-                  condition =
-                      condition == null ? wordCondition : condition & wordCondition;
+                  condition = condition == null
+                      ? wordCondition
+                      : condition & wordCondition;
                 }
                 return condition ?? const Constant(true);
               })
@@ -89,7 +94,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
                 for (final word in words) {
                   final term = '%$word%';
                   final wordCondition = b.name.like(term);
-                  condition = condition == null ? wordCondition : condition & wordCondition;
+                  condition = condition == null
+                      ? wordCondition
+                      : condition & wordCondition;
                 }
                 return condition ?? const Constant(true);
               })
@@ -119,7 +126,9 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
                 for (final word in words) {
                   final term = '%$word%';
                   final wordCondition = g.name.like(term);
-                  condition = condition == null ? wordCondition : condition & wordCondition;
+                  condition = condition == null
+                      ? wordCondition
+                      : condition & wordCondition;
                 }
                 return condition ?? const Constant(true);
               })
@@ -150,8 +159,11 @@ final globalSearchProvider = FutureProvider.family<List<SearchResult>, String>((
                 Expression<bool>? condition;
                 for (final word in words) {
                   final term = '%$word%';
-                  final wordCondition = l.description.like(term) | l.provider.like(term);
-                  condition = condition == null ? wordCondition : condition & wordCondition;
+                  final wordCondition =
+                      l.description.like(term) | l.provider.like(term);
+                  condition = condition == null
+                      ? wordCondition
+                      : condition & wordCondition;
                 }
                 return condition ?? const Constant(true);
               })

@@ -23,7 +23,11 @@ class StaggeredList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: physics ?? (shrinkWrap ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics()),
+      physics:
+          physics ??
+          (shrinkWrap
+              ? const NeverScrollableScrollPhysics()
+              : const BouncingScrollPhysics()),
       shrinkWrap: shrinkWrap,
       padding: padding,
       itemCount: itemCount,

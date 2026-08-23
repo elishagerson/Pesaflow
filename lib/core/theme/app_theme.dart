@@ -32,14 +32,18 @@ class AppTheme {
   static const Color onBgLight = Color(0xFF0F172A); // Slate-900
   static const Color surfaceLight = Color(0xFFFFFFFF); // Pure white cards
   static const Color onSurfaceLight = Color(0xFF0F172A);
-  static const Color surfaceHighLight = Color(0xFFFFFFFF); // Pure white for elevated surfaces
+  static const Color surfaceHighLight = Color(
+    0xFFFFFFFF,
+  ); // Pure white for elevated surfaces
 
   // Dark — OLED black base
   static const Color bgDark = Color(0xFF000000); // Pure OLED black
   static const Color onBgDark = Color(0xFFF8FAFC);
   static const Color surfaceDark = Color(0xFF0F0F0F); // Very dark gray
   static const Color onSurfaceDark = Color(0xFFF8FAFC);
-  static const Color surfaceHighDark = Color(0xFF1C1C1E); // Apple system dark gray
+  static const Color surfaceHighDark = Color(
+    0xFF1C1C1E,
+  ); // Apple system dark gray
 
   // Finance semantic colors
   static const Color incomeColor = Color(0xFF10B981);
@@ -402,7 +406,9 @@ class AppTheme {
       onPrimaryContainer: isLight
           ? onPrimaryContainerLight
           : const Color(0xFFDBEAFE),
-      secondary: isLight ? secondaryLight : const Color(0xFF94A3B8), // Slate-400
+      secondary: isLight
+          ? secondaryLight
+          : const Color(0xFF94A3B8), // Slate-400
       onSecondary: isLight ? onSecondaryLight : const Color(0xFF0F172A),
       secondaryContainer: isLight
           ? secondaryContainerLight

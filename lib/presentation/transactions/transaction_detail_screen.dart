@@ -62,7 +62,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: kSpacing8),
                 TactileSpringContainer(
-                  onTap: () => context.push('/transactions/edit/$transactionId'),
+                  onTap: () =>
+                      context.push('/transactions/edit/$transactionId'),
                   child: Container(
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
@@ -78,7 +79,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(kSpacing10),
                     decoration: BoxDecoration(
-                      color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                      color: context.appColors.expenseColor.withValues(
+                        alpha: 0.12,
+                      ),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -98,32 +101,36 @@ class TransactionDetailScreen extends ConsumerWidget {
                 },
                 child: Material(
                   type: MaterialType.transparency,
-          child: itemAsync.when(
-            data: (item) {
-              if (item == null) {
-                return ErrorState(
-                  title: 'Transaction Not Found',
-                  message: 'This transaction may have been deleted or does not exist.',
-                  onRetry: () => Navigator.of(context).pop(),
-                );
-              }
-              return _buildDetail(context, ref, theme, onSurface, item);
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, _) => ErrorState(
-              title: 'Error Loading Transaction',
-              message: err.toString(),
-              onRetry: () {
-                ref.invalidate(transactionDetailProvider(transactionId));
-              },
+                  child: itemAsync.when(
+                    data: (item) {
+                      if (item == null) {
+                        return ErrorState(
+                          title: 'Transaction Not Found',
+                          message:
+                              'This transaction may have been deleted or does not exist.',
+                          onRetry: () => Navigator.of(context).pop(),
+                        );
+                      }
+                      return _buildDetail(context, ref, theme, onSurface, item);
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (err, _) => ErrorState(
+                      title: 'Error Loading Transaction',
+                      message: err.toString(),
+                      onRetry: () {
+                        ref.invalidate(
+                          transactionDetailProvider(transactionId),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
-            ),
-          ),
+          ],
         ),
       ),
-    ],
-  ),
-),
     );
   }
 

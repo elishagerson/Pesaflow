@@ -4,10 +4,7 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 class GlassListContainer extends StatelessWidget {
   final Widget child;
 
-  const GlassListContainer({
-    super.key,
-    required this.child,
-  });
+  const GlassListContainer({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
