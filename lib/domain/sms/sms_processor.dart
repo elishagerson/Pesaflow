@@ -389,6 +389,7 @@ class SmsProcessor {
           remaining: sms.amount,
           status: 'active',
           provider: provider,
+          category: CategoryRepository.loanPaymentCategoryName,
           description: finalDescription,
           sender: sms.senderOrRecipient,
           reference: sms.reference,

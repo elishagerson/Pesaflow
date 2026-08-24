@@ -505,21 +505,9 @@ Future<bool> processOfflinePayment({
             .read(settingsRepositoryProvider)
             .getSetting('active_tracker_id') ??
         'default_personal';
-    final categories = await ref
+    final loanCat = await ref
         .read(categoryRepositoryProvider)
-        .getAllCategories();
-    final loanCat = loan.category != null
-        ? categories.firstWhere(
-            (c) => c.name == loan.category,
-            orElse: () => categories.firstWhere(
-              (c) => c.type == 'expense',
-              orElse: () => categories.first,
-            ),
-          )
-        : categories.firstWhere(
-            (c) => c.type == 'expense',
-            orElse: () => categories.first,
-          );
+        .resolveLoanPaymentCategory(loan.category);
 
     final txn = Transaction(
       id: const Uuid().v4(),
