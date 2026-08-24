@@ -68,6 +68,7 @@ class CategoryRepository {
       type: 'expense',
       isSystem: true,
       sortOrder: 90,
+      createdAt: DateTime.now(),
     );
     await createCategory(created);
     return created;
