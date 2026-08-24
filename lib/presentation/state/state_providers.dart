@@ -327,6 +327,7 @@ final savingsGoalsTotalSavedProvider = Provider<int>((ref) {
 });
 
 final daysSinceLastSaveProvider = FutureProvider<int>((ref) async {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(savingsGoalRepositoryProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
   final lastDate = await repo.getLatestDepositDate(trackerId);
@@ -392,6 +393,7 @@ final paidLoansCountProvider = FutureProvider<int>((ref) {
 });
 
 final recentLoanActivityProvider = FutureProvider<int>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(loanRepositoryProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
   return repo.getActiveLoanCountPastMonths(3, trackerId: trackerId);
@@ -404,6 +406,7 @@ final loanTransactionsStreamProvider =
     });
 
 final totalOutstandingLoanProvider = FutureProvider<int>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(loanRepositoryProvider);
   final trackerId = ref.watch(activeTrackerIdProvider);
   return repo.getTotalOutstanding(trackerId: trackerId);
