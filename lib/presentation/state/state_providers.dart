@@ -277,21 +277,25 @@ final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) {
 // ═══════════════════════════════════════════════════════
 
 final monthlyTotalsProvider = FutureProvider<Map<String, int>>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(analyticsRepositoryProvider);
   return repo.getMonthTotals(DateTime.now());
 });
 
 final topCategoriesProvider = FutureProvider<List<CategorySpending>>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(analyticsRepositoryProvider);
   return repo.getTopCategoriesForMonth(DateTime.now(), limit: 5);
 });
 
 final monthlySnapshotsProvider = FutureProvider<List<MonthlySnapshot>>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final repo = ref.watch(analyticsRepositoryProvider);
   return repo.getMonthlySnapshots(12);
 });
 
 final insightsProvider = FutureProvider<List<Insight>>((ref) {
+  ref.watch(dataChangesStreamProvider);
   final generator = ref.watch(insightGeneratorProvider);
   return generator.generateInsights();
 });
