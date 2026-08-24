@@ -254,7 +254,7 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
   final db = ref.watch(databaseProvider);
   return db
       .tableUpdates(
-        TableUpdateQuery.watchAllTables({
+        TableUpdateQuery.onAllTables({
           db.transactions,
           db.accounts,
           db.loans,
