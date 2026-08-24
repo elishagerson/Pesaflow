@@ -243,6 +243,28 @@ final _transactionChangesProvider = StreamProvider<int>((ref) {
   return dao.watchTransactionChanges();
 });
 
+/// Canonical change ticker: emits whenever any core financial table mutates
+/// (SMS pipeline writes, loan payments, balance reconciliations, manual edits).
+///
+/// Aggregate [FutureProvider]s below watch this so that background writes
+/// (e.g. an SMS-triggered loan payment) refresh every screen without any
+/// manual `ref.invalidate` calls.
+final dataChangesStreamProvider = StreamProvider<int>((ref) {
+  final db = ref.watch(databaseProvider);
+  return db
+      .tableUpdates(
+        TableUpdateQuery.watchAllTables({
+          db.transactions,
+          db.accounts,
+          db.loans,
+          db.savingsGoals,
+          db.savingsGoalContributions,
+          db.recurringTransactions,
+        }),
+      )
+      .map((_) => DateTime.now().microsecondsSinceEpoch);
+});
+
 final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) {
   ref.watch(_transactionChangesProvider);
   ref.watch(activeBudgetsStreamProvider);
