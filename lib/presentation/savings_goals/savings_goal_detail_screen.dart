@@ -22,6 +22,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
@@ -1019,7 +1020,7 @@ class _SavingsGoalDetailScreenState
                                   _showAddMoneySheet(context, goal, true);
                                 },
                                 child: Container(
-                                  height: kSpacing52,
+                                  height: kSpacing48,
                                   decoration: BoxDecoration(
                                     color: context.appColors.incomeColor
                                         .withValues(alpha: 0.12),
@@ -1055,7 +1056,7 @@ class _SavingsGoalDetailScreenState
                                   _showAddMoneySheet(context, goal, false);
                                 },
                                 child: Container(
-                                  height: kSpacing52,
+                                  height: kSpacing48,
                                   decoration: BoxDecoration(
                                     color: context.appColors.expenseColor
                                         .withValues(alpha: 0.12),
@@ -1396,6 +1397,57 @@ class _SavingsGoalDetailScreenState
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GoalStatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+  final ThemeData theme;
+
+  const _GoalStatCard({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GlassCard(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kSpacing12,
+          vertical: kSpacing14,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: context.ts(
+                10,
+                color: Colors.white.withValues(alpha: 0.4),
+              ),
+            ),
+            const SizedBox(height: kSpacing4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: context.ts(
+                  15,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
