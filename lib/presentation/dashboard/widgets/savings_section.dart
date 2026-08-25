@@ -191,7 +191,7 @@ class SavingsReminder extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(kSpacing14),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.08),
+            color: color.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(AppTheme.radiusCard),
             border: Border.all(
               color: color.withValues(alpha: 0.15),

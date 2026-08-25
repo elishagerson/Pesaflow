@@ -609,14 +609,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                                       kSpacing2,
                                                                 ),
                                                             decoration: BoxDecoration(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .primary
-                                                                  .withValues(
-                                                                    alpha: 0.08,
-                                                                  ),
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
+                                                               color: theme
+                                                                   .colorScheme
+                                                                   .primary
+                                                                   .withValues(
+                                                                     alpha: 0.05,
+                                                                   ),
+                                                               borderRadius:
+                                                                   BorderRadius.circular(
                                                                     kSpacing6,
                                                                   ),
                                                             ),
@@ -874,12 +874,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                               ref,
                                             ),
                                       ),
-                                      Container(
-                                        width: 1,
-                                        height: 18,
-                                        color: onSurface.withValues(
-                                          alpha: 0.08,
-                                        ),
+                                       Container(
+                                         width: 1,
+                                         height: 18,
+                                         color: onSurface.withValues(
+                                           alpha: 0.05,
+                                         ),
                                       ),
                                       TactileSpringContainer(
                                         onTap: () {
@@ -1341,10 +1341,10 @@ class _MiniBar extends StatelessWidget {
                 height: 8,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: FractionallySizedBox(
+                   color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                   borderRadius: BorderRadius.circular(4),
+                 ),
+                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,
                   widthFactor: val,
                   child: Container(

@@ -266,7 +266,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.08),
+                                          .withValues(alpha: 0.05),
                                       borderRadius: BorderRadius.circular(24),
                                     ),
                                     child: Text(
@@ -1190,7 +1190,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                           thickness: 0.5,
                                                           color: onSurface
                                                               .withValues(
-                                                                alpha: 0.08,
+                                                                alpha: 0.05,
                                                               ),
                                                           indent: 20 + 46 + 14,
                                                         ),

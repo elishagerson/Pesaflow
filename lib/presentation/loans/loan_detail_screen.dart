@@ -548,7 +548,7 @@ class LoanDetailScreen extends ConsumerWidget {
                                 alpha: 0.15,
                               )
                             : theme.colorScheme.onSurface.withValues(
-                                alpha: 0.08,
+                                alpha: 0.05,
                               ),
                         shape: BoxShape.circle,
                       ),

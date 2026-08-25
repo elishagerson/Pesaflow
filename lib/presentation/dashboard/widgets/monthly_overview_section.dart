@@ -42,7 +42,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(kSpacing16),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
