@@ -10,7 +10,6 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -74,15 +73,37 @@ class BudgetDetailScreen extends ConsumerWidget {
           data: (bp) {
             if (bp == null) {
               return Scaffold(
-                appBar: const IosNavBar(
-                  title: 'Budget Details',
-                  largeTitle: false,
-                ),
-                body: EmptyState(
-                  icon: PesaFlowIcons.budgets,
-                  title: 'Budget Not Found',
-                  subtitle:
-                      'The requested envelope budget could not be located.',
+                backgroundColor: Colors.black,
+                body: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                      child: Row(
+                        children: [
+                          TactileSpringContainer(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Text('Budget Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                        ],
+                      ),
+                    ),
+                    const Expanded(
+                      child: EmptyState(
+                        icon: PesaFlowIcons.budgets,
+                        title: 'Budget Not Found',
+                        subtitle: 'The requested envelope budget could not be located.',
+                      ),
+                    ),
+                  ],
                 ),
               );
             }
