@@ -652,3 +652,5 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   ),                // Column
 ),                  // Scaffold
 );                  // PopScope
+  }
+}

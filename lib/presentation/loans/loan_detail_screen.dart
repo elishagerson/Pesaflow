@@ -228,7 +228,6 @@ class LoanDetailScreen extends ConsumerWidget {
       ],
     ),
   ),
-),
 );
       },
       loading: () => Scaffold(

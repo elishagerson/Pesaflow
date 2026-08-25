@@ -844,3 +844,5 @@ class _RecurringTransactionFormScreenState
   ),                // Column
 ),                  // Scaffold
 );                  // PopScope
+  }
+}
