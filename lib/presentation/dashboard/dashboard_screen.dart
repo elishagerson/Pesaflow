@@ -498,15 +498,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               const SizedBox(width: kSpacing8),
                                               Text(
                                                 _formatCompact(account.balance),
-                                                style: theme
-                                                    .textTheme
-                                                    .labelSmall
-                                                    ?.copyWith(
-                                                      fontFamily: 'monospace',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: isSelected
-                                                          ? theme
+                                                style: AppTheme.getMonospaceStyle(
+                                                  theme.textTheme.labelSmall!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: isSelected
+                                                        ? theme
                                                                 .colorScheme
                                                                 .primary
                                                                 .withValues(
@@ -516,9 +512,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                                 .colorScheme
                                                                 .onSurface
                                                                 .withValues(
-                                                                  alpha: 0.8,
+                                                                   alpha: 0.8,
                                                                 ),
                                                     ),
+                                                ),
                                               ),
                                             ],
                                           ),
