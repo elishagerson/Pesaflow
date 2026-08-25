@@ -75,26 +75,66 @@ class LoanDetailScreen extends ConsumerWidget {
           );
         }
         return Scaffold(
-          appBar: IosNavBar(
-            title: 'Loan Details',
-            largeTitle: false,
-            actions: [
-              IconButton(
-                icon: const Icon(PesaFlowIcons.edit),
-                onPressed: () => context.push('/loans/${loan.id}/edit'),
-              ),
-              IconButton(
-                icon: Icon(
-                  PesaFlowIcons.delete,
-                  color: theme.colorScheme.error,
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          TactileSpringContainer(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing12),
+                          Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TactileSpringContainer(
+                            onTap: () => context.push('/loans/${loan.id}/edit'),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(PesaFlowIcons.edit, size: 18, color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          TactileSpringContainer(
+                            onTap: () => _confirmDelete(context, ref, loan),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(PesaFlowIcons.delete, size: 18, color: context.appColors.expenseColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () => _confirmDelete(context, ref, loan),
-              ),
-            ],
-          ),
-          body: ListView(
-            padding: const EdgeInsets.all(kSpacing16),
-            children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(kSpacing16),
+                    children: [
               StaggeredFadeSlide(
                 index: 0,
                 child: _buildLoanHeader(context, loan, theme),

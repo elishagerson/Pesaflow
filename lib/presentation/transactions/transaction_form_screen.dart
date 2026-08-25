@@ -829,23 +829,47 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               : context.appColors.transferColor);
 
     return Scaffold(
-      backgroundColor: context.appColors.bgColor,
-      appBar: AppBar(
-        title: Text(
-          _isEditMode ? 'Edit Transaction' : 'New Transaction',
-          style: context.ts(18, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(PesaFlowIcons.close, color: theme.colorScheme.onSurface),
-          onPressed: () => context.pop(),
-        ),
-      ),
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                20,
+                MediaQuery.of(context).padding.top + 8,
+                20,
+                16,
+              ),
+              child: Row(
+                children: [
+                  TactileSpringContainer(
+                    onTap: () => Navigator.of(context).maybePop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing14),
+                  Text(
+                    _isEditMode ? 'Edit Transaction' : 'New Transaction',
+                    style: context.ts(
+                      28,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.8,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             // TOP HALF: Display & Context
             Expanded(
               child: Column(

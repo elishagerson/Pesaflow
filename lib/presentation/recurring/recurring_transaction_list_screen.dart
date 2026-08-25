@@ -70,21 +70,50 @@ class _RecurringTransactionListScreenState
     final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
-      appBar: IosNavBar(
-        title: 'Recurring Flows',
-        largeTitle: true,
-        canPop: canPop,
-        actions: [
-          IconButton(
-            icon: const Icon(PesaFlowIcons.add, size: 28),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              context.push('/recurring/add');
-            },
-          ),
-        ],
-      ),
-      body: recurringAsync.when(
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: Column(
+          children: [
+            // ── OLED Header ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Recurring Flows',
+                    style: context.ts(
+                      34,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  TactileSpringContainer(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      context.push('/recurring/add');
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        PesaFlowIcons.add,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // ── Content ──
+            Expanded(
+              child: recurringAsync.when(
         data: (recurring) {
           final filtered = _applyFilter(recurring);
           final sorted = List<RecurringTransaction>.from(filtered)

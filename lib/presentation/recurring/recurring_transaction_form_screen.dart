@@ -270,89 +270,155 @@ class _RecurringTransactionFormScreenState
         }
       },
       child: Scaffold(
-        appBar: IosNavBar(
-          title: _isEditing ? 'Edit Recurring' : 'Add Recurring',
-          largeTitle: false,
-          actions: [
-            if (_isEditing)
-              IconButton(
-                icon: Icon(
-                  PesaFlowIcons.delete,
-                  color: theme.colorScheme.error,
-                ),
-                onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Delete Recurring Flow?'),
-                      content: const Text(
-                        'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(false),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.error,
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () => Navigator.of(ctx).pop(true),
-                          child: const Text('Delete'),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm == true && mounted) {
-                    final existing = await ref
-                        .read(recurringTransactionRepositoryProvider)
-                        .getById(widget.recurringId!);
-                    if (existing == null || !mounted) return;
-                    final recurringData = existing;
-
-                    if (!context.mounted) return;
-                    UndoDelete.show(
-                      context: context,
-                      entityName: 'Recurring Flow',
-                      message: 'Recurring flow deleted',
-                      onUndo: () async {
-                        await ref
-                            .read(recurringTransactionRepositoryProvider)
-                            .createRecurringTransaction(recurringData);
-                        if (mounted) {
-                          ref.invalidate(recurringTransactionsStreamProvider);
-                          ref.invalidate(dueRecurringTransactionsProvider);
-                        }
-                      },
-                      onDelete: () async {
-                        try {
-                          await ref
-                              .read(recurringTransactionRepositoryProvider)
-                              .deleteRecurringTransaction(widget.recurringId!);
-                          if (context.mounted) {
-                            ref.invalidate(recurringTransactionsStreamProvider);
-                            ref.invalidate(dueRecurringTransactionsProvider);
-                            context.pop();
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            CustomToast.show(
-                              context,
-                              message: 'Error: $e',
-                              type: ToastType.error,
-                            );
-                          }
-                        }
-                      },
-                    );
-                  }
-                },
+        body: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                20,
+                MediaQuery.of(context).padding.top + 8,
+                20,
+                16,
               ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(kSpacing16),
+              child: Row(
+                children: [
+                  TactileSpringContainer(
+                    onTap: () => Navigator.of(context).maybePop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing14),
+                  Text(
+                    _isEditing ? 'Edit Recurring' : 'Add Recurring',
+                    style: context.ts(
+                      28,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.8,
+                      color: Colors.white,
+                    ),
+                  ),
+                  if (_isEditing) ...[
+                    const Spacer(),
+                    TactileSpringContainer(
+                      onTap: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Delete Recurring Flow?'),
+                            content: const Text(
+                              'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(ctx).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      theme.colorScheme.error,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(ctx).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true && mounted) {
+                          final existing = await ref
+                              .read(
+                                recurringTransactionRepositoryProvider,
+                              )
+                              .getById(widget.recurringId!);
+                          if (existing == null || !mounted) return;
+                          final recurringData = existing;
+
+                          if (!context.mounted) return;
+                          UndoDelete.show(
+                            context: context,
+                            entityName: 'Recurring Flow',
+                            message: 'Recurring flow deleted',
+                            onUndo: () async {
+                              await ref
+                                  .read(
+                                    recurringTransactionRepositoryProvider,
+                                  )
+                                  .createRecurringTransaction(
+                                    recurringData,
+                                  );
+                              if (mounted) {
+                                ref.invalidate(
+                                  recurringTransactionsStreamProvider,
+                                );
+                                ref.invalidate(
+                                  dueRecurringTransactionsProvider,
+                                );
+                              }
+                            },
+                            onDelete: () async {
+                              try {
+                                await ref
+                                    .read(
+                                      recurringTransactionRepositoryProvider,
+                                    )
+                                    .deleteRecurringTransaction(
+                                      widget.recurringId!,
+                                    );
+                                if (context.mounted) {
+                                  ref.invalidate(
+                                    recurringTransactionsStreamProvider,
+                                  );
+                                  ref.invalidate(
+                                    dueRecurringTransactionsProvider,
+                                  );
+                                  context.pop();
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  CustomToast.show(
+                                    context,
+                                    message: 'Error: $e',
+                                    type: ToastType.error,
+                                  );
+                                }
+                              }
+                            },
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: context.appColors.expenseColor
+                              .withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          PesaFlowIcons.delete,
+                          size: 18,
+                          color: context.appColors.expenseColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(kSpacing16),
           child: Form(
             key: _formKey,
             child: Column(
