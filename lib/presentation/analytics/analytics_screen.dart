@@ -188,7 +188,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
     return DefaultTabController(
       length: 3,
       child: Scaffold(

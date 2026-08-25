@@ -838,8 +838,9 @@ class _RecurringTransactionFormScreenState
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
+        ),          // SingleChildScrollView
+      ),            // Expanded
+    ],              // Column children
+  ),                // Column
+),                  // Scaffold
+);                  // PopScope

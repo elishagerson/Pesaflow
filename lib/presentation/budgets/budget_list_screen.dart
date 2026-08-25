@@ -52,7 +52,6 @@ class BudgetListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final activeTab = ref.watch(budgetActiveTabProvider);
     final budgetProgressAsync = ref.watch(budgetProgressProvider);
-    final onSurface = theme.colorScheme.onSurface;
 
     return Scaffold(
       body: SafeArea(

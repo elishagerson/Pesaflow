@@ -66,8 +66,6 @@ class _RecurringTransactionListScreenState
       return cat != null ? hexToColor(cat.color) : null;
     }
 
-    final canPop = Navigator.of(context).canPop();
-
     return Scaffold(
       body: SafeArea(
         top: true,

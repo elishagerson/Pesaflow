@@ -646,8 +646,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
+        ),          // SingleChildScrollView
+      ),            // Expanded
+    ],              // Column children
+  ),                // Column
+),                  // Scaffold
+);                  // PopScope
