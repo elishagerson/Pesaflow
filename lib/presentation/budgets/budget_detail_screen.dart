@@ -466,8 +466,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                         // ── 4. DAILY SPEND CHART — with budget line + average ──
                         dailyAsync.when(
                           data: (dailyData) {
-                            if (dailyData.isEmpty)
+                            if (dailyData.isEmpty) {
                               return const SizedBox.shrink();
+                            }
                             final maxAmount = dailyData
                                 .map((e) => e.value)
                                 .reduce((a, b) => a > b ? a : b);
