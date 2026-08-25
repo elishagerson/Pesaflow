@@ -864,7 +864,7 @@ class _SavingsGoalDetailSheetState
                                 ),
                                 style: Theme.of(context).textTheme.titleLarge!
                                     .copyWith(
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w800,
                                       color: onSurface,
                                     ),
                               ),

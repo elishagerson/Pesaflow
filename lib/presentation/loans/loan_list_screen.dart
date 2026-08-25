@@ -376,7 +376,7 @@ class LoanListScreen extends ConsumerWidget {
                       CurrencyFormatter.formatCents(total),
                       style: context.ts(
                         22,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                         color: onSurface,
                       ),
                     ),

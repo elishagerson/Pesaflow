@@ -649,15 +649,15 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                               trans.rawSms!,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: theme.textTheme.labelSmall
-                                                  ?.copyWith(
-                                                    fontFamily: 'monospace',
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant
-                                                        .withValues(alpha: 0.6),
-                                                    fontSize: 11,
-                                                  ),
+                                              style: AppTheme.getMonospaceStyle(
+                                                theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant
+                                                      .withValues(alpha: 0.6),
+                                                  fontSize: 11,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],

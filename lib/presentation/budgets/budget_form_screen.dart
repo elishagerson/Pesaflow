@@ -369,12 +369,12 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: kSpacing12),
                   child: Text(
                     'Tsh $formattedVal',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: 'monospace',
-                      letterSpacing: -0.5,
-                    ),
+                    style: AppTheme.getMonospaceStyle(
+                      theme.textTheme.headlineSmall!.copyWith(
+                        color: theme.colorScheme.onSurface,
+                        letterSpacing: -0.5,
+                      ),
+                    ).copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
               ),

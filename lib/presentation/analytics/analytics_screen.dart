@@ -840,13 +840,13 @@ class _OverviewTab extends StatelessWidget {
                                         }
                                         return val.toStringAsFixed(0);
                                       })(),
-                                      style: context
-                                          .ts(
-                                            12,
-                                            fontWeight: FontWeight.bold,
-                                            color: theme.colorScheme.onSurface,
-                                          )
-                                          .copyWith(fontFamily: 'monospace'),
+                                      style: AppTheme.getMonospaceStyle(
+                                        context.ts(
+                                          12,
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),

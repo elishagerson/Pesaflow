@@ -596,13 +596,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   horizontal: kSpacing20,
                                 ),
                                 child: Text(
-                                  'BUDGET PROGRESS',
+                                  'Budget Progress',
                                   style: context.ts(
-                                    12,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.1,
+                                    14,
+                                    fontWeight: FontWeight.w600,
                                     color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.5),
+                                        .withValues(alpha: 0.6),
                                   ),
                                 ),
                               ),

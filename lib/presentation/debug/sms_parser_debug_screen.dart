@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/domain/sms/provider_matcher.dart';
 import 'package:pesaflow/domain/sms/provider_config.dart';
 import 'package:pesaflow/domain/sms/sms_classifier.dart';
@@ -165,10 +166,11 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                 child: SingleChildScrollView(
                   child: SelectableText(
                     _output,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      color: Colors.greenAccent,
+                    style: AppTheme.getMonospaceStyle(
+                      const TextStyle(
+                        fontSize: 12,
+                        color: Colors.greenAccent,
+                      ),
                     ),
                   ),
                 ),

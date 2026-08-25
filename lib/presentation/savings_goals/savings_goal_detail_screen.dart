@@ -876,7 +876,7 @@ class _SavingsGoalDetailScreenState
                                   goal.currentAmount,
                                 ),
                                 style: theme.textTheme.titleLarge!.copyWith(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w800,
                                   color: onSurface,
                                 ),
                               ),
