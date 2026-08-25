@@ -267,223 +267,235 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                     kSpacing24,
                   ),
                   child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'GOAL DETAILS',
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: onSurface.withValues(alpha: 0.45),
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: kSpacing8),
-                StaggeredFadeSlide(
-                  index: 0,
-                  child: GlassCard(
-                    padding: const EdgeInsets.all(kSpacing16),
-                    borderRadius: AppTheme.radiusCard,
+                    key: _formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextFormField(
-                          controller: _nameController,
-                          textCapitalization: TextCapitalization.words,
-                          style: theme.textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
+                        Text(
+                          'Goal Details',
+                          style: context.ts(
+                            15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
-                          decoration: inputDeco(
-                            label: 'Goal Title',
-                            hint: 'e.g. Vacation to Zanzibar',
-                            icon: PesaFlowIcons.title,
-                          ).copyWith(errorText: _nameError),
-                          onChanged: (_) => setState(() => _nameError = null),
                         ),
-                        const SizedBox(height: kSpacing12),
-                        TextFormField(
-                          controller: _amountController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          style: theme.textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w500,
+                        const SizedBox(height: kSpacing8),
+                        StaggeredFadeSlide(
+                          index: 0,
+                          child: GlassCard(
+                            padding: const EdgeInsets.all(kSpacing16),
+                            borderRadius: AppTheme.radiusCard,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: _nameController,
+                                  textCapitalization: TextCapitalization.words,
+                                  style: theme.textTheme.titleMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  decoration: inputDeco(
+                                    label: 'Goal Title',
+                                    hint: 'e.g. Vacation to Zanzibar',
+                                    icon: PesaFlowIcons.title,
+                                  ).copyWith(errorText: _nameError),
+                                  onChanged: (_) =>
+                                      setState(() => _nameError = null),
+                                ),
+                                const SizedBox(height: kSpacing12),
+                                TextFormField(
+                                  controller: _amountController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  style: theme.textTheme.titleMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  decoration: inputDeco(
+                                    label: 'Target Amount (Tsh)',
+                                    hint: 'e.g. 1500000',
+                                    icon: PesaFlowIcons.cash,
+                                  ).copyWith(errorText: _amountError),
+                                  onChanged: (_) =>
+                                      setState(() => _amountError = null),
+                                ),
+                                const SizedBox(height: kSpacing12),
+                                ModernDateSelector(
+                                  labelText: 'Target Date',
+                                  value: _selectedDate,
+                                  prefixIcon: PesaFlowIcons.calendar,
+                                  firstDate: DateTime.now().subtract(
+                                    const Duration(days: 1),
+                                  ),
+                                  lastDate: DateTime(2035),
+                                  onChanged: (d) =>
+                                      setState(() => _selectedDate = d),
+                                ),
+                              ],
+                            ),
                           ),
-                          decoration: inputDeco(
-                            label: 'Target Amount (Tsh)',
-                            hint: 'e.g. 1500000',
-                            icon: PesaFlowIcons.cash,
-                          ).copyWith(errorText: _amountError),
-                          onChanged: (_) => setState(() => _amountError = null),
                         ),
-                        const SizedBox(height: kSpacing12),
-                        ModernDateSelector(
-                          labelText: 'Target Date',
-                          value: _selectedDate,
-                          prefixIcon: PesaFlowIcons.calendar,
-                          firstDate: DateTime.now().subtract(
-                            const Duration(days: 1),
+                        const SizedBox(height: kSpacing20),
+
+                        Text(
+                          'Theme Color',
+                          style: context.ts(
+                            15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
-                          lastDate: DateTime(2035),
-                          onChanged: (d) => setState(() => _selectedDate = d),
                         ),
+                        const SizedBox(height: kSpacing8),
+                        StaggeredFadeSlide(
+                          index: 1,
+                          child: GlassCard(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                              vertical: kSpacing14,
+                            ),
+                            borderRadius: AppTheme.radiusCard,
+                            child: ModernColorPicker(
+                              selectedColorHex: _selectedColor,
+                              onColorChanged: (hex) {
+                                setState(() => _selectedColor = hex);
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing16),
+
+                        Text(
+                          'Goal Icon',
+                          style: context.ts(
+                            15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing8),
+                        StaggeredFadeSlide(
+                          index: 2,
+                          child: GlassCard(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing16,
+                              vertical: kSpacing14,
+                            ),
+                            borderRadius: AppTheme.radiusCard,
+                            child: SizedBox(
+                              height: 48,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _icons.length,
+                                separatorBuilder: (_, _) =>
+                                    const SizedBox(width: kSpacing14),
+                                itemBuilder: (context, index) {
+                                  final item = _icons[index];
+                                  final isSelected =
+                                      _selectedIcon == item['name'];
+                                  final themeCol = hexToColor(_selectedColor);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      HapticFeedback.selectionClick();
+                                      setState(
+                                        () => _selectedIcon = item['name'],
+                                      );
+                                    },
+                                    child: AnimatedContainer(
+                                      duration:
+                                          const Duration(milliseconds: 250),
+                                      curve: Curves.easeInOut,
+                                      width: isSelected ? 48 : 44,
+                                      height: isSelected ? 48 : 44,
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? themeCol.withValues(alpha: 0.15)
+                                            : theme.colorScheme
+                                                .surfaceContainerHigh,
+                                        borderRadius:
+                                            BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? themeCol
+                                              : Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        item['icon'],
+                                        color: isSelected
+                                            ? themeCol
+                                            : Colors.white
+                                                .withValues(alpha: 0.6),
+                                        size: 22,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing28),
+
+                        StaggeredFadeSlide(
+                          index: 3,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: kSpacing48,
+                            child: TactileSpringContainer(
+                              onTap: _isLoading ? null : _save,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      hexToColor(_selectedColor),
+                                      hexToColor(_selectedColor)
+                                          .withValues(alpha: 0.8),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(100),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: hexToColor(
+                                        _selectedColor,
+                                      ).withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        height: kSpacing20,
+                                        width: kSpacing20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        widget.goalId != null
+                                            ? 'Update Goal'
+                                            : 'Create Savings Goal',
+                                        style: theme.textTheme.titleMedium!
+                                            .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing24),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: kSpacing20),
-
-                Text(
-                  'THEME COLOR',
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: onSurface.withValues(alpha: 0.45),
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: kSpacing8),
-                StaggeredFadeSlide(
-                  index: 1,
-                  child: GlassCard(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kSpacing16,
-                      vertical: kSpacing14,
-                    ),
-                    borderRadius: AppTheme.radiusCard,
-                    child: ModernColorPicker(
-                      selectedColorHex: _selectedColor,
-                      onColorChanged: (hex) {
-                        setState(() => _selectedColor = hex);
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-
-                Text(
-                  'GOAL ICON',
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: onSurface.withValues(alpha: 0.45),
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: kSpacing8),
-                StaggeredFadeSlide(
-                  index: 2,
-                  child: GlassCard(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kSpacing16,
-                      vertical: kSpacing14,
-                    ),
-                    borderRadius: AppTheme.radiusCard,
-                    child: SizedBox(
-                      height: 48,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _icons.length,
-                        separatorBuilder: (_, _) =>
-                            const SizedBox(width: kSpacing14),
-                        itemBuilder: (context, index) {
-                          final item = _icons[index];
-                          final isSelected = _selectedIcon == item['name'];
-                          final themeCol = hexToColor(_selectedColor);
-                          return GestureDetector(
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              setState(() => _selectedIcon = item['name']);
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              curve: Curves.easeInOut,
-                              width: isSelected ? 48 : 44,
-                              height: isSelected ? 48 : 44,
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? themeCol.withValues(alpha: 0.15)
-                                    : theme.colorScheme.surfaceContainerHigh,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? themeCol
-                                      : Colors.transparent,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Icon(
-                                item['icon'],
-                                color: isSelected
-                                    ? themeCol
-                                    : onSurface.withValues(alpha: 0.6),
-                                size: 22,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing28),
-
-                StaggeredFadeSlide(
-                  index: 3,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: kSpacing48,
-                    child: TactileSpringContainer(
-                      onTap: _isLoading ? null : _save,
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              hexToColor(_selectedColor),
-                              hexToColor(_selectedColor).withValues(alpha: 0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              color: hexToColor(
-                                _selectedColor,
-                              ).withValues(alpha: 0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                height: kSpacing20,
-                                width: kSpacing20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : Text(
-                                widget.goalId != null
-                                    ? 'Update Goal'
-                                    : 'Create Savings Goal',
-                                style: theme.textTheme.titleMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing24),
-              ],
+              ),
             ),
-          ),
-        ),
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
