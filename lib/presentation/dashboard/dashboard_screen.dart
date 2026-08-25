@@ -579,9 +579,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                     const SizedBox(width: kSpacing10),
                                     _QuickActionButton(
-                                      icon: PesaFlowIcons.goal,
+                                      icon: PesaFlowIcons.savings,
                                       label: 'Goal',
-                                      color: context.appColors.transferColor,
+                                      color: context.appColors.transferColor
+                                          .withValues(alpha: 0.85),
                                       onTap: () =>
                                           context.push('/savings-goals/add'),
                                     ),
@@ -647,13 +648,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'RECENT TRANSACTIONS',
+                                    'Recent Transactions',
                                     style: context.ts(
-                                      12,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 1.1,
+                                      14,
+                                      fontWeight: FontWeight.w600,
                                       color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
+                                          .withValues(alpha: 0.6),
                                     ),
                                   ),
                                   TactileSpringContainer(
