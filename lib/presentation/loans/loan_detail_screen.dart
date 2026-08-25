@@ -522,7 +522,7 @@ class LoanDetailScreen extends ConsumerWidget {
                   '${(ratio * 100).round()}%',
                   style: context.ts(
                     16,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     color: Color.lerp(
                       context.appColors.expenseColor,
                       context.appColors.incomeColor,
@@ -679,7 +679,7 @@ class LoanDetailScreen extends ConsumerWidget {
                       DateFormatter.shortDate(estimatedDate),
                       style: context.ts(
                         16,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -690,7 +690,7 @@ class LoanDetailScreen extends ConsumerWidget {
                 '${daysLeft}d',
                 style: context.ts(
                   22,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   color: theme.colorScheme.tertiary,
                 ),
               ),

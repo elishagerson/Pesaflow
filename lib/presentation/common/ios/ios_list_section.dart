@@ -244,7 +244,7 @@ class IosMetricCard extends StatelessWidget {
             value,
             style: context.ts(
               18,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               color: theme.colorScheme.onSurface,
             ),
           ),

@@ -149,7 +149,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                         'TSh',
                                         style: theme.textTheme.titleMedium!
                                             .copyWith(
-                                              fontWeight: FontWeight.w900,
+                                              fontWeight: FontWeight.w600,
                                               color: onSurface.withValues(
                                                 alpha: 0.55,
                                               ),

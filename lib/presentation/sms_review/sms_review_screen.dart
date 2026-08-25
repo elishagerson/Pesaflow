@@ -1416,7 +1416,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: 1.5,
                                   ),
                             ),
@@ -1470,7 +1470,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: 1.5,
                                   ),
                             ),

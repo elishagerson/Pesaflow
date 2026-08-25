@@ -26,6 +26,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/transactions/widgets/transaction_filter_sheet.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/motion/skeleton_crossfade.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
@@ -345,11 +346,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                 Text(
                                   _formatHeaderDate(
                                     firstItemDate,
-                                  ).toUpperCase(),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.2,
-                                    color: onSurface.withValues(alpha: 0.34),
+                                  ),
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: onSurface.withValues(alpha: 0.45),
                                   ),
                                 ),
                                 // Monospace Net Change Indicator
@@ -490,12 +490,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                 width: 40,
                                                 height: 40,
                                                 alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: categoryColor.withValues(alpha: 0.12),
+                                                  borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                                                ),
                                                 child: Icon(
                                                   getCategoryIcon(
                                                     item.category.icon,
                                                   ),
                                                   color: categoryColor,
-                                                  size: 24,
+                                                  size: 20,
                                                 ),
                                               ),
                                               const SizedBox(width: kSpacing14),
@@ -651,20 +655,20 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                                   const SizedBox(
                                                     height: kSpacing4,
                                                   ),
-                                                  Text(
-                                                    formattedTime,
-                                                    style: theme
-                                                        .textTheme
-                                                        .labelSmall
-                                                        ?.copyWith(
-                                                          color: onSurface
-                                                              .withValues(
-                                                                alpha: 0.25,
-                                                              ),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                  ),
+                                                   Text(
+                                                     formattedTime,
+                                                     style: theme
+                                                         .textTheme
+                                                         .labelSmall
+                                                         ?.copyWith(
+                                                           color: onSurface
+                                                               .withValues(
+                                                                 alpha: 0.38,
+                                                               ),
+                                                           fontWeight:
+                                                               FontWeight.w500,
+                                                         ),
+                                                   ),
                                                 ],
                                               ),
                                             ],
@@ -743,7 +747,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   'Transactions',
                                   style: theme.textTheme.headlineMedium
                                       ?.copyWith(
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w700,
                                         letterSpacing: -0.5,
                                         color: onSurface,
                                       ),

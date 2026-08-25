@@ -113,7 +113,7 @@ class SmsReviewCard extends StatelessWidget {
                       : '0 PENDING',
                   style: context.ts(
                     10,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     color: pendingReviewCount > 0
                         ? context.appColors.transferColor
                         : theme.colorScheme.onSurface.withValues(alpha: 0.6),

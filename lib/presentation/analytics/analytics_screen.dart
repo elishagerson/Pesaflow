@@ -369,7 +369,7 @@ class _OverviewTab extends StatelessWidget {
                                   style: context.ts(
                                     20,
                                     color: incomeColorVal,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
@@ -393,7 +393,7 @@ class _OverviewTab extends StatelessWidget {
                                   style: context.ts(
                                     20,
                                     color: expenseColorVal,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
@@ -431,7 +431,7 @@ class _OverviewTab extends StatelessWidget {
                                 : AmountType.expense,
                             style: Theme.of(context).textTheme.bodyLarge!
                                 .copyWith(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w700,
                                   color: net >= 0
                                       ? incomeColorVal
                                       : expenseColorVal,
@@ -781,7 +781,7 @@ class _OverviewTab extends StatelessWidget {
                     final colors = [
                       theme.colorScheme.primary,
                       context.appColors.transferColor,
-                      theme.colorScheme.primary,
+                      const Color(0xFF0EA5E9), // Sky blue
                       theme.colorScheme.secondary,
                       context.appColors.expenseColor,
                     ];
@@ -823,7 +823,7 @@ class _OverviewTab extends StatelessWidget {
                                       'SPENT',
                                       style: context.ts(
                                         8,
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w700,
                                         color: theme.colorScheme.onSurface
                                             .withValues(alpha: 0.4),
                                         letterSpacing: 1.0,

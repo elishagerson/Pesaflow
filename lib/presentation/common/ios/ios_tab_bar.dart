@@ -228,7 +228,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
 
     final titleStyle = context.ts(
       28,
-      fontWeight: FontWeight.w900,
+      fontWeight: FontWeight.w700,
       letterSpacing: -0.8,
       color: theme.colorScheme.onSurface,
     );

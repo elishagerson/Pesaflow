@@ -356,7 +356,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                         color: Colors.white,
                                                         fontSize: 8,
                                                         fontWeight:
-                                                            FontWeight.w900,
+                                                            FontWeight.w700,
                                                       ),
                                                 ),
                                               ),

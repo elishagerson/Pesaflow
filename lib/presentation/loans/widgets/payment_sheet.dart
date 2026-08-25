@@ -62,7 +62,7 @@ class LoanProgressRing extends StatelessWidget {
               ),
               Text(
                 '${(paidFraction * 100).round()}%',
-                style: context.ts(13, fontWeight: FontWeight.w900),
+                style: context.ts(13, fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -905,7 +905,7 @@ Widget _buildAmountField({
           'TSh',
           style: context.ts(
             16,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w600,
             color: onSurface.withValues(alpha: 0.55),
           ),
         ),

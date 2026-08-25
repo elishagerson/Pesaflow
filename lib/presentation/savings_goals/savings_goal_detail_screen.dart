@@ -293,7 +293,7 @@ class _SavingsGoalDetailScreenState
                                           'TSh',
                                           style: theme.textTheme.titleMedium!
                                               .copyWith(
-                                                fontWeight: FontWeight.w900,
+                                                fontWeight: FontWeight.w600,
                                                 color: accentColor,
                                               ),
                                         ),
@@ -850,7 +850,7 @@ class _SavingsGoalDetailScreenState
                               Text(
                                 '$percentInt%',
                                 style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w700,
                                   color: goalColor,
                                 ),
                               ),

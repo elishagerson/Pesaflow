@@ -147,7 +147,7 @@ class _SpendingHeatmapCardState extends ConsumerState<SpendingHeatmapCard> {
                       style: context.ts(
                         20,
                         color: appColors.expenseColor,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         letterSpacing: -0.3,
                       ),
                     ),

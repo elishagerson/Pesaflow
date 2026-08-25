@@ -285,7 +285,7 @@ class _SavingsGoalDetailSheetState
                                           'TSh',
                                           style: theme.textTheme.titleMedium!
                                               .copyWith(
-                                                fontWeight: FontWeight.w900,
+                                                fontWeight: FontWeight.w600,
                                                 color: accentColor,
                                               ),
                                         ),
@@ -837,7 +837,7 @@ class _SavingsGoalDetailSheetState
                                 '$percentInt%',
                                 style: Theme.of(context).textTheme.bodyMedium!
                                     .copyWith(
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w700,
                                       color: goalColor,
                                     ),
                               ),

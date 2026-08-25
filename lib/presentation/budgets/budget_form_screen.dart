@@ -357,7 +357,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                     : _nameController.text.toUpperCase(),
                 style: context.ts(
                   10,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                   letterSpacing: 1.5,
                 ),
@@ -393,7 +393,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                   _period.toUpperCase(),
                   style: context.ts(
                     10,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     color: themeColor,
                     letterSpacing: 0.5,
                   ),
@@ -870,8 +870,8 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                             ),
                                             style: theme.textTheme.titleMedium!
                                                 .copyWith(
-                                                  fontWeight: FontWeight.w900,
-                                                  color: thresholdColor,
+                                                   fontWeight: FontWeight.w700,
+                                                   color: thresholdColor,
                                                 ),
                                             child: Text(
                                               '${(_threshold * 100).round()}%',

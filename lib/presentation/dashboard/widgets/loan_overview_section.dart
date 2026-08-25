@@ -185,7 +185,7 @@ class LoanOverviewSection extends ConsumerWidget {
                             Text(
                               '$severityLevel DEBT BURDEN',
                               style: theme.textTheme.labelSmall?.copyWith(
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.w700,
                                 color: severityColor,
                                 letterSpacing: 0.8,
                               ),
@@ -403,7 +403,7 @@ class LoanOverviewSection extends ConsumerWidget {
                             CurrencyFormatter.formatCents(loan.remaining),
                             style: context.ts(
                               14,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w700,
                               color: loanSeverity,
                             ),
                           ),

@@ -408,7 +408,7 @@ class _RecurringTransactionListScreenState
           child: Text(
             value,
             style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),

@@ -713,7 +713,7 @@ class _StatCard extends StatelessWidget {
           AmountText(
             amountInCents: amount.abs(),
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               color: color,
               letterSpacing: -0.3,
             ),

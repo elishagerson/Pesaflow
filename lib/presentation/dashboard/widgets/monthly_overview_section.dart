@@ -112,7 +112,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                               : '${savingsPct.abs()}% DEFICIT',
                           style: context.ts(
                             11,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
                             color: netSavings >= 0
                                 ? appColors.incomeColor
                                 : appColors.expenseColor,
@@ -378,7 +378,7 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
           : '-${widget.savingsPct.abs()}%',
       style: context.ts(
         10,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w700,
         color: widget.netSavings >= 0
             ? widget.incomeColor
             : widget.expenseColor,

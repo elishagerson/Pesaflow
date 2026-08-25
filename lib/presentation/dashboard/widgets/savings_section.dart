@@ -126,7 +126,7 @@ class SavingsSection extends ConsumerWidget {
                       '$percentInt%',
                       style: context.ts(
                         16,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         color: goalColor,
                       ),
                     ),
