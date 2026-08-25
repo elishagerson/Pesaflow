@@ -71,7 +71,7 @@ class BudgetListScreen extends ConsumerWidget {
                     style: context.ts(
                       34,
                       fontWeight: FontWeight.w800,
-                      color: onSurface,
+                      color: Colors.white,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -91,14 +91,14 @@ class BudgetListScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(
-                          alpha: 0.15,
+                        color: Colors.white.withValues(
+                          alpha: 0.1,
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         PesaFlowIcons.add,
-                        color: theme.colorScheme.primary,
+                        color: Colors.white,
                         size: 22,
                       ),
                     ),
