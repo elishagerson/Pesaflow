@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -98,7 +99,6 @@ class BudgetDetailScreen extends ConsumerWidget {
 
             return Column(
               children: [
-                // ── Connected header: title + category + status ──
                 Container(
                   padding: EdgeInsets.fromLTRB(
                     20,
@@ -106,46 +106,47 @@ class BudgetDetailScreen extends ConsumerWidget {
                     20,
                     16,
                   ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface.withValues(alpha: 0.85),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-                        width: 0.5,
-                      ),
-                    ),
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Back button row
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).maybePop(),
+                          TactileSpringContainer(
+                            onTap: () {
+                              Navigator.of(context).maybePop();
+                            },
                             child: Container(
-                              width: 36,
-                              height: 36,
-                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                color: Colors.white.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
-                                PesaFlowIcons.back,
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
                                 size: 18,
-                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
                           const Spacer(),
-                          IconButton(
-                            icon: const Icon(PesaFlowIcons.edit, size: 20),
-                            onPressed: () => context.push('/budgets/$budgetId/edit'),
+                          TactileSpringContainer(
+                            onTap: () => context.push('/budgets/$budgetId/edit'),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.06),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                PesaFlowIcons.edit,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                          IconButton(
-                            icon: const Icon(PesaFlowIcons.delete, size: 20),
-                            onPressed: () async {
+                          const SizedBox(width: kSpacing8),
+                          TactileSpringContainer(
+                            onTap: () async {
                               final confirm = await ModernDialog.show<bool>(
                                 context: context,
                                 title: const Text('Delete Budget?'),
@@ -207,11 +208,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 );
                               }
                             },
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: context.appColors.expenseColor
+                                    .withValues(alpha: 0.12),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                PesaFlowIcons.delete,
+                                size: 18,
+                                color: context.appColors.expenseColor,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      // Title + status pill
+                      const SizedBox(height: kSpacing12),
                       Row(
                         children: [
                           Expanded(
@@ -221,7 +234,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 28,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: -0.8,
-                                color: theme.colorScheme.onSurface,
+                                color: Colors.white,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -256,7 +269,6 @@ class BudgetDetailScreen extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: kSpacing6),
-                      // Category chip + period
                       Row(
                         children: [
                           Container(
@@ -283,7 +295,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                             style: context.ts(
                               11,
                               fontWeight: FontWeight.w500,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                              color: Colors.white.withValues(alpha: 0.4),
                             ),
                           ),
                         ],
