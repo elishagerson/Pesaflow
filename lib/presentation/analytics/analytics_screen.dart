@@ -200,15 +200,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             children: [
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.85),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: onSurface.withValues(alpha: 0.06),
-                      width: 0.5,
-                    ),
-                  ),
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -218,7 +209,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         28,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.8,
-                        color: onSurface,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -226,7 +217,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       'Spending trends & insights',
                       style: context.ts(
                         13,
-                        color: onSurface.withValues(alpha: 0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     ),
                   ],

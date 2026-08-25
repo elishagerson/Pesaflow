@@ -224,31 +224,84 @@ class LoanDetailScreen extends ConsumerWidget {
               ),
             ],
           ),
-                ),
-              ],
-            ),
-          ),
-        );
+        ),
+      ],
+    ),
+  ),
+),
+);
       },
-      loading: () => const Scaffold(
-        appBar: IosNavBar(title: 'Loan Details', largeTitle: false),
-        body: Padding(
-          padding: EdgeInsets.all(kSpacing20),
-          child: Column(
-            children: [
-              SkeletonCard(height: 180),
-              SizedBox(height: kSpacing16),
-              SkeletonCard(height: 100),
-            ],
-          ),
+      loading: () => Scaffold(
+        backgroundColor: Colors.black,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Row(
+                children: [
+                  TactileSpringContainer(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing12),
+                  Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                ],
+              ),
+            ),
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(kSpacing20),
+                child: Column(
+                  children: [
+                    SkeletonCard(height: 180),
+                    SizedBox(height: kSpacing16),
+                    SkeletonCard(height: 100),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       error: (e, _) => Scaffold(
-        appBar: const IosNavBar(title: 'Loan Details', largeTitle: false),
-        body: ErrorState(
-          title: 'Failed to Load Loan Details',
-          message: e.toString(),
-          onRetry: () => ref.invalidate(loansStreamProvider),
+        backgroundColor: Colors.black,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Row(
+                children: [
+                  TactileSpringContainer(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(kSpacing10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing12),
+                  Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ErrorState(
+                title: 'Failed to Load Loan Details',
+                message: e.toString(),
+                onRetry: () => ref.invalidate(loansStreamProvider),
+              ),
+            ),
+          ],
         ),
       ),
     );
