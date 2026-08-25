@@ -229,32 +229,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
+                  color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                    color: onSurface.withValues(alpha: 0.08),
-                    width: 0.5,
-                  ),
                 ),
                 child: TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
                   dividerColor: Colors.transparent,
                   indicatorPadding: EdgeInsets.zero,
                   indicator: BoxDecoration(
-                    color: theme.colorScheme.surface,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(100),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.shadow.withValues(
-                          alpha: 0.06,
-                        ),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
                   ),
-                  labelColor: onSurface,
-                  unselectedLabelColor: onSurface.withValues(alpha: 0.55),
+                  labelColor: Colors.black87,
+                  unselectedLabelColor: Colors.white.withValues(alpha: 0.55),
                   labelStyle: context.ts(13, fontWeight: FontWeight.w700),
                   unselectedLabelStyle: context.ts(
                     13,
