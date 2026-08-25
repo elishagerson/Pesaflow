@@ -540,7 +540,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                               ),
                             ],
-                            const SizedBox(height: kSpacing16),
+                            const SizedBox(height: kSpacing32),
 
                             // ── 3b. Quick Actions ──
                             StaggeredFadeSlide(
@@ -589,7 +589,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: kSpacing20),
+                            const SizedBox(height: kSpacing28),
 
                             // ── Budget Progress Row ──
                             if (budgets.isNotEmpty) ...[
