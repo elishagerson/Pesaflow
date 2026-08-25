@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
@@ -16,13 +15,13 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 
@@ -700,7 +699,6 @@ class _SavingsGoalDetailScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
 
     return goalsAsync.when(
@@ -708,12 +706,42 @@ class _SavingsGoalDetailScreenState
         final goal = goals.where((g) => g.id == widget.goalId).firstOrNull;
         if (goal == null) {
           return Scaffold(
-            appBar: const IosNavBar(title: 'Goal Details', largeTitle: false),
-            body: EmptyState(
-              icon: PesaFlowIcons.savings,
-              title: 'Goal Not Found',
-              subtitle:
-                  'The requested savings goal details could not be located.',
+            backgroundColor: Colors.black,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                    child: Row(
+                      children: [
+                        TactileSpringContainer(
+                          onTap: () => Navigator.of(context).maybePop(),
+                          child: Container(
+                            padding: const EdgeInsets.all(kSpacing10),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: EmptyState(
+                      icon: PesaFlowIcons.savings,
+                      title: 'Goal Not Found',
+                      subtitle:
+                          'The requested savings goal details could not be located.',
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -729,441 +757,559 @@ class _SavingsGoalDetailScreenState
             : 0.0;
         final percentInt = (pct * 100).round();
 
-        return Scaffold(
-          appBar: IosNavBar(
-            title: goal.name,
-            largeTitle: false,
-            actions: [
-              IconButton(
-                icon: const Icon(PesaFlowIcons.edit, size: 20),
-                onPressed: () => context.push('/savings-goals/${goal.id}/edit'),
-              ),
-              IconButton(
-                icon: Icon(
-                  PesaFlowIcons.delete,
-                  size: 20,
-                  color: Colors.red.withValues(alpha: 0.7),
+        final daysElapsed = DateTime.now().difference(goal.targetDate).inDays < 0
+            ? DateTime.now().difference(
+                DateTime.now().subtract(
+                  DateTime.now().difference(goal.targetDate),
                 ),
-                onPressed: () => _deleteGoal(goal.id),
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-              kSpacing16,
-              0,
-              kSpacing16,
-              kSpacing24,
-            ),
+              ).inDays
+            : 0;
+        final dailyTarget = remainingDays > 0
+            ? (goal.targetAmount - goal.currentAmount) ~/ (remainingDays * 100)
+            : 0;
+        final totalSaved = goal.currentAmount;
+
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            bottom: false,
             child: Column(
               children: [
-                const SizedBox(height: kSpacing8),
-                // Goal header
-                Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: goalColor.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: goalColor.withValues(alpha: 0.3),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Icon(
-                        getGoalIcon(goal.icon),
-                        color: goalColor,
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                // ── OLED Black Header ──
+                Container(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    MediaQuery.of(context).padding.top + 8,
+                    20,
+                    16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            goal.name,
-                            style: context.ts(22, fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          TactileSpringContainer(
+                            onTap: () => Navigator.of(context).maybePop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: kSpacing4),
-                          Text(
-                            'Target deadline: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year} ($remainingDays days remaining)',
-                            style: theme.textTheme.labelSmall!.copyWith(
-                              color: onSurface.withValues(alpha: 0.6),
+                          const Spacer(),
+                          TactileSpringContainer(
+                            onTap: () =>
+                                context.push('/savings-goals/${goal.id}/edit'),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.06),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                PesaFlowIcons.edit,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          TactileSpringContainer(
+                            onTap: () => _deleteGoal(goal.id),
+                            child: Container(
+                              padding: const EdgeInsets.all(kSpacing10),
+                              decoration: BoxDecoration(
+                                color: context.appColors.expenseColor
+                                    .withValues(alpha: 0.12),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                PesaFlowIcons.delete,
+                                size: 18,
+                                color: context.appColors.expenseColor,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing16),
-
-                // Progress Card
-                Hero(
-                  tag: 'goal-${goal.id}',
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(kSpacing20),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: onSurface.withValues(alpha: 0.08),
-                        width: 0.5,
+                      const SizedBox(height: kSpacing12),
+                      Text(
+                        goal.name,
+                        style: context.ts(
+                          28,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.8,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: kSpacing64,
-                          width: kSpacing64,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              PieChart(
-                                PieChartData(
-                                  startDegreeOffset: -90,
-                                  sectionsSpace: 0,
-                                  centerSpaceRadius: 28,
-                                  sections: [
-                                    PieChartSectionData(
-                                      value: pct * 100,
-                                      color: goalColor,
-                                      radius: 6,
-                                      showTitle: false,
-                                    ),
-                                    PieChartSectionData(
-                                      value: (1.0 - pct) * 100,
-                                      color: goalColor.withValues(alpha: 0.12),
-                                      radius: 6,
-                                      showTitle: false,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                '$percentInt%',
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: goalColor,
-                                ),
-                              ),
-                            ],
+                      const SizedBox(height: kSpacing4),
+                      Row(
+                        children: [
+                          Icon(
+                            getGoalIcon(goal.icon),
+                            size: 14,
+                            color: goalColor,
                           ),
-                        ),
-                        const SizedBox(width: kSpacing20),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'TOTAL SAVED',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.1,
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing4),
-                              Text(
-                                CurrencyFormatter.formatCents(
-                                  goal.currentAmount,
-                                ),
-                                style: theme.textTheme.titleLarge!.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: kSpacing4),
-                              Text(
-                                'Goal target: ${CurrencyFormatter.formatCents(goal.targetAmount)}',
-                                style: theme.textTheme.labelSmall!.copyWith(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-
-                // Deposit / Withdraw buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: TactileSpringContainer(
-                        onTap: () {
-                          _showAddMoneySheet(context, goal, true);
-                        },
-                        child: Container(
-                          height: kSpacing48,
-                          decoration: BoxDecoration(
-                            color: context.appColors.incomeColor.withValues(
-                              alpha: 0.15,
+                          const SizedBox(width: kSpacing6),
+                          Text(
+                            remainingDays > 0
+                                ? '$remainingDays days remaining'
+                                : 'Target date reached',
+                            style: context.ts(
+                              12,
+                              color: Colors.white.withValues(alpha: 0.45),
                             ),
-                            borderRadius: BorderRadius.circular(12),
                           ),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                PesaFlowIcons.add,
-                                color: context.appColors.incomeColor,
-                                size: 18,
-                              ),
-                              const SizedBox(width: kSpacing6),
-                              Text(
-                                'Add Money',
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: context.appColors.incomeColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing12),
-                    Expanded(
-                      child: TactileSpringContainer(
-                        onTap: () {
-                          _showAddMoneySheet(context, goal, false);
-                        },
-                        child: Container(
-                          height: kSpacing48,
-                          decoration: BoxDecoration(
-                            color: context.appColors.expenseColor.withValues(
-                              alpha: 0.15,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                PesaFlowIcons.remove,
-                                color: context.appColors.expenseColor,
-                                size: 18,
-                              ),
-                              const SizedBox(width: kSpacing6),
-                              Text(
-                                'Withdraw',
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: context.appColors.expenseColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing24),
-
-                // Contribution Ledger
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'CONTRIBUTION LEDGER',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.grey[500],
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.1,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing8),
-
-                contributionsAsync.when(
-                  data: (logs) {
-                    if (logs.isEmpty) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: kSpacing32,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No deposits or withdrawals logged yet.',
-                          style: theme.textTheme.bodySmall!.copyWith(
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      );
-                    }
-
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: logs.length,
-                      separatorBuilder: (_, _) => Divider(
-                        color: onSurface.withValues(alpha: 0.12),
-                        height: 1,
-                      ),
-                      itemBuilder: (context, idx) {
-                        final log = logs[idx];
-                        final isPos = log.amount >= 0;
-
-                        return StaggeredFadeSlide(
-                          index: idx,
-                          child: Padding(
+                          const SizedBox(width: kSpacing10),
+                          Container(
                             padding: const EdgeInsets.symmetric(
-                              vertical: kSpacing12,
+                              horizontal: kSpacing8,
+                              vertical: kSpacing2,
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: isPos
-                                        ? context.appColors.incomeColor
-                                        : context.appColors.expenseColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: kSpacing14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        isPos
-                                            ? 'Savings Deposit'
-                                            : 'Savings Withdrawal',
-                                        style: theme.textTheme.bodySmall!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
+                            decoration: BoxDecoration(
+                              color: goalColor.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '$percentInt%',
+                              style: context.ts(
+                                11,
+                                fontWeight: FontWeight.w700,
+                                color: goalColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ── Scrollable body ──
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(
+                      kSpacing16,
+                      0,
+                      kSpacing16,
+                      kSpacing24,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── Hero Progress Card ──
+                        Hero(
+                          tag: 'goal-${goal.id}',
+                          child: GlassCard(
+                            padding: const EdgeInsets.all(kSpacing24),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 140,
+                                    width: 140,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 140,
+                                          width: 140,
+                                          child: CircularProgressIndicator(
+                                            value: pct,
+                                            strokeWidth: 10,
+                                            backgroundColor: goalColor
+                                                .withValues(alpha: 0.1),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              goalColor,
                                             ),
-                                      ),
-                                      if (log.notes != null) ...[
-                                        const SizedBox(height: kSpacing4),
-                                        Text(
-                                          log.notes!,
-                                          style: theme.textTheme.labelSmall!
-                                              .copyWith(
-                                                color: Colors.grey[500],
-                                              ),
+                                            strokeCap: StrokeCap.round,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 80,
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            color: goalColor
+                                                .withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            getGoalIcon(goal.icon),
+                                            color: goalColor,
+                                            size: 32,
+                                          ),
                                         ),
                                       ],
-                                      const SizedBox(height: kSpacing2),
+                                    ),
+                                  ),
+                                  const SizedBox(height: kSpacing16),
+                                  AmountText(
+                                    amountInCents: totalSaved,
+                                    style: context.ts(
+                                      32,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: -0.8,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: kSpacing2),
+                                  Text(
+                                    'of ${CurrencyFormatter.formatCents(goal.targetAmount)}',
+                                    style: context.ts(
+                                      13,
+                                      color: Colors.white.withValues(alpha: 0.4),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing16),
+
+                        // ── Stats Row ──
+                        Row(
+                          children: [
+                            _GoalStatCard(
+                              label: 'Remaining',
+                              value: CurrencyFormatter.formatCents(
+                                (goal.targetAmount - goal.currentAmount)
+                                    .clamp(0, goal.targetAmount),
+                              ),
+                              color: goalColor,
+                              theme: theme,
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            _GoalStatCard(
+                              label: 'Days Left',
+                              value: '$remainingDays',
+                              color: theme.colorScheme.secondary,
+                              theme: theme,
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            _GoalStatCard(
+                              label: 'Daily Target',
+                              value: CurrencyFormatter.formatCents(
+                                dailyTarget * 100,
+                              ),
+                              color: Colors.orange,
+                              theme: theme,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing16),
+
+                        // ── Action Buttons ──
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TactileSpringContainer(
+                                onTap: () {
+                                  _showAddMoneySheet(context, goal, true);
+                                },
+                                child: Container(
+                                  height: kSpacing52,
+                                  decoration: BoxDecoration(
+                                    color: context.appColors.incomeColor
+                                        .withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        PesaFlowIcons.add,
+                                        color: context.appColors.incomeColor,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: kSpacing6),
                                       Text(
-                                        '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
+                                        'Deposit',
                                         style: context.ts(
-                                          10,
-                                          color: Colors.grey[500],
+                                          14,
+                                          fontWeight: FontWeight.w700,
+                                          color: context.appColors.incomeColor,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      (isPos ? '+' : '-') +
-                                          CurrencyFormatter.formatCents(
-                                            log.amount.abs(),
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing10),
+                            Expanded(
+                              child: TactileSpringContainer(
+                                onTap: () {
+                                  _showAddMoneySheet(context, goal, false);
+                                },
+                                child: Container(
+                                  height: kSpacing52,
+                                  decoration: BoxDecoration(
+                                    color: context.appColors.expenseColor
+                                        .withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        PesaFlowIcons.remove,
+                                        color: context.appColors.expenseColor,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: kSpacing6),
+                                      Text(
+                                        'Withdraw',
+                                        style: context.ts(
+                                          14,
+                                          fontWeight: FontWeight.w700,
+                                          color: context.appColors.expenseColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing24),
+
+                        // ── Contribution History ──
+                        Row(
+                          children: [
+                            Text(
+                              'Contribution History',
+                              style: context.ts(
+                                15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                        const SizedBox(height: kSpacing10),
+
+                        contributionsAsync.when(
+                          data: (logs) {
+                            if (logs.isEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: kSpacing32,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'No contributions yet. Tap Deposit to get started.',
+                                    style: context.ts(
+                                      13,
+                                      color: Colors.white.withValues(alpha: 0.35),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return Column(
+                              children: logs.asMap().entries.map((entry) {
+                                final idx = entry.key;
+                                final log = entry.value;
+                                final isPos = log.amount >= 0;
+
+                                return StaggeredFadeSlide(
+                                  index: idx,
+                                  child: GlassCard(
+                                    margin: const EdgeInsets.only(
+                                      bottom: kSpacing8,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kSpacing14,
+                                      vertical: kSpacing12,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 36,
+                                          height: 36,
+                                          decoration: BoxDecoration(
+                                            color: (isPos
+                                                    ? context
+                                                        .appColors.incomeColor
+                                                    : context
+                                                        .appColors.expenseColor)
+                                                .withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
                                           ),
-                                      style: theme.textTheme.bodySmall!
-                                          .copyWith(
-                                            fontWeight: FontWeight.bold,
+                                          child: Icon(
+                                            isPos
+                                                ? PesaFlowIcons.add
+                                                : PesaFlowIcons.remove,
+                                            size: 16,
                                             color: isPos
                                                 ? context.appColors.incomeColor
                                                 : context
-                                                      .appColors
-                                                      .expenseColor,
+                                                    .appColors.expenseColor,
                                           ),
-                                    ),
-                                    const SizedBox(height: kSpacing2),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final confirm =
-                                            await ModernDialog.show<bool>(
-                                              context: context,
-                                              title: const Text(
-                                                'Delete Contribution?',
-                                              ),
-                                              titleIcon: PesaFlowIcons.warning,
-                                              content: const Text(
-                                                'This will undo this deposit/withdrawal from this visual savings goal balance.',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(
-                                                    context,
-                                                  ).pop(false),
-                                                  child: const Text('Cancel'),
+                                        ),
+                                        const SizedBox(width: kSpacing12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                isPos
+                                                    ? 'Deposit'
+                                                    : 'Withdrawal',
+                                                style: context.ts(
+                                                  13,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
                                                 ),
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(
-                                                    context,
-                                                  ).pop(true),
-                                                  child: Text(
-                                                    'Delete',
-                                                    style: context.ts(
-                                                      14,
-                                                      color: Colors.red,
-                                                    ),
+                                              ),
+                                              if (log.notes != null &&
+                                                  log.notes!.isNotEmpty) ...[
+                                                const SizedBox(
+                                                  height: kSpacing2,
+                                                ),
+                                                Text(
+                                                  log.notes!,
+                                                  style: context.ts(
+                                                    11,
+                                                    color: Colors.white
+                                                        .withValues(
+                                                          alpha: 0.4,
+                                                        ),
                                                   ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ],
-                                            );
-
-                                        if (confirm == true) {
-                                          await ref
-                                              .read(
-                                                savingsGoalRepositoryProvider,
-                                              )
-                                              .deleteContribution(log.id);
-                                          ref.invalidate(
-                                            savingsGoalsStreamProvider,
-                                          );
-                                          ref.invalidate(
-                                            savingsGoalsTotalSavedProvider,
-                                          );
-                                        }
-                                      },
-                                      child: Icon(
-                                        PesaFlowIcons.delete,
-                                        size: 16,
-                                        color: Colors.red.withValues(
-                                          alpha: 0.7,
+                                            ],
+                                          ),
                                         ),
-                                      ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              '${isPos ? '+' : '-'}${CurrencyFormatter.formatCents(log.amount.abs())}',
+                                              style: context.ts(
+                                                13,
+                                                fontWeight: FontWeight.w700,
+                                                color: isPos
+                                                    ? context
+                                                        .appColors.incomeColor
+                                                    : context
+                                                        .appColors.expenseColor,
+                                              ),
+                                            ),
+                                            const SizedBox(height: kSpacing2),
+                                            Text(
+                                              '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year}',
+                                              style: context.ts(
+                                                10,
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.3),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: kSpacing8),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final confirm =
+                                                await ModernDialog.show<bool>(
+                                                  context: context,
+                                                  title: const Text(
+                                                    'Delete Contribution?',
+                                                  ),
+                                                  titleIcon:
+                                                      PesaFlowIcons.warning,
+                                                  content: const Text(
+                                                    'This will undo this deposit/withdrawal from this goal\'s balance.',
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                        context,
+                                                      ).pop(false),
+                                                      child:
+                                                          const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                        context,
+                                                      ).pop(true),
+                                                      child: Text(
+                                                        'Delete',
+                                                        style: context.ts(
+                                                          14,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+
+                                            if (confirm == true) {
+                                              await ref
+                                                  .read(
+                                                    savingsGoalRepositoryProvider,
+                                                  )
+                                                  .deleteContribution(log.id);
+                                              ref.invalidate(
+                                                savingsGoalsStreamProvider,
+                                              );
+                                              ref.invalidate(
+                                                savingsGoalsTotalSavedProvider,
+                                              );
+                                            }
+                                          },
+                                          child: Icon(
+                                            PesaFlowIcons.delete,
+                                            size: 14,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
+                          loading: () => const Padding(
+                            padding: EdgeInsets.symmetric(vertical: kSpacing20),
+                            child: SkeletonCard(height: 80),
+                          ),
+                          error: (e, _) => ErrorState(
+                            title: 'Failed to Load Contributions',
+                            message: e.toString(),
+                            onRetry: () => ref.invalidate(
+                              savingsGoalContributionsStreamProvider(goal.id),
                             ),
                           ),
-                        );
-                      },
-                    );
-                  },
-                  loading: () => const Padding(
-                    padding: EdgeInsets.symmetric(vertical: kSpacing20),
-                    child: SkeletonCard(height: 80),
-                  ),
-                  error: (e, _) => ErrorState(
-                    title: 'Failed to Load Contributions',
-                    message: e.toString(),
-                    onRetry: () => ref.invalidate(
-                      savingsGoalContributionsStreamProvider(goal.id),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -1172,25 +1318,84 @@ class _SavingsGoalDetailScreenState
           ),
         );
       },
-      loading: () => const Scaffold(
-        appBar: IosNavBar(title: 'Goal Details', largeTitle: false),
-        body: Padding(
-          padding: EdgeInsets.all(kSpacing20),
+      loading: () => Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
           child: Column(
             children: [
-              SkeletonCard(height: 200),
-              SizedBox(height: kSpacing16),
-              SkeletonCard(height: 120),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: Row(
+                  children: [
+                    TactileSpringContainer(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(kSpacing20),
+                child: Column(
+                  children: [
+                    SkeletonCard(height: 200),
+                    SizedBox(height: kSpacing16),
+                    SkeletonCard(height: 120),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
       error: (err, _) => Scaffold(
-        appBar: const IosNavBar(title: 'Goal Details', largeTitle: false),
-        body: ErrorState(
-          title: 'Failed to Load Goal Details',
-          message: err.toString(),
-          onRetry: () => ref.invalidate(savingsGoalsStreamProvider),
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: Row(
+                  children: [
+                    TactileSpringContainer(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ErrorState(
+                  title: 'Failed to Load Goal Details',
+                  message: err.toString(),
+                  onRetry: () =>
+                      ref.invalidate(savingsGoalsStreamProvider),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
