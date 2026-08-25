@@ -45,16 +45,16 @@ class AppTheme {
     0xFF1C1C1E,
   ); // Apple system dark gray
 
-  // Finance semantic colors
-  static const Color incomeColor = Color(0xFF10B981);
-  static const Color expenseColor = Color(0xFFEF4444);
-  static const Color transferColor = Color(0xFF6366F1);
+  // Finance semantic colors — desaturated, premium tones
+  static const Color incomeColor = Color(0xFF16A34A); // Muted green, not neon
+  static const Color expenseColor = Color(0xFFDC2626); // Softer red, not fire
+  static const Color transferColor = Color(0xFF4F46E5); // Deep indigo, not electric
 
-  static const Color incomeColorDark = Color(0xFF34D399);
-  static const Color expenseColorDark = Color(0xFFF87171);
-  static const Color transferColorDark = Color(0xFF818CF8);
+  static const Color incomeColorDark = Color(0xFF4ADE80); // Softer light green
+  static const Color expenseColorDark = Color(0xFFF87171); // Pastel red
+  static const Color transferColorDark = Color(0xFF818CF8); // Soft periwinkle
 
-  static const Color errorLight = Color(0xFFEF4444);
+  static const Color errorLight = Color(0xFFDC2626);
   static const Color onErrorLight = Color(0xFFFFFFFF);
   static const Color errorDark = Color(0xFFF87171);
   static const Color onErrorDark = Color(0xFF000000);
@@ -63,8 +63,10 @@ class AppTheme {
   static Color get surfaceContainerDark => surfaceHighDark;
 
   // Radii — generous, soft corners (Budjetly feel)
+  static const double radiusCompact = 10.0;
   static const double radiusCard = 16.0;
-  static const double radiusDialog = 20.0;
+  static const double radiusHero = 20.0;
+  static const double radiusDialog = 24.0;
   static const double radiusInput = 12.0;
   static const double radiusButton = 28.0;
 
@@ -76,7 +78,7 @@ class AppTheme {
         'Roboto Mono',
         'Courier New',
       ],
-      fontWeight: FontWeight.w900,
+      fontWeight: FontWeight.w700,
     );
   }
 

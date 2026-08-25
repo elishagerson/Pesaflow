@@ -50,7 +50,7 @@ class _GlassCardState extends State<GlassCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 280),
     );
   }
 
@@ -149,7 +149,7 @@ class _GlassCardState extends State<GlassCard>
                   builder: (context, child) {
                     if (_controller.value == 0) return const SizedBox.shrink();
                     return FractionalTranslation(
-                      translation: Offset((_controller.value * 2.5) - 1.25, 0),
+                      translation: Offset((_controller.value * 1.8) - 0.9, 0),
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -220,7 +220,7 @@ class _GlassCardState extends State<GlassCard>
                   animation: _controller,
                   builder: (context, child) {
                     return Transform.scale(
-                      scale: 1.0 - (_controller.value * 0.02),
+                      scale: 1.0 - (_controller.value * 0.035),
                       child: child,
                     );
                   },
@@ -253,7 +253,7 @@ class _GradientBorderPainter extends CustomPainter {
           Colors.white.withValues(alpha: isDark ? 0.35 : 0.8),
           Colors.white.withValues(alpha: 0.0),
         ],
-        stops: const [0.0, 0.4],
+        stops: const [0.0, 0.55],
       ).createShader(rect);
     canvas.drawRRect(rrect, paint);
   }
