@@ -198,65 +198,82 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                child: Text(
-                  'Analytics',
-                  style: context.ts(
-                    34,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ),
-              // iOS-style sliding capsule control
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Container(
-                  height: 38,
-                  padding: const EdgeInsets.all(kSpacing4),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: onSurface.withValues(alpha: 0.1),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.85),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: onSurface.withValues(alpha: 0.06),
                       width: 0.5,
                     ),
                   ),
-                  child: TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    dividerColor: Colors.transparent,
-                    indicatorPadding: EdgeInsets.zero,
-                    indicator: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.shadow.withValues(
-                            alpha: 0.04,
-                          ),
-                          blurRadius: 1,
-                          offset: const Offset(0, 1),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Analytics',
+                      style: context.ts(
+                        28,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.8,
+                        color: onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Spending trends & insights',
+                      style: context.ts(
+                        13,
+                        color: onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // iOS-style sliding capsule control
+              Container(
+                height: 44,
+                margin: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+                padding: const EdgeInsets.all(kSpacing4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    color: onSurface.withValues(alpha: 0.08),
+                    width: 0.5,
+                  ),
+                ),
+                child: TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  indicatorPadding: EdgeInsets.zero,
+                  indicator: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.shadow.withValues(
+                          alpha: 0.06,
                         ),
-                      ],
-                    ),
-                    labelColor: onSurface,
-                    unselectedLabelColor: onSurface.withValues(alpha: 0.6),
-                    labelStyle: context.ts(13, fontWeight: FontWeight.w800),
-                    unselectedLabelStyle: context.ts(
-                      13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    tabs: const [
-                      Tab(text: 'Overview'),
-                      Tab(text: 'Trends'),
-                      Tab(text: 'Insights'),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
                     ],
                   ),
+                  labelColor: onSurface,
+                  unselectedLabelColor: onSurface.withValues(alpha: 0.55),
+                  labelStyle: context.ts(13, fontWeight: FontWeight.w700),
+                  unselectedLabelStyle: context.ts(
+                    13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  tabs: const [
+                    Tab(text: 'Overview'),
+                    Tab(text: 'Trends'),
+                    Tab(text: 'Insights'),
+                  ],
                 ),
               ),
               Expanded(
