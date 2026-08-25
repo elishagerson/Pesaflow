@@ -55,11 +55,23 @@ class LoanDetailScreen extends ConsumerWidget {
                             color: Colors.white.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
                       ),
                       const SizedBox(width: kSpacing12),
-                      Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                      Text(
+                        'Loan Details',
+                        style: context.ts(
+                          34,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -67,7 +79,8 @@ class LoanDetailScreen extends ConsumerWidget {
                   child: EmptyState(
                     icon: PesaFlowIcons.loans,
                     title: 'Loan Not Found',
-                    subtitle: 'The requested loan details could not be located.',
+                    subtitle:
+                        'The requested loan details could not be located.',
                   ),
                 ),
               ],
@@ -94,11 +107,23 @@ class LoanDetailScreen extends ConsumerWidget {
                                 color: Colors.white.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 18,
+                              ),
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
-                          Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                          Text(
+                            'Loan Details',
+                            style: context.ts(
+                              34,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
                         ],
                       ),
                       Row(
@@ -111,7 +136,11 @@ class LoanDetailScreen extends ConsumerWidget {
                                 color: Colors.white.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(PesaFlowIcons.edit, size: 18, color: Colors.white),
+                              child: const Icon(
+                                PesaFlowIcons.edit,
+                                size: 18,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           const SizedBox(width: kSpacing8),
@@ -120,10 +149,15 @@ class LoanDetailScreen extends ConsumerWidget {
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
-                                color: context.appColors.expenseColor.withValues(alpha: 0.12),
+                                color: context.appColors.expenseColor
+                                    .withValues(alpha: 0.12),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(PesaFlowIcons.delete, size: 18, color: context.appColors.expenseColor),
+                              child: Icon(
+                                PesaFlowIcons.delete,
+                                size: 18,
+                                color: context.appColors.expenseColor,
+                              ),
                             ),
                           ),
                         ],
@@ -135,100 +169,104 @@ class LoanDetailScreen extends ConsumerWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(kSpacing16),
                     children: [
-              StaggeredFadeSlide(
-                index: 0,
-                child: _buildLoanHeader(context, loan, theme),
-              ),
-              const SizedBox(height: kSpacing16),
-              StaggeredFadeSlide(
-                index: 1,
-                child: _buildLoanInfo(context, loan, theme),
-              ),
-              const SizedBox(height: kSpacing16),
-              StaggeredFadeSlide(
-                index: 2,
-                child: _buildStatusTimeline(context, loan, theme),
-              ),
-              if (loan.installmentAmount != null) ...[
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 3,
-                  child: _buildInstallmentSchedule(context, loan, theme),
-                ),
-              ],
-              StaggeredFadeSlide(
-                index: 4,
-                child: _buildPayoffProjection(context, loan, theme),
-              ),
-              if (loan.status == 'active') ...[
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 5,
-                  child: _buildPaymentButton(context, loan, theme, ref),
-                ),
-              ],
-              const SizedBox(height: kSpacing20),
-              StaggeredFadeSlide(
-                index: loan.status == 'active' ? 6 : 5,
-                child: Text(
-                  'Payment History',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: kSpacing8),
-              transactionsAsync.when(
-                data: (txs) {
-                  if (txs.isEmpty) {
-                    return StaggeredFadeSlide(
-                      index: 6,
-                      child: GlassCard(
-                        padding: const EdgeInsets.all(kSpacing20),
-                        borderRadius: AppTheme.radiusCard,
-                        child: Center(
-                          child: Text(
-                            'No payment transactions recorded',
-                            style: context.ts(
-                              14,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
+                      StaggeredFadeSlide(
+                        index: 0,
+                        child: _buildLoanHeader(context, loan, theme),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: _buildLoanInfo(context, loan, theme),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 2,
+                        child: _buildStatusTimeline(context, loan, theme),
+                      ),
+                      if (loan.installmentAmount != null) ...[
+                        const SizedBox(height: kSpacing16),
+                        StaggeredFadeSlide(
+                          index: 3,
+                          child: _buildInstallmentSchedule(
+                            context,
+                            loan,
+                            theme,
+                          ),
+                        ),
+                      ],
+                      StaggeredFadeSlide(
+                        index: 4,
+                        child: _buildPayoffProjection(context, loan, theme),
+                      ),
+                      if (loan.status == 'active') ...[
+                        const SizedBox(height: kSpacing16),
+                        StaggeredFadeSlide(
+                          index: 5,
+                          child: _buildPaymentButton(context, loan, theme, ref),
+                        ),
+                      ],
+                      const SizedBox(height: kSpacing20),
+                      StaggeredFadeSlide(
+                        index: loan.status == 'active' ? 6 : 5,
+                        child: Text(
+                          'Payment History',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    );
-                  }
-                  return Column(
-                    children: txs.asMap().entries.map((entry) {
-                      final idx = entry.key;
-                      final tx = entry.value;
-                      return StaggeredFadeSlide(
-                        index: 7 + idx,
-                        child: TransactionTile(tx: tx),
-                      );
-                    }).toList(),
-                  );
-                },
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: kSpacing20),
-                  child: SkeletonCard(height: 80),
+                      const SizedBox(height: kSpacing8),
+                      transactionsAsync.when(
+                        data: (txs) {
+                          if (txs.isEmpty) {
+                            return StaggeredFadeSlide(
+                              index: 6,
+                              child: GlassCard(
+                                padding: const EdgeInsets.all(kSpacing20),
+                                borderRadius: AppTheme.radiusCard,
+                                child: Center(
+                                  child: Text(
+                                    'No payment transactions recorded',
+                                    style: context.ts(
+                                      14,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: txs.asMap().entries.map((entry) {
+                              final idx = entry.key;
+                              final tx = entry.value;
+                              return StaggeredFadeSlide(
+                                index: 7 + idx,
+                                child: TransactionTile(tx: tx),
+                              );
+                            }).toList(),
+                          );
+                        },
+                        loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(vertical: kSpacing20),
+                          child: SkeletonCard(height: 80),
+                        ),
+                        error: (e, _) => ErrorState(
+                          title: 'Failed to Load Payments',
+                          message: e.toString(),
+                          onRetry: () => ref.invalidate(
+                            loanTransactionsStreamProvider(loanId),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                error: (e, _) => ErrorState(
-                  title: 'Failed to Load Payments',
-                  message: e.toString(),
-                  onRetry: () =>
-                      ref.invalidate(loanTransactionsStreamProvider(loanId)),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  ),
-);
+        );
       },
       loading: () => Scaffold(
         backgroundColor: Colors.black,
@@ -246,11 +284,23 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: Colors.white.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing12),
-                  Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                  Text(
+                    'Loan Details',
+                    style: context.ts(
+                      34,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -285,11 +335,23 @@ class LoanDetailScreen extends ConsumerWidget {
                         color: Colors.white.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(width: kSpacing12),
-                  Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                  Text(
+                    'Loan Details',
+                    style: context.ts(
+                      34,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
                 ],
               ),
             ),

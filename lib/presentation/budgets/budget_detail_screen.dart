@@ -88,11 +88,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 color: Colors.white.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 18,
+                              ),
                             ),
                           ),
                           const SizedBox(width: kSpacing12),
-                          Text('Budget Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                          Text(
+                            'Budget Details',
+                            style: context.ts(
+                              34,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -100,7 +112,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                       child: EmptyState(
                         icon: PesaFlowIcons.budgets,
                         title: 'Budget Not Found',
-                        subtitle: 'The requested envelope budget could not be located.',
+                        subtitle:
+                            'The requested envelope budget could not be located.',
                       ),
                     ),
                   ],
@@ -151,7 +164,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                           ),
                           const Spacer(),
                           TactileSpringContainer(
-                            onTap: () => context.push('/budgets/$budgetId/edit'),
+                            onTap: () =>
+                                context.push('/budgets/$budgetId/edit'),
                             child: Container(
                               padding: const EdgeInsets.all(kSpacing10),
                               decoration: BoxDecoration(
@@ -268,10 +282,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                               vertical: kSpacing4,
                             ),
                             decoration: BoxDecoration(
-                              color: (status.isOverBudget
-                                      ? theme.colorScheme.error
-                                      : catColor)
-                                  .withValues(alpha: 0.12),
+                              color:
+                                  (status.isOverBudget
+                                          ? theme.colorScheme.error
+                                          : catColor)
+                                      .withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Text(
@@ -327,7 +342,12 @@ class BudgetDetailScreen extends ConsumerWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing12, kSpacing16, kSpacing24),
+                    padding: const EdgeInsets.fromLTRB(
+                      kSpacing16,
+                      kSpacing12,
+                      kSpacing16,
+                      kSpacing24,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -350,10 +370,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  status.remaining >= 0 ? 'remaining' : 'overspent',
+                                  status.remaining >= 0
+                                      ? 'remaining'
+                                      : 'overspent',
                                   style: context.ts(
                                     13,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
                                   ),
                                 ),
                               ],
@@ -396,19 +419,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   color: theme.colorScheme.primary,
                                   theme: theme,
                                   subtitle: () {
-                                    final rolled = bp.currentPeriod?.rolledFrom ?? 0;
+                                    final rolled =
+                                        bp.currentPeriod?.rolledFrom ?? 0;
                                     if (rolled == 0) return null;
                                     final prefix = rolled > 0 ? '+' : '-';
                                     final label = rolled > 0 ? 'roll' : 'def';
                                     return Text(
                                       '$prefix Tsh ${rolled.abs() ~/ 100} $label',
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: rolled > 0
-                                            ? context.appColors.incomeColor
-                                            : context.appColors.expenseColor,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: rolled > 0
+                                                ? context.appColors.incomeColor
+                                                : context
+                                                      .appColors
+                                                      .expenseColor,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     );
                                   }(),
                                 ),
@@ -417,8 +444,15 @@ class BudgetDetailScreen extends ConsumerWidget {
                               Expanded(
                                 child: _StatCard(
                                   label: 'Daily Avg',
-                                  amount: status.daysLeft + (status.totalDays - status.daysLeft) > 0
-                                      ? (bp.spentInPeriod ~/ ((status.totalDays - status.daysLeft).clamp(1, status.totalDays)))
+                                  amount:
+                                      status.daysLeft +
+                                              (status.totalDays -
+                                                  status.daysLeft) >
+                                          0
+                                      ? (bp.spentInPeriod ~/
+                                            ((status.totalDays -
+                                                    status.daysLeft)
+                                                .clamp(1, status.totalDays)))
                                       : 0,
                                   color: theme.colorScheme.secondary,
                                   theme: theme,
@@ -432,11 +466,13 @@ class BudgetDetailScreen extends ConsumerWidget {
                         // ── 4. DAILY SPEND CHART — with budget line + average ──
                         dailyAsync.when(
                           data: (dailyData) {
-                            if (dailyData.isEmpty) return const SizedBox.shrink();
+                            if (dailyData.isEmpty)
+                              return const SizedBox.shrink();
                             final maxAmount = dailyData
                                 .map((e) => e.value)
                                 .reduce((a, b) => a > b ? a : b);
-                            final daysElapsed = status.totalDays - status.daysLeft;
+                            final daysElapsed =
+                                status.totalDays - status.daysLeft;
                             final dailyBudget = daysElapsed > 0
                                 ? status.allocated / status.totalDays
                                 : status.allocated.toDouble();
@@ -454,9 +490,10 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       children: [
                                         Text(
                                           'Daily Spend',
-                                          style: theme.textTheme.titleSmall?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                          style: theme.textTheme.titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                         const Spacer(),
                                         _ChartLegend(
@@ -465,7 +502,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                                         ),
                                         const SizedBox(width: kSpacing10),
                                         _ChartLegend(
-                                          color: theme.colorScheme.error.withValues(alpha: 0.5),
+                                          color: theme.colorScheme.error
+                                              .withValues(alpha: 0.5),
                                           label: 'Budget/day',
                                           dashed: true,
                                         ),
@@ -476,31 +514,52 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       height: 140,
                                       child: BarChart(
                                         BarChartData(
-                                          alignment: BarChartAlignment.spaceAround,
-                                          maxY: math.max(maxAmount * 1.2, dailyBudget * 1.5),
-                                          barTouchData: BarTouchData(enabled: false),
+                                          alignment:
+                                              BarChartAlignment.spaceAround,
+                                          maxY: math.max(
+                                            maxAmount * 1.2,
+                                            dailyBudget * 1.5,
+                                          ),
+                                          barTouchData: BarTouchData(
+                                            enabled: false,
+                                          ),
                                           titlesData: FlTitlesData(
                                             show: true,
                                             leftTitles: const AxisTitles(
-                                              sideTitles: SideTitles(showTitles: false),
+                                              sideTitles: SideTitles(
+                                                showTitles: false,
+                                              ),
                                             ),
                                             topTitles: const AxisTitles(
-                                              sideTitles: SideTitles(showTitles: false),
+                                              sideTitles: SideTitles(
+                                                showTitles: false,
+                                              ),
                                             ),
                                             rightTitles: const AxisTitles(
-                                              sideTitles: SideTitles(showTitles: false),
+                                              sideTitles: SideTitles(
+                                                showTitles: false,
+                                              ),
                                             ),
                                             bottomTitles: AxisTitles(
                                               sideTitles: SideTitles(
                                                 showTitles: true,
                                                 getTitlesWidget: (value, meta) {
                                                   final day = value.toInt();
-                                                  if (day % 5 == 0 || day == 1) {
+                                                  if (day % 5 == 0 ||
+                                                      day == 1) {
                                                     return Padding(
-                                                      padding: const EdgeInsets.only(top: kSpacing4),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            top: kSpacing4,
+                                                          ),
                                                       child: Text(
                                                         '$day',
-                                                        style: theme.textTheme.labelSmall?.copyWith(fontSize: 9),
+                                                        style: theme
+                                                            .textTheme
+                                                            .labelSmall
+                                                            ?.copyWith(
+                                                              fontSize: 9,
+                                                            ),
                                                       ),
                                                     );
                                                   }
@@ -510,13 +569,16 @@ class BudgetDetailScreen extends ConsumerWidget {
                                               ),
                                             ),
                                           ),
-                                          gridData: const FlGridData(show: false),
+                                          gridData: const FlGridData(
+                                            show: false,
+                                          ),
                                           borderData: FlBorderData(show: false),
                                           extraLinesData: ExtraLinesData(
                                             horizontalLines: [
                                               HorizontalLine(
                                                 y: dailyBudget,
-                                                color: theme.colorScheme.error.withValues(alpha: 0.35),
+                                                color: theme.colorScheme.error
+                                                    .withValues(alpha: 0.35),
                                                 strokeWidth: 1,
                                                 dashArray: [6, 4],
                                                 label: HorizontalLineLabel(
@@ -525,24 +587,35 @@ class BudgetDetailScreen extends ConsumerWidget {
                                                   style: context.ts(
                                                     9,
                                                     fontWeight: FontWeight.w500,
-                                                    color: theme.colorScheme.error.withValues(alpha: 0.6),
+                                                    color: theme
+                                                        .colorScheme
+                                                        .error
+                                                        .withValues(alpha: 0.6),
                                                   ),
-                                                  labelResolver: (_) => 'budget',
+                                                  labelResolver: (_) =>
+                                                      'budget',
                                                 ),
                                               ),
                                               if (dailyAvg > 0)
                                                 HorizontalLine(
                                                   y: dailyAvg,
-                                                  color: catColor.withValues(alpha: 0.4),
+                                                  color: catColor.withValues(
+                                                    alpha: 0.4,
+                                                  ),
                                                   strokeWidth: 1,
                                                   dashArray: [3, 3],
                                                   label: HorizontalLineLabel(
                                                     show: true,
-                                                    alignment: Alignment.topRight,
+                                                    alignment:
+                                                        Alignment.topRight,
                                                     style: context.ts(
                                                       9,
-                                                      fontWeight: FontWeight.w500,
-                                                      color: catColor.withValues(alpha: 0.6),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: catColor
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
                                                     ),
                                                     labelResolver: (_) => 'avg',
                                                   ),
@@ -550,20 +623,27 @@ class BudgetDetailScreen extends ConsumerWidget {
                                             ],
                                           ),
                                           barGroups: dailyData.map((entry) {
-                                            final isOverDaily = entry.value > dailyBudget;
+                                            final isOverDaily =
+                                                entry.value > dailyBudget;
                                             return BarChartGroupData(
                                               x: entry.key.day,
                                               barRods: [
                                                 BarChartRodData(
                                                   toY: entry.value.toDouble(),
                                                   color: isOverDaily
-                                                      ? theme.colorScheme.error.withValues(alpha: 0.7)
+                                                      ? theme.colorScheme.error
+                                                            .withValues(
+                                                              alpha: 0.7,
+                                                            )
                                                       : mutedCatColor,
                                                   width: 7,
-                                                  borderRadius: const BorderRadius.only(
-                                                    topLeft: Radius.circular(3),
-                                                    topRight: Radius.circular(3),
-                                                  ),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(3),
+                                                        topRight:
+                                                            Radius.circular(3),
+                                                      ),
                                                 ),
                                               ],
                                             );
@@ -615,7 +695,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 '${bp.budget.period.toUpperCase()} · Rollover ${bp.budget.rollover ? bp.budget.rolloverType : "off"}',
                                 style: context.ts(
                                   11,
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.4,
+                                  ),
                                 ),
                               ),
                             ],
@@ -633,7 +715,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                     ? (p.spent / p.allocated)
                                     : 0.0;
                                 return Padding(
-                                  padding: const EdgeInsets.only(bottom: kSpacing6),
+                                  padding: const EdgeInsets.only(
+                                    bottom: kSpacing6,
+                                  ),
                                   child: _PeriodRow(
                                     period: p,
                                     pctUsed: pctUsed,
@@ -652,7 +736,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                           error: (e, _) => ErrorState(
                             title: 'Failed to Load Periods',
                             message: e.toString(),
-                            onRetry: () => ref.invalidate(budgetPeriodsProvider(budgetId)),
+                            onRetry: () =>
+                                ref.invalidate(budgetPeriodsProvider(budgetId)),
                           ),
                         ),
                       ],
@@ -678,11 +763,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                             color: Colors.white.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
                       ),
                       const SizedBox(width: kSpacing12),
-                      Text('Budget Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                      Text(
+                        'Budget Details',
+                        style: context.ts(
+                          34,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -717,11 +814,23 @@ class BudgetDetailScreen extends ConsumerWidget {
                             color: Colors.white.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
                       ),
                       const SizedBox(width: kSpacing12),
-                      Text('Budget Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                      Text(
+                        'Budget Details',
+                        style: context.ts(
+                          34,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -729,7 +838,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                   child: ErrorState(
                     title: 'Failed to Load Budget details',
                     message: e.toString(),
-                    onRetry: () => ref.invalidate(budgetDetailProvider(budgetId)),
+                    onRetry: () =>
+                        ref.invalidate(budgetDetailProvider(budgetId)),
                   ),
                 ),
               ],
@@ -904,8 +1014,9 @@ class _TimelineProgressBar extends StatelessWidget {
                         child: Stack(
                           children: [
                             Container(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.04),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.04,
+                              ),
                             ),
                             FractionallySizedBox(
                               widthFactor: math.min(budgetPct, 1.0),
@@ -915,10 +1026,14 @@ class _TimelineProgressBar extends StatelessWidget {
                                     colors: isOverBudget
                                         ? [
                                             theme.colorScheme.error,
-                                            theme.colorScheme.error
-                                                .withValues(alpha: 0.7),
+                                            theme.colorScheme.error.withValues(
+                                              alpha: 0.7,
+                                            ),
                                           ]
-                                        : [catColor, catColor.withValues(alpha: 0.6)],
+                                        : [
+                                            catColor,
+                                            catColor.withValues(alpha: 0.6),
+                                          ],
                                   ),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
@@ -947,8 +1062,9 @@ class _TimelineProgressBar extends StatelessWidget {
                         '${(timePct * 100).round()}% time',
                         style: context.ts(
                           9,
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.35),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.35,
+                          ),
                         ),
                       ),
                     ),
@@ -960,10 +1076,10 @@ class _TimelineProgressBar extends StatelessWidget {
                         style: context.ts(
                           9,
                           color: isOverBudget
-                              ? theme.colorScheme.error
-                                  .withValues(alpha: 0.6)
-                              : theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.35),
+                              ? theme.colorScheme.error.withValues(alpha: 0.6)
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.35,
+                                ),
                         ),
                       ),
                     ),
@@ -976,7 +1092,10 @@ class _TimelineProgressBar extends StatelessWidget {
           _LegendRow(
             items: [
               _LegendItem(catColor, 'Spent'),
-              _LegendItem(theme.colorScheme.onSurface.withValues(alpha: 0.12), 'Remaining'),
+              _LegendItem(
+                theme.colorScheme.onSurface.withValues(alpha: 0.12),
+                'Remaining',
+              ),
             ],
           ),
         ],
@@ -1003,10 +1122,7 @@ class _ChartLegend extends StatelessWidget {
       children: [
         CustomPaint(
           size: const Size(16, 2),
-          painter: _DashedLinePainter(
-            color: color,
-            dashed: dashed,
-          ),
+          painter: _DashedLinePainter(color: color, dashed: dashed),
         ),
         const SizedBox(width: kSpacing4),
         Text(
@@ -1014,7 +1130,9 @@ class _ChartLegend extends StatelessWidget {
           style: context.ts(
             10,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
       ],
@@ -1057,7 +1175,8 @@ class _DashedLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedLinePainter old) => old.color != color || old.dashed != dashed;
+  bool shouldRepaint(_DashedLinePainter old) =>
+      old.color != color || old.dashed != dashed;
 }
 
 class _PaceInsight extends StatelessWidget {
@@ -1164,8 +1283,8 @@ class _PeriodRow extends StatelessWidget {
     final barColor = pctUsed > 1.0
         ? theme.colorScheme.error
         : pctUsed > 0.8
-            ? Colors.orange
-            : catColor;
+        ? Colors.orange
+        : catColor;
 
     return GlassCard(
       padding: const EdgeInsets.symmetric(
@@ -1188,8 +1307,9 @@ class _PeriodRow extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: isCurrent
                             ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.55),
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.55,
+                              ),
                       ),
                     ),
                     if (isCurrent) ...[
@@ -1237,8 +1357,9 @@ class _PeriodRow extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: pctUsed.clamp(0.0, 1.0),
                     minHeight: 4,
-                    backgroundColor: theme.colorScheme.onSurface
-                        .withValues(alpha: 0.06),
+                    backgroundColor: theme.colorScheme.onSurface.withValues(
+                      alpha: 0.06,
+                    ),
                     valueColor: AlwaysStoppedAnimation<Color>(barColor),
                   ),
                 ),
@@ -1261,8 +1382,19 @@ class _PeriodRow extends StatelessWidget {
 
   String _formatPeriodLabel(BudgetPeriod p) {
     final months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     if (p.periodStart.month == p.periodEnd.month &&
         p.periodStart.year == p.periodEnd.year) {
@@ -1305,10 +1437,9 @@ class _LegendRow extends StatelessWidget {
                     item.label,
                     style: context.ts(
                       10,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.45),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.45),
                     ),
                   ),
                 ],
