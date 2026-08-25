@@ -93,18 +93,25 @@ class _AnimatedEmptyIllustration extends StatefulWidget {
 class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  late Animation<double> _opacityAnim;
+  late Animation<Offset> _slideAnim;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.96, end: 1.04).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOutQuad),
+      duration: const Duration(milliseconds: 500),
     );
+    _opacityAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.08),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _controller.forward();
   }
 
   @override
@@ -118,7 +125,13 @@ class _AnimatedEmptyIllustrationState extends State<_AnimatedEmptyIllustration>
     if (context.isReducedMotion) {
       return widget.child;
     }
-    return ScaleTransition(scale: _animation, child: widget.child);
+    return FadeTransition(
+      opacity: _opacityAnim,
+      child: SlideTransition(
+        position: _slideAnim,
+        child: widget.child,
+      ),
+    );
   }
 }
 

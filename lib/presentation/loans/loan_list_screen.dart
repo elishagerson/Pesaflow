@@ -326,7 +326,7 @@ class LoanListScreen extends ConsumerWidget {
     final severityColor = debtRatio > 1.0
         ? context.appColors.expenseColor
         : debtRatio > 0.5
-        ? context.appColors.transferColor
+        ? const Color(0xFFF59E0B) // Amber — caution
         : context.appColors.transferColor;
 
     return GlassCard(
