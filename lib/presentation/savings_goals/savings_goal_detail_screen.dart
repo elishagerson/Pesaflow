@@ -758,13 +758,6 @@ class _SavingsGoalDetailScreenState
             : 0.0;
         final percentInt = (pct * 100).round();
 
-        final daysElapsed = DateTime.now().difference(goal.targetDate).inDays < 0
-            ? DateTime.now().difference(
-                DateTime.now().subtract(
-                  DateTime.now().difference(goal.targetDate),
-                ),
-              ).inDays
-            : 0;
         final dailyTarget = remainingDays > 0
             ? (goal.targetAmount - goal.currentAmount) ~/ (remainingDays * 100)
             : 0;
