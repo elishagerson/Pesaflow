@@ -749,14 +749,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       ?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         letterSpacing: -0.5,
-                                        color: onSurface,
+                                        color: Colors.white,
                                       ),
                                 ),
                                 Text(
                                   'Track your recent activity',
                                   style: context.ts(
                                     13,
-                                    color: onSurface.withValues(alpha: 0.5),
+                                    color: Colors.white.withValues(alpha: 0.5),
                                   ),
                                 ),
                               ],
@@ -840,7 +840,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                 Container(
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: onSurface.withValues(alpha: 0.05),
+                                    color: Colors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
@@ -877,9 +877,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                        Container(
                                          width: 1,
                                          height: 18,
-                                         color: onSurface.withValues(
-                                           alpha: 0.05,
-                                         ),
+                                         color: Colors.white.withValues(
+                                            alpha: 0.05,
+                                          ),
                                       ),
                                       TactileSpringContainer(
                                         onTap: () {
@@ -904,14 +904,14 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             vertical: 10,
                                           ),
                                           child: Icon(
-                                            PesaFlowIcons.search,
-                                            size: 17,
-                                            color: _isSearchVisible
-                                                ? theme.colorScheme.primary
-                                                : onSurface.withValues(
-                                                    alpha: 0.5,
-                                                  ),
-                                          ),
+                                             PesaFlowIcons.search,
+                                             size: 17,
+                                             color: _isSearchVisible
+                                                 ? theme.colorScheme.primary
+                                                 : Colors.white.withValues(
+                                                     alpha: 0.5,
+                                                   ),
+                                           ),
                                         ),
                                       ),
                                     ],
@@ -959,12 +959,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     suffixIcon: searchQuery.isNotEmpty
                                         ? IconButton(
                                             icon: Icon(
-                                              PesaFlowIcons.clear,
-                                              size: 16,
-                                              color: onSurface.withValues(
-                                                alpha: 0.54,
-                                              ),
-                                            ),
+                                               PesaFlowIcons.clear,
+                                               size: 16,
+                                               color: Colors.white.withValues(
+                                                 alpha: 0.54,
+                                               ),
+                                             ),
                                             onPressed: () {
                                               _searchController.clear();
                                               ref
@@ -1026,7 +1026,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : onSurface.withValues(
+                                              : Colors.white.withValues(
                                                   alpha: 0.1,
                                                 ),
                                           width: 1.0,
@@ -1034,19 +1034,19 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                       ),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        type,
-                                        style: context.ts(
-                                          13,
-                                          color: isSelected
-                                              ? theme.colorScheme.onPrimary
-                                              : onSurface.withValues(
-                                                  alpha: 0.7,
-                                                ),
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.w600,
-                                        ),
-                                      ),
+                                         type,
+                                         style: context.ts(
+                                           13,
+                                           color: isSelected
+                                               ? theme.colorScheme.onPrimary
+                                               : Colors.white.withValues(
+                                                   alpha: 0.7,
+                                                 ),
+                                           fontWeight: isSelected
+                                               ? FontWeight.bold
+                                               : FontWeight.w600,
+                                         ),
+                                       ),
                                     ),
                                   ),
                                 );
