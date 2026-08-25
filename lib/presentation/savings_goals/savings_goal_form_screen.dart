@@ -481,6 +481,10 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
             ),
           ),
         ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
