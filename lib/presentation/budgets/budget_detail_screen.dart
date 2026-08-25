@@ -293,89 +293,55 @@ class BudgetDetailScreen extends ConsumerWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(kSpacing16),
+                    padding: const EdgeInsets.fromLTRB(kSpacing16, kSpacing12, kSpacing16, kSpacing24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Radial ring chart
+                        // ── 1. HERO AMOUNT — remaining of allocated ──
                         StaggeredFadeSlide(
                           index: 0,
-                          child: Hero(
-                            tag: 'budget-$budgetId',
-                            child: Center(
-                              child: SizedBox(
-                                height: 200,
-                                width: 200,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    PieChart(
-                                      PieChartData(
-                                        startDegreeOffset: -90,
-                                        sectionsSpace: 0,
-                                        centerSpaceRadius: 70,
-                                        sections: [
-                                          PieChartSectionData(
-                                            value:
-                                                status.percentage.clamp(
-                                                  0.0,
-                                                  1.0,
-                                                ) *
-                                                100,
-                                            color: status.isOverBudget
-                                                ? theme.colorScheme.error
-                                                : mutedCatColor,
-                                            radius: 20,
-                                            showTitle: false,
-                                          ),
-                                          PieChartSectionData(
-                                            value:
-                                                (1.0 -
-                                                    status.percentage.clamp(
-                                                      0.0,
-                                                      1.0,
-                                                    )) *
-                                                100,
-                                            color: mutedCatColor.withValues(
-                                              alpha: 0.15,
-                                            ),
-                                            radius: 20,
-                                            showTitle: false,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${(status.percentage * 100).round()}%',
-                                          style: theme.textTheme.headlineMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        Text(
-                                          'used',
-                                          style: TextStyle(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AmountText(
+                                  amountInCents: status.remaining.abs(),
+                                  style: context.ts(
+                                    40,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -1.0,
+                                    color: status.remaining >= 0
+                                        ? theme.colorScheme.onSurface
+                                        : theme.colorScheme.error,
+                                  ),
                                 ),
-                              ),
+                                Text(
+                                  status.remaining >= 0 ? 'remaining' : 'overspent',
+                                  style: context.ts(
+                                    13,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        const SizedBox(height: kSpacing24),
+                        const SizedBox(height: kSpacing20),
 
-                        // Stats row
+                        // ── 2. LINEAR PROGRESS — time remaining + budget used ──
                         StaggeredFadeSlide(
                           index: 1,
+                          child: _TimelineProgressBar(
+                            status: status,
+                            catColor: catColor,
+                            theme: theme,
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing20),
+
+                        // ── 3. STATS ROW — Spent / Allocated / Daily Avg ──
+                        StaggeredFadeSlide(
+                          index: 2,
                           child: Row(
                             children: [
                               Expanded(
@@ -388,18 +354,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   theme: theme,
                                 ),
                               ),
-                              const SizedBox(width: kSpacing12),
-                              Expanded(
-                                child: _StatCard(
-                                  label: 'Remaining',
-                                  amount: status.remaining,
-                                  color: status.remaining >= 0
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.error,
-                                  theme: theme,
-                                ),
-                              ),
-                              const SizedBox(width: kSpacing12),
+                              const SizedBox(width: kSpacing10),
                               Expanded(
                                 child: _StatCard(
                                   label: 'Allocated',
@@ -407,25 +362,32 @@ class BudgetDetailScreen extends ConsumerWidget {
                                   color: theme.colorScheme.primary,
                                   theme: theme,
                                   subtitle: () {
-                                    final rolled =
-                                        bp.currentPeriod?.rolledFrom ?? 0;
+                                    final rolled = bp.currentPeriod?.rolledFrom ?? 0;
                                     if (rolled == 0) return null;
                                     final prefix = rolled > 0 ? '+' : '-';
                                     final label = rolled > 0 ? 'roll' : 'def';
                                     return Text(
                                       '$prefix Tsh ${rolled.abs() ~/ 100} $label',
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            color: rolled > 0
-                                                ? context.appColors.incomeColor
-                                                : context
-                                                      .appColors
-                                                      .expenseColor,
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: rolled > 0
+                                            ? context.appColors.incomeColor
+                                            : context.appColors.expenseColor,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     );
                                   }(),
+                                ),
+                              ),
+                              const SizedBox(width: kSpacing10),
+                              Expanded(
+                                child: _StatCard(
+                                  label: 'Daily Avg',
+                                  amount: status.daysLeft + (status.totalDays - status.daysLeft) > 0
+                                      ? (bp.spentInPeriod ~/ ((status.totalDays - status.daysLeft).clamp(1, status.totalDays)))
+                                      : 0,
+                                  color: theme.colorScheme.secondary,
+                                  theme: theme,
                                 ),
                               ),
                             ],
@@ -433,285 +395,230 @@ class BudgetDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: kSpacing20),
 
-                        // Pace card
-                        StaggeredFadeSlide(
-                          index: 2,
-                          child: GlassCard(
-                            padding: const EdgeInsets.all(kSpacing16),
-
-                            child: Row(
-                              children: [
-                                Icon(
-                                  status.isOnTrack
-                                      ? PesaFlowIcons.success
-                                      : PesaFlowIcons.warning,
-                                  color: status.isOnTrack
-                                      ? theme.colorScheme.primary
-                                      : Colors.orange,
-                                  size: 28,
-                                ),
-                                const SizedBox(width: kSpacing12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        status.paceLabel,
-                                        style: theme.textTheme.titleSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      Text(
-                                        '${status.daysLeft} days remaining in this period',
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(color: Colors.grey),
-                                      ),
-                                      if (!status.isOnTrack &&
-                                          !status.isOverBudget &&
-                                          status.daysLeft > 0 &&
-                                          status.percentage > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: kSpacing4,
-                                          ),
-                                          child: Text(
-                                            _projectedOverspendDate(status),
-                                            style: theme.textTheme.bodySmall
-                                                ?.copyWith(
-                                                  color: Colors.orange,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing24),
-
-                        // Daily spend bar chart
+                        // ── 4. DAILY SPEND CHART — with budget line + average ──
                         dailyAsync.when(
                           data: (dailyData) {
-                            if (dailyData.isEmpty) {
-                              return const SizedBox.shrink();
-                            }
+                            if (dailyData.isEmpty) return const SizedBox.shrink();
                             final maxAmount = dailyData
                                 .map((e) => e.value)
                                 .reduce((a, b) => a > b ? a : b);
+                            final daysElapsed = status.totalDays - status.daysLeft;
+                            final dailyBudget = daysElapsed > 0
+                                ? status.allocated / status.totalDays
+                                : status.allocated.toDouble();
+                            final dailyAvg = daysElapsed > 0
+                                ? bp.spentInPeriod / daysElapsed
+                                : 0.0;
                             return StaggeredFadeSlide(
                               index: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Daily Spend',
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
+                              child: GlassCard(
+                                padding: const EdgeInsets.all(kSpacing16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Daily Spend',
+                                          style: theme.textTheme.titleSmall?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        _ChartLegend(
+                                          color: mutedCatColor,
+                                          label: 'Actual',
+                                        ),
+                                        const SizedBox(width: kSpacing10),
+                                        _ChartLegend(
+                                          color: theme.colorScheme.error.withValues(alpha: 0.5),
+                                          label: 'Budget/day',
+                                          dashed: true,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: kSpacing12),
-                                  SizedBox(
-                                    height: 120,
-                                    child: BarChart(
-                                      BarChartData(
-                                        alignment:
-                                            BarChartAlignment.spaceAround,
-                                        maxY: maxAmount * 1.2,
-                                        barTouchData: BarTouchData(
-                                          enabled: false,
-                                        ),
-                                        titlesData: FlTitlesData(
-                                          show: true,
-                                          leftTitles: const AxisTitles(
-                                            sideTitles: SideTitles(
-                                              showTitles: false,
+                                    const SizedBox(height: kSpacing14),
+                                    SizedBox(
+                                      height: 140,
+                                      child: BarChart(
+                                        BarChartData(
+                                          alignment: BarChartAlignment.spaceAround,
+                                          maxY: math.max(maxAmount * 1.2, dailyBudget * 1.5),
+                                          barTouchData: BarTouchData(enabled: false),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            leftTitles: const AxisTitles(
+                                              sideTitles: SideTitles(showTitles: false),
                                             ),
-                                          ),
-                                          topTitles: const AxisTitles(
-                                            sideTitles: SideTitles(
-                                              showTitles: false,
+                                            topTitles: const AxisTitles(
+                                              sideTitles: SideTitles(showTitles: false),
                                             ),
-                                          ),
-                                          rightTitles: const AxisTitles(
-                                            sideTitles: SideTitles(
-                                              showTitles: false,
+                                            rightTitles: const AxisTitles(
+                                              sideTitles: SideTitles(showTitles: false),
                                             ),
-                                          ),
-                                          bottomTitles: AxisTitles(
-                                            sideTitles: SideTitles(
-                                              showTitles: true,
-                                              getTitlesWidget: (value, meta) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        top: kSpacing4,
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                getTitlesWidget: (value, meta) {
+                                                  final day = value.toInt();
+                                                  if (day % 5 == 0 || day == 1) {
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: kSpacing4),
+                                                      child: Text(
+                                                        '$day',
+                                                        style: theme.textTheme.labelSmall?.copyWith(fontSize: 9),
                                                       ),
-                                                  child: Text(
-                                                    '${value.toInt()}',
-                                                    style: theme
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(fontSize: 9),
-                                                  ),
-                                                );
-                                              },
-                                              reservedSize: 20,
-                                            ),
-                                          ),
-                                        ),
-                                        gridData: const FlGridData(show: false),
-                                        borderData: FlBorderData(show: false),
-                                        barGroups: dailyData.map((entry) {
-                                          return BarChartGroupData(
-                                            x: entry.key.day,
-                                            barRods: [
-                                              BarChartRodData(
-                                                toY: entry.value.toDouble(),
-                                                color: mutedCatColor,
-                                                width: 8,
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                      topLeft: Radius.circular(
-                                                        4,
-                                                      ),
-                                                      topRight: Radius.circular(
-                                                        4,
-                                                      ),
-                                                    ),
+                                                    );
+                                                  }
+                                                  return const SizedBox.shrink();
+                                                },
+                                                reservedSize: 20,
                                               ),
+                                            ),
+                                          ),
+                                          gridData: const FlGridData(show: false),
+                                          borderData: FlBorderData(show: false),
+                                          extraLinesData: ExtraLinesData(
+                                            horizontalLines: [
+                                              HorizontalLine(
+                                                y: dailyBudget,
+                                                color: theme.colorScheme.error.withValues(alpha: 0.35),
+                                                strokeWidth: 1,
+                                                dashArray: [6, 4],
+                                                label: HorizontalLineLabel(
+                                                  show: true,
+                                                  alignment: Alignment.topRight,
+                                                  style: context.ts(
+                                                    9,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: theme.colorScheme.error.withValues(alpha: 0.6),
+                                                  ),
+                                                  labelResolver: (_) => 'budget',
+                                                ),
+                                              ),
+                                              if (dailyAvg > 0)
+                                                HorizontalLine(
+                                                  y: dailyAvg,
+                                                  color: catColor.withValues(alpha: 0.4),
+                                                  strokeWidth: 1,
+                                                  dashArray: [3, 3],
+                                                  label: HorizontalLineLabel(
+                                                    show: true,
+                                                    alignment: Alignment.topRight,
+                                                    style: context.ts(
+                                                      9,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: catColor.withValues(alpha: 0.6),
+                                                    ),
+                                                    labelResolver: (_) => 'avg',
+                                                  ),
+                                                ),
                                             ],
-                                          );
-                                        }).toList(),
+                                          ),
+                                          barGroups: dailyData.map((entry) {
+                                            final isOverDaily = entry.value > dailyBudget;
+                                            return BarChartGroupData(
+                                              x: entry.key.day,
+                                              barRods: [
+                                                BarChartRodData(
+                                                  toY: entry.value.toDouble(),
+                                                  color: isOverDaily
+                                                      ? theme.colorScheme.error.withValues(alpha: 0.7)
+                                                      : mutedCatColor,
+                                                  width: 7,
+                                                  borderRadius: const BorderRadius.only(
+                                                    topLeft: Radius.circular(3),
+                                                    topRight: Radius.circular(3),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           },
                           loading: () => const SizedBox.shrink(),
                           error: (_, _) => const SizedBox.shrink(),
                         ),
+
+                        // ── 5. PACE + PROJECTED — inline, not a separate card ──
+                        if (status.daysLeft > 0) ...[
+                          const SizedBox(height: kSpacing16),
+                          StaggeredFadeSlide(
+                            index: 4,
+                            child: _PaceInsight(
+                              status: status,
+                              catColor: catColor,
+                              theme: theme,
+                              projectedDate: _projectedOverspendDate(status),
+                            ),
+                          ),
+                        ],
+
+                        // ── 6. PERIOD COMPARISON — inline insight ──
                         const SizedBox(height: kSpacing16),
-
-                        // Previous period comparison
                         _buildPeriodComparison(periodsAsync, bp, theme),
-                        const SizedBox(height: kSpacing24),
 
-                        // Period info
+                        // ── 7. PERIOD HISTORY ──
+                        const SizedBox(height: kSpacing24),
                         StaggeredFadeSlide(
                           index: 5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
                               Text(
-                                'Period: ${bp.budget.period}',
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                                'Period History',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              const Spacer(),
                               Text(
-                                'Rollover: ${bp.budget.rollover ? bp.budget.rolloverType : "disabled"}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey,
+                                '${bp.budget.period.toUpperCase()} · Rollover ${bp.budget.rollover ? bp.budget.rolloverType : "off"}',
+                                style: context.ts(
+                                  11,
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: kSpacing20),
-
-                        // Historical Periods
-                        StaggeredFadeSlide(
-                          index: 6,
-                          child: Text(
-                            'Period History',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: kSpacing12),
+                        const SizedBox(height: kSpacing10),
                         periodsAsync.when(
-                          data: (periods) => Column(
-                            children: periods.asMap().entries.map((entry) {
-                              final idx = entry.key;
-                              final p = entry.value;
-                              final pctUsed = p.allocated > 0
-                                  ? (p.spent / p.allocated * 100).round()
-                                  : 0;
-                              return StaggeredFadeSlide(
-                                index: 7 + idx,
-                                child: GlassCard(
-                                  margin: const EdgeInsets.only(
-                                    bottom: kSpacing8,
+                          data: (periods) {
+                            if (periods.isEmpty) return const SizedBox.shrink();
+                            return Column(
+                              children: periods.asMap().entries.map((entry) {
+                                final idx = entry.key;
+                                final p = entry.value;
+                                final pctUsed = p.allocated > 0
+                                    ? (p.spent / p.allocated)
+                                    : 0.0;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: kSpacing6),
+                                  child: _PeriodRow(
+                                    period: p,
+                                    pctUsed: pctUsed,
+                                    isCurrent: idx == 0,
+                                    catColor: catColor,
+                                    theme: theme,
                                   ),
-                                  padding: const EdgeInsets.all(kSpacing12),
-                                  borderRadius: 8,
-
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        p.isClosed
-                                            ? PesaFlowIcons.lock
-                                            : PesaFlowIcons.unlock,
-                                        size: 16,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(width: kSpacing8),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${p.periodStart.day}/${p.periodStart.month} — ${p.periodEnd.day}/${p.periodEnd.month}/${p.periodEnd.year}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '$pctUsed% used${p.rolledFrom != null && p.rolledFrom != 0 ? " • Rolled: Tsh ${p.rolledFrom! ~/ 100}" : ""}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      AmountText(
-                                        amountInCents: p.spent,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                                );
+                              }).toList(),
+                            );
+                          },
                           loading: () => const Padding(
                             padding: EdgeInsets.symmetric(vertical: kSpacing12),
-                            child: SkeletonCard(height: 70),
+                            child: SkeletonCard(height: 50),
                           ),
                           error: (e, _) => ErrorState(
                             title: 'Failed to Load Periods',
                             message: e.toString(),
-                            onRetry: () =>
-                                ref.invalidate(budgetPeriodsProvider(budgetId)),
+                            onRetry: () => ref.invalidate(budgetPeriodsProvider(budgetId)),
                           ),
                         ),
                       ],
