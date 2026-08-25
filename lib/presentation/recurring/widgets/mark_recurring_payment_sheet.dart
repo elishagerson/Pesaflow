@@ -82,7 +82,7 @@ Future<void> showMarkRecurringPaymentSheet({
                     Divider(
                       height: 0.5,
                       color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.08,
+                        alpha: 0.05,
                       ),
                     ),
                     // Scrollable content

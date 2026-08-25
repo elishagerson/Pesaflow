@@ -156,7 +156,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           Container(
             padding: const EdgeInsets.all(kSpacing12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.error.withValues(alpha: 0.08),
+              color: theme.colorScheme.error.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -227,7 +227,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           Container(
             padding: const EdgeInsets.all(kSpacing10),
             decoration: BoxDecoration(
-              color: theme.colorScheme.error.withValues(alpha: 0.08),
+              color: theme.colorScheme.error.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(

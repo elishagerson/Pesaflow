@@ -393,7 +393,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.08,
+                                    alpha: 0.05,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(

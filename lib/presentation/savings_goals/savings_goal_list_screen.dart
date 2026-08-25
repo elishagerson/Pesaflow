@@ -503,7 +503,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
             Divider(
               height: 1,
               thickness: 0.5,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
               indent: 4 + 16,
             ),
         ],
