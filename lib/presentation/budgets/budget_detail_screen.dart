@@ -1110,7 +1110,7 @@ class _PeriodRow extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: kSpacing4,
-                          vertical: kSpacing1,
+                          vertical: kSpacing2,
                         ),
                         decoration: BoxDecoration(
                           color: catColor.withValues(alpha: 0.1),
