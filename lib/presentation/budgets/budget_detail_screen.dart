@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -751,4 +752,489 @@ class _StatCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _TimelineProgressBar extends StatelessWidget {
+  final BudgetStatus status;
+  final Color catColor;
+  final ThemeData theme;
+
+  const _TimelineProgressBar({
+    required this.status,
+    required this.catColor,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final daysElapsed = status.totalDays - status.daysLeft;
+    final timePct = status.totalDays > 0
+        ? (daysElapsed / status.totalDays).clamp(0.0, 1.0)
+        : 0.0;
+    final budgetPct = status.percentage.clamp(0.0, 1.5);
+    final isOverBudget = status.isOverBudget;
+
+    return GlassCard(
+      padding: const EdgeInsets.all(kSpacing14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Timeline',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${status.daysLeft} days left',
+                style: context.ts(
+                  12,
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: kSpacing12),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final barWidth = constraints.maxWidth;
+              return SizedBox(
+                height: 32,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 20,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.04),
+                            ),
+                            FractionallySizedBox(
+                              widthFactor: math.min(budgetPct, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: isOverBudget
+                                        ? [
+                                            theme.colorScheme.error,
+                                            theme.colorScheme.error
+                                                .withValues(alpha: 0.7),
+                                          ]
+                                        : [catColor, catColor.withValues(alpha: 0.6)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 22,
+                      left: (timePct * barWidth) - 1,
+                      child: Container(
+                        width: 2,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurface,
+                          borderRadius: BorderRadius.circular(1),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 30,
+                      left: 0,
+                      child: Text(
+                        '${(timePct * 100).round()}% time',
+                        style: context.ts(
+                          9,
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.35),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 30,
+                      right: 0,
+                      child: Text(
+                        '${(budgetPct * 100).round()}% budget',
+                        style: context.ts(
+                          9,
+                          color: isOverBudget
+                              ? theme.colorScheme.error
+                                  .withValues(alpha: 0.6)
+                              : theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.35),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: kSpacing14),
+          _LegendRow(
+            items: [
+              _LegendItem(catColor, 'Spent'),
+              _LegendItem(theme.colorScheme.onSurface.withValues(alpha: 0.12), 'Remaining'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChartLegend extends StatelessWidget {
+  final Color color;
+  final String label;
+  final bool dashed;
+
+  const _ChartLegend({
+    required this.color,
+    required this.label,
+    this.dashed = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomPaint(
+          size: const Size(16, 2),
+          painter: _DashedLinePainter(
+            color: color,
+            dashed: dashed,
+          ),
+        ),
+        const SizedBox(width: kSpacing4),
+        Text(
+          label,
+          style: context.ts(
+            10,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DashedLinePainter extends CustomPainter {
+  final Color color;
+  final bool dashed;
+
+  _DashedLinePainter({required this.color, this.dashed = false});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.round;
+
+    if (dashed) {
+      const dashWidth = 3.0;
+      const dashSpace = 2.0;
+      double x = 0;
+      while (x < size.width) {
+        canvas.drawLine(
+          Offset(x, size.height / 2),
+          Offset(x + dashWidth, size.height / 2),
+          paint,
+        );
+        x += dashWidth + dashSpace;
+      }
+    } else {
+      canvas.drawLine(
+        Offset(0, size.height / 2),
+        Offset(size.width, size.height / 2),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DashedLinePainter old) => old.color != color || old.dashed != dashed;
+}
+
+class _PaceInsight extends StatelessWidget {
+  final BudgetStatus status;
+  final Color catColor;
+  final ThemeData theme;
+  final String projectedDate;
+
+  const _PaceInsight({
+    required this.status,
+    required this.catColor,
+    required this.theme,
+    required this.projectedDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color statusColor;
+    final IconData icon;
+    final String title;
+    final String subtitle;
+
+    if (status.isOverBudget) {
+      statusColor = theme.colorScheme.error;
+      icon = PesaFlowIcons.expense;
+      title = status.paceLabel;
+      subtitle = 'You\'ve exceeded your budget for this period.';
+    } else if (status.isOnTrack) {
+      statusColor = context.appColors.incomeColor;
+      icon = PesaFlowIcons.income;
+      title = status.paceLabel;
+      subtitle = 'At current pace, you\'ll stay within budget.';
+    } else {
+      statusColor = Colors.orange;
+      icon = PesaFlowIcons.expense;
+      title = status.paceLabel;
+      subtitle = projectedDate.isNotEmpty
+          ? projectedDate
+          : 'You\'re spending faster than planned.';
+    }
+
+    return GlassCard(
+      padding: const EdgeInsets.all(kSpacing14),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 18, color: statusColor),
+          ),
+          const SizedBox(width: kSpacing12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.ts(
+                    13,
+                    fontWeight: FontWeight.w700,
+                    color: statusColor,
+                  ),
+                ),
+                const SizedBox(height: kSpacing2),
+                Text(
+                  subtitle,
+                  style: context.ts(
+                    11,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PeriodRow extends StatelessWidget {
+  final BudgetPeriod period;
+  final double pctUsed;
+  final bool isCurrent;
+  final Color catColor;
+  final ThemeData theme;
+
+  const _PeriodRow({
+    required this.period,
+    required this.pctUsed,
+    required this.isCurrent,
+    required this.catColor,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final barColor = pctUsed > 1.0
+        ? theme.colorScheme.error
+        : pctUsed > 0.8
+            ? Colors.orange
+            : catColor;
+
+    return GlassCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: kSpacing12,
+        vertical: kSpacing10,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      _formatPeriodLabel(period),
+                      style: context.ts(
+                        12,
+                        fontWeight: FontWeight.w600,
+                        color: isCurrent
+                            ? theme.colorScheme.onSurface
+                            : theme.colorScheme.onSurface
+                                .withValues(alpha: 0.55),
+                      ),
+                    ),
+                    if (isCurrent) ...[
+                      const SizedBox(width: kSpacing6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing4,
+                          vertical: kSpacing1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: catColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'NOW',
+                          style: context.ts(
+                            8,
+                            fontWeight: FontWeight.w700,
+                            color: catColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: kSpacing2),
+                Text(
+                  '${_formatDate(period.periodStart)} – ${_formatDate(period.periodEnd)}',
+                  style: context.ts(
+                    10,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: kSpacing10),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: pctUsed.clamp(0.0, 1.0),
+                    minHeight: 4,
+                    backgroundColor: theme.colorScheme.onSurface
+                        .withValues(alpha: 0.06),
+                    valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                  ),
+                ),
+                const SizedBox(height: kSpacing4),
+                Text(
+                  '${(pctUsed * 100).round()}% · Tsh ${period.spent ~/ 100} / ${period.allocated ~/ 100}',
+                  style: context.ts(
+                    10,
+                    fontWeight: FontWeight.w500,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatPeriodLabel(BudgetPeriod p) {
+    final months = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    if (p.periodStart.month == p.periodEnd.month &&
+        p.periodStart.year == p.periodEnd.year) {
+      return '${months[p.periodStart.month]} ${p.periodStart.year}';
+    }
+    if (p.periodStart.year == p.periodEnd.year) {
+      return '${months[p.periodStart.month]} – ${months[p.periodEnd.month]} ${p.periodStart.year}';
+    }
+    return '${months[p.periodStart.month]} ${p.periodStart.year} – ${months[p.periodEnd.month]} ${p.periodEnd.year}';
+  }
+
+  String _formatDate(DateTime d) => '${d.day}/${d.month}';
+}
+
+class _LegendRow extends StatelessWidget {
+  final List<_LegendItem> items;
+
+  const _LegendRow({required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: items
+          .map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(right: kSpacing14),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: item.color,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: kSpacing4),
+                  Text(
+                    item.label,
+                    style: context.ts(
+                      10,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.45),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class _LegendItem {
+  final Color color;
+  final String label;
+  const _LegendItem(this.color, this.label);
 }
