@@ -97,80 +97,198 @@ class BudgetDetailScreen extends ConsumerWidget {
 
             return Column(
               children: [
-                IosNavBar(
-                  title: bp.budget.name,
-                  largeTitle: false,
-                  actions: [
-                    IconButton(
-                      icon: const Icon(PesaFlowIcons.edit),
-                      onPressed: () => context.push('/budgets/$budgetId/edit'),
+                // ── Connected header: title + category + status ──
+                Container(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    MediaQuery.of(context).padding.top + 8,
+                    20,
+                    16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface.withValues(alpha: 0.85),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+                        width: 0.5,
+                      ),
                     ),
-                    IconButton(
-                      icon: const Icon(PesaFlowIcons.delete),
-                      onPressed: () async {
-                        final confirm = await ModernDialog.show<bool>(
-                          context: context,
-                          title: const Text('Delete Budget?'),
-                          titleIcon: PesaFlowIcons.delete,
-                          iconColor: Colors.red,
-                          content: const Text(
-                            'This will permanently remove this budget and all its history.',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(false),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(true),
-                              child: const Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.red),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Back button row
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).maybePop(),
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                PesaFlowIcons.back,
+                                size: 18,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
-                          ],
-                        );
-                        if (confirm == true) {
-                          if (!context.mounted) return;
-                          final budget = bp.budget;
-                          final savedBudgetName = budget.name;
-                          await UndoDelete.show(
-                            context: context,
-                            entityName: 'Budget',
-                            message: '"$savedBudgetName" deleted',
-                            onUndo: () async {
-                              await ref
-                                  .read(budgetRepositoryProvider)
-                                  .createBudget(
-                                    name: budget.name,
-                                    categoryId: budget.categoryId,
-                                    period: budget.period,
-                                    amount: budget.amount,
-                                    rollover: budget.rollover,
-                                    rolloverType: budget.rolloverType,
-                                    rolloverCap: budget.rolloverCap,
-                                    startDate: budget.startDate,
-                                    notificationThreshold:
-                                        budget.notificationThreshold,
-                                  );
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(PesaFlowIcons.edit, size: 20),
+                            onPressed: () => context.push('/budgets/$budgetId/edit'),
+                          ),
+                          IconButton(
+                            icon: const Icon(PesaFlowIcons.delete, size: 20),
+                            onPressed: () async {
+                              final confirm = await ModernDialog.show<bool>(
+                                context: context,
+                                title: const Text('Delete Budget?'),
+                                titleIcon: PesaFlowIcons.delete,
+                                iconColor: Colors.red,
+                                content: const Text(
+                                  'This will permanently remove this budget and all its history.',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop(false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop(true),
+                                    child: const Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              );
+                              if (confirm == true) {
+                                if (!context.mounted) return;
+                                final budget = bp.budget;
+                                final savedBudgetName = budget.name;
+                                await UndoDelete.show(
+                                  context: context,
+                                  entityName: 'Budget',
+                                  message: '"$savedBudgetName" deleted',
+                                  onUndo: () async {
+                                    await ref
+                                        .read(budgetRepositoryProvider)
+                                        .createBudget(
+                                          name: budget.name,
+                                          categoryId: budget.categoryId,
+                                          period: budget.period,
+                                          amount: budget.amount,
+                                          rollover: budget.rollover,
+                                          rolloverType: budget.rolloverType,
+                                          rolloverCap: budget.rolloverCap,
+                                          startDate: budget.startDate,
+                                          notificationThreshold:
+                                              budget.notificationThreshold,
+                                        );
+                                  },
+                                  onDelete: () async {
+                                    await ref
+                                        .read(budgetRepositoryProvider)
+                                        .deleteBudget(budgetId);
+                                    if (context.mounted) context.pop();
+                                  },
+                                );
+                              }
                             },
-                            onDelete: () async {
-                              await ref
-                                  .read(budgetRepositoryProvider)
-                                  .deleteBudget(budgetId);
-                              if (context.mounted) context.pop();
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Title + status pill
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              bp.budget.name,
+                              style: context.ts(
+                                28,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.8,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing10,
+                              vertical: kSpacing4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: (status.isOverBudget
+                                      ? theme.colorScheme.error
+                                      : catColor)
+                                  .withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              status.isOverBudget
+                                  ? 'Over budget'
+                                  : '${(status.percentage * 100).round()}%',
+                              style: context.ts(
+                                12,
+                                fontWeight: FontWeight.w600,
+                                color: status.isOverBudget
+                                    ? theme.colorScheme.error
+                                    : catColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: kSpacing6),
+                      // Category chip + period
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing8,
+                              vertical: kSpacing2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: catColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              bp.category.name,
+                              style: context.ts(
+                                11,
+                                fontWeight: FontWeight.w600,
+                                color: catColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: kSpacing8),
+                          Text(
+                            bp.budget.period.toUpperCase(),
+                            style: context.ts(
+                              11,
+                              fontWeight: FontWeight.w500,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
