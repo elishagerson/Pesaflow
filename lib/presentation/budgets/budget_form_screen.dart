@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/presentation/common/ios/ios_list_section.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_date_selector.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
@@ -473,9 +472,42 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              IosNavBar(
-                title: isEditing ? 'Edit Budget' : 'New Budget',
-                largeTitle: false,
+              Container(
+                padding: EdgeInsets.fromLTRB(
+                  20,
+                  MediaQuery.of(context).padding.top + 8,
+                  20,
+                  16,
+                ),
+                child: Row(
+                  children: [
+                    TactileSpringContainer(
+                      onTap: () => Navigator.of(context).maybePop(),
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: kSpacing14),
+                    Text(
+                      isEditing ? 'Edit Budget' : 'New Budget',
+                      style: context.ts(
+                        28,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.8,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: SingleChildScrollView(

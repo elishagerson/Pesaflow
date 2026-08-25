@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pesaflow/presentation/common/ios/ios_tab_bar.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -21,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
+import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -40,11 +40,37 @@ class LoanDetailScreen extends ConsumerWidget {
         final loan = loans.where((l) => l.id == loanId).firstOrNull;
         if (loan == null) {
           return Scaffold(
-            appBar: const IosNavBar(title: 'Loan Details', largeTitle: false),
-            body: EmptyState(
-              icon: PesaFlowIcons.loans,
-              title: 'Loan Not Found',
-              subtitle: 'The requested loan details could not be located.',
+            backgroundColor: Colors.black,
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                  child: Row(
+                    children: [
+                      TactileSpringContainer(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          padding: const EdgeInsets.all(kSpacing10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                        ),
+                      ),
+                      const SizedBox(width: kSpacing12),
+                      Text('Loan Details', style: context.ts(34, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5)),
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  child: EmptyState(
+                    icon: PesaFlowIcons.loans,
+                    title: 'Loan Not Found',
+                    subtitle: 'The requested loan details could not be located.',
+                  ),
+                ),
+              ],
             ),
           );
         }
