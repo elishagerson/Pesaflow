@@ -362,7 +362,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   decoration: BoxDecoration(
                                     color: const Color(
                                       0xFF609F8A,
-                                    ).withValues(alpha: 0.08),
+                                    ).withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color: const Color(

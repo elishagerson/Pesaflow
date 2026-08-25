@@ -584,14 +584,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                   kSpacing2,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .primary
-                                                              .withValues(
-                                                                alpha: 0.08,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
+                                                           color: theme
+                                                               .colorScheme
+                                                               .primary
+                                                               .withValues(
+                                                                 alpha: 0.05,
+                                                               ),
+                                                           borderRadius:
+                                                               BorderRadius.circular(
                                                                 6,
                                                               ),
                                                         ),
@@ -827,8 +827,8 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 decoration: BoxDecoration(
                                                   color: context
                                                       .appColors
-                                                      .expenseColor
-                                                      .withValues(alpha: 0.08),
+                                                       .expenseColor
+                                                       .withValues(alpha: 0.05),
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),

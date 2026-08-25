@@ -540,7 +540,7 @@ class _RecurringTransactionListScreenState
                   decoration: BoxDecoration(
                     color: isActive
                         ? theme.colorScheme.primary.withValues(alpha: 0.15)
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
@@ -858,7 +858,7 @@ class _RecurringTransactionListScreenState
             Divider(
               height: 1,
               thickness: 0.5,
-              color: onSurface.withValues(alpha: 0.08),
+              color: onSurface.withValues(alpha: 0.05),
               indent: 14 + 32 + 12,
             ),
         ],
