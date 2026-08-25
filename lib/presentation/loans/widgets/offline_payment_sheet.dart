@@ -47,6 +47,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                 top: Radius.circular(24),
               ),
               child: LiquidGlassOverlay(
+                grainSeed: 0xB4C3,
                 child: Container(
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface.withValues(alpha: 0.78),

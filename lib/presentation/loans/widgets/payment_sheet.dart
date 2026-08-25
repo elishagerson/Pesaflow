@@ -238,6 +238,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                 top: Radius.circular(24),
               ),
               child: LiquidGlassOverlay(
+                grainSeed: 0xC5D4,
                 child: Container(
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface.withValues(alpha: 0.78),

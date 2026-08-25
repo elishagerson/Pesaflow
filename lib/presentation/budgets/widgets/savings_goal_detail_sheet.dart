@@ -167,6 +167,7 @@ class _SavingsGoalDetailSheetState
           builder: (context, scrollController) => ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: LiquidGlassOverlay(
+              grainSeed: 0xA3B2,
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface.withValues(alpha: 0.60),

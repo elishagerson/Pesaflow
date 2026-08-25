@@ -49,6 +49,10 @@ class LiquidGlassOverlay extends StatefulWidget {
   /// macOS-style cursor-following specular highlight.
   final bool enableParallax;
 
+  /// Seed for deterministic grain pattern. Each instance should use a
+  /// different value to avoid identical noise across overlapping overlays.
+  final int grainSeed;
+
   const LiquidGlassOverlay({
     super.key,
     required this.child,
@@ -59,6 +63,7 @@ class LiquidGlassOverlay extends StatefulWidget {
     this.showTopHighlight = true,
     this.showInnerBorder = true,
     this.enableParallax = false,
+    this.grainSeed = 0x61F7,
   });
 
   @override
@@ -169,6 +174,7 @@ class _LiquidGlassOverlayState extends State<LiquidGlassOverlay>
                       isDark: isDark,
                       showTopHighlight: widget.showTopHighlight,
                       showInnerBorder: widget.showInnerBorder,
+                      grainSeed: widget.grainSeed,
                       pointer: widget.enableParallax && !reducedMotion
                           ? _pointer
                           : null,
@@ -192,6 +198,7 @@ class _LiquidGlassPainter extends CustomPainter {
   final bool isDark;
   final bool showTopHighlight;
   final bool showInnerBorder;
+  final int grainSeed;
   final ValueNotifier<Offset?>? pointer;
 
   _LiquidGlassPainter({
@@ -199,6 +206,7 @@ class _LiquidGlassPainter extends CustomPainter {
     required this.isDark,
     required this.showTopHighlight,
     required this.showInnerBorder,
+    required this.grainSeed,
     this.pointer,
   }) : super(repaint: pointer);
 
@@ -237,7 +245,7 @@ class _LiquidGlassPainter extends CustomPainter {
   void _paintGrain(Canvas canvas, Size size) {
     if (k < 0.2) return;
     final count = math.min(360, (size.width * size.height / 1100).round());
-    final rng = math.Random(0x61F7);
+    final rng = math.Random(grainSeed);
     final dot = Paint()..strokeWidth = 0.8;
     for (var i = 0; i < count; i++) {
       final p = Offset(rng.nextDouble() * size.width, rng.nextDouble() * size.height);

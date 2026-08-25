@@ -30,6 +30,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: LiquidGlassOverlay(
+          grainSeed: 0xA8B9,
           child: Container(
             decoration: BoxDecoration(
               color: theme.colorScheme.surface.withValues(alpha: 0.60),

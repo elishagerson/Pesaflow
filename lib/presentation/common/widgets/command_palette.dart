@@ -276,6 +276,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                 child: GestureDetector(
                   onTap: () {},
                   child: LiquidGlassOverlay(
+                    grainSeed: 0xD6E5,
                     enableParallax: true,
                     child: Container(
                       constraints: const BoxConstraints(

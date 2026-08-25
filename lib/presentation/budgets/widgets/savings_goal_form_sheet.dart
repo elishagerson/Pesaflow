@@ -168,6 +168,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       child: LiquidGlassOverlay(
+        grainSeed: 0xF7A8,
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh.withValues(

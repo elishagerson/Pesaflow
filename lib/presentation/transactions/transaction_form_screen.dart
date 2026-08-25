@@ -303,6 +303,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           builder: (context, scrollController) => ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: LiquidGlassOverlay(
+              grainSeed: 0xE7F6,
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.75),
