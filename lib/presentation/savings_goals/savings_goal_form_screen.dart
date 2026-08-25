@@ -165,7 +165,6 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final onSurface = theme.colorScheme.onSurface;
 
     InputDecoration inputDeco({
       required String label,
@@ -494,8 +493,8 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
