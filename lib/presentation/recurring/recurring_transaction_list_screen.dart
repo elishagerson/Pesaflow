@@ -314,6 +314,10 @@ class _RecurringTransactionListScreenState
           },
         ),
       ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
