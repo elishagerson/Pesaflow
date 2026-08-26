@@ -97,10 +97,11 @@ class ProviderMatcher {
       }
       if (upperBody.contains('MIXX') ||
           upperBody.contains('TIGO') ||
-          upperBody.contains('YAS')) {
+          upperBody.contains('YAS PESA') ||
+          upperBody.contains('YASPESA')) {
         return 'TigoPesa_TZ';
       }
-      if (upperBody.contains('HALOPESA') || upperBody.contains('HALO')) {
+      if (upperBody.contains('HALOPESA') || upperBody.contains('HALO PESA')) {
         return 'Halopesa_TZ';
       }
     }

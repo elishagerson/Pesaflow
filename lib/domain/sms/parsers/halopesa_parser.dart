@@ -133,6 +133,111 @@ class HalopesaParser implements SmsParser {
           rawSmsBody: text,
         );
       }
+
+      // 5. Airtime Purchase (Expense)
+      // Swahili: "Umenunua TZS 5,000.00 ya malipo ya simu. Rej: HP12345. Salio: TZS 45,000.00"
+      // English: "You have purchased TZS 5,000.00 airtime. Ref: HP12345. Balance: TZS 45,000.00"
+      final airtimeRegex = RegExp(
+        r'(?:Umenunua|You have (?:bought|purchased))\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:ya\s+malipo\s+ya\s+simu|airtime)',
+        caseSensitive: false,
+      );
+      match = airtimeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'airtime',
+          senderOrRecipient: 'Halopesa Airtime',
+          reference: ref,
+          provider: 'Halopesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 6. Fee / Charges (Fee)
+      // Swahili: "Ada ya TZS 500.00 imetozwa. Rej: HP12345. Salio: TZS 44,500.00"
+      // English: "A fee of TZS 500.00 has been charged. Ref: HP12345. Balance: TZS 44,500.00"
+      final feeRegex = RegExp(
+        r'(?:Ada\s+ya|A\s+fee\s+of|Kodi\s+ya)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:imetozwa|has\s+been\s+charged|imejikokwa)',
+        caseSensitive: false,
+      );
+      match = feeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'fee',
+          senderOrRecipient: 'Halopesa Fee',
+          reference: ref,
+          provider: 'Halopesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 7. Loan Disbursement (Loan)
+      // Swahili: "Umepokea mkopo wa TZS 100,000.00. Rej: HP12345. Salio: TZS 150,000.00"
+      // English: "You have received a loan of TZS 100,000.00. Ref: HP12345. Balance: TZS 150,000.00"
+      final loanRegex = RegExp(
+        r'(?:Umepokea\s+mkopo\s+wa|You\s+have\s+received\s+(?:a\s+)?loan\s+of)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = loanRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'loan',
+          senderOrRecipient: 'Halopesa Loan',
+          reference: ref,
+          provider: 'Halopesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 8. Payment Received (Income) — distinct from simple received money
+      // Swahili: "Umepokea malipo ya TZS 25,000.00 kutoka kwa JOHN. Rej: HP12345. Salio: TZS 75,000.00"
+      // English: "Payment of TZS 25,000.00 received from JOHN. Ref: HP12345. Balance: TZS 75,000.00"
+      final paymentReceivedRegex = RegExp(
+        r'(?:Umepokea\s+malipo\s+ya|Payment\s+of)\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+(?:received\s+from|kutoka\s+kwa)\s+(.+?)(?:\.|\s+Rej|\s+Salio|\s+Ref|\s+Balance|$)',
+        caseSensitive: false,
+      );
+      match = paymentReceivedRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final sender = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: sender,
+          reference: ref,
+          provider: 'Halopesa_TZ',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
     } catch (e) {
       developer.log('HalopesaParser error: $e', name: 'Parser');
     }

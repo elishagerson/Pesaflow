@@ -65,8 +65,9 @@ class SelcomPesaParser implements SmsParser {
 
       // 1. English: Received Money (Income)
       // Example: "0517EQMYW Confirmed. You have received TZS 473,000.00 from ELISHA NDUNDULU - Mixx by Yas (255675259341) on 2026-05-17 17:57:46. Updated balance is TZS 477,319.85."
+      // Also handles: on 17/05/2026, on 17-05-2026, on 17/05/26, on 17 May 2026
       final engReceivedRegex = RegExp(
-        r'Confirmed\.\s*You have received TZS\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\s+on\s+\d{4}-\d{2}-\d{2}',
+        r'Confirmed\.\s*You have received TZS\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\s+on\s+(?:\d{4}[-/]\d{2}[-/]\d{2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4}|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4})',
         caseSensitive: false,
       );
       var match = engReceivedRegex.firstMatch(text);
@@ -91,8 +92,9 @@ class SelcomPesaParser implements SmsParser {
 
       // 2. English: Sent Money (Expense)
       // Example: "0517EQN0Z Accepted. You have sent TZS 477,000.00 to PARTS AND COMPONENTS MBEYA - 19938686 on 2026-05-17 17:58:34. Charge is FREE. Updated balance is TZS 319.85."
+      // Also handles: on 17/05/2026, on 17-05-2026, on 17/05/26, on 17 May 2026
       final engSentRegex = RegExp(
-        r'Accepted\.\s*You have sent TZS\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+\d{4}-\d{2}-\d{2}',
+        r'Accepted\.\s*You have sent TZS\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+on\s+(?:\d{4}[-/]\d{2}[-/]\d{2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4}|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4})',
         caseSensitive: false,
       );
       match = engSentRegex.firstMatch(text);

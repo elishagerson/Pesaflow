@@ -46,6 +46,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -75,6 +76,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -98,6 +100,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final senderPhone = match.group(2) ?? '';
         final senderName = (match.group(3) ?? '').trim();
         final ref = _extractReference(text);
@@ -125,6 +128,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final merchant = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -183,6 +187,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final source = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -207,6 +212,7 @@ class NmbBankParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final desc = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -263,6 +269,7 @@ class CrdbBankParser implements SmsParser {
       var match = debitRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final merchant = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -288,6 +295,7 @@ class CrdbBankParser implements SmsParser {
       match = creditRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final source = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -296,6 +304,136 @@ class CrdbBankParser implements SmsParser {
           amount: amt,
           type: 'income',
           senderOrRecipient: source,
+          reference: ref,
+          provider: 'CRDB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 3. Transfer Sent (Expense)
+      // "CRDB: Your transfer of TZS 200,000.00 to JOHN DOE has been processed. Available: TZS 600,000.00. Ref: CRDB789"
+      final transferSentRegex = RegExp(
+        r'CRDB:\s*(?:Your\s+)?transfer\s+of\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+has\s+been\s+processed',
+        caseSensitive: false,
+      );
+      match = transferSentRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'CRDB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 4. Bill Payment (Expense)
+      // "CRDB: You have paid TANESCO for TZS 85,000.00. Available: TZS 515,000.00. Ref: CRDB101"
+      final billPaymentRegex = RegExp(
+        r'CRDB:\s*You\s+have\s+paid\s+(.+?)\s+for\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      );
+      match = billPaymentRegex.firstMatch(text);
+      if (match != null) {
+        final biller = (match.group(1) ?? '').trim();
+        final amt = parseAmount(match.group(2) ?? '');
+        if (amt <= 0) return null;
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: biller,
+          reference: ref,
+          provider: 'CRDB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 5. Fee / Charges (Fee)
+      // "CRDB: Your account has been charged TZS 1,500.00 for EFT OUTWARD. Available: TZS 513,500.00. Ref: CRDB202"
+      final feeRegex = RegExp(
+        r'CRDB:\s*(?:Your\s+account\s+has\s+been\s+)?charged\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+for\s+(.+?)\.?\s*(?:Available|Ref|$)',
+        caseSensitive: false,
+      );
+      match = feeRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final desc = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'fee',
+          senderOrRecipient: 'CRDB Fee: $desc',
+          reference: ref,
+          provider: 'CRDB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 6. Salary / Employer Credit (Income)
+      // "CRDB: Salary credited: TZS 1,200,000.00 from TELLA LTD. Available: TZS 1,800,000.00. Ref: CRDB303"
+      final salaryCreditRegex = RegExp(
+        r'CRDB:\s*(?:Salary\s+credited|Salary\s+credit)[:\s]+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+from\s+(.+?)\.?\s*(?:Available|Ref|$)',
+        caseSensitive: false,
+      );
+      match = salaryCreditRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final employer = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: employer,
+          reference: ref,
+          provider: 'CRDB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 7. Standing Order / Direct Debit (Expense)
+      // "CRDB: Standing order of TZS 250,000.00 to ACME INSURANCE has been processed. Available: TZS 265,000.00. Ref: CRDB404"
+      final standingOrderRegex = RegExp(
+        r'CRDB:\s*Standing\s+order\s+of\s+(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)\s+to\s+(.+?)\s+has\s+been\s+processed',
+        caseSensitive: false,
+      );
+      match = standingOrderRegex.firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final recipient = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
           reference: ref,
           provider: 'CRDB_Bank',
           balanceAfter: bal,
@@ -326,6 +464,7 @@ class NbcBankParser implements SmsParser {
       var match = debitRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');
@@ -351,6 +490,7 @@ class NbcBankParser implements SmsParser {
       match = creditRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');

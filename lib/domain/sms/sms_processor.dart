@@ -65,13 +65,13 @@ class SmsProcessor {
   // important rule first and produces a single correct result.
   final Map<String, List<_BufferedSms>> _messageBuffer = {};
   Timer? _flushTimer;
-  static const _debounceWindow = Duration(milliseconds: 800);
+  static const _debounceWindow = Duration(milliseconds: 2500);
 
   // ── In-memory content dedup cache ───────────────────────────────────
   // Catches the same SMS body arriving through multiple reception paths
   // (foreground listener, background handler, periodic inbox scan).
   final Set<_ContentKey> _recentContentKeys = {};
-  static const _dedupCapacity = 200;
+  static const _dedupCapacity = 500;
 
   final bool debounceEnabled;
 
