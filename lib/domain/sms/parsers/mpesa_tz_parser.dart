@@ -18,6 +18,40 @@ class MpesaTzParser implements SmsParser {
     return 'MPESA-REF-UNKNOWN';
   }
 
+  int? _extractFee(String text) {
+    // Patterns: "Ada ya manunuzi: TZS 300", "Ada: TZS 100", "ada ni TZS 300"
+    final swaRegex = RegExp(
+      r'Ada\s+(?:ya\s+\w+\s*:|ni|:)\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final swaMatch = swaRegex.firstMatch(text);
+    if (swaMatch != null) {
+      return parseAmount(swaMatch.group(1) ?? '');
+    }
+
+    // English: "Fee: TZS 300" or "Fee TZS 300"
+    final engRegex = RegExp(
+      r'(?:Total\s+)?Fee:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) {
+      return parseAmount(engMatch.group(1) ?? '');
+    }
+
+    // Swahili: "Kodi ya kuhudumia" (service fee) — extract only the fee portion
+    final kodiRegex = RegExp(
+      r'Kodi\s+ya\s+kuhudumia\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final kodiMatch = kodiRegex.firstMatch(text);
+    if (kodiMatch != null) {
+      return parseAmount(kodiMatch.group(1) ?? '');
+    }
+
+    return null;
+  }
+
   int? _extractBalance(String text) {
     // Swahili: Salio: Tsh XXX
     final salioRegex = RegExp(
@@ -56,6 +90,7 @@ class MpesaTzParser implements SmsParser {
       var match = receivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -67,6 +102,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -81,6 +117,7 @@ class MpesaTzParser implements SmsParser {
       match = sentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -92,6 +129,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -106,6 +144,7 @@ class MpesaTzParser implements SmsParser {
       match = airtimeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -116,6 +155,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -130,6 +170,7 @@ class MpesaTzParser implements SmsParser {
       match = feeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -140,6 +181,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -155,6 +197,7 @@ class MpesaTzParser implements SmsParser {
       match = loanRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -165,6 +208,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -182,6 +226,7 @@ class MpesaTzParser implements SmsParser {
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -193,6 +238,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -207,6 +253,7 @@ class MpesaTzParser implements SmsParser {
       match = engSentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -218,6 +265,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -232,6 +280,7 @@ class MpesaTzParser implements SmsParser {
       match = engSentModernRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -243,6 +292,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -257,6 +307,7 @@ class MpesaTzParser implements SmsParser {
       match = engPaidRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final payee = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -268,6 +319,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -282,6 +334,7 @@ class MpesaTzParser implements SmsParser {
       match = engAirtimeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -292,6 +345,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -306,6 +360,7 @@ class MpesaTzParser implements SmsParser {
       match = engFeeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -316,6 +371,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -330,6 +386,7 @@ class MpesaTzParser implements SmsParser {
       match = engOverdraftRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final service = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -341,6 +398,7 @@ class MpesaTzParser implements SmsParser {
           reference: ref,
           provider: 'M-Pesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );

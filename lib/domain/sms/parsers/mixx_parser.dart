@@ -36,6 +36,50 @@ class MixxParser implements SmsParser {
     return 'TIGO-REF-UNKNOWN';
   }
 
+  int? _extractFee(String text) {
+    // Swahili: "Ada: TZS 300", "Ada Tsh 180"
+    final swaRegex = RegExp(
+      r'Ada\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final swaMatch = swaRegex.firstMatch(text);
+    if (swaMatch != null) {
+      return parseAmount(swaMatch.group(1) ?? '');
+    }
+
+    // English: "Fee: TZS 300" or "Total fee Tsh3,500.00"
+    final engRegex = RegExp(
+      r'(?:Total\s+)?Fee\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) {
+      return parseAmount(engMatch.group(1) ?? '');
+    }
+
+    // "Total Charges TSh 300" or "Charges TSh 540"
+    final chargesRegex = RegExp(
+      r'(?:Total\s+)?Charges?\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final chargesMatch = chargesRegex.firstMatch(text);
+    if (chargesMatch != null) {
+      return parseAmount(chargesMatch.group(1) ?? '');
+    }
+
+    // "Service fee: TZS 300" or "Service fee TZS 100"
+    final svcRegex = RegExp(
+      r'Service\s+fee\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final svcMatch = svcRegex.firstMatch(text);
+    if (svcMatch != null) {
+      return parseAmount(svcMatch.group(1) ?? '');
+    }
+
+    return null;
+  }
+
   int? _extractBalance(String text) {
     // Swahili: Salio jipya ni / Salio
     final swaRegex = RegExp(
@@ -450,8 +494,9 @@ class MixxParser implements SmsParser {
     return null;
   }
 
-  SmsParsed _buildIncome(Match match, String text, DateTime timestamp) {
+  SmsParsed? _buildIncome(Match match, String text, DateTime timestamp) {
     final amt = parseAmount(match.group(1) ?? '');
+    if (amt <= 0) return null;
     final sender = (match.group(2) ?? '').trim();
     final ref = _extractReference(text);
     final bal = _extractBalance(text);
@@ -464,13 +509,15 @@ class MixxParser implements SmsParser {
       reference: ref,
       provider: 'TigoPesa_TZ',
       balanceAfter: bal,
+      feeAmount: _extractFee(text),
       timestamp: timestamp,
       rawSmsBody: text,
     );
   }
 
-  SmsParsed _buildExpense(Match match, String text, DateTime timestamp) {
+  SmsParsed? _buildExpense(Match match, String text, DateTime timestamp) {
     final amt = parseAmount(match.group(1) ?? '');
+    if (amt <= 0) return null;
     final recipient = (match.group(2) ?? '').trim();
     final ref = _extractReference(text);
     final bal = _extractBalance(text);
@@ -482,18 +529,20 @@ class MixxParser implements SmsParser {
       reference: ref,
       provider: 'TigoPesa_TZ',
       balanceAfter: bal,
+      feeAmount: _extractFee(text),
       timestamp: timestamp,
       rawSmsBody: text,
     );
   }
 
-  SmsParsed _buildAirtime(
+  SmsParsed? _buildAirtime(
     Match match,
     String text,
     DateTime timestamp,
     String label,
   ) {
     final amt = parseAmount(match.group(1) ?? '');
+    if (amt <= 0) return null;
     final ref = _extractReference(text);
     final bal = _extractBalance(text);
 
@@ -504,6 +553,7 @@ class MixxParser implements SmsParser {
       reference: ref,
       provider: 'TigoPesa_TZ',
       balanceAfter: bal,
+      feeAmount: _extractFee(text),
       timestamp: timestamp,
       rawSmsBody: text,
     );

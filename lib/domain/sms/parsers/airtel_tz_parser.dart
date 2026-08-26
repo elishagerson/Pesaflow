@@ -20,6 +20,40 @@ class AirtelTzParser implements SmsParser {
     return 'AIRTEL-REF-UNKNOWN';
   }
 
+  int? _extractFee(String text) {
+    // Swahili: "Ada ni TZS 300", "Ada: TZS 180"
+    final swaRegex = RegExp(
+      r'Ada\s+(?:ni|:)\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final swaMatch = swaRegex.firstMatch(text);
+    if (swaMatch != null) {
+      return parseAmount(swaMatch.group(1) ?? '');
+    }
+
+    // English: "Transaction Fee: TZS 100" or "Service Fee: TZS 300"
+    final engRegex = RegExp(
+      r'(?:Transaction|Service)\s+Fee:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final engMatch = engRegex.firstMatch(text);
+    if (engMatch != null) {
+      return parseAmount(engMatch.group(1) ?? '');
+    }
+
+    // Airtel "Makato" fee breakdown: "Makato Tsh 180.00( Ada Tsh 180.00 + Tozo Tsh 0.00)"
+    final makatoRegex = RegExp(
+      r'Makato\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final makatoMatch = makatoRegex.firstMatch(text);
+    if (makatoMatch != null) {
+      return parseAmount(makatoMatch.group(1) ?? '');
+    }
+
+    return null;
+  }
+
   int? _extractBalance(String text) {
     final regex = RegExp(
       r'(?:Salio|Balance|Bal):?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
@@ -46,6 +80,7 @@ class AirtelTzParser implements SmsParser {
       var match = swReceivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -57,6 +92,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -71,6 +107,7 @@ class AirtelTzParser implements SmsParser {
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -82,6 +119,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -96,6 +134,7 @@ class AirtelTzParser implements SmsParser {
       match = swSentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -107,6 +146,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -122,6 +162,7 @@ class AirtelTzParser implements SmsParser {
       match = swPayLipaRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -133,6 +174,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -147,6 +189,7 @@ class AirtelTzParser implements SmsParser {
       match = engSentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -158,6 +201,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -172,6 +216,7 @@ class AirtelTzParser implements SmsParser {
       match = swAirtimeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -182,6 +227,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -197,6 +243,7 @@ class AirtelTzParser implements SmsParser {
       match = swBundleRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -207,6 +254,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -222,6 +270,7 @@ class AirtelTzParser implements SmsParser {
       match = swPaymentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -233,6 +282,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -247,6 +297,7 @@ class AirtelTzParser implements SmsParser {
       match = swWithdrawalRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final location = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -258,6 +309,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -272,6 +324,7 @@ class AirtelTzParser implements SmsParser {
       match = engAirtimeRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -282,6 +335,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -296,6 +350,7 @@ class AirtelTzParser implements SmsParser {
       match = engPaidRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final payee = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -307,6 +362,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -322,6 +378,7 @@ class AirtelTzParser implements SmsParser {
       match = engWithdrawalRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final location = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -333,6 +390,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -347,6 +405,7 @@ class AirtelTzParser implements SmsParser {
       match = engBundleRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -357,6 +416,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -371,6 +431,7 @@ class AirtelTzParser implements SmsParser {
       match = swDepositRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -381,6 +442,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -395,6 +457,7 @@ class AirtelTzParser implements SmsParser {
       match = engDepositRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -405,6 +468,7 @@ class AirtelTzParser implements SmsParser {
           reference: ref,
           provider: 'AirtelMoney_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
