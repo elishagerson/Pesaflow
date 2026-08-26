@@ -252,6 +252,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
 
@@ -262,6 +263,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -277,6 +279,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -289,6 +292,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -302,6 +306,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -314,6 +319,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -327,6 +333,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -338,6 +345,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -383,6 +391,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(2) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(1) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -394,6 +403,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -417,6 +427,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(2) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(1) ?? '').trim();
         final ref = _extractReference(text);
         // Balance in loan repayment SMS is the loan balance, NOT wallet balance
@@ -429,6 +440,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -442,6 +454,7 @@ class MixxParser implements SmsParser {
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -453,6 +466,7 @@ class MixxParser implements SmsParser {
           reference: ref,
           provider: 'TigoPesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
