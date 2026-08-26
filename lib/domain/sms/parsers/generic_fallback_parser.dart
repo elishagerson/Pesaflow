@@ -1,6 +1,5 @@
 import 'dart:developer' as developer;
 import '../../models/sms_parsed.dart';
-import '../sms_classifier.dart';
 import 'amount_helper.dart';
 import 'sms_parser_interface.dart';
 
@@ -15,17 +14,9 @@ class GenericFallbackParser implements SmsParser {
     if (text.isEmpty) return null;
 
     try {
-      // Run the signal-based classifier to determine if this is a real transaction
-      final classification = SmsClassifier.classify(text);
-      if (!classification.isTransaction) {
-        developer.log(
-          'GenericFallbackParser: rejected as ${classification.label} '
-          '(confidence: ${classification.transactionConfidence.toStringAsFixed(2)}) — '
-          'reasons: ${classification.reasons.join("; ")}',
-          name: 'Parser',
-        );
-        return null;
-      }
+      // NOTE: The SmsClassifier is NOT called here. The SmsProcessor already
+      // runs the classifier before invoking this fallback parser. Running it
+      // a second time would be redundant and wasteful.
 
       final amount = _extractFirstAmount(text);
       if (amount == 0) {

@@ -468,12 +468,16 @@ class NbcBankParser implements SmsParser {
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');
+        final dateStr =
+            '${timestamp.day.toString().padLeft(2, '0')}'
+            '${timestamp.month.toString().padLeft(2, '0')}'
+            '${timestamp.year}';
 
         return SmsParsed(
           amount: amt,
           type: 'expense',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-REF-${timestamp.millisecondsSinceEpoch}',
+          reference: 'NBC-$dateStr-$amt',
           provider: 'NBC_Bank',
           balanceAfter: bal,
           timestamp: timestamp,
@@ -494,12 +498,16 @@ class NbcBankParser implements SmsParser {
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');
+        final dateStr =
+            '${timestamp.day.toString().padLeft(2, '0')}'
+            '${timestamp.month.toString().padLeft(2, '0')}'
+            '${timestamp.year}';
 
         return SmsParsed(
           amount: amt,
           type: 'income',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-REF-${timestamp.millisecondsSinceEpoch}',
+          reference: 'NBC-$dateStr-$amt',
           provider: 'NBC_Bank',
           balanceAfter: bal,
           timestamp: timestamp,
