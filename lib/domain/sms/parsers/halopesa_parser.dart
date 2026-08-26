@@ -39,6 +39,7 @@ class HalopesaParser implements SmsParser {
       var match = receivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -64,6 +65,7 @@ class HalopesaParser implements SmsParser {
       match = engReceivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -89,6 +91,7 @@ class HalopesaParser implements SmsParser {
       match = sentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -114,6 +117,7 @@ class HalopesaParser implements SmsParser {
       match = engSentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);

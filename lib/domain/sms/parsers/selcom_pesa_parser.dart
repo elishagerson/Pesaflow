@@ -72,6 +72,7 @@ class SelcomPesaParser implements SmsParser {
       var match = engReceivedRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final sender = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -97,6 +98,7 @@ class SelcomPesaParser implements SmsParser {
       match = engSentRegex.firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
         final recipient = (match.group(2) ?? '').trim();
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
@@ -131,7 +133,7 @@ class SelcomPesaParser implements SmsParser {
       if (match == null) return null;
 
       final amt = parseAmount(match.group(1) ?? '');
-      if (amt == 0) return null;
+      if (amt <= 0) return null;
 
       // 4. Determine transaction type (income / expense)
       String type = 'expense';
