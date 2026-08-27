@@ -20,6 +20,8 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/squircle_border.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
+import 'package:pesaflow/presentation/budgets/widgets/budget_hero_clipper.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 class BudgetFormScreen extends ConsumerStatefulWidget {
@@ -469,42 +471,10 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(
-                  20,
-                  8,
-                  20,
-                  16,
-                ),
-                child: Row(
-                  children: [
-                    TactileSpringContainer(
-                      onTap: () => Navigator.of(context).maybePop(),
-                      child: Container(
-                        padding: const EdgeInsets.all(kSpacing10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: kSpacing14),
-                    Text(
-                      isEditing ? 'Edit Budget' : 'New Budget',
-                      style: context.ts(
-                        28,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.8,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+              FloatingTopBar(
+                title: isEditing ? 'Edit Budget' : 'New Budget',
+                forceWhite: true,
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               ),
               Expanded(
                 child: SingleChildScrollView(
