@@ -943,7 +943,7 @@ class _OverviewTab extends StatelessWidget {
                                                       ),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                        100,
+                                                        AppTheme.radiusPill,
                                                       ),
                                                 ),
                                               ),
@@ -1002,7 +1002,7 @@ class _TrendsTab extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
         ),
         child: Text(
           label,
@@ -1066,7 +1066,7 @@ class _TrendsTab extends StatelessWidget {
                   padding: const EdgeInsets.all(kSpacing2),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     border: Border.all(
                       color: theme.colorScheme.onSurface.withValues(
                         alpha: 0.06,
@@ -1138,7 +1138,7 @@ class _TrendsTab extends StatelessWidget {
                                   return theme.colorScheme.surfaceContainerHigh
                                       .withValues(alpha: 0.96);
                                 },
-                                tooltipBorderRadius: BorderRadius.circular(12),
+                                tooltipBorderRadius: BorderRadius.circular(AppTheme.radiusInput),
                                 tooltipBorder: BorderSide(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.09,

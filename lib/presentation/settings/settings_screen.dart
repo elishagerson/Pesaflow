@@ -122,7 +122,7 @@ class SettingsScreen extends ConsumerWidget {
                               color: theme.colorScheme.primary.withValues(
                                 alpha: 0.12,
                               ),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
                             ),
                             child: Icon(
                               getAccountIcon(acc.icon),
