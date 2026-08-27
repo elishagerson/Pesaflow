@@ -254,7 +254,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             color: amountColor.withValues(alpha: 0.115),
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                             border: Border.all(
                               color: amountColor.withValues(alpha: 0.25),
                               width: 1,
@@ -385,7 +385,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () {},
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
@@ -395,7 +395,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                                   color: theme.colorScheme.primary.withValues(
                                     alpha: 0.05,
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                                   border: Border.all(
                                     color: theme.colorScheme.primary.withValues(
                                       alpha: 0.15,
@@ -672,7 +672,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.022),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         border: Border.all(
           color: onSurface.withValues(alpha: 0.045),
           width: 0.5,
@@ -690,7 +690,7 @@ class TransactionDetailScreen extends ConsumerWidget {
               type: ToastType.success,
             );
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
           child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: kSpacing10,
@@ -764,7 +764,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.022),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
         border: Border.all(
           color: onSurface.withValues(alpha: 0.045),
           width: 0.5,

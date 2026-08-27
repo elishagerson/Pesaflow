@@ -405,7 +405,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                           .withValues(alpha: 0.8),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                                   boxShadow: [
                                     BoxShadow(
                                       color: hexToColor(

@@ -228,9 +228,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                               horizontal: 24,
                               vertical: 14,
                             ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              borderRadius: BorderRadius.circular(100),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                               boxShadow: [
                                 BoxShadow(
                                   color: theme.colorScheme.primary.withValues(
@@ -408,7 +408,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                     ),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.error,
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusHero),
                                     ),
                                     child: Icon(
                                       PesaFlowIcons.delete,
@@ -839,9 +839,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                   ),
                                 Container(
                                   height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.05),
-                                    borderRadius: BorderRadius.circular(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusHero),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -1021,7 +1021,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                                             ? theme.colorScheme.primary
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.circular(
-                                          100,
+                                          AppTheme.radiusPill,
                                         ),
                                         border: Border.all(
                                           color: isSelected
@@ -1106,9 +1106,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
             kSpacing20,
             kSpacing24,
           ),
-          child: Container(
+            child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
               border: Border.all(
                 color: accentColor.withValues(alpha: 0.3),
                 width: 1.0,
@@ -1408,7 +1408,7 @@ class _NewRowHighlightState extends State<_NewRowHighlight>
           ),
           decoration: BoxDecoration(
             color: highlightColor.withValues(alpha: alpha),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppTheme.radiusHero),
           ),
           child: child,
         );

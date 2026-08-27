@@ -161,7 +161,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                 theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
             ),
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           ),
           child: Text(
             'Set Your First Goal',
@@ -231,7 +231,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
             tween: Tween<double>(begin: 0, end: overallPct),
             builder: (context, value, child) {
               return ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 child: LinearProgressIndicator(
                   value: value,
                   backgroundColor: theme.colorScheme.primary.withValues(
@@ -380,7 +380,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.primary
                                           .withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                                     ),
                                     child: Text(
                                       'COMPLETED',

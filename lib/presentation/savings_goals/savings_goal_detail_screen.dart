@@ -22,6 +22,7 @@ import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/empty_state.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
@@ -277,7 +278,7 @@ class _SavingsGoalDetailScreenState
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                       border: Border.all(
                                         color: onSurface.withValues(
                                           alpha: 0.07,
@@ -560,9 +561,9 @@ class _SavingsGoalDetailScreenState
                                             theme.colorScheme.onPrimary,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusCard,
+                                        ),
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                           vertical: kSpacing14,

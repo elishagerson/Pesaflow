@@ -19,6 +19,7 @@ import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_numpad.dart';
@@ -330,7 +331,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.17,
                         ),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                       ),
                     ),
                     const SizedBox(height: kSpacing16),
@@ -758,7 +759,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 filled: true,
                 fillColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                   borderSide: BorderSide.none,
                 ),
               ),
@@ -903,7 +904,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       color: theme.colorScheme.surfaceContainerHigh.withValues(
                         alpha: 0.4,
                       ),
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                     padding: const EdgeInsets.all(kSpacing4),
                     child: LayoutBuilder(
@@ -925,7 +926,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: theme.colorScheme.surfaceContainerHigh,
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withValues(

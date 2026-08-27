@@ -155,7 +155,7 @@ class BudgetListScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(kSpacing4),
       decoration: BoxDecoration(
         color: onSurface.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
         border: Border.all(color: onSurface.withValues(alpha: 0.05)),
       ),
       child: Row(
@@ -175,7 +175,7 @@ class BudgetListScreen extends ConsumerWidget {
                   color: activeTab == 0
                       ? theme.colorScheme.surface
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   boxShadow: activeTab == 0
                       ? [
                           BoxShadow(
@@ -217,7 +217,7 @@ class BudgetListScreen extends ConsumerWidget {
                   color: activeTab == 1
                       ? theme.colorScheme.surface
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   boxShadow: activeTab == 1
                       ? [
                           BoxShadow(
@@ -277,7 +277,7 @@ class BudgetListScreen extends ConsumerWidget {
             ),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
               boxShadow: [
                 BoxShadow(
                   color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -509,7 +509,7 @@ class BudgetListScreen extends ConsumerWidget {
                                   padding: const EdgeInsets.all(kSpacing10),
                                   decoration: BoxDecoration(
                                     color: catColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                                   ),
                                   child: Icon(
                                     getCategoryIcon(bp.category.icon),
@@ -615,7 +615,7 @@ class BudgetListScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: kSpacing16),
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                               child: TweenAnimationBuilder<double>(
                                 duration: const Duration(milliseconds: 800),
                                 curve: Curves.easeOutCubic,
@@ -806,7 +806,7 @@ class BudgetListScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: kSpacing16),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                         child: LinearProgressIndicator(
                           value: overallPct,
                           backgroundColor: onSurface.withValues(alpha: 0.07),
@@ -992,10 +992,10 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .withValues(
                                                           alpha: 0.12,
                                                         ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
-                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              AppTheme.radiusInput,
+                                                            ),
                                                   ),
                                                   child: Text(
                                                     'COMPLETED',

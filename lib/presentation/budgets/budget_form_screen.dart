@@ -101,7 +101,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
       padding: const EdgeInsets.all(kSpacing8),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.125),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
       ),
       child: Icon(icon, color: color, size: 20),
     );
@@ -367,7 +367,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                 ),
                 decoration: BoxDecoration(
                   color: themeColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
                 child: Text(
                   _period.toUpperCase(),

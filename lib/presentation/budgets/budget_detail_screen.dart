@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
@@ -246,7 +247,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                           ? theme.colorScheme.error
                                           : catColor)
                                       .withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                             ),
                             child: Text(
                               status.isOverBudget
@@ -1133,7 +1134,7 @@ class _PaceInsight extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               color: statusColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
             ),
             child: Icon(icon, size: 18, color: statusColor),
           ),
