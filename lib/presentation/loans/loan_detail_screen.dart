@@ -40,7 +40,7 @@ class LoanDetailScreen extends ConsumerWidget {
         final loan = loans.where((l) => l.id == loanId).firstOrNull;
         if (loan == null) {
           return Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: Column(
               children: [
                 Padding(
@@ -88,7 +88,7 @@ class LoanDetailScreen extends ConsumerWidget {
           );
         }
         return Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             child: Column(
               children: [
@@ -269,7 +269,7 @@ class LoanDetailScreen extends ConsumerWidget {
         );
       },
       loading: () => Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
             Padding(
@@ -320,7 +320,7 @@ class LoanDetailScreen extends ConsumerWidget {
         ),
       ),
       error: (e, _) => Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
             Padding(

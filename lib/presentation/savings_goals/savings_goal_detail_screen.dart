@@ -707,7 +707,7 @@ class _SavingsGoalDetailScreenState
         final goal = goals.where((g) => g.id == widget.goalId).firstOrNull;
         if (goal == null) {
           return Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: SafeArea(
               child: Column(
                 children: [
@@ -1312,7 +1312,7 @@ class _SavingsGoalDetailScreenState
         );
       },
       loading: () => Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -1353,7 +1353,7 @@ class _SavingsGoalDetailScreenState
         ),
       ),
       error: (err, _) => Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
