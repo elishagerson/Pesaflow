@@ -15,6 +15,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -711,28 +712,7 @@ class _SavingsGoalDetailScreenState
             body: SafeArea(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                    child: Row(
-                      children: [
-                        TactileSpringContainer(
-                          onTap: () => Navigator.of(context).maybePop(),
-                          child: Container(
-                            padding: const EdgeInsets.all(kSpacing10),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_back_ios_new,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const FloatingTopBar(forceWhite: true),
                   Expanded(
                     child: EmptyState(
                       icon: PesaFlowIcons.savings,
@@ -779,24 +759,10 @@ class _SavingsGoalDetailScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          TactileSpringContainer(
-                            onTap: () => Navigator.of(context).maybePop(),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
+                      FloatingTopBar(
+                        padding: EdgeInsets.zero,
+                        forceWhite: true,
+                        actions: [
                           TactileSpringContainer(
                             onTap: () =>
                                 context.push('/savings-goals/${goal.id}/edit'),
@@ -1357,28 +1323,7 @@ class _SavingsGoalDetailScreenState
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                child: Row(
-                  children: [
-                    TactileSpringContainer(
-                      onTap: () => Navigator.of(context).maybePop(),
-                      child: Container(
-                        padding: const EdgeInsets.all(kSpacing10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const FloatingTopBar(forceWhite: true),
               Expanded(
                 child: ErrorState(
                   title: 'Failed to Load Goal Details',
