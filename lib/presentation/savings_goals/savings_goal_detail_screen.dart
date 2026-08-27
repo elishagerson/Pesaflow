@@ -195,7 +195,7 @@ class _SavingsGoalDetailScreenState
                           height: 5,
                           decoration: BoxDecoration(
                             color: onSurface.withValues(alpha: 0.17),
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                           ),
                         ),
                         const SizedBox(height: kSpacing16),
