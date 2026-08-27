@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -187,8 +188,7 @@ class _SavingsGoalDetailSheetState
                           height: 5,
                           decoration: BoxDecoration(
                             color: onSurface.withValues(alpha: 0.17),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                         ),
                         const SizedBox(height: kSpacing16),
                         Expanded(
@@ -270,7 +270,7 @@ class _SavingsGoalDetailSheetState
                                   Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                       border: Border.all(
                                         color: onSurface.withValues(
                                           alpha: 0.07,
@@ -542,7 +542,7 @@ class _SavingsGoalDetailSheetState
                                       ),
                                       curve: Curves.easeOutCubic,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                         boxShadow: !_isOperationLoading
                                             ? [
                                                 BoxShadow(
@@ -732,7 +732,7 @@ class _SavingsGoalDetailSheetState
                     padding: const EdgeInsets.all(kSpacing20),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                       border: Border.all(
                         color: onSurface.withValues(alpha: 0.08),
                         width: 0.5,
@@ -831,7 +831,7 @@ class _SavingsGoalDetailSheetState
                               color: context.appColors.incomeColor.withValues(
                                 alpha: 0.15,
                               ),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                             ),
                             alignment: Alignment.center,
                             child: Row(
@@ -868,7 +868,7 @@ class _SavingsGoalDetailSheetState
                               color: context.appColors.expenseColor.withValues(
                                 alpha: 0.15,
                               ),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                             ),
                             alignment: Alignment.center,
                             child: Row(
