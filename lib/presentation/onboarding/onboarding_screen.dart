@@ -520,7 +520,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   size: 14,
                   color: permissionGranted
                       ? context.appColors.incomeColor
-                      : Colors.grey,
+                      : context.appColors.textMedium,
                 ),
                 const SizedBox(width: kSpacing6),
                 Text(
@@ -530,7 +530,7 @@ class _SmsPermissionPage extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: permissionGranted
                         ? context.appColors.incomeColor
-                        : Colors.grey,
+                        : context.appColors.textMedium,
                   ),
                 ),
               ],
@@ -648,7 +648,7 @@ class _AccountsPage extends StatelessWidget {
                               icons[e.key],
                               color: isSelected
                                   ? theme.colorScheme.primary
-                                  : Colors.grey,
+                                  : context.appColors.textMedium,
                               size: 24,
                             ),
                           ),
@@ -663,9 +663,7 @@ class _AccountsPage extends StatelessWidget {
                                       ? (theme.brightness == Brightness.dark
                                             ? Colors.white
                                             : theme.colorScheme.primary)
-                                      : (theme.brightness == Brightness.dark
-                                            ? Colors.grey[300]
-                                            : Colors.grey[700]),
+                                      : context.appColors.textMedium,
                                 ),
                           ),
                           const SizedBox(height: kSpacing8),
