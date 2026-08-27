@@ -560,11 +560,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: context.ts(
-              14,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+              13,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
               color: isSelected
                   ? activeColor
-                  : theme.colorScheme.onSurfaceVariant,
+                  : context.appColors.textMedium,
             ),
             child: Text(title),
           ),
@@ -933,10 +933,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   // Premium Segmented Control
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: kSpacing32),
-                    height: 48,
+                    height: 44,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHigh.withValues(
-                        alpha: 0.5,
+                        alpha: 0.4,
                       ),
                       borderRadius: BorderRadius.circular(100),
                     ),
@@ -959,16 +959,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               width: tabWidth,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color:
-                                      context.appColors.surfaceContainerHighest,
+                                  color: theme.colorScheme.surfaceContainerHigh,
                                   borderRadius: BorderRadius.circular(100),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withValues(
-                                        alpha: 0.15,
+                                        alpha: 0.08,
                                       ),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 1),
                                     ),
                                   ],
                                 ),
@@ -1038,17 +1037,17 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         _showCategorySheet(context, theme, categoriesAsync),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: kSpacing24,
-                        vertical: kSpacing12,
+                        horizontal: kSpacing20,
+                        vertical: kSpacing10,
                       ),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest
-                            .withValues(alpha: 0.4),
-                        borderRadius: BorderRadius.circular(100),
+                        color: theme.colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.1,
+                            alpha: 0.08,
                           ),
+                          width: 0.6,
                         ),
                       ),
                       child: Row(
@@ -1058,36 +1057,36 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             Icon(
                               getCategoryIcon(selectedCatObj.icon),
                               color: hexToColor(selectedCatObj.color),
-                              size: 22,
+                              size: 18,
                             ),
-                            const SizedBox(width: kSpacing12),
+                            const SizedBox(width: kSpacing8),
                             Text(
                               selectedCatObj.name,
                               style: context.ts(
-                                18,
-                                fontWeight: FontWeight.bold,
+                                14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ] else ...[
                             Icon(
                               PesaFlowIcons.category,
                               color: theme.colorScheme.onSurfaceVariant,
-                              size: 22,
+                              size: 18,
                             ),
-                            const SizedBox(width: kSpacing12),
+                            const SizedBox(width: kSpacing8),
                             Text(
-                              'Select Category',
+                              'Category',
                               style: context.ts(
-                                18,
-                                fontWeight: FontWeight.bold,
+                                14,
+                                fontWeight: FontWeight.w600,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
-                          const SizedBox(width: kSpacing8),
+                          const SizedBox(width: kSpacing4),
                           Icon(
                             Icons.keyboard_arrow_down,
-                            size: 20,
+                            size: 16,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ],
@@ -1114,11 +1113,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               ? 'Today'
                               : DateFormat('MMM d').format(_selectedDate),
                           onTap: () => _showDatePickerSheet(context),
-                          backgroundColor: context.appColors.primaryColor
+                          backgroundColor: theme.colorScheme.primary
                               .withValues(alpha: 0.08),
-                          iconColor: context.appColors.primaryColor,
-                          textColor: context.appColors.primaryColor,
-                          borderColor: context.appColors.primaryColor
+                          iconColor: theme.colorScheme.primary,
+                          textColor: theme.colorScheme.primary,
+                          borderColor: theme.colorScheme.primary
                               .withValues(alpha: 0.12),
                         ),
                         const SizedBox(width: kSpacing8),
@@ -1131,17 +1130,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           onTap: () => _showNoteSheet(context, theme),
                           backgroundColor:
                               _descriptionController.text.isNotEmpty
-                              ? context.appColors.primaryColor.withValues(
-                                  alpha: 0.1,
+                              ? theme.colorScheme.primary.withValues(
+                                  alpha: 0.12,
                                 )
-                              : context.appColors.primaryColor.withValues(
+                              : theme.colorScheme.primary.withValues(
                                   alpha: 0.08,
                                 ),
-                          iconColor: context.appColors.primaryColor,
-                          textColor: _descriptionController.text.isNotEmpty
-                              ? context.appColors.primaryColor
-                              : context.appColors.primaryColor,
-                          borderColor: context.appColors.primaryColor
+                          iconColor: theme.colorScheme.primary,
+                          textColor: theme.colorScheme.primary,
+                          borderColor: theme.colorScheme.primary
                               .withValues(alpha: 0.12),
                         ),
                         const SizedBox(width: kSpacing8),
@@ -1159,11 +1156,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             accounts,
                             isDestination: false,
                           ),
-                          backgroundColor: context.appColors.primaryColor
+                          backgroundColor: theme.colorScheme.primary
                               .withValues(alpha: 0.08),
-                          iconColor: context.appColors.primaryColor,
-                          textColor: context.appColors.primaryColor,
-                          borderColor: context.appColors.primaryColor
+                          iconColor: theme.colorScheme.primary,
+                          textColor: theme.colorScheme.primary,
+                          borderColor: theme.colorScheme.primary
                               .withValues(alpha: 0.12),
                         ),
                         if (_transactionType == 'Transfer') ...[
