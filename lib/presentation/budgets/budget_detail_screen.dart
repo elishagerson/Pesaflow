@@ -73,7 +73,7 @@ class BudgetDetailScreen extends ConsumerWidget {
           data: (bp) {
             if (bp == null) {
               return Scaffold(
-                backgroundColor: Colors.black,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 body: Column(
                   children: [
                     Padding(

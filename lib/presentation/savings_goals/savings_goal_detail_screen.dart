@@ -764,16 +764,15 @@ class _SavingsGoalDetailScreenState
         final totalSaved = goal.currentAmount;
 
         return Scaffold(
-          backgroundColor: Colors.black,
           body: SafeArea(
             bottom: false,
             child: Column(
               children: [
                 // ── OLED Black Header ──
                 Container(
-                  padding: EdgeInsets.fromLTRB(
+                  padding: const EdgeInsets.fromLTRB(
                     20,
-                    MediaQuery.of(context).padding.top + 8,
+                    8,
                     20,
                     16,
                   ),

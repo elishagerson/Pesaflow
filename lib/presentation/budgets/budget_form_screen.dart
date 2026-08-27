@@ -470,9 +470,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(
+                padding: const EdgeInsets.fromLTRB(
                   20,
-                  MediaQuery.of(context).padding.top + 8,
+                  8,
                   20,
                   16,
                 ),
