@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 
 class LoanDetailScreen extends ConsumerWidget {
   final String loanId;
@@ -43,37 +44,9 @@ class LoanDetailScreen extends ConsumerWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  child: Row(
-                    children: [
-                      TactileSpringContainer(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          padding: const EdgeInsets.all(kSpacing10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: kSpacing12),
-                      Text(
-                        'Loan Details',
-                        style: context.ts(
-                          34,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                    ],
-                  ),
+                const FloatingTopBar(
+                  title: 'Loan Details',
+                  forceWhite: true,
                 ),
                 const Expanded(
                   child: EmptyState(
@@ -92,78 +65,43 @@ class LoanDetailScreen extends ConsumerWidget {
           body: SafeArea(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          TactileSpringContainer(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing12),
-                          Text(
-                            'Loan Details',
-                            style: context.ts(
-                              34,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                        ],
+                FloatingTopBar(
+                  title: 'Loan Details',
+                  forceWhite: true,
+                  actions: [
+                    TactileSpringContainer(
+                      onTap: () => context.push('/loans/${loan.id}/edit'),
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          PesaFlowIcons.edit,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          TactileSpringContainer(
-                            onTap: () => context.push('/loans/${loan.id}/edit'),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                PesaFlowIcons.edit,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: kSpacing8),
-                          TactileSpringContainer(
-                            onTap: () => _confirmDelete(context, ref, loan),
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: context.appColors.expenseColor
-                                    .withValues(alpha: 0.12),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                PesaFlowIcons.delete,
-                                size: 18,
-                                color: context.appColors.expenseColor,
-                              ),
-                            ),
-                          ),
-                        ],
+                    ),
+                    const SizedBox(width: kSpacing8),
+                    TactileSpringContainer(
+                      onTap: () => _confirmDelete(context, ref, loan),
+                      child: Container(
+                        padding: const EdgeInsets.all(kSpacing10),
+                        decoration: BoxDecoration(
+                          color: context.appColors.expenseColor
+                              .withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          PesaFlowIcons.delete,
+                          size: 18,
+                          color: context.appColors.expenseColor,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: ListView(
@@ -272,37 +210,9 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-              child: Row(
-                children: [
-                  TactileSpringContainer(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing12),
-                  Text(
-                    'Loan Details',
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ],
-              ),
+            const FloatingTopBar(
+              title: 'Loan Details',
+              forceWhite: true,
             ),
             const Expanded(
               child: Padding(
@@ -323,37 +233,9 @@ class LoanDetailScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-              child: Row(
-                children: [
-                  TactileSpringContainer(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing12),
-                  Text(
-                    'Loan Details',
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ],
-              ),
+            const FloatingTopBar(
+              title: 'Loan Details',
+              forceWhite: true,
             ),
             Expanded(
               child: ErrorState(

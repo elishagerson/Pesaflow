@@ -28,7 +28,6 @@ class SavingsGoalListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final savingsGoalsAsync = ref.watch(savingsGoalsStreamProvider);
     final totalSaved = ref.watch(savingsGoalsTotalSavedProvider);
-    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
       body: SafeArea(

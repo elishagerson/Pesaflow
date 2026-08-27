@@ -29,7 +29,6 @@ class LoanListScreen extends ConsumerWidget {
     final paidLoansAsync = ref.watch(paidLoansStreamProvider);
     final totalOutstandingAsync = ref.watch(totalOutstandingLoanProvider);
     final recentLoanCountAsync = ref.watch(recentLoanActivityProvider);
-    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
       floatingActionButton: PremiumExtendedFab(
