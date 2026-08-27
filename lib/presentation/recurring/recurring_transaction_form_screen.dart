@@ -426,15 +426,9 @@ class _RecurringTransactionFormScreenState
                   child: accountsAsync.when(
                     data: (accounts) => DropdownButtonFormField<String>(
                       initialValue: _selectedAccountId,
-                      decoration: InputDecoration(
+                      decoration: context.inputDecoration(
                         labelText: 'Account',
                         prefixIcon: const Icon(PesaFlowIcons.loans, size: 18),
-                        filled: true,
-                        fillColor: inputFill,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
                       ),
                       items: accounts
                           .map(
@@ -472,17 +466,11 @@ class _RecurringTransactionFormScreenState
                           .toList();
                       return DropdownButtonFormField<String>(
                         initialValue: _selectedCategoryId,
-                        decoration: InputDecoration(
+                        decoration: context.inputDecoration(
                           labelText: 'Category',
                           prefixIcon: const Icon(
                             PesaFlowIcons.category,
                             size: 18,
-                          ),
-                          filled: true,
-                          fillColor: inputFill,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
                           ),
                         ),
                         items: filtered
@@ -520,16 +508,10 @@ class _RecurringTransactionFormScreenState
                   child: TextFormField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: context.inputDecoration(
                       labelText: 'Amount (Tsh)',
                       hintText: 'e.g. 50000',
                       prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
-                      filled: true,
-                      fillColor: inputFill,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) return 'Enter amount';
@@ -583,16 +565,10 @@ class _RecurringTransactionFormScreenState
                   index: 4,
                   child: TextField(
                     controller: _descriptionController,
-                    decoration: InputDecoration(
+                    decoration: context.inputDecoration(
                       labelText: 'Description (optional)',
                       hintText: 'e.g. Monthly rent',
                       prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                      filled: true,
-                      fillColor: inputFill,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
                     ),
                     textCapitalization: TextCapitalization.sentences,
                   ),
@@ -603,16 +579,10 @@ class _RecurringTransactionFormScreenState
                     index: 4,
                     child: TextField(
                       controller: _keywordsController,
-                      decoration: InputDecoration(
+                      decoration: context.inputDecoration(
                         labelText: 'SMS Auto-Matching Keywords (optional)',
                         hintText: 'e.g. netflix, spotify (comma separated)',
                         prefixIcon: const Icon(PesaFlowIcons.key, size: 18),
-                        filled: true,
-                        fillColor: inputFill,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
                       ),
                     ),
                   ),
@@ -622,17 +592,11 @@ class _RecurringTransactionFormScreenState
                   index: 5,
                   child: DropdownButtonFormField<String>(
                     initialValue: _frequency,
-                    decoration: InputDecoration(
+                    decoration: context.inputDecoration(
                       labelText: 'Frequency',
                       prefixIcon: const Icon(
                         PesaFlowIcons.subscriptions,
                         size: 18,
-                      ),
-                      filled: true,
-                      fillColor: inputFill,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
                       ),
                     ),
                     items: const [
@@ -665,16 +629,10 @@ class _RecurringTransactionFormScreenState
                         child: TextFormField(
                           controller: _intervalController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: context.inputDecoration(
                             labelText: 'Every',
                             hintText: '1',
                             prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
-                            filled: true,
-                            fillColor: inputFill,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
                           ),
                           validator: (v) {
                             if (v == null || v.trim().isEmpty) {
@@ -723,17 +681,11 @@ class _RecurringTransactionFormScreenState
                     onTap: () => _pickDate(endDate: false),
                     borderRadius: BorderRadius.circular(12),
                     child: InputDecorator(
-                      decoration: InputDecoration(
+                      decoration: context.inputDecoration(
                         labelText: 'Next Date',
                         prefixIcon: const Icon(
                           PesaFlowIcons.calendar,
                           size: 18,
-                        ),
-                        filled: true,
-                        fillColor: inputFill,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
                         ),
                       ),
                       child: Row(
@@ -755,17 +707,11 @@ class _RecurringTransactionFormScreenState
                     onTap: () => _pickDate(endDate: true),
                     borderRadius: BorderRadius.circular(12),
                     child: InputDecorator(
-                      decoration: InputDecoration(
+                      decoration: context.inputDecoration(
                         labelText: 'End Date (optional)',
                         prefixIcon: const Icon(
                           PesaFlowIcons.calendar,
                           size: 18,
-                        ),
-                        filled: true,
-                        fillColor: inputFill,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
                         ),
                       ),
                       child: Row(
