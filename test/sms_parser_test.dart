@@ -623,6 +623,59 @@ void main() {
       expect(result.reference, '26693868497442');
       expect(result.balanceAfter, 20000);
     });
+
+    test('ENGLISH: parses Payment Successful to (bill/bet payment)', () {
+      const sms =
+          'Payment Successful to Sporty Bet PUSH, Amount TSh 25,000. New Balance TSh 370. Charges TSh 500. VAT TSh 76. TxnID: 26607196230775.26/08/26 19:12.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2500000);
+      expect(result.senderOrRecipient, 'Sporty Bet PUSH');
+      expect(result.reference, '26607196230775');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 37000);
+      expect(result.feeAmount, 50000); // Charges TSh 500 (no colon)
+    });
+
+    test('ENGLISH: Payment Successful without VAT', () {
+      const sms =
+          'Payment Successful to LUKU PREPAID, Amount TSh 10,000. New Balance TSh 5,200. Charges TSh 0. TxnID: 26712345678901.25/08/26 10:00.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 1000000);
+      expect(result.senderOrRecipient, 'LUKU PREPAID');
+      expect(result.reference, '26712345678901');
+      expect(result.balanceAfter, 520000);
+      expect(result.feeAmount, 0);
+    });
+
+    test('SWAHILI: parses Malipo yamefanikiwa (payment successful)', () {
+      const sms =
+          'Malipo yamefanikiwa kwenda Sporty Bet PUSH, Kiasi Tsh 25,000. Salio jipya ni Tsh 370. Ada Tsh 500. VAT TSh 76. Kumbukumbu no.26607196230775. 26/08/26 19:12.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 2500000);
+      expect(result.senderOrRecipient, 'Sporty Bet PUSH');
+      expect(result.reference, '26607196230775');
+      expect(result.provider, 'TigoPesa_TZ');
+      expect(result.balanceAfter, 37000);
+      expect(result.feeAmount, 50000);
+    });
+
+    test('fee extraction works without colon (Charges TSh 540)', () {
+      const sms =
+          'You have sent TSh 20,000 to JOHN DOE. Charges TSh 540. New balance is TSh 311,708. TxnID: 26706282103620.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.feeAmount, 54000);
+    });
   });
 
   // ===========================================================================
