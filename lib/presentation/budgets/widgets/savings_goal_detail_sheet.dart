@@ -189,6 +189,7 @@ class _SavingsGoalDetailSheetState
                           decoration: BoxDecoration(
                             color: onSurface.withValues(alpha: 0.17),
                             borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                          ),
                         ),
                         const SizedBox(height: kSpacing16),
                         Expanded(
