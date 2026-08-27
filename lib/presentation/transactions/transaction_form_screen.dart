@@ -624,7 +624,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           if (newCat != null) {
                             _lastCategoryByType[_transactionType] = newCat.id;
                             setState(() => _selectedCategoryId = newCat.id);
-                            if (context.mounted) Navigator.pop(context);
+                            if (context.mounted) context.pop();
                           }
                         },
                         child: Column(
@@ -668,7 +668,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           _lastCategoryByType[_transactionType] = cat.id;
                           _selectedCategoryId = cat.id;
                         });
-                        Navigator.pop(context);
+                        context.pop();
                       },
                       child: Column(
                         children: [
@@ -770,7 +770,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => context.pop(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
@@ -807,7 +807,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             ),
             CupertinoButton(
               child: const Text('Done'),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
             ),
           ],
         ),

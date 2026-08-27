@@ -18,6 +18,7 @@ import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_color_picker.dart';
+import 'package:go_router/go_router.dart';
 
 class SavingsGoalFormSheet extends ConsumerStatefulWidget {
   final SavingsGoal? existingGoal;
@@ -115,7 +116,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
           message: 'Goal saved!',
           type: ToastType.success,
         );
-        if (mounted) Navigator.of(context).pop();
+        if (mounted) context.pop();
       }
     } catch (e) {
       if (mounted) {
@@ -218,7 +219,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         style: context.ts(22, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
+                        onTap: () => context.pop(),
                         child: Container(
                           padding: const EdgeInsets.all(kSpacing6),
                           decoration: BoxDecoration(

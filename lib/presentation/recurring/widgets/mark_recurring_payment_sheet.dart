@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/transaction_repository.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> showMarkRecurringPaymentSheet({
   required BuildContext context,
@@ -221,7 +222,7 @@ Future<void> showMarkRecurringPaymentSheet({
                                           deductBalance: deductBalance,
                                         );
                                         if (context.mounted) {
-                                          Navigator.of(context).pop();
+                                          context.pop();
                                         }
                                       } catch (e) {
                                         setSheetState(
@@ -256,7 +257,7 @@ Future<void> showMarkRecurringPaymentSheet({
                             child: OutlinedButton(
                               onPressed: isProcessing
                                   ? null
-                                  : () => Navigator.pop(context),
+                                  : () => context.pop(),
                               child: const Text('Cancel'),
                             ),
                           ),

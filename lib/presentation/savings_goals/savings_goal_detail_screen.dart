@@ -539,7 +539,7 @@ class _SavingsGoalDetailScreenState
                                                   isDeposit,
                                                 );
                                                 if (context.mounted) {
-                                                  Navigator.of(context).pop();
+                                                  context.pop();
                                                 }
                                               } catch (e) {
                                                 setModalState(() {
@@ -640,11 +640,11 @@ class _SavingsGoalDetailScreenState
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
+          onPressed: () => context.pop(false),
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () => context.pop(true),
           child: Text('Delete', style: context.ts(14, color: Colors.red)),
         ),
       ],

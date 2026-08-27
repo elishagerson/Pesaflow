@@ -20,6 +20,7 @@ import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/add_category_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:go_router/go_router.dart';
 
 class SmsReviewScreen extends ConsumerStatefulWidget {
   const SmsReviewScreen({super.key});
@@ -102,7 +103,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                   ref,
                                 );
                                 if (newCat != null && context.mounted) {
-                                  Navigator.of(context).pop(newCat.id);
+                                  context.pop(newCat.id);
                                 }
                               },
                             );
@@ -130,7 +131,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            onTap: () => Navigator.of(context).pop(cat.id),
+                            onTap: () => context.pop(cat.id),
                           );
                         },
                       ),

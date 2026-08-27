@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:go_router/go_router.dart';
 
 class FloatingTopBar extends StatelessWidget {
   final String? title;
@@ -40,7 +41,7 @@ class FloatingTopBar extends StatelessWidget {
                 TactileSpringContainer(
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    Navigator.of(context).pop();
+                    context.pop();
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: title != null ? 12 : 0),

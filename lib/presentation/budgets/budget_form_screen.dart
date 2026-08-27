@@ -464,7 +464,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
           ],
         );
         if (shouldPop == true && context.mounted) {
-          Navigator.of(context).pop();
+          context.pop();
         }
       },
       child: Scaffold(

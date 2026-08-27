@@ -108,7 +108,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                           title: 'Transaction Not Found',
                           message:
                               'This transaction may have been deleted or does not exist.',
-                          onRetry: () => Navigator.of(context).pop(),
+                          onRetry: () => context.pop(),
                         );
                       }
                       return _buildDetail(context, ref, theme, onSurface, item);

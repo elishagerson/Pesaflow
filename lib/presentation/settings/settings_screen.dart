@@ -514,7 +514,7 @@ class SettingsScreen extends ConsumerWidget {
                       .deleteAccount(acc.id);
                   ref.invalidate(accountsStreamProvider);
                   ref.invalidate(netWorthProvider);
-                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) context.pop();
                 } catch (e) {
                   if (context.mounted) {
                     CustomToast.show(
@@ -556,7 +556,7 @@ class SettingsScreen extends ConsumerWidget {
                   icon: const Icon(PesaFlowIcons.add),
                   label: const Text('Add Custom'),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    context.pop();
                     showAddCategoryDialog(context, ref);
                   },
                 ),
@@ -617,7 +617,7 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           TactileSpringContainer(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              context.pop();
                               showAddCategoryDialog(
                                 context,
                                 ref,

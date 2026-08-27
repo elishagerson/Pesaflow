@@ -21,6 +21,7 @@ import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:go_router/go_router.dart';
 
 class SavingsGoalDetailSheet extends ConsumerStatefulWidget {
   final SavingsGoal goal;
@@ -112,7 +113,7 @@ class _SavingsGoalDetailSheetState
       ref.invalidate(savingsGoalsTotalSavedProvider);
 
       if (mounted) {
-        Navigator.of(context).pop(); // pop amount modal
+        context.pop(); // pop amount modal
         if (isDeposit) {
           CustomToast.show(
             context,

@@ -16,6 +16,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:go_router/go_router.dart';
 
 class SmsReviewDialog extends ConsumerStatefulWidget {
   final TransactionWithCategoryAndAccount item;
@@ -53,13 +54,13 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
     ref.invalidate(reviewQueueStreamProvider);
     ref.invalidate(recentTransactionsStreamProvider);
     ref.read(pendingReviewProvider.notifier).clear();
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) context.pop();
   }
 
   Future<void> _reject() async {
     final txData = widget.item;
     ref.read(pendingReviewProvider.notifier).clear();
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) context.pop();
     UndoDelete.show(
       context: context,
       entityName: 'Transaction',
@@ -128,7 +129,7 @@ class _SmsReviewDialogState extends ConsumerState<SmsReviewDialog> {
                     icon: Icon(PesaFlowIcons.close, size: 20),
                     onPressed: () {
                       ref.read(pendingReviewProvider.notifier).clear();
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     visualDensity: VisualDensity.compact,
                   ),

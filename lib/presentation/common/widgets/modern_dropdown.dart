@@ -7,6 +7,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:go_router/go_router.dart';
 
 class ModernDropdownItem<T> {
   final T value;
@@ -225,7 +226,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(PesaFlowIcons.close, size: 20),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                     style: IconButton.styleFrom(
                       backgroundColor: onSurface.withValues(alpha: 0.11),
                       padding: const EdgeInsets.all(kSpacing6),
@@ -251,7 +252,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                             onTap: () {
                               HapticFeedback.lightImpact();
                               onChanged(item.value);
-                              Navigator.pop(context);
+                              context.pop();
                             },
                             borderRadius: BorderRadius.circular(
                               AppTheme.radiusCard,

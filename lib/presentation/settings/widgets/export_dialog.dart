@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
+import 'package:go_router/go_router.dart';
 
 enum ExportFormat { csv, pdf }
 
@@ -208,7 +209,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
     ),
     actions: [
       TextButton(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => context.pop(),
         style: TextButton.styleFrom(
           foregroundColor: Colors.grey[600],
           padding: const EdgeInsets.symmetric(
@@ -225,7 +226,7 @@ Future<void> showExportDialog(BuildContext context, WidgetRef ref) async {
         icon: const Icon(PesaFlowIcons.download, size: 18),
         label: const Text('Export'),
         onPressed: () async {
-          Navigator.of(context).pop();
+          context.pop();
           final isMonthly = dateMode == _DateMode.monthly;
           await _generateAndShare(
             context,

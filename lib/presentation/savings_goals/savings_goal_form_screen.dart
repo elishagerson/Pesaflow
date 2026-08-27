@@ -209,7 +209,7 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
           ],
         );
         if (shouldPop == true && context.mounted) {
-          Navigator.of(context).pop();
+          context.pop();
         }
       },
       child: Scaffold(

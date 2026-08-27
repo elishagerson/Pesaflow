@@ -11,6 +11,7 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> showTransactionFilterSheet(BuildContext context, WidgetRef ref) {
   final accounts = ref.watch(accountsStreamProvider).value ?? [];
@@ -132,7 +133,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           'All';
                       ref.read(transactionSearchQueryProvider.notifier).state =
                           '';
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.redAccent.withValues(alpha: 0.8),
@@ -419,7 +420,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: onSurface.withValues(alpha: 0.52),
@@ -471,7 +472,7 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                             null;
                       }
 
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.primary,

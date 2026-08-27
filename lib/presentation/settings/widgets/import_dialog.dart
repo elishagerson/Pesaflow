@@ -6,6 +6,7 @@ import 'package:pesaflow/core/utils/csv_parser.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
+import 'package:go_router/go_router.dart';
 
 class CsvImportResult {
   final List<Transaction> transactions;
@@ -492,7 +493,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
       );
     }).toList();
 
-    Navigator.of(context).pop(
+    context.pop(
       CsvImportResult(
         transactions: resolved,
         accountId: _selectedAccountId,

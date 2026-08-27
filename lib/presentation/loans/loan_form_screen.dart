@@ -159,7 +159,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: kSpacing6),
                   child: TactileSpringContainer(
-                    onTap: () => Navigator.of(context).pop(cat),
+                    onTap: () => context.pop(cat),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(
@@ -398,7 +398,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
           ],
         );
         if (shouldPop == true && context.mounted) {
-          Navigator.of(context).pop();
+          context.pop();
         }
       },
       child: Scaffold(

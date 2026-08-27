@@ -17,6 +17,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
+import 'package:go_router/go_router.dart';
 
 void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
   showSpringSheet(
@@ -96,7 +97,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                             ref
                                 .read(activeTrackerIdProvider.notifier)
                                 .setTrackerId(item.id);
-                            Navigator.pop(context);
+                            context.pop();
                           },
                           child: Container(
                             margin: const EdgeInsets.only(bottom: kSpacing8),
