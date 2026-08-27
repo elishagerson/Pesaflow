@@ -37,6 +37,7 @@ class _SavingsGoalDetailSheetState
     extends ConsumerState<SavingsGoalDetailSheet> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String? _selectedAccountId;
   bool _deductFromWallet = false;
   bool _isOperationLoading = false;
@@ -179,9 +180,11 @@ class _SavingsGoalDetailSheetState
                 ),
                 child: StatefulBuilder(
                   builder: (context, setModalState) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
                         const SizedBox(height: kSpacing10),
                         Container(
                           width: 38,
@@ -302,6 +305,14 @@ class _SavingsGoalDetailSheetState
                                               FilteringTextInputFormatter
                                                   .digitsOnly,
                                             ],
+                                            validator: (v) {
+                                              final val =
+                                                  int.tryParse(v ?? '') ?? 0;
+                                              if (val <= 0) {
+                                                return 'Enter a valid amount';
+                                              }
+                                              return null;
+                                            },
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headlineMedium!
@@ -559,9 +570,15 @@ class _SavingsGoalDetailSheetState
                                       child: ElevatedButton(
                                         onPressed: _isOperationLoading
                                             ? null
-                                            : () => _handleContribution(
-                                                isDeposit,
-                                              ),
+                                            : () {
+                                                if (!_formKey.currentState!
+                                                    .validate()) {
+                                                  return;
+                                                }
+                                                _handleContribution(
+                                                  isDeposit,
+                                                );
+                                              },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: accentColor,
                                           foregroundColor: Colors.white,
@@ -621,6 +638,7 @@ class _SavingsGoalDetailSheetState
                           ),
                         ),
                       ],
+                    ),
                     );
                   },
                 ),
