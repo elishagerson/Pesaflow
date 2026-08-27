@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/color_helpers.dart';
 import 'package:pesaflow/core/utils/icon_helpers.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -533,7 +534,7 @@ class _CategoryChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: color != null
               ? Border.all(color: color!.withValues(alpha: 0.5), width: 0.5)
               : null,
@@ -583,7 +584,7 @@ class _DateButton extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: onSurface.withValues(alpha: 0.06),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
           border: Border.all(color: onSurface.withValues(alpha: 0.10)),
         ),
         child: Column(

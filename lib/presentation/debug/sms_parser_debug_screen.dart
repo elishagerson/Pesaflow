@@ -160,7 +160,7 @@ class _SmsParserDebugScreenState extends ConsumerState<SmsParserDebugScreen> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                   border: Border.all(color: Colors.grey[800]!),
                 ),
                 child: SingleChildScrollView(

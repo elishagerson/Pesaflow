@@ -104,7 +104,7 @@ class MonthlyOverviewSection extends ConsumerWidget {
                           color: netSavings >= 0
                               ? appColors.incomeColor.withValues(alpha: 0.12)
                               : appColors.expenseColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                         ),
                         child: Text(
                           netSavings >= 0

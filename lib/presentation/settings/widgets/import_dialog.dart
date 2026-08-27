@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/csv_parser.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -82,7 +83,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             height: 4,
             decoration: BoxDecoration(
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(AppTheme.radiusPill),
             ),
           ),
           Padding(
@@ -125,7 +126,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             padding: const EdgeInsets.all(kSpacing32),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               border: Border.all(
                 color: theme.colorScheme.primary.withValues(alpha: 0.2),
               ),
@@ -158,7 +159,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             padding: const EdgeInsets.all(kSpacing12),
             decoration: BoxDecoration(
               color: theme.colorScheme.error.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppTheme.radiusInput),
             ),
             child: Row(
               children: [
@@ -194,7 +195,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           padding: const EdgeInsets.all(kSpacing12),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(alpha: 0.06),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppTheme.radiusInput),
           ),
           child: Row(
             children: [
@@ -229,7 +230,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
             padding: const EdgeInsets.all(kSpacing10),
             decoration: BoxDecoration(
               color: theme.colorScheme.error.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,7 +352,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                   color: theme.colorScheme.surfaceContainerHighest.withValues(
                     alpha: 0.3,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                 ),
                 child: Row(
                   children: [
@@ -410,7 +411,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: kSpacing12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                 ),
               ),
             ),

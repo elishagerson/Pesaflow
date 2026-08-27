@@ -139,7 +139,7 @@ Future<Category?> showAddCategoryDialog(
                       color: isSelected
                           ? theme.colorScheme.primary.withValues(alpha: 0.15)
                           : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                       border: isSelected
                           ? Border.all(
                               color: theme.colorScheme.primary,

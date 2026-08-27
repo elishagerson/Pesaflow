@@ -200,7 +200,7 @@ class LoanOverviewSection extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           color: severityColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                         ),
                         child: Text(
                           '${activeLoans.length} loan${activeLoans.length == 1 ? '' : 's'}',

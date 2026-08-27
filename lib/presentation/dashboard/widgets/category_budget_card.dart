@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -39,7 +40,7 @@ class CategoryBudgetCard extends StatelessWidget {
         padding: const EdgeInsets.all(kSpacing14),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +92,7 @@ class CategoryBudgetCard extends StatelessWidget {
                 ),
                 const SizedBox(height: kSpacing10),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   child: LinearProgressIndicator(
                     value: pct.clamp(0.0, 1.0),
                     minHeight: 4,

@@ -117,7 +117,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
             margin: const EdgeInsets.only(right: kSpacing12),
             decoration: BoxDecoration(
               color: context.appColors.surfaceHigh,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               border: Border.all(
                 color: color.withValues(
                   alpha: 0.2 + _expandAnimation.value * 0.2,
@@ -133,7 +133,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               child: Stack(
                 children: [
                   // Severity gradient bar at top
@@ -162,7 +162,7 @@ class _MorphingInsightCardState extends State<MorphingInsightCard>
                               padding: const EdgeInsets.all(kSpacing6),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                               ),
                               child: PulseIcon(
                                 icon: widget.data.icon,

@@ -57,7 +57,7 @@ void showWorkspaceSelectorSheet(BuildContext context, WidgetRef ref) {
                       color: theme.colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.2,
                       ),
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                   ),
                 ),

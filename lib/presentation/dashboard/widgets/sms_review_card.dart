@@ -105,7 +105,7 @@ class SmsReviewCard extends StatelessWidget {
                   color: pendingReviewCount > 0
                       ? context.appColors.transferColor.withValues(alpha: 0.12)
                       : theme.colorScheme.onSurface.withValues(alpha: 0.11),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
                 child: Text(
                   pendingReviewCount > 0
@@ -164,7 +164,7 @@ class SmsReviewCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: appColors.surfaceHigh,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

@@ -267,7 +267,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.onSurface
                                           .withValues(alpha: 0.05),
-                                      borderRadius: BorderRadius.circular(24),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusDialog),
                                     ),
                                     child: Text(
                                       'Personal',
@@ -336,10 +336,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   color: context
                                                       .appColors
                                                       .expenseColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        100,
-                                                      ),
+                                                          borderRadius:
+                                                            BorderRadius.circular(
+                                                              AppTheme.radiusPill,
+                                                            ),
                                                   border: Border.all(
                                                     color: theme
                                                         .colorScheme
@@ -455,9 +455,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 : theme
                                                       .colorScheme
                                                       .surfaceContainerHigh,
-                                            borderRadius: BorderRadius.circular(
-                                              100,
-                                            ),
+                                    borderRadius: BorderRadius.circular(
+                                                        AppTheme.radiusPill,
+                                                      ),
                                             border: Border.all(
                                               color: isSelected
                                                   ? theme.colorScheme.primary

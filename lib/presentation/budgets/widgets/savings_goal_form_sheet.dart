@@ -149,15 +149,15 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
         filled: true,
         fillColor: inputFill,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
           borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppTheme.radiusInput),
           borderSide: BorderSide(
             color: theme.colorScheme.primary.withValues(alpha: 0.5),
             width: 1.5,
@@ -203,8 +203,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.2,
                         ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                     ),
                   ),
 
@@ -427,7 +426,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                               hexToColor(_selectedColor).withValues(alpha: 0.8),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                           boxShadow: [
                             BoxShadow(
                               color: hexToColor(
