@@ -38,8 +38,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   final _amountController = TextEditingController();
   final _capController = TextEditingController();
   String? _selectedCategoryId;
-  String? _nameError;
-  String? _amountError;
   String _period = 'monthly';
   bool _rollover = false;
   String _rolloverType = 'none';
@@ -112,23 +110,9 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   Future<void> _save() async {
     if (_isSaving) return;
 
-    setState(() {
-      _nameError = null;
-      _amountError = null;
-    });
-
-    bool hasError = false;
-
-    if (_nameController.text.trim().isEmpty) {
-      _nameError = 'Enter a budget name';
-      hasError = true;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
-    if (amountCents <= 0) {
-      _amountError = 'Enter a valid amount';
-      hasError = true;
-    }
 
     if (_selectedCategoryId == null) {
       CustomToast.show(
@@ -136,11 +120,6 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
         message: 'Please select a category',
         type: ToastType.error,
       );
-      return;
-    }
-
-    if (hasError) {
-      setState(() {});
       return;
     }
 
@@ -501,40 +480,46 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                               borderRadius: AppTheme.radiusCard,
                               child: Column(
                                 children: [
-                                  _InteractiveInputRow(
-                                    controller: _nameController,
-                                    label: 'Budget Name',
-                                    hint: 'e.g. Monthly Food',
-                                    icon: PesaFlowIcons.label,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    errorText: _nameError,
-                                    onChanged: (_) =>
-                                        setState(() => _nameError = null),
-                                  ),
-                                  const SizedBox(height: kSpacing16),
-                                  categoriesAsync.when(
-                                    data: (cats) =>
-                                        _buildCategorySelector(cats, theme),
-                                    loading: () =>
-                                        const LinearProgressIndicator(),
-                                    error: (e, _) => Text('Error: $e'),
-                                  ),
-                                  const SizedBox(height: kSpacing8),
-                                  _InteractiveInputRow(
-                                    controller: _amountController,
-                                    label: 'Budget Amount (Tsh)',
-                                    hint: 'e.g. 300000',
-                                    icon: PesaFlowIcons.cash,
-                                    keyboardType: TextInputType.number,
-                                    errorText: _amountError,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                    onChanged: (_) =>
-                                        setState(() => _amountError = null),
-                                  ),
+                                    _InteractiveInputRow(
+                                      controller: _nameController,
+                                      label: 'Budget Name',
+                                      hint: 'e.g. Monthly Food',
+                                      icon: PesaFlowIcons.label,
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      validator: (v) {
+                                        if (v == null || v.trim().isEmpty) {
+                                          return 'Enter a budget name';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(height: kSpacing16),
+                                    categoriesAsync.when(
+                                      data: (cats) =>
+                                          _buildCategorySelector(cats, theme),
+                                      loading: () =>
+                                          const LinearProgressIndicator(),
+                                      error: (e, _) => Text('Error: $e'),
+                                    ),
+                                    const SizedBox(height: kSpacing8),
+                                    _InteractiveInputRow(
+                                      controller: _amountController,
+                                      label: 'Budget Amount (Tsh)',
+                                      hint: 'e.g. 300000',
+                                      icon: PesaFlowIcons.cash,
+                                      keyboardType: TextInputType.number,
+                                      validator: (v) {
+                                        if (v == null || v.isEmpty) return 'Enter a valid amount';
+                                        final val = CurrencyFormatter.parseToCents(v);
+                                        if (val <= 0) return 'Enter a valid amount';
+                                        return null;
+                                      },
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w500),
+                                    ),
                                 ],
                               ),
                             ),
@@ -1003,7 +988,7 @@ class _InteractiveInputRow extends StatefulWidget {
   final IconData icon;
   final TextInputType? keyboardType;
   final TextCapitalization textCapitalization;
-  final String? errorText;
+  final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
   final TextStyle? style;
 
@@ -1014,7 +999,7 @@ class _InteractiveInputRow extends StatefulWidget {
     required this.icon,
     this.keyboardType,
     this.textCapitalization = TextCapitalization.none,
-    this.errorText,
+    this.validator,
     this.onChanged,
     this.style,
   });
@@ -1104,6 +1089,7 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 style:
                     widget.style ?? context.ts(15, fontWeight: FontWeight.w600),
                 onChanged: widget.onChanged,
+                validator: widget.validator,
                 decoration: InputDecoration(
                   filled: false,
                   labelText: widget.label,
@@ -1124,7 +1110,6 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                   focusedBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   focusedErrorBorder: InputBorder.none,
-                  errorText: widget.errorText,
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: kSpacing6,
                   ),
