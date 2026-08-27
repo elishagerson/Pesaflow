@@ -132,89 +132,57 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: onSurface.withValues(alpha: 0.07),
+                                TextField(
+                                  controller: amountController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                  autofocus: true,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[\d.,]'),
+                                    ),
+                                  ],
+                                  style: theme.textTheme.headlineMedium!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: onSurface,
+                                      ),
+                                  decoration: context.inputDecoration(
+                                    hintText: 'Enter amount',
+                                    prefixText: 'TSh ',
+                                    suffixIcon: paymentAmount() > 0 ? GestureDetector(
+                                      onTap: () {
+                                        amountController.clear();
+                                        setSheetState(() {});
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.all(kSpacing8),
+                                        padding: const EdgeInsets.all(kSpacing4),
+                                        decoration: BoxDecoration(
+                                          color: onSurface.withValues(
+                                            alpha: 0.07,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          PesaFlowIcons.close,
+                                          size: 18,
+                                          color: onSurface.withValues(
+                                            alpha: 0.55,
+                                          ),
+                                        ),
+                                      ),
+                                    ) : null,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 16,
                                     ),
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: kSpacing16,
-                                    vertical: kSpacing4,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'TSh',
-                                        style: theme.textTheme.titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: onSurface.withValues(
-                                                alpha: 0.55,
-                                              ),
-                                            ),
-                                      ),
-                                      const SizedBox(width: kSpacing12),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: amountController,
-                                          keyboardType:
-                                              const TextInputType.numberWithOptions(
-                                                decimal: true,
-                                              ),
-                                          autofocus: true,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.allow(
-                                              RegExp(r'[\d.,]'),
-                                            ),
-                                          ],
-                                          style: theme.textTheme.headlineMedium!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: onSurface,
-                                              ),
-                                          decoration: const InputDecoration(
-                                            hintText: 'Enter amount',
-                                            border: InputBorder.none,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                  vertical: 12,
-                                                ),
-                                          ),
-                                          onChanged: (val) {
-                                            setSheetState(() {});
-                                          },
-                                        ),
-                                      ),
-                                      if (paymentAmount() > 0)
-                                        GestureDetector(
-                                          onTap: () {
-                                            amountController.clear();
-                                            setSheetState(() {});
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(
-                                              kSpacing4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: onSurface.withValues(
-                                                alpha: 0.07,
-                                              ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              PesaFlowIcons.close,
-                                              size: 18,
-                                              color: onSurface.withValues(
-                                                alpha: 0.55,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                                  onChanged: (val) {
+                                    setSheetState(() {});
+                                  },
                                 ),
                                 const SizedBox(height: kSpacing16),
                                 Row(
