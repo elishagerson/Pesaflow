@@ -951,9 +951,6 @@ class LoanDetailScreen extends ConsumerWidget {
                   backgroundColor: context.appColors.incomeColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: kSpacing14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                  ),
                   elevation: 0,
                 ),
               ),

@@ -628,11 +628,6 @@ class _SavingsGoalDetailSheetState
                                           disabledBackgroundColor: onSurface
                                               .withValues(alpha: 0.05),
                                           elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                          ),
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 14,
                                           ),

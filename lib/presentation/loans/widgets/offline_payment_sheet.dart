@@ -448,9 +448,6 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                       disabledForegroundColor: onSurface
                                           .withValues(alpha: 0.25),
                                       elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 14,
                                       ),
