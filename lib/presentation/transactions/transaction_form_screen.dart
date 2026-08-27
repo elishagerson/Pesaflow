@@ -773,9 +773,6 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
                 ),
                 child: Text(
                   'Done',
