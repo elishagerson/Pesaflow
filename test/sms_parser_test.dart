@@ -791,6 +791,30 @@ void main() {
       expect(result.reference, 'NMB-610FTIT262391237');
       expect(result.provider, 'NMB_Bank');
     });
+
+    test('parses debit (Kimetumwa) with fee in SMS body', () {
+      const sms =
+          'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341. Ada: TZS 2,000\nTarehe:10-06-2026 20:11:13. Salio: TZS 1,000,000.00';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 33450000);
+      expect(result.senderOrRecipient, 'ELISHA NDUNDULU 255763559341');
+      expect(result.feeAmount, 200000);
+      expect(result.balanceAfter, 100000000);
+    });
+
+    test('parses debit (Kimetumwa) without fee in SMS body uses fallback', () {
+      const sms =
+          'Kumb: GWX102246282556 Imethibitishwa.\nKiasi cha TSH334,500 kimetumwa kutoka katika akaunti inayoishia na 1222 kwenda ELISHA NDUNDULU 255763559341.\nTarehe:10-06-2026 20:11:13';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'expense');
+      expect(result.amount, 33450000);
+      expect(result.feeAmount, 200000);
+    });
   });
 
   // ===========================================================================
