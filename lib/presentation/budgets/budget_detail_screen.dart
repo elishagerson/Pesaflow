@@ -115,26 +115,10 @@ class BudgetDetailScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          TactileSpringContainer(
-                            onTap: () {
-                              Navigator.of(context).maybePop();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(kSpacing10),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
+                      FloatingTopBar(
+                        padding: EdgeInsets.zero,
+                        forceWhite: true,
+                        actions: [
                           TactileSpringContainer(
                             onTap: () =>
                                 context.push('/budgets/$budgetId/edit'),
