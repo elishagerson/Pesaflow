@@ -255,7 +255,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         height: 5,
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.17),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
@@ -743,7 +745,9 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     duration: const Duration(milliseconds: 250),
                                     curve: Curves.easeOutCubic,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusCard,
+                                      ),
                                       boxShadow: canSubmit
                                           ? [
                                               BoxShadow(

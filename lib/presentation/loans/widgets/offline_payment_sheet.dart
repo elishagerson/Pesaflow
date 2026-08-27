@@ -65,7 +65,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         height: 5,
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.17),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
@@ -153,29 +155,35 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   decoration: context.inputDecoration(
                                     hintText: 'Enter amount',
                                     prefixText: 'TSh ',
-                                    suffixIcon: paymentAmount() > 0 ? GestureDetector(
-                                      onTap: () {
-                                        amountController.clear();
-                                        setSheetState(() {});
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(kSpacing8),
-                                        padding: const EdgeInsets.all(kSpacing4),
-                                        decoration: BoxDecoration(
-                                          color: onSurface.withValues(
-                                            alpha: 0.07,
-                                          ),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          PesaFlowIcons.close,
-                                          size: 18,
-                                          color: onSurface.withValues(
-                                            alpha: 0.55,
-                                          ),
-                                        ),
-                                      ),
-                                    ) : null,
+                                    suffixIcon: paymentAmount() > 0
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              amountController.clear();
+                                              setSheetState(() {});
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(
+                                                kSpacing8,
+                                              ),
+                                              padding: const EdgeInsets.all(
+                                                kSpacing4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: onSurface.withValues(
+                                                  alpha: 0.07,
+                                                ),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                PesaFlowIcons.close,
+                                                size: 18,
+                                                color: onSurface.withValues(
+                                                  alpha: 0.55,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : null,
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 16,
                                       vertical: 16,
@@ -314,7 +322,9 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     color: const Color(
                                       0xFF609F8A,
                                     ).withValues(alpha: 0.05),
-                                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusInput,
+                                    ),
                                     border: Border.all(
                                       color: const Color(
                                         0xFF609F8A,

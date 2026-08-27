@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -148,107 +149,115 @@ class _ToastWidgetState extends State<_ToastWidget>
                     child: Material(
                       color: Colors.transparent,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusPill,
+                        ),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                           child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacing20,
-                            vertical: kSpacing12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHigh
-                                .withValues(
-                                  alpha: theme.brightness == Brightness.dark
-                                      ? 0.70
-                                      : 0.85,
-                                ),
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                              color: brandColor.withValues(alpha: 0.15),
-                              width: 1.0,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kSpacing20,
+                              vertical: kSpacing12,
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: brandColor.withValues(alpha: 0.08),
-                                blurRadius: 24,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHigh
+                                  .withValues(
+                                    alpha: theme.brightness == Brightness.dark
+                                        ? 0.70
+                                        : 0.85,
+                                  ),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusPill,
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Snappy spring-scaled icon reveal
-                              Transform.scale(
-                                scale: t.clamp(0.0, 1.0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: brandColor.withValues(alpha: 0.12),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    icon,
-                                    color: brandColor,
-                                    size: 16,
-                                  ),
-                                ),
+                              border: Border.all(
+                                color: brandColor.withValues(alpha: 0.15),
+                                width: 1.0,
                               ),
-                              const SizedBox(width: kSpacing10),
-                              Flexible(
-                                child: Text(
-                                  widget.message,
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: theme.colorScheme.onSurface,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.2,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                              ),
-                              if (widget.actionLabel != null &&
-                                  widget.onAction != null) ...[
-                                const SizedBox(width: kSpacing8),
-                                Container(
-                                  height: 24,
-                                  width: 1,
-                                  color: theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.1),
-                                ),
-                                const SizedBox(width: kSpacing4),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing12),
-                                    minimumSize: Size.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    widget.onAction!();
-                                    _dismiss();
-                                  },
-                                  child: Text(
-                                    widget.actionLabel!.toUpperCase(),
-                                    style: context.ts(12,
-                                        fontWeight: FontWeight.bold,
-                                        color: brandColor),
-                                  ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: brandColor.withValues(alpha: 0.08),
+                                  blurRadius: 24,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 8),
                                 ),
                               ],
-                            ],
-                          ),
-                        ), // Container
-                      ), // BackdropFilter
-                    ), // ClipRRect
-                  ), // Material
-                ), // Center
-              ), // Opacity
-            ), // Transform.scale
-          ); // Transform.translate
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Snappy spring-scaled icon reveal
+                                Transform.scale(
+                                  scale: t.clamp(0.0, 1.0),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: brandColor.withValues(alpha: 0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      icon,
+                                      color: brandColor,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing10),
+                                Flexible(
+                                  child: Text(
+                                    widget.message,
+                                    style: theme.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color: theme.colorScheme.onSurface,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.2,
+                                        ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                                if (widget.actionLabel != null &&
+                                    widget.onAction != null) ...[
+                                  const SizedBox(width: kSpacing8),
+                                  Container(
+                                    height: 24,
+                                    width: 1,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                  const SizedBox(width: kSpacing4),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing12,
+                                      ),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () {
+                                      widget.onAction!();
+                                      _dismiss();
+                                    },
+                                    child: Text(
+                                      widget.actionLabel!.toUpperCase(),
+                                      style: context.ts(
+                                        12,
+                                        fontWeight: FontWeight.bold,
+                                        color: brandColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ), // Container
+                        ), // BackdropFilter
+                      ), // ClipRRect
+                    ), // Material
+                  ), // Center
+                ), // Opacity
+              ), // Transform.scale
+            ); // Transform.translate
           },
         ),
       ),

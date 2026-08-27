@@ -208,7 +208,7 @@ class _ModernDropdownFieldWidget<T> extends StatelessWidget {
                 height: 4,
                 decoration: BoxDecoration(
                   color: onSurface.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
               ),
               const SizedBox(height: kSpacing16),

@@ -1138,7 +1138,9 @@ class _TrendsTab extends StatelessWidget {
                                   return theme.colorScheme.surfaceContainerHigh
                                       .withValues(alpha: 0.96);
                                 },
-                                tooltipBorderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                                tooltipBorderRadius: BorderRadius.circular(
+                                  AppTheme.radiusInput,
+                                ),
                                 tooltipBorder: BorderSide(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.09,

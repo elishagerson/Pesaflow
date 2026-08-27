@@ -111,206 +111,225 @@ class _RecurringTransactionListScreenState
             // ── Content ──
             Expanded(
               child: recurringAsync.when(
-        data: (recurring) {
-          final filtered = _applyFilter(recurring);
-          final sorted = List<RecurringTransaction>.from(filtered)
-            ..sort((a, b) {
-              final aDue = dueIds.contains(a.id) ? 0 : 1;
-              final bDue = dueIds.contains(b.id) ? 0 : 1;
-              if (aDue != bDue) return aDue - bDue;
-              return a.nextDate.compareTo(b.nextDate);
-            });
+                data: (recurring) {
+                  final filtered = _applyFilter(recurring);
+                  final sorted = List<RecurringTransaction>.from(filtered)
+                    ..sort((a, b) {
+                      final aDue = dueIds.contains(a.id) ? 0 : 1;
+                      final bDue = dueIds.contains(b.id) ? 0 : 1;
+                      if (aDue != bDue) return aDue - bDue;
+                      return a.nextDate.compareTo(b.nextDate);
+                    });
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(recurringTransactionsStreamProvider);
-              ref.invalidate(dueRecurringTransactionsProvider);
-            },
-            child: recurring.isEmpty
-                ? SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: _buildEmptyState(context, theme),
-                  )
-                : CustomScrollView(
-                    key: const PageStorageKey('recurring_list'),
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      // ── Summary Header ──
-                      SliverToBoxAdapter(
-                        child: StaggeredFadeSlide(
-                          index: 0,
-                          child: _buildSummaryHeader(
-                            theme,
-                            totals,
-                            recurring,
-                            dueIds,
-                          ),
-                        ),
-                      ),
-
-                      // ── Segmented Filter ──
-                      SliverToBoxAdapter(
-                        child: StaggeredFadeSlide(
-                          index: 1,
-                          child: _buildSegmentedFilter(theme, recurring),
-                        ),
-                      ),
-
-                      // ── Due Soon Header (if any) ──
-                      if (dueIds.isNotEmpty &&
-                          _activeFilter != _RecurringFilter.income)
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              kSpacing16,
-                              kSpacing4,
-                              kSpacing16,
-                              kSpacing8,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  PesaFlowIcons.calendar,
-                                  size: 12,
-                                  color: context.appColors.transferColor,
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      ref.invalidate(recurringTransactionsStreamProvider);
+                      ref.invalidate(dueRecurringTransactionsProvider);
+                    },
+                    child: recurring.isEmpty
+                        ? SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: _buildEmptyState(context, theme),
+                          )
+                        : CustomScrollView(
+                            key: const PageStorageKey('recurring_list'),
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            slivers: [
+                              // ── Summary Header ──
+                              SliverToBoxAdapter(
+                                child: StaggeredFadeSlide(
+                                  index: 0,
+                                  child: _buildSummaryHeader(
+                                    theme,
+                                    totals,
+                                    recurring,
+                                    dueIds,
+                                  ),
                                 ),
-                                const SizedBox(width: kSpacing6),
-                                Text(
-                                  '${dueIds.length} DUE NOW',
-                                  style: context
-                                      .ts(
-                                        10,
-                                        fontWeight: FontWeight.w800,
-                                        color: context.appColors.transferColor,
-                                      )
-                                      .copyWith(letterSpacing: 1.2),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
 
-                      // ── List Items ──
-                      if (filtered.isEmpty)
-                        SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Center(
-                            child: EmptyState(
-                              icon: _activeFilter == _RecurringFilter.income
-                                  ? PesaFlowIcons.income
-                                  : PesaFlowIcons.expense,
-                              title:
-                                  'No ${_activeFilter == _RecurringFilter.income ? 'income' : 'expense'} flows',
-                              subtitle:
-                                  'Tap + to add a recurring ${_activeFilter == _RecurringFilter.income ? 'income' : 'expense'}.',
-                            ),
-                          ),
-                        )
-                      else
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(
-                            kSpacing16,
-                            0,
-                            kSpacing16,
-                            100,
-                          ),
-                          sliver: SliverToBoxAdapter(
-                            child: GlassListContainer(
-                              child: Column(
-                                children: sorted.asMap().entries.map((e) {
-                                  final i = e.key;
-                                  return StaggeredFadeSlide(
-                                    index: i + 2,
-                                    child: Dismissible(
-                                      key: ValueKey(sorted[i].id),
-                                      direction: DismissDirection.endToStart,
-                                      confirmDismiss: (_) async {
-                                        showMarkRecurringPaymentSheet(
-                                          context: context,
-                                          ref: ref,
-                                          recurring: sorted[i],
-                                          accountName:
-                                              accountNames[sorted[i]
-                                                  .accountId] ??
-                                              'Unknown',
-                                        );
-                                        return false;
-                                      },
-                                      background: Container(
-                                        decoration: BoxDecoration(
-                                          color: context.appColors.incomeColor,
+                              // ── Segmented Filter ──
+                              SliverToBoxAdapter(
+                                child: StaggeredFadeSlide(
+                                  index: 1,
+                                  child: _buildSegmentedFilter(
+                                    theme,
+                                    recurring,
+                                  ),
+                                ),
+                              ),
+
+                              // ── Due Soon Header (if any) ──
+                              if (dueIds.isNotEmpty &&
+                                  _activeFilter != _RecurringFilter.income)
+                                SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      kSpacing16,
+                                      kSpacing4,
+                                      kSpacing16,
+                                      kSpacing8,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          PesaFlowIcons.calendar,
+                                          size: 12,
+                                          color:
+                                              context.appColors.transferColor,
                                         ),
-                                        alignment: Alignment.centerRight,
-                                        padding: const EdgeInsets.only(
-                                          right: kSpacing24,
+                                        const SizedBox(width: kSpacing6),
+                                        Text(
+                                          '${dueIds.length} DUE NOW',
+                                          style: context
+                                              .ts(
+                                                10,
+                                                fontWeight: FontWeight.w800,
+                                                color: context
+                                                    .appColors
+                                                    .transferColor,
+                                              )
+                                              .copyWith(letterSpacing: 1.2),
                                         ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              PesaFlowIcons.success,
-                                              color: Colors.white,
-                                              size: 24,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                              // ── List Items ──
+                              if (filtered.isEmpty)
+                                SliverFillRemaining(
+                                  hasScrollBody: false,
+                                  child: Center(
+                                    child: EmptyState(
+                                      icon:
+                                          _activeFilter ==
+                                              _RecurringFilter.income
+                                          ? PesaFlowIcons.income
+                                          : PesaFlowIcons.expense,
+                                      title:
+                                          'No ${_activeFilter == _RecurringFilter.income ? 'income' : 'expense'} flows',
+                                      subtitle:
+                                          'Tap + to add a recurring ${_activeFilter == _RecurringFilter.income ? 'income' : 'expense'}.',
+                                    ),
+                                  ),
+                                )
+                              else
+                                SliverPadding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    kSpacing16,
+                                    0,
+                                    kSpacing16,
+                                    100,
+                                  ),
+                                  sliver: SliverToBoxAdapter(
+                                    child: GlassListContainer(
+                                      child: Column(
+                                        children: sorted.asMap().entries.map((
+                                          e,
+                                        ) {
+                                          final i = e.key;
+                                          return StaggeredFadeSlide(
+                                            index: i + 2,
+                                            child: Dismissible(
+                                              key: ValueKey(sorted[i].id),
+                                              direction:
+                                                  DismissDirection.endToStart,
+                                              confirmDismiss: (_) async {
+                                                showMarkRecurringPaymentSheet(
+                                                  context: context,
+                                                  ref: ref,
+                                                  recurring: sorted[i],
+                                                  accountName:
+                                                      accountNames[sorted[i]
+                                                          .accountId] ??
+                                                      'Unknown',
+                                                );
+                                                return false;
+                                              },
+                                              background: Container(
+                                                decoration: BoxDecoration(
+                                                  color: context
+                                                      .appColors
+                                                      .incomeColor,
+                                                ),
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                padding: const EdgeInsets.only(
+                                                  right: kSpacing24,
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      PesaFlowIcons.success,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: kSpacing4,
+                                                    ),
+                                                    Text(
+                                                      'Mark Paid',
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              child: _buildRecurringTile(
+                                                context,
+                                                sorted[i],
+                                                theme,
+                                                dueIds.contains(sorted[i].id),
+                                                catColor(sorted[i].categoryId),
+                                                accountNames,
+                                                i,
+                                                sorted.length,
+                                              ),
                                             ),
-                                            const SizedBox(height: kSpacing4),
-                                            Text(
-                                              'Mark Paid',
-                                              style: theme.textTheme.labelSmall
-                                                  ?.copyWith(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      child: _buildRecurringTile(
-                                        context,
-                                        sorted[i],
-                                        theme,
-                                        dueIds.contains(sorted[i].id),
-                                        catColor(sorted[i].categoryId),
-                                        accountNames,
-                                        i,
-                                        sorted.length,
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                                  ),
+                                ),
+                            ],
                           ),
-                        ),
+                  );
+                },
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: kSpacing16,
+                    vertical: kSpacing8,
+                  ),
+                  child: Column(
+                    children: [
+                      SkeletonCard(height: 100),
+                      SizedBox(height: kSpacing8),
+                      SkeletonCard(height: 100),
+                      SizedBox(height: kSpacing8),
+                      SkeletonCard(height: 100),
+                      SizedBox(height: kSpacing8),
+                      SkeletonCard(height: 100),
                     ],
                   ),
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: kSpacing16,
-            vertical: kSpacing8,
-          ),
-          child: Column(
-            children: [
-              SkeletonCard(height: 100),
-              SizedBox(height: kSpacing8),
-              SkeletonCard(height: 100),
-              SizedBox(height: kSpacing8),
-              SkeletonCard(height: 100),
-              SizedBox(height: kSpacing8),
-              SkeletonCard(height: 100),
-            ],
-          ),
-        ),
-        error: (e, _) => ErrorState(
-          title: 'Failed to load recurring transactions',
-          message: e.toString(),
-          onRetry: () {
-            ref.invalidate(recurringTransactionsStreamProvider);
-          },
-        ),
-      ),
+                ),
+                error: (e, _) => ErrorState(
+                  title: 'Failed to load recurring transactions',
+                  message: e.toString(),
+                  onRetry: () {
+                    ref.invalidate(recurringTransactionsStreamProvider);
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -433,7 +452,7 @@ class _RecurringTransactionListScreenState
           ),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           ),
           child: Text(
             value,
@@ -463,7 +482,7 @@ class _RecurringTransactionListScreenState
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
       ),
       child: Text(
         text,
@@ -498,7 +517,7 @@ class _RecurringTransactionListScreenState
       padding: const EdgeInsets.all(kSpacing4),
       decoration: BoxDecoration(
         color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(AppTheme.radiusPill),
       ),
       child: Row(
         children: [
@@ -537,7 +556,7 @@ class _RecurringTransactionListScreenState
             color: isActive
                 ? theme.colorScheme.surfaceContainerHigh
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(AppTheme.radiusPill),
             boxShadow: isActive
                 ? [
                     BoxShadow(
@@ -571,7 +590,7 @@ class _RecurringTransactionListScreenState
                     color: isActive
                         ? theme.colorScheme.primary.withValues(alpha: 0.15)
                         : theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                   child: Text(
                     '$count',
@@ -661,7 +680,9 @@ class _RecurringTransactionListScreenState
                       padding: const EdgeInsets.all(kSpacing10),
                       decoration: BoxDecoration(
                         color: mutedAccent.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusInput,
+                        ),
                       ),
                       child: Icon(
                         isExpense
@@ -857,7 +878,9 @@ class _RecurringTransactionListScreenState
                         color: context.appColors.incomeColor.withValues(
                           alpha: 0.12,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusSmall,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

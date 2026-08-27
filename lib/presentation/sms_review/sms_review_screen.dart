@@ -346,7 +346,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                     color: theme.colorScheme.primary.withValues(
                                       alpha: 0.08,
                                     ),
-                                    borderRadius: BorderRadius.circular(100),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusPill,
+                                    ),
                                     border: Border.all(
                                       color: theme.colorScheme.primary
                                           .withValues(alpha: 0.15),
@@ -458,7 +460,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                             alpha: 0.08,
                                           )
                                         : theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusDialog,
+                                    ),
                                     border: Border.all(
                                       color: isSelected
                                           ? theme.colorScheme.primary
@@ -585,14 +589,14 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                                   kSpacing2,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                           color: theme
-                                                               .colorScheme
-                                                               .primary
-                                                               .withValues(
-                                                                 alpha: 0.05,
-                                                               ),
-                                                           borderRadius:
-                                                               BorderRadius.circular(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .primary
+                                                              .withValues(
+                                                                alpha: 0.05,
+                                                              ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
                                                                 6,
                                                               ),
                                                         ),
@@ -644,20 +648,25 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                   .surfaceContainerHighest
                                                   .withValues(alpha: 0.25),
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(
+                                                    AppTheme.radiusCompact,
+                                                  ),
                                             ),
                                             child: Text(
                                               trans.rawSms!,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                               style: AppTheme.getMonospaceStyle(
-                                                theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .onSurfaceVariant
-                                                      .withValues(alpha: 0.6),
-                                                  fontSize: 11,
-                                                ),
+                                                theme.textTheme.labelSmall!
+                                                    .copyWith(
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurfaceVariant
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
+                                                      fontSize: 11,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -682,7 +691,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       .surfaceContainerHighest
                                                       .withValues(alpha: 0.4),
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusSmall,
+                                                      ),
                                                 ),
                                                 child: Row(
                                                   mainAxisSize:
@@ -758,7 +769,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                       .incomeColor
                                                       .withValues(alpha: 0.12),
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusSmall,
+                                                      ),
                                                 ),
                                                 child: Row(
                                                   mainAxisSize:
@@ -828,10 +841,12 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                                 decoration: BoxDecoration(
                                                   color: context
                                                       .appColors
-                                                       .expenseColor
-                                                       .withValues(alpha: 0.05),
+                                                      .expenseColor
+                                                      .withValues(alpha: 0.05),
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusSmall,
+                                                      ),
                                                 ),
                                                 child: Row(
                                                   mainAxisSize:
@@ -922,7 +937,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                           .colorScheme
                                           .surfaceContainerHighest
                                           .withValues(alpha: 0.6),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(
+                                        AppTheme.radiusInput,
+                                      ),
                                       border: Border.all(
                                         color: theme.colorScheme.onSurface
                                             .withValues(alpha: 0.1),
@@ -949,7 +966,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.primary,
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusInput,
+                                        ),
                                       ),
                                       child: Center(
                                         child: Text(
@@ -998,7 +1017,9 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: context.appColors.incomeColor,
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(
+                                          AppTheme.radiusInput,
+                                        ),
                                       ),
                                       child: Center(
                                         child: Text(

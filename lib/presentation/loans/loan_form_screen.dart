@@ -169,7 +169,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                             ? theme.colorScheme.primary.withValues(alpha: 0.08)
                             : theme.colorScheme.surfaceContainerHighest
                                   .withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusInput,
+                        ),
                         border: isSelected
                             ? Border.all(
                                 color: theme.colorScheme.primary.withValues(
@@ -384,223 +386,249 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(kSpacing16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                StaggeredFadeSlide(
-                  index: 0,
-                  child: TextFormField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Enter a valid amount';
-                      final val = CurrencyFormatter.parseToCents(v);
-                      if (val <= 0) return 'Enter a valid amount';
-                      return null;
-                    },
-                    decoration: context.inputDecoration(
-                      labelText: 'Loan Amount (Tsh)',
-                      hintText: 'e.g. 100000',
-                      prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 1,
-                  child: TextFormField(
-                    controller: _descriptionController,
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) {
-                        return 'Enter a description';
-                      }
-                      return null;
-                    },
-                    decoration: context.inputDecoration(
-                      labelText: 'Description',
-                      hintText: 'e.g. M-Pesa Loan, Bank Loan',
-                      prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                    ),
-                    textCapitalization: TextCapitalization.sentences,
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 2,
-                  child: TextField(
-                    controller: _senderController,
-                    decoration: context.inputDecoration(
-                      labelText: 'Lender / Source (optional)',
-                      hintText: 'e.g. Vodacom, NMB Bank',
-                      prefixIcon: const Icon(PesaFlowIcons.person, size: 18),
-                    ),
-                    textCapitalization: TextCapitalization.words,
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 3,
-                  child: TextField(
-                    controller: _referenceController,
-                    decoration: context.inputDecoration(
-                      labelText: 'Reference (optional)',
-                      hintText: 'e.g. loan reference number',
-                      prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 4,
-                  child: InkWell(
-                    onTap: () => _pickDate(dueDate: false),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    child: InputDecorator(
-                      decoration: context.inputDecoration(
-                        labelText: 'Disbursement Date',
-                        prefixIcon: const Icon(
-                          PesaFlowIcons.calendar,
-                          size: 18,
-                        ),
-                      ),
-                      child: Text(
-                        '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
-                        style: TextStyle(color: onSurface),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 5,
-                  child: TextFormField(
-                    controller: _interestRateController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return null;
-                      final rate = double.tryParse(v);
-                      if (rate == null || rate < 0) return 'Enter a valid rate';
-                      return null;
-                    },
-                    decoration: context.inputDecoration(
-                      labelText: 'Interest Rate',
-                      hintText: 'e.g. 18.5',
-                      prefixIcon: const Icon(PesaFlowIcons.percent, size: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 6,
-                  child: InkWell(
-                    onTap: () => _pickDate(dueDate: true),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    child: InputDecorator(
-                      decoration: context.inputDecoration(
-                        labelText: 'Due Date (optional)',
-                        prefixIcon: const Icon(
-                          PesaFlowIcons.calendar,
-                          size: 18,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _dueAt != null
-                                ? '${_dueAt!.day}/${_dueAt!.month}/${_dueAt!.year}'
-                                : 'Set due date',
-                            style: TextStyle(
-                              color: _dueAt != null
-                                  ? onSurface
-                                  : onSurface.withValues(alpha: 0.6),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      StaggeredFadeSlide(
+                        index: 0,
+                        child: TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty)
+                              return 'Enter a valid amount';
+                            final val = CurrencyFormatter.parseToCents(v);
+                            if (val <= 0) return 'Enter a valid amount';
+                            return null;
+                          },
+                          decoration: context.inputDecoration(
+                            labelText: 'Loan Amount (Tsh)',
+                            hintText: 'e.g. 100000',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.money,
+                              size: 18,
                             ),
                           ),
-                          if (_dueAt != null)
-                            GestureDetector(
-                              onTap: () => setState(() => _dueAt = null),
-                              child: Icon(
-                                PesaFlowIcons.close,
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: TextFormField(
+                          controller: _descriptionController,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) {
+                              return 'Enter a description';
+                            }
+                            return null;
+                          },
+                          decoration: context.inputDecoration(
+                            labelText: 'Description',
+                            hintText: 'e.g. M-Pesa Loan, Bank Loan',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.edit,
+                              size: 18,
+                            ),
+                          ),
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 2,
+                        child: TextField(
+                          controller: _senderController,
+                          decoration: context.inputDecoration(
+                            labelText: 'Lender / Source (optional)',
+                            hintText: 'e.g. Vodacom, NMB Bank',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.person,
+                              size: 18,
+                            ),
+                          ),
+                          textCapitalization: TextCapitalization.words,
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 3,
+                        child: TextField(
+                          controller: _referenceController,
+                          decoration: context.inputDecoration(
+                            labelText: 'Reference (optional)',
+                            hintText: 'e.g. loan reference number',
+                            prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 4,
+                        child: InkWell(
+                          onTap: () => _pickDate(dueDate: false),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
+                          child: InputDecorator(
+                            decoration: context.inputDecoration(
+                              labelText: 'Disbursement Date',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.calendar,
                                 size: 18,
-                                color: Colors.grey[500],
                               ),
                             ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 7,
-                  child: InkWell(
-                    onTap: _pickCategory,
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    child: InputDecorator(
-                      decoration: context.inputDecoration(
-                        labelText: 'Category (optional)',
-                        prefixIcon: const Icon(
-                          PesaFlowIcons.category,
-                          size: 18,
+                            child: Text(
+                              '${_disbursedAt.day}/${_disbursedAt.month}/${_disbursedAt.year}',
+                              style: TextStyle(color: onSurface),
+                            ),
+                          ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _selectedCategory ?? 'Select category',
-                            style: TextStyle(
-                              color: _selectedCategory != null
-                                  ? onSurface
-                                  : onSurface.withValues(alpha: 0.6),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 5,
+                        child: TextFormField(
+                          controller: _interestRateController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return null;
+                            final rate = double.tryParse(v);
+                            if (rate == null || rate < 0)
+                              return 'Enter a valid rate';
+                            return null;
+                          },
+                          decoration: context.inputDecoration(
+                            labelText: 'Interest Rate',
+                            hintText: 'e.g. 18.5',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.percent,
+                              size: 18,
                             ),
                           ),
-                          Icon(
-                            PesaFlowIcons.chevronRight,
-                            size: 18,
-                            color: onSurface.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 6,
+                        child: InkWell(
+                          onTap: () => _pickDate(dueDate: true),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing32),
-                StaggeredFadeSlide(
-                  index: 8,
-                  child: TactileSpringContainer(
-                    onTap: _submit,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                      ),
-                      child: Text(
-                        _existingLoan != null ? 'Update Loan' : 'Add Loan',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          child: InputDecorator(
+                            decoration: context.inputDecoration(
+                              labelText: 'Due Date (optional)',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.calendar,
+                                size: 18,
+                              ),
                             ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _dueAt != null
+                                      ? '${_dueAt!.day}/${_dueAt!.month}/${_dueAt!.year}'
+                                      : 'Set due date',
+                                  style: TextStyle(
+                                    color: _dueAt != null
+                                        ? onSurface
+                                        : onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                if (_dueAt != null)
+                                  GestureDetector(
+                                    onTap: () => setState(() => _dueAt = null),
+                                    child: Icon(
+                                      PesaFlowIcons.close,
+                                      size: 18,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 7,
+                        child: InkWell(
+                          onTap: _pickCategory,
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
+                          child: InputDecorator(
+                            decoration: context.inputDecoration(
+                              labelText: 'Category (optional)',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.category,
+                                size: 18,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _selectedCategory ?? 'Select category',
+                                  style: TextStyle(
+                                    color: _selectedCategory != null
+                                        ? onSurface
+                                        : onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                Icon(
+                                  PesaFlowIcons.chevronRight,
+                                  size: 18,
+                                  color: onSurface.withValues(alpha: 0.4),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing32),
+                      StaggeredFadeSlide(
+                        index: 8,
+                        child: TactileSpringContainer(
+                          onTap: _submit,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusInput,
+                              ),
+                            ),
+                            child: Text(
+                              _existingLoan != null
+                                  ? 'Update Loan'
+                                  : 'Add Loan',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),          // SingleChildScrollView
-      ),            // Expanded
-    ],              // Column children
-  ),                // Column
-),                  // Scaffold
-);                  // PopScope
+              ), // SingleChildScrollView
+            ), // Expanded
+          ], // Column children
+        ), // Column
+      ), // Scaffold
+    ); // PopScope
   }
 }

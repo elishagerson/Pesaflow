@@ -280,487 +280,524 @@ class _RecurringTransactionFormScreenState
                 20,
                 16,
               ),
-              actions: _isEditing ? [
-                    TactileSpringContainer(
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: const Text('Delete Recurring Flow?'),
-                            content: const Text(
-                              'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(ctx).pop(false),
-                                child: const Text('Cancel'),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      theme.colorScheme.error,
-                                  foregroundColor: Colors.white,
-                                ),
-                                onPressed: () =>
-                                    Navigator.of(ctx).pop(true),
-                                child: const Text('Delete'),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true && mounted) {
-                          final existing = await ref
-                              .read(
-                                recurringTransactionRepositoryProvider,
-                              )
-                              .getById(widget.recurringId!);
-                          if (existing == null || !mounted) return;
-                          final recurringData = existing;
-
-                          if (!context.mounted) return;
-                          UndoDelete.show(
+              actions: _isEditing
+                  ? [
+                      TactileSpringContainer(
+                        onTap: () async {
+                          final confirm = await showDialog<bool>(
                             context: context,
-                            entityName: 'Recurring Flow',
-                            message: 'Recurring flow deleted',
-                            onUndo: () async {
-                              await ref
-                                  .read(
-                                    recurringTransactionRepositoryProvider,
-                                  )
-                                  .createRecurringTransaction(
-                                    recurringData,
-                                  );
-                              if (mounted) {
-                                ref.invalidate(
-                                  recurringTransactionsStreamProvider,
-                                );
-                                ref.invalidate(
-                                  dueRecurringTransactionsProvider,
-                                );
-                              }
-                            },
-                            onDelete: () async {
-                              try {
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('Delete Recurring Flow?'),
+                              content: const Text(
+                                'Are you sure you want to delete this recurring flow? Linked transaction history won\'t be affected.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                  child: const Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: theme.colorScheme.error,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true && mounted) {
+                            final existing = await ref
+                                .read(recurringTransactionRepositoryProvider)
+                                .getById(widget.recurringId!);
+                            if (existing == null || !mounted) return;
+                            final recurringData = existing;
+
+                            if (!context.mounted) return;
+                            UndoDelete.show(
+                              context: context,
+                              entityName: 'Recurring Flow',
+                              message: 'Recurring flow deleted',
+                              onUndo: () async {
                                 await ref
                                     .read(
                                       recurringTransactionRepositoryProvider,
                                     )
-                                    .deleteRecurringTransaction(
-                                      widget.recurringId!,
-                                    );
-                                if (context.mounted) {
+                                    .createRecurringTransaction(recurringData);
+                                if (mounted) {
                                   ref.invalidate(
                                     recurringTransactionsStreamProvider,
                                   );
                                   ref.invalidate(
                                     dueRecurringTransactionsProvider,
                                   );
-                                  context.pop();
                                 }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  CustomToast.show(
-                                    context,
-                                    message: 'Error: $e',
-                                    type: ToastType.error,
-                                  );
+                              },
+                              onDelete: () async {
+                                try {
+                                  await ref
+                                      .read(
+                                        recurringTransactionRepositoryProvider,
+                                      )
+                                      .deleteRecurringTransaction(
+                                        widget.recurringId!,
+                                      );
+                                  if (context.mounted) {
+                                    ref.invalidate(
+                                      recurringTransactionsStreamProvider,
+                                    );
+                                    ref.invalidate(
+                                      dueRecurringTransactionsProvider,
+                                    );
+                                    context.pop();
+                                  }
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    CustomToast.show(
+                                      context,
+                                      message: 'Error: $e',
+                                      type: ToastType.error,
+                                    );
+                                  }
                                 }
-                              }
-                            },
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(kSpacing10),
-                        decoration: BoxDecoration(
-                          color: context.appColors.expenseColor
-                              .withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          PesaFlowIcons.delete,
-                          size: 18,
-                          color: context.appColors.expenseColor,
+                              },
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(kSpacing10),
+                          decoration: BoxDecoration(
+                            color: context.appColors.expenseColor.withValues(
+                              alpha: 0.12,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            PesaFlowIcons.delete,
+                            size: 18,
+                            color: context.appColors.expenseColor,
+                          ),
                         ),
                       ),
-                    ),
                     ]
                   : null,
             ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(kSpacing16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                StaggeredFadeSlide(
-                  index: 0,
-                  child: accountsAsync.when(
-                    data: (accounts) => DropdownButtonFormField<String>(
-                      initialValue: _selectedAccountId,
-                      decoration: context.inputDecoration(
-                        labelText: 'Account',
-                        prefixIcon: const Icon(PesaFlowIcons.loans, size: 18),
-                      ),
-                      items: accounts
-                          .map(
-                            (a) => DropdownMenuItem(
-                              value: a.id,
-                              child: Text(
-                                a.name,
-                                overflow: TextOverflow.ellipsis,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      StaggeredFadeSlide(
+                        index: 0,
+                        child: accountsAsync.when(
+                          data: (accounts) => DropdownButtonFormField<String>(
+                            initialValue: _selectedAccountId,
+                            decoration: context.inputDecoration(
+                              labelText: 'Account',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.loans,
+                                size: 18,
                               ),
                             ),
-                          )
-                          .toList(),
-                      onChanged: (v) => setState(() => _selectedAccountId = v),
-                      validator: (v) => v == null ? 'Select an account' : null,
-                    ),
-                    loading: () => const SizedBox(
-                      height: 56,
-                      child: Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                    error: (e, _) => Text(
-                      'Error: $e',
-                      style: TextStyle(color: theme.colorScheme.error),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 1,
-                  child: categoriesAsync.when(
-                    data: (categories) {
-                      final filtered = categories
-                          .where((c) => c.type == _type)
-                          .toList();
-                      return DropdownButtonFormField<String>(
-                        initialValue: _selectedCategoryId,
-                        decoration: context.inputDecoration(
-                          labelText: 'Category',
-                          prefixIcon: const Icon(
-                            PesaFlowIcons.category,
-                            size: 18,
+                            items: accounts
+                                .map(
+                                  (a) => DropdownMenuItem(
+                                    value: a.id,
+                                    child: Text(
+                                      a.name,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (v) =>
+                                setState(() => _selectedAccountId = v),
+                            validator: (v) =>
+                                v == null ? 'Select an account' : null,
+                          ),
+                          loading: () => const SizedBox(
+                            height: 56,
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          error: (e, _) => Text(
+                            'Error: $e',
+                            style: TextStyle(color: theme.colorScheme.error),
                           ),
                         ),
-                        items: filtered
-                            .map(
-                              (c) => DropdownMenuItem(
-                                value: c.id,
-                                child: Text(
-                                  c.name,
-                                  overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 1,
+                        child: categoriesAsync.when(
+                          data: (categories) {
+                            final filtered = categories
+                                .where((c) => c.type == _type)
+                                .toList();
+                            return DropdownButtonFormField<String>(
+                              initialValue: _selectedCategoryId,
+                              decoration: context.inputDecoration(
+                                labelText: 'Category',
+                                prefixIcon: const Icon(
+                                  PesaFlowIcons.category,
+                                  size: 18,
                                 ),
                               ),
-                            )
-                            .toList(),
-                        onChanged: (v) =>
-                            setState(() => _selectedCategoryId = v),
-                        validator: (v) =>
-                            v == null ? 'Select a category' : null,
-                      );
-                    },
-                    loading: () => const SizedBox(
-                      height: 56,
-                      child: Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                    error: (e, _) => Text(
-                      'Error: $e',
-                      style: TextStyle(color: theme.colorScheme.error),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 2,
-                  child: TextFormField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    decoration: context.inputDecoration(
-                      labelText: 'Amount (Tsh)',
-                      hintText: 'e.g. 50000',
-                      prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Enter amount';
-                      final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
-                      final parsed = int.tryParse(cleaned);
-                      if (parsed == null || parsed <= 0) {
-                        return 'Enter a valid amount';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 3,
-                  child: SegmentedButton<String>(
-                    segments: [
-                      ButtonSegment(
-                        value: 'income',
-                        label: Text(
-                          'Income',
-                          style: theme.textTheme.labelMedium!,
+                              items: filtered
+                                  .map(
+                                    (c) => DropdownMenuItem(
+                                      value: c.id,
+                                      child: Text(
+                                        c.name,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (v) =>
+                                  setState(() => _selectedCategoryId = v),
+                              validator: (v) =>
+                                  v == null ? 'Select a category' : null,
+                            );
+                          },
+                          loading: () => const SizedBox(
+                            height: 56,
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          error: (e, _) => Text(
+                            'Error: $e',
+                            style: TextStyle(color: theme.colorScheme.error),
+                          ),
                         ),
                       ),
-                      ButtonSegment(
-                        value: 'expense',
-                        label: Text(
-                          'Expense',
-                          style: theme.textTheme.labelMedium!,
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: 'transfer',
-                        label: Text(
-                          'Transfer',
-                          style: theme.textTheme.labelMedium!,
-                        ),
-                      ),
-                    ],
-                    selected: {_type},
-                    onSelectionChanged: (v) {
-                      setState(() {
-                        _type = v.first;
-                        _selectedCategoryId = null;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 4,
-                  child: TextField(
-                    controller: _descriptionController,
-                    decoration: context.inputDecoration(
-                      labelText: 'Description (optional)',
-                      hintText: 'e.g. Monthly rent',
-                      prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                    ),
-                    textCapitalization: TextCapitalization.sentences,
-                  ),
-                ),
-                if (_type == 'expense') ...[
-                  const SizedBox(height: kSpacing16),
-                  StaggeredFadeSlide(
-                    index: 4,
-                    child: TextField(
-                      controller: _keywordsController,
-                      decoration: context.inputDecoration(
-                        labelText: 'SMS Auto-Matching Keywords (optional)',
-                        hintText: 'e.g. netflix, spotify (comma separated)',
-                        prefixIcon: const Icon(PesaFlowIcons.key, size: 18),
-                      ),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 5,
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _frequency,
-                    decoration: context.inputDecoration(
-                      labelText: 'Frequency',
-                      prefixIcon: const Icon(
-                        PesaFlowIcons.subscriptions,
-                        size: 18,
-                      ),
-                    ),
-                    items: const [
-                      DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
-                      DropdownMenuItem(
-                        value: 'biweekly',
-                        child: Text('Biweekly'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'monthly',
-                        child: Text('Monthly'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'quarterly',
-                        child: Text('Quarterly'),
-                      ),
-                      DropdownMenuItem(value: 'yearly', child: Text('Yearly')),
-                    ],
-                    onChanged: (v) {
-                      if (v != null) setState(() => _frequency = v);
-                    },
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 6,
-                  child: Row(
-                    children: [
-                      Expanded(
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 2,
                         child: TextFormField(
-                          controller: _intervalController,
+                          controller: _amountController,
                           keyboardType: TextInputType.number,
                           decoration: context.inputDecoration(
-                            labelText: 'Every',
-                            hintText: '1',
-                            prefixIcon: const Icon(PesaFlowIcons.tag, size: 18),
+                            labelText: 'Amount (Tsh)',
+                            hintText: 'e.g. 50000',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.money,
+                              size: 18,
+                            ),
                           ),
                           validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
-                              return 'Required';
+                            if (v == null || v.trim().isEmpty)
+                              return 'Enter amount';
+                            final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
+                            final parsed = int.tryParse(cleaned);
+                            if (parsed == null || parsed <= 0) {
+                              return 'Enter a valid amount';
                             }
-                            final parsed = int.tryParse(v);
-                            if (parsed == null || parsed < 1) return 'Min 1';
                             return null;
                           },
                         ),
                       ),
-                      const SizedBox(width: kSpacing12),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            color: inputFill,
-                            borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                          ),
-                          child: Text(
-                            _frequency == 'weekly'
-                                ? 'week(s)'
-                                : _frequency == 'biweekly'
-                                ? 'two weeks'
-                                : _frequency == 'monthly'
-                                ? 'month(s)'
-                                : _frequency == 'quarterly'
-                                ? 'quarter(s)'
-                                : 'year(s)',
-                            style: TextStyle(
-                              color: onSurface.withValues(alpha: 0.6),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 3,
+                        child: SegmentedButton<String>(
+                          segments: [
+                            ButtonSegment(
+                              value: 'income',
+                              label: Text(
+                                'Income',
+                                style: theme.textTheme.labelMedium!,
+                              ),
                             ),
+                            ButtonSegment(
+                              value: 'expense',
+                              label: Text(
+                                'Expense',
+                                style: theme.textTheme.labelMedium!,
+                              ),
+                            ),
+                            ButtonSegment(
+                              value: 'transfer',
+                              label: Text(
+                                'Transfer',
+                                style: theme.textTheme.labelMedium!,
+                              ),
+                            ),
+                          ],
+                          selected: {_type},
+                          onSelectionChanged: (v) {
+                            setState(() {
+                              _type = v.first;
+                              _selectedCategoryId = null;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 4,
+                        child: TextField(
+                          controller: _descriptionController,
+                          decoration: context.inputDecoration(
+                            labelText: 'Description (optional)',
+                            hintText: 'e.g. Monthly rent',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.edit,
+                              size: 18,
+                            ),
+                          ),
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                      ),
+                      if (_type == 'expense') ...[
+                        const SizedBox(height: kSpacing16),
+                        StaggeredFadeSlide(
+                          index: 4,
+                          child: TextField(
+                            controller: _keywordsController,
+                            decoration: context.inputDecoration(
+                              labelText:
+                                  'SMS Auto-Matching Keywords (optional)',
+                              hintText:
+                                  'e.g. netflix, spotify (comma separated)',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.key,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 5,
+                        child: DropdownButtonFormField<String>(
+                          initialValue: _frequency,
+                          decoration: context.inputDecoration(
+                            labelText: 'Frequency',
+                            prefixIcon: const Icon(
+                              PesaFlowIcons.subscriptions,
+                              size: 18,
+                            ),
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'weekly',
+                              child: Text('Weekly'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'biweekly',
+                              child: Text('Biweekly'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'monthly',
+                              child: Text('Monthly'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'quarterly',
+                              child: Text('Quarterly'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'yearly',
+                              child: Text('Yearly'),
+                            ),
+                          ],
+                          onChanged: (v) {
+                            if (v != null) setState(() => _frequency = v);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 6,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _intervalController,
+                                keyboardType: TextInputType.number,
+                                decoration: context.inputDecoration(
+                                  labelText: 'Every',
+                                  hintText: '1',
+                                  prefixIcon: const Icon(
+                                    PesaFlowIcons.tag,
+                                    size: 18,
+                                  ),
+                                ),
+                                validator: (v) {
+                                  if (v == null || v.trim().isEmpty) {
+                                    return 'Required';
+                                  }
+                                  final parsed = int.tryParse(v);
+                                  if (parsed == null || parsed < 1)
+                                    return 'Min 1';
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: kSpacing12),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: inputFill,
+                                  borderRadius: BorderRadius.circular(
+                                    AppTheme.radiusInput,
+                                  ),
+                                ),
+                                child: Text(
+                                  _frequency == 'weekly'
+                                      ? 'week(s)'
+                                      : _frequency == 'biweekly'
+                                      ? 'two weeks'
+                                      : _frequency == 'monthly'
+                                      ? 'month(s)'
+                                      : _frequency == 'quarterly'
+                                      ? 'quarter(s)'
+                                      : 'year(s)',
+                                  style: TextStyle(
+                                    color: onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 7,
+                        child: InkWell(
+                          onTap: () => _pickDate(endDate: false),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
+                          child: InputDecorator(
+                            decoration: context.inputDecoration(
+                              labelText: 'Next Date',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.calendar,
+                                size: 18,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${_nextDate.day}/${_nextDate.month}/${_nextDate.year}',
+                                  style: TextStyle(color: onSurface),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing16),
+                      StaggeredFadeSlide(
+                        index: 8,
+                        child: InkWell(
+                          onTap: () => _pickDate(endDate: true),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusInput,
+                          ),
+                          child: InputDecorator(
+                            decoration: context.inputDecoration(
+                              labelText: 'End Date (optional)',
+                              prefixIcon: const Icon(
+                                PesaFlowIcons.calendar,
+                                size: 18,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _endDate != null
+                                      ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
+                                      : 'Set end date',
+                                  style: TextStyle(
+                                    color: _endDate != null
+                                        ? onSurface
+                                        : onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                if (_endDate != null)
+                                  GestureDetector(
+                                    onTap: () =>
+                                        setState(() => _endDate = null),
+                                    child: Icon(
+                                      PesaFlowIcons.close,
+                                      size: 18,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: kSpacing32),
+                      StaggeredFadeSlide(
+                        index: 9,
+                        child: TactileSpringContainer(
+                          onTap: _isLoading ? null : _submit,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: kSpacing16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _isLoading
+                                  ? Colors.grey
+                                  : Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusInput,
+                              ),
+                            ),
+                            child: _isLoading
+                                ? const Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    _isEditing
+                                        ? 'Update Recurring'
+                                        : 'Add Recurring',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                  ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 7,
-                  child: InkWell(
-                    onTap: () => _pickDate(endDate: false),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    child: InputDecorator(
-                      decoration: context.inputDecoration(
-                        labelText: 'Next Date',
-                        prefixIcon: const Icon(
-                          PesaFlowIcons.calendar,
-                          size: 18,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${_nextDate.day}/${_nextDate.month}/${_nextDate.year}',
-                            style: TextStyle(color: onSurface),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing16),
-                StaggeredFadeSlide(
-                  index: 8,
-                  child: InkWell(
-                    onTap: () => _pickDate(endDate: true),
-                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                    child: InputDecorator(
-                      decoration: context.inputDecoration(
-                        labelText: 'End Date (optional)',
-                        prefixIcon: const Icon(
-                          PesaFlowIcons.calendar,
-                          size: 18,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _endDate != null
-                                ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
-                                : 'Set end date',
-                            style: TextStyle(
-                              color: _endDate != null
-                                  ? onSurface
-                                  : onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          if (_endDate != null)
-                            GestureDetector(
-                              onTap: () => setState(() => _endDate = null),
-                              child: Icon(
-                                PesaFlowIcons.close,
-                                size: 18,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing32),
-                StaggeredFadeSlide(
-                  index: 9,
-                  child: TactileSpringContainer(
-                    onTap: _isLoading ? null : _submit,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing16),
-                      decoration: BoxDecoration(
-                        color: _isLoading
-                            ? Colors.grey
-                            : Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-                      ),
-                      child: _isLoading
-                          ? const Center(
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          : Text(
-                              _isEditing ? 'Update Recurring' : 'Add Recurring',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                            ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),          // SingleChildScrollView
-      ),            // Expanded
-    ],              // Column children
-  ),                // Column
-),                  // Scaffold
-);                  // PopScope
+              ), // SingleChildScrollView
+            ), // Expanded
+          ], // Column children
+        ), // Column
+      ), // Scaffold
+    ); // PopScope
   }
 }

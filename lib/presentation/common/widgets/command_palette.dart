@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pesaflow/presentation/common/widgets/liquid_glass.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/router/app_router.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/state/palette_provider.dart';
@@ -285,8 +286,12 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                       ),
                       margin: const EdgeInsets.all(kSpacing24),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surface.withValues(alpha: 0.60),
-                        borderRadius: BorderRadius.circular(20),
+                        color: theme.colorScheme.surface.withValues(
+                          alpha: 0.60,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          AppTheme.radiusHero,
+                        ),
                         border: Border.all(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.09,
@@ -371,7 +376,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                   fillColor:
                                       theme.colorScheme.surfaceContainerHigh,
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusInput,
+                                    ),
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
@@ -462,7 +469,9 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                 color: Colors.transparent,
                                                 child: InkWell(
                                                   borderRadius:
-                                                      BorderRadius.circular(12),
+                                                      BorderRadius.circular(
+                                                        AppTheme.radiusInput,
+                                                      ),
                                                   onTap: () => _select(action),
                                                   onHover: (_) => setState(
                                                     () => _selectedIndex = i,
@@ -485,7 +494,8 @@ class _CommandPaletteState extends ConsumerState<CommandPalette>
                                                           : Colors.transparent,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            12,
+                                                            AppTheme
+                                                                .radiusInput,
                                                           ),
                                                     ),
                                                     child: Row(

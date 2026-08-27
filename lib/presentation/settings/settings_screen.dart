@@ -78,7 +78,9 @@ class SettingsScreen extends ConsumerWidget {
                           color: theme.colorScheme.primary.withValues(
                             alpha: 0.1,
                           ),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusPill,
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -122,7 +124,9 @@ class SettingsScreen extends ConsumerWidget {
                               color: theme.colorScheme.primary.withValues(
                                 alpha: 0.12,
                               ),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                              borderRadius: BorderRadius.circular(
+                                AppTheme.radiusCompact,
+                              ),
                             ),
                             child: Icon(
                               getAccountIcon(acc.icon),
@@ -892,7 +896,7 @@ class SettingsScreen extends ConsumerWidget {
                     color: Theme.of(
                       context,
                     ).colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                 ),
               ),
@@ -1113,7 +1117,9 @@ class SettingsScreen extends ConsumerWidget {
                           color: theme.colorScheme.primary.withValues(
                             alpha: 0.12,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(
+                            AppTheme.radiusSmall,
+                          ),
                         ),
                         child: Icon(
                           PesaFlowIcons.security,
