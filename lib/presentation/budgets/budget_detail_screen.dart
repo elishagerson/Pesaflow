@@ -134,9 +134,9 @@ class BudgetDetailScreen extends ConsumerWidget {
             return Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(
+                  padding: const EdgeInsets.fromLTRB(
                     20,
-                    MediaQuery.of(context).padding.top + 8,
+                    8,
                     20,
                     16,
                   ),
