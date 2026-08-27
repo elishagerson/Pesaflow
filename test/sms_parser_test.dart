@@ -778,6 +778,19 @@ void main() {
       expect(result.senderOrRecipient, contains('ATM WITHDRAWAL'));
       expect(result.balanceAfter, 124900000);
     });
+
+    test('parses credit (umepokea kutoka kwa variant)', () {
+      const sms =
+          'Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako.';
+      final result = parser.parse(sms, now);
+
+      expect(result, isNotNull);
+      expect(result!.type, 'income');
+      expect(result.amount, 500000000);
+      expect(result.senderOrRecipient, 'ALEX SAMWEL MAPUNDA');
+      expect(result.reference, 'NMB-610FTIT262391237');
+      expect(result.provider, 'NMB_Bank');
+    });
   });
 
   // ===========================================================================

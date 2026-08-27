@@ -1012,6 +1012,18 @@ final List<SmsCorpusEntry> smsCorpus = [
       senderOrRecipient: 'ELISHA NDUNDULU 5525102063444',
     ),
   ),
+  SmsCorpusEntry(
+    label: 'nmb_credit_umepokea_kwa',
+    sender: 'NMB',
+    body: 'Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako.',
+    timestamp: DateTime(2026, 8, 27, 17, 29),
+    expect: SmsExpectation(
+      amount: 500000000,
+      type: 'income',
+      senderOrRecipient: 'ALEX SAMWEL MAPUNDA',
+      reference: 'NMB-610FTIT262391237',
+    ),
+  ),
 
   // =========================================================================
   // CRDB Bank

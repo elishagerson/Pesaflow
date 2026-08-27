@@ -92,6 +92,31 @@ class NmbBankParser implements SmsParser {
         );
       }
 
+      // 3b. Credit (income) — "umepokea" variant (no "kiasi cha", "kutoka kwa")
+      // "Ndugu ELISHA GERSON NDUNDULU, umepokea TZS 5,000,000.00 kwenye akaunti inayoishia 1222 kutoka kwa ALEX SAMWEL MAPUNDA, 27-AUG-2026 17:29:15. Kumb: 610FTIT262391237. NMB Karibu Yako."
+      match = RegExp(
+        r'umepokea\s+(?:TSH|TZS)\s*([\d,]+(?:\.\d+)?)\s+kwenye\s+akaunti\s+inayoishia\s+\d+\s+kutoka\s+kwa\s+(.+?)(?:,\s*\d{2}|\.\s*27|\.$|$)',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(1) ?? '');
+        if (amt <= 0) return null;
+        final senderName = (match.group(2) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'income',
+          senderOrRecipient: senderName,
+          reference: ref,
+          provider: 'NMB_Bank',
+          balanceAfter: bal,
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
       // 3. Credit (income) — "Umepokea" (received from person)
       // "Umepokea kiasi cha TZS 8500 kwenye akaunti yako inayoishia 11222 kutoka  5525102063444 ELISHA NDUNDULU Tar 09.06.2026 11:04:55. NMB Karibu yako"
       match = RegExp(
