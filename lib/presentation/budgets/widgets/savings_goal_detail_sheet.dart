@@ -853,7 +853,7 @@ class _SavingsGoalDetailSheetState
                               Text(
                                 'TOTAL SAVED',
                                 style: theme.textTheme.labelSmall?.copyWith(
-                                  color: Colors.grey[500],
+                                  color: context.appColors.textMedium,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.1,
                                 ),
@@ -873,7 +873,7 @@ class _SavingsGoalDetailSheetState
                               Text(
                                 'Goal target: ${CurrencyFormatter.formatCents(widget.goal.targetAmount)}',
                                 style: Theme.of(context).textTheme.labelSmall!
-                                    .copyWith(color: Colors.grey),
+                                    .copyWith(color: context.appColors.textMedium),
                               ),
                             ],
                           ),
@@ -969,7 +969,7 @@ class _SavingsGoalDetailSheetState
                     child: Text(
                       'CONTRIBUTION LEDGER',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.grey[500],
+                        color: context.appColors.textMedium,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.1,
                       ),
@@ -988,7 +988,7 @@ class _SavingsGoalDetailSheetState
                           child: Text(
                             'No deposits or withdrawals logged yet.',
                             style: Theme.of(context).textTheme.bodySmall!
-                                .copyWith(color: Colors.grey[500]),
+                                .copyWith(color: context.appColors.textMedium),
                           ),
                         );
                       }
