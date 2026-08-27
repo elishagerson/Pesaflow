@@ -318,41 +318,23 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                   ),
                                 ),
                                 const SizedBox(height: kSpacing8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: theme.colorScheme.surface,
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(
-                                      color: onSurface.withValues(alpha: 0.07),
-                                    ),
+                                TextField(
+                                  controller: descriptionController,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                    color: onSurface,
                                   ),
-                                  child: TextField(
-                                    controller: descriptionController,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: onSurface,
+                                  decoration: context.inputDecoration(
+                                    hintText: 'Add a note (optional)',
+                                    prefixIcon: Icon(
+                                      PesaFlowIcons.edit,
+                                      size: 20,
+                                      color: onSurface.withValues(alpha: 0.32),
                                     ),
-                                    decoration: InputDecoration(
-                                      hintText: 'Add a note (optional)',
-                                      hintStyle: TextStyle(
-                                        color: onSurface.withValues(
-                                          alpha: 0.28,
-                                        ),
-                                      ),
-                                      prefixIcon: Icon(
-                                        PesaFlowIcons.edit,
-                                        size: 20,
-                                        color: onSurface.withValues(
-                                          alpha: 0.32,
-                                        ),
-                                      ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 14,
-                                          ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 14,
                                     ),
                                   ),
                                 ),
