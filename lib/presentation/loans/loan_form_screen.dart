@@ -35,9 +35,6 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   DateTime _disbursedAt = DateTime.now();
   DateTime? _dueAt;
   Loan? _existingLoan;
-  String? _descriptionError;
-  String? _amountError;
-  String? _interestRateError;
   String? _selectedCategory;
 
   bool get _isDirty {
@@ -251,38 +248,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   }
 
   Future<void> _submit() async {
-    setState(() {
-      _descriptionError = null;
-      _amountError = null;
-      _interestRateError = null;
-    });
-
-    bool hasError = false;
-
-    if (_descriptionController.text.trim().isEmpty) {
-      _descriptionError = 'Enter a description';
-      hasError = true;
-    }
-
-    final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
-    if (amountCents <= 0) {
-      _amountError = 'Enter a valid amount';
-      hasError = true;
-    }
-
-    final interestText = _interestRateController.text.trim();
-    if (interestText.isNotEmpty) {
-      final rate = double.tryParse(interestText);
-      if (rate == null || rate < 0) {
-        _interestRateError = 'Enter a valid rate';
-        hasError = true;
-      }
-    }
-
-    if (hasError) {
-      setState(() {});
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     if (!_formKey.currentState!.validate()) return;
 
@@ -427,28 +393,36 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   child: TextFormField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return 'Enter a valid amount';
+                      final val = CurrencyFormatter.parseToCents(v);
+                      if (val <= 0) return 'Enter a valid amount';
+                      return null;
+                    },
                     decoration: context.inputDecoration(
                       labelText: 'Loan Amount (Tsh)',
                       hintText: 'e.g. 100000',
                       prefixIcon: const Icon(PesaFlowIcons.money, size: 18),
-                      errorText: _amountError,
                     ),
-                    onChanged: (_) => setState(() => _amountError = null),
                   ),
                 ),
                 const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 1,
-                  child: TextField(
+                  child: TextFormField(
                     controller: _descriptionController,
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) {
+                        return 'Enter a description';
+                      }
+                      return null;
+                    },
                     decoration: context.inputDecoration(
                       labelText: 'Description',
                       hintText: 'e.g. M-Pesa Loan, Bank Loan',
                       prefixIcon: const Icon(PesaFlowIcons.edit, size: 18),
-                      errorText: _descriptionError,
                     ),
                     textCapitalization: TextCapitalization.sentences,
-                    onChanged: (_) => setState(() => _descriptionError = null),
                   ),
                 ),
                 const SizedBox(height: kSpacing16),
@@ -500,18 +474,22 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                 const SizedBox(height: kSpacing16),
                 StaggeredFadeSlide(
                   index: 5,
-                  child: TextField(
+                  child: TextFormField(
                     controller: _interestRateController,
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return null;
+                      final rate = double.tryParse(v);
+                      if (rate == null || rate < 0) return 'Enter a valid rate';
+                      return null;
+                    },
                     decoration: context.inputDecoration(
                       labelText: 'Interest Rate',
                       hintText: 'e.g. 18.5',
                       prefixIcon: const Icon(PesaFlowIcons.percent, size: 18),
-                      errorText: _interestRateError,
                     ),
-                    onChanged: (_) => setState(() => _interestRateError = null),
                   ),
                 ),
                 const SizedBox(height: kSpacing16),
