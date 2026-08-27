@@ -9,6 +9,7 @@ class FloatingTopBar extends StatelessWidget {
   final List<Widget>? actions;
   final bool forceWhite;
   final Color? customColor;
+  final EdgeInsetsGeometry? padding;
 
   const FloatingTopBar({
     super.key,
@@ -17,6 +18,7 @@ class FloatingTopBar extends StatelessWidget {
     this.actions,
     this.forceWhite = false,
     this.customColor,
+    this.padding,
   });
 
   @override
@@ -28,7 +30,7 @@ class FloatingTopBar extends StatelessWidget {
         : customColor ?? theme.colorScheme.onSurface;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding: padding ?? const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
