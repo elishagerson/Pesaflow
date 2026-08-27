@@ -11,6 +11,7 @@ import 'package:pesaflow/data/repositories/loan_repository.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -403,41 +404,14 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            Container(
+            FloatingTopBar(
+              title: _existingLoan != null ? 'Edit Loan' : 'Add Loan',
+              forceWhite: true,
               padding: EdgeInsets.fromLTRB(
                 20,
                 MediaQuery.of(context).padding.top + 8,
                 20,
                 16,
-              ),
-              child: Row(
-                children: [
-                  TactileSpringContainer(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing14),
-                  Text(
-                    _existingLoan != null ? 'Edit Loan' : 'Add Loan',
-                    style: context.ts(
-                      28,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.8,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
               ),
             ),
             Expanded(

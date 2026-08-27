@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/staggered_animation.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
@@ -269,42 +270,16 @@ class _RecurringTransactionFormScreenState
       child: Scaffold(
         body: Column(
           children: [
-            Container(
+            FloatingTopBar(
+              title: _isEditing ? 'Edit Recurring' : 'Add Recurring',
+              forceWhite: true,
               padding: EdgeInsets.fromLTRB(
                 20,
                 MediaQuery.of(context).padding.top + 8,
                 20,
                 16,
               ),
-              child: Row(
-                children: [
-                  TactileSpringContainer(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing14),
-                  Text(
-                    _isEditing ? 'Edit Recurring' : 'Add Recurring',
-                    style: context.ts(
-                      28,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.8,
-                      color: Colors.white,
-                    ),
-                  ),
-                  if (_isEditing) ...[
-                    const Spacer(),
+              actions: _isEditing ? [
                     TactileSpringContainer(
                       onTap: () async {
                         final confirm = await showDialog<bool>(
@@ -409,9 +384,8 @@ class _RecurringTransactionFormScreenState
                         ),
                       ),
                     ),
-                  ],
-                ],
-              ),
+                    ]
+                  : null,
             ),
             Expanded(
               child: SingleChildScrollView(
