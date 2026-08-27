@@ -169,7 +169,7 @@ class QuickAmountChip extends StatelessWidget {
             color: isActive
                 ? context.appColors.incomeColor.withValues(alpha: 0.15)
                 : onSurface.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppTheme.radiusInput),
             border: Border.all(
               color: isActive
                   ? context.appColors.incomeColor.withValues(alpha: 0.5)
@@ -255,7 +255,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         height: 5,
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.17),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
@@ -743,7 +743,7 @@ void showPaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     duration: const Duration(milliseconds: 250),
                                     curve: Curves.easeOutCubic,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                                       boxShadow: canSubmit
                                           ? [
                                               BoxShadow(
@@ -888,7 +888,7 @@ Widget _buildAmountField({
   return Container(
     decoration: BoxDecoration(
       color: theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       border: Border.all(color: onSurface.withValues(alpha: 0.07)),
     ),
     padding: const EdgeInsets.symmetric(

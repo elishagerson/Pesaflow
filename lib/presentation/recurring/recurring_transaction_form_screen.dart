@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/undo_delete.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
@@ -627,7 +628,7 @@ class _RecurringTransactionFormScreenState
                           ),
                           decoration: BoxDecoration(
                             color: inputFill,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                           ),
                           child: Text(
                             _frequency == 'weekly'
@@ -653,7 +654,7 @@ class _RecurringTransactionFormScreenState
                   index: 7,
                   child: InkWell(
                     onTap: () => _pickDate(endDate: false),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                     child: InputDecorator(
                       decoration: context.inputDecoration(
                         labelText: 'Next Date',
@@ -679,7 +680,7 @@ class _RecurringTransactionFormScreenState
                   index: 8,
                   child: InkWell(
                     onTap: () => _pickDate(endDate: true),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                     child: InputDecorator(
                       decoration: context.inputDecoration(
                         labelText: 'End Date (optional)',
@@ -727,7 +728,7 @@ class _RecurringTransactionFormScreenState
                         color: _isLoading
                             ? Colors.grey
                             : Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                       ),
                       child: _isLoading
                           ? const Center(

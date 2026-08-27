@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'payment_sheet.dart';
 
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 
@@ -64,7 +65,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                         height: 5,
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.17),
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                         ),
                       ),
                       const SizedBox(height: kSpacing16),
@@ -313,7 +314,7 @@ void showOfflinePaymentSheet(BuildContext context, WidgetRef ref, Loan loan) {
                                     color: const Color(
                                       0xFF609F8A,
                                     ).withValues(alpha: 0.05),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                                     border: Border.all(
                                       color: const Color(
                                         0xFF609F8A,

@@ -14,6 +14,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/custom_toast.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
+import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 
@@ -168,7 +169,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                             ? theme.colorScheme.primary.withValues(alpha: 0.08)
                             : theme.colorScheme.surfaceContainerHighest
                                   .withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                         border: isSelected
                             ? Border.all(
                                 color: theme.colorScheme.primary.withValues(
@@ -455,7 +456,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   index: 4,
                   child: InkWell(
                     onTap: () => _pickDate(dueDate: false),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                     child: InputDecorator(
                       decoration: context.inputDecoration(
                         labelText: 'Disbursement Date',
@@ -497,7 +498,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   index: 6,
                   child: InkWell(
                     onTap: () => _pickDate(dueDate: true),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                     child: InputDecorator(
                       decoration: context.inputDecoration(
                         labelText: 'Due Date (optional)',
@@ -538,7 +539,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                   index: 7,
                   child: InkWell(
                     onTap: _pickCategory,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                     child: InputDecorator(
                       decoration: context.inputDecoration(
                         labelText: 'Category (optional)',
@@ -578,7 +579,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                       padding: const EdgeInsets.symmetric(vertical: kSpacing16),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
                       ),
                       child: Text(
                         _existingLoan != null ? 'Update Loan' : 'Add Loan',

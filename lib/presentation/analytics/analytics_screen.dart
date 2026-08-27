@@ -229,7 +229,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 padding: const EdgeInsets.all(kSpacing4),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                 ),
                 child: TabBar(
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -237,7 +237,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   indicatorPadding: EdgeInsets.zero,
                   indicator: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                   ),
                   labelColor: Colors.black87,
                   unselectedLabelColor: Colors.white.withValues(alpha: 0.55),
@@ -923,7 +923,7 @@ class _OverviewTab extends StatelessWidget {
                                       // Curved progress track
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(
-                                          100,
+                                          AppTheme.radiusPill,
                                         ),
                                         child: Container(
                                           height: 5,
