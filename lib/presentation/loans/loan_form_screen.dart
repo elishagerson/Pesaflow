@@ -250,7 +250,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (!_formKey.currentState!.validate()) return;
+    final amountCents = CurrencyFormatter.parseToCents(_amountController.text);
 
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 

@@ -989,7 +989,6 @@ class _InteractiveInputRow extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
-  final ValueChanged<String>? onChanged;
   final TextStyle? style;
 
   const _InteractiveInputRow({
@@ -1000,7 +999,6 @@ class _InteractiveInputRow extends StatefulWidget {
     this.keyboardType,
     this.textCapitalization = TextCapitalization.none,
     this.validator,
-    this.onChanged,
     this.style,
   });
 
@@ -1088,7 +1086,6 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 textCapitalization: widget.textCapitalization,
                 style:
                     widget.style ?? context.ts(15, fontWeight: FontWeight.w600),
-                onChanged: widget.onChanged,
                 validator: widget.validator,
                 decoration: InputDecoration(
                   filled: false,
@@ -1121,7 +1118,6 @@ class _InteractiveInputRowState extends State<_InteractiveInputRow> {
                 onTap: () {
                   HapticFeedback.lightImpact();
                   widget.controller.clear();
-                  if (widget.onChanged != null) widget.onChanged!('');
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(kSpacing6),
