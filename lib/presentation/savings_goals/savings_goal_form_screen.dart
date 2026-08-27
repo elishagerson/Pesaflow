@@ -32,8 +32,6 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
-  String? _nameError;
-  String? _amountError;
 
   late String _selectedColor;
   late String _selectedIcon;
@@ -88,28 +86,9 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
   }
 
   Future<void> _save() async {
-    setState(() {
-      _nameError = null;
-      _amountError = null;
-    });
-
-    bool hasError = false;
-
-    if (_nameController.text.trim().isEmpty) {
-      _nameError = 'Enter a goal name';
-      hasError = true;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     final targetVal = CurrencyFormatter.parseToCents(_amountController.text);
-    if (targetVal <= 0) {
-      _amountError = 'Enter a valid amount';
-      hasError = true;
-    }
-
-    if (hasError) {
-      setState(() {});
-      return;
-    }
 
     setState(() => _isLoading = true);
     try {
@@ -257,13 +236,17 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   style: theme.textTheme.titleMedium!.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  validator: (v) {
+                                    if (v == null || v.trim().isEmpty) {
+                                      return 'Enter a goal name';
+                                    }
+                                    return null;
+                                  },
                                   decoration: inputDeco(
                                     label: 'Goal Title',
                                     hint: 'e.g. Vacation to Zanzibar',
                                     icon: PesaFlowIcons.title,
-                                  ).copyWith(errorText: _nameError),
-                                  onChanged: (_) =>
-                                      setState(() => _nameError = null),
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing12),
                                 TextFormField(
@@ -275,13 +258,17 @@ class _SavingsGoalFormScreenState extends ConsumerState<SavingsGoalFormScreen> {
                                   style: theme.textTheme.titleMedium!.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  validator: (v) {
+                                    if (v == null || v.isEmpty) return 'Enter a valid amount';
+                                    final val = CurrencyFormatter.parseToCents(v);
+                                    if (val <= 0) return 'Enter a valid amount';
+                                    return null;
+                                  },
                                   decoration: inputDeco(
                                     label: 'Target Amount (Tsh)',
                                     hint: 'e.g. 1500000',
                                     icon: PesaFlowIcons.cash,
-                                  ).copyWith(errorText: _amountError),
-                                  onChanged: (_) =>
-                                      setState(() => _amountError = null),
+                                  ),
                                 ),
                                 const SizedBox(height: kSpacing12),
                                 ModernDateSelector(
