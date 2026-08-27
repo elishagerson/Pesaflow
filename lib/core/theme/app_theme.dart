@@ -63,12 +63,14 @@ class AppTheme {
   static Color get surfaceContainerDark => surfaceHighDark;
 
   // Radii — generous, soft corners (Budjetly feel)
+  static const double radiusSmall = 8.0;
   static const double radiusCompact = 10.0;
+  static const double radiusInput = 12.0;
   static const double radiusCard = 16.0;
   static const double radiusHero = 20.0;
   static const double radiusDialog = 24.0;
-  static const double radiusInput = 12.0;
   static const double radiusButton = 28.0;
+  static const double radiusPill = 100.0;
 
   static TextStyle getMonospaceStyle(TextStyle baseStyle) {
     return baseStyle.copyWith(
