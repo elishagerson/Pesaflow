@@ -20,7 +20,8 @@ import 'package:pesaflow/core/utils/context_extensions.dart';
 
 import 'package:pesaflow/data/database/app_database.dart';
 import 'package:intl/intl.dart';
-import 'package:pesaflow/presentation/common/widgets/modern_numpad.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_bottom_sheet.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
@@ -884,42 +885,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(
-                20,
-                8,
-                20,
-                16,
-              ),
-              child: Row(
-                children: [
-                  TactileSpringContainer(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(kSpacing10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: kSpacing14),
-                  Text(
-                    _isEditMode ? 'Edit Transaction' : 'New Transaction',
-                    style: context.ts(
-                      28,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.8,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
+            FloatingTopBar(
+              title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
+              forceWhite: true,
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
             ),
             // TOP HALF: Display & Context
             Expanded(
