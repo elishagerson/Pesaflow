@@ -492,8 +492,9 @@ class _RecurringTransactionFormScreenState
                             ),
                           ),
                           validator: (v) {
-                            if (v == null || v.trim().isEmpty)
+                            if (v == null || v.trim().isEmpty) {
                               return 'Enter amount';
+                            }
                             final cleaned = v.replaceAll(RegExp(r'[^0-9]'), '');
                             final parsed = int.tryParse(cleaned);
                             if (parsed == null || parsed <= 0) {
@@ -635,8 +636,9 @@ class _RecurringTransactionFormScreenState
                                     return 'Required';
                                   }
                                   final parsed = int.tryParse(v);
-                                  if (parsed == null || parsed < 1)
+                                  if (parsed == null || parsed < 1) {
                                     return 'Min 1';
+                                  }
                                   return null;
                                 },
                               ),

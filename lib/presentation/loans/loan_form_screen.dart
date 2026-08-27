@@ -397,10 +397,13 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           controller: _amountController,
                           keyboardType: TextInputType.number,
                           validator: (v) {
-                            if (v == null || v.trim().isEmpty)
+                            if (v == null || v.trim().isEmpty) {
                               return 'Enter a valid amount';
+                            }
                             final val = CurrencyFormatter.parseToCents(v);
-                            if (val <= 0) return 'Enter a valid amount';
+                            if (val <= 0) {
+                              return 'Enter a valid amount';
+                            }
                             return null;
                           },
                           decoration: context.inputDecoration(
@@ -497,8 +500,9 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
                           validator: (v) {
                             if (v == null || v.trim().isEmpty) return null;
                             final rate = double.tryParse(v);
-                            if (rate == null || rate < 0)
+                            if (rate == null || rate < 0) {
                               return 'Enter a valid rate';
+                            }
                             return null;
                           },
                           decoration: context.inputDecoration(
