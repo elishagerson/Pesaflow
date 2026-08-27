@@ -11,6 +11,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
@@ -35,42 +36,7 @@ class SavingsGoalListScreen extends ConsumerWidget {
         bottom: false,
         child: Column(
           children: [
-            // ── Floating Top Bar ──
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-              child: Row(
-                children: [
-                  if (canPop)
-                    TactileSpringContainer(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.08,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: theme.colorScheme.onSurface,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  Text(
-                    'Savings Goals',
-                    style: context.ts(
-                      34,
-                      fontWeight: FontWeight.w800,
-                      color: theme.colorScheme.onSurface,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const FloatingTopBar(title: 'Savings Goals'),
             Expanded(
               child: SkeletonCrossfade(
                 isLoading:

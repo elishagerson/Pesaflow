@@ -13,6 +13,7 @@ import 'package:pesaflow/presentation/common/widgets/glass_list_container.dart';
 import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.dart';
 import 'package:pesaflow/presentation/common/widgets/error_state.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
+import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
 import 'package:pesaflow/presentation/common/widgets/premium_fab.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
@@ -57,37 +58,10 @@ class LoanListScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Floating Top Bar ──
-                Row(
-                  children: [
-                    if (canPop)
-                      TactileSpringContainer(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 12),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(
-                              alpha: 0.1,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    Text(
-                      'Loans',
-                      style: context.ts(
-                        34,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                  ],
+                const FloatingTopBar(
+                  title: 'Loans',
+                  padding: EdgeInsets.zero,
+                  forceWhite: true,
                 ),
                 const SizedBox(height: 16),
 
