@@ -143,7 +143,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 context: context,
                                 title: const Text('Delete Budget?'),
                                 titleIcon: PesaFlowIcons.delete,
-                                iconColor: Colors.red,
+                                iconColor: context.appColors.expenseColor,
                                 content: const Text(
                                   'This will permanently remove this budget and all its history.',
                                 ),
@@ -160,9 +160,11 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       context,
                                       rootNavigator: true,
                                     ).pop(true),
-                                    child: const Text(
+                                    child: Text(
                                       'Delete',
-                                      style: TextStyle(color: Colors.red),
+                                      style: TextStyle(
+                                        color: context.appColors.expenseColor,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -706,7 +708,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             );
           },
           loading: () => Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
                 const FloatingTopBar(
@@ -729,7 +731,7 @@ class BudgetDetailScreen extends ConsumerWidget {
             ),
           ),
           error: (e, _) => Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: Column(
               children: [
                 const FloatingTopBar(
@@ -832,7 +834,9 @@ class _StatCard extends StatelessWidget {
             label,
             style: Theme.of(
               context,
-            ).textTheme.labelSmall!.copyWith(color: Colors.grey),
+            ).textTheme.labelSmall!.copyWith(
+              color: context.appColors.textMedium,
+            ),
           ),
           const SizedBox(height: kSpacing4),
           AmountText(

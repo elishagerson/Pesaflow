@@ -645,7 +645,10 @@ class _SavingsGoalDetailScreenState
         ),
         TextButton(
           onPressed: () => context.pop(true),
-          child: Text('Delete', style: context.ts(14, color: Colors.red)),
+          child: Text(
+            'Delete',
+            style: context.ts(14, color: context.appColors.expenseColor),
+          ),
         ),
       ],
     );
@@ -1220,7 +1223,9 @@ class _SavingsGoalDetailScreenState
                                                         'Delete',
                                                         style: context.ts(
                                                           14,
-                                                          color: Colors.red,
+                                                          color: context
+                                                              .appColors
+                                                              .expenseColor,
                                                         ),
                                                       ),
                                                     ),
