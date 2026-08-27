@@ -58,7 +58,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   String? _selectedDestinationAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
-  String? _amountError;
+  final _formKey = GlobalKey<FormState>();
 
   final _descriptionController = TextEditingController();
   final _referenceController = TextEditingController();
@@ -181,11 +181,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   Future<void> _saveTransaction() async {
     if (_isSaving) return;
 
+    if (!_formKey.currentState!.validate()) return;
+
     final cents = CurrencyFormatter.parseToCents(_amountController.text);
-    if (cents <= 0) {
-      setState(() => _amountError = 'Enter a valid amount');
-      return;
-    }
     if (_selectedAccountId == null) {
       CustomToast.show(
         context,
@@ -883,8 +881,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
             FloatingTopBar(
               title: _isEditMode ? 'Edit Transaction' : 'New Transaction',
               forceWhite: true,
@@ -968,31 +968,45 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   // Massive Hero Amount
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kSpacing24),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        amt,
-                        style: context.ts(
-                          96,
-                          fontWeight: FontWeight.w900,
-                          color: amtColor,
-                          letterSpacing: -2,
-                        ),
-                      ),
+                    child: FormField<String>(
+                      validator: (_) {
+                        final cents = CurrencyFormatter.parseToCents(_amountController.text);
+                        if (cents <= 0) return 'Enter a valid amount';
+                        return null;
+                      },
+                      builder: (state) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                amt,
+                                style: context.ts(
+                                  96,
+                                  fontWeight: FontWeight.w900,
+                                  color: amtColor,
+                                  letterSpacing: -2,
+                                ),
+                              ),
+                            ),
+                            if (state.hasError)
+                              Padding(
+                                padding: const EdgeInsets.only(top: kSpacing8),
+                                child: Text(
+                                  state.errorText!,
+                                  style: TextStyle(
+                                    color: theme.colorScheme.error,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
                     ),
                   ),
-                  if (_amountError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: kSpacing8),
-                      child: Text(
-                        _amountError!,
-                        style: TextStyle(
-                          color: theme.colorScheme.error,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
 
                   const SizedBox(height: kSpacing16),
 
@@ -1174,6 +1188,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               onDone: _isSaving ? null : _saveTransaction,
             ),
           ],
+        ),
         ),
       ),
     );
