@@ -173,30 +173,15 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           child: TextField(
                             controller: minCtl,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
+                            decoration: context.inputDecoration(
                               labelText: 'Min',
                               hintText: '0',
                               prefixText: 'TSh ',
-                              isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                                 vertical: 10,
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: onSurface.withValues(alpha: 0.12),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: onSurface.withValues(alpha: 0.07),
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: onSurface.withValues(alpha: 0.03),
-                            ),
+                            ).copyWith(isDense: true),
                           ),
                         ),
                         Padding(
@@ -215,30 +200,15 @@ class _TransactionFilterSheetContent extends ConsumerWidget {
                           child: TextField(
                             controller: maxCtl,
                             keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
+                            decoration: context.inputDecoration(
                               labelText: 'Max',
                               hintText: '1000000',
                               prefixText: 'TSh ',
-                              isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12,
                                 vertical: 10,
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: onSurface.withValues(alpha: 0.12),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: onSurface.withValues(alpha: 0.07),
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: onSurface.withValues(alpha: 0.03),
-                            ),
+                            ).copyWith(isDense: true),
                           ),
                         ),
                       ],

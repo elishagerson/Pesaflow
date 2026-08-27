@@ -289,27 +289,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           const SizedBox(height: kSpacing16),
           DropdownButtonFormField<String>(
             initialValue: _selectedAccountId,
-            decoration: InputDecoration(
+            decoration: context.inputDecoration(
               labelText: 'Assign to Account',
               prefixIcon: const Icon(PesaFlowIcons.wallet, size: 20),
-              filled: true,
-              fillColor: Colors.transparent,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.5,
-                  ),
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.3,
-                  ),
-                ),
-              ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,
@@ -333,27 +315,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           const SizedBox(height: kSpacing12),
           DropdownButtonFormField<String>(
             initialValue: _defaultCategoryId,
-            decoration: InputDecoration(
+            decoration: context.inputDecoration(
               labelText: 'Default Category',
               prefixIcon: const Icon(PesaFlowIcons.category, size: 20),
-              filled: true,
-              fillColor: Colors.transparent,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.5,
-                  ),
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant.withValues(
-                    alpha: 0.3,
-                  ),
-                ),
-              ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,

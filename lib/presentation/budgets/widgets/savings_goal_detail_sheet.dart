@@ -307,42 +307,8 @@ class _SavingsGoalDetailSheetState
                                                   fontWeight: FontWeight.bold,
                                                   color: onSurface,
                                                 ),
-                                            decoration: InputDecoration(
+                                            decoration: context.inputDecoration(
                                               hintText: '0',
-                                              hintStyle: TextStyle(
-                                                color: onSurface.withValues(
-                                                  alpha: 0.28,
-                                                ),
-                                              ),
-                                              filled: true,
-                                              fillColor: theme
-                                                  .colorScheme
-                                                  .surfaceContainerHigh,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                borderSide: BorderSide(
-                                                  color: onSurface.withValues(
-                                                    alpha: 0.07,
-                                                  ),
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                borderSide: BorderSide(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .primary
-                                                      .withValues(alpha: 0.5),
-                                                  width: 1.5,
-                                                ),
-                                              ),
                                               contentPadding:
                                                   const EdgeInsets.symmetric(
                                                     horizontal: 16,
@@ -396,35 +362,14 @@ class _SavingsGoalDetailSheetState
                                         .textTheme
                                         .bodyMedium!
                                         .copyWith(color: onSurface),
-                                    decoration: InputDecoration(
+                                    decoration: context.inputDecoration(
                                       hintText:
                                           'Add an optional note (e.g. Salary bonus)',
-                                      hintStyle: TextStyle(
-                                        color: onSurface.withValues(
-                                          alpha: 0.28,
-                                        ),
-                                      ),
                                       prefixIcon: Icon(
                                         PesaFlowIcons.edit,
                                         size: 20,
                                         color: onSurface.withValues(
                                           alpha: 0.32,
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: theme
-                                          .colorScheme
-                                          .surfaceContainerHigh,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                        borderSide: BorderSide(
-                                          color: onSurface.withValues(
-                                            alpha: 0.07,
-                                          ),
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
