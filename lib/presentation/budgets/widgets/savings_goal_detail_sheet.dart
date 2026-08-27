@@ -1049,18 +1049,21 @@ class _SavingsGoalDetailSheetState
                                                 .textTheme
                                                 .labelSmall!
                                                 .copyWith(
-                                                  color: Colors.grey[500],
+                                                  color:
+                                                      context
+                                                          .appColors
+                                                          .textMedium,
                                                 ),
                                           ),
                                         ],
                                         const SizedBox(height: kSpacing2),
                                         Text(
                                           '${log.createdAt.day}/${log.createdAt.month}/${log.createdAt.year} ${log.createdAt.hour}:${log.createdAt.minute.toString().padLeft(2, '0')}',
-                                          style: theme.textTheme.labelSmall!
-                                              .copyWith(
-                                                fontSize: 9,
-                                                color: Colors.grey[500],
-                                              ),
+                                          style: context.ts(
+                                            11,
+                                            color:
+                                                context.appColors.textMedium,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1117,7 +1120,9 @@ class _SavingsGoalDetailSheetState
                                                     child: Text(
                                                       'Delete',
                                                       style: TextStyle(
-                                                        color: Colors.red,
+                                                        color: context
+                                                            .appColors
+                                                            .expenseColor,
                                                       ),
                                                     ),
                                                   ),
@@ -1141,9 +1146,8 @@ class _SavingsGoalDetailSheetState
                                         child: Icon(
                                           PesaFlowIcons.delete,
                                           size: 16,
-                                          color: Colors.red.withValues(
-                                            alpha: 0.7,
-                                          ),
+                                          color: context.appColors.expenseColor
+                                              .withValues(alpha: 0.7),
                                         ),
                                       ),
                                     ],
