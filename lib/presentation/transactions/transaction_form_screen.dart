@@ -159,6 +159,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       _descriptionController.text = match.transaction.description;
       _referenceController.text = match.transaction.reference ?? '';
       _selectedAccountId = match.transaction.accountId;
+      _selectedDestinationAccountId = match.transaction.destinationAccountId;
       _selectedCategoryId = match.transaction.categoryId;
       _transactionType =
           match.transaction.type[0].toUpperCase() +
@@ -288,7 +289,15 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     }
   }
 
-  void _showAccountPickerSheet(BuildContext context, List<Account> accounts) {
+  void _showAccountPickerSheet(
+    BuildContext context,
+    List<Account> accounts, {
+    required bool isDestination,
+  }) {
+    final currentSelectedId =
+        isDestination ? _selectedDestinationAccountId : _selectedAccountId;
+    final title = isDestination ? 'To Account' : 'From Account';
+
     showSpringSheet(
       context,
       isScrollControlled: true,
@@ -303,7 +312,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           builder: (context, scrollController) => ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             child: LiquidGlassOverlay(
-              grainSeed: 0xE7F6,
+              grainSeed: isDestination ? 0xE7F7 : 0xE7F6,
               child: Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.75),
@@ -348,7 +357,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           ),
                           const SizedBox(width: kSpacing12),
                           Text(
-                            'Select Source Account',
+                            title,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -368,22 +377,34 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           itemCount: accounts.length,
                           itemBuilder: (listCtx, index) {
                             final account = accounts[index];
-                            final isSelected = account.id == _selectedAccountId;
+                            final isSelected = account.id == currentSelectedId;
+                            final isDisabled =
+                                isDestination && account.id == _selectedAccountId;
                             return Padding(
                               padding: const EdgeInsets.only(bottom: kSpacing8),
                               child: GestureDetector(
-                                onTap: () {
-                                  setState(
-                                    () => _selectedAccountId = account.id,
-                                  );
-                                  Navigator.pop(ctx);
-                                },
+                                onTap: isDisabled
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          if (isDestination) {
+                                            _selectedDestinationAccountId =
+                                                account.id;
+                                          } else {
+                                            _selectedAccountId = account.id;
+                                          }
+                                        });
+                                        Navigator.pop(ctx);
+                                      },
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
                                   curve: Curves.easeOutCubic,
                                   padding: const EdgeInsets.all(kSpacing16),
                                   decoration: BoxDecoration(
-                                    color: isSelected
+                                    color: isDisabled
+                                        ? theme.colorScheme.onSurface
+                                              .withValues(alpha: 0.02)
+                                        : isSelected
                                         ? theme.colorScheme.primary.withValues(
                                             alpha: 0.08,
                                           )
@@ -417,7 +438,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                               ? PesaFlowIcons.success
                                               : PesaFlowIcons.wallet,
                                           size: 20,
-                                          color: isSelected
+                                          color: isDisabled
+                                              ? theme.colorScheme.onSurface
+                                                    .withValues(alpha: 0.2)
+                                              : isSelected
                                               ? theme.colorScheme.primary
                                               : theme.colorScheme.onSurface
                                                     .withValues(alpha: 0.55),
@@ -436,7 +460,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                                 fontWeight: isSelected
                                                     ? FontWeight.w700
                                                     : FontWeight.w500,
-                                                color: isSelected
+                                                color: isDisabled
+                                                    ? theme.colorScheme.onSurface
+                                                          .withValues(alpha: 0.25)
+                                                    : isSelected
                                                     ? theme.colorScheme.primary
                                                     : onSurface.withValues(
                                                         alpha: 0.87,
@@ -448,14 +475,35 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                               'Balance: ${CurrencyFormatter.formatCents(account.balance)}',
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
-                                                    color: onSurface.withValues(
-                                                      alpha: 0.38,
-                                                    ),
+                                                    color: isDisabled
+                                                        ? theme.colorScheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha: 0.12,
+                                                              )
+                                                        : onSurface.withValues(
+                                                            alpha: 0.38,
+                                                          ),
                                                   ),
                                             ),
                                           ],
                                         ),
                                       ),
+                                      if (isDisabled)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: kSpacing8,
+                                          ),
+                                          child: Text(
+                                            'Source',
+                                            style: context.ts(
+                                              11,
+                                              fontWeight: FontWeight.w600,
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: 0.2),
+                                            ),
+                                          ),
+                                        ),
                                       if (isSelected)
                                         Container(
                                           padding: const EdgeInsets.all(
@@ -502,6 +550,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
             setState(() {
               _transactionType = title;
               _selectedCategoryId = _lastCategoryByType[title];
+              if (title != 'Transfer') {
+                _selectedDestinationAccountId = null;
+              }
             });
           }
         },
@@ -1097,13 +1148,44 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                   .firstOrNull
                                   ?.name ??
                               'Account',
-                          onTap: () =>
-                              _showAccountPickerSheet(context, accounts),
+                          onTap: () => _showAccountPickerSheet(
+                            context,
+                            accounts,
+                            isDestination: false,
+                          ),
                           backgroundColor: theme.colorScheme.onSurface
                               .withValues(alpha: 0.04),
                           iconColor: theme.colorScheme.primary,
                           textColor: theme.colorScheme.onSurface,
                         ),
+                        if (_transactionType == 'Transfer') ...[
+                          const SizedBox(width: kSpacing8),
+                          _buildActionPill(
+                            context: context,
+                            icon: PesaFlowIcons.arrowForward,
+                            label:
+                                accounts
+                                    .where(
+                                      (a) =>
+                                          a.id ==
+                                          _selectedDestinationAccountId,
+                                    )
+                                    .firstOrNull
+                                    ?.name ??
+                                'To Account',
+                            onTap: () => _showAccountPickerSheet(
+                              context,
+                              accounts,
+                              isDestination: true,
+                            ),
+                            backgroundColor: context
+                                .appColors
+                                .transferColor
+                                .withValues(alpha: 0.1),
+                            iconColor: context.appColors.transferColor,
+                            textColor: theme.colorScheme.onSurface,
+                          ),
+                        ],
                       ],
                     ),
                   ),
