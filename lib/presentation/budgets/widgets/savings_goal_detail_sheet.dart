@@ -372,14 +372,7 @@ class _SavingsGoalDetailSheetState
                                           alpha: 0.32,
                                         ),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                        borderSide: BorderSide(
-                                          color: theme.colorScheme.primary
-                                              .withValues(alpha: 0.5),
-                                          width: 1.5,
-                                        ),
-                                      ),
+
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                             horizontal: 16,
