@@ -39,7 +39,7 @@ class MixxParser implements SmsParser {
   int? _extractFee(String text) {
     // Swahili: "Ada: TZS 300", "Ada Tsh 180"
     final swaRegex = RegExp(
-      r'Ada\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'Ada\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final swaMatch = swaRegex.firstMatch(text);
@@ -49,7 +49,7 @@ class MixxParser implements SmsParser {
 
     // English: "Fee: TZS 300" or "Total fee Tsh3,500.00"
     final engRegex = RegExp(
-      r'(?:Total\s+)?Fee\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:Total\s+)?Fee\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final engMatch = engRegex.firstMatch(text);
@@ -59,7 +59,7 @@ class MixxParser implements SmsParser {
 
     // "Total Charges TSh 300" or "Charges TSh 540"
     final chargesRegex = RegExp(
-      r'(?:Total\s+)?Charges?\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:Total\s+)?Charges?\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final chargesMatch = chargesRegex.firstMatch(text);
@@ -69,7 +69,7 @@ class MixxParser implements SmsParser {
 
     // "Service fee: TZS 300" or "Service fee TZS 100"
     final svcRegex = RegExp(
-      r'Service\s+fee\s*:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'Service\s+fee\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final svcMatch = svcRegex.firstMatch(text);
@@ -177,6 +177,32 @@ class MixxParser implements SmsParser {
       // "Malipo yamekamilika kwenda Nivushe Plus, Kiasi Tsh645,728. Salio jipya ni Tsh 47,272. Ada Tsh 0. VAT TSh 0. Kumbukumbu no.26394529507543."
       match = RegExp(
         r'Malipo yamekamilika kwenda (.+?),\s*Kiasi\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(2) ?? '');
+        if (amt <= 0) return null;
+        final recipient = (match.group(1) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          feeAmount: _extractFee(text),
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 3b. Swahili Payment Successful — Malipo yamefanikiwa (alternative wording)
+      // "Malipo yamefanikiwa kwenda Sporty Bet PUSH, Kiasi Tsh 25,000. Salio jipya ni Tsh 370. Ada Tsh 500. VAT TSh 76. Kumbukumbu no.26607196230775."
+      match = RegExp(
+        r'Malipo yamefanikiwa kwenda (.+?),\s*Kiasi\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
       ).firstMatch(text);
       if (match != null) {
@@ -388,6 +414,33 @@ class MixxParser implements SmsParser {
         r'Money sent successfully to\s+(.+?)[,\.].*?Amt\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
         caseSensitive: false,
         dotAll: true,
+      ).firstMatch(text);
+      if (match != null) {
+        final amt = parseAmount(match.group(2) ?? '');
+        if (amt <= 0) return null;
+        final recipient = (match.group(1) ?? '').trim();
+        final ref = _extractReference(text);
+        final bal = _extractBalance(text);
+
+        return SmsParsed(
+          amount: amt,
+          type: 'expense',
+          senderOrRecipient: recipient,
+          reference: ref,
+          provider: 'TigoPesa_TZ',
+          balanceAfter: bal,
+          feeAmount: _extractFee(text),
+          timestamp: timestamp,
+          rawSmsBody: text,
+        );
+      }
+
+      // 12b. English "Payment Successful to" (modern Mixx by Yas bill/bet payment)
+      // "Payment Successful to Sporty Bet PUSH, Amount TSh 25,000. New Balance TSh 370.
+      //  Charges TSh 500. VAT TSh 76. TxnID: 26607196230775.26/08/26 19:12."
+      match = RegExp(
+        r'Payment\s+Successful\s+to\s+(.+?),\s*Amount\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+        caseSensitive: false,
       ).firstMatch(text);
       if (match != null) {
         final amt = parseAmount(match.group(2) ?? '');

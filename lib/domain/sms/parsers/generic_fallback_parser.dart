@@ -106,6 +106,7 @@ class GenericFallbackParser implements SmsParser {
       'sent',
       'paid',
       'payment to',
+      'payment successful',
       'deducted',
       'purchase',
       'withdrawal',

@@ -261,6 +261,7 @@ class SmsClassifier {
       'has been deducted': 1.5,
       'payment from': 1.5,
       'payment to': 1.5,
+      'payment successful': 1.5,
 
       // Mild transaction indicators (1.0 each)
       'sent to': 1.0,
