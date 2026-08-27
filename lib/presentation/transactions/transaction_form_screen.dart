@@ -825,27 +825,31 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     required Color backgroundColor,
     required Color iconColor,
     required Color textColor,
+    Color? borderColor,
   }) {
     return TactileSpringContainer(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: kSpacing16,
-          vertical: kSpacing10,
+          horizontal: kSpacing14,
+          vertical: kSpacing8,
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(14),
+          border: borderColor != null
+              ? Border.all(color: borderColor, width: 0.8)
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 18, color: iconColor),
-            const SizedBox(width: kSpacing8),
+            Icon(icon, size: 16, color: iconColor),
+            const SizedBox(width: kSpacing6),
             Text(
               label,
               style: context.ts(
-                15,
+                13,
                 fontWeight: FontWeight.w600,
                 color: textColor,
               ),
@@ -1006,7 +1010,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                         amt,
                         style: context.ts(
                           96,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w900,
                           color: amtColor,
                           letterSpacing: -2,
                         ),
@@ -1110,10 +1114,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                               ? 'Today'
                               : DateFormat('MMM d').format(_selectedDate),
                           onTap: () => _showDatePickerSheet(context),
-                          backgroundColor: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.04),
-                          iconColor: theme.colorScheme.primary,
-                          textColor: theme.colorScheme.onSurface,
+                          backgroundColor: context.appColors.primaryColor
+                              .withValues(alpha: 0.08),
+                          iconColor: context.appColors.primaryColor,
+                          textColor: context.appColors.primaryColor,
+                          borderColor: context.appColors.primaryColor
+                              .withValues(alpha: 0.12),
                         ),
                         const SizedBox(width: kSpacing8),
                         _buildActionPill(
@@ -1125,18 +1131,18 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                           onTap: () => _showNoteSheet(context, theme),
                           backgroundColor:
                               _descriptionController.text.isNotEmpty
-                              ? theme.colorScheme.primary.withValues(
-                                  alpha: 0.15,
+                              ? context.appColors.primaryColor.withValues(
+                                  alpha: 0.1,
                                 )
-                              : theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.04,
+                              : context.appColors.primaryColor.withValues(
+                                  alpha: 0.08,
                                 ),
-                          iconColor: _descriptionController.text.isNotEmpty
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.primary,
+                          iconColor: context.appColors.primaryColor,
                           textColor: _descriptionController.text.isNotEmpty
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
+                              ? context.appColors.primaryColor
+                              : context.appColors.primaryColor,
+                          borderColor: context.appColors.primaryColor
+                              .withValues(alpha: 0.12),
                         ),
                         const SizedBox(width: kSpacing8),
                         _buildActionPill(
@@ -1153,10 +1159,12 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             accounts,
                             isDestination: false,
                           ),
-                          backgroundColor: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.04),
-                          iconColor: theme.colorScheme.primary,
-                          textColor: theme.colorScheme.onSurface,
+                          backgroundColor: context.appColors.primaryColor
+                              .withValues(alpha: 0.08),
+                          iconColor: context.appColors.primaryColor,
+                          textColor: context.appColors.primaryColor,
+                          borderColor: context.appColors.primaryColor
+                              .withValues(alpha: 0.12),
                         ),
                         if (_transactionType == 'Transfer') ...[
                           const SizedBox(width: kSpacing8),
@@ -1181,9 +1189,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             backgroundColor: context
                                 .appColors
                                 .transferColor
-                                .withValues(alpha: 0.1),
+                                .withValues(alpha: 0.08),
                             iconColor: context.appColors.transferColor,
-                            textColor: theme.colorScheme.onSurface,
+                            textColor: context.appColors.transferColor,
+                            borderColor: context.appColors.transferColor
+                                .withValues(alpha: 0.12),
                           ),
                         ],
                       ],
