@@ -204,6 +204,7 @@ class _SavingsGoalFormSheetState extends ConsumerState<SavingsGoalFormSheet> {
                           alpha: 0.2,
                         ),
                         borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                      ),
                     ),
                   ),
 
