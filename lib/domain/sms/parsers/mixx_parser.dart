@@ -20,9 +20,9 @@ class MixxParser implements SmsParser {
   }
 
   String _extractReference(String text) {
-    // Swahili: Kumbukumbu no. / Kumbukumbu, Rej, TxnID/TxnId
+    // Swahili: Kumbukumbu no. / Kumbukumbu, Rej, TxnID/TxnId (prefer TxnID over Ref to avoid "Ref No:" in balance-first format)
     final swaRegex = RegExp(
-      r'(?:Kumbukumbu\s+no\.?|Kumbukumbu|Rej|TxnID|TxnId|Marejeleo):?\s*([A-Za-z0-9]+)',
+      r'(?:Kumbukumbu\s+no\.?|Kumbukumbu|Rej|TxnID|TxnId|Marejeleo)\s*:?\s*([A-Za-z0-9]+)',
       caseSensitive: false,
     );
     var match = swaRegex.firstMatch(text);
@@ -91,9 +91,9 @@ class MixxParser implements SmsParser {
       return parseAmount(match.group(1) ?? '');
     }
 
-    // English: New balance is / Balance is / New Mixx balance is / Updated balance is
+    // English: New balance is / Balance is / New Mixx balance is / Updated balance is / New Bal:
     final engRegex = RegExp(
-      r'(?:New\s+(?:Mixx\s+)?balance is|Balance is|Updated balance is)\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:New\s+(?:Mixx\s+)?balance is|Balance is|Updated balance is|New Bal:)\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     match = engRegex.firstMatch(text);
@@ -391,6 +391,16 @@ class MixxParser implements SmsParser {
       // "ABC123DF Confirmed. Tsh 150,000.00 sent to TIPS-Mixx By Yas for account 255763559341 on 3/6/26."
       match = RegExp(
         r'[A-Z0-9]+\s+[Cc]onfirmed\.\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+sent\s+to\s+(.+?)(?:\s+for account|\s+on|\.?\s*Total fee|\s*Balance|\s*New\s+(?:Mixx\s+)?balance|$)',
+        caseSensitive: false,
+      ).firstMatch(text);
+      if (match != null) {
+        return _buildExpense(match, text, timestamp);
+      }
+
+      // 10c. English Sent — "Txn Amt TSh X sent to Y"
+      // "Txn Amt TSh 40,000 sent to Yas PostPaid (100100). Wait for confirmation. Ref: 0675259341. New Bal: TSh 1,099."
+      match = RegExp(
+        r'Txn\s+Amt\s+(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)\s+sent\s+to\s+(.+?)(?:\s*\(.*?\))?(?:\.|\s+Wait|\s+Ref|\s+TxnID|\s+New\s+Bal|$)',
         caseSensitive: false,
       ).firstMatch(text);
       if (match != null) {
