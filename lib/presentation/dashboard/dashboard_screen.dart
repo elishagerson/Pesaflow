@@ -605,6 +605,48 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ),
                                 ),
                               ),
+                              Builder(
+                                builder: (context) {
+                                  final sorted = List.from(budgets)..sort((a, b) => b.percentage.compareTo(a.percentage));
+                                  final tightest = sorted.first;
+                                  if (tightest.percentage > 0.0) {
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing12, kSpacing20, 0),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
+                                          border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.1), width: 0.5),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              tightest.isOverBudget ? PesaFlowIcons.expense : PesaFlowIcons.info,
+                                              size: 14,
+                                              color: tightest.isOverBudget ? theme.colorScheme.error : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                            ),
+                                            const SizedBox(width: kSpacing8),
+                                            Expanded(
+                                              child: Text(
+                                                tightest.isOverBudget
+                                                    ? '${tightest.budget.name} is over budget by ${_formatCompact(tightest.remaining.abs())}'
+                                                    : '${tightest.budget.name} is tightest: ${_formatCompact(tightest.remaining)} left',
+                                                style: context.ts(
+                                                  12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: tightest.isOverBudget ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                },
+                              ),
                               const SizedBox(height: kSpacing12),
                               SizedBox(
                                 height:

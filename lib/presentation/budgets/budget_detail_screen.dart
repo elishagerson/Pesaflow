@@ -347,6 +347,62 @@ class BudgetDetailScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(height: kSpacing16),
+                        
+                        // ── 1.5. SAFE TO SPEND TODAY ──
+                        StaggeredFadeSlide(
+                          index: 1,
+                          child: GlassCard(
+                            padding: const EdgeInsets.all(kSpacing12),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: (status.remaining <= 0 ? theme.colorScheme.error : context.appColors.incomeColor).withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    status.remaining <= 0 ? PesaFlowIcons.expense : PesaFlowIcons.income,
+                                    size: 16,
+                                    color: status.remaining <= 0 ? theme.colorScheme.error : context.appColors.incomeColor,
+                                  ),
+                                ),
+                                const SizedBox(width: kSpacing12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Safe to spend today',
+                                        style: context.ts(
+                                          12,
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                      const SizedBox(height: kSpacing2),
+                                      Text(
+                                        status.remaining <= 0
+                                            ? 'Tsh 0'
+                                            : 'Tsh ${(status.remaining ~/ (status.daysLeft > 0 ? status.daysLeft : 1)) ~/ 100}',
+                                        style: context.ts(
+                                          16,
+                                          fontWeight: FontWeight.w700,
+                                          color: status.remaining <= 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (status.remaining > 0)
+                                  Text(
+                                    '${status.daysLeft} days left',
+                                    style: context.ts(11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: kSpacing20),
 
                         // ── 2. LINEAR PROGRESS — time remaining + budget used ──
