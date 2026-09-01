@@ -25,6 +25,8 @@ import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/presentation/common/widgets/spring_sheet_route.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/spending_heatmap_card.dart';
 import 'package:pesaflow/presentation/dashboard/widgets/monthly_overview_section.dart';
+import 'package:pesaflow/presentation/analytics/widgets/custom_tooltip.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_tab.dart';
 import 'package:pesaflow/presentation/analytics/widgets/insights_carousel.dart';
 
@@ -683,8 +685,8 @@ class _OverviewTab extends StatelessWidget {
                           const SizedBox(height: kSpacing14),
                           Text(
                             netSavings > 0
-                                ? 'You\'ve saved Tsh ${NumberFormat('#,###').format(netSavings ~/ 100)} this month! Let\'s build a target habit.'
-                                : 'Set a visual savings goal target to build a structured emergency safety vault.',
+                                ? 'You\'ve saved ${CurrencyFormatter.formatCents(netSavings)} this month! Let\'s build a target habit.'
+                                : 'You\'re spending more than you\'re earning (${CurrencyFormatter.formatCents(-netSavings)} deficit). Let\'s review your budget.',
                             style: context.ts(
                               12,
                               color: theme.colorScheme.onSurface.withValues(
@@ -1151,7 +1153,7 @@ class _TrendsTab extends StatelessWidget {
                                   return touchedSpots.map((spot) {
                                     final isIncome = spot.barIndex == 0;
                                     return LineTooltipItem(
-                                      '${isIncome ? "Income" : "Expense"}\nTsh ${NumberFormat('#,###').format(spot.y.round() * 100)}',
+                                      '${isIncome ? "Income" : "Expense"}\n${CurrencyFormatter.formatCents((spot.y.round() * 100))}',
                                       context.ts(
                                         12,
                                         color: isIncome
