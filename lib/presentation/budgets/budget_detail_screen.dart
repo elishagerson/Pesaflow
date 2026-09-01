@@ -11,6 +11,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/data/database/daos/budget_dao.dart';
 import 'package:pesaflow/data/repositories/budget_repository.dart';
 import 'package:pesaflow/domain/budget/budget_engine.dart';
+import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/presentation/common/widgets/amount_text.dart';
 import 'package:pesaflow/presentation/common/widgets/glass_card.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
@@ -26,6 +27,7 @@ import 'package:pesaflow/core/theme/app_theme.dart';
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
   (ref, budgetId) async {
+    ref.watch(dataChangesStreamProvider);
     final repo = ref.watch(budgetRepositoryProvider);
     final budget = await repo.getBudgetById(budgetId);
     if (budget == null) return null;
@@ -36,6 +38,7 @@ final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
 
 final budgetPeriodsProvider = FutureProvider.family<List<BudgetPeriod>, String>(
   (ref, budgetId) {
+    ref.watch(dataChangesStreamProvider);
     final repo = ref.watch(budgetRepositoryProvider);
     return repo.getPeriodsForBudget(budgetId);
   },
@@ -46,6 +49,7 @@ final dailySpendProvider =
       ref,
       budgetId,
     ) async {
+      ref.watch(dataChangesStreamProvider);
       final repo = ref.watch(budgetRepositoryProvider);
       final budget = await repo.getBudgetById(budgetId);
       if (budget == null) return [];
