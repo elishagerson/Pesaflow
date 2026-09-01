@@ -612,34 +612,59 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   if (tightest.percentage > 0.0) {
                                     return Padding(
                                       padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing12, kSpacing20, 0),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: kSpacing12, vertical: kSpacing8),
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                                          borderRadius: BorderRadius.circular(AppTheme.radiusCompact),
-                                          border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.1), width: 0.5),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              tightest.remaining < 0 ? PesaFlowIcons.expense : PesaFlowIcons.info,
-                                              size: 14,
-                                              color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                            ),
-                                            const SizedBox(width: kSpacing8),
-                                            Expanded(
-                                              child: Text(
-                                                tightest.remaining < 0
-                                                    ? '${tightest.budget.name} is over budget by ${_formatCompact(tightest.remaining.abs())}'
-                                                    : '${tightest.budget.name} is tightest: ${_formatCompact(tightest.remaining)} left',
-                                                style: context.ts(
-                                                  12,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                      child: TactileSpringContainer(
+                                        onTap: () => context.go('/budgets'),
+                                        child: GlassCard(
+                                          padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing12),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.all(kSpacing8),
+                                                decoration: BoxDecoration(
+                                                  color: tightest.remaining < 0 
+                                                      ? theme.colorScheme.error.withValues(alpha: 0.1)
+                                                      : Colors.orange.withValues(alpha: 0.1),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  tightest.remaining < 0 ? PesaFlowIcons.expense : PesaFlowIcons.info,
+                                                  size: 16,
+                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : Colors.orange,
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(width: kSpacing12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      tightest.budget.name,
+                                                      style: context.ts(
+                                                        13,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: kSpacing2),
+                                                    Text(
+                                                      tightest.remaining < 0
+                                                          ? 'Over budget by ${_formatCompact(tightest.remaining.abs())}'
+                                                          : '${_formatCompact(tightest.remaining)} left to spend',
+                                                      style: context.ts(
+                                                        11,
+                                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Icon(
+                                                PesaFlowIcons.chevronRight,
+                                                size: 14,
+                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
