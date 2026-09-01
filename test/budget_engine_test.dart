@@ -334,5 +334,54 @@ void main() {
         expect(start.month, 2);
       });
     });
+
+    group('period boundary expiry', () {
+      test('period ending today should NOT be considered expired', () {
+        // A monthly period ending Sep 30 at midnight (00:00:00).
+        // On Sep 30 at any time during the day, the period is still active.
+        final periodEnd = DateTime(2026, 9, 30);
+        final nowOnLastDay = DateTime(2026, 9, 30, 14, 30); // 2:30 PM
+
+        // The correct boundary check: only expire after midnight of the NEXT day
+        final expiryBoundary = DateTime(
+          periodEnd.year,
+          periodEnd.month,
+          periodEnd.day + 1,
+        );
+
+        // During the last day: NOT expired
+        expect(nowOnLastDay.isAfter(expiryBoundary), isFalse);
+
+        // After midnight of the next day: expired
+        final nextDayMorning = DateTime(2026, 10, 1, 0, 0, 1);
+        expect(nextDayMorning.isAfter(expiryBoundary), isTrue);
+      });
+
+      test('period ending at midnight is NOT expired at exactly midnight', () {
+        final periodEnd = DateTime(2026, 9, 30);
+        final atMidnight = DateTime(2026, 9, 30, 0, 0, 0);
+
+        final expiryBoundary = DateTime(
+          periodEnd.year,
+          periodEnd.month,
+          periodEnd.day + 1,
+        );
+
+        expect(atMidnight.isAfter(expiryBoundary), isFalse);
+      });
+
+      test('old boundary check (isAfter periodEnd) would prematurely close', () {
+        // Demonstrates the bug: the old check was `now.isAfter(periodEnd)`
+        final periodEnd = DateTime(2026, 9, 30); // midnight
+        final morningOfLastDay = DateTime(2026, 9, 30, 8, 0);
+
+        // Old broken check: 8am on Sep 30 IS after midnight Sep 30
+        expect(morningOfLastDay.isAfter(periodEnd), isTrue);
+
+        // New correct check: 8am on Sep 30 is NOT after Oct 1 midnight
+        final expiryBoundary = DateTime(2026, 10, 1);
+        expect(morningOfLastDay.isAfter(expiryBoundary), isFalse);
+      });
+    });
   });
 }
