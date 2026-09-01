@@ -131,7 +131,17 @@ class BudgetRepository {
 
     for (final budget in activeBudgets) {
       var currentPeriod = await _budgetDao.getCurrentPeriod(budget.id);
-      while (currentPeriod != null && now.isAfter(currentPeriod.periodEnd)) {
+      while (currentPeriod != null &&
+          now.isAfter(
+            // periodEnd is the inclusive last day stored at midnight (00:00:00).
+            // Only close after the last day is fully elapsed — i.e. when we are
+            // past midnight of the *next* day.
+            DateTime(
+              currentPeriod.periodEnd.year,
+              currentPeriod.periodEnd.month,
+              currentPeriod.periodEnd.day + 1,
+            ),
+          )) {
         // Period has expired — close it and create next
         final spent = await _budgetDao.getSpentForCategoryInPeriod(
           budget.categoryId,
