@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/analytics_repository.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 
 final insightGeneratorProvider = Provider<InsightGenerator>((ref) {
   final repo = ref.watch(analyticsRepositoryProvider);
@@ -36,10 +37,10 @@ class InsightGenerator {
         insights.add(
           Insight(
             type: InsightType.netCashflow,
-            title: isPositive ? 'Positive Cash Flow' : 'Negative Cash Flow',
-            message: isPositive
-                ? 'You\'ve saved Tsh ${_formatAmount(netCashflow)} this month so far.'
-                : 'You\'ve spent Tsh ${_formatAmount(-netCashflow)} more than earned this month.',
+            title: 'Net Cashflow',
+            message: netCashflow >= 0
+                ? 'You\'ve saved ${CurrencyFormatter.formatCents(netCashflow)} this month so far.'
+                : 'You\'ve spent ${CurrencyFormatter.formatCents(-netCashflow)} more than earned this month.',
             severity: isPositive
                 ? InsightSeverity.positive
                 : InsightSeverity.warning,
@@ -130,9 +131,9 @@ class InsightGenerator {
         insights.add(
           Insight(
             type: InsightType.topCategory,
-            title: 'Top Spending: ${top.categoryName}',
+            title: 'Top Category',
             message:
-                'Tsh ${_formatAmount(top.amount)} spent on ${top.categoryName} this month.',
+                '${CurrencyFormatter.formatCents(top.amount)} spent on ${top.categoryName} this month.',
             severity: InsightSeverity.neutral,
             icon: 'category',
           ),
