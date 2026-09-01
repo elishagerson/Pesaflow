@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer' as developer;
@@ -127,7 +129,7 @@ class NotificationService {
     final details = NotificationDetails(android: channel);
 
     for (final sub in due) {
-      final amountStr = (sub.amountCents / 100).toStringAsFixed(0);
+      final amountStr = CurrencyFormatter.formatCents(sub.amountCents);
       // Use a stable ID based on name + day to avoid collisions
       final notifId =
           sub.name.hashCode ^ sub.nextDueDate.day ^ sub.nextDueDate.month;
@@ -135,7 +137,7 @@ class NotificationService {
         id: notifId,
         title: '${sub.name} renewing soon',
         body:
-            '${sub.name} (Tsh $amountStr) — ${sub.nextDueDate.day}/${sub.nextDueDate.month}',
+            '${sub.name} ($amountStr) — ${sub.nextDueDate.day}/${sub.nextDueDate.month}',
         notificationDetails: details,
       );
       developer.log(

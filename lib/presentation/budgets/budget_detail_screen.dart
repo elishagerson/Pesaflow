@@ -23,7 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
-
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
   (ref, budgetId) async {
@@ -384,7 +384,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                       Text(
                                         status.remaining <= 0
                                             ? 'Tsh 0'
-                                            : 'Tsh ${(status.remaining ~/ (status.daysLeft > 0 ? status.daysLeft : 1)) ~/ 100}',
+                                            : CurrencyFormatter.formatCents(status.remaining ~/ (status.daysLeft > 0 ? status.daysLeft : 1)),
                                         style: context.ts(
                                           16,
                                           fontWeight: FontWeight.w700,

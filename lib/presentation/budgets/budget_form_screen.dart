@@ -692,7 +692,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
                                         SizedBox(
                                           width: double.infinity,
                                           child: CupertinoSlidingSegmentedControl<String>(
-                                            groupValue: _rolloverType,
+                                            groupValue: _rolloverType == 'none' ? 'all' : _rolloverType,
                                             backgroundColor: theme
                                                 .colorScheme
                                                 .onSurface

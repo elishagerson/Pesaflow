@@ -4,6 +4,7 @@ import 'package:pesaflow/data/database/database_providers.dart';
 import 'package:pesaflow/data/database/daos/transaction_dao.dart';
 import 'package:pesaflow/presentation/state/state_providers.dart';
 import 'package:pesaflow/services/notification_service.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 
 final dailySummaryServiceProvider = Provider<DailySummaryService>((ref) {
   return DailySummaryService(
@@ -47,7 +48,7 @@ class DailySummaryService {
 
       if (totalSpending <= 0) return;
 
-      final totalStr = (totalSpending / 100).toStringAsFixed(0);
+      final totalStr = CurrencyFormatter.formatCents(totalSpending);
 
       // Find the top spending category
       final categoryTotals = <String, int>{};
@@ -57,7 +58,7 @@ class DailySummaryService {
             (categoryTotals[catName] ?? 0) + t.transaction.amount;
       }
 
-      String body = 'You spent Tsh $totalStr on expenses yesterday';
+      String body = 'You spent $totalStr on expenses yesterday';
       if (categoryTotals.isNotEmpty) {
         final topEntry = categoryTotals.entries.fold<MapEntry<String, int>?>(
           null,
@@ -73,8 +74,9 @@ class DailySummaryService {
         title: "Yesterday's spending summary",
         body: body,
       );
+
       developer.log(
-        'Daily spending summary sent: Tsh $totalStr',
+        'Daily spending summary sent: $totalStr',
         name: 'DailySummary',
       );
     } catch (e) {

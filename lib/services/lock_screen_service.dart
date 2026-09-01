@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/services/notification_service.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'dart:developer' as developer;
 
 final lockScreenServiceProvider = Provider<LockScreenService>((ref) {
@@ -29,7 +30,7 @@ class LockScreenService {
     }
     await ensureInitialized();
 
-    final formatted = NumberFormat('#,###').format(totalCents ~/ 100);
+    final formatted = CurrencyFormatter.formatCents(totalCents);
 
     final androidDetails = AndroidNotificationDetails(
       'pesaflow_balance_channel',
@@ -49,12 +50,12 @@ class LockScreenService {
       await plugin.show(
         id: _notificationId,
         title: 'PesaFlow Balance',
-        body: 'Tsh $formatted',
+        body: formatted,
         notificationDetails: details,
       );
       _hasBalanceNotification = true;
       developer.log(
-        'Balance notification shown: Tsh $formatted',
+        'Balance notification shown: $formatted',
         name: 'LockScreenService',
       );
     } catch (e) {
