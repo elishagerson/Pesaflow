@@ -89,6 +89,12 @@ class TransactionRepository {
       transactions,
     );
     if (transactions.isNotEmpty) {
+      // Trigger budget alert checks for each unique category in the batch
+      // so imported transactions are counted against budgets immediately.
+      final uniqueCategoryIds = transactions.map((t) => t.categoryId).toSet();
+      for (final categoryId in uniqueCategoryIds) {
+        _budgetAlertService?.checkBudgetsAfterTransaction(categoryId);
+      }
       _refreshAnalytics(DateTime.now());
     }
   }

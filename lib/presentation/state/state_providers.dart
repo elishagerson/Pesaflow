@@ -266,10 +266,13 @@ final dataChangesStreamProvider = StreamProvider<int>((ref) {
       .map((_) => DateTime.now().microsecondsSinceEpoch);
 });
 
-final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) {
+final budgetProgressProvider = FutureProvider<List<BudgetWithProgress>>((ref) async {
   ref.watch(_transactionChangesProvider);
   ref.watch(activeBudgetsStreamProvider);
   final repo = ref.watch(budgetRepositoryProvider);
+  // Close any expired periods at runtime so budgets stay correct when the app
+  // remains open across a period boundary (e.g. midnight monthly rollover).
+  await repo.checkAndCloseExpiredPeriods();
   return repo.getActiveBudgetsWithProgress();
 });
 
