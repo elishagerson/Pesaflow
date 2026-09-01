@@ -291,7 +291,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
         if (widget.accounts.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing16),
           DropdownButtonFormField<String>(
-            value: _selectedAccountId,
+            initialValue: _selectedAccountId,
             decoration: context.inputDecoration(
               labelText: 'Assign to Account',
               prefixIcon: const Icon(PesaFlowIcons.wallet, size: 20),
@@ -317,7 +317,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
         if (widget.categories.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing12),
           DropdownButtonFormField<String>(
-            value: _defaultCategoryId,
+            initialValue: _defaultCategoryId,
             decoration: context.inputDecoration(
               labelText: 'Default Category',
               prefixIcon: const Icon(PesaFlowIcons.category, size: 20),

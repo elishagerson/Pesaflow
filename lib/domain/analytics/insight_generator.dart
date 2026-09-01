@@ -146,17 +146,6 @@ class InsightGenerator {
     return insights;
   }
 
-  String _formatAmount(int cents) {
-    final whole = cents ~/ 100;
-    if (whole >= 1000) {
-      final formatted = whole.toString().replaceAllMapped(
-        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-        (match) => '${match[1]},',
-      );
-      return formatted;
-    }
-    return whole.toString();
-  }
 }
 
 class Insight {
