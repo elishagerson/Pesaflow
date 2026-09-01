@@ -622,20 +622,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              tightest.isOverBudget ? PesaFlowIcons.expense : PesaFlowIcons.info,
+                                              tightest.remaining < 0 ? PesaFlowIcons.expense : PesaFlowIcons.info,
                                               size: 14,
-                                              color: tightest.isOverBudget ? theme.colorScheme.error : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                              color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                             ),
                                             const SizedBox(width: kSpacing8),
                                             Expanded(
                                               child: Text(
-                                                tightest.isOverBudget
+                                                tightest.remaining < 0
                                                     ? '${tightest.budget.name} is over budget by ${_formatCompact(tightest.remaining.abs())}'
                                                     : '${tightest.budget.name} is tightest: ${_formatCompact(tightest.remaining)} left',
                                                 style: context.ts(
                                                   12,
                                                   fontWeight: FontWeight.w500,
-                                                  color: tightest.isOverBudget ? theme.colorScheme.error : theme.colorScheme.onSurface,
+                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : theme.colorScheme.onSurface,
                                                 ),
                                               ),
                                             ),
