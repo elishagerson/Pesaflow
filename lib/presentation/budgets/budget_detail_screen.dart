@@ -445,7 +445,7 @@ class BudgetDetailScreen extends ConsumerWidget {
                                     final prefix = rolled > 0 ? '+' : '-';
                                     final label = rolled > 0 ? 'roll' : 'def';
                                     return Text(
-                                      '$prefix Tsh ${rolled.abs() ~/ 100} $label',
+                                      '$prefix ${CurrencyFormatter.formatCents(rolled.abs())} $label',
                                       style: theme.textTheme.labelSmall
                                           ?.copyWith(
                                             color: rolled > 0
@@ -1332,7 +1332,7 @@ class _PeriodRow extends StatelessWidget {
                 ),
                 const SizedBox(height: kSpacing4),
                 Text(
-                  '${(pctUsed * 100).round()}% · Tsh ${period.spent ~/ 100} / ${period.allocated ~/ 100}',
+                  '${(pctUsed * 100).round()}% · ${CurrencyFormatter.formatCents(period.spent)} / ${CurrencyFormatter.formatCents(period.allocated)}',
                   style: context.ts(
                     10,
                     fontWeight: FontWeight.w500,
