@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:developer' as developer;
 
@@ -558,8 +559,7 @@ class SmsProcessor {
       }
 
       // 9. Trigger local notification
-      final amountFormatted =
-          'Tsh ${(sms.amount / 100).toStringAsFixed(0).replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}';
+      final amountFormatted = CurrencyFormatter.formatCents(sms.amount);
       final isCredit = sms.type == 'income' || sms.type == 'loan';
       final alertTitle = isAutoApproved
           ? 'Transaction Auto-Logged'

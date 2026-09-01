@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:pesaflow/core/utils/csv_parser.dart';
+import 'package:pesaflow/core/utils/currency_formatter.dart';
 import 'package:pesaflow/core/utils/spacing.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/data/database/app_database.dart';
@@ -290,7 +291,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
         if (widget.accounts.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing16),
           DropdownButtonFormField<String>(
-            initialValue: _selectedAccountId,
+            value: _selectedAccountId,
             decoration: context.inputDecoration(
               labelText: 'Assign to Account',
               prefixIcon: const Icon(PesaFlowIcons.wallet, size: 20),
@@ -316,7 +317,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
         if (widget.categories.isNotEmpty && result.transactions.isNotEmpty) ...[
           const SizedBox(height: kSpacing12),
           DropdownButtonFormField<String>(
-            initialValue: _defaultCategoryId,
+            value: _defaultCategoryId,
             decoration: context.inputDecoration(
               labelText: 'Default Category',
               prefixIcon: const Icon(PesaFlowIcons.category, size: 20),
@@ -344,6 +345,9 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
           const SizedBox(height: kSpacing8),
           ...List.generate(previewCount, (i) {
             final tx = result.transactions[i];
+            final txColor = tx.type == 'income'
+                ? context.appColors.incomeColor
+                : context.appColors.expenseColor;
             return Padding(
               padding: const EdgeInsets.only(bottom: kSpacing4),
               child: Container(
@@ -361,9 +365,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                           ? PesaFlowIcons.arrowDown
                           : PesaFlowIcons.arrowUp,
                       size: 16,
-                      color: tx.type == 'income'
-                          ? context.appColors.incomeColor
-                          : context.appColors.expenseColor,
+                      color: txColor,
                     ),
                     const SizedBox(width: kSpacing8),
                     Expanded(
@@ -387,8 +389,8 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
                       ),
                     ),
                     Text(
-                      'Tsh ${(tx.amount / 100).toStringAsFixed(0)}',
-                      style: context.ts(12, fontWeight: FontWeight.bold),
+                      CurrencyFormatter.formatCents(tx.amount),
+                      style: context.ts(12, color: txColor, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
