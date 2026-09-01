@@ -87,7 +87,11 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
         .watch();
   }
 
-  /// Calculates total spent for a category within a date range from transactions.
+  /// Calculates total spent for a category (and its sub-categories) within a
+  /// date range from transactions.
+  ///
+  /// Uses `COALESCE(smsTimestamp, createdAt)` so SMS-ingested transactions are
+  /// bucketed by their actual SMS date rather than the processing timestamp.
   ///
   /// [start] is inclusive; [end] is treated as the inclusive last day of the
   /// range, so transactions on [end] itself are counted (upper bound is
@@ -97,12 +101,22 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     DateTime start,
     DateTime end,
   ) async {
+    // Include transactions assigned to child categories of this budget's
+    // category so sub-category spending rolls up into the parent budget.
+    final childIds = await _getChildCategoryIds(categoryId);
+    final allCategoryIds = [categoryId, ...childIds];
+
+    final effectiveDate = coalesce<DateTime>([
+      transactions.smsTimestamp,
+      transactions.createdAt,
+    ]);
+
     final query = selectOnly(transactions)
       ..addColumns([transactions.amount.sum()])
       ..where(
-        transactions.categoryId.equals(categoryId) &
-            transactions.createdAt.isBiggerOrEqual(Constant(start)) &
-            transactions.createdAt.isSmallerThan(
+        transactions.categoryId.isIn(allCategoryIds) &
+            effectiveDate.isBiggerOrEqual(Constant(start)) &
+            effectiveDate.isSmallerThan(
               Constant(end.add(const Duration(days: 1))),
             ) &
             (transactions.type.equals('expense') |
@@ -268,7 +282,11 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     return result;
   }
 
-  /// Gets daily spending amounts for a budget's category within a date range.
+  /// Gets daily spending amounts for a budget's category (and sub-categories)
+  /// within a date range.
+  ///
+  /// Uses `COALESCE(smsTimestamp, createdAt)` so SMS-ingested transactions are
+  /// bucketed by their actual SMS date.
   Future<List<MapEntry<DateTime, int>>> getDailySpendForBudget(
     String budgetId,
     DateTime periodStart,
@@ -277,13 +295,22 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     final budget = await getBudgetById(budgetId);
     if (budget == null) return [];
 
+    final childIds = await _getChildCategoryIds(budget.categoryId);
+    final allCategoryIds = [budget.categoryId, ...childIds];
+
     final txns =
         await (select(transactions)
               ..where(
                 (t) =>
-                    t.categoryId.equals(budget.categoryId) &
-                    t.createdAt.isBiggerOrEqual(Constant(periodStart)) &
-                    t.createdAt.isSmallerThan(
+                    t.categoryId.isIn(allCategoryIds) &
+                    coalesce<DateTime>([
+                      t.smsTimestamp,
+                      t.createdAt,
+                    ]).isBiggerOrEqual(Constant(periodStart)) &
+                    coalesce<DateTime>([
+                      t.smsTimestamp,
+                      t.createdAt,
+                    ]).isSmallerThan(
                       Constant(periodEnd.add(const Duration(days: 1))),
                     ) &
                     (t.type.equals('expense') |
@@ -295,10 +322,12 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
 
     final dailyMap = <DateTime, int>{};
     for (final t in txns) {
+      // Use smsTimestamp for day bucketing when available
+      final effectiveDate = t.smsTimestamp ?? t.createdAt;
       final day = DateTime(
-        t.createdAt.year,
-        t.createdAt.month,
-        t.createdAt.day,
+        effectiveDate.year,
+        effectiveDate.month,
+        effectiveDate.day,
       );
       dailyMap[day] = (dailyMap[day] ?? 0) + t.amount;
     }
@@ -317,5 +346,13 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
     final budget = await getBudgetById(budgetId);
     if (budget == null) return 0;
     return getSpentForCategoryInPeriod(budget.categoryId, start, end);
+  }
+
+  /// Returns the IDs of all categories whose [parentId] matches [categoryId].
+  Future<List<String>> _getChildCategoryIds(String categoryId) async {
+    final children = await (select(categories)
+          ..where((c) => c.parentId.equals(categoryId)))
+        .get();
+    return children.map((c) => c.id).toList();
   }
 }
