@@ -1243,6 +1243,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         ),
         ),
       ),
+      ),
     );
   }
 }
