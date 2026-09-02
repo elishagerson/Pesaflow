@@ -39,6 +39,8 @@ Future<void> showMarkRecurringPaymentSheet({
     if (cat != null) categoryName = cat.name;
   }
 
+  if (!context.mounted) return;
+
   await showSpringSheet(
     context,
     isScrollControlled: true,
@@ -268,6 +270,7 @@ Future<void> showMarkRecurringPaymentSheet({
                                           txRepo: txRepo,
                                           recurring: recurring,
                                           deductBalance: deductBalance,
+                                          amountCents: amountCents,
                                         );
                                         if (context.mounted) {
                                           context.pop();
@@ -355,13 +358,14 @@ Future<void> _confirmMarkPaid({
   required TransactionRepository txRepo,
   required RecurringTransaction recurring,
   required bool deductBalance,
+  required int amountCents,
 }) async {
   final now = DateTime.now();
   final transaction = Transaction(
     id: const Uuid().v4(),
     accountId: recurring.accountId,
     categoryId: recurring.categoryId ?? '',
-    amount: recurring.amount,
+    amount: amountCents,
     type: recurring.type,
     description: recurring.description ?? 'Recurring ${recurring.type}',
     source: 'manual',
@@ -373,7 +377,7 @@ Future<void> _confirmMarkPaid({
   await repo.recordMarkedPayment(
     transaction: transaction,
     recurringId: recurring.id,
-    amount: recurring.amount,
+    amount: amountCents,
     paidAt: now,
     deductBalance: deductBalance,
   );
