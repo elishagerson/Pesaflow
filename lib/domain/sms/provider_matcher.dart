@@ -73,7 +73,8 @@ class ProviderMatcher {
       if (upperBody.contains('NMB KARIBU') ||
           upperBody.contains('NMB:') ||
           upperBody.contains('KIMETUMWA') ||
-          upperBody.contains('KIMEWEKWA')) {
+          upperBody.contains('KIMEWEKWA') ||
+          upperBody.contains('TUMEKUTOA')) {
         return 'NMB_Bank';
       }
       if (upperBody.contains('CRDB:')) {
