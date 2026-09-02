@@ -174,15 +174,32 @@ class AutoBudgetConfig {
     'period': period,
   };
 
-  factory AutoBudgetConfig.fromJson(Map<String, dynamic> json) =>
-    AutoBudgetConfig(
-      enabled: json['enabled'] as bool? ?? false,
-      incomeCategoryIds: (json['incomeCategoryIds'] as List?)?.cast<String>() ?? [],
-      groups: (json['groups'] as List?)
+  factory AutoBudgetConfig.fromJson(Map<String, dynamic> json) {
+    bool enabled = false;
+    try {
+      enabled = json['enabled'] as bool? ?? false;
+    } catch (_) {}
+    List<String> incomeCategoryIds = [];
+    try {
+      incomeCategoryIds = (json['incomeCategoryIds'] as List?)?.cast<String>() ?? [];
+    } catch (_) {}
+    List<BudgetGroupConfig> groups = [];
+    try {
+      groups = (json['groups'] as List?)
           ?.map((g) => BudgetGroupConfig.fromJson(g as Map<String, dynamic>))
-          .toList() ?? [],
-      period: json['period'] as String? ?? 'monthly',
+          .toList() ?? [];
+    } catch (_) {}
+    String period = 'monthly';
+    try {
+      period = json['period'] as String? ?? 'monthly';
+    } catch (_) {}
+    return AutoBudgetConfig(
+      enabled: enabled,
+      incomeCategoryIds: incomeCategoryIds,
+      groups: groups,
+      period: period,
     );
+  }
 
   static AutoBudgetConfig defaults() {
     const needs = [
@@ -316,7 +333,7 @@ class AutoBudgetService {
       map[b.categoryId] = _PeriodInfo(
         budgetId: b.id,
         categoryId: b.categoryId,
-        currentPeriodId: coversMonth ? period!.id : null,
+        currentPeriodId: coversMonth ? period.id : null,
       );
     }
     return map;

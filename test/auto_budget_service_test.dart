@@ -232,10 +232,11 @@ void main() {
         ],
       );
       final errors = config.validationErrors;
-      expect(errors.length, 3);
-      expect(errors[0], contains('50.0%'));
-      expect(errors[1], contains('60.0%'));
-      expect(errors[2], contains('has no sub-allocations'));
+      expect(errors.length, 4);
+      expect(errors[0], contains('80.0%'));
+      expect(errors[1], contains('50.0%'));
+      expect(errors[2], contains('60.0%'));
+      expect(errors[3], contains('has no sub-allocations'));
     });
 
     test('serializes and deserializes defaults', () {
