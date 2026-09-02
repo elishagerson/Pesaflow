@@ -95,7 +95,7 @@ class NmbBankParser implements SmsParser {
         final ref = _extractReference(text);
         final bal = _extractBalance(text);
         // Extract fee from SMS body; fallback to NMB EFT outward tariff
-        final fee = _extractFee(text) ?? 200000;
+        final fee = _extractFee(text);
 
         return SmsParsed(
           amount: amt,
