@@ -704,10 +704,10 @@ class _SavingsGoalDetailScreenState
         },
         onDelete: () async {
           await ref.read(savingsGoalRepositoryProvider).deleteSavingsGoal(id);
-          if (context.mounted) {
+          if (mounted) {
             ref.invalidate(savingsGoalsStreamProvider);
             ref.invalidate(savingsGoalsTotalSavedProvider);
-            context.pop();
+            if (context.mounted) context.pop();
           }
         },
       );
