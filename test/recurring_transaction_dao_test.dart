@@ -286,7 +286,6 @@ void main() {
     });
 
     test('recordPayment sets status to cancelled when nextDate would pass endDate', () async {
-      final today = DateTime(2025, 7, 1);
       final endDate = DateTime(2025, 7, 15);
       final r = makeRecurring(
         nextDate: DateTime(2025, 7, 10),
