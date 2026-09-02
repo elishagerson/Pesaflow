@@ -27,6 +27,17 @@ Future<void> showMarkRecurringPaymentSheet({
 
   bool deductBalance = true;
   bool isProcessing = false;
+  int amountCents = recurring.amount;
+  final amountController = TextEditingController(
+    text: CurrencyFormatter.formatCents(recurring.amount),
+  );
+  final categoryDao = ref.read(categoryDaoProvider);
+
+  String categoryName = 'Not set';
+  if (recurring.categoryId != null && recurring.categoryId!.isNotEmpty) {
+    final cat = await categoryDao.getCategoryById(recurring.categoryId!);
+    if (cat != null) categoryName = cat.name;
+  }
 
   await showSpringSheet(
     context,
@@ -107,6 +118,43 @@ Future<void> showMarkRecurringPaymentSheet({
                             ),
                           ),
                           const SizedBox(height: kSpacing14),
+                          // Editable amount
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: kSpacing14),
+                            child: TextField(
+                              controller: amountController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              style: theme.textTheme.bodyMedium,
+                              decoration: context.inputDecoration(
+                                labelText: 'Pay amount',
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 12,
+                                    right: 8,
+                                    top: 12,
+                                    bottom: 12,
+                                  ),
+                                  child: Text(
+                                    'TSh',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onChanged: (val) {
+                                final parsed = int.tryParse(val);
+                                if (parsed != null) {
+                                  amountCents = parsed;
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
                             theme: theme,
                             label: 'Description',
@@ -124,9 +172,7 @@ Future<void> showMarkRecurringPaymentSheet({
                           _buildSummaryRow(
                             theme: theme,
                             label: 'Category',
-                            value: recurring.categoryId != null
-                                ? 'Category set'
-                                : 'Not set',
+                            value: categoryName,
                           ),
                           const SizedBox(height: kSpacing14),
                           _buildSummaryRow(
