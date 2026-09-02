@@ -145,6 +145,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               amount: amountCents,
               rollover: _rollover,
               rolloverType: _rolloverType,
+              rolloverCap: rolloverCap,
               notificationThreshold: _threshold,
             ),
           );

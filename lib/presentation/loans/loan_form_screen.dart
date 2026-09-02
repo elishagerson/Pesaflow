@@ -258,7 +258,8 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
     final activeTrackerId = ref.read(activeTrackerIdProvider);
 
     if (_existingLoan != null) {
-      final updatedRemaining = amountCents.clamp(0, _existingLoan!.remaining);
+      final paid = _existingLoan!.amount - _existingLoan!.remaining;
+      final updatedRemaining = (amountCents - paid).clamp(0, amountCents);
       final updatedLoan = _existingLoan!.copyWith(
         amount: amountCents,
         remaining: updatedRemaining,

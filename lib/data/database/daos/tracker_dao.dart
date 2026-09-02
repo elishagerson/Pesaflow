@@ -105,7 +105,25 @@ class TrackerDao extends DatabaseAccessor<AppDatabase> with _$TrackerDaoMixin {
         )..where((t) => t.trackerId.equals(id))).go();
       }
 
-      // 5. Finally delete the tracker
+      // 5. Delete loans and their linked transactions
+      final loansList = await (db.select(
+        db.loans,
+      )..where((t) => t.trackerId.equals(id))).get();
+      for (final loan in loansList) {
+        await (db.delete(
+          db.transactions,
+        )..where((t) => t.loanId.equals(loan.id))).go();
+      }
+      await (db.delete(
+        db.loans,
+      )..where((t) => t.trackerId.equals(id))).go();
+
+      // 6. Delete recurring transactions
+      await (db.delete(
+        db.recurringTransactions,
+      )..where((t) => t.trackerId.equals(id))).go();
+
+      // 7. Finally delete the tracker
       await (db.delete(db.trackers)..where((t) => t.id.equals(id))).go();
     });
   }
