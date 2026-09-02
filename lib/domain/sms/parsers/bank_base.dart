@@ -539,12 +539,16 @@ class NbcBankParser implements SmsParser {
             '${timestamp.day.toString().padLeft(2, '0')}'
             '${timestamp.month.toString().padLeft(2, '0')}'
             '${timestamp.year}';
+        final timeStr =
+            '${timestamp.hour.toString().padLeft(2, '0')}'
+            '${timestamp.minute.toString().padLeft(2, '0')}'
+            '${timestamp.second.toString().padLeft(2, '0')}';
 
         return SmsParsed(
           amount: amt,
           type: 'expense',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-$dateStr-$amt',
+          reference: 'NBC-$dateStr-$timeStr-$amt',
           provider: 'NBC_Bank',
           balanceAfter: bal,
           timestamp: timestamp,
@@ -569,12 +573,16 @@ class NbcBankParser implements SmsParser {
             '${timestamp.day.toString().padLeft(2, '0')}'
             '${timestamp.month.toString().padLeft(2, '0')}'
             '${timestamp.year}';
+        final timeStr =
+            '${timestamp.hour.toString().padLeft(2, '0')}'
+            '${timestamp.minute.toString().padLeft(2, '0')}'
+            '${timestamp.second.toString().padLeft(2, '0')}';
 
         return SmsParsed(
           amount: amt,
           type: 'income',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-$dateStr-$amt',
+          reference: 'NBC-$dateStr-$timeStr-$amt',
           provider: 'NBC_Bank',
           balanceAfter: bal,
           timestamp: timestamp,

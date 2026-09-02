@@ -338,8 +338,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
             t.provider.equals(provider) &
             t.type.equals(type) &
             t.amount.equals(amount) &
-            t.createdAt.isBiggerOrEqual(Constant(start)) &
-            t.createdAt.isSmallerOrEqual(Constant(end)),
+            t.smsTimestamp.isBiggerOrEqual(Constant(start)) &
+            t.smsTimestamp.isSmallerOrEqual(Constant(end)),
       );
     return query.get();
   }
