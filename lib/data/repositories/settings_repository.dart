@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../database/daos/settings_dao.dart';
 import '../database/database_providers.dart';
 
@@ -21,6 +22,8 @@ class SettingsRepository {
 
   Future<void> markOnboardingComplete() async {
     await _settingsDao.setSetting('onboarding_complete', 'true');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_complete', true);
   }
 
   Future<String> getThemeMode() async {
