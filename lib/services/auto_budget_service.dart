@@ -18,6 +18,40 @@ final autoBudgetServiceProvider = Provider<AutoBudgetService>((ref) {
   return AutoBudgetService(budgetRepo, budgetDao, categoryDao, settingsRepo);
 });
 
+/// Distributes [total] across [percentages] using largest-remainder method
+/// so rounding errors never lose or over-allocate money.
+List<int> distributeAmount(int total, List<double> percentages) {
+  if (percentages.isEmpty) return [];
+  final n = percentages.length;
+  final raw = <int>[];
+  final remainders = <int>[];
+  var sum = 0;
+
+  for (var i = 0; i < n; i++) {
+    final exact = total * percentages[i];
+    final floored = exact.floor();
+    raw.add(floored);
+    remainders.add(i);
+    sum += floored;
+  }
+
+  var remainder = total - sum;
+  remainders.sort((a, b) {
+    final ra = total * percentages[a] - raw[a];
+    final rb = total * percentages[b] - raw[b];
+    return rb.compareTo(ra);
+  });
+
+  var idx = 0;
+  while (remainder > 0 && idx < n) {
+    raw[remainders[idx]]++;
+    remainder--;
+    idx++;
+  }
+
+  return raw;
+}
+
 class SubAllocation {
   final String name;
   final double percentage;
@@ -62,6 +96,12 @@ class BudgetGroupConfig {
   double get totalSubPercentage =>
       subAllocations.fold(0, (sum, s) => sum + s.percentage);
 
+  bool get isValid {
+    if (subAllocations.isEmpty) return false;
+    final diff = (totalSubPercentage - 1.0).abs();
+    return diff < 0.001;
+  }
+
   Map<String, dynamic> toJson() => {
     'name': name,
     'percentage': percentage,
@@ -90,6 +130,42 @@ class AutoBudgetConfig {
     required this.groups,
     this.period = 'monthly',
   });
+
+  double get totalGroupPercentage =>
+      groups.fold(0, (sum, g) => sum + g.percentage);
+
+  bool get isValid {
+    if (groups.isEmpty) return false;
+    final groupDiff = (totalGroupPercentage - 1.0).abs();
+    if (groupDiff >= 0.001) return false;
+    return groups.every((g) => g.isValid);
+  }
+
+  List<String> get validationErrors {
+    final errors = <String>[];
+    if (groups.isEmpty) {
+      errors.add('No budget groups defined');
+      return errors;
+    }
+    final groupDiff = (totalGroupPercentage - 1.0).abs();
+    if (groupDiff >= 0.001) {
+      errors.add(
+        'Group percentages sum to ${(totalGroupPercentage * 100).toStringAsFixed(1)}%, expected 100%',
+      );
+    }
+    for (final g in groups) {
+      if (g.subAllocations.isEmpty) {
+        errors.add('${g.name} has no sub-allocations');
+      }
+      final subDiff = (g.totalSubPercentage - 1.0).abs();
+      if (subDiff >= 0.001) {
+        errors.add(
+          '${g.name} sub-allocations sum to ${(g.totalSubPercentage * 100).toStringAsFixed(1)}%, expected 100%',
+        );
+      }
+    }
+    return errors;
+  }
 
   Map<String, dynamic> toJson() => {
     'enabled': enabled,
@@ -140,6 +216,19 @@ class AutoBudgetConfig {
   }
 }
 
+/// Pre-fetched period data keyed by budget ID.
+class _PeriodInfo {
+  final String budgetId;
+  final String categoryId;
+  final String? currentPeriodId;
+
+  const _PeriodInfo({
+    required this.budgetId,
+    required this.categoryId,
+    this.currentPeriodId,
+  });
+}
+
 class AutoBudgetService {
   final BudgetRepository _budgetRepo;
   final BudgetDao _budgetDao;
@@ -159,13 +248,24 @@ class AutoBudgetService {
     final json = await _settingsRepo.getSetting(_configKey);
     if (json == null) return AutoBudgetConfig.defaults();
     try {
-      return AutoBudgetConfig.fromJson(jsonDecode(json));
+      final config = AutoBudgetConfig.fromJson(jsonDecode(json));
+      if (!config.isValid) {
+        developer.log(
+          'Auto-budget config invalid, using defaults: ${config.validationErrors}',
+          name: 'AutoBudgetService',
+        );
+        return AutoBudgetConfig.defaults();
+      }
+      return config;
     } catch (e) {
       return AutoBudgetConfig.defaults();
     }
   }
 
   Future<void> saveConfig(AutoBudgetConfig config) async {
+    if (!config.isValid) {
+      throw ArgumentError('Invalid config: ${config.validationErrors}');
+    }
     await _settingsRepo.setSetting(_configKey, jsonEncode(config.toJson()));
   }
 
@@ -190,15 +290,36 @@ class AutoBudgetService {
     return map;
   }
 
-  Future<List<SubAllocation>> _resolveSubAllocations(
+  List<SubAllocation> _resolveSubAllocations(
     List<SubAllocation> configured,
     Map<String, String> nameToId,
-  ) async {
+  ) {
     return configured.map((sub) {
       if (sub.categoryId != null) return sub;
       final id = nameToId[sub.name.toLowerCase()];
       return sub.copyWith(categoryId: id);
     }).toList();
+  }
+
+  /// Pre-fetches period data for all active budgets in a single query,
+  /// returning a map of categoryId → _PeriodInfo.
+  Future<Map<String, _PeriodInfo>> _buildPeriodMap(
+    List<Budget> budgets,
+    DateTime monthStart,
+  ) async {
+    final map = <String, _PeriodInfo>{};
+    for (final b in budgets) {
+      final period = await _budgetDao.getCurrentPeriod(b.id);
+      final coversMonth = period != null &&
+          period.periodStart.isBefore(monthStart.add(const Duration(days: 1))) &&
+          period.periodEnd.isAfter(monthStart.subtract(const Duration(days: 1)));
+      map[b.categoryId] = _PeriodInfo(
+        budgetId: b.id,
+        categoryId: b.categoryId,
+        currentPeriodId: coversMonth ? period!.id : null,
+      );
+    }
+    return map;
   }
 
   Future<void> checkAndCreateAutoBudgets(Transaction transaction) async {
@@ -218,42 +339,36 @@ class AutoBudgetService {
       final now = transaction.createdAt;
       final startDate = DateTime(now.year, now.month, 1);
       final existingBudgets = await _budgetDao.getAllActiveBudgets();
+      final periodMap = await _buildPeriodMap(existingBudgets, startDate);
 
       for (final group in config.groups) {
+        final groupPercentages = group.subAllocations
+            .map((s) => s.percentage)
+            .toList();
+        final resolvedSubs = _resolveSubAllocations(group.subAllocations, nameToId);
         final groupAmount = (amountCents * group.percentage).round();
         if (groupAmount <= 0) continue;
 
-        final resolvedSubs = await _resolveSubAllocations(
-          group.subAllocations,
-          nameToId,
-        );
+        final subAmounts = distributeAmount(groupAmount, groupPercentages);
 
-        for (final sub in resolvedSubs) {
+        for (var i = 0; i < resolvedSubs.length; i++) {
+          final sub = resolvedSubs[i];
           if (sub.categoryId == null) continue;
-          final subAmount = (groupAmount * sub.percentage).round();
+          final subAmount = subAmounts[i];
           if (subAmount <= 0) continue;
 
-          Budget? existing;
-          for (final b in existingBudgets) {
-            if (b.categoryId == sub.categoryId) {
-              final period = await _budgetDao.getCurrentPeriod(b.id);
-              if (period != null &&
-                  period.periodStart.isBefore(
-                      startDate.add(const Duration(days: 1))) &&
-                  period.periodEnd.isAfter(
-                      startDate.subtract(const Duration(days: 1)))) {
-                existing = b;
-                break;
-              }
-            }
-          }
+          final info = periodMap[sub.categoryId];
+          final existingPeriodId = info?.currentPeriodId;
 
-          if (existing != null) {
+          if (existingPeriodId != null) {
+            final budget = existingBudgets.firstWhere(
+              (b) => b.id == info!.budgetId,
+            );
             await _budgetDao.updateBudget(
-              existing.copyWith(amount: subAmount),
+              budget.copyWith(amount: subAmount),
             );
             await _budgetDao.updateCurrentPeriodAllocated(
-              existing.id,
+              budget.id,
               subAmount,
             );
           } else {
