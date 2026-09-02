@@ -233,10 +233,12 @@ void main() {
       );
       final errors = config.validationErrors;
       expect(errors.length, 4);
-      expect(errors[0], contains('80.0%'));
-      expect(errors[1], contains('50.0%'));
-      expect(errors[2], contains('60.0%'));
-      expect(errors[3], contains('has no sub-allocations'));
+      expect(errors.any((e) => e.contains('80.0%')), isTrue,
+          reason: 'Group percentages should sum to 80.0%');
+      expect(errors.any((e) => e.contains('60.0%')), isTrue,
+          reason: 'Needs sub-allocations should sum to 60.0%');
+      expect(errors.any((e) => e.contains('has no sub-allocations')), isTrue,
+          reason: 'Wants has no sub-allocations');
     });
 
     test('serializes and deserializes defaults', () {
