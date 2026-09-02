@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pesaflow/core/utils/pesaflow_icons.dart';
@@ -145,7 +146,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
               amount: amountCents,
               rollover: _rollover,
               rolloverType: _rolloverType,
-              rolloverCap: rolloverCap,
+              rolloverCap: Value(rolloverCap),
               notificationThreshold: _threshold,
             ),
           );

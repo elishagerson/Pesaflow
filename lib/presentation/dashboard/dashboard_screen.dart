@@ -614,7 +614,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     return Padding(
                                       padding: const EdgeInsets.fromLTRB(kSpacing20, kSpacing12, kSpacing20, 0),
                                       child: TactileSpringContainer(
-                                        onTap: () => context.go('/budgets'),
+                                        onTap: () => context.push('/budgets'),
                                         child: GlassCard(
                                           padding: const EdgeInsets.symmetric(horizontal: kSpacing14, vertical: kSpacing12),
                                           child: Row(
@@ -692,7 +692,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       child: CategoryBudgetCard(
                                         budgetProgress: budgets[index],
                                         onTap: () {
-                                          context.go('/budgets');
+                                          context.push('/budgets');
                                         },
                                       ),
                                     );
@@ -721,7 +721,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     ),
                                   ),
                                   TactileSpringContainer(
-                                    onTap: () => context.go('/transactions'),
+                                    onTap: () => context.push('/transactions'),
                                     child: Text(
                                       'See All',
                                       style: context.ts(
@@ -909,7 +909,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                   height: kSpacing20,
                                                 ),
                                                 TactileSpringContainer(
-                                                  onTap: () => context.go(
+                                                  onTap: () => context.push(
                                                     '/transactions/add',
                                                   ),
                                                   child: Container(
