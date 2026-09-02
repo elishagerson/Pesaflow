@@ -22,7 +22,7 @@ import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/presentation/recurring/widgets/mark_recurring_payment_sheet.dart';
 
 /// Filter options for the recurring flows list.
-enum _RecurringFilter { all, expenses, income }
+enum _RecurringFilter { all, expenses, income, transfers }
 
 class RecurringTransactionListScreen extends ConsumerStatefulWidget {
   const RecurringTransactionListScreen({super.key});
@@ -43,6 +43,8 @@ class _RecurringTransactionListScreenState
         items.where((r) => r.type == 'expense').toList(),
       _RecurringFilter.income =>
         items.where((r) => r.type == 'income').toList(),
+      _RecurringFilter.transfers =>
+        items.where((r) => r.type == 'transfer').toList(),
     };
   }
 
@@ -234,17 +236,31 @@ class _RecurringTransactionListScreenState
                                             child: Dismissible(
                                               key: ValueKey(sorted[i].id),
                                               direction:
-                                                  DismissDirection.endToStart,
-                                              confirmDismiss: (_) async {
-                                                showMarkRecurringPaymentSheet(
-                                                  context: context,
-                                                  ref: ref,
-                                                  recurring: sorted[i],
-                                                  accountName:
-                                                      accountNames[sorted[i]
-                                                          .accountId] ??
-                                                      'Unknown',
-                                                );
+                                                  DismissDirection.horizontal,
+                                              confirmDismiss: (direction) async {
+                                                if (direction == DismissDirection.endToStart) {
+                                                  showMarkRecurringPaymentSheet(
+                                                    context: context,
+                                                    ref: ref,
+                                                    recurring: sorted[i],
+                                                    accountName:
+                                                        accountNames[sorted[i]
+                                                            .accountId] ??
+                                                        'Unknown',
+                                                  );
+                                                } else {
+                                                  await ref
+                                                      .read(recurringTransactionRepositoryProvider)
+                                                      .toggleStatus(sorted[i].id);
+                                                  if (context.mounted) {
+                                                    final newStatus = sorted[i].status == 'active' ? 'paused' : 'active';
+                                                    CustomToast.show(
+                                                      context,
+                                                      message: 'Recurring ${newStatus == 'paused' ? 'paused' : 'resumed'}',
+                                                      type: ToastType.info,
+                                                    );
+                                                  }
+                                                }
                                                 return false;
                                               },
                                               background: Container(
@@ -272,6 +288,47 @@ class _RecurringTransactionListScreenState
                                                     ),
                                                     Text(
                                                       'Mark Paid',
+                                                      style: theme
+                                                          .textTheme
+                                                          .labelSmall
+                                                          ?.copyWith(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              secondaryBackground: Container(
+                                                decoration: BoxDecoration(
+                                                  color: sorted[i].status == 'active'
+                                                      ? Colors.orange
+                                                      : context.appColors.incomeColor,
+                                                ),
+                                                alignment:
+                                                    Alignment.centerLeft,
+                                                padding: const EdgeInsets.only(
+                                                  left: kSpacing24,
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      sorted[i].status == 'active'
+                                                          ? PesaFlowIcons.pause
+                                                          : PesaFlowIcons.success,
+                                                      color: Colors.white,
+                                                      size: 24,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: kSpacing4,
+                                                    ),
+                                                    Text(
+                                                      sorted[i].status == 'active'
+                                                          ? 'Pause'
+                                                          : 'Resume',
                                                       style: theme
                                                           .textTheme
                                                           .labelSmall
@@ -508,6 +565,7 @@ class _RecurringTransactionListScreenState
     final allCount = allRecurring.length;
     final expenseCount = allRecurring.where((r) => r.type == 'expense').length;
     final incomeCount = allRecurring.where((r) => r.type == 'income').length;
+    final transferCount = allRecurring.where((r) => r.type == 'transfer').length;
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -529,6 +587,7 @@ class _RecurringTransactionListScreenState
             _RecurringFilter.expenses,
           ),
           _filterTab(theme, 'Income', incomeCount, _RecurringFilter.income),
+          _filterTab(theme, 'Transfer', transferCount, _RecurringFilter.transfers),
         ],
       ),
     );
