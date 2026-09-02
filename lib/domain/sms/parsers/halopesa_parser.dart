@@ -91,6 +91,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -117,6 +118,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -143,6 +145,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -169,6 +172,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -195,6 +199,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -221,6 +226,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -247,6 +253,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -274,6 +281,7 @@ class HalopesaParser implements SmsParser {
           reference: ref,
           provider: 'Halopesa_TZ',
           balanceAfter: bal,
+          feeAmount: _extractFee(text),
           timestamp: timestamp,
           rawSmsBody: text,
         );
