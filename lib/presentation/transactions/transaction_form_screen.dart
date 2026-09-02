@@ -399,6 +399,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                     ? null
                                     : () {
                                         setState(() {
+                                          _isDirty = true;
                                           if (isDestination) {
                                             _selectedDestinationAccountId =
                                                 account.id;
@@ -634,8 +635,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             initialType: _transactionType,
                           );
                           if (newCat != null) {
-                            _lastCategoryByType[_transactionType] = newCat.id;
-                            setState(() => _selectedCategoryId = newCat.id);
+                            setState(() {
+                              _isDirty = true;
+                              _lastCategoryByType[_transactionType] = newCat.id;
+                              _selectedCategoryId = newCat.id;
+                            });
                             if (context.mounted) context.pop();
                           }
                         },
@@ -677,6 +681,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       onTap: () {
                         HapticFeedback.lightImpact();
                         setState(() {
+                          _isDirty = true;
                           _lastCategoryByType[_transactionType] = cat.id;
                           _selectedCategoryId = cat.id;
                         });
@@ -893,8 +898,41 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               ? context.appColors.incomeColor
               : context.appColors.transferColor);
 
-    return Scaffold(
-      body: SafeArea(
+    return PopScope(
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await ModernDialog.show<bool>(
+          context: context,
+          title: const Text('Discard Changes?'),
+          titleIcon: PesaFlowIcons.warning,
+          iconColor: Colors.orange,
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to go back?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(false),
+              child: const Text('Keep Editing'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.expenseColor,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              child: const Text('Discard'),
+            ),
+          ],
+        );
+        if (shouldPop == true && context.mounted) {
+          context.pop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
         child: Form(
           key: _formKey,
           child: Column(
