@@ -18,7 +18,6 @@ import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';
 import '../../data/repositories/savings_goal_repository.dart';
 import '../../data/repositories/loan_repository.dart';
-import '../../data/repositories/recurring_transaction_repository.dart';
 import '../../domain/analytics/insight_generator.dart';
 
 class ActiveTrackerIdNotifier extends Notifier<String> {
