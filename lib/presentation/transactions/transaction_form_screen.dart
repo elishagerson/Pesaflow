@@ -22,6 +22,7 @@ import 'package:pesaflow/data/database/app_database.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:pesaflow/presentation/common/widgets/floating_top_bar.dart';
+import 'package:pesaflow/presentation/common/widgets/modern_dialog.dart';
 import 'package:pesaflow/presentation/common/widgets/modern_numpad.dart';
 import 'package:pesaflow/presentation/common/ios/ios_sheet.dart';
 import 'package:pesaflow/data/repositories/settings_repository.dart';
@@ -69,13 +70,21 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   bool _isEditMode = false;
   bool _isSaving = false;
+  bool _isDirty = false;
+  bool _suppressDirtyTracking = false;
   Transaction? _existingTransaction;
 
   @override
   void initState() {
     super.initState();
     _amountController.addListener(() {
-      if (mounted) setState(() {});
+      if (mounted && !_suppressDirtyTracking) setState(() => _isDirty = true);
+    });
+    _descriptionController.addListener(() {
+      if (mounted && !_suppressDirtyTracking) setState(() => _isDirty = true);
+    });
+    _referenceController.addListener(() {
+      if (mounted && !_suppressDirtyTracking) setState(() => _isDirty = true);
     });
     _isEditMode = widget.transactionId != null;
     if (_isEditMode) {
