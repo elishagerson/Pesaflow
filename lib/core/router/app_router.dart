@@ -370,6 +370,14 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
   debugLogDiagnostics: kDebugMode,
+  redirect: (context, state) async {
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+    if (!onboardingComplete && state.matchedLocation != '/onboarding') {
+      return '/onboarding';
+    }
+    return null;
+  },
   routes: <RouteBase>[
     GoRoute(
       path: '/onboarding',
