@@ -1260,9 +1260,45 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
 
-              // Data
+              // Auto-Budget
               StaggeredFadeSlide(
                 index: 3,
+                child: IosListSection(
+                  header: 'Auto-Budget',
+                  rows: [
+                    IosToggleRow(
+                      leading: Icon(
+                        PesaFlowIcons.budgets,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                      title: const Text('Auto-Budget on Income'),
+                      subtitle: const Text(
+                        'Automatically create 50/30/20 budgets when income is logged',
+                      ),
+                      value: ref.watch(autoBudgetEnabledProvider).value ?? false,
+                      onChanged: (val) async {
+                        HapticFeedback.lightImpact();
+                        await ref
+                            .read(settingsRepositoryProvider)
+                            .setSetting('auto_budget_enabled', val.toString());
+                        if (val) {
+                          if (!context.mounted) return;
+                          CustomToast.show(
+                            context,
+                            message: 'Auto-budget enabled — 50/30/20 split',
+                            type: ToastType.success,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              // Data
+              StaggeredFadeSlide(
+                index: 4,
                 child: IosListSection(
                   header: 'Data',
                   rows: [
@@ -1419,7 +1455,7 @@ class SettingsScreen extends ConsumerWidget {
 
               // Debug (dev only)
               StaggeredFadeSlide(
-                index: 4,
+                index: 5,
                 child: IosListSection(
                   header: 'Debug',
                   rows: [

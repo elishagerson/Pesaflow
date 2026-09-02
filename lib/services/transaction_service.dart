@@ -1,23 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pesaflow/data/repositories/transaction_repository.dart';
+import 'package:pesaflow/services/auto_budget_service.dart';
 import 'package:pesaflow/services/budget_alert_service.dart';
 
 final transactionServiceProvider = Provider<TransactionService>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
   final budgetAlertService = ref.watch(budgetAlertServiceProvider);
-  return TransactionService(repo, budgetAlertService);
+  final autoBudgetService = ref.watch(autoBudgetServiceProvider);
+  return TransactionService(repo, budgetAlertService, autoBudgetService);
 });
 
 final transactionServiceNoAlertsProvider = Provider<TransactionService>((ref) {
   final repo = ref.watch(transactionRepositoryProvider);
-  return TransactionService(repo, null);
+  return TransactionService(repo, null, null);
 });
 
 class TransactionService {
   final TransactionRepository _repo;
   final BudgetAlertService? _budgetAlertService;
+  final AutoBudgetService? _autoBudgetService;
 
-  TransactionService(this._repo, this._budgetAlertService);
+  TransactionService(this._repo, this._budgetAlertService, this._autoBudgetService);
 
   Stream<List<dynamic>> watchFilteredTransactions({
     String? accountId,
@@ -52,11 +55,13 @@ class TransactionService {
 
   Future<void> createTransaction(dynamic transaction) async {
     await _repo.createTransaction(transaction);
+    _autoBudgetService?.checkAndCreateAutoBudgets(transaction);
   }
 
   Future<void> createTransactionNoBalanceAdjustment(dynamic transaction) async {
     await _repo.createTransactionNoBalanceAdjustment(transaction);
     _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
+    _autoBudgetService?.checkAndCreateAutoBudgets(transaction);
   }
 
   Future<void> deleteTransaction(String transactionId) {
@@ -95,10 +100,14 @@ class TransactionService {
     String transactionId, {
     String? newCategoryId,
   }) async {
+    final tx = await _repo.getTransactionById(transactionId);
     await _repo.approveReviewedTransaction(
       transactionId,
       newCategoryId: newCategoryId,
     );
+    if (tx != null && tx.transaction.type.toLowerCase() == 'income') {
+      _autoBudgetService?.checkAndCreateAutoBudgets(tx.transaction);
+    }
   }
 
   Future<dynamic> findFuzzyTransferMatch({

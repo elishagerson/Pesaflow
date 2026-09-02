@@ -358,6 +358,11 @@ final smsAutoDeduplicationProvider = StreamProvider<bool>((ref) {
       .map((val) => val == 'true');
 });
 
+final autoBudgetEnabledProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSetting('auto_budget_enabled').map((val) => val == 'true');
+});
+
 final lockScreenBalanceEnabledProvider = StreamProvider<bool>((ref) {
   final repo = ref.watch(settingsRepositoryProvider);
   return repo
