@@ -10,7 +10,6 @@ import '../data/database/database_providers.dart';
 import '../data/repositories/budget_repository.dart';
 import '../data/repositories/settings_repository.dart';
 
-/// Provider for the auto-budget service.
 final autoBudgetServiceProvider = Provider<AutoBudgetService>((ref) {
   final budgetRepo = ref.watch(budgetRepositoryProvider);
   final budgetDao = ref.watch(budgetDaoProvider);
@@ -19,33 +18,66 @@ final autoBudgetServiceProvider = Provider<AutoBudgetService>((ref) {
   return AutoBudgetService(budgetRepo, budgetDao, categoryDao, settingsRepo);
 });
 
-/// Configuration for a single budget group in the auto-budget split.
-class BudgetGroupConfig {
+class SubAllocation {
   final String name;
   final double percentage;
-  final List<String> categoryIds;
+  final String? categoryId;
 
-  const BudgetGroupConfig({
+  const SubAllocation({
     required this.name,
     required this.percentage,
-    required this.categoryIds,
+    this.categoryId,
   });
+
+  SubAllocation copyWith({String? categoryId}) => SubAllocation(
+    name: name,
+    percentage: percentage,
+    categoryId: categoryId ?? this.categoryId,
+  );
 
   Map<String, dynamic> toJson() => {
     'name': name,
     'percentage': percentage,
-    'categoryIds': categoryIds,
+    if (categoryId != null) 'categoryId': categoryId,
+  };
+
+  factory SubAllocation.fromJson(Map<String, dynamic> json) => SubAllocation(
+    name: json['name'] as String,
+    percentage: (json['percentage'] as num).toDouble(),
+    categoryId: json['categoryId'] as String?,
+  );
+}
+
+class BudgetGroupConfig {
+  final String name;
+  final double percentage;
+  final List<SubAllocation> subAllocations;
+
+  const BudgetGroupConfig({
+    required this.name,
+    required this.percentage,
+    required this.subAllocations,
+  });
+
+  double get totalSubPercentage =>
+      subAllocations.fold(0, (sum, s) => sum + s.percentage);
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'percentage': percentage,
+    'subAllocations': subAllocations.map((s) => s.toJson()).toList(),
   };
 
   factory BudgetGroupConfig.fromJson(Map<String, dynamic> json) =>
     BudgetGroupConfig(
       name: json['name'] as String,
       percentage: (json['percentage'] as num).toDouble(),
-      categoryIds: (json['categoryIds'] as List).cast<String>(),
+      subAllocations: (json['subAllocations'] as List?)
+          ?.map((s) => SubAllocation.fromJson(s as Map<String, dynamic>))
+          .toList() ?? [],
     );
 }
 
-/// The auto-budget split configuration.
 class AutoBudgetConfig {
   final bool enabled;
   final List<String> incomeCategoryIds;
@@ -76,33 +108,38 @@ class AutoBudgetConfig {
       period: json['period'] as String? ?? 'monthly',
     );
 
-  /// Default 50/30/20 configuration with placeholder category IDs.
-  /// The actual category IDs are resolved at runtime.
-  static AutoBudgetConfig defaults() => const AutoBudgetConfig(
-    enabled: false,
-    incomeCategoryIds: [], // Resolved at runtime to Salary + Business
-    period: 'monthly',
-    groups: [
-      BudgetGroupConfig(
-        name: 'Needs',
-        percentage: 0.50,
-        categoryIds: [], // Resolved at runtime
-      ),
-      BudgetGroupConfig(
-        name: 'Wants',
-        percentage: 0.30,
-        categoryIds: [], // Resolved at runtime
-      ),
-      BudgetGroupConfig(
-        name: 'Savings & Debt',
-        percentage: 0.20,
-        categoryIds: [], // Resolved at runtime
-      ),
-    ],
-  );
+  static AutoBudgetConfig defaults() {
+    const needs = [
+      SubAllocation(name: 'Rent', percentage: 0.38),
+      SubAllocation(name: 'Food & Groceries', percentage: 0.25),
+      SubAllocation(name: 'Transport', percentage: 0.20),
+      SubAllocation(name: 'Utilities', percentage: 0.10),
+      SubAllocation(name: 'Health', percentage: 0.07),
+    ];
+    const wants = [
+      SubAllocation(name: 'Airtime & Data', percentage: 0.167),
+      SubAllocation(name: 'Shopping', percentage: 0.30),
+      SubAllocation(name: 'Entertainment', percentage: 0.20),
+      SubAllocation(name: 'Other', percentage: 0.333),
+    ];
+    const savings = [
+      SubAllocation(name: 'Savings', percentage: 0.50),
+      SubAllocation(name: 'Loans', percentage: 0.25),
+      SubAllocation(name: 'Other', percentage: 0.25),
+    ];
+    return const AutoBudgetConfig(
+      enabled: false,
+      incomeCategoryIds: [],
+      period: 'monthly',
+      groups: [
+        BudgetGroupConfig(name: 'Mahitaji Muhimu', percentage: 0.50, subAllocations: needs),
+        BudgetGroupConfig(name: 'Matumizi Binafsi', percentage: 0.30, subAllocations: wants),
+        BudgetGroupConfig(name: 'Akiba & Uwekezaji', percentage: 0.20, subAllocations: savings),
+      ],
+    );
+  }
 }
 
-/// Service that manages automatic budget creation when income is logged.
 class AutoBudgetService {
   final BudgetRepository _budgetRepo;
   final BudgetDao _budgetDao;
@@ -118,7 +155,6 @@ class AutoBudgetService {
 
   static const _configKey = 'auto_budget_config';
 
-  /// Loads the auto-budget configuration from settings.
   Future<AutoBudgetConfig> getConfig() async {
     final json = await _settingsRepo.getSetting(_configKey);
     if (json == null) return AutoBudgetConfig.defaults();
@@ -129,15 +165,11 @@ class AutoBudgetService {
     }
   }
 
-  /// Saves the auto-budget configuration to settings.
   Future<void> saveConfig(AutoBudgetConfig config) async {
     await _settingsRepo.setSetting(_configKey, jsonEncode(config.toJson()));
   }
 
-  /// Resolves the default income category IDs (Salary + Business) if none configured.
-  Future<List<String>> _resolveIncomeCategoryIds(
-    List<String> configuredIds,
-  ) async {
+  Future<List<String>> _resolveIncomeCategoryIds(List<String> configuredIds) async {
     if (configuredIds.isNotEmpty) return configuredIds;
     final categories = await _categoryDao.getAllCategories();
     return categories
@@ -149,159 +181,102 @@ class AutoBudgetService {
         .toList();
   }
 
-  /// Resolves the default category group IDs based on category names.
-  /// Maps existing categories to Needs/Wants/Savings groups.
-  Future<Map<String, List<String>>> _resolveGroupCategoryIds() async {
+  Future<Map<String, String>> _buildCategoryNameToIdMap() async {
     final categories = await _categoryDao.getAllCategories();
-    final needs = <String>[];
-    final wants = <String>[];
-    final savings = <String>[];
-
+    final map = <String, String>{};
     for (final cat in categories) {
-      if (cat.type != 'expense') continue;
-      final name = cat.name.toLowerCase();
-      // Needs: essential living expenses
-      if (name == 'food & groceries' ||
-          name == 'rent' ||
-          name == 'utilities' ||
-          name == 'transport' ||
-          name == 'health' ||
-          name == 'airtime & data' ||
-          name == 'education') {
-        needs.add(cat.id);
-      }
-      // Wants: discretionary spending
-      else if (name == 'entertainment' ||
-          name == 'shopping' ||
-          name == 'eating out') {
-        wants.add(cat.id);
-      }
-      // Savings & Debt: financial obligations
-      else if (name == 'savings' ||
-          name == 'loans' ||
-          name == 'bank fees' ||
-          name == 'atm withdrawal' ||
-          name == 'mobile money transfer') {
-        savings.add(cat.id);
-      }
+      map[cat.name.toLowerCase()] = cat.id;
     }
-
-    return {'needs': needs, 'wants': wants, 'savings': savings};
+    return map;
   }
 
-  /// Checks if auto-budget should run for this transaction, and if so,
-  /// creates or updates the budgets for the current period.
-  ///
-  /// Call this after every income transaction is saved.
+  Future<List<SubAllocation>> _resolveSubAllocations(
+    List<SubAllocation> configured,
+    Map<String, String> nameToId,
+  ) async {
+    return configured.map((sub) {
+      if (sub.categoryId != null) return sub;
+      final id = nameToId[sub.name.toLowerCase()];
+      return sub.copyWith(categoryId: id);
+    }).toList();
+  }
+
   Future<void> checkAndCreateAutoBudgets(Transaction transaction) async {
     try {
       final config = await getConfig();
       if (!config.enabled) return;
-
-      // Only auto-budget for income transactions
       if (transaction.type.toLowerCase() != 'income') return;
 
       final incomeCategoryIds = await _resolveIncomeCategoryIds(
         config.incomeCategoryIds,
       );
       if (incomeCategoryIds.isEmpty) return;
-
-      // Check if this income category is in the configured list
       if (!incomeCategoryIds.contains(transaction.categoryId)) return;
 
-      final groupCategoryIds = await _resolveGroupCategoryIds();
+      final nameToId = await _buildCategoryNameToIdMap();
       final amountCents = transaction.amount;
       final now = transaction.createdAt;
       final startDate = DateTime(now.year, now.month, 1);
+      final existingBudgets = await _budgetDao.getAllActiveBudgets();
 
-      // Resolve group category IDs from config or defaults
-      final resolvedGroups = <BudgetGroupConfig>[];
       for (final group in config.groups) {
-        List<String> catIds;
-        if (group.categoryIds.isNotEmpty) {
-          catIds = group.categoryIds;
-        } else {
-          // Resolve from defaults based on group name
-          final name = group.name.toLowerCase();
-          if (name.contains('need')) {
-            catIds = groupCategoryIds['needs'] ?? [];
-          } else if (name.contains('want')) {
-            catIds = groupCategoryIds['wants'] ?? [];
-          } else if (name.contains('saving') || name.contains('debt')) {
-            catIds = groupCategoryIds['savings'] ?? [];
-          } else {
-            catIds = [];
-          }
-        }
-        resolvedGroups.add(BudgetGroupConfig(
-          name: group.name,
-          percentage: group.percentage,
-          categoryIds: catIds,
-        ));
-      }
-
-      // Create or update budgets for each group
-      for (final group in resolvedGroups) {
-        if (group.categoryIds.isEmpty) continue;
-
         final groupAmount = (amountCents * group.percentage).round();
         if (groupAmount <= 0) continue;
 
-        // Use the first category in the group as the budget's categoryId
-        // (the spending calculation already handles sub-categories)
-        final primaryCategoryId = group.categoryIds.first;
+        final resolvedSubs = await _resolveSubAllocations(
+          group.subAllocations,
+          nameToId,
+        );
 
-        // Find existing budget for this category in the current period
-        final existingBudgets = await _budgetDao.getAllActiveBudgets();
-        Budget? existingBudget;
-        for (final b in existingBudgets) {
-          if (b.categoryId == primaryCategoryId) {
-            final period = await _budgetDao.getCurrentPeriod(b.id);
-            if (period != null &&
-                period.periodStart.isBefore(startDate.add(const Duration(days: 1))) &&
-                period.periodEnd.isAfter(startDate.subtract(const Duration(days: 1)))) {
-              existingBudget = b;
-              break;
+        for (final sub in resolvedSubs) {
+          if (sub.categoryId == null) continue;
+          final subAmount = (groupAmount * sub.percentage).round();
+          if (subAmount <= 0) continue;
+
+          Budget? existing;
+          for (final b in existingBudgets) {
+            if (b.categoryId == sub.categoryId) {
+              final period = await _budgetDao.getCurrentPeriod(b.id);
+              if (period != null &&
+                  period.periodStart.isBefore(
+                      startDate.add(const Duration(days: 1))) &&
+                  period.periodEnd.isAfter(
+                      startDate.subtract(const Duration(days: 1)))) {
+                existing = b;
+                break;
+              }
             }
           }
-        }
 
-        if (existingBudget != null) {
-          // Update existing budget's allocated amount
-          final period = await _budgetDao.getCurrentPeriod(existingBudget.id);
-          if (period != null) {
+          if (existing != null) {
             await _budgetDao.updateBudget(
-              existingBudget.copyWith(amount: groupAmount),
+              existing.copyWith(amount: subAmount),
             );
             await _budgetDao.updateCurrentPeriodAllocated(
-              existingBudget.id,
-              groupAmount,
+              existing.id,
+              subAmount,
+            );
+          } else {
+            await _budgetRepo.createBudget(
+              name: '${group.name} — ${sub.name}',
+              categoryId: sub.categoryId!,
+              period: config.period,
+              amount: subAmount,
+              rollover: true,
+              rolloverType: 'all',
+              startDate: startDate,
+              notificationThreshold: 0.8,
             );
           }
-        } else {
-          // Create new budget with first period
-          await _budgetRepo.createBudget(
-            name: '${group.name} (${(group.percentage * 100).round()}%)',
-            categoryId: primaryCategoryId,
-            period: config.period,
-            amount: groupAmount,
-            rollover: true,
-            rolloverType: 'all',
-            startDate: startDate,
-            notificationThreshold: 0.8,
-          );
         }
       }
 
       developer.log(
-        'Auto-budget created for income ${transaction.amount} cents',
+        'Auto-budget created for income TSh ${(amountCents / 100).toStringAsFixed(0)}',
         name: 'AutoBudgetService',
       );
     } catch (e) {
-      developer.log(
-        'Auto-budget error: $e',
-        name: 'AutoBudgetService',
-      );
+      developer.log('Auto-budget error: $e', name: 'AutoBudgetService');
     }
   }
 }
