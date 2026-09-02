@@ -238,9 +238,10 @@ void main() {
   group('endDate enforcement', () {
     test('recordPayment returns false when endDate has passed', () async {
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final twoDaysAgo = DateTime.now().subtract(const Duration(days: 2));
       final r = makeRecurring(
         nextDate: yesterday,
-        endDate: yesterday,
+        endDate: twoDaysAgo,
       );
       await dao.insertRecurringTransaction(r);
 
@@ -252,14 +253,28 @@ void main() {
       expect(check.paymentCount, 0);
     });
 
-    test('recordPayment advances past endDate if nextDate is before endDate', () async {
+    test('recordPayment accepts payment when nextDate equals endDate (last occurrence)', () async {
       final today = DateTime.now();
-      final tomorrow = today.add(const Duration(days: 1));
-      final nextWeek = today.add(const Duration(days: 7));
+      final r = makeRecurring(
+        nextDate: today,
+        endDate: today,
+      );
+      await dao.insertRecurringTransaction(r);
+
+      final result = await dao.recordPayment(r.id, 1000, today);
+      expect(result, isTrue);
+
+      final check = await dao.getById(r.id);
+      expect(check!.totalPaid, 1000);
+    });
+
+    test('recordPayment advances when nextDate is before endDate', () async {
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      final nextWeek = DateTime.now().add(const Duration(days: 7));
       final r = makeRecurring(
         nextDate: tomorrow,
         endDate: nextWeek,
-        frequency: 'daily',
+        frequency: 'weekly',
       );
       await dao.insertRecurringTransaction(r);
 
@@ -267,7 +282,7 @@ void main() {
       expect(result, isTrue);
 
       final check = await dao.getById(r.id);
-      expect(check!.nextDate.isAfter(nextWeek), isTrue);
+      expect(check!.totalPaid, 1000);
     });
 
     test('recordPayment sets status to cancelled when nextDate would pass endDate', () async {

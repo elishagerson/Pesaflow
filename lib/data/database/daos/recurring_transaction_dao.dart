@@ -131,7 +131,10 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
       case 'quarterly':
         return _addMonths(from, 3 * interval);
       case 'yearly':
-        return DateTime(from.year + interval, from.month, from.day);
+        final targetYear = from.year + interval;
+        final lastDay = DateTime(targetYear, from.month + 1, 0).day;
+        final clampedDay = from.day.clamp(1, lastDay);
+        return DateTime(targetYear, from.month, clampedDay);
       default:
         return _addMonths(from, interval);
     }
