@@ -12,6 +12,7 @@ import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/transaction_repository.dart';
 import '../../data/repositories/budget_repository.dart';
 import '../../data/repositories/analytics_repository.dart';
+import '../../data/repositories/recurring_transaction_repository.dart';
 import '../../core/utils/settings_keys.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../data/repositories/tracker_repository.dart';

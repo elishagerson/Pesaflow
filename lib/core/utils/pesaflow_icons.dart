@@ -88,6 +88,7 @@ class PesaFlowIcons {
   static const IconData clear = Icons.clear_rounded;
   static const IconData remove = Icons.remove_rounded;
   static const IconData block = Icons.block_rounded;
+  static const IconData pause = Icons.pause_rounded;
 
   // Content / Actions
   static const IconData copy = Icons.copy_rounded;
