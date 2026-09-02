@@ -87,14 +87,12 @@ class AutoCategorizer {
 
     // 2. Exact match rules based on parsed types
     if (type == 'airtime') {
-      final airtimeCat = getCategoryByName('Airtime');
+      final airtimeCat = getCategoryByName('Airtime & Data');
       return AutoCategorizerResult(category: airtimeCat, confidence: 1.0);
     }
 
     if (type == 'fee') {
-      final feeCat = getCategoryByName(
-        'Taxes',
-      ); // Map telco fees to system taxes/fees
+      final feeCat = getCategoryByName('Bank Fees');
       return AutoCategorizerResult(category: feeCat, confidence: 1.0);
     }
 
@@ -128,9 +126,9 @@ class AutoCategorizer {
       'bolt': 'Transport',
       'taxify': 'Transport',
       'mwendokasi': 'Transport',
-      'travel': 'Travel',
-      'ndege': 'Travel',
-      'flight': 'Travel',
+      'travel': 'Transport',
+      'ndege': 'Transport',
+      'flight': 'Transport',
 
       // Utilities / Rent
       'luku': 'Utilities',
@@ -160,8 +158,8 @@ class AutoCategorizer {
       // Savings / Investments
       'savings': 'Savings',
       'akiba': 'Savings',
-      'investment': 'Investment',
-      'hisa': 'Investment',
+      'investment': 'Savings',
+      'hisa': 'Savings',
     };
 
     // Scan lowercase combined text for these keywords
