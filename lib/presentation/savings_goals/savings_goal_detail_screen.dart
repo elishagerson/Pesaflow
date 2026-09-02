@@ -72,6 +72,15 @@ class _SavingsGoalDetailScreenState
 
     final amountCents = amountVal * 100;
 
+    if (!isDeposit && amountCents > goal.currentAmount) {
+      CustomToast.show(
+        context,
+        message: 'Cannot withdraw more than saved (${(goal.currentAmount ~/ 100).toString()} TZS).',
+        type: ToastType.error,
+      );
+      return;
+    }
+
     final repo = ref.read(savingsGoalRepositoryProvider);
     final trackerId = ref.read(activeTrackerIdProvider);
 
