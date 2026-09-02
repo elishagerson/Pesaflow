@@ -76,19 +76,47 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Records an automated SMS-logged payment for the recurring transaction, increments stats, and advances nextDate.
-  Future<void> recordPayment(String id, int amount, DateTime paidAt) async {
+  /// Returns false if the payment was rejected (end date passed or duplicate).
+  Future<bool> recordPayment(String id, int amount, DateTime paidAt) async {
     final tx = await getById(id);
-    if (tx == null) return;
+    if (tx == null) return false;
 
-    final nextDue = _advanceDate(tx.nextDate, tx.frequency, tx.intervalValue);
+    if (tx.endDate != null && tx.nextDate.isAfter(tx.endDate!)) {
+      return false;
+    }
+
+    if (tx.lastPaidAt != null) {
+      final diff = paidAt.difference(tx.lastPaidAt!).inMinutes.abs();
+      if (diff < 30 && tx.totalPaid > 0) {
+        return false;
+      }
+    }
+
+    final nextDue = tx.endDate != null
+        ? _advanceDateWithEnd(tx.nextDate, tx.frequency, tx.intervalValue, tx.endDate!)
+        : _advanceDate(tx.nextDate, tx.frequency, tx.intervalValue);
+
+    final newStatus = nextDue == null ? 'cancelled' : tx.status;
+
     await update(recurringTransactions).replace(
       tx.copyWith(
         lastPaidAt: Value(paidAt),
         totalPaid: tx.totalPaid + amount,
         paymentCount: tx.paymentCount + 1,
-        nextDate: nextDue,
+        nextDate: nextDue ?? tx.nextDate,
+        status: newStatus,
         updatedAt: DateTime.now(),
       ),
+    );
+    return true;
+  }
+
+  Future<void> toggleStatus(String id) async {
+    final tx = await getById(id);
+    if (tx == null) return;
+    final newStatus = tx.status == 'active' ? 'paused' : 'active';
+    await update(recurringTransactions).replace(
+      tx.copyWith(status: newStatus, updatedAt: DateTime.now()),
     );
   }
 
@@ -99,13 +127,32 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase>
       case 'biweekly':
         return DateTime(from.year, from.month, from.day + 14 * interval);
       case 'monthly':
-        return DateTime(from.year, from.month + interval, from.day);
+        return _addMonths(from, interval);
       case 'quarterly':
-        return DateTime(from.year, from.month + 3 * interval, from.day);
+        return _addMonths(from, 3 * interval);
       case 'yearly':
         return DateTime(from.year + interval, from.month, from.day);
       default:
-        return DateTime(from.year, from.month + interval, from.day);
+        return _addMonths(from, interval);
     }
+  }
+
+  DateTime? _advanceDateWithEnd(
+    DateTime from,
+    String frequency,
+    int interval,
+    DateTime endDate,
+  ) {
+    final next = _advanceDate(from, frequency, interval);
+    return next.isAfter(endDate) ? null : next;
+  }
+
+  static DateTime _addMonths(DateTime from, int months) {
+    final targetMonth = from.month + months;
+    final targetYear = from.year + ((targetMonth - 1) ~/ 12);
+    final monthInYear = ((targetMonth - 1) % 12) + 1;
+    final lastDay = DateTime(targetYear, monthInYear + 1, 0).day;
+    final clampedDay = from.day.clamp(1, lastDay);
+    return DateTime(targetYear, monthInYear, clampedDay);
   }
 }

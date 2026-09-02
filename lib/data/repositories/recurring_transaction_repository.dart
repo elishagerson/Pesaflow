@@ -47,8 +47,11 @@ class RecurringTransactionRepository {
   Future<List<RecurringTransaction>> getActiveWithKeywords() =>
       _recurringTransactionDao.getActiveWithKeywords();
 
-  Future<void> recordPayment(String id, int amount, DateTime paidAt) =>
+  Future<bool> recordPayment(String id, int amount, DateTime paidAt) =>
       _recurringTransactionDao.recordPayment(id, amount, paidAt);
+
+  Future<void> toggleStatus(String id) =>
+      _recurringTransactionDao.toggleStatus(id);
 
   Future<void> recordMarkedPayment({
     required Transaction transaction,
