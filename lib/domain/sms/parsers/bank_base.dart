@@ -21,7 +21,7 @@ class NmbBankParser implements SmsParser {
   int? _extractFee(String text) {
     // "Ada: TZS 2,000" or "Ada ya EFT: TZS 2,000"
     final adaRegex = RegExp(
-      r'Ada(?:\s+ya\s+\w+)?:\s*(?:TZS|Tsh)?\s*([\d,]+)',
+      r'Ada(?:\s+ya\s+\w+)?:?\s*(?:TZS|Tsh)?\s*([\d,]+)',
       caseSensitive: false,
     );
     final adaMatch = adaRegex.firstMatch(text);
@@ -312,7 +312,7 @@ class CrdbBankParser implements SmsParser {
 
   int? _extractBalance(String text) {
     final regex = RegExp(
-      r'Available:\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:Available|Balance|Bal):\s*(?:TZS|Tsh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final match = regex.firstMatch(text);
@@ -517,6 +517,52 @@ class CrdbBankParser implements SmsParser {
 }
 
 class NbcBankParser implements SmsParser {
+  String _extractReference(String text) {
+    final regex = RegExp(r'Ref:\s*([A-Za-z0-9]+)', caseSensitive: false);
+    final match = regex.firstMatch(text);
+    return match?.group(1) ?? 'NBC-REF-UNKNOWN';
+  }
+
+  int? _extractFee(String text) {
+    final adaRegex = RegExp(
+      r'Ada(?:\s+ya\s+\w+)?:?\s*(?:TZS|Tsh)?\s*([\d,]+)',
+      caseSensitive: false,
+    );
+    final adaMatch = adaRegex.firstMatch(text);
+    if (adaMatch != null) {
+      return parseAmount(adaMatch.group(1) ?? '');
+    }
+
+    final feeRegex = RegExp(
+      r'Fee\s*:?\s*(?:TZS|Tsh)?\s*([\d,]+)',
+      caseSensitive: false,
+    );
+    final feeMatch = feeRegex.firstMatch(text);
+    if (feeMatch != null) {
+      return parseAmount(feeMatch.group(1) ?? '');
+    }
+
+    final chargesRegex = RegExp(
+      r'Charges?\s*:?\s*(?:TZS|Tsh)?\s*([\d,]+)',
+      caseSensitive: false,
+    );
+    final chargesMatch = chargesRegex.firstMatch(text);
+    if (chargesMatch != null) {
+      return parseAmount(chargesMatch.group(1) ?? '');
+    }
+
+    final kodiRegex = RegExp(
+      r'Kodi\s*:?\s*(?:TZS|Tsh)?\s*([\d,]+)',
+      caseSensitive: false,
+    );
+    final kodiMatch = kodiRegex.firstMatch(text);
+    if (kodiMatch != null) {
+      return parseAmount(kodiMatch.group(1) ?? '');
+    }
+
+    return null;
+  }
+
   @override
   SmsParsed? parse(String rawSmsBody, DateTime timestamp) {
     final text = rawSmsBody.trim();
@@ -535,6 +581,8 @@ class NbcBankParser implements SmsParser {
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');
+        final ref = _extractReference(text);
+        final fee = _extractFee(text);
         final dateStr =
             '${timestamp.day.toString().padLeft(2, '0')}'
             '${timestamp.month.toString().padLeft(2, '0')}'
@@ -548,9 +596,12 @@ class NbcBankParser implements SmsParser {
           amount: amt,
           type: 'expense',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-$dateStr-$timeStr-$amt',
+          reference: ref.isEmpty || ref == 'NBC-REF-UNKNOWN'
+              ? 'NBC-$dateStr-$timeStr-$amt'
+              : ref,
           provider: 'NBC_Bank',
           balanceAfter: bal,
+          feeAmount: fee,
           timestamp: timestamp,
           rawSmsBody: text,
         );
@@ -569,6 +620,8 @@ class NbcBankParser implements SmsParser {
         final acct = (match.group(2) ?? '').trim();
         final desc = (match.group(3) ?? '').trim();
         final bal = parseAmount(match.group(4) ?? '');
+        final ref = _extractReference(text);
+        final fee = _extractFee(text);
         final dateStr =
             '${timestamp.day.toString().padLeft(2, '0')}'
             '${timestamp.month.toString().padLeft(2, '0')}'
@@ -582,9 +635,12 @@ class NbcBankParser implements SmsParser {
           amount: amt,
           type: 'income',
           senderOrRecipient: '$desc (Acct: $acct)',
-          reference: 'NBC-$dateStr-$timeStr-$amt',
+          reference: ref.isEmpty || ref == 'NBC-REF-UNKNOWN'
+              ? 'NBC-$dateStr-$timeStr-$amt'
+              : ref,
           provider: 'NBC_Bank',
           balanceAfter: bal,
+          feeAmount: fee,
           timestamp: timestamp,
           rawSmsBody: text,
         );

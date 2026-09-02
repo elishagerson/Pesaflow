@@ -25,6 +25,46 @@ class HalopesaParser implements SmsParser {
     return null;
   }
 
+  int? _extractFee(String text) {
+    final adaRegex = RegExp(
+      r'Ada(?:\s+ya\s+\w+)?:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final adaMatch = adaRegex.firstMatch(text);
+    if (adaMatch != null) {
+      return parseAmount(adaMatch.group(1) ?? '');
+    }
+
+    final feeRegex = RegExp(
+      r'Fee\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final feeMatch = feeRegex.firstMatch(text);
+    if (feeMatch != null) {
+      return parseAmount(feeMatch.group(1) ?? '');
+    }
+
+    final chargesRegex = RegExp(
+      r'Charges?\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final chargesMatch = chargesRegex.firstMatch(text);
+    if (chargesMatch != null) {
+      return parseAmount(chargesMatch.group(1) ?? '');
+    }
+
+    final kodiRegex = RegExp(
+      r'Kodi\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final kodiMatch = kodiRegex.firstMatch(text);
+    if (kodiMatch != null) {
+      return parseAmount(kodiMatch.group(1) ?? '');
+    }
+
+    return null;
+  }
+
   @override
   SmsParsed? parse(String rawSmsBody, DateTime timestamp) {
     final text = rawSmsBody.trim();

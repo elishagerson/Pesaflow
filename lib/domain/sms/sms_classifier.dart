@@ -58,10 +58,10 @@ class SmsClassifier {
     //  PROMO / NON-TRANSACTION SIGNALS (negative)
     // ════════════════════════════════════════════
 
-    // Signal: Contains URLs (strong promo indicator)
+    // Signal: Contains URLs (moderate promo indicator — legitimate carrier SMS can include links)
     if (_hasUrl(lower)) {
-      score -= 3.0;
-      reasons.add('Contains URL (www/http) → promo');
+      score -= 1.5;
+      reasons.add('Contains URL (www/http) → mild promo signal');
     }
 
     // Signal: Contains dial / USSD codes
@@ -89,9 +89,17 @@ class SmsClassifier {
     }
 
     // Signal: Message is very long (receipts are typically < 250 chars, promos are longer)
-    if (text.length > 350) {
+    // Bank SMS can be verbose (multi-line with details), so use a higher threshold.
+    final isBankSms = lower.contains('nmb') ||
+        lower.contains('crdb') ||
+        lower.contains('nbc') ||
+        lower.contains('acct') ||
+        lower.contains('debited') ||
+        lower.contains('credited');
+    final lengthThreshold = isBankSms ? 500 : 350;
+    if (text.length > lengthThreshold) {
       score -= 1.0;
-      reasons.add('Long message (${text.length} chars) → more likely promo');
+      reasons.add('Long message (${text.length} chars, threshold $lengthThreshold) → more likely promo');
     }
 
     // Signal: All-caps ratio (promos tend to shout)

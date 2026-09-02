@@ -52,7 +52,6 @@ class TransactionService {
 
   Future<void> createTransaction(dynamic transaction) async {
     await _repo.createTransaction(transaction);
-    _budgetAlertService?.checkBudgetsAfterTransaction(transaction.categoryId);
   }
 
   Future<void> createTransactionNoBalanceAdjustment(dynamic transaction) async {

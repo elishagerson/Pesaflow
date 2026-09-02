@@ -31,12 +31,22 @@ class MpesaTzParser implements SmsParser {
 
     // English: "Fee: TZS 300" or "Fee TZS 300"
     final engRegex = RegExp(
-      r'(?:Total\s+)?Fee:\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      r'(?:Total\s+)?Fee\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
       caseSensitive: false,
     );
     final engMatch = engRegex.firstMatch(text);
     if (engMatch != null) {
       return parseAmount(engMatch.group(1) ?? '');
+    }
+
+    // English: "Charges: TZS 300" or "Charges TSh 300"
+    final chargesRegex = RegExp(
+      r'Charges?\s*:?\s*(?:Tsh|TZS|TSh)?\s*([\d,]+(?:\.[\d]{2})?)',
+      caseSensitive: false,
+    );
+    final chargesMatch = chargesRegex.firstMatch(text);
+    if (chargesMatch != null) {
+      return parseAmount(chargesMatch.group(1) ?? '');
     }
 
     // Swahili: "Kodi ya kuhudumia" (service fee) — extract only the fee portion

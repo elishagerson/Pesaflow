@@ -113,36 +113,46 @@ class _SavingsGoalDetailScreenState
     }
 
     if (_deductFromWallet && _selectedAccountId != null) {
-      final txRepo = ref.read(transactionRepositoryProvider);
-      final categories = ref.read(categoriesFutureProvider).value ?? [];
-      if (categories.isNotEmpty) {
-        final savingsCategory = categories.firstWhere(
-          (c) => c.name.toLowerCase() == 'savings' || c.icon == 'piggy-bank',
-          orElse: () => categories.first,
-        );
+      try {
+        final txRepo = ref.read(transactionRepositoryProvider);
+        final categories = ref.read(categoriesFutureProvider).value ?? [];
+        if (categories.isNotEmpty) {
+          final savingsCategory = categories.firstWhere(
+            (c) => c.name.toLowerCase() == 'savings' || c.icon == 'piggy-bank',
+            orElse: () => categories.first,
+          );
 
-        final uuid = const Uuid();
-        final tx = Transaction(
-          id: uuid.v4(),
-          accountId: _selectedAccountId!,
-          categoryId: savingsCategory.id,
-          trackerId: trackerId,
-          amount: amountCents,
-          type: isDeposit ? 'expense' : 'income',
-          description: isDeposit
-              ? 'Saved: ${goal.name}'
-              : 'Withdrawal: ${goal.name}',
-          source: 'manual',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
+          final uuid = const Uuid();
+          final tx = Transaction(
+            id: uuid.v4(),
+            accountId: _selectedAccountId!,
+            categoryId: savingsCategory.id,
+            trackerId: trackerId,
+            amount: amountCents,
+            type: isDeposit ? 'expense' : 'income',
+            description: isDeposit
+                ? 'Saved: ${goal.name}'
+                : 'Withdrawal: ${goal.name}',
+            source: 'manual',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
 
-        await txRepo.createTransaction(tx);
+          await txRepo.createTransaction(tx);
 
-        ref.invalidate(recentTransactionsStreamProvider);
-        ref.invalidate(filteredTransactionsStreamProvider);
-        ref.invalidate(accountsStreamProvider);
-        ref.invalidate(netWorthProvider);
+          ref.invalidate(recentTransactionsStreamProvider);
+          ref.invalidate(filteredTransactionsStreamProvider);
+          ref.invalidate(accountsStreamProvider);
+          ref.invalidate(netWorthProvider);
+        }
+      } catch (e) {
+        if (mounted) {
+          CustomToast.show(
+            context,
+            message: 'Wallet deduction failed: $e',
+            type: ToastType.error,
+          );
+        }
       }
     }
 
@@ -697,6 +707,8 @@ class _SavingsGoalDetailScreenState
           if (mounted) {
             ref.invalidate(savingsGoalsStreamProvider);
             ref.invalidate(savingsGoalsTotalSavedProvider);
+          }
+          if (context.mounted) {
             context.pop();
           }
         },

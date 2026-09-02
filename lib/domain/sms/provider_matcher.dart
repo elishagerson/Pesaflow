@@ -70,9 +70,10 @@ class ProviderMatcher {
       final upperBody = body.toUpperCase();
 
       // Bank-specific keywords are already transaction indicators — safe to route.
-      if (upperBody.contains('TUMEKUTOA') ||
-          upperBody.contains('TUMEONGEZA') ||
-          upperBody.contains('FEES:')) {
+      if (upperBody.contains('NMB KARIBU') ||
+          upperBody.contains('NMB:') ||
+          upperBody.contains('KIMETUMWA') ||
+          upperBody.contains('KIMEWEKWA')) {
         return 'NMB_Bank';
       }
       if (upperBody.contains('CRDB:')) {

@@ -65,7 +65,7 @@ class SmsProcessor {
   // spurious duplicate transactions; the combined text hits the most
   // important rule first and produces a single correct result.
   final Map<String, List<_BufferedSms>> _messageBuffer = {};
-  Timer? _flushTimer;
+  final Map<String, Timer?> _flushTimers = {};
   static const _debounceWindow = Duration(milliseconds: 2500);
 
   // ── In-memory content dedup cache ───────────────────────────────────
@@ -139,8 +139,8 @@ class SmsProcessor {
         .putIfAbsent(provider, () => [])
         .add(_BufferedSms(sender: sender, body: body, timestamp: timestamp));
 
-    _flushTimer?.cancel();
-    _flushTimer = Timer(_debounceWindow, _flushBuffer);
+    _flushTimers[provider]?.cancel();
+    _flushTimers[provider] = Timer(_debounceWindow, () => _flushProvider(provider));
 
     return true;
   }
@@ -149,32 +149,27 @@ class SmsProcessor {
   // BUFFER FLUSH
   // ═════════════════════════════════════════════════════════════════════
 
-  void _flushBuffer() {
-    final snapshot = Map<String, List<_BufferedSms>>.from(_messageBuffer);
-    _messageBuffer.clear();
+  void _flushProvider(String provider) {
+    final messages = _messageBuffer.remove(provider);
+    _flushTimers.remove(provider);
+    if (messages == null || messages.isEmpty) return;
 
-    for (final entry in snapshot.entries) {
-      final messages = entry.value;
-      if (messages.isEmpty) continue;
-      final provider = entry.key;
+    // Concatenate all buffered bodies — the primary parser rule fires
+    // on the combined text and extracts the main transaction, while any
+    // secondary fragments (fee, balance-only) blend into the context.
+    final combinedBody = messages.map((e) => e.body).join('\n');
+    final earliestTimestamp = messages
+        .map((e) => e.timestamp)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
 
-      // Concatenate all buffered bodies — the primary parser rule fires
-      // on the combined text and extracts the main transaction, while any
-      // secondary fragments (fee, balance-only) blend into the context.
-      final combinedBody = messages.map((e) => e.body).join('\n');
-      final earliestTimestamp = messages
-          .map((e) => e.timestamp)
-          .reduce((a, b) => a.isBefore(b) ? a : b);
-
-      unawaited(
-        _processParsed(
-          provider: provider,
-          sender: messages.first.sender,
-          body: combinedBody,
-          timestamp: earliestTimestamp,
-        ),
-      );
-    }
+    unawaited(
+      _processParsed(
+        provider: provider,
+        sender: messages.first.sender,
+        body: combinedBody,
+        timestamp: earliestTimestamp,
+      ),
+    );
   }
 
   // ═════════════════════════════════════════════════════════════════════
