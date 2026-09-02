@@ -153,6 +153,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Future<void> _loadExistingTransaction() async {
+    _suppressDirtyTracking = true;
     if (!mounted) return;
     try {
       final repo = ref.read(transactionRepositoryProvider);
@@ -185,6 +186,8 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
         message: 'Failed to load transaction',
         type: ToastType.error,
       );
+    } finally {
+      _suppressDirtyTracking = false;
     }
   }
 
@@ -557,6 +560,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
           if (!isSelected) {
             HapticFeedback.selectionClick();
             setState(() {
+              _isDirty = true;
               _transactionType = title;
               _selectedCategoryId = _lastCategoryByType[title];
               if (title != 'Transfer') {
