@@ -104,6 +104,9 @@ final netWorthProvider = Provider<int>((ref) {
 class TransactionTypeFilterNotifier extends Notifier<String> {
   @override
   String build() => 'All';
+  @override
+  set state(String value) => super.state = value;
+
 
 }
 
@@ -116,6 +119,8 @@ class TransactionAccountFilterNotifier extends Notifier<String?> {
   @override
   String? build() => null;
 
+  @override
+  set state(String? value) => super.state = value;
 }
 
 final transactionAccountFilterProvider =
@@ -127,6 +132,8 @@ class TransactionCategoryFilterNotifier extends Notifier<String?> {
   @override
   String? build() => null;
 
+  @override
+  set state(String? value) => super.state = value;
 }
 
 final transactionCategoryFilterProvider =
@@ -138,6 +145,8 @@ class TransactionSearchQueryNotifier extends Notifier<String> {
   @override
   String build() => '';
 
+  @override
+  set state(String value) => super.state = value;
 }
 
 final transactionSearchQueryProvider =
@@ -149,6 +158,8 @@ class TransactionAmountMinNotifier extends Notifier<int?> {
   @override
   int? build() => null;
 
+  @override
+  set state(int? value) => super.state = value;
 }
 
 final transactionAmountMinProvider =
@@ -160,6 +171,8 @@ class TransactionAmountMaxNotifier extends Notifier<int?> {
   @override
   int? build() => null;
 
+  @override
+  set state(int? value) => super.state = value;
 }
 
 final transactionAmountMaxProvider =
@@ -171,6 +184,8 @@ class TransactionDateFromNotifier extends Notifier<DateTime?> {
   @override
   DateTime? build() => null;
 
+  @override
+  set state(DateTime? value) => super.state = value;
 }
 
 final transactionDateFromProvider =
@@ -182,6 +197,8 @@ class TransactionDateToNotifier extends Notifier<DateTime?> {
   @override
   DateTime? build() => null;
 
+  @override
+  set state(DateTime? value) => super.state = value;
 }
 
 final transactionDateToProvider =
@@ -548,6 +565,8 @@ class ScrollSpeedNotifier extends Notifier<double> {
   @override
   double build() => 1.0;
 
+  @override
+  set state(double value) => super.state = value;
 }
 
 final scrollSpeedProvider = NotifierProvider<ScrollSpeedNotifier, double>(() {
