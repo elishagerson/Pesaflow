@@ -12,10 +12,8 @@ import 'package:pesaflow/presentation/state/state_providers.dart';
 
 import 'package:pesaflow/domain/analytics/insight_generator.dart';
 
-class InsightsTab extends StatelessWidget {
-  final ThemeData theme;
-  final WidgetRef ref;
-  const InsightsTab({super.key, required this.theme, required this.ref});
+class InsightsTab extends ConsumerWidget {
+  const InsightsTab({super.key});
 
   IconData _getInsightIcon(String iconName) {
     switch (iconName) {
@@ -47,12 +45,13 @@ class InsightsTab extends StatelessWidget {
       case InsightSeverity.critical:
         return context.appColors.expenseColor;
       case InsightSeverity.neutral:
-        return theme.colorScheme.onSurfaceVariant;
+        return Theme.of(context).colorScheme.onSurfaceVariant;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final insightsAsync = ref.watch(insightsProvider);
     return insightsAsync.when(
       data: (insights) {
