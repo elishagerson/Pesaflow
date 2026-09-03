@@ -214,7 +214,7 @@ class IosNavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final top = MediaQuery.of(context).padding.top;
+    final top = MediaQuery.paddingOf(context).top;
 
     final effectiveCanPop = canPop ?? Navigator.of(context).canPop();
     final effectiveLeading =
