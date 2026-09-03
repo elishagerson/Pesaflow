@@ -69,7 +69,7 @@ class _ImportCsvSheetState extends State<_ImportCsvSheet> {
 
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
+        maxHeight: MediaQuery.sizeOf(context).height * 0.85,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,

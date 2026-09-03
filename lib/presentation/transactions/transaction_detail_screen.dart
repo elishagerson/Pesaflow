@@ -161,7 +161,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       children: [
         // Ambient Category Glow Backdrop
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.05,
+          top: MediaQuery.sizeOf(context).height * 0.05,
           left: 0,
           right: 0,
           child: Center(

@@ -672,7 +672,7 @@ class _SavingsGoalDetailSheetState
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: MediaQuery.sizeOf(context).height * 0.85,
       child: Column(
         children: [
           // Top drag handle

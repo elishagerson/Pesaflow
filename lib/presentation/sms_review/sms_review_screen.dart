@@ -1013,7 +1013,7 @@ class _SmsReviewScreenState extends ConsumerState<SmsReviewScreen> {
                               kSpacing16,
                               kSpacing12,
                               kSpacing16,
-                              MediaQuery.of(context).padding.bottom +
+                              MediaQuery.paddingOf(context).bottom +
                                   kSpacing12,
                             ),
                             decoration: BoxDecoration(

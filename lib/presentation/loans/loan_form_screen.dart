@@ -379,7 +379,7 @@ class _LoanFormScreenState extends ConsumerState<LoanFormScreen> {
               forceWhite: true,
               padding: EdgeInsets.fromLTRB(
                 20,
-                MediaQuery.of(context).padding.top + 8,
+                MediaQuery.paddingOf(context).top + 8,
                 20,
                 16,
               ),

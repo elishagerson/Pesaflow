@@ -301,7 +301,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     shrinkWrap: false,
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 176.0,
+                      top: MediaQuery.paddingOf(context).top + 176.0,
                       bottom: 110.0,
                     ),
                     itemCount: sortedDays.length + 1,
@@ -726,7 +726,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen>
                     ),
                   ),
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 16,
+                    top: MediaQuery.paddingOf(context).top + 16,
                     bottom: 16,
                   ),
                   child: Column(

@@ -25,7 +25,7 @@ class IosTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final height = minimized ? minimizedHeight : navBarHeight;
 
     const tabs = [
