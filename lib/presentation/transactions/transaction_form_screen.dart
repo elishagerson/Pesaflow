@@ -1053,9 +1053,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                                 padding: const EdgeInsets.only(top: kSpacing8),
                                 child: Text(
                                   state.errorText!,
-                                  style: TextStyle(
+                                  style: context.ts(
+                                    14,
                                     color: theme.colorScheme.error,
-                                    fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

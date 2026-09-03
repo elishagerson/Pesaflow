@@ -617,13 +617,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                                 decoration: BoxDecoration(
                                                   color: tightest.remaining < 0 
                                                       ? theme.colorScheme.error.withValues(alpha: 0.1)
-                                                      : Colors.orange.withValues(alpha: 0.1),
+                                                      : context.appColors.warningColor.withValues(alpha: 0.1),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Icon(
                                                   tightest.remaining < 0 ? PesaFlowIcons.expense : PesaFlowIcons.info,
                                                   size: 16,
-                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : Colors.orange,
+                                                  color: tightest.remaining < 0 ? theme.colorScheme.error : context.appColors.warningColor,
                                                 ),
                                               ),
                                               const SizedBox(width: kSpacing12),

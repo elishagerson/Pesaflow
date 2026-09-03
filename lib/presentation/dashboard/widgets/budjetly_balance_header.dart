@@ -64,9 +64,12 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _toggleFlip,
-      child: AnimatedBuilder(
+    return Semantics(
+      button: true,
+      label: 'Balance details. Tap to flip between balance and account totals.',
+      child: GestureDetector(
+        onTap: _toggleFlip,
+        child: AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
           final angle = _animation.value * pi;
@@ -90,6 +93,7 @@ class _BudjetlyBalanceHeaderState extends State<BudjetlyBalanceHeader>
                 : _buildCardSide(context, isFront: true),
           );
         },
+        ),
       ),
     );
   }

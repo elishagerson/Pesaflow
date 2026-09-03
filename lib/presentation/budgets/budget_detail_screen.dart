@@ -23,6 +23,7 @@ import 'package:pesaflow/presentation/common/widgets/tactile_spring_container.da
 import 'package:pesaflow/core/widgets/skeleton_loader.dart';
 import 'package:pesaflow/core/utils/context_extensions.dart';
 import 'package:pesaflow/core/theme/app_theme.dart';
+import 'package:pesaflow/core/theme/app_colors_theme.dart';
 import 'package:pesaflow/core/utils/currency_formatter.dart';
 /// Provider for loading a specific budget's full data.
 final budgetDetailProvider = FutureProvider.family<BudgetWithProgress?, String>(
@@ -849,13 +850,13 @@ class BudgetDetailScreen extends ConsumerWidget {
               Icon(
                 diff > 0 ? PesaFlowIcons.income : PesaFlowIcons.expense,
                 size: 14,
-                color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
+                color: diff > 0 ? theme.extension<AppColorsTheme>()!.warningColor : theme.colorScheme.primary,
               ),
               const SizedBox(width: kSpacing4),
               Text(
                 '${diff.abs().round()}% ${diff > 0 ? 'higher' : 'lower'} than last period',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: diff > 0 ? Colors.orange : theme.colorScheme.primary,
+                  color: diff > 0 ? theme.extension<AppColorsTheme>()!.warningColor : theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1177,7 +1178,7 @@ class _PaceInsight extends StatelessWidget {
       title = status.paceLabel;
       subtitle = 'At current pace, you\'ll stay within budget.';
     } else {
-      statusColor = Colors.orange;
+      statusColor = context.appColors.warningColor;
       icon = PesaFlowIcons.expense;
       title = status.paceLabel;
       subtitle = projectedDate.isNotEmpty
@@ -1250,7 +1251,7 @@ class _PeriodRow extends StatelessWidget {
     final barColor = pctUsed > 1.0
         ? theme.colorScheme.error
         : pctUsed > 0.8
-        ? Colors.orange
+        ? context.appColors.warningColor
         : catColor;
 
     return GlassCard(

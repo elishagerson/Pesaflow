@@ -174,7 +174,7 @@ class SavingsReminder extends ConsumerWidget {
             ? (
                 PesaFlowIcons.warning,
                 'It\'s been $days days since you saved — set aside some money today!',
-                Colors.orange,
+                context.appColors.warningColor,
               )
             : days >= 7
             ? (

@@ -487,7 +487,7 @@ class BudgetListScreen extends ConsumerWidget {
                 if (status.isOverBudget) {
                   paceColor = context.appColors.expenseColor;
                 } else if (!status.isOnTrack) {
-                  paceColor = Colors.orange;
+                  paceColor = context.appColors.warningColor;
                 } else {
                   paceColor = context.appColors.incomeColor;
                 }
@@ -1003,7 +1003,6 @@ class BudgetListScreen extends ConsumerWidget {
                                                         .textTheme
                                                         .labelSmall
                                                         ?.copyWith(
-                                                          fontSize: 11,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: AppTheme

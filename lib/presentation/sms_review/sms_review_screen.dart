@@ -1249,11 +1249,11 @@ class _RawSmsPreviewState extends State<_RawSmsPreview> {
               maxLines: _expanded ? null : 2,
               overflow: _expanded ? null : TextOverflow.ellipsis,
               style: AppTheme.getMonospaceStyle(
-                theme.textTheme.labelSmall!.copyWith(
+                context.ts(
+                  10,
                   color: theme.colorScheme.onSurfaceVariant.withValues(
                     alpha: 0.7,
                   ),
-                  fontSize: 10,
                   height: 1.4,
                 ),
               ),
