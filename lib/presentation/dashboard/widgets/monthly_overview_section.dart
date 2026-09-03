@@ -325,7 +325,12 @@ class _BudgetPulseDonutState extends State<_BudgetPulseDonut>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    );
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      _controller!.value = 1.0;
+    } else {
+      _controller!.repeat(reverse: true);
+    }
     _glowAnimation = Tween<double>(
       begin: 4.0,
       end: 14.0,
